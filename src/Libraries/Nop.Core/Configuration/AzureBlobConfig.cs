@@ -10,37 +10,37 @@ namespace Nop.Core.Configuration
         /// <summary>
         /// Gets or sets connection string for Azure Blob storage
         /// </summary>
-        public string ConnectionString { get; set; } = string.Empty;
+        public string ConnectionString { get; private set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets container name for Azure Blob storage
         /// </summary>
-        public string ContainerName { get; set; } = string.Empty;
+        public string ContainerName { get; private set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets end point for Azure Blob storage
         /// </summary>
-        public string EndPoint { get; set; } = string.Empty;
+        public string EndPoint { get; private set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets whether or the Container Name is appended to the AzureBlobStorageEndPoint when constructing the url
         /// </summary>
-        public bool AppendContainerName { get; set; } = true;
+        public bool AppendContainerName { get; private set; } = true;
 
         /// <summary>
         /// Gets or sets whether to store Data Protection Keys in Azure Blob Storage
         /// </summary>
-        public bool StoreDataProtectionKeys { get; set; } = false;
+        public bool StoreDataProtectionKeys { get; private set; } = false;
 
         /// <summary>
         /// Gets or sets the Azure container name for storing Data Prtection Keys (this container should be separate from the container used for media and should be Private)
         /// </summary>
-        public string DataProtectionKeysContainerName { get; set; } = string.Empty;
+        public string DataProtectionKeysContainerName { get; private set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the Azure key vault ID used to encrypt the Data Protection Keys. (this is optional)
         /// </summary>
-        public string DataProtectionKeysVaultId { get; set; } = string.Empty;
+        public string DataProtectionKeysVaultId { get; private set; } = string.Empty;
 
         /// <summary>
         /// Gets a value indicating whether we should use Azure Blob storage

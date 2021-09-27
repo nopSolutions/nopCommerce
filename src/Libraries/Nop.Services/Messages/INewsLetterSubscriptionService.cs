@@ -15,6 +15,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
 
         /// <summary>
@@ -22,6 +23,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
 
         /// <summary>
@@ -29,20 +31,27 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
 
         /// <summary>
         /// Gets a newsletter subscription by newsletter subscription identifier
         /// </summary>
         /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
-        /// <returns>NewsLetter subscription</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsLetter subscription
+        /// </returns>
         Task<NewsLetterSubscription> GetNewsLetterSubscriptionByIdAsync(int newsLetterSubscriptionId);
 
         /// <summary>
         /// Gets a newsletter subscription by newsletter subscription GUID
         /// </summary>
         /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
-        /// <returns>NewsLetter subscription</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsLetter subscription
+        /// </returns>
         Task<NewsLetterSubscription> GetNewsLetterSubscriptionByGuidAsync(Guid newsLetterSubscriptionGuid);
 
         /// <summary>
@@ -50,7 +59,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="email">The newsletter subscription email</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>NewsLetter subscription</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsLetter subscription
+        /// </returns>
         Task<NewsLetterSubscription> GetNewsLetterSubscriptionByEmailAndStoreIdAsync(string email, int storeId);
 
         /// <summary>
@@ -64,7 +76,10 @@ namespace Nop.Services.Messages
         /// <param name="customerRoleId">Customer role identifier. Used to filter subscribers by customer role. 0 to load all records.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>NewsLetterSubscription entities</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsLetterSubscription entities
+        /// </returns>
         Task<IPagedList<NewsLetterSubscription>> GetAllNewsLetterSubscriptionsAsync(string email = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int storeId = 0, bool? isActive = null, int customerRoleId = 0,

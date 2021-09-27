@@ -21,8 +21,12 @@ namespace Nop.Web.Areas.Admin.Models.Messages
 
         #region Properties
 
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.List.SearchKeywords")]
+        public string SearchKeywords { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.List.SearchStore")]
         public int SearchStoreId { get; set; }
+
         public IList<SelectListItem> AvailableStores { get; set; }
 
         public bool HideStoresList { get; set; }

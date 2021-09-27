@@ -17,7 +17,7 @@ namespace Nop.Plugin.Tax.Avalara.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="appSettings">App settings</param>
-        public virtual void Register(IServiceCollection services, ITypeFinder typeFinder, AppSettings appSettings)
+        public void Register(IServiceCollection services, ITypeFinder typeFinder, AppSettings appSettings)
         {
             services.AddScoped<AvalaraTaxManager>();
             services.AddScoped<TaxTransactionLogService>();

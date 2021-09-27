@@ -17,15 +17,16 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
+using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
-using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure.Mapper;
+using Nop.Data.Configuration;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Cms;
@@ -43,11 +44,11 @@ using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Discounts;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
-using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
 using Nop.Web.Areas.Admin.Models.Forums;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Areas.Admin.Models.Logging;
 using Nop.Web.Areas.Admin.Models.Messages;
+using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
 using Nop.Web.Areas.Admin.Models.News;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Payments;
@@ -187,7 +188,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<HostingConfig, HostingConfigModel>();
             CreateMap<HostingConfigModel, HostingConfig>();
-            
+
             CreateMap<DistributedCacheConfig, DistributedCacheConfigModel>()
                 .ForMember(model => model.DistributedCacheTypeValues, options => options.Ignore());
             CreateMap<DistributedCacheConfigModel, DistributedCacheConfig>();
@@ -205,6 +206,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<CommonConfig, CommonConfigModel>();
             CreateMap<CommonConfigModel, CommonConfig>();
+
+            CreateMap<DataConfig, DataConfigModel>()
+                .ForMember(model => model.DataProviderTypeValues, options => options.Ignore());
+            CreateMap<DataConfigModel, DataConfig>();
         }
 
         /// <summary>
@@ -369,11 +374,11 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.SearchPagePriceRangeFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.SearchPagePriceFrom_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.SearchPagePriceTo_OverrideForStore, mo => mo.Ignore())
-                .ForMember(model => model.SearchPageAutomaticallyCalculatePriceRange_OverrideForStore, mo => mo.Ignore())
+                .ForMember(model => model.SearchPageManuallyPriceRange_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.ProductsByTagPriceRangeFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.ProductsByTagPriceFrom_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.ProductsByTagPriceTo_OverrideForStore, mo => mo.Ignore())
-                .ForMember(model => model.ProductsByTagAutomaticallyCalculatePriceRange_OverrideForStore, mo => mo.Ignore())
+                .ForMember(model => model.ProductsByTagManuallyPriceRange_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.EnableManufacturerFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.EnablePriceRangeFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.AttributeValueOutOfStockDisplayTypes, mo => mo.Ignore())
@@ -1492,6 +1497,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.DisplayShipmentEventsToStoreOwner_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.EstimateShippingCartPageEnabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.EstimateShippingProductPageEnabled_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.EstimateShippingCityNameEnabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.FreeShippingOverXEnabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.FreeShippingOverXIncludingTax_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.FreeShippingOverXValue_OverrideForStore, options => options.Ignore())

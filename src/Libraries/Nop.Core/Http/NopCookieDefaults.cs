@@ -26,6 +26,11 @@
         public static string SessionCookie => ".Session";
 
         /// <summary>
+        /// Gets a cookie name of the culture
+        /// </summary>
+        public static string CultureCookie => ".Culture";
+
+        /// <summary>
         /// Gets a cookie name of the temp data
         /// </summary>
         public static string TempDataCookie => ".TempData";

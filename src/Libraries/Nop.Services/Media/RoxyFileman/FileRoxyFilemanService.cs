@@ -50,6 +50,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="destinationPath">Path to the destination directory</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task BaseCopyDirectoryAsync(string sourcePath, string destinationPath)
         {
             var existingFiles = _fileProvider.GetFiles(sourcePath);
@@ -77,7 +78,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="directoryPath">Path to the files directory</param>
         /// <param name="type">Type of the files</param>
-        /// <returns>List of paths to the files</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of paths to the files
+        /// </returns>
         protected virtual async Task<List<string>> GetFilesByDirectoryAsync(string directoryPath, string type)
         {
             if (!await IsPathAllowedAsync(directoryPath))
@@ -165,7 +169,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// Checks if the path is allowed to work on
         /// </summary>
         /// <param name="path">Path to check</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         protected virtual async Task<bool> IsPathAllowedAsync(string path)
         {
             var absp = _fileProvider.GetAbsolutePath(path);
@@ -185,6 +192,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Initial service configuration
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ConfigureAsync()
         {
             await CreateConfigurationAsync();
@@ -203,7 +211,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="destinationPath">Path to the destination directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CopyDirectoryAsync(string sourcePath, string destinationPath)
         {
             var directoryPath = GetFullPath(await GetVirtualPathAsync(sourcePath));
@@ -229,7 +237,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="parentDirectoryPath">Path to the parent directory</param>
         /// <param name="name">Name of the new directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CreateDirectoryAsync(string parentDirectoryPath, string name)
         {
             parentDirectoryPath = GetFullPath(await GetVirtualPathAsync(parentDirectoryPath));
@@ -256,7 +264,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Delete the directory
         /// </summary>
         /// <param name="path">Path to the directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteDirectoryAsync(string path)
         {
             path = await GetVirtualPathAsync(path);
@@ -288,7 +296,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Download the directory from the server as a zip archive
         /// </summary>
         /// <param name="path">Path to the directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task DownloadDirectoryAsync(string path)
         {
             path = (await GetVirtualPathAsync(path)).TrimEnd('/');
@@ -322,7 +330,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Get all available directories as a directory tree
         /// </summary>
         /// <param name="type">Type of the file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task GetDirectoriesAsync(string type)
         {
             var rootDirectoryPath = GetFullPath(await GetVirtualPathAsync(null));
@@ -351,7 +359,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="destinationPath">Path to the destination directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task MoveDirectoryAsync(string sourcePath, string destinationPath)
         {
             var fullSourcePath = GetFullPath(await GetVirtualPathAsync(sourcePath));
@@ -386,7 +394,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="newName">New name of the directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task RenameDirectoryAsync(string sourcePath, string newName)
         {
             var fullSourcePath = GetFullPath(await GetVirtualPathAsync(sourcePath));
@@ -428,7 +436,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source file</param>
         /// <param name="destinationPath">Path to the destination file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
             var filePath = GetFullPath(await GetVirtualPathAsync(sourcePath));
@@ -457,7 +465,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Delete the file
         /// </summary>
         /// <param name="path">Path to the file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteFileAsync(string path)
         {
             path = GetFullPath(await GetVirtualPathAsync(path));
@@ -482,7 +490,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Download the file from the server
         /// </summary>
         /// <param name="path">Path to the file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DownloadFileAsync(string path)
         {
             var filePath = GetFullPath(await GetVirtualPathAsync(path));
@@ -504,7 +512,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="directoryPath">Path to the files directory</param>
         /// <param name="type">Type of the files</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task GetFilesAsync(string directoryPath, string type)
         {
             directoryPath = await GetVirtualPathAsync(directoryPath);
@@ -539,7 +547,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source file</param>
         /// <param name="destinationPath">Path to the destination file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task MoveFileAsync(string sourcePath, string destinationPath)
         {
             var fullSourcePath = GetFullPath(await GetVirtualPathAsync(sourcePath));
@@ -574,7 +582,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source file</param>
         /// <param name="newName">New name of the file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task RenameFileAsync(string sourcePath, string newName)
         {
             var fullSourcePath = GetFullPath(await GetVirtualPathAsync(sourcePath));
@@ -605,7 +613,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Upload files to a directory on passed path
         /// </summary>
         /// <param name="directoryPath">Path to directory to upload files</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UploadFilesAsync(string directoryPath)
         {
             var result = GetSuccessResponse();
@@ -669,6 +677,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Create the thumbnail of the image and write it to the response
         /// </summary>
         /// <param name="path">Path to the image</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CreateImageThumbnailAsync(string path)
         {
             path = GetFullPath(await GetVirtualPathAsync(path));
@@ -708,6 +717,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Flush all images on disk
         /// </summary>
         /// <param name="removeOriginal">Specifies whether to delete original images</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual Task FlushAllImagesOnDiskAsync(bool removeOriginal = true)
         {
             //do nothing
@@ -718,6 +728,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Flush images on disk
         /// </summary>
         /// <param name="directoryPath">Directory path to flush images</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual Task FlushImagesOnDiskAsync(string directoryPath)
         {
             //do nothing

@@ -51,6 +51,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Handle the email unsubscribed event.
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EmailUnsubscribedEvent eventMessage)
         {
             //unsubscribe contact
@@ -61,6 +62,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Handle the email subscribed event.
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EmailSubscribedEvent eventMessage)
         {
             //subscribe contact
@@ -71,6 +73,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Handle the add shopping cart item event
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityInsertedEvent<ShoppingCartItem> eventMessage)
         {
             //handle event
@@ -81,6 +84,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Handle the update shopping cart item event
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
         {
             //handle event
@@ -91,6 +95,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Handle the delete shopping cart item event
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<ShoppingCartItem> eventMessage)
         {
             //handle event
@@ -101,6 +106,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Handle the order paid event
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(OrderPaidEvent eventMessage)
         {
             //handle event
@@ -112,6 +118,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Handle the order placed event
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
         {
             //handle event
@@ -122,6 +129,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Handle the store tokens added event
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public Task HandleEventAsync(EntityTokensAddedEvent<Store, Token> eventMessage)
         {
             //handle event
@@ -134,6 +142,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Handle the customer tokens added event
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityTokensAddedEvent<Customer, Token> eventMessage)
         {
             //handle event

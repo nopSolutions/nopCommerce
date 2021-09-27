@@ -87,8 +87,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.PriceTo")]
         public decimal PriceTo { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange")]
-        public bool AutomaticallyCalculatePriceRange { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.ManuallyPriceRange")]
+        public bool ManuallyPriceRange { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.ShowOnHomepage")]
         public bool ShowOnHomepage { get; set; }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
 using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -25,7 +27,6 @@ using Nop.Services.Shipping.Date;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using NUnit.Framework;
-using OfficeOpenXml;
 
 namespace Nop.Tests.Nop.Services.Tests.ExportImport
 {
@@ -97,7 +98,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
         }
 
         #endregion
-        
+
         #region Utilities
 
         protected static T PropertiesShouldEqual<T, Tp>(T actual, PropertyManager<Tp> manager, IDictionary<string, string> replacePairs, params string[] filter)
@@ -117,28 +118,30 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
 
                 var objectPropertyValue = objectProperty.GetValue(actual);
 
-                if (objectProperty.PropertyType == typeof(Guid)) 
+                if (objectProperty.PropertyType == typeof(Guid))
                     objectPropertyValue = objectPropertyValue.ToString();
 
                 if (objectProperty.PropertyType == typeof(string))
                     objectPropertyValue = (property.PropertyValue?.ToString() == string.Empty && objectPropertyValue == null) ? string.Empty : objectPropertyValue;
 
-                if (objectProperty.PropertyType.IsEnum) 
+                if (objectProperty.PropertyType.IsEnum)
                     objectPropertyValue = (int)objectPropertyValue;
 
-                if (objectProperty.PropertyType == typeof(DateTime)) 
-                    objectPropertyValue = ((DateTime)objectPropertyValue).ToOADate();
+                //https://github.com/ClosedXML/ClosedXML/blob/develop/ClosedXML/Extensions/ObjectExtensions.cs#L61
+                if (objectProperty.PropertyType == typeof(DateTime))
+                    objectPropertyValue = DateTime.FromOADate(double.Parse(((DateTime)objectPropertyValue).ToOADate().ToString("G15", CultureInfo.InvariantCulture)));
 
-                if (objectProperty.PropertyType == typeof(DateTime?)) 
-                    objectPropertyValue = ((DateTime?)objectPropertyValue)?.ToOADate();
+                if (objectProperty.PropertyType == typeof(DateTime?))
+                    objectPropertyValue = objectPropertyValue != null ? DateTime.FromOADate(double.Parse(((DateTime?)objectPropertyValue)?.ToOADate().ToString("G15", CultureInfo.InvariantCulture))) : null;
 
-                property.PropertyValue.Should().Be(objectPropertyValue, $"The property \"{typeof(T).Name}.{property.PropertyName}\" of these objects is not equal");
+                //https://github.com/ClosedXML/ClosedXML/issues/544
+                property.PropertyValue.Should().Be(objectPropertyValue ?? "", $"The property \"{typeof(T).Name}.{property.PropertyName}\" of these objects is not equal");
             }
 
             return actual;
         }
 
-        protected PropertyManager<T> GetPropertyManager<T>(ExcelWorksheet worksheet)
+        protected PropertyManager<T> GetPropertyManager<T>(IXLWorksheet worksheet)
         {
             //the columns
             var properties = ImportManager.GetPropertiesByExcelCells<T>(worksheet);
@@ -146,13 +149,13 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             return new PropertyManager<T>(properties, _catalogSettings);
         }
 
-        protected ExcelWorksheet GetWorksheets(byte[] excelData)
+        protected IXLWorksheet GetWorksheets(byte[] excelData)
         {
             var stream = new MemoryStream(excelData);
-            var xlPackage = new ExcelPackage(stream);
+            var workbook = new XLWorkbook(stream);
 
             // get the first worksheet in the workbook
-            var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
+            var worksheet = workbook.Worksheets.FirstOrDefault();
             if (worksheet == null)
                 throw new NopException("No worksheet found");
 
@@ -174,7 +177,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
 
             return obj;
         }
-        
+
         #endregion
 
         #region Test export to excel
@@ -349,7 +352,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
                 { "RecurringCyclePeriod", "RecurringCyclePeriodId" },
                 { "RentalPricePeriod", "RentalPricePeriodId" }
             };
-            
+
             var ignore = new List<string> { "Categories", "Manufacturers", "AdminComment",
                 "ProductType", "BackorderMode", "DownloadActivationType", "GiftCardType", "LowStockActivity",
                 "ManageInventoryMethod", "RecurringCyclePeriod", "RentalPricePeriod", "ProductCategories",

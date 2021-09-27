@@ -38,7 +38,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare email account search model
         /// </summary>
         /// <param name="searchModel">Email account search model</param>
-        /// <returns>Email account search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email account search model
+        /// </returns>
         public virtual Task<EmailAccountSearchModel> PrepareEmailAccountSearchModelAsync(EmailAccountSearchModel searchModel)
         {
             if (searchModel == null)
@@ -54,7 +57,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged email account list model
         /// </summary>
         /// <param name="searchModel">Email account search model</param>
-        /// <returns>Email account list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email account list model
+        /// </returns>
         public virtual async Task<EmailAccountListModel> PrepareEmailAccountListModelAsync(EmailAccountSearchModel searchModel)
         {
             if (searchModel == null)
@@ -87,7 +93,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Email account model</param>
         /// <param name="emailAccount">Email account</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Email account model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email account model
+        /// </returns>
         public virtual Task<EmailAccountModel> PrepareEmailAccountModelAsync(EmailAccountModel model,
             EmailAccount emailAccount, bool excludeProperties = false)
         {

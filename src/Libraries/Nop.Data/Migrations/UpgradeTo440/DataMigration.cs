@@ -9,8 +9,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo440
 {
-    [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Data)]
-    [SkipMigrationOnInstall]
+    [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Data, MigrationProcessType.Update)]
     public class DataMigration : Migration
     {
         private readonly INopDataProvider _dataProvider;
@@ -212,24 +211,24 @@ namespace Nop.Data.Migrations.UpgradeTo440
             }
 
             //add column
-            var automaticallyCalculatePriceRangeColumnName = "AutomaticallyCalculatePriceRange";
+            var manuallyPriceRangeColumnName = "ManuallyPriceRange";
 
-            if (!Schema.Table(categoryTableName).Column(automaticallyCalculatePriceRangeColumnName).Exists())
+            if (!Schema.Table(categoryTableName).Column(manuallyPriceRangeColumnName).Exists())
             {
                 Alter.Table(categoryTableName)
-                    .AddColumn(automaticallyCalculatePriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
+                    .AddColumn(manuallyPriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
             }
 
-            if (!Schema.Table(manufacturerTableName).Column(automaticallyCalculatePriceRangeColumnName).Exists())
+            if (!Schema.Table(manufacturerTableName).Column(manuallyPriceRangeColumnName).Exists())
             {
                 Alter.Table(manufacturerTableName)
-                    .AddColumn(automaticallyCalculatePriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
+                    .AddColumn(manuallyPriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
             }
 
-            if (!Schema.Table(vendorTableName).Column(automaticallyCalculatePriceRangeColumnName).Exists())
+            if (!Schema.Table(vendorTableName).Column(manuallyPriceRangeColumnName).Exists())
             {
                 Alter.Table(vendorTableName)
-                    .AddColumn(automaticallyCalculatePriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
+                    .AddColumn(manuallyPriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
             }
         }
 

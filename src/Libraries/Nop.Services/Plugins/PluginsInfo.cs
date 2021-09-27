@@ -29,7 +29,10 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Get system names of installed plugins from obsolete file
         /// </summary>
-        /// <returns>List of plugin system names</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of plugin system names
+        /// </returns>
         protected virtual async Task<IList<string>> GetObsoleteInstalledPluginNamesAsync()
         {
             //check whether file exists
@@ -103,6 +106,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Save plugins info to the file
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SaveAsync()
         {
             //save the file
@@ -125,7 +129,10 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Get plugins info
         /// </summary>
-        /// <returns>True if data are loaded, otherwise False</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if data are loaded, otherwise False
+        /// </returns>
         public virtual async Task<bool> LoadPluginInfoAsync()
         {
             //check whether plugins info file exists

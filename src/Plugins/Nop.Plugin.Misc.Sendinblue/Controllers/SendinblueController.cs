@@ -92,6 +92,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         /// Prepare SendinblueModel
         /// </summary>
         /// <param name="model">Model</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task PrepareModelAsync(ConfigurationModel model)
         {
             //load settings for active store scope
@@ -288,6 +289,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetSynchronizationInfo()
         {
             var res = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(SendinblueDefaults.SyncKeyCache), () => string.Empty);

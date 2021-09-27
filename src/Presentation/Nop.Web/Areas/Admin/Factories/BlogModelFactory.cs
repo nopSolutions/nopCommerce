@@ -68,32 +68,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare blog post search model
-        /// </summary>
-        /// <param name="searchModel">Blog post search model</param>
-        /// <returns>Blog post search model</returns>
-        protected virtual async Task<BlogPostSearchModel> PrepareBlogPostSearchModelAsync(BlogPostSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
-
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -101,7 +76,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="blogContentModel">Blog content model</param>
         /// <param name="filterByBlogPostId">Blog post ID</param>
-        /// <returns>Blog content model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog content model
+        /// </returns>
         public virtual async Task<BlogContentModel> PrepareBlogContentModelAsync(BlogContentModel blogContentModel, int? filterByBlogPostId)
         {
             if (blogContentModel == null)
@@ -119,7 +97,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged blog post list model
         /// </summary>
         /// <param name="searchModel">Blog post search model</param>
-        /// <returns>Blog post list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog post list model
+        /// </returns>
         public virtual async Task<BlogPostListModel> PrepareBlogPostListModelAsync(BlogPostSearchModel searchModel)
         {
             if (searchModel == null)
@@ -166,7 +147,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Blog post model</param>
         /// <param name="blogPost">Blog post</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Blog post model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog post model
+        /// </returns>
         public virtual async Task<BlogPostModel> PrepareBlogPostModelAsync(BlogPostModel model, BlogPost blogPost, bool excludeProperties = false)
         {
             //fill in model values from the entity
@@ -218,7 +202,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Blog comment search model</param>
         /// <param name="blogPost">Blog post</param>
-        /// <returns>Blog comment search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog comment search model
+        /// </returns>
         public virtual async Task<BlogCommentSearchModel> PrepareBlogCommentSearchModelAsync(BlogCommentSearchModel searchModel, BlogPost blogPost)
         {
             if (searchModel == null)
@@ -254,7 +241,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Blog comment search model</param>
         /// <param name="blogPostId">Blog post ID</param>
-        /// <returns>Blog comment list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog comment list model
+        /// </returns>
         public virtual async Task<BlogCommentListModel> PrepareBlogCommentListModelAsync(BlogCommentSearchModel searchModel, int? blogPostId)
         {
             if (searchModel == null)
@@ -305,6 +295,30 @@ namespace Nop.Web.Areas.Admin.Factories
             });
 
             return model;
+        }
+        
+        /// <summary>
+        /// Prepare blog post search model
+        /// </summary>
+        /// <param name="searchModel">Blog post search model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog post search model
+        /// </returns>
+        public virtual async Task<BlogPostSearchModel> PrepareBlogPostSearchModelAsync(BlogPostSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare available stores
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
         }
 
         #endregion

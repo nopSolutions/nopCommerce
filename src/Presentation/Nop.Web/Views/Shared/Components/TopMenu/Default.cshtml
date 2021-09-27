@@ -45,7 +45,7 @@
 }
 
 <ul class="top-menu notmobile">
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuBefore })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuBefore, additionalData = Model })
     @if (Model.DisplayHomepageMenuItem)
     {
         <li><a href="@Url.RouteUrl("Homepage")">@T("Homepage")</a></li>
@@ -91,7 +91,7 @@
     {
         <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuAfter })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuAfter, additionalData = Model })
 </ul>
 @{
     var rootCategoriesResponsive = Model.Categories.ToList();
@@ -99,7 +99,7 @@
     var responsiveMenuTitle = Model.HasOnlyCategories ? T("Categories") : T("Menu");
     <div class="menu-toggle">@responsiveMenuTitle</div>
     <ul class="top-menu mobile">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuBefore })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuBefore, additionalData = Model })
         @if (Model.DisplayHomepageMenuItem)
         {
             <li><a href="@Url.RouteUrl("Homepage")">@T("Homepage")</a></li>
@@ -145,7 +145,7 @@
         {
             <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuAfter })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuAfter, additionalData = Model })
     </ul>
 
     @if (Model.UseAjaxMenu)

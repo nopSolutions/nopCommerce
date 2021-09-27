@@ -69,7 +69,10 @@ namespace Nop.Services.Orders
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <param name="renderPrices">A value indicating whether to render prices</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperlink tags could be rendered (if required)</param>
-        /// <returns>Attributes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the attributes
+        /// </returns>
         public virtual async Task<string> FormatAttributesAsync(string attributesXml,
             Customer customer,
             string separator = "<br />",
@@ -116,7 +119,7 @@ namespace Nop.Services.Orders
                                 if (allowHyperlinks)
                                 {
                                     //hyperlinks are allowed
-                                    var downloadLink = $"{_webHelper.GetStoreLocation(false)}download/getfileupload/?downloadId={download.DownloadGuid}";
+                                    var downloadLink = $"{_webHelper.GetStoreLocation()}download/getfileupload/?downloadId={download.DownloadGuid}";
                                     attributeText = $"<a href=\"{downloadLink}\" class=\"fileuploadattribute\">{fileName}</a>";
                                 }
                                 else

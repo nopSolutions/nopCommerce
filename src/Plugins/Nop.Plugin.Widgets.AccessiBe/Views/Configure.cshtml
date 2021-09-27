@@ -14,9 +14,9 @@
 
     function toggleEnabled() {
         if ($('#@Html.IdFor(model => model.Enabled)').is(':checked')) {
-            $('#script-field').showField();
+            $('#script-field').showElement();
         } else {
-            $('#script-field').hide();
+            $('#script-field').hideElement();
         }
     }
 </script>

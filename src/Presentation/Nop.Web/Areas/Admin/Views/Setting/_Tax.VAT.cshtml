@@ -71,17 +71,17 @@
         });
         function toggleEUVAT() {
             if ($('#@Html.IdFor(model => model.EuVatEnabled)').is(':checked')) {
-                $('#pnlEuVatShopCountry').showField();
-                $('#pnlEuVatAllowVATExemption').showField();
-                $('#pnlEuVatAssumeValid').showField();
-                $('#pnlEuVatUseWebService').showField();
-                $('#pnlEuVatEmailAdminWhenNewVATSubmitted').showField();
+                $('#pnlEuVatShopCountry').showElement();
+                $('#pnlEuVatAllowVATExemption').showElement();
+                $('#pnlEuVatAssumeValid').showElement();
+                $('#pnlEuVatUseWebService').showElement();
+                $('#pnlEuVatEmailAdminWhenNewVATSubmitted').showElement();
             } else {
-                $('#pnlEuVatShopCountry').hide();
-                $('#pnlEuVatAllowVATExemption').hide();
-                $('#pnlEuVatAssumeValid').hide();
-                $('#pnlEuVatUseWebService').hide();
-                $('#pnlEuVatEmailAdminWhenNewVATSubmitted').hide();
+                $('#pnlEuVatShopCountry').hideElement();
+                $('#pnlEuVatAllowVATExemption').hideElement();
+                $('#pnlEuVatAssumeValid').hideElement();
+                $('#pnlEuVatUseWebService').hideElement();
+                $('#pnlEuVatEmailAdminWhenNewVATSubmitted').hideElement();
             }
         }
     </script>

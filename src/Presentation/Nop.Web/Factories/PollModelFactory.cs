@@ -47,7 +47,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="poll">Poll</param>
         /// <param name="setAlreadyVotedProperty">Whether to load a value indicating that customer already voted for this poll</param>
-        /// <returns>Poll model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the poll model
+        /// </returns>
         public virtual async Task<PollModel> PreparePollModelAsync(Poll poll, bool setAlreadyVotedProperty)
         {
             if (poll == null)
@@ -81,7 +84,10 @@ namespace Nop.Web.Factories
         /// Get the poll model by poll system keyword
         /// </summary>
         /// <param name="systemKeyword">Poll system keyword</param>
-        /// <returns>Poll model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the poll model
+        /// </returns>
         public virtual async Task<PollModel> PreparePollModelBySystemNameAsync(string systemKeyword)
         {
             if (string.IsNullOrWhiteSpace(systemKeyword))
@@ -117,7 +123,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the home page poll models
         /// </summary>
-        /// <returns>List of the poll model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of the poll model
+        /// </returns>
         public virtual async Task<List<PollModel>> PrepareHomepagePollModelsAsync()
         {
             var customer = await _workContext.GetCurrentCustomerAsync();

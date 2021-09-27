@@ -169,261 +169,13 @@ namespace Nop.Web.Factories
         }
 
         /// <summary>
-        /// Prepare sorting options
-        /// </summary>
-        /// <param name="model">Catalog products model</param>
-        /// <param name="command">Model to get the catalog products</param>
-        protected virtual async Task PrepareSortingOptionsAsync(CatalogProductsModel model, CatalogProductsCommand command)
-        {
-            //set the order by position by default
-            model.OrderBy = command.OrderBy;
-            command.OrderBy = (int)ProductSortingEnum.Position;
-
-            //ensure that product sorting is enabled
-            if (!_catalogSettings.AllowProductSorting)
-                return;
-
-            //get active sorting options
-            var activeSortingOptionsIds = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
-                .Except(_catalogSettings.ProductSortingEnumDisabled).ToList();
-            if (!activeSortingOptionsIds.Any())
-                return;
-
-            //order sorting options
-            var orderedActiveSortingOptions = activeSortingOptionsIds
-                .Select(id => new { Id = id, Order = _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(id, out var order) ? order : id })
-                .OrderBy(option => option.Order).ToList();
-
-            model.AllowProductSorting = true;
-            command.OrderBy = model.OrderBy ?? orderedActiveSortingOptions.FirstOrDefault().Id;
-
-            //prepare available model sorting options
-            foreach (var option in orderedActiveSortingOptions)
-            {
-                model.AvailableSortOptions.Add(new SelectListItem
-                {
-                    Text = await _localizationService.GetLocalizedEnumAsync((ProductSortingEnum)option.Id),
-                    Value = option.Id.ToString(),
-                    Selected = option.Id == command.OrderBy
-                });
-            }
-        }
-
-        /// <summary>
-        /// Prepare view modes
-        /// </summary>
-        /// <param name="model">Catalog products model</param>
-        /// <param name="command">Model to get the catalog products</param>
-        protected virtual async Task PrepareViewModesAsync(CatalogProductsModel model, CatalogProductsCommand command)
-        {
-            model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
-
-            var viewMode = !string.IsNullOrEmpty(command.ViewMode)
-                ? command.ViewMode
-                : _catalogSettings.DefaultViewMode;
-            model.ViewMode = viewMode;
-            if (model.AllowProductViewModeChanging)
-            {
-                //grid
-                model.AvailableViewModes.Add(new SelectListItem
-                {
-                    Text = await _localizationService.GetResourceAsync("Catalog.ViewMode.Grid"),
-                    Value = "grid",
-                    Selected = viewMode == "grid"
-                });
-                //list
-                model.AvailableViewModes.Add(new SelectListItem
-                {
-                    Text = await _localizationService.GetResourceAsync("Catalog.ViewMode.List"),
-                    Value = "list",
-                    Selected = viewMode == "list"
-                });
-            }
-        }
-
-        /// <summary>
-        /// Prepare page size options
-        /// </summary>
-        /// <param name="model">Catalog products model</param>
-        /// <param name="command">Model to get the catalog products</param>
-        /// <param name="allowCustomersToSelectPageSize">Are customers allowed to select page size?</param>
-        /// <param name="pageSizeOptions">Page size options</param>
-        /// <param name="fixedPageSize">Fixed page size</param>
-        protected virtual Task PreparePageSizeOptionsAsync(CatalogProductsModel model, CatalogProductsCommand command,
-            bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize)
-        {
-            if (command.PageNumber <= 0)
-                command.PageNumber = 1;
-
-            model.AllowCustomersToSelectPageSize = false;
-            if (allowCustomersToSelectPageSize && pageSizeOptions != null)
-            {
-                var pageSizes = pageSizeOptions.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (pageSizes.Any())
-                {
-                    // get the first page size entry to use as the default (category page load) or if customer enters invalid value via query string
-                    if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
-                    {
-                        if (int.TryParse(pageSizes.FirstOrDefault(), out var temp))
-                        {
-                            if (temp > 0)
-                                command.PageSize = temp;
-                        }
-                    }
-
-                    foreach (var pageSize in pageSizes)
-                    {
-                        if (!int.TryParse(pageSize, out var temp))
-                            continue;
-
-                        if (temp <= 0)
-                            continue;
-
-                        model.PageSizeOptions.Add(new SelectListItem
-                        {
-                            Text = pageSize,
-                            Value = pageSize,
-                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
-                        });
-                    }
-
-                    if (model.PageSizeOptions.Any())
-                    {
-                        model.PageSizeOptions = model.PageSizeOptions.OrderBy(x => int.Parse(x.Value)).ToList();
-                        model.AllowCustomersToSelectPageSize = true;
-
-                        if (command.PageSize <= 0)
-                            command.PageSize = int.Parse(model.PageSizeOptions.First().Value);
-                    }
-                }
-            }
-            else
-            {
-                //customer is not allowed to select a page size
-                command.PageSize = fixedPageSize;
-            }
-
-            //ensure pge size is specified
-            if (command.PageSize <= 0)
-            {
-                command.PageSize = fixedPageSize;
-            }
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Prepare category (simple) models
-        /// </summary>
-        /// <returns>List of category (simple) models</returns>
-        protected virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync()
-        {
-            //load and cache them
-            var language = await _workContext.GetWorkingLanguageAsync();
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryAllModelKey,
-                language, customerRoleIds, store);
-
-            return await _staticCacheManager.GetAsync(cacheKey, async () => await PrepareCategorySimpleModelsAsync(0));
-        }
-
-        /// <summary>
-        /// Prepare category (simple) models
-        /// </summary>
-        /// <param name="rootCategoryId">Root category identifier</param>
-        /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
-        /// <returns>List of category (simple) models</returns>
-        protected virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, bool loadSubCategories = true)
-        {
-            var result = new List<CategorySimpleModel>();
-
-            //little hack for performance optimization
-            //we know that this method is used to load top and left menu for categories.
-            //it'll load all categories anyway.
-            //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
-            //so we load all categories at once (we know they are cached)
-            var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
-            var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
-            foreach (var category in categories)
-            {
-                var categoryModel = new CategorySimpleModel
-                {
-                    Id = category.Id,
-                    Name = await _localizationService.GetLocalizedAsync(category, x => x.Name),
-                    SeName = await _urlRecordService.GetSeNameAsync(category),
-                    IncludeInTopMenu = category.IncludeInTopMenu
-                };
-
-                //number of products in each category
-                if (_catalogSettings.ShowCategoryProductNumber)
-                {
-                    var categoryIds = new List<int> { category.Id };
-                    //include subcategories
-                    if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
-                        categoryIds.AddRange(
-                            await _categoryService.GetChildCategoryIdsAsync(category.Id, (await _storeContext.GetCurrentStoreAsync()).Id));
-
-                    categoryModel.NumberOfProducts =
-                        await _productService.GetNumberOfProductsInCategoryAsync(categoryIds, (await _storeContext.GetCurrentStoreAsync()).Id);
-                }
-
-                if (loadSubCategories)
-                {
-                    var subCategories = await PrepareCategorySimpleModelsAsync(category.Id);
-                    categoryModel.SubCategories.AddRange(subCategories);
-                }
-
-                categoryModel.HaveSubCategories = categoryModel.SubCategories.Count > 0 &
-                    categoryModel.SubCategories.Any(x => x.IncludeInTopMenu);
-
-                result.Add(categoryModel);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Prepare category (simple) xml document
-        /// </summary>
-        /// <returns>Xml document of category (simple) models</returns>
-        protected virtual async Task<XDocument> PrepareCategoryXmlDocumentAsync()
-        {
-            var language = await _workContext.GetWorkingLanguageAsync();
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryXmlAllModelKey,
-                language, customerRoleIds, store);
-
-            return await _staticCacheManager.GetAsync(cacheKey, async () =>
-            {
-                var categories = await PrepareCategorySimpleModelsAsync();
-
-                var xsSubmit = new XmlSerializer(typeof(List<CategorySimpleModel>));
-
-                var settings = new XmlWriterSettings
-                {
-                    Async = true,
-                    ConformanceLevel = ConformanceLevel.Auto
-                };
-
-                await using var strWriter = new StringWriter();
-                await using var writer = XmlWriter.Create(strWriter, settings);
-                xsSubmit.Serialize(writer, categories);
-                var xml = strWriter.ToString();
-
-                return XDocument.Parse(xml);
-            });
-        }
-
-        /// <summary>
         /// Gets the price range converted to primary store currency
         /// </summary>
         /// <param name="command">Model to get the catalog products</param>
-        /// <returns>The <see cref="Task"/> containing the price range converted to primary store currency</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the <see cref="Task"/> containing the price range converted to primary store currency
+        /// </returns>
         protected virtual async Task<PriceRangeModel> GetConvertedPriceRangeAsync(CatalogProductsCommand command)
         {
             var result = new PriceRangeModel();
@@ -462,7 +214,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="selectedOptions">The selected options to filter the products</param>
         /// <param name="availableOptions">The available options to filter the products</param>
-        /// <returns>The specification filter model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the specification filter model
+        /// </returns>
         protected virtual async Task<SpecificationFilterModel> PrepareSpecificationFilterModel(IList<int> selectedOptions, IList<SpecificationAttributeOption> availableOptions)
         {
             var model = new SpecificationFilterModel();
@@ -508,7 +263,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="selectedManufacturers">The selected manufacturers to filter the products</param>
         /// <param name="availableManufacturers">The available manufacturers to filter the products</param>
-        /// <returns>The specification filter model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the specification filter model
+        /// </returns>
         protected virtual async Task<ManufacturerFilterModel> PrepareManufacturerFilterModel(IList<int> selectedManufacturers, IList<Manufacturer> availableManufacturers)
         {
             var model = new ManufacturerFilterModel();
@@ -541,8 +299,7 @@ namespace Nop.Web.Factories
         /// <param name="selectedPriceRange">The selected price range to filter the products</param>
         /// <param name="availablePriceRange">The available price range to filter the products</param>
         /// <returns>The price range filter</returns>
-        protected virtual async Task<PriceRangeFilterModel> PreparePriceRangeFilterAsync(
-            PriceRangeModel selectedPriceRange, PriceRangeModel availablePriceRange, bool automaticallyCalculated)
+        protected virtual async Task<PriceRangeFilterModel> PreparePriceRangeFilterAsync(PriceRangeModel selectedPriceRange, PriceRangeModel availablePriceRange)
         {
             var model = new PriceRangeFilterModel();
 
@@ -597,12 +354,14 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="model">Catalog products model</param>
         /// <param name="products">The products</param>
-        protected virtual async Task PrepareCatalogProductsAsync(CatalogProductsModel model, IPagedList<Product> products)
+        /// <param name="isFiltering">A value indicating that filtering has been applied</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PrepareCatalogProductsAsync(CatalogProductsModel model, IPagedList<Product> products, bool isFiltering = false)
         {
             if (!string.IsNullOrEmpty(model.WarningMessage))
                 return;
 
-            if (products.Count == 0)
+            if (products.Count == 0 && isFiltering)
                 model.NoResultMessage = await _localizationService.GetResourceAsync("Catalog.Products.NoResult");
             else
             {
@@ -620,7 +379,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="category">Category</param>
         /// <param name="command">Model to get the catalog products</param>
-        /// <returns>Category model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category model
+        /// </returns>
         public virtual async Task<CategoryModel> PrepareCategoryModelAsync(Category category, CatalogProductsCommand command)
         {
             if (category == null)
@@ -714,7 +476,10 @@ namespace Nop.Web.Factories
         /// Prepare category template view path
         /// </summary>
         /// <param name="templateId">Template identifier</param>
-        /// <returns>Category template view path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category template view path
+        /// </returns>
         public virtual async Task<string> PrepareCategoryTemplateViewPathAsync(int templateId)
         {
             var template = await _categoryTemplateService.GetCategoryTemplateByIdAsync(templateId) ??
@@ -731,7 +496,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="currentCategoryId">Current category identifier</param>
         /// <param name="currentProductId">Current product identifier</param>
-        /// <returns>Category navigation model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category navigation model
+        /// </returns>
         public virtual async Task<CategoryNavigationModel> PrepareCategoryNavigationModelAsync(int currentCategoryId, int currentProductId)
         {
             //get active category
@@ -762,7 +530,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare top menu model
         /// </summary>
-        /// <returns>Top menu model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the op menu model
+        /// </returns>
         public virtual async Task<TopMenuModel> PrepareTopMenuModelAsync()
         {
             var cachedCategoriesModel = new List<CategorySimpleModel>();
@@ -802,7 +573,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare homepage category models
         /// </summary>
-        /// <returns>List of homepage category models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of homepage category models
+        /// </returns>
         public virtual async Task<List<CategoryModel>> PrepareHomepageCategoryModelsAsync()
         {
             var language = await _workContext.GetWorkingLanguageAsync();
@@ -862,7 +636,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare root categories for menu
         /// </summary>
-        /// <returns>List of category (simple) models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of category (simple) models
+        /// </returns>
         public virtual async Task<List<CategorySimpleModel>> PrepareRootCategoriesAsync()
         {
             var doc = await PrepareCategoryXmlDocumentAsync();
@@ -877,7 +654,10 @@ namespace Nop.Web.Factories
         /// Prepare subcategories for menu
         /// </summary>
         /// <param name="id">Id of category to get subcategory</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         public virtual async Task<List<CategorySimpleModel>> PrepareSubCategoriesAsync(int id)
         {
             var doc = await PrepareCategoryXmlDocumentAsync();
@@ -897,7 +677,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="category">Category</param>
         /// <param name="command">Model to get the catalog products</param>
-        /// <returns>The category products model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category products model
+        /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareCategoryProductsModelAsync(Category category, CatalogProductsCommand command)
         {
             if (category == null)
@@ -934,7 +717,7 @@ namespace Nop.Web.Factories
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
                 PriceRangeModel availablePriceRange = null;
-                if (category.AutomaticallyCalculatePriceRange)
+                if (!category.ManuallyPriceRange)
                 {
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                     {
@@ -963,8 +746,7 @@ namespace Nop.Web.Factories
                     };
                 }
 
-                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(
-                    selectedPriceRange, availablePriceRange, category.AutomaticallyCalculatePriceRange);
+                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
             }
 
             //filterable options
@@ -997,11 +779,127 @@ namespace Nop.Web.Factories
                 filteredSpecOptions: filteredSpecs,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            await PrepareCatalogProductsAsync(model, products);
+            var isFiltering = filterableOptions.Any() || selectedPriceRange?.From is not null;
+            await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
         }
+        
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of category (simple) models
+        /// </returns>
+        public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync()
+        {
+            //load and cache them
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryAllModelKey,
+                language, customerRoleIds, store);
 
+            return await _staticCacheManager.GetAsync(cacheKey, async () => await PrepareCategorySimpleModelsAsync(0));
+        }
+
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <param name="rootCategoryId">Root category identifier</param>
+        /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of category (simple) models
+        /// </returns>
+        public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, bool loadSubCategories = true)
+        {
+            var result = new List<CategorySimpleModel>();
+
+            //little hack for performance optimization
+            //we know that this method is used to load top and left menu for categories.
+            //it'll load all categories anyway.
+            //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
+            //so we load all categories at once (we know they are cached)
+            var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+            var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
+            foreach (var category in categories)
+            {
+                var categoryModel = new CategorySimpleModel
+                {
+                    Id = category.Id,
+                    Name = await _localizationService.GetLocalizedAsync(category, x => x.Name),
+                    SeName = await _urlRecordService.GetSeNameAsync(category),
+                    IncludeInTopMenu = category.IncludeInTopMenu
+                };
+
+                //number of products in each category
+                if (_catalogSettings.ShowCategoryProductNumber)
+                {
+                    var categoryIds = new List<int> { category.Id };
+                    //include subcategories
+                    if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
+                        categoryIds.AddRange(
+                            await _categoryService.GetChildCategoryIdsAsync(category.Id, (await _storeContext.GetCurrentStoreAsync()).Id));
+
+                    categoryModel.NumberOfProducts =
+                        await _productService.GetNumberOfProductsInCategoryAsync(categoryIds, (await _storeContext.GetCurrentStoreAsync()).Id);
+                }
+
+                if (loadSubCategories)
+                {
+                    var subCategories = await PrepareCategorySimpleModelsAsync(category.Id);
+                    categoryModel.SubCategories.AddRange(subCategories);
+                }
+
+                categoryModel.HaveSubCategories = categoryModel.SubCategories.Count > 0 &
+                    categoryModel.SubCategories.Any(x => x.IncludeInTopMenu);
+
+                result.Add(categoryModel);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Prepare category (simple) xml document
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the xml document of category (simple) models
+        /// </returns>
+        public virtual async Task<XDocument> PrepareCategoryXmlDocumentAsync()
+        {
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryXmlAllModelKey,
+                language, customerRoleIds, store);
+
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                var categories = await PrepareCategorySimpleModelsAsync();
+
+                var xsSubmit = new XmlSerializer(typeof(List<CategorySimpleModel>));
+
+                var settings = new XmlWriterSettings
+                {
+                    Async = true,
+                    ConformanceLevel = ConformanceLevel.Auto
+                };
+
+                await using var strWriter = new StringWriter();
+                await using var writer = XmlWriter.Create(strWriter, settings);
+                xsSubmit.Serialize(writer, categories);
+                var xml = strWriter.ToString();
+
+                return XDocument.Parse(xml);
+            });
+        }
+        
         #endregion
 
         #region Manufacturers
@@ -1011,7 +909,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="manufacturer">Manufacturer identifier</param>
         /// <param name="command">Model to get the catalog products</param>
-        /// <returns>Manufacturer model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer model
+        /// </returns>
         public virtual async Task<ManufacturerModel> PrepareManufacturerModelAsync(Manufacturer manufacturer, CatalogProductsCommand command)
         {
             if (manufacturer == null)
@@ -1049,7 +950,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
         /// <param name="command">Model to get the catalog products</param>
-        /// <returns>The manufacturer products model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer products model
+        /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareManufacturerProductsModelAsync(Manufacturer manufacturer, CatalogProductsCommand command)
         {
             if (manufacturer == null)
@@ -1081,7 +985,7 @@ namespace Nop.Web.Factories
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
                 PriceRangeModel availablePriceRange = null;
-                if (manufacturer.AutomaticallyCalculatePriceRange)
+                if (!manufacturer.ManuallyPriceRange)
                 {
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                     {
@@ -1110,8 +1014,7 @@ namespace Nop.Web.Factories
                     };
                 }
 
-                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(
-                    selectedPriceRange, availablePriceRange, manufacturer.AutomaticallyCalculatePriceRange);
+                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
             }
 
             // filterable options
@@ -1135,7 +1038,8 @@ namespace Nop.Web.Factories
                 filteredSpecOptions: filteredSpecs,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            await PrepareCatalogProductsAsync(model, products);
+            var isFiltering = filterableOptions.Any() || selectedPriceRange?.From is not null;
+            await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
         }
@@ -1144,7 +1048,10 @@ namespace Nop.Web.Factories
         /// Prepare manufacturer template view path
         /// </summary>
         /// <param name="templateId">Template identifier</param>
-        /// <returns>Manufacturer template view path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer template view path
+        /// </returns>
         public virtual async Task<string> PrepareManufacturerTemplateViewPathAsync(int templateId)
         {
             var template = await _manufacturerTemplateService.GetManufacturerTemplateByIdAsync(templateId) ??
@@ -1159,7 +1066,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare manufacturer all models
         /// </summary>
-        /// <returns>List of manufacturer models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of manufacturer models
+        /// </returns>
         public virtual async Task<List<ManufacturerModel>> PrepareManufacturerAllModelsAsync()
         {
             var model = new List<ManufacturerModel>();
@@ -1213,7 +1123,10 @@ namespace Nop.Web.Factories
         /// Prepare manufacturer navigation model
         /// </summary>
         /// <param name="currentManufacturerId">Current manufacturer identifier</param>
-        /// <returns>Manufacturer navigation model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer navigation model
+        /// </returns>
         public virtual async Task<ManufacturerNavigationModel> PrepareManufacturerNavigationModelAsync(int currentManufacturerId)
         {
             var language = await _workContext.GetWorkingLanguageAsync();
@@ -1260,7 +1173,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="vendor">Vendor</param>
         /// <param name="command">Model to get the catalog products</param>
-        /// <returns>Vendor model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor model
+        /// </returns>
         public virtual async Task<VendorModel> PrepareVendorModelAsync(Vendor vendor, CatalogProductsCommand command)
         {
             if (vendor == null)
@@ -1290,7 +1206,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="vendor">Vendor</param>
         /// <param name="command">Model to get the catalog products</param>
-        /// <returns>The vendor products model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor products model
+        /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareVendorProductsModelAsync(Vendor vendor, CatalogProductsCommand command)
         {
             if (vendor == null)
@@ -1319,7 +1238,7 @@ namespace Nop.Web.Factories
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
                 PriceRangeModel availablePriceRange = null;
-                if (vendor.AutomaticallyCalculatePriceRange)
+                if (!vendor.ManuallyPriceRange)
                 {
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                     {
@@ -1347,8 +1266,7 @@ namespace Nop.Web.Factories
                     };
                 }
 
-                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(
-                    selectedPriceRange, availablePriceRange, vendor.AutomaticallyCalculatePriceRange);
+                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
             }
 
             //products
@@ -1362,7 +1280,8 @@ namespace Nop.Web.Factories
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            await PrepareCatalogProductsAsync(model, products);
+            var isFiltering = selectedPriceRange?.From is not null;
+            await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
         }
@@ -1370,7 +1289,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare vendor all models
         /// </summary>
-        /// <returns>List of vendor models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of vendor models
+        /// </returns>
         public virtual async Task<List<VendorModel>> PrepareVendorAllModelsAsync()
         {
             var model = new List<VendorModel>();
@@ -1421,7 +1343,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare vendor navigation model
         /// </summary>
-        /// <returns>Vendor navigation model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor navigation model
+        /// </returns>
         public virtual async Task<VendorNavigationModel> PrepareVendorNavigationModelAsync()
         {
             var cacheKey = NopModelCacheDefaults.VendorNavigationModelKey;
@@ -1457,7 +1382,10 @@ namespace Nop.Web.Factories
         /// Prepare popular product tags model
         /// </summary>
         /// <param name="numberTagsToReturn">The number of tags to be returned; pass 0 to get all tags</param>
-        /// <returns>Product tags model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product tags model
+        /// </returns>
         public virtual async Task<PopularProductTagsModel> PreparePopularProductTagsModelAsync(int numberTagsToReturn = 0)
         {
             var model = new PopularProductTagsModel();
@@ -1495,7 +1423,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="productTag">Product tag</param>
         /// <param name="command">Model to get the catalog products</param>
-        /// <returns>Products by tag model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products by tag model
+        /// </returns>
         public virtual async Task<ProductsByTagModel> PrepareProductsByTagModelAsync(ProductTag productTag, CatalogProductsCommand command)
         {
             if (productTag == null)
@@ -1520,7 +1451,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="productTag">Product tag</param>
         /// <param name="command">Model to get the catalog products</param>
-        /// <returns>The tag products model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ag products model
+        /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareTagProductsModelAsync(ProductTag productTag, CatalogProductsCommand command)
         {
             if (productTag == null)
@@ -1549,7 +1483,7 @@ namespace Nop.Web.Factories
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
                 PriceRangeModel availablePriceRange = null;
-                if (_catalogSettings.ProductsByTagAutomaticallyCalculatePriceRange)
+                if (!_catalogSettings.ProductsByTagManuallyPriceRange)
                 {
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                     {
@@ -1577,8 +1511,7 @@ namespace Nop.Web.Factories
                     };
                 }
 
-                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(
-                    selectedPriceRange, availablePriceRange, _catalogSettings.ProductsByTagAutomaticallyCalculatePriceRange);
+                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
             }
 
             //products
@@ -1592,7 +1525,8 @@ namespace Nop.Web.Factories
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            await PrepareCatalogProductsAsync(model, products);
+            var isFiltering = selectedPriceRange?.From is not null;
+            await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
         }
@@ -1606,7 +1540,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="model">Search model</param>
         /// <param name="command">Model to get the catalog products</param>
-        /// <returns>Search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the search model
+        /// </returns>
         public virtual async Task<SearchModel> PrepareSearchModelAsync(SearchModel model, CatalogProductsCommand command)
         {
             if (model == null)
@@ -1706,7 +1643,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="model">Search model</param>
         /// <param name="command">Model to get the catalog products</param>
-        /// <returns>The search products model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the search products model
+        /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareSearchProductsModelAsync(SearchModel searchModel, CatalogProductsCommand command)
         {
             if (command == null)
@@ -1749,7 +1689,7 @@ namespace Nop.Web.Factories
                     var manufacturerId = 0;
                     var searchInDescriptions = false;
                     var vendorId = 0;
-                    if (searchModel.adv)
+                    if (searchModel.advs)
                     {
                         //advanced search
                         var categoryId = searchModel.cid;
@@ -1783,7 +1723,7 @@ namespace Nop.Web.Factories
                         selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
                         PriceRangeModel availablePriceRange = null;
-                        if (_catalogSettings.SearchPageAutomaticallyCalculatePriceRange)
+                        if (!_catalogSettings.SearchPageManuallyPriceRange)
                         {
                             async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                             {
@@ -1817,8 +1757,7 @@ namespace Nop.Web.Factories
                             };
                         }
 
-                        model.PriceRangeFilter = await PreparePriceRangeFilterAsync(
-                            selectedPriceRange, availablePriceRange, _catalogSettings.SearchPageAutomaticallyCalculatePriceRange);
+                        model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
                     }
 
                     //products
@@ -1873,7 +1812,8 @@ namespace Nop.Web.Factories
                 }
             }
 
-            await PrepareCatalogProductsAsync(model, products);
+            var isFiltering = !string.IsNullOrEmpty(searchTerms);
+            await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
         }
@@ -1881,7 +1821,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare search box model
         /// </summary>
-        /// <returns>Search box model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the search box model
+        /// </returns>
         public virtual Task<SearchBoxModel> PrepareSearchBoxModelAsync()
         {
             var model = new SearchBoxModel
@@ -1895,6 +1838,158 @@ namespace Nop.Web.Factories
             return Task.FromResult(model);
         }
 
+        #endregion
+
+        #region Common
+        
+        /// <summary>
+        /// Prepare sorting options
+        /// </summary>
+        /// <param name="model">Catalog products model</param>
+        /// <param name="command">Model to get the catalog products</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareSortingOptionsAsync(CatalogProductsModel model, CatalogProductsCommand command)
+        {
+            //set the order by position by default
+            model.OrderBy = command.OrderBy;
+            command.OrderBy = (int)ProductSortingEnum.Position;
+
+            //ensure that product sorting is enabled
+            if (!_catalogSettings.AllowProductSorting)
+                return;
+
+            //get active sorting options
+            var activeSortingOptionsIds = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
+                .Except(_catalogSettings.ProductSortingEnumDisabled).ToList();
+            if (!activeSortingOptionsIds.Any())
+                return;
+
+            //order sorting options
+            var orderedActiveSortingOptions = activeSortingOptionsIds
+                .Select(id => new { Id = id, Order = _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(id, out var order) ? order : id })
+                .OrderBy(option => option.Order).ToList();
+
+            model.AllowProductSorting = true;
+            command.OrderBy = model.OrderBy ?? orderedActiveSortingOptions.FirstOrDefault().Id;
+
+            //prepare available model sorting options
+            foreach (var option in orderedActiveSortingOptions)
+            {
+                model.AvailableSortOptions.Add(new SelectListItem
+                {
+                    Text = await _localizationService.GetLocalizedEnumAsync((ProductSortingEnum)option.Id),
+                    Value = option.Id.ToString(),
+                    Selected = option.Id == command.OrderBy
+                });
+            }
+        }
+
+        /// <summary>
+        /// Prepare view modes
+        /// </summary>
+        /// <param name="model">Catalog products model</param>
+        /// <param name="command">Model to get the catalog products</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareViewModesAsync(CatalogProductsModel model, CatalogProductsCommand command)
+        {
+            model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+
+            var viewMode = !string.IsNullOrEmpty(command.ViewMode)
+                ? command.ViewMode
+                : _catalogSettings.DefaultViewMode;
+            model.ViewMode = viewMode;
+            if (model.AllowProductViewModeChanging)
+            {
+                //grid
+                model.AvailableViewModes.Add(new SelectListItem
+                {
+                    Text = await _localizationService.GetResourceAsync("Catalog.ViewMode.Grid"),
+                    Value = "grid",
+                    Selected = viewMode == "grid"
+                });
+                //list
+                model.AvailableViewModes.Add(new SelectListItem
+                {
+                    Text = await _localizationService.GetResourceAsync("Catalog.ViewMode.List"),
+                    Value = "list",
+                    Selected = viewMode == "list"
+                });
+            }
+        }
+
+        /// <summary>
+        /// Prepare page size options
+        /// </summary>
+        /// <param name="model">Catalog products model</param>
+        /// <param name="command">Model to get the catalog products</param>
+        /// <param name="allowCustomersToSelectPageSize">Are customers allowed to select page size?</param>
+        /// <param name="pageSizeOptions">Page size options</param>
+        /// <param name="fixedPageSize">Fixed page size</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual Task PreparePageSizeOptionsAsync(CatalogProductsModel model, CatalogProductsCommand command,
+            bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize)
+        {
+            if (command.PageNumber <= 0)
+                command.PageNumber = 1;
+
+            model.AllowCustomersToSelectPageSize = false;
+            if (allowCustomersToSelectPageSize && pageSizeOptions != null)
+            {
+                var pageSizes = pageSizeOptions.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (pageSizes.Any())
+                {
+                    // get the first page size entry to use as the default (category page load) or if customer enters invalid value via query string
+                    if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
+                    {
+                        if (int.TryParse(pageSizes.FirstOrDefault(), out var temp))
+                        {
+                            if (temp > 0)
+                                command.PageSize = temp;
+                        }
+                    }
+
+                    foreach (var pageSize in pageSizes)
+                    {
+                        if (!int.TryParse(pageSize, out var temp))
+                            continue;
+
+                        if (temp <= 0)
+                            continue;
+
+                        model.PageSizeOptions.Add(new SelectListItem
+                        {
+                            Text = pageSize,
+                            Value = pageSize,
+                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
+                        });
+                    }
+
+                    if (model.PageSizeOptions.Any())
+                    {
+                        model.PageSizeOptions = model.PageSizeOptions.OrderBy(x => int.Parse(x.Value)).ToList();
+                        model.AllowCustomersToSelectPageSize = true;
+
+                        if (command.PageSize <= 0)
+                            command.PageSize = int.Parse(model.PageSizeOptions.First().Value);
+                    }
+                }
+            }
+            else
+            {
+                //customer is not allowed to select a page size
+                command.PageSize = fixedPageSize;
+            }
+
+            //ensure pge size is specified
+            if (command.PageSize <= 0)
+            {
+                command.PageSize = fixedPageSize;
+            }
+
+            return Task.CompletedTask;
+        }
+        
         #endregion
     }
 }

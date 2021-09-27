@@ -13,40 +13,40 @@
 
     function toggleDownloadableProduct() {
         if ($('#@Html.IdFor(model => model.IsDownload)').is(':checked')) {
-            $('#pnlDownloadFile').showField();
-            $('#pnlUnlimitedDownloads').showField();
+            $('#pnlDownloadFile').showElement();
+            $('#pnlUnlimitedDownloads').showElement();
             if ($('#@Html.IdFor(model => model.UnlimitedDownloads)').is(':checked')) {
-                $('#pnlMaxNumberOfDownloads').hide();
+                $('#pnlMaxNumberOfDownloads').hideElement();
             } else {
-                $('#pnlMaxNumberOfDownloads').showField();
+                $('#pnlMaxNumberOfDownloads').showElement();
             }
-            $('#pnlDownloadExpirationDays').showField();
-            $('#pnlDownloadActivationType').showField();
+            $('#pnlDownloadExpirationDays').showElement();
+            $('#pnlDownloadActivationType').showElement();
 
-            $('#pnlHasUserAgreement').showField();
+            $('#pnlHasUserAgreement').showElement();
             if ($('#@Html.IdFor(model => model.HasUserAgreement)').is(':checked')) {
-                $('#pnlUserAgreementText').showField();
+                $('#pnlUserAgreementText').showElement();
             } else {
-                $('#pnlUserAgreementText').hide();
+                $('#pnlUserAgreementText').hideElement();
             }
 
-            $('#pnlHasSampleDownload').showField();
+            $('#pnlHasSampleDownload').showElement();
 
             if ($('#@Html.IdFor(model => model.HasSampleDownload)').is(':checked')) {
-                $('#pnlSampleDownloadFile').showField();
+                $('#pnlSampleDownloadFile').showElement();
             } else {
-                $('#pnlSampleDownloadFile').hide();
+                $('#pnlSampleDownloadFile').hideElement();
             }
         } else {
-            $('#pnlDownloadFile').hide();
-            $('#pnlUnlimitedDownloads').hide();
-            $('#pnlMaxNumberOfDownloads').hide();
-            $('#pnlDownloadExpirationDays').hide();
-            $('#pnlDownloadActivationType').hide();
-            $('#pnlHasUserAgreement').hide();
-            $('#pnlUserAgreementText').hide();
-            $('#pnlHasSampleDownload').hide();
-            $('#pnlSampleDownloadFile').hide();
+            $('#pnlDownloadFile').hideElement();
+            $('#pnlUnlimitedDownloads').hideElement();
+            $('#pnlMaxNumberOfDownloads').hideElement();
+            $('#pnlDownloadExpirationDays').hideElement();
+            $('#pnlDownloadActivationType').hideElement();
+            $('#pnlHasUserAgreement').hideElement();
+            $('#pnlUserAgreementText').hideElement();
+            $('#pnlHasSampleDownload').hideElement();
+            $('#pnlSampleDownloadFile').hideElement();
         }
     }
 </script>

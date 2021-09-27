@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Configuration;
 using Nop.Services.Plugins;
 
 namespace Nop.Web.Framework.Security
@@ -29,10 +29,10 @@ namespace Nop.Web.Framework.Security
             //write permissions
             var writePermissions = new[] { 2, 3, 6, 7 };
 
-            if (checkRead & readPermissions.Contains(userFilePermission))
+            if (checkRead && readPermissions.Contains(userFilePermission))
                 return true;
 
-            return (checkWrite || checkModify || checkDelete) & writePermissions.Contains(userFilePermission);
+            return (checkWrite || checkModify || checkDelete) && writePermissions.Contains(userFilePermission);
         }
 
         [SupportedOSPlatform("windows")]

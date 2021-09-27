@@ -474,6 +474,9 @@
   <LocaleResource Name="Account.Login">
     <Value>Log in</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Login.AlreadyLogin">
+      <Value>You are already logged in as {0}. You may log in to another account.</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Login.CheckoutAsGuest">
     <Value>Checkout as Guest</Value>
   </LocaleResource>
@@ -2082,12 +2085,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.AllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange">
-    <Value>Calculate price range automatically</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.CategoryTemplate">
     <Value>Category template</Value>
   </LocaleResource>
@@ -2129,6 +2126,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.LimitedToStores.Hint">
     <Value>Option to limit this category to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ManuallyPriceRange">
+    <Value>Enter price range manually</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.MetaDescription">
     <Value>Meta description</Value>
@@ -2328,12 +2331,6 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange">
-    <Value>Calculate price range automatically</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Deleted">
     <Value>Deleted</Value>
   </LocaleResource>
@@ -2363,6 +2360,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.LimitedToStores.Hint">
     <Value>Option to limit this manufacturer to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManuallyPriceRange">
+    <Value>Enter price range manually</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManufacturerTemplate">
     <Value>Manufacturer template</Value>
@@ -3655,7 +3658,7 @@
     <Value>This attribute is already added to this product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination">
-    <Value>This attribute is already exists into combination: '{0}'.</Value>
+    <Value>This attribute already exists in combination: '{0}'.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.BackToProduct">
     <Value>back to product details</Value>
@@ -4164,6 +4167,9 @@
   <LocaleResource Name="Admin.Common.Alert.Add.Error">
     <Value>Failed to add record.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Alert.NothingSelected">
+    <Value>Please select at least one record.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.Alert.Save.Error">
     <Value>Error while saving.</Value>
   </LocaleResource>
@@ -4426,7 +4432,13 @@
     <Value>Schedule task run timeout</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout.Hint">
-    <Value>The length of time, in milliseconds, before the running schedule task times out. Set null to use default value.</Value>
+    <Value>The length of time, in milliseconds, a running schedule task timeouts. Set null to use a default value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.ServeUnknownFileTypes">
+    <Value>Serve unknown types of static files</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.ServeUnknownFileTypes.Hint">
+    <Value>Enable this setting to serve files that are in the .well-known directory without a recognized content-type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.StaticFilesCacheControl">
     <Value>Static files cache control</Value>
@@ -4438,7 +4450,7 @@
     <Value>Support previous nopCommerce versions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint">
-    <Value>Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance).</Value>
+    <Value>Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance). In this case, old URLs (from previous nopCommerce versions) will redirect to new ones. Enable it only if you upgraded from one of the previous nopCommerce versions.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.UserAgentStringsPath">
     <Value>User agent strings path</Value>
@@ -4452,8 +4464,29 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.UseSessionStateTempDataProvider.Hint">
     <Value>Enable this setting to store TempData in the session state. By default the cookie-based TempData provider is used to store TempData in cookies.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data">
+    <Value>Data configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.ConnectionString">
+    <Value>Connection string</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.ConnectionString.Hint">
+    <Value>Sets a connection string.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.DataProvider">
+    <Value>Data provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.DataProvider.Hint">
+    <Value>Sets a data provider.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.SQLCommandTimeout">
+    <Value>SQL command timeout</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.SQLCommandTimeout.Hint">
+    <Value>Gets or sets the wait time (in seconds) before terminating the attempt to execute a command and generating an error. By default, timeout isn't set and a default value for the current provider used. Set 0 to use infinite timeout.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Description">
-    <Value><![CDATA[Configuration in ASP.NET Core is performed using a configuration provider from the external appsettings.json configuration file. These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href="{0}" target="_blank">our documentation.</a>]]></Value>
+    <Value><![CDATA[Configuration in ASP.NET Core is performed using a different configuration providers (e.g. external appsettings.json configuration file, environment variables, etc). These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href="{0}" target="_blank">our documentation</a>. Please note that changing the values here will overwrite the external appsettings.json file, settings from other configuration providers will not be affected.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache">
     <Value>Distributed cache configuration</Value>
@@ -4494,23 +4527,29 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting">
     <Value>Hosting configuration</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader">
-    <Value>Forwarded HTTP header</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedForHeaderName">
+    <Value>The header used to retrieve the originating client IP</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader.Hint">
-    <Value>Use this setting if your hosting doesn't use 'X-FORWARDED-FOR' header to determine IP address. You can specify a custom HTTP header (e.g. CF-Connecting-IP, X-FORWARDED-PROTO, etc).</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedForHeaderName.Hint">
+    <Value>Specify a custom HTTP header name to determine the originating IP address (e.g., CF-Connecting-IP, X-ProxyUser-Ip).</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps">
-    <Value>Use HTTP_CLUSTER_HTTPS</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedProtoHeaderName">
+    <Value>The header used to retrieve the value for the originating scheme</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps.Hint">
-    <Value>Enable this setting if your hosting uses a load balancer. It'll be used to determine whether the current request is HTTPS.</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedProtoHeaderName.Hint">
+    <Value>Specify a custom HTTP header name for identifying the protocol (HTTP or HTTPS) that a client used to connect to your proxy or load balancer.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto">
-    <Value>Use HTTP_X_FORWARDED_PROTO</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.KnownProxies">
+    <Value>Addresses of known proxies</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto.Hint">
-    <Value>Enable this setting if you use a reverse proxy server (for example, if you host your site on Linux with Nginx/Apache and SSL).</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.KnownProxies.Hint">
+    <Value>Specify a list of IP addresses (comma separated) to accept forwarded headers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseProxy">
+    <Value>Use proxy servers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseProxy.Hint">
+    <Value>Enable this setting to apply forwarded headers to their matching fields on the current HTTP-request.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Installation">
     <Value>Installation configuration</Value>
@@ -5036,6 +5075,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.BackToList">
     <Value>back to language list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.CLDR.Warning">
+    <Value><![CDATA[Please make sure the appropriate CLDR package is installed for this culture. You can set CLDR for the specified culture on the <a href="{0}" target="_blank">General Settings page, Localization tab</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Deleted">
     <Value>The language has been deleted successfully.</Value>
@@ -5596,7 +5638,7 @@
     <Value>Display type for attribute value when out of stock</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType.Hint">
-    <Value>Select the display type for attribute value when out of stock. Note that 'Allow only existing attribute combinations' should be activated on product.</Value>
+    <Value>Select the display type for attribute value when an attribute combination is out of stock. Please note that the 'Allow only existing attribute combinations'option should be enabled for a product.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.AdditionalSections">
     <Value>Additional sections</Value>
@@ -5907,11 +5949,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the 'Products by tag' page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange">
-    <Value>'Products by tag' page. Calculate price range automatically</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange">
+    <Value>'Products by tag' page. Enter price range manually</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation on 'Products by tag' page.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Products by tag' page (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSize">
     <Value>'Products by tag' page. Products per page</Value>
@@ -5997,11 +6039,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAllowCustomersToSelectPageSize.Hint">
     <Value>Search page. Check to allow customers to select the page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange">
-    <Value>Search page. Calculate price range automatically</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange">
+    <Value>Search page. Enter price range manually</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation on 'Search' page.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Search' page (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions">
     <Value>Search page. Page size options</Value>
@@ -7303,7 +7345,7 @@
     <Value>CSS bundling and minification</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint">
-    <Value>Enable to combine (bundle) multiple CSS files into a single file. Do not enable if you're running nopCommerce in IIS virtual directory. Currently it doesn't support web farms. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
+    <Value>Enable to combine (bundle) multiple CSS files into a single file. Do not enable if you're running nopCommerce in IIS virtual directory. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning">
     <Value>CSS bundling is not allowed in virtual directories</Value>
@@ -7318,7 +7360,7 @@
     <Value>JavaScript bundling and minification</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint">
-    <Value>Enable to combine (bundle) multiple JavaScript files into a single file. Currently it doesn't support web farms. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
+    <Value>Enable to combine (bundle) multiple JavaScript files into a single file. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey">
     <Value>Encryption private key</Value>
@@ -8483,6 +8525,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCartPageEnabled.Hint">
     <Value>Check to allow customers to estimate shipping on the shopping cart page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled">
+    <Value>Use a city name for estimate shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled.Hint">
+    <Value>Check to allow customers to enter a city name instead of zip postal code.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingProductPageEnabled">
     <Value>Estimate shipping enabled (product page)</Value>
@@ -9715,7 +9763,7 @@
     <Value>Your store name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Store.Ssl.Text">
-    <Value><![CDATA[If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certification <a href="{0}" target="_blank">here</a>]]>.</Value>
+    <Value><![CDATA[If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certificates <a href="{0}" target="_blank">here</a>]]>.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Store.Ssl.Title">
     <Value>Enable SSL</Value>
@@ -10376,6 +10424,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords">
+    <Value>Search keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint">
+    <Value>Search message template(s) by specific keywords.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test">
     <Value>Test template</Value>
@@ -12295,7 +12349,7 @@
     <Value>Search by recipient name. Leave empty to load all records.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.RecipientNotified">
-    <Value>The recipient has been notified successfully.</Value>
+    <Value>The recipient has been successfully notified.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Updated">
     <Value>The gift card has been updated successfully.</Value>
@@ -12733,7 +12787,7 @@
     <Value>Shipping method</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ShippingMethod.Hint">
-    <Value>The customers chosen shipping method for this order. You can manage shipping methods from Configuration &gt; Shipping &gt; Shipping providers.</Value>
+    <Value>A chosen shipping method for this order. You can manage shipping methods from Configuration &gt; Shipping &gt; Shipping providers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ShippingStatus">
     <Value>Shipping status</Value>
@@ -15534,12 +15588,6 @@
   <LocaleResource Name="Admin.Vendors.Fields.AssociatedCustomerEmails.None">
     <Value>No customer account associated to this vendor.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Vendors.Fields.AutomaticallyCalculatePriceRange">
-    <Value>Calculate price range automatically</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Vendors.Fields.AutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Description">
     <Value>Description</Value>
   </LocaleResource>
@@ -15560,6 +15608,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Email.Required">
     <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.ManuallyPriceRange">
+    <Value>Enter price range manually</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.ManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.MetaDescription">
     <Value>Meta description</Value>
@@ -15993,11 +16047,11 @@
   <LocaleResource Name="Checkout.PickupPoints.Name">
     <Value>Pickup at {0}</Value>
   </LocaleResource>
-  <LocaleResource Name="Checkout.PickupPoints.NullName">
-    <Value>Pickup</Value>
-  </LocaleResource>
   <LocaleResource Name="Checkout.PickupPoints.NotAvailable">
     <Value>Pickup points could not be loaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints.NullName">
+    <Value>Pickup</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.PickupPoints.SelectPickupPoint">
     <Value>Select pickup point</Value>
@@ -16793,6 +16847,18 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Tax.VatNumberStatus.Valid">
     <Value>Valid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Data.DataProviderType.Unknown">
+    <Value>Unknown</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Data.DataProviderType.SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Data.DataProviderType.MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Data.DataProviderType.PostgreSQL">
+    <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Services.Orders.GroupByOptions.Day">
     <Value>Day</Value>
@@ -18813,6 +18879,9 @@
   <LocaleResource Name="Search.Vendor">
     <Value>Vendor</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShipping.City.Required">
+    <Value>City is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShipping.Country.Required">
     <Value>Country is required</Value>
   </LocaleResource>
@@ -18821,6 +18890,9 @@
   </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.ChooseShippingTitle">
     <Value>Shipping Method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.City">
+    <Value>City</Value>
   </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.Country">
     <Value>Country</Value>

@@ -1,5 +1,5 @@
 ﻿@model DataTablesModel
-@using System.Globalization
+
 @using System.Net;
 
 @functions
@@ -118,7 +118,7 @@ else
         @if (isMasterCheckBoxUsed)
         {
             <text>
-            clearMasterCheckbox('@Model.Name');
+            clearMasterCheckbox('#@Model.Name');
             </text>
         }
         },

@@ -33,7 +33,7 @@
     </h1>
     <div class="float-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MaintenanceButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MaintenanceButtons, additionalData = Model })
     </div>
 </div>
 

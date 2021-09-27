@@ -46,7 +46,7 @@
         <h1>@T("Checkout")</h1>
     </div>
     <div class="page-body checkout-data">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpcContentBefore })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpcContentBefore, additionalData = Model })
         <ol class="opc" id="checkout-steps">
             <li id="opc-billing" class="tab-section allow">
                 <div class="step-title">
@@ -206,13 +206,13 @@
                         <p class="back-link">
                             <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a>
                         </p>
-                        <button type="button" class="button-1 confirm-order-next-step-button" onclick="ConfirmOrder.save()">@T("Common.Confirm")</button>
+                        <button type="button" class="button-1 confirm-order-next-step-button" onclick="ConfirmOrder.save()">@T("Checkout.ConfirmButton")</button>
                         <span class="please-wait" id="confirm-order-please-wait" style="display: none;">@T("Checkout.SubmittingOrder")</span>
                     </div>
                 </div>
             </li>
         </ol>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpcContentAfter })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpcContentAfter, additionalData = Model })
     </div>
     <script asp-location="Footer">
         Accordion.init('checkout-steps', '.step-title', true);

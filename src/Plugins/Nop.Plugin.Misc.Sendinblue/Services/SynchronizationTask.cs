@@ -1,5 +1,5 @@
-﻿using Nop.Services.Tasks;
-using Task = System.Threading.Tasks.Task;
+﻿using System.Threading.Tasks;
+using Nop.Services.ScheduleTasks;
 
 namespace Nop.Plugin.Misc.Sendinblue.Services
 {
@@ -28,6 +28,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <summary>
         /// Execute task
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task ExecuteAsync()
         {
             await _sendinblueEmailManager.SynchronizeAsync();

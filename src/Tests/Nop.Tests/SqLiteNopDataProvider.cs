@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -17,6 +18,7 @@ using Nop.Core;
 using Nop.Core.ComponentModel;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.DataProviders;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 
@@ -25,21 +27,22 @@ namespace Nop.Tests
     /// <summary>
     /// Represents the SQLite data provider
     /// </summary>
-    public partial class SqLiteNopDataProvider : INopDataProvider
+    public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     {
         #region Consts
 
         //it's quite fast hash (to cheaply distinguish between objects)
         private const string HASH_ALGORITHM = "SHA1";
-        private static IDbConnection _connection;
         private static DataConnection _dataContext;
-        private static readonly ReaderWriterLockSlim _locker = new ReaderWriterLockSlim();
+        private static readonly Lazy<IDataProvider> _dataProvider = new(() => new SQLiteDataProvider(ProviderName.SQLiteMS), true);
+
+        private static readonly ReaderWriterLockSlim _locker = new();
 
         #endregion
 
         #region Utils
 
-        private void UpdateOutputParameters(DataConnection dataConnection, DataParameter[] dataParameters)
+        private static void UpdateOutputParameters(DataConnection dataConnection, DataParameter[] dataParameters)
         {
             if (dataParameters is null || dataParameters.Length == 0)
                 return;
@@ -48,7 +51,7 @@ namespace Nop.Tests
                 UpdateParameterValue(dataConnection, dataParam);
         }
 
-        private void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
+        private static void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
         {
             if (dataConnection is null)
                 throw new ArgumentNullException(nameof(dataConnection));
@@ -60,7 +63,9 @@ namespace Nop.Tests
                 command.Parameters.Count > 0 &&
                 command.Parameters.Contains(parameter.Name) &&
                 command.Parameters[parameter.Name] is IDbDataParameter param)
+            {
                 parameter.Value = param.Value;
+            }
         }
 
         #endregion
@@ -69,21 +74,22 @@ namespace Nop.Tests
 
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
-            Task.FromResult(ExecuteNonQueryAsync("PRAGMA journal_mode=WAL;"));
+            ExecuteNonQueryAsync("PRAGMA journal_mode=WAL;").Wait();
         }
 
         /// <summary>
-        /// Creates a connection to a database
+        /// Gets a connection to the database for a current data provider
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        public virtual IDbConnection CreateDbConnection(string connectionString = null)
+        protected override DbConnection GetInternalDbConnection(string connectionString)
         {
-            _connection ??= new SqliteConnection(string.IsNullOrEmpty(connectionString)
+            if (string.IsNullOrEmpty(connectionString))
+                throw new ArgumentNullException(nameof(connectionString));
+
+            return new SqliteConnection(string.IsNullOrEmpty(connectionString)
                 ? DataSettingsManager.LoadSettings().ConnectionString
                 : connectionString);
-
-            return _connection;
         }
 
         /// <summary>
@@ -101,7 +107,7 @@ namespace Nop.Tests
         /// <param name="entity"></param>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns>Inserted entity</returns>
-        public TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public override TEntity InsertEntity<TEntity>(TEntity entity)
         {
             using (new ReaderWriteLockDisposable(_locker))
             {
@@ -116,7 +122,7 @@ namespace Nop.Tests
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>Entity</returns>
-        public Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public override Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity)
         {
             InsertEntity(entity);
 
@@ -124,22 +130,22 @@ namespace Nop.Tests
         }
 
         /// <summary>
-        /// Updates record in table, using values from entity parameter. 
+        /// Updates record in table, using values from entity parameter.
         /// Record to update identified by match on primary key value from obj value.
         /// </summary>
         /// <param name="entity">Entity with data to update</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public override Task UpdateEntityAsync<TEntity>(TEntity entity)
         {
-            using (new ReaderWriteLockDisposable(_locker)) 
+            using (new ReaderWriteLockDisposable(_locker))
                 DataContext.Update(entity);
 
             return Task.CompletedTask;
         }
 
-        public async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        public override async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities)
         {
-            foreach (var entity in entities) 
+            foreach (var entity in entities)
                 await UpdateEntityAsync(entity);
         }
 
@@ -149,7 +155,7 @@ namespace Nop.Tests
         /// </summary>
         /// <param name="entity">Entity for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public Task DeleteEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public override Task DeleteEntityAsync<TEntity>(TEntity entity)
         {
             using (new ReaderWriteLockDisposable(_locker))
                 DataContext.Delete(entity);
@@ -162,11 +168,13 @@ namespace Nop.Tests
         /// </summary>
         /// <param name="entities">Entities for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
+        public override Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities)
         {
             using (new ReaderWriteLockDisposable(_locker))
+            {
                 foreach (var entity in entities)
                     DataContext.Delete(entity);
+            }
 
             return Task.CompletedTask;
         }
@@ -176,7 +184,7 @@ namespace Nop.Tests
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public Task<int> BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
+        public override Task<int> BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate)
         {
             return Task.FromResult(DataContext.GetTable<TEntity>()
                 .Where(predicate).Delete());
@@ -187,7 +195,7 @@ namespace Nop.Tests
         /// </summary>
         /// <param name="entities">Entities for insert operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        public override Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities)
         {
             using (new ReaderWriteLockDisposable(_locker))
                 DataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(DataContext));
@@ -225,7 +233,7 @@ namespace Nop.Tests
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Queryable source</returns>
-        public ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
+        public override IQueryable<TEntity> GetTable<TEntity>()
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
                 return DataContext.GetTable<TEntity>();
@@ -323,16 +331,6 @@ namespace Nop.Tests
         }
 
         /// <summary>
-        /// Returns mapped entity descriptor.
-        /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>Mapping descriptor</returns>
-        public EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity
-        {
-            return AdditionalSchema?.GetEntityDescriptor(typeof(TEntity));
-        }
-
-        /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
         /// returns results as collection of values of specified type
         /// </summary>
@@ -340,7 +338,7 @@ namespace Nop.Tests
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        public Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
+        public override Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
         {
             //stored procedure is not support by SqLite
             return Task.FromResult<IList<T>>(new List<T>());
@@ -353,7 +351,7 @@ namespace Nop.Tests
         /// <param name="sql">SQL command text</param>
         /// <param name="parameters">Parameters to execute the SQL command</param>
         /// <returns>Collection of values of specified type</returns>
-        public Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
+        public override Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
                 return Task.FromResult<IList<T>>(DataContext.Query<T>(sql, parameters).ToList());
@@ -365,7 +363,7 @@ namespace Nop.Tests
         /// <param name="sql">Command text</param>
         /// <param name="dataParameters">Command parameters</param>
         /// <returns>Number of records, affected by command execution.</returns>
-        public Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
+        public override Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
@@ -378,12 +376,12 @@ namespace Nop.Tests
             }
         }
 
-        public Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storageKey, IQueryable<TItem> query) where TItem : class
+        public override Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storageKey, IQueryable<TItem> query)
         {
             return Task.FromResult<ITempDataStorage<TItem>>(new TempSqlDataStorage<TItem>(storageKey, query, DataContext));
         }
 
-        public Task<ITable<TEntity>> GetTableAsync<TEntity>() where TEntity : BaseEntity
+        public override Task<IQueryable<TEntity>> GetTableAsync<TEntity>()
         {
             return Task.FromResult(GetTable<TEntity>());
         }
@@ -398,6 +396,19 @@ namespace Nop.Tests
             return Task.FromResult(DatabaseExists());
         }
 
+        /// <summary>
+        /// Truncates database table
+        /// </summary>
+        /// <param name="resetIdentity">Performs reset identity column</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public override Task TruncateAsync<TEntity>(bool resetIdentity = false)
+        {
+            using (new ReaderWriteLockDisposable(_locker))
+                DataContext.GetTable<TEntity>().Truncate(resetIdentity);
+
+            return Task.CompletedTask;
+        }
+
         #endregion
 
         #region Properties
@@ -407,11 +418,6 @@ namespace Nop.Tests
             {
                 CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
             };
-
-        /// <summary>
-        /// Name of database provider
-        /// </summary>
-        public string ConfigurationName => LinqToDbDataProvider.Name;
 
         /// <summary>
         /// Additional mapping schema
@@ -424,7 +430,7 @@ namespace Nop.Tests
                     return Singleton<MappingSchema>.Instance;
 
                 Singleton<MappingSchema>.Instance =
-                    new MappingSchema(ConfigurationName) { MetadataReader = new FluentMigratorMetadataReader() };
+                    new MappingSchema(ConfigurationName) { MetadataReader = new FluentMigratorMetadataReader(this) };
 
                 return Singleton<MappingSchema>.Instance;
             }
@@ -433,7 +439,7 @@ namespace Nop.Tests
         /// <summary>
         /// Linq2Db data provider
         /// </summary>
-        protected IDataProvider LinqToDbDataProvider { get; } = SQLiteTools.GetDataProvider();
+        protected override IDataProvider LinqToDbDataProvider { get; } = _dataProvider.Value;
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

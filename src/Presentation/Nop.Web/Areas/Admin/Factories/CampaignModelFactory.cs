@@ -53,7 +53,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare campaign search model
         /// </summary>
         /// <param name="searchModel">Campaign search model</param>
-        /// <returns>Campaign search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the campaign search model
+        /// </returns>
         public virtual async Task<CampaignSearchModel> PrepareCampaignSearchModelAsync(CampaignSearchModel searchModel)
         {
             if (searchModel == null)
@@ -74,7 +77,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged campaign list model
         /// </summary>
         /// <param name="searchModel">Campaign search model</param>
-        /// <returns>Campaign list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the campaign list model
+        /// </returns>
         public virtual async Task<CampaignListModel> PrepareCampaignListModelAsync(CampaignSearchModel searchModel)
         {
             if (searchModel == null)
@@ -112,7 +118,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Campaign model</param>
         /// <param name="campaign">Campaign</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Campaign model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the campaign model
+        /// </returns>
         public virtual async Task<CampaignModel> PrepareCampaignModelAsync(CampaignModel model, Campaign campaign, bool excludeProperties = false)
         {
             //fill in model values from the entity

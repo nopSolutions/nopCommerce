@@ -78,6 +78,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CopyDiscountsMappingAsync(Product product, Product productCopy)
         {
             foreach (var discountMapping in await _productService.GetAllDiscountsAppliedToProductAsync(product.Id))
@@ -95,6 +96,7 @@ namespace Nop.Services.Catalog
         /// <param name="copyImages">A value indicating whether to copy images</param>
         /// <param name="copyAssociatedProducts">A value indicating whether to copy associated products</param>
         /// <param name="productCopy">New product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CopyAssociatedProductsAsync(Product product, bool isPublished, bool copyImages, bool copyAssociatedProducts, Product productCopy)
         {
             if (!copyAssociatedProducts)
@@ -116,6 +118,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CopyTierPricesAsync(Product product, Product productCopy)
         {
             foreach (var tierPrice in await _productService.GetTierPricesByProductAsync(product.Id))
@@ -137,6 +140,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
         /// <param name="originalNewPictureIdentifiers">Identifiers of pictures</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CopyAttributesMappingAsync(Product product, Product productCopy, Dictionary<int, int> originalNewPictureIdentifiers)
         {
             var associatedAttributes = new Dictionary<int, int>();
@@ -353,6 +357,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CopyProductSpecificationsAsync(Product product, Product productCopy)
         {
             foreach (var productSpecificationAttribute in await _specificationAttributeService.GetProductSpecificationAttributesAsync(product.Id))
@@ -376,6 +381,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CopyCrossSellsMappingAsync(Product product, Product productCopy)
         {
             foreach (var csProduct in await _productService.GetCrossSellProductsByProductId1Async(product.Id, true))
@@ -392,6 +398,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CopyRelatedProductsMappingAsync(Product product, Product productCopy)
         {
             foreach (var relatedProduct in await _productService.GetRelatedProductsByProductId1Async(product.Id, true))
@@ -409,6 +416,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CopyManufacturersMappingAsync(Product product, Product productCopy)
         {
             foreach (var productManufacturers in await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id, true))
@@ -430,6 +438,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CopyCategoriesMappingAsync(Product product, Product productCopy)
         {
             foreach (var productCategory in await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, showHidden: true))
@@ -451,6 +460,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CopyWarehousesMappingAsync(Product product, Product productCopy)
         {
             foreach (var pwi in await _productService.GetAllProductWarehouseInventoryRecordsAsync(product.Id))
@@ -479,7 +489,10 @@ namespace Nop.Services.Catalog
         /// <param name="newName">New product name</param>
         /// <param name="copyImages"></param>
         /// <param name="productCopy">New product</param>
-        /// <returns>Identifiers of old and new pictures</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the identifiers of old and new pictures
+        /// </returns>
         protected virtual async Task<Dictionary<int, int>> CopyProductPicturesAsync(Product product, string newName, bool copyImages, Product productCopy)
         {
             //variable to store original and new picture identifiers
@@ -513,6 +526,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CopyLocalizationDataAsync(Product product, Product productCopy)
         {
             var languages = await _languageService.GetAllLanguagesAsync(true);
@@ -555,7 +569,10 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="newName">New product name</param>
         /// <param name="isPublished">A value indicating whether a new product is published</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         protected virtual async Task<Product> CopyBaseProductDataAsync(Product product, string newName, bool isPublished)
         {
             //product download & sample download
@@ -728,7 +745,10 @@ namespace Nop.Services.Catalog
         /// <param name="isPublished">A value indicating whether the product duplicate should be published</param>
         /// <param name="copyImages">A value indicating whether the product images should be copied</param>
         /// <param name="copyAssociatedProducts">A value indicating whether the copy associated products</param>
-        /// <returns>Product copy</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product copy
+        /// </returns>
         public virtual async Task<Product> CopyProductAsync(Product product, string newName,
             bool isPublished = true, bool copyImages = true, bool copyAssociatedProducts = true)
         {

@@ -43,7 +43,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare permission mapping model
         /// </summary>
         /// <param name="model">Permission mapping model</param>
-        /// <returns>Permission mapping model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the permission mapping model
+        /// </returns>
         public virtual async Task<PermissionMappingModel> PreparePermissionMappingModelAsync(PermissionMappingModel model)
         {
             if (model == null)

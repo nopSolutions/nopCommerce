@@ -1,4 +1,4 @@
-using FluentMigrator.Expressions;
+﻿using FluentMigrator.Expressions;
 using FluentMigrator.Runner.Conventions;
 
 namespace Nop.Data.Migrations

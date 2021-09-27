@@ -18,6 +18,8 @@
     var hidePluginBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePluginBlockAttributeName);
     const string hideCommonBlockAttributeName = "AppSettingsPage.HideCommonBlock";
     var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    const string hideDataBlockAttributeName = "AppSettingsPage.HideDataBlock";
+    var hideDataBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDataBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="AppSettings" method="post">
@@ -30,7 +32,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AppSettingsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AppSettingsButtons, additionalData = Model })
         </div>
     </div>
     <div class="content">
@@ -49,6 +51,7 @@
                 </div>
             </div>
             <nop-cards id="app-settings-cards">
+                <nop-card asp-name="app-settings-data" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Data")" asp-hide-block-attribute-name="@hideDataBlockAttributeName" asp-hide="@hideDataBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Data", Model)</nop-card>
                 <nop-card asp-name="app-settings-cache" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Cache")" asp-hide-block-attribute-name="@hideCacheBlockAttributeName" asp-hide="@hideCacheBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Cache", Model)</nop-card>
                 <nop-card asp-name="app-settings-distributed-cache" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.DistributedCache")" asp-hide-block-attribute-name="@hideDistributedCacheBlockAttributeName" asp-hide="@hideDistributedCacheBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.DistributedCache", Model)</nop-card>
                 <nop-card asp-name="app-settings-hosting" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Hosting")" asp-hide-block-attribute-name="@hideHostingBlockAttributeName" asp-hide="@hideHostingBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Hosting", Model)</nop-card>

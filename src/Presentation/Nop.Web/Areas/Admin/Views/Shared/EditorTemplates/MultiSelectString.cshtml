@@ -1,0 +1,26 @@
+﻿@model List<string>
+<select asp-for="@Model" asp-items="@((IEnumerable<SelectListItem>)ViewData["SelectList"])"></select>
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdForModel()").kendoMultiSelect({
+            select: function (e) {
+                var current = this.value();
+
+                if (this.dataSource.view()[e.item.index()].value.trim() == '') {
+                    this.value("");
+                }
+                else if (current.indexOf("0") !== -1) {
+                    current = $.grep(current, function (value) {
+                        return value.trim() !== '';
+                    });
+
+                    this.value(current);
+                }
+            },
+            change: function (e) {
+                if (this.value().length === 0)
+                    this.value([""]);
+            }
+        }).data("kendoMultiSelect");
+    });
+</script>

@@ -88,6 +88,7 @@ namespace Nop.Services.Gdpr
         /// Insert a GDPR log
         /// </summary>
         /// <param name="gdprLog">GDPR log</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InsertLogAsync(GdprLog gdprLog)
         {
             await _gdprLogRepository.InsertAsync(gdprLog);
@@ -103,7 +104,10 @@ namespace Nop.Services.Gdpr
         /// Get a GDPR consent
         /// </summary>
         /// <param name="gdprConsentId">The GDPR consent identifier</param>
-        /// <returns>GDPR consent</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR consent
+        /// </returns>
         public virtual async Task<GdprConsent> GetConsentByIdAsync(int gdprConsentId)
         {
             return await _gdprConsentRepository.GetByIdAsync(gdprConsentId, cache => default);
@@ -112,7 +116,10 @@ namespace Nop.Services.Gdpr
         /// <summary>
         /// Get all GDPR consents
         /// </summary>
-        /// <returns>GDPR consent</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR consent
+        /// </returns>
         public virtual async Task<IList<GdprConsent>> GetAllConsentsAsync()
         {
             var gdprConsents = await _gdprConsentRepository.GetAllAsync(query =>
@@ -129,6 +136,7 @@ namespace Nop.Services.Gdpr
         /// Insert a GDPR consent
         /// </summary>
         /// <param name="gdprConsent">GDPR consent</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertConsentAsync(GdprConsent gdprConsent)
         {
             await _gdprConsentRepository.InsertAsync(gdprConsent);
@@ -138,6 +146,7 @@ namespace Nop.Services.Gdpr
         /// Update the GDPR consent
         /// </summary>
         /// <param name="gdprConsent">GDPR consent</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateConsentAsync(GdprConsent gdprConsent)
         {
             await _gdprConsentRepository.UpdateAsync(gdprConsent);
@@ -147,6 +156,7 @@ namespace Nop.Services.Gdpr
         /// Delete a GDPR consent
         /// </summary>
         /// <param name="gdprConsent">GDPR consent</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteConsentAsync(GdprConsent gdprConsent)
         {
             await _gdprConsentRepository.DeleteAsync(gdprConsent);
@@ -157,7 +167,10 @@ namespace Nop.Services.Gdpr
         /// </summary>
         /// <param name="consentId">Consent identifier</param>
         /// <param name="customerId">Customer identifier</param>
-        /// <returns>Result; null if previous a customer hasn't been asked</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result; null if previous a customer hasn't been asked
+        /// </returns>
         public virtual async Task<bool?> IsConsentAcceptedAsync(int consentId, int customerId)
         {
             //get latest record
@@ -186,7 +199,10 @@ namespace Nop.Services.Gdpr
         /// <param name="requestType">GDPR request type</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>GDPR log records</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR log records
+        /// </returns>
         public virtual async Task<IPagedList<GdprLog>> GetAllLogAsync(int customerId = 0, int consentId = 0,
             string customerInfo = "", GdprRequestType? requestType = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -221,6 +237,7 @@ namespace Nop.Services.Gdpr
         /// <param name="consentId">Consent identifier</param>
         /// <param name="requestType">Request type</param>
         /// <param name="requestDetails">Request details</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertLogAsync(Customer customer, int consentId, GdprRequestType requestType, string requestDetails)
         {
             if (customer == null)
@@ -247,6 +264,7 @@ namespace Nop.Services.Gdpr
         /// Permanent delete of customer
         /// </summary>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PermanentDeleteCustomerAsync(Customer customer)
         {
             if (customer == null)

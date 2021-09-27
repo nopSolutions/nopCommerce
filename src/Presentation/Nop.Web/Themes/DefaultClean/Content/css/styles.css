@@ -2807,6 +2807,10 @@ label, label + * {
   display: none;
 }
 
+.attribute-squares-padding {
+  padding: 0 5px 0 0;
+}
+
 .tooltip-container {
   position: absolute;
   width: 200px;
@@ -4775,6 +4779,18 @@ label, label + * {
   vertical-align: middle;
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.checkout-page .edit-address-button {
+  float: right; 
+  margin: 20px 10px 10px 12px;
+  display: none;
+}
+
+.checkout-page .delete-address-button {
+  float: right; 
+  margin: 20px 0 10px 0;
+  display: none;
 }
 
 .shipping-method .method-list,

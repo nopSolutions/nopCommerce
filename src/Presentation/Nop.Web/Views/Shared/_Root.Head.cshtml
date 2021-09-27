@@ -1,19 +1,15 @@
-﻿@using StackExchange.Profiling
-@using Nop.Core.Configuration
+﻿@using Nop.Core.Configuration
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
-@using Nop.Services.Events
 @using Nop.Services.Security
-@using Nop.Web.Framework.Events
-@using Nop.Core
 @using Nop.Core.Events
+
 @inject CommonSettings commonSettings
 @inject IEventPublisher eventPublisher
 @inject IPermissionService permissionService
-@inject IWorkContext workContext
 @inject SeoSettings seoSettings
 @inject AppSettings appSettings
-@inject Nop.Services.Localization.ILanguageService languageService
+
 @{
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
@@ -38,13 +34,13 @@
         Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
 
-    var displayMiniProfiler = appSettings.CommonConfig.MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
+    var displayMiniProfiler = appSettings.Get<CommonConfig>().MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
 
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
-<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())" @(await this.ShouldUseRtlThemeAsync() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" @Html.NopPageCssClasses()>
 <head>
     <title>@Html.NopTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

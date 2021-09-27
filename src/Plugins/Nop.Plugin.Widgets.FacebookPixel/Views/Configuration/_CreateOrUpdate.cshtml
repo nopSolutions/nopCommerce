@@ -41,7 +41,7 @@
                             }
                             else
                             {
-                                <nop-editor asp-for="PixelId" asp-required="true" asp-disabled="true" asp-value="@Model.PixelId" />
+                                <nop-editor asp-for="PixelId" asp-required="true" html-attributes="@(new { disabled = true, value =  Model.PixelId })"/>
                                 <input asp-for="PixelId" type="hidden" />
                             }
                             <span asp-validation-for="PixelId"></span>

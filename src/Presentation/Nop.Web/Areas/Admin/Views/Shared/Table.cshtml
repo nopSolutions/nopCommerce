@@ -1,8 +1,8 @@
 ﻿@model DataTablesModel
-@using System.Net;
-@using System.Globalization
 
-@{ 
+@using System.Net;
+
+@{
     Html.AppendScriptParts("~/js/admin.table.js");
 }
 
@@ -96,7 +96,7 @@
             </text>
         }
         $('#@Model.Name').DataTable().columns.adjust();
-                
+
     });
 </script>
 
@@ -329,7 +329,7 @@
         function saveRowIntoArray_@(tableName)(cureentCells) {
             $.each(columnData_@(tableName), function (index, element) {
                 if (element.Editable == true) {
-                    var htmlVal = $($(cureentCells).children("[data-columnname='" + element.Data + "']")[0]).html();                    
+                    var htmlVal = $($(cureentCells).children("[data-columnname='" + element.Data + "']")[0]).html();
                     editRowData_@(tableName)[element.Data] = htmlVal;
                 }
             });
@@ -346,10 +346,23 @@
         var tableName = ReplaceName(curModel.Name);
         if (curModel.ChildTable != null)
         {
+            var footerHtml = "";
+            if (curModel.ChildTable.FooterColumns > 0)
+            {
+                //You need to add the footer before you create the table
+                //as DataTables doesn't provide a method for creating a footer at the moment
+                for (int i = 0; i < curModel.ChildTable.FooterColumns; i++)
+                {
+                    footerHtml = string.Concat(footerHtml, "<td></td>");
+                }
+
+                footerHtml = string.Concat("<tfoot><tr>", footerHtml, "</tr></tfoot>");
+            }
             <text>
-                <script>                   
+                <script>
+
                 function getchild_@(tableName)(d) {
-                    return '<table id="child' + d.@(curModel.PrimaryKeyColumn) + '_@(tableName)' + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
+                    return '<table id="child' + d.@(curModel.PrimaryKeyColumn) + '_@(tableName)' + '" class="table table-bordered table-hover dataTable" width="100%">@(Html.Raw(footerHtml))</table>';
                 }
                     $(document).ready(function () {
 
@@ -401,8 +414,8 @@
                     });
                 });
                 </script>
-                
+
             </text>
-        }            
+        }
     }
 }

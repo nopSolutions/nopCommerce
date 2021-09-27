@@ -77,7 +77,10 @@ namespace Nop.Services.Vendors
         /// Gets vendor attributes from XML
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>List of vendor attributes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of vendor attributes
+        /// </returns>
         public virtual async Task<IList<VendorAttribute>> ParseVendorAttributesAsync(string attributesXml)
         {
             var result = new List<VendorAttribute>();
@@ -101,7 +104,10 @@ namespace Nop.Services.Vendors
         /// Get vendor attribute values from XML
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>List of vendor attribute values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of vendor attribute values
+        /// </returns>
         public virtual async Task<IList<VendorAttributeValue>> ParseVendorAttributeValuesAsync(string attributesXml)
         {
             var values = new List<VendorAttributeValue>();
@@ -251,7 +257,10 @@ namespace Nop.Services.Vendors
         /// Validates vendor attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Warnings</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warnings
+        /// </returns>
         public virtual async Task<IList<string>> GetAttributeWarningsAsync(string attributesXml)
         {
             var warnings = new List<string>();

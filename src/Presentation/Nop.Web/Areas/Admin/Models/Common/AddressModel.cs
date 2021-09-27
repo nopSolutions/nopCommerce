@@ -60,6 +60,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
         [NopResourceDisplayName("Admin.Address.Fields.PhoneNumber")]
         public string PhoneNumber { get; set; }
 
+        [DataType(DataType.PhoneNumber)]
         [NopResourceDisplayName("Admin.Address.Fields.FaxNumber")]
         public string FaxNumber { get; set; }
 

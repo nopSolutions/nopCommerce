@@ -36,9 +36,9 @@
 
     function toggleShowOnHomepage() {
         if ($('#@Html.IdFor(model => model.ShowOnHomepage)').is(':checked')) {
-            $('#pnlDisplayOrder').showField();
+            $('#pnlDisplayOrder').showElement();
         } else {
-            $('#pnlDisplayOrder').hide();
+            $('#pnlDisplayOrder').hideElement();
         }
     }
 
@@ -49,33 +49,33 @@
 
         var selectedProductTypeId = $("#@Html.IdFor(model => model.ProductTypeId)").val();
         if (!selectedProductTypeId || selectedProductTypeId == simpleProductId) {
-            $('#group-required-other-products').showField();
-            $('#group-visible-individually').showField();
-            $('#group-associated-products').hide();
+            $('#group-required-other-products').showElement();
+            $('#group-visible-individually').showElement();
+            $('#group-associated-products').hideElement();
 
-            $('[data-card-name=product-price]').showField();
-            $('[data-card-name=product-shipping]').showField();
-            $('[data-card-name=product-inventory]').showField();
-            $('[data-card-name=product-giftcard]').showField();
-            $('[data-card-name=product-downloadable]').showField();
-            $('[data-card-name=product-rental]').showField();
-            $('[data-card-name=product-recurring]').showField();
+            $('[data-card-name=product-price]').showElement();
+            $('[data-card-name=product-shipping]').showElement();
+            $('[data-card-name=product-inventory]').showElement();
+            $('[data-card-name=product-giftcard]').showElement();
+            $('[data-card-name=product-downloadable]').showElement();
+            $('[data-card-name=product-rental]').showElement();
+            $('[data-card-name=product-recurring]').showElement();
         } else if (selectedProductTypeId == groupedProductId) {
-            $('#group-required-other-products').hide();
-            $('#group-visible-individually').hide();
-            $('#group-associated-products').showField();
+            $('#group-required-other-products').hideElement();
+            $('#group-visible-individually').hideElement();
+            $('#group-associated-products').showElement();
             updateTableWidth('#associatedproducts-grid');
 
             $('#@Html.IdFor(model => model.VisibleIndividually)').prop('checked', true);
             
 
-            $('[data-card-name=product-price]').hide();
-            $('[data-card-name=product-shipping]').hide();
-            $('[data-card-name=product-inventory]').hide();
-            $('[data-card-name=product-giftcard]').hide();
-            $('[data-card-name=product-downloadable]').hide();
-            $('[data-card-name=product-rental]').hide();
-            $('[data-card-name=product-recurring]').hide();
+            $('[data-card-name=product-price]').hideElement();
+            $('[data-card-name=product-shipping]').hideElement();
+            $('[data-card-name=product-inventory]').hideElement();
+            $('[data-card-name=product-giftcard]').hideElement();
+            $('[data-card-name=product-downloadable]').hideElement();
+            $('[data-card-name=product-rental]').hideElement();
+            $('[data-card-name=product-recurring]').hideElement();
         }
 
         //templates
@@ -102,29 +102,29 @@
         });
 
         if ($('#@Html.IdFor(model => model.ProductTemplateId) option').length > 1) {
-            $('#pnlProductTemplateId').showField();
+            $('#pnlProductTemplateId').showElement();
         } else {
-            $('#pnlProductTemplateId').hide();
+            $('#pnlProductTemplateId').hideElement();
         }
     }
 
     function toggleRequireOtherProducts() {
         if ($('#@Html.IdFor(model => model.RequireOtherProducts)').is(':checked')) {
-            $('#pnlRequiredProductIds').showField();
-            $('#pnlAutomaticallyAddRequiredProducts').showField();
+            $('#pnlRequiredProductIds').showElement();
+            $('#pnlAutomaticallyAddRequiredProducts').showElement();
         } else {
-            $('#pnlRequiredProductIds').hide();
-            $('#pnlAutomaticallyAddRequiredProducts').hide();
+            $('#pnlRequiredProductIds').hideElement();
+            $('#pnlAutomaticallyAddRequiredProducts').hideElement();
         }
     }
 
     function toggleMarkAsNew() {
         if ($('#@Html.IdFor(model => model.MarkAsNew)').is(':checked')) {
-            $('#pnlMarkAsNewStartDateTimeUtc').showField();
-            $('#pnlMarkAsNewEndDateTimeUtc').showField();
+            $('#pnlMarkAsNewStartDateTimeUtc').showElement();
+            $('#pnlMarkAsNewEndDateTimeUtc').showElement();
         } else {
-            $('#pnlMarkAsNewStartDateTimeUtc').hide();
-            $('#pnlMarkAsNewEndDateTimeUtc').hide();
+            $('#pnlMarkAsNewStartDateTimeUtc').hideElement();
+            $('#pnlMarkAsNewEndDateTimeUtc').hideElement();
         }
     }
 
@@ -161,7 +161,7 @@
         var inputValue = $('#@Html.IdFor(model => model.RequiredProductIds)').val();
         if (inputValue) {
             //load friendly names
-            $('#required-products-check-progress').showField();
+            $('#required-products-check-progress').show();
 
             var postData = {
                 productIds: inputValue

@@ -13,46 +13,61 @@ namespace Nop.Services.Common
         /// Deletes an address
         /// </summary>
         /// <param name="address">Address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteAddressAsync(Address address);
 
         /// <summary>
         /// Gets total number of addresses by country identifier
         /// </summary>
         /// <param name="countryId">Country identifier</param>
-        /// <returns>Number of addresses</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of addresses
+        /// </returns>
         Task<int> GetAddressTotalByCountryIdAsync(int countryId);
 
         /// <summary>
         /// Gets total number of addresses by state/province identifier
         /// </summary>
         /// <param name="stateProvinceId">State/province identifier</param>
-        /// <returns>Number of addresses</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of addresses
+        /// </returns>
         Task<int> GetAddressTotalByStateProvinceIdAsync(int stateProvinceId);
 
         /// <summary>
         /// Gets an address by address identifier
         /// </summary>
         /// <param name="addressId">Address identifier</param>
-        /// <returns>Address</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address
+        /// </returns>
         Task<Address> GetAddressByIdAsync(int addressId);
 
         /// <summary>
         /// Inserts an address
         /// </summary>
         /// <param name="address">Address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertAddressAsync(Address address);
 
         /// <summary>
         /// Updates the address
         /// </summary>
         /// <param name="address">Address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateAddressAsync(Address address);
 
         /// <summary>
         /// Gets a value indicating whether address is valid (can be saved)
         /// </summary>
         /// <param name="address">Address to validate</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<bool> IsAddressValidAsync(Address address);
 
         //TODO: migrate to an extension method

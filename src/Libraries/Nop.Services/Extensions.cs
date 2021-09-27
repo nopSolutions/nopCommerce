@@ -22,7 +22,10 @@ namespace Nop.Services
         /// <param name="markCurrentAsSelected">Mark current value as selected</param>
         /// <param name="valuesToExclude">Values to exclude</param>
         /// <param name="useLocalization">Localize</param>
-        /// <returns>SelectList</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the selectList
+        /// </returns>
         public static async Task<SelectList> ToSelectListAsync<TEnum>(this TEnum enumObj,
            bool markCurrentAsSelected = true, int[] valuesToExclude = null, bool useLocalization = true) where TEnum : struct
         {

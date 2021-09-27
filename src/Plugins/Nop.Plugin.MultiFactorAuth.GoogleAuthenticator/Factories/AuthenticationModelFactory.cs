@@ -31,6 +31,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Factories
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<AuthModel> PrepareAuthModel(AuthModel model)
         {
             if (model == null)

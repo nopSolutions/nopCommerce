@@ -42,6 +42,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ProcessRecurringPaymentAsync(string invoiceId, PaymentStatus newPaymentStatus, string transactionId, string ipnInfo)
         {
             Guid orderNumberGuid;
@@ -115,6 +116,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             await _logger.InformationAsync("PayPal IPN. Recurring info", new NopException(ipnInfo));
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ProcessPaymentAsync(string orderNumber, string ipnInfo, PaymentStatus newPaymentStatus, decimal mcGross, string transactionId)
         {
             Guid orderNumberGuid;

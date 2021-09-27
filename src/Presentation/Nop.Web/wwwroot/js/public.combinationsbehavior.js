@@ -87,12 +87,13 @@
 
       var selectedAttributes = self.getSelectedAttributes();
 
-      $.each(availableAttributeIds, function (i, attributeId) {
+      $.each(availableAttributeIds, function (attrIndex, attributeId) {
         var attibuteValueIds = self.getAttributeValueIds(attributeId);
         $.each(attibuteValueIds, function (i, valueId) {
-          // if current attribute is already selected, then replace it with current value
-          var availableAttributes = $.grep(selectedAttributes, function (attribute) {
-            return attribute.id !== attributeId && attribute.values.length > 0;
+          // get only previous attributes (if any) excluding the selection by current attribute
+          // and then check the combinations stock with current value
+          var availableAttributes = $.grep(selectedAttributes, function (attribute, selectedAttrIndex) {
+            return attrIndex > selectedAttrIndex && attribute.id !== attributeId && attribute.values.length > 0;
           });
           availableAttributes.push({ id: attributeId, values: [valueId] });
 
@@ -176,12 +177,8 @@
       var $contentEl = $(this.settings.contentEl);
       var $value = $('[data-attr-value=' + valueId + ']', $contentEl);
       if (enabled) {
-        $value.prop('disabled', false);
-        $('input', $value).prop('disabled', false);
         $value.removeClass('disabled');
       } else {
-        $value.prop('disabled', true);
-        $('input', $value).prop('disabled', true);
         $value.addClass('disabled');
       }
     },

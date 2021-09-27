@@ -1,23 +1,16 @@
 ﻿using FluentMigrator;
+using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Data
 {
-    [SkipMigrationOnUpdate]
-    [NopMigration("2020/02/03 08:40:55:1687541", "Shipping.FixedByWeightByTotal base schema")]
+    [NopMigration("2020/02/03 08:40:55:1687541", "Shipping.FixedByWeightByTotal base schema", MigrationProcessType.Installation)]
     public class SchemaMigration : AutoReversingMigration
     {
-        protected IMigrationManager _migrationManager;
-
-        public SchemaMigration(IMigrationManager migrationManager)
-        {
-            _migrationManager = migrationManager;
-        }
-
         public override void Up()
         {
-            _migrationManager.BuildTable<ShippingByWeightByTotalRecord>(Create);
+            Create.TableFor<ShippingByWeightByTotalRecord>();
         }
     }
 }

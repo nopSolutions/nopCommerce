@@ -153,7 +153,9 @@ namespace Nop.Web.Controllers
         /// Parses the pickup option
         /// </summary>
         /// <param name="form">The form</param>
-        /// <returns>The pickup option</returns>
+        /// <returns>
+        /// The task result contains the pickup option
+        /// </returns>
         protected virtual async Task<PickupPoint> ParsePickupOptionAsync(IFormCollection form)
         {
             var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
@@ -302,7 +304,6 @@ namespace Nop.Web.Controllers
         /// Get specified Address by addresId
         /// </summary>
         /// <param name="addressId"></param>
-        /// <returns></returns>
         public virtual async Task<IActionResult> GetAddressById(int addressId)
         {
             var address = await _customerService.GetCustomerAddressAsync((await _workContext.GetCurrentCustomerAsync()).Id, addressId);
@@ -376,7 +377,6 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="addressId"></param>
         /// <param name="opc"></param>
-        /// <returns></returns>
         public virtual async Task<IActionResult> DeleteEditAddress(int addressId, bool opc = false)
         {
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);

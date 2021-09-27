@@ -68,7 +68,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare product review search model
         /// </summary>
         /// <param name="searchModel">Product review search model</param>
-        /// <returns>Product review search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review search model
+        /// </returns>
         public virtual async Task<ProductReviewSearchModel> PrepareProductReviewSearchModelAsync(ProductReviewSearchModel searchModel)
         {
             if (searchModel == null)
@@ -108,7 +111,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged product review list model
         /// </summary>
         /// <param name="searchModel">Product review search model</param>
-        /// <returns>Product review list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review list model
+        /// </returns>
         public virtual async Task<ProductReviewListModel> PrepareProductReviewListModelAsync(ProductReviewSearchModel searchModel)
         {
             if (searchModel == null)
@@ -168,7 +174,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Product review model</param>
         /// <param name="productReview">Product review</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Product review model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review model
+        /// </returns>
         public virtual async Task<ProductReviewModel> PrepareProductReviewModelAsync(ProductReviewModel model,
             ProductReview productReview, bool excludeProperties = false)
         {
@@ -216,7 +225,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product review mapping search model</param>
         /// <param name="productReview">Product</param>
-        /// <returns>Product review mapping search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review mapping search model
+        /// </returns>
         public virtual async Task<ProductReviewReviewTypeMappingSearchModel> PrepareProductReviewReviewTypeMappingSearchModelAsync(ProductReviewReviewTypeMappingSearchModel searchModel,
             ProductReview productReview)
         {
@@ -241,7 +253,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product review and review type mapping search model</param>
         /// <param name="productReview">Product review</param>
-        /// <returns>Product review and review type mapping list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review and review type mapping list model
+        /// </returns>
         public virtual async Task<ProductReviewReviewTypeMappingListModel> PrepareProductReviewReviewTypeMappingListModelAsync(ProductReviewReviewTypeMappingSearchModel searchModel, ProductReview productReview)
         {
             if (searchModel == null)

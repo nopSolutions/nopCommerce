@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.3" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.6" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="NUnit" Version="3.13.1" />

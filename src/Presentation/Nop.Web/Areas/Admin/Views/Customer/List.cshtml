@@ -1,6 +1,5 @@
 ﻿@model CustomerSearchModel
 
-@using System.Globalization;
 @using Nop.Core.Domain.Media
 
 @inject MediaSettings _mediaSettings
@@ -65,7 +64,7 @@
                 </ul>
 
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerListButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerListButtons, additionalData = Model })
         </div>
     </div>
 

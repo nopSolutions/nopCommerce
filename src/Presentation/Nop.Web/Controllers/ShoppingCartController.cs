@@ -78,6 +78,7 @@ namespace Nop.Web.Controllers
         private readonly MediaSettings _mediaSettings;
         private readonly OrderSettings _orderSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly ShippingSettings _shippingSettings;
 
         #endregion
 
@@ -115,7 +116,8 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            ShippingSettings shippingSettings)
         {
             _captchaSettings = captchaSettings;
             _customerSettings = customerSettings;
@@ -150,6 +152,7 @@ namespace Nop.Web.Controllers
             _mediaSettings = mediaSettings;
             _orderSettings = orderSettings;
             _shoppingCartSettings = shoppingCartSettings;
+            _shippingSettings = shippingSettings;
         }
 
         #endregion
@@ -1385,8 +1388,12 @@ namespace Nop.Web.Controllers
                 model = new EstimateShippingModel();
 
             var errors = new List<string>();
-            if (string.IsNullOrEmpty(model.ZipPostalCode))
+
+            if (!_shippingSettings.EstimateShippingCityNameEnabled && string.IsNullOrEmpty(model.ZipPostalCode))
                 errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.ZipPostalCode.Required"));
+
+            if (_shippingSettings.EstimateShippingCityNameEnabled && string.IsNullOrEmpty(model.City))
+                errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.City.Required"));
 
             if (model.CountryId == null || model.CountryId == 0)
                 errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.Country.Required"));
@@ -1402,7 +1409,7 @@ namespace Nop.Web.Controllers
             //parse and save checkout attributes
             await ParseAndSaveCheckoutAttributesAsync(cart, form);
 
-            var result = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(cart, model.CountryId, model.StateProvinceId, model.ZipPostalCode, true);
+            var result = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(cart, model, true);
 
             return Json(result);
         }
