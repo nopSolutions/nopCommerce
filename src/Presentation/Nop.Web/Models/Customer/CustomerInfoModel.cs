@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using System.Globalization;
+using Nop.Core;
 
 namespace Nop.Web.Models.Customer
 {
@@ -56,16 +58,7 @@ namespace Nop.Web.Models.Customer
         public bool DateOfBirthRequired { get; set; }
         public DateTime? ParseDateOfBirth()
         {
-            if (!DateOfBirthYear.HasValue || !DateOfBirthMonth.HasValue || !DateOfBirthDay.HasValue)
-                return null;
-
-            DateTime? dateOfBirth = null;
-            try
-            {
-                dateOfBirth = new DateTime(DateOfBirthYear.Value, DateOfBirthMonth.Value, DateOfBirthDay.Value);
-            }
-            catch { }
-            return dateOfBirth;
+            return CommonHelper.ParseDate(DateOfBirthYear, DateOfBirthMonth, DateOfBirthDay);
         }
 
         public bool CompanyEnabled { get; set; }

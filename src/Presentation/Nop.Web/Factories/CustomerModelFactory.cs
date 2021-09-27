@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -217,9 +218,11 @@ namespace Nop.Web.Factories
                 var dateOfBirth = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
                 if (dateOfBirth.HasValue)
                 {
-                    model.DateOfBirthDay = dateOfBirth.Value.Day;
-                    model.DateOfBirthMonth = dateOfBirth.Value.Month;
-                    model.DateOfBirthYear = dateOfBirth.Value.Year;
+                    var currentCalendar = CultureInfo.CurrentCulture.Calendar;
+
+                    model.DateOfBirthDay = currentCalendar.GetDayOfMonth(dateOfBirth.Value);
+                    model.DateOfBirthMonth = currentCalendar.GetMonth(dateOfBirth.Value);
+                    model.DateOfBirthYear = currentCalendar.GetYear(dateOfBirth.Value);
                 }
                 model.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
                 model.StreetAddress = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
