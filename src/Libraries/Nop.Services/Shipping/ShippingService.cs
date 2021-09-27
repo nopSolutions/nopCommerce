@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -1034,6 +1035,14 @@ namespace Nop.Services.Shipping
                 .SumAwaitAsync(async attributeValue => (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.AdditionalShippingCharge ?? decimal.Zero);
 
             return additionalShippingCharge;
+        }
+        
+        public virtual async Task SaveSortingType(bool isSortingByPrice)
+        {
+            if (isSortingByPrice)
+            {
+                
+            }
         }
 
         #endregion

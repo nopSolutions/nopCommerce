@@ -36,7 +36,7 @@
                 <div class="card card-default">
                     <div class="card-body">
                         <p>
-                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ShippingProviders", Docs.ShippingProviders + Utm.OnAdmin)" asp-add-wrapper="false"/>
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ShippingProviders", Docs.ShippingProviders + Utm.OnAdmin)" asp-add-wrapper="false" />
                             @T("Admin.Configuration.Shipping.Providers.DownloadMorePlugins", OfficialSite.ShippingPlugins + Utm.OnAdminShippingPlugins.Replace('?', '&'))
                         </p>
 
@@ -50,51 +50,50 @@
                                 Length = Model.PageSize,
                                 LengthMenu = Model.AvailablePageSizes,
                                 ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(ShippingProviderModel.FriendlyName))
                                     {
-                                        new ColumnProperty(nameof(ShippingProviderModel.FriendlyName))
-                                        {
-                                            Title = T("Admin.Configuration.Shipping.Providers.Fields.FriendlyName").Text
-                                        },
-                                        new ColumnProperty(nameof(ShippingProviderModel.SystemName))
-                                        {
-                                            Title = T("Admin.Configuration.Shipping.Providers.Fields.SystemName").Text,
-                                            Width = "250"
-                                        },
-                                        new ColumnProperty(nameof(ShippingProviderModel.DisplayOrder))
-                                        {
-                                            Title = T("Admin.Configuration.Shipping.Providers.Fields.DisplayOrder").Text,
-                                            Width = "100",
-                                            ClassName = NopColumnClassDefaults.CenterAll,
-                                            Editable = true,
-                                            EditType = EditType.Number
-                                        },
-                                        new ColumnProperty(nameof(ShippingProviderModel.IsActive))
-                                        {
-                                            Title = T("Admin.Configuration.Shipping.Providers.Fields.IsActive").Text,
-                                            Width = "100",
-                                            ClassName = NopColumnClassDefaults.CenterAll,
-                                            Render = new RenderBoolean(),
-                                            Editable = true,
-                                            EditType = EditType.Checkbox
-                                        },
-                                        new ColumnProperty(nameof(ShippingProviderModel.SystemName))
-                                        {
-                                            Title = T("Admin.Configuration.Shipping.Providers.Configure").Text,
-                                            Width = "200",
-                                            ClassName =  NopColumnClassDefaults.Button + " column-configure",
-                                            Render = new RenderCustom("renderColumnConfigure")
-                                        },
-                                        new ColumnProperty(nameof(ShippingProviderModel.SystemName))
-                                        {
-                                            Title = T("Admin.Common.Edit").Text,
-                                            Width = "150",
-                                            ClassName =  NopColumnClassDefaults.Button + " column-edit",
-                                            Render = new RenderButtonsInlineEdit()
-                                        }
+                                        Title = T("Admin.Configuration.Shipping.Providers.Fields.FriendlyName").Text
+                                    },
+                                    new ColumnProperty(nameof(ShippingProviderModel.SystemName))
+                                    {
+                                        Title = T("Admin.Configuration.Shipping.Providers.Fields.SystemName").Text,
+                                        Width = "250"
+                                    },
+                                    new ColumnProperty(nameof(ShippingProviderModel.DisplayOrder))
+                                    {
+                                        Title = T("Admin.Configuration.Shipping.Providers.Fields.DisplayOrder").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Editable = true,
+                                        EditType = EditType.Number
+                                    },
+                                    new ColumnProperty(nameof(ShippingProviderModel.IsActive))
+                                    {
+                                        Title = T("Admin.Configuration.Shipping.Providers.Fields.IsActive").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean(),
+                                        Editable = true,
+                                        EditType = EditType.Checkbox
+                                    },
+                                    new ColumnProperty(nameof(ShippingProviderModel.SystemName))
+                                    {
+                                        Title = T("Admin.Configuration.Shipping.Providers.Configure").Text,
+                                        Width = "200",
+                                        ClassName =  NopColumnClassDefaults.Button + " column-configure",
+                                        Render = new RenderCustom("renderColumnConfigure")
+                                    },
+                                    new ColumnProperty(nameof(ShippingProviderModel.SystemName))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "150",
+                                        ClassName =  NopColumnClassDefaults.Button + " column-edit",
+                                        Render = new RenderButtonsInlineEdit()
                                     }
+                                }
                             })
                         </div>
-
                         <script>
                             function renderColumnConfigure(data, type, row, meta) {
                                 if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
@@ -106,7 +105,43 @@
                         </script>
                     </div>
                 </div>
+                <div class="card card-default">
+                    <div class="card-body">
+                        <form id="sortingForm">
+                            <div id="shipping-methods-sorting" class="shipping-sorting-items">
+                                <div>
+                                    <input type="radio" name="sorting" value="sortByPrice" id="sortByPrice" class="form-check-input"
+                                           @(Model.IsSortingByPrice ? "checked" : string.Empty) />
+                                    <label for="sortByPrice">@T("Admin.Configuration.Shipping.Providers.SortByPrice")</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="sorting" value="sortByPosition" id="sortByPosition" class="form-check-input"
+                                           @(!Model.IsSortingByPrice ? "checked" : string.Empty) />
+                                    <label for="sortByPosition">@T("Admin.Configuration.Shipping.Providers.SortByPosition")</label>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="sortingButton">Save</button>
+                        </form>
+                    </div>
+                    <script>
+                        const saveSorting = () => {
+                            const formData = $('#sortingForm').serializeArray();
+                            let jsonData = {};
+                            $(formData).each((index, obj) => {
+                                jsonData[obj.name] = obj.value;
+                            });
+                            addAntiForgeryToken(jsonData);
+                            $.post("@Url.Action("SaveSortingShipping", "Shipping")", jsonData)
+                                .done(() => $("#saveSortingOk").click())
+                                .fail(() => $("#saveSortingError").click());
+                        }
+
+                        $(document).ready(() => $('#sortingButton').click(saveSorting));
+                    </script>
+                </div>
             </div>
         </div>
     </div>
 </section>
+<nop-alert asp-alert-id="saveSortingOk" asp-alert-message="@T("Admin.Common.Alert.Save.Ok")" />
+<nop-alert asp-alert-id="saveSortingError" asp-alert-message="@T("Admin.Common.Alert.Save.Error")" />

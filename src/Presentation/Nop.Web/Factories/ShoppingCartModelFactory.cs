@@ -1342,6 +1342,11 @@ namespace Nop.Web.Factories
                     }
                 }
 
+                if (_shippingSettings.IsSortingByPrice)
+                {
+                    rawShippingOptions = rawShippingOptions.OrderBy(o => o.Rate).ToList();
+                }
+
                 ShippingOption selectedShippingOption = null;
                 if (cacheShippingOptions)
                 {

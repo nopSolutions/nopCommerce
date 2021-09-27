@@ -7,5 +7,6 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// </summary>
     public partial record ShippingProviderSearchModel : BaseSearchModel
     {
+        public bool IsSortingByPrice { get; set; }
     }
 }

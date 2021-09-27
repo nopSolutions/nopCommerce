@@ -132,6 +132,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _shippingModelFactory.PrepareShippingProviderSearchModelAsync(new ShippingProviderSearchModel());
+            model.IsSortingByPrice = _shippingSettings.IsSortingByPrice;
 
             //show configuration tour
             if (showtour)
@@ -390,6 +391,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Methods.Deleted"));
 
             return RedirectToAction("Methods");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveSortingShipping(string sorting)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            _shippingSettings.IsSortingByPrice = sorting == "sortByPrice";
+            await _settingService.SaveSettingAsync(_shippingSettings, s => s.IsSortingByPrice);
+
+            return Ok();
         }
 
         #endregion

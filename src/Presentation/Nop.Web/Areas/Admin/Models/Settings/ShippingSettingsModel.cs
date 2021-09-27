@@ -99,6 +99,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public string PrimaryStoreCurrencyCode { get; set; }
 
-        #endregion
+        public bool IsSortingByPrice { get; set; }
+
+
+    #endregion
     }
 }
