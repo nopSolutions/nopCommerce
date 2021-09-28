@@ -5160,6 +5160,9 @@
   <LocaleResource Name="Admin.Configuration.Languages.Info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.NeedRestart">
+    <Value>Since language cultures are loaded only when the application is starting, you have to restart the application for it to work correctly once the language is changed.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.PublishedLanguageRequired">
     <Value>At least one published language is required</Value>
   </LocaleResource>
