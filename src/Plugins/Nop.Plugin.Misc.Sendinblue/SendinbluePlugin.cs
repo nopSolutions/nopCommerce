@@ -130,7 +130,7 @@ namespace Nop.Plugin.Misc.Sendinblue
             }
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Misc.Sendinblue.AccountInfo"] = "Account info",
                 ["Plugins.Misc.Sendinblue.AccountInfo.Hint"] = "Display account information.",

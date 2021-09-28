@@ -167,7 +167,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
                 .Select(lang => lang.Id).FirstOrDefault();
             
-            localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)",
                 ["Admin.Configuration.AppSettings"] = "App settings",

@@ -39,7 +39,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
                 .Select(lang => lang.Id).FirstOrDefault();
 
-            localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 //#5696
                 ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords"] = "Search keywords",

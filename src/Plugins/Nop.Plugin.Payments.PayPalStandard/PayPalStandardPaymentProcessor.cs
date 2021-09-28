@@ -575,7 +575,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             });
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Payments.PayPalStandard.Fields.AdditionalFee"] = "Additional fee",
                 ["Plugins.Payments.PayPalStandard.Fields.AdditionalFee.Hint"] = "Enter additional fee to charge your customers.",

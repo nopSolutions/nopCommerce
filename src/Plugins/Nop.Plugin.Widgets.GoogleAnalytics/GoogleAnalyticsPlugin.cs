@@ -91,7 +91,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             };
             await _settingService.SaveSettingAsync(settings);
 
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.GoogleAnalytics.GoogleId"] = "ID",
                 ["Plugins.Widgets.GoogleAnalytics.GoogleId.Hint"] = "Enter Google Analytics ID.",

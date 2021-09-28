@@ -246,7 +246,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             await _settingService.SaveSettingAsync(settings);
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Payment.CheckMoneyOrder.AdditionalFee"] = "Additional fee",
                 ["Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint"] = "The additional fee.",

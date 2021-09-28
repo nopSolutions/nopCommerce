@@ -89,7 +89,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
             };
             await _settingService.SaveSettingAsync(settings);
 
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.NivoSlider.Picture1"] = "Picture 1",
                 ["Plugins.Widgets.NivoSlider.Picture2"] = "Picture 2",
