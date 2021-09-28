@@ -458,6 +458,12 @@ i.false-icon {
   background-color: #ba5c12;
 }
 
+.shipping-sorting-items {
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+}
+
 .payments-step .configuration-step-icon {
   background-color: #ff7f11;
 }
