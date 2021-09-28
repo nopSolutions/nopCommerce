@@ -87,7 +87,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Enums.Nop.Data.DataProviderType.PostgreSQL"] = "PostgreSQL",
 
                 //#5204
-                ["Admin.Configuration.Shipping.Providers.SortByPrice"] = "Sorting by price",
+                ["Admin.Configuration.Shipping.Providers.SortByPrice"] = "Sorting by shipping cost",
                 ["Admin.Configuration.Shipping.Providers.SortByPosition"] = "Sorting by position",
             }, languageId).Wait();
 
