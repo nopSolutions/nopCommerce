@@ -154,7 +154,7 @@ namespace Nop.Services.Localization
             if (clearCache)
                 await _staticCacheManager.RemoveByPrefixAsync(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
 
-            return localResources.Where(item => !existsResources.Contains(item.Key))
+            return localResources.Where(item => !existsResources.Contains(item.Key, StringComparer.InvariantCultureIgnoreCase))
                 .ToDictionary(p => p.Key, p => p.Value);
         }
 

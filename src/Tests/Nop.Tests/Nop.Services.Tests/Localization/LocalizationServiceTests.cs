@@ -123,16 +123,17 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
         public async Task AddOrUpdateLocaleResourceShouldApdateAllResorcesIfLangIdIsNull()
         {
             var languageService = GetService<ILanguageService>();
-            var l = new Language
+            var language = new Language
             {
                 Name = "test lang",
                 LanguageCulture = "en"
             };
-            await languageService.InsertLanguageAsync(l);
+            await languageService.InsertLanguageAsync(language);
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources, 1);
-            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources, l.Id);
+            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources, language.Id);
             LocaleResourceConsumer.UpdateCount = 0;
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key, p => p.Value.ToUpper()), null);
+            await languageService.DeleteLanguageAsync(language);
             LocaleResourceConsumer.UpdateCount.Should().Be(6);
         }
 
