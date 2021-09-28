@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
@@ -13,7 +12,6 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
-using Nop.Core.Configuration;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 
@@ -26,7 +24,6 @@ namespace Nop.Core
     {
         #region Fields 
 
-        private readonly AppSettings _appSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IHostApplicationLifetime _hostApplicationLifetime;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -36,13 +33,11 @@ namespace Nop.Core
 
         #region Ctor
 
-        public WebHelper(AppSettings appSettings,
-            IActionContextAccessor actionContextAccessor,
+        public WebHelper(IActionContextAccessor actionContextAccessor,
             IHostApplicationLifetime hostApplicationLifetime,
             IHttpContextAccessor httpContextAccessor,
             IUrlHelperFactory urlHelperFactory)
         {
-            _appSettings = appSettings;
             _actionContextAccessor = actionContextAccessor;
             _hostApplicationLifetime = hostApplicationLifetime;
             _httpContextAccessor = httpContextAccessor;

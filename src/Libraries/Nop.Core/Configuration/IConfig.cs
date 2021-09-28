@@ -12,5 +12,11 @@ namespace Nop.Core.Configuration
         /// </summary>
         [JsonIgnore]
         string Name => GetType().Name;
+
+        /// <summary>
+        /// Gets an order of configuration
+        /// </summary>
+        /// <returns>Order</returns>
+        public int GetOrder() => 1;
     }
 }
