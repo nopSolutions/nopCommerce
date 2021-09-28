@@ -20,7 +20,7 @@ namespace Nop.Services.Payments
         /// A task that represents the asynchronous operation
         /// The task result contains the list of active payment methods
         /// </returns>
-        Task<IList<IPaymentMethod>> LoadActivePluginsAsyncAsync(Customer customer = null, int storeId = 0, int countryId = 0);
+        Task<IList<IPaymentMethod>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0, int countryId = 0);
 
         /// <summary>
         /// Check whether the passed payment method is active
