@@ -87,8 +87,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Enums.Nop.Data.DataProviderType.PostgreSQL"] = "PostgreSQL",
                 
                 //#5838
-                ["Admin.Configuration.Languages.NeedRestart.AfterAdded"] = "Please, restart the app because the new language is added.",
-                ["Admin.Configuration.Languages.NeedRestart.AfterRemoved"] = "Please, restart the app because the language is deleted.",
+                ["Admin.Configuration.Languages.NeedRestart"] = "Since language packs are loaded only when the application is launched, you have to restart the application for it to work correctly once the language is changed.",
             }, languageId).Wait();
 
             // rename locales

@@ -5160,13 +5160,10 @@
   <LocaleResource Name="Admin.Configuration.Languages.Info">
     <Value>Info</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.NeedRestart.AfterAdded">
-    <Value>Please, restart the app because the new language is added.</Value>
+  <LocaleResource Name="Admin.Configuration.Languages.NeedRestart">
+    <Value>Since language packs are loaded only when the application is launched, you have to restart the application for it to work correctly once the language is changed.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.NeedRestart.AfterRemoved">
-    <Value>Please, restart the app because the language is deleted.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.PublishedLanguageRequired">
+    <LocaleResource Name="Admin.Configuration.Languages.PublishedLanguageRequired">
     <Value>At least one published language is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources">
