@@ -3,7 +3,7 @@ using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog
 {
-    public static class ShippingExtensions
+    public static class ProductExtensions
     {
         /// <summary>
         /// Sorts the elements of a sequence in order according to a product sorting rule
