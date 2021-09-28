@@ -134,7 +134,9 @@ namespace Nop.Services.Localization
 
                 return rez;
             });
-            
+
+            var existsResources = new List<string>();
+
             foreach (var localeStringResource in resourcesToUpdate.ToList())
             {
                 var newValue = localResources[localeStringResource.ResourceName];
@@ -143,7 +145,7 @@ namespace Nop.Services.Localization
                     resourcesToUpdate.Remove(localeStringResource);
 
                 localeStringResource.ResourceValue = newValue;
-                localResources.Remove(localeStringResource.ResourceName);
+                existsResources.Add(localeStringResource.ResourceName);
             }
 
             await _lsrRepository.UpdateAsync(resourcesToUpdate);
@@ -152,7 +154,8 @@ namespace Nop.Services.Localization
             if (clearCache)
                 await _staticCacheManager.RemoveByPrefixAsync(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
 
-            return localResources;
+            return localResources.Where(item => !existsResources.Contains(item.Key))
+                .ToDictionary(p => p.Key, p => p.Value);
         }
 
         #endregion
