@@ -85,6 +85,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Enums.Nop.Data.DataProviderType.SqlServer"] = "Microsoft SQL Server",
                 ["Enums.Nop.Data.DataProviderType.MySql"] = "MySQL",
                 ["Enums.Nop.Data.DataProviderType.PostgreSQL"] = "PostgreSQL",
+                
+                //#5838
+                ["Admin.Configuration.Languages.NeedRestart"] = "Since language cultures are loaded only when the application is starting, you have to restart the application for it to work correctly once the language is changed.",
             }, languageId).Wait();
 
             // rename locales
