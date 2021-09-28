@@ -86,8 +86,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!await _customerService.PasswordIsExpiredAsync(customer))
                     return;
 
+                var returnUrl = context.HttpContext.Request.Path;
                 //redirect to ChangePassword page if expires
-                context.Result = new RedirectToRouteResult("CustomerChangePassword", null);
+                context.Result = new RedirectToRouteResult("CustomerChangePassword", new { returnUrl = returnUrl });
             }
 
             #endregion
