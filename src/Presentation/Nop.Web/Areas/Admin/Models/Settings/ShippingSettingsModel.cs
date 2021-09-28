@@ -1,6 +1,7 @@
 ﻿using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -99,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public string PrimaryStoreCurrencyCode { get; set; }
 
-        public bool IsSortingByPrice { get; set; }
+        public ShippingSortingEnum ShippingSorting { get; set; }
 
 
     #endregion

@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Nop.Core.Domain.Shipping;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Shipping
 {
@@ -7,6 +8,6 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// </summary>
     public partial record ShippingProviderSearchModel : BaseSearchModel
     {
-        public bool IsSortingByPrice { get; set; }
+        public ShippingSortingEnum ShippingSorting { get; set; }
     }
 }

@@ -105,40 +105,6 @@
                         </script>
                     </div>
                 </div>
-                <div class="card card-default">
-                    <div class="card-body">
-                        <form id="sortingForm">
-                            <div id="shipping-methods-sorting" class="shipping-sorting-items">
-                                <div>
-                                    <input type="radio" name="sorting" value="sortByPrice" id="sortByPrice" class="form-check-input"
-                                           @(Model.IsSortingByPrice ? "checked" : string.Empty) />
-                                    <label for="sortByPrice">@T("Admin.Configuration.Shipping.Providers.SortByPrice")</label>
-                                </div>
-                                <div>
-                                    <input type="radio" name="sorting" value="sortByPosition" id="sortByPosition" class="form-check-input"
-                                           @(!Model.IsSortingByPrice ? "checked" : string.Empty) />
-                                    <label for="sortByPosition">@T("Admin.Configuration.Shipping.Providers.SortByPosition")</label>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-primary" id="sortingButton">Save</button>
-                        </form>
-                    </div>
-                    <script>
-                        const saveSorting = () => {
-                            const formData = $('#sortingForm').serializeArray();
-                            let jsonData = {};
-                            $(formData).each((index, obj) => {
-                                jsonData[obj.name] = obj.value;
-                            });
-                            addAntiForgeryToken(jsonData);
-                            $.post("@Url.Action("SaveSortingShipping", "Shipping")", jsonData)
-                                .done(() => $("#saveSortingOk").click())
-                                .fail(() => $("#saveSortingError").click());
-                        }
-
-                        $(document).ready(() => $('#sortingButton').click(saveSorting));
-                    </script>
-                </div>
             </div>
         </div>
     </div>

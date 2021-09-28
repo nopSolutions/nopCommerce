@@ -1342,7 +1342,7 @@ namespace Nop.Web.Factories
                     }
                 }
 
-                if (_shippingSettings.IsSortingByPrice)
+                if (_shippingSettings.ShippingSorting == ShippingSortingEnum.Price)
                 {
                     rawShippingOptions = rawShippingOptions.OrderBy(o => o.Rate).ToList();
                 }

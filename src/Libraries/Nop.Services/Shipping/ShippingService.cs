@@ -1035,17 +1035,8 @@ namespace Nop.Services.Shipping
 
             return additionalShippingCharge;
         }
-        
-        public virtual async Task SaveSortingType(bool isSortingByPrice)
-        {
-            if (isSortingByPrice)
-            {
-                
-            }
-        }
 
         #endregion
-
         #endregion
     }
 }

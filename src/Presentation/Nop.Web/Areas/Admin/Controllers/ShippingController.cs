@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _shippingModelFactory.PrepareShippingProviderSearchModelAsync(new ShippingProviderSearchModel());
-            model.IsSortingByPrice = _shippingSettings.IsSortingByPrice;
+            model.ShippingSorting = _shippingSettings.ShippingSorting;
 
             //show configuration tour
             if (showtour)
@@ -398,9 +398,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
-
-            _shippingSettings.IsSortingByPrice = sorting == "sortByPrice";
-            await _settingService.SaveSettingAsync(_shippingSettings, s => s.IsSortingByPrice);
+            
+            _shippingSettings.ShippingSorting = sorting == "sortByPrice" ? ShippingSortingEnum.Price : ShippingSortingEnum.Position;
+            await _settingService.SaveSettingAsync(_shippingSettings, s => s.ShippingSorting);
 
             return Ok();
         }

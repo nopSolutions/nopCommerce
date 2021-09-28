@@ -1,3 +1,4 @@
+@using Nop.Core.Domain.Shipping
 @model ShippingSettingsModel
 
 @{
@@ -47,6 +48,40 @@
                     <nop-card asp-name="product-notifications" asp-icon="fas fa-bell" asp-title="@T("Admin.Configuration.Settings.Shipping.BlockTitle.Notifications")" asp-hide-block-attribute-name="@hideNotificationsBlockAttributeName" asp-hide="@hideNotificationsBlock" asp-advanced="true">@await Html.PartialAsync("_Shipping.Notifications", Model)</nop-card>
                     <nop-card asp-name="product-checkout" asp-icon="far fa-credit-card" asp-title="@T("Admin.Configuration.Settings.Shipping.BlockTitle.Checkout")" asp-hide-block-attribute-name="@hideCheckoutBlockAttributeName" asp-hide="@hideCheckoutBlock" asp-advanced="false">@await Html.PartialAsync("_Shipping.Checkout", Model)</nop-card>
                     <nop-card asp-name="product-shipping-origin" asp-icon="fas fa-truck" asp-title="@T("Admin.Configuration.Settings.Shipping.ShippingOriginAddress")" asp-hide-block-attribute-name="@hideShippingOriginBlockAttributeName" asp-hide="@hideShippingOriginBlock" asp-advanced="false">@await Html.PartialAsync("_Shipping.ShippingOrigin", Model)</nop-card>
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <form id="sortingForm">
+                                <div id="shipping-methods-sorting" class="shipping-sorting-items">
+                                    <div>
+                                        <input type="radio" name="sorting" value="sortByPrice" id="sortByPrice" class="form-check-input"
+                                               @(Model.ShippingSorting == ShippingSortingEnum.Price ? "checked" : string.Empty) />
+                                        <label for="sortByPrice">@T("Admin.Configuration.Shipping.Providers.SortByPrice")</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="sorting" value="sortByPosition" id="sortByPosition" class="form-check-input"
+                                               @(Model.ShippingSorting == ShippingSortingEnum.Position ? "checked" : string.Empty) />
+                                        <label for="sortByPosition">@T("Admin.Configuration.Shipping.Providers.SortByPosition")</label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="sortingButton">Save</button>
+                            </form>
+                        </div>
+                        <script>
+                        const saveSorting = () => {
+                            const formData = $('#sortingForm').serializeArray();
+                            let jsonData = {};
+                            $(formData).each((index, obj) => {
+                                jsonData[obj.name] = obj.value;
+                            });
+                            addAntiForgeryToken(jsonData);
+                            $.post("@Url.Action("SaveSortingShipping", "Shipping")", jsonData)
+                                .done(() => $("#saveSortingOk").click())
+                                .fail(() => $("#saveSortingError").click());
+                        }
+
+                        $(document).ready(() => $('#sortingButton').click(saveSorting));
+                        </script>
+                    </div>
 
                     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingDetailsBlock, additionalData = Model })
                 </nop-cards>

@@ -139,7 +139,7 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets a value of sorting by price
         /// </summary>
-        public bool IsSortingByPrice { get; set; }
+        public ShippingSortingEnum ShippingSorting { get; set; }
 
         /// <summary>
         /// Gets or sets the request delay in the shipping calculation popup (on product page/shopping cart page) when user enter the shipping address.
