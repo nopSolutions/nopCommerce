@@ -54,7 +54,7 @@ namespace Nop.Services.ScheduleTasks
         /// </summary>
         public async Task InitializeAsync()
         {
-            if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             if (_taskThreads.Any())

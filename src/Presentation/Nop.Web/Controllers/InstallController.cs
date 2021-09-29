@@ -106,9 +106,9 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        public virtual async Task<IActionResult> Index()
+        public virtual IActionResult Index()
         {
-            if (await DataSettingsManager.IsDatabaseInstalledAsync())
+            if (DataSettingsManager.IsDatabaseInstalled())
                 return RedirectToRoute("Homepage");
 
             var model = new InstallModel
@@ -133,7 +133,7 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> Index(InstallModel model)
         {
-            if (await DataSettingsManager.IsDatabaseInstalledAsync())
+            if (DataSettingsManager.IsDatabaseInstalled())
                 return RedirectToRoute("Homepage");
 
             model.DisableSampleDataOption = _appSettings.Get<InstallationConfig>().DisableSampleData;
@@ -297,9 +297,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual async Task<IActionResult> ChangeLanguage(string language)
+        public virtual IActionResult ChangeLanguage(string language)
         {
-            if (await DataSettingsManager.IsDatabaseInstalledAsync())
+            if (DataSettingsManager.IsDatabaseInstalled())
                 return RedirectToRoute("Homepage");
 
             _locService.SaveCurrentLanguage(language);
@@ -310,17 +310,17 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public virtual async Task<IActionResult> RestartInstall()
+        public virtual IActionResult RestartInstall()
         {
-            if (await DataSettingsManager.IsDatabaseInstalledAsync())
+            if (DataSettingsManager.IsDatabaseInstalled())
                 return RedirectToRoute("Homepage");
 
             return View("Index", new InstallModel { RestartUrl = Url.Action("Index", "Install") });
         }
 
-        public virtual async Task<IActionResult> RestartApplication()
+        public virtual IActionResult RestartApplication()
         {
-            if (await DataSettingsManager.IsDatabaseInstalledAsync())
+            if (DataSettingsManager.IsDatabaseInstalled())
                 return RedirectToRoute("Homepage");
 
             //restart application

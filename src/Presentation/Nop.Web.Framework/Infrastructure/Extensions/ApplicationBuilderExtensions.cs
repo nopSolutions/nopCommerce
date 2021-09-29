@@ -104,7 +104,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     try
                     {
                         //check whether database is installed
-                        if (await DataSettingsManager.IsDatabaseInstalledAsync())
+                        if (DataSettingsManager.IsDatabaseInstalled())
                         {
                             //get current customer
                             var currentCustomer = await EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomerAsync();
@@ -140,7 +140,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         var originalPath = context.HttpContext.Request.Path;
                         var originalQueryString = context.HttpContext.Request.QueryString;
 
-                        if (await DataSettingsManager.IsDatabaseInstalledAsync())
+                        if (DataSettingsManager.IsDatabaseInstalled())
                         {
                             var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
 
@@ -340,7 +340,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             application.UseRequestLocalization(async options =>
             {
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
                 //prepare supported cultures

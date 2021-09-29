@@ -101,39 +101,9 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Creates the database connection
         /// </summary>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task<DataConnection> CreateDataConnectionAsync()
-        {
-            return await CreateDataConnectionAsync(LinqToDbDataProvider);
-        }
-
-        /// <summary>
-        /// Creates the database connection
-        /// </summary>
         protected virtual DataConnection CreateDataConnection()
         {
             return CreateDataConnection(LinqToDbDataProvider);
-        }
-
-        /// <summary>
-        /// Creates the database connection
-        /// </summary>
-        /// <param name="dataProvider">Data provider</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the database connection
-        /// </returns>
-        protected virtual async Task<DataConnection> CreateDataConnectionAsync(IDataProvider dataProvider)
-        {
-            if (dataProvider is null)
-                throw new ArgumentNullException(nameof(dataProvider));
-
-            var dataContext = new DataConnection(dataProvider, await CreateDbConnectionAsync(), GetMappingSchema())
-            {
-                CommandTimeout = await DataSettingsManager.GetSqlCommandTimeoutAsync()
-            };
-
-            return dataContext;
         }
 
         /// <summary>
@@ -150,21 +120,6 @@ namespace Nop.Data.DataProviders
             {
                 CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
             };
-        }
-
-        /// <summary>
-        /// Creates a connection to a database
-        /// </summary>
-        /// <param name="connectionString">Connection string</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the connection to a database
-        /// </returns>
-        protected virtual async Task<IDbConnection> CreateDbConnectionAsync(string connectionString = null)
-        {
-            var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : await GetCurrentConnectionStringAsync());
-
-            return MiniProfillerEnabled ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
         }
 
         /// <summary>
@@ -210,10 +165,10 @@ namespace Nop.Data.DataProviders
         /// A task that represents the asynchronous operation
         /// The task result contains the iQueryable instance of temporary storage
         /// </returns>
-        public virtual async Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storeKey, IQueryable<TItem> query)
+        public virtual Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storeKey, IQueryable<TItem> query)
             where TItem : class
         {
-            return new TempSqlDataStorage<TItem>(storeKey, query, await CreateDataConnectionAsync());
+            return Task.FromResult<ITempDataStorage<TItem>>(new TempSqlDataStorage<TItem>(storeKey, query, CreateDataConnection()));
         }
 
         /// <summary>
@@ -295,21 +250,6 @@ namespace Nop.Data.DataProviders
         /// mapped to database table or view.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the queryable source
-        /// </returns>
-        public virtual async Task<IQueryable<TEntity>> GetTableAsync<TEntity>() where TEntity : BaseEntity
-        {
-            return new DataContext(LinqToDbDataProvider, await GetCurrentConnectionStringAsync()) { MappingSchema = GetMappingSchema() }
-                .GetTable<TEntity>();
-        }
-
-        /// <summary>
-        /// Returns queryable source for specified mapping class for current connection,
-        /// mapped to database table or view.
-        /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Queryable source</returns>
         public virtual IQueryable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
@@ -328,7 +268,7 @@ namespace Nop.Data.DataProviders
         /// </returns>
         public virtual async Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = await CreateDataConnectionAsync();
+            using var dataContext = CreateDataConnection();
             entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
             return entity;
         }
@@ -355,7 +295,7 @@ namespace Nop.Data.DataProviders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = await CreateDataConnectionAsync();
+            using var dataContext = CreateDataConnection();
             await dataContext.UpdateAsync(entity);
         }
 
@@ -383,7 +323,7 @@ namespace Nop.Data.DataProviders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = await CreateDataConnectionAsync();
+            using var dataContext = CreateDataConnection();
             await dataContext.DeleteAsync(entity);
         }
 
@@ -395,7 +335,7 @@ namespace Nop.Data.DataProviders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
         {
-            using var dataContext = await CreateDataConnectionAsync();
+            using var dataContext = CreateDataConnection();
             if (entities.All(entity => entity.Id == 0))
             {
                 foreach (var entity in entities)
@@ -420,7 +360,7 @@ namespace Nop.Data.DataProviders
         /// </returns>
         public virtual async Task<int> BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
-            using var dataContext = await CreateDataConnectionAsync();
+            using var dataContext = CreateDataConnection();
             return await dataContext.GetTable<TEntity>()
                 .Where(predicate)
                 .DeleteAsync();
@@ -434,7 +374,7 @@ namespace Nop.Data.DataProviders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
-            using var dataContext = await CreateDataConnectionAsync(LinqToDbDataProvider);
+            using var dataContext = CreateDataConnection(LinqToDbDataProvider);
             await dataContext.BulkCopyAsync(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
         }
 
@@ -449,7 +389,7 @@ namespace Nop.Data.DataProviders
         /// </returns>
         public virtual async Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
         {
-            using var dataContext = await CreateDataConnectionAsync();
+            using var dataContext = CreateDataConnection();
             var command = new CommandInfo(dataContext, sql, dataParameters);
             var affectedRecords = await command.ExecuteAsync();
             UpdateOutputParameters(dataContext, dataParameters);
@@ -467,13 +407,13 @@ namespace Nop.Data.DataProviders
         /// A task that represents the asynchronous operation
         /// The task result contains the returns collection of query result records
         /// </returns>
-        public virtual async Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
+        public virtual Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
         {
-            using var dataContext = await CreateDataConnectionAsync();
+            using var dataContext = CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
             var rez = command.QueryProc<T>()?.ToList();
             UpdateOutputParameters(dataContext, parameters);
-            return rez ?? new List<T>();
+            return Task.FromResult<IList<T>>(rez ?? new List<T>());
         }
 
         /// <summary>
@@ -486,10 +426,10 @@ namespace Nop.Data.DataProviders
         /// A task that represents the asynchronous operation
         /// The task result contains the collection of values of specified type
         /// </returns>
-        public virtual async Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
+        public virtual Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
         {
-            using var dataContext = await CreateDataConnectionAsync();
-            return dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
+            using var dataContext = CreateDataConnection();
+            return Task.FromResult<IList<T>>(dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>());
         }
 
         /// <summary>
@@ -499,7 +439,7 @@ namespace Nop.Data.DataProviders
         /// <typeparam name="TEntity">Entity type</typeparam>
         public virtual async Task TruncateAsync<TEntity>(bool resetIdentity = false) where TEntity : BaseEntity
         {
-            using var dataContext = await CreateDataConnectionAsync(LinqToDbDataProvider);
+            using var dataContext = CreateDataConnection(LinqToDbDataProvider);
             await dataContext.GetTable<TEntity>().TruncateAsync(resetIdentity);
         }
 
@@ -516,15 +456,6 @@ namespace Nop.Data.DataProviders
         /// Gets or sets a value that indicates whether should use MiniProfiler for the current connection
         /// </summary>
         protected static bool MiniProfillerEnabled => Singleton<AppSettings>.Instance.Get<CommonConfig>().MiniProfilerEnabled;
-
-        /// <summary>
-        /// Database connection string
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        protected static async Task<string> GetCurrentConnectionStringAsync()
-        {
-            return (await DataSettingsManager.LoadSettingsAsync()).ConnectionString;
-        }
 
         /// <summary>
         /// Database connection string

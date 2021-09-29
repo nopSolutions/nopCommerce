@@ -72,7 +72,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (_webHelper.IsAjaxRequest(context.HttpContext.Request))
                     return;
 
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
                 //get action and controller names
