@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -35,6 +36,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Fields
 
             private readonly ICustomerService _customerService;
+            private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
 
             #endregion
@@ -42,10 +44,12 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Ctor
 
             public ValidatePasswordFilter(ICustomerService customerService,
+                IWebHelper webHelper,
                 IWorkContext workContext)
             {
                 _customerService = customerService;
                 _workContext = workContext;
+                _webHelper = webHelper;
             }
 
             #endregion
@@ -86,7 +90,12 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!await _customerService.PasswordIsExpiredAsync(customer))
                     return;
 
-                var returnUrl = context.HttpContext.Request.Path;
+
+                //ignore AJAX requests
+                if (_webHelper.IsAjaxRequest(context.HttpContext.Request))
+                    return;
+
+                var returnUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
                 //redirect to ChangePassword page if expires
                 context.Result = new RedirectToRouteResult("CustomerChangePassword", new { returnUrl = returnUrl });
             }
