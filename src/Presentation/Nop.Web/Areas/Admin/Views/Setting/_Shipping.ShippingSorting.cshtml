@@ -1,0 +1,38 @@
+@using Nop.Core.Domain.Shipping
+@using Nop.Services
+@model ShippingSettingsModel
+<div class="card-body">
+        <form id="sortingForm">
+            
+            <div id="shipping-methods-sorting" class="shipping-sorting-items">
+                @{
+                    var items = await ShippingSortingEnum.Price.ToSelectListAsync();
+                }
+                <div class="col-md-3">
+                    <div class="label-wrapper">
+                        <label for="ShippingSorting" class="col-form-label">@T("Admin.Configuration.Shipping.Settings.SortingBy")</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <nop-select asp-for="ShippingSorting" asp-items="@items" />
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" id="sortingButton">@T("Admin.Common.Save")</button>
+        </form>
+    </div>
+    <script>
+        const saveSorting = () => {
+            const selected = $("#ShippingSorting option:selected").text();
+            let jsonData = {
+                'sorting': selected
+            };
+
+            console.log(jsonData);
+            addAntiForgeryToken(jsonData);
+            $.post("@Url.Action("SaveSortingShipping", "Shipping")", jsonData)
+                .done(() => $("#saveSortingOk").click())
+                .fail(() => $("#saveSortingError").click());
+        }
+
+        $(document).ready(() => $('#sortingButton').click(saveSorting));
+</script>

@@ -9264,6 +9264,12 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Updated">
     <Value>The settings have been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Settings.SortingBy">
+    <Value>Sorting by</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Settings.SortingTitle">
+    <Value>Sorting type</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Warehouses">
     <Value>Warehouses</Value>
   </LocaleResource>

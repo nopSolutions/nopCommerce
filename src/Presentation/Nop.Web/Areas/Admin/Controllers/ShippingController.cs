@@ -399,7 +399,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
             
-            _shippingSettings.ShippingSorting = sorting == "sortByPrice" ? ShippingSortingEnum.Price : ShippingSortingEnum.Position;
+            _shippingSettings.ShippingSorting = sorting == "Price" ? ShippingSortingEnum.Price : ShippingSortingEnum.Position;
             await _settingService.SaveSettingAsync(_shippingSettings, s => s.ShippingSorting);
 
             return Ok();

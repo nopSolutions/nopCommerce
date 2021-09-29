@@ -451,8 +451,7 @@ i.false-icon {
 
 .shipping-sorting-items {
   display: flex;
-  flex-direction: column;
-  padding: 18px;
+  padding-bottom: 10px;
 }
 
 .payments-step .configuration-step-icon {
