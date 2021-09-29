@@ -116,7 +116,7 @@
             var rootAppPath = '@(Url.Content("~/"))';
     </script>
     @Html.NopHeadCustom()
-    @Html.NopCssFiles(ResourceLocation.Head, false)
+    @Html.NopCssFilesAsync(ResourceLocation.Head, false)
     @Html.NopScripts(ResourceLocation.Head, false)
 </head>
 <body class="hold-transition skin-blue sidebar-collapse layout-fixed">
@@ -154,7 +154,7 @@
             </div>
         </div>
     </div>
-    @Html.NopCssFiles(ResourceLocation.Footer)
+    @Html.NopCssFilesAsync(ResourceLocation.Footer)
     @Html.NopScripts(ResourceLocation.Footer)
     <script>
         $(document).ready(function () {

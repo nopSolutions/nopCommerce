@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
@@ -177,10 +178,10 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public static IHtmlContent NopScripts(this IHtmlHelper html, ResourceLocation location, bool? bundleFiles = null)
+        public static async Task<IHtmlContent> NopScripts(this IHtmlHelper html, ResourceLocation location, bool? bundleFiles = null)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            return new HtmlString(pageHeadBuilder.GenerateScripts(location, bundleFiles));
+            return new HtmlString(await pageHeadBuilder.GenerateScriptsAsync(location, bundleFiles));
         }
 
 
@@ -278,10 +279,10 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public static IHtmlContent NopCssFiles(this IHtmlHelper html, ResourceLocation location, bool? bundleFiles = null)
+        public static async Task<IHtmlContent> NopCssFilesAsync(this IHtmlHelper html, ResourceLocation location, bool? bundleFiles = null)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            return new HtmlString(pageHeadBuilder.GenerateCssFiles(location, bundleFiles));
+            return new HtmlString(await pageHeadBuilder.GenerateCssFilesAsync(location, bundleFiles));
         }
 
         /// <summary>

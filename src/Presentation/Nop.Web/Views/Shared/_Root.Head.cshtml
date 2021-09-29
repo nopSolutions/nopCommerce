@@ -52,7 +52,7 @@
     @*This is used so that themes can inject content into the header*@
     @await Html.PartialAsync("Head")
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
-    @Html.NopCssFiles(ResourceLocation.Head)
+    @Html.NopCssFilesAsync(ResourceLocation.Head)
     @Html.NopScripts(ResourceLocation.Head)
     @Html.NopCanonicalUrls()
     @await Component.InvokeAsync("NewsRssHeaderLink")
@@ -68,7 +68,7 @@
 </head>
 <body>
     @RenderBody()
-    @Html.NopCssFiles(ResourceLocation.Footer)
+    @Html.NopCssFilesAsync(ResourceLocation.Footer)
     @Html.NopScripts(ResourceLocation.Footer)
     @Html.NopInlineScripts(ResourceLocation.Footer)
 </body>

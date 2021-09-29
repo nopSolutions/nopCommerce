@@ -320,7 +320,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public virtual string GenerateScripts(ResourceLocation location, bool? bundleFiles = null)
+        public virtual async Task<string> GenerateScriptsAsync(ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
                 return "";
@@ -388,7 +388,7 @@ namespace Nop.Web.Framework.UI
                         CacheTime = _appSettings.Get<CacheConfig>().BundledFilesCacheTime
                     };
 
-                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true).Result;
+                    var shouldRebuild = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true);
 
                     if (shouldRebuild)
                     {
@@ -401,7 +401,7 @@ namespace Nop.Web.Framework.UI
                             _processor.Process(configFilePath, new List<Bundle> { bundle });
                         }
 
-                        _staticCacheManager.SetAsync(cacheKey, false);
+                        await _staticCacheManager.SetAsync(cacheKey, false);
                     }
 
                     //render
@@ -541,13 +541,14 @@ namespace Nop.Web.Framework.UI
                 DebugSrc = debugSrc
             });
         }
+
         /// <summary>
         /// Generate all CSS parts
         /// </summary>
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public virtual string GenerateCssFiles(ResourceLocation location, bool? bundleFiles = null)
+        public virtual async Task<string> GenerateCssFilesAsync(ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
                 return "";
@@ -618,7 +619,7 @@ namespace Nop.Web.Framework.UI
                         CacheTime = _appSettings.Get<CacheConfig>().BundledFilesCacheTime
                     };
 
-                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true).Result;
+                    var shouldRebuild = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true);
 
                     if (shouldRebuild)
                     {
@@ -631,7 +632,7 @@ namespace Nop.Web.Framework.UI
                             _processor.Process(configFilePath, new List<Bundle> { bundle });
                         }
 
-                        _staticCacheManager.SetAsync(cacheKey, false);
+                        await _staticCacheManager.SetAsync(cacheKey, false);
                     }
 
                     //render

@@ -136,7 +136,7 @@
             var rootAppPath = '@(Url.Content("~/"))';
     </script>
     @Html.NopHeadCustom()
-    @Html.NopCssFiles(ResourceLocation.Head, false)
+    @Html.NopCssFilesAsync(ResourceLocation.Head, false)
     @Html.NopScripts(ResourceLocation.Head, false)
     @*Insert favicon and app icons head code*@
     @await Component.InvokeAsync("Favicon")
@@ -350,7 +350,7 @@
             </script>
         }
     }
-    @Html.NopCssFiles(ResourceLocation.Footer)
+    @Html.NopCssFilesAsync(ResourceLocation.Footer)
     @Html.NopScripts(ResourceLocation.Footer)
     <a id="backTop" class="btn btn-back-top bg-teal"></a>
     <script>
