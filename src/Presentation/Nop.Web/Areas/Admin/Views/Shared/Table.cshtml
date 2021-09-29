@@ -275,9 +275,6 @@
             $.each(columnData_@(tableName), function (index, element) {
                 if (element.Editable == true) {
                     var value = $($($(currentCells).children("[data-columnname='" + element.Data + "']")).children('input')[0]).val();
-                    if (element.Type == 'number') {
-                        value = new Intl.NumberFormat('@currentCulture', { useGrouping: false }).format(value);
-                    }
                     updateRowData.push({
                         'pname': element.Data, 'pvalue': value
                     });
