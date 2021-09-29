@@ -10,10 +10,7 @@ namespace Nop.Core.Html
     public partial class ResolveLinksHelper
     {
         #region Fields
-
-        private const string LINK = "<a href=\"{0}{1}\" rel=\"nofollow\">{2}</a>";
-        private const int MAX_LENGTH = 50;
-
+        
         /// <summary>
         /// The regular expression used to parse links.
         /// </summary>
@@ -97,12 +94,15 @@ namespace Nop.Core.Html
                 return string.Empty;
 
             var info = CultureInfo.InvariantCulture;
+            const string link = "<a href=\"{0}{1}\" rel=\"nofollow\">{2}</a>";
+            const int maxLength = 50;
+
             foreach (Match match in _regex.Matches(text))
             {
                 text = text.Replace(match.Value,
                     !match.Value.Contains("://")
-                        ? string.Format(info, LINK, "http://", match.Value, ShortenUrl(match.Value, MAX_LENGTH))
-                        : string.Format(info, LINK, string.Empty, match.Value, ShortenUrl(match.Value, MAX_LENGTH)));
+                        ? string.Format(info, link, "http://", match.Value, ShortenUrl(match.Value, maxLength))
+                        : string.Format(info, link, string.Empty, match.Value, ShortenUrl(match.Value, maxLength)));
             }
 
             return text;
