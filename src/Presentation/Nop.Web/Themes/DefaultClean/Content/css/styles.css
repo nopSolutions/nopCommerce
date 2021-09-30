@@ -6524,7 +6524,34 @@ pre {
   color: #666;
 }
 
+a.skip {
+  position: absolute;
+  top: -1000px;
+  left: -1000px;
+  height: 1px;
+  width: 1px;
+  text-align: left;
+  overflow: hidden;
+}
 
+a.skip:active,
+a.skip:focus,
+a.skip:hover {
+  position: initial;
+  top: 0;
+  left: 0;
+  display: block;
+  height: auto;
+  margin: 3px 0;
+  overflow: visible;
+  padding: 2px;
+  color: #444444;
+  background: #ffffff;
+  text-decoration: underline;
+  text-align: center;
+  width: 100%;
+  font-size: 16px;
+}
 
 @media all and (max-width: 769px) {
 
@@ -6684,6 +6711,8 @@ pre {
     color: #fff;
     text-transform: uppercase;
     cursor: pointer;
+    width: 100%;
+    border: none;
   }
 
   .top-menu {
@@ -8635,6 +8664,10 @@ pre {
 
   .header-menu > ul > li {
     padding: 0 20px;
+  }
+
+  .header-menu > ul > li:focus-within > .sublist {
+    display: block;
   }
 
   .header-menu > ul > li > a,
