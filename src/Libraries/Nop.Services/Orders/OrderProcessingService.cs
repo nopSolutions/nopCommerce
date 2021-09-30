@@ -1614,7 +1614,7 @@ namespace Nop.Services.Orders
                                     var secondTime = dates[1].Split('-')[1].Split(':');
                                     var thirdTime = dates[2].Split('-')[1].Split(':');
                                     //Get the first value of the first setting
-                                    var nextDayDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day + 1, Convert.ToInt32(firstTime[0]), Convert.ToInt32(firstTime[1]), Convert.ToInt32(firstTime[2]), DateTimeKind.Utc);
+                                    var nextDayDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(firstTime[0]), Convert.ToInt32(firstTime[1]), Convert.ToInt32(firstTime[2]), DateTimeKind.Utc).AddDays(1);
                                     //Get the first value of the second setting
                                     var firstDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(firstTime[0]), Convert.ToInt32(firstTime[1]), Convert.ToInt32(firstTime[2]), DateTimeKind.Utc);
                                     //Get the second value of the second setting
