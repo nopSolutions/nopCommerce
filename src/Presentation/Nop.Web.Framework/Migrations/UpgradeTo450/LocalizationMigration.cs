@@ -88,7 +88,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
                 //#5204
                 ["Admin.Configuration.Shipping.Settings.SortingTitle"] = "Sorting type",
-                ["Admin.Configuration.Shipping.Settings.SortingBy"] = "Sorting by"
+                ["Admin.Configuration.Shipping.Settings.SortingBy"] = "Sorting by",
+                ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position"] = "Position",
+                ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Price"] = "Price",
             }, languageId).Wait();
 
             // rename locales
