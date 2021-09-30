@@ -140,6 +140,8 @@ function displayBarNotification(message, messagetype, timeout) {
     for (var i = 0; i < messages.length; i++) {
         var content = document.createElement('p');
         content.classList.add('content');
+        content.setAttribute('aria-live', 'assertive');
+        content.setAttribute('role', 'alert');
         content.innerHTML = messages[i];
 
       htmlcode.appendChild(content);
