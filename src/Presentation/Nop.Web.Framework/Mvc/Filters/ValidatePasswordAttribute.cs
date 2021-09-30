@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -48,8 +47,8 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IWorkContext workContext)
             {
                 _customerService = customerService;
-                _workContext = workContext;
                 _webHelper = webHelper;
+                _workContext = workContext;
             }
 
             #endregion
@@ -67,6 +66,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                     throw new ArgumentNullException(nameof(context));
 
                 if (context.HttpContext.Request == null)
+                    return;
+
+                //ignore AJAX requests
+                if (_webHelper.IsAjaxRequest(context.HttpContext.Request))
                     return;
 
                 if (!await DataSettingsManager.IsDatabaseInstalledAsync())
@@ -88,11 +91,6 @@ namespace Nop.Web.Framework.Mvc.Filters
                 //check password expiration
                 var customer = await _workContext.GetCurrentCustomerAsync();
                 if (!await _customerService.PasswordIsExpiredAsync(customer))
-                    return;
-
-
-                //ignore AJAX requests
-                if (_webHelper.IsAjaxRequest(context.HttpContext.Request))
                     return;
 
                 var returnUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
