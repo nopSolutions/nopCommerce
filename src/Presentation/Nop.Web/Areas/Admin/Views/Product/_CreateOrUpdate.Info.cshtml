@@ -30,6 +30,14 @@
         toggleProductType();
     });
 
+    function toggleShowOnHomepage() {
+        if ($('#@Html.IdFor(model => model.ShowOnHomepage)').is(':checked')) {
+            $('#pnlDisplayOrder').showElement();
+        } else {
+            $('#pnlDisplayOrder').hideElement();
+        }
+    }
+
     function toggleProductType() {
         var simpleProductId = "@((int)ProductType.SimpleProduct)";
         var groupedProductId = "@((int)ProductType.GroupedProduct)";
@@ -345,8 +353,8 @@
             <span asp-validation-for="ShowOnHomepage"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="ShowOnHomepage">
-        <div class="form-group row @(Model.ProductEditorSettingsModel.ShowOnHomepage  ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+    <nop-nested-setting asp-for="ShowOnHomepage" disable-auto-generation="true">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.ShowOnHomepage  ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <div class="col-md-3">
                 <nop-label asp-for="DisplayOrder" />
             </div>
