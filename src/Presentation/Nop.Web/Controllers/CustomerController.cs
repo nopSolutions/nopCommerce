@@ -1620,7 +1620,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> ChangePassword(ChangePasswordModel model)
+        public virtual async Task<IActionResult> ChangePassword(ChangePasswordModel model, string returnUrl)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
@@ -1635,7 +1635,7 @@ namespace Nop.Web.Controllers
                 if (changePasswordResult.Success)
                 {
                     _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
-                    return View(model);
+                    return string.IsNullOrEmpty(returnUrl)  ? View(model) : new RedirectResult(returnUrl);
                 }
 
                 //errors
