@@ -263,7 +263,10 @@ namespace Nop.Services.Messages
                     "%Order.CreatedOn%",
                     "%Order.OrderURLForCustomer%",
                     "%Order.PickupInStore%",
-                    "%Order.OrderId%"
+                    "%Order.OrderId%",
+                    "%Order.IsCompletelyShipped%",
+                    "%Order.IsCompletelyReadyForPickup%",
+                    "%Order.IsCompletelyDelivered%"
                 });
 
                 //shipment tokens
@@ -996,6 +999,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingZipPostalCode", (await orderAddress(order))?.ZipPostalCode ?? string.Empty));
             tokens.Add(new Token("Order.ShippingCountry", await _countryService.GetCountryByAddressAsync(await orderAddress(order)) is Country orderCountry ? await _localizationService.GetLocalizedAsync(orderCountry, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingCustomAttributes", await _addressAttributeFormatter.FormatAttributesAsync((await orderAddress(order))?.CustomAttributes ?? string.Empty), true));
+            tokens.Add(new Token("Order.IsCompletelyShipped", !order.PickupInStore && order.ShippingStatus == ShippingStatus.Shipped));
+            tokens.Add(new Token("Order.IsCompletelyReadyForPickup", order.PickupInStore && !await _orderService.HasItemsToAddToShipmentAsync(order) && !await _orderService.HasItemsToReadyForPickupAsync(order)));
+            tokens.Add(new Token("Order.IsCompletelyDelivered", order.ShippingStatus == ShippingStatus.Delivered));
 
             var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(order.PaymentMethodSystemName);
             var paymentMethodName = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, (await _workContext.GetWorkingLanguageAsync()).Id) : order.PaymentMethodSystemName;
@@ -1539,6 +1545,7 @@ namespace Nop.Services.Messages
                 MessageTemplateSystemNames.OrderCancelledCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
                 MessageTemplateSystemNames.ShipmentSentCustomerNotification or 
+                MessageTemplateSystemNames.ShipmentReadyForPickupCustomerNotification or 
                 MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ShipmentTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
                 MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification or 

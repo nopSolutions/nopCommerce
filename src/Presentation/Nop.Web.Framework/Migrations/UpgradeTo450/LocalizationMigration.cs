@@ -97,6 +97,27 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Admin.System.Warnings.PluginNotInstalled.HelpText"] = "You may delete the plugins you don't use in order to increase startup time",
 
                 ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination"] = "This attribute value cannot be removed because it is already used in this combination: {0}.",
+
+                //#5162
+                ["Admin.ContentManagement.MessageTemplates.Description.ShipmentDelivered.CustomerNotification"] = "This message template is used to notify a customer that the shipment of the certain order is delivered.",
+                ["Admin.ContentManagement.MessageTemplates.Description.ShipmentReadyForPickup.CustomerNotification"] = "This message template is used to notify a customer that the shipment of the certain order is ready for pickup.",
+                ["Admin.ContentManagement.MessageTemplates.Description.ShipmentSent.CustomerNotification"] = "This message template is used to notify a customer that the shipment of the certain order is sent.",
+                ["Admin.Orders.Shipments.CanMarkAsReadyForPickup"] = "Ready for pickup",
+                ["Admin.Orders.Shipments.CanMarkAsReadyForPickup.Hint"] = "Check to apply current date to shipment.",
+                ["Admin.Orders.Shipments.DateNotAvailable"] = "-",
+                ["Admin.Orders.Shipments.List.LoadNotReadyForPickup"] = "Load not ready for pickup",
+                ["Admin.Orders.Shipments.List.LoadNotReadyForPickup.Hint"] = "Load only not ready for pickup shipments.",
+                ["Admin.Orders.Shipments.PickupInStore"] = "Pickup from store",
+                ["Admin.Orders.Shipments.ReadyForPickupDate"] = "Date ready for pickup",
+                ["Admin.Orders.Shipments.ReadyForPickupDate.Button"] = "Set as ready for pickup",
+                ["Admin.Orders.Shipments.ReadyForPickupDate.EnterUtc"] = "Date and time should be entered in Coordinated Universal Time (UTC)",
+                ["Admin.Orders.Shipments.ReadyForPickupDate.Hint"] = "The date this shipment was ready for pickup.",
+                ["Admin.Orders.Shipments.ReadyForPickupDate.NotYet"] = "Not yet",
+                ["Admin.Orders.Shipments.ReadyForPickupSelected"] = "Set as ready for pickup (selected)",
+                ["Order.Shipments.ReadyForPickupDate"] = "Date ready for pickup",
+                ["Order.Shipments.ReadyForPickupDate.NotYet"] = "Not yet",
+                ["Admin.Orders.Shipments.Products.QtyReadyForPickup"] = "Qty ready for pickup",
+                ["Admin.Orders.Shipments.Products.QtyToPickup"] = "Qty to pickup",
                 
                 //#5042
                 ["Admin.Help.Documentation"] = "Documentation",

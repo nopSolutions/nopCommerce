@@ -251,8 +251,8 @@ namespace Nop.Web.Factories
 
                 model.ShippingMethod = order.ShippingMethod;
 
-                //shipments (only already shipped)
-                var shipments = (await _shipmentService.GetShipmentsByOrderIdAsync(order.Id, true)).OrderBy(x => x.CreatedOnUtc).ToList();
+                //shipments (only already shipped or ready for pickup)
+                var shipments = (await _shipmentService.GetShipmentsByOrderIdAsync(order.Id, !order.PickupInStore, order.PickupInStore)).OrderBy(x => x.CreatedOnUtc).ToList();
                 foreach (var shipment in shipments)
                 {
                     var shipmentModel = new OrderDetailsModel.ShipmentBriefModel
@@ -262,6 +262,8 @@ namespace Nop.Web.Factories
                     };
                     if (shipment.ShippedDateUtc.HasValue)
                         shipmentModel.ShippedDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
+                    if (shipment.ReadyForPickupDateUtc.HasValue)
+                        shipmentModel.ReadyForPickupDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ReadyForPickupDateUtc.Value, DateTimeKind.Utc);
                     if (shipment.DeliveryDateUtc.HasValue)
                         shipmentModel.DeliveryDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
                     model.Shipments.Add(shipmentModel);
@@ -511,6 +513,8 @@ namespace Nop.Web.Factories
             };
             if (shipment.ShippedDateUtc.HasValue)
                 model.ShippedDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
+            if (shipment.ReadyForPickupDateUtc.HasValue)
+                model.ReadyForPickupDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ReadyForPickupDateUtc.Value, DateTimeKind.Utc);
             if (shipment.DeliveryDateUtc.HasValue)
                 model.DeliveryDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
 

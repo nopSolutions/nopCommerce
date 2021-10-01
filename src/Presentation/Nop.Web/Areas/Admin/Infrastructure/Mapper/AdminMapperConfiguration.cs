@@ -1483,12 +1483,15 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<Shipment, ShipmentModel>()
                 .ForMember(model => model.ShippedDate, options => options.Ignore())
+                .ForMember(model => model.ReadyForPickupDate, options => options.Ignore())
                 .ForMember(model => model.DeliveryDate, options => options.Ignore())
                 .ForMember(model => model.TotalWeight, options => options.Ignore())
                 .ForMember(model => model.TrackingNumberUrl, options => options.Ignore())
                 .ForMember(model => model.Items, options => options.Ignore())
                 .ForMember(model => model.ShipmentStatusEvents, options => options.Ignore())
+                .ForMember(model => model.PickupInStore, options => options.Ignore())
                 .ForMember(model => model.CanShip, options => options.Ignore())
+                .ForMember(model => model.CanMarkAsReadyForPickup, options => options.Ignore())
                 .ForMember(model => model.CanDeliver, options => options.Ignore())
                 .ForMember(model => model.CustomOrderNumber, options => options.Ignore());
 
