@@ -9243,9 +9243,6 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Providers.Fields.SystemName">
     <Value>System name</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Providers.SortByPosition">
-    <Value>Sorting by position</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Providers.SortByPrice">
     <Value>Sorting by price</Value>
   </LocaleResource>

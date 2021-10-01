@@ -132,7 +132,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _shippingModelFactory.PrepareShippingProviderSearchModelAsync(new ShippingProviderSearchModel());
-            model.ShippingSorting = _shippingSettings.ShippingSorting;
 
             //show configuration tour
             if (showtour)
