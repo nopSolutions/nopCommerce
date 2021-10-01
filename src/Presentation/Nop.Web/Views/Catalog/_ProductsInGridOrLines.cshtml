@@ -17,23 +17,24 @@
                     @await Html.PartialAsync("_ProductBox", product)
                 </div>
             }
+            <div class="pager" hidden>
+                @Html.Pager(Model).QueryParam("pagenumber")
+            </div>
         </div>
     </div>
 
-    var pager = Html.Pager(Model)
-        .QueryParam("pagenumber")
-        // for search page
-        .BooleanParameterName("advs")
-        .BooleanParameterName("isc")
-        .BooleanParameterName("sid")
-        .RenderEmptyParameters(true);
-
-    @if (!await pager.IsEmpty())
-    {
-        <div class="pager">
-            @pager
-        </div>
-    }
+    <script>
+        var viewModeClass = '.@(Model.ViewMode == "list" ? "product-list" : "product-grid")';
+        $(viewModeClass).jscroll({
+            loadingHtml: '<small>Loading...</small>',
+            padding: 200,
+            debug: true,
+            autoTrigger: true,
+            autoTriggerUntil: 100,
+            nextSelector: 'li.next-page a',
+            contentSelector: viewModeClass
+        });
+    </script>
 }
 else if (!string.IsNullOrEmpty(Model.NoResultMessage))
 {

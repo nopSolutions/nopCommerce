@@ -371,7 +371,7 @@ namespace Nop.Services.Orders
             {
                 var currentDay = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59);
                 var createdToDate = (createdToUtc.Value - currentDay).Days > 0 ? currentDay : createdToUtc.Value;
-                query = query.Where(o => o.ScheduleDate <= createdToUtc.Value);
+                query = query.Where(o => o.ScheduleDate <= createdToDate);
             }
             else if(createdToUtc.HasValue)
             {
