@@ -186,6 +186,17 @@ namespace Nop.Services.Messages
         Task<IList<int>> SendShipmentSentCustomerNotificationAsync(Shipment shipment, int languageId);
 
         /// <summary>
+        /// Sends a shipment ready for pickup notification to a customer
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        Task<IList<int>> SendShipmentReadyForPickupNotificationAsync(Shipment shipment, int languageId);
+
+        /// <summary>
         /// Sends a shipment delivered notification to a customer
         /// </summary>
         /// <param name="shipment">Shipment</param>

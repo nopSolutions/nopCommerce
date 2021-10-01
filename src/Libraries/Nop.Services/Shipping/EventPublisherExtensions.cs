@@ -21,6 +21,17 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
+        /// Publishes the shipment ready for pickup event.
+        /// </summary>
+        /// <param name="eventPublisher">The event publisher.</param>
+        /// <param name="shipment">The shipment.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public static async Task PublishShipmentReadyForPickupAsync(this IEventPublisher eventPublisher, Shipment shipment)
+        {
+            await eventPublisher.PublishAsync(new ShipmentReadyForPickupEvent(shipment));
+        }
+
+        /// <summary>
         /// Publishes the shipment delivered event.
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>

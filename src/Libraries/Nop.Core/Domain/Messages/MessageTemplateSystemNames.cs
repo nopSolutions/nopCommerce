@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Messages
+﻿namespace Nop.Core.Domain.Messages
 {
     /// <summary>
     /// Represents message template system names
@@ -80,6 +80,11 @@ namespace Nop.Core.Domain.Messages
         /// Represents system name of notification customer about sent shipment
         /// </summary>
         public const string ShipmentSentCustomerNotification = "ShipmentSent.CustomerNotification";
+
+        /// <summary>
+        /// Represents system name of notification customer about ready for pickup shipment
+        /// </summary>
+        public const string ShipmentReadyForPickupCustomerNotification = "ShipmentReadyForPickup.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about delivered shipment

@@ -835,6 +835,54 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
+        /// Sends a shipment ready for pickup notification to a customer
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendShipmentReadyForPickupNotificationAsync(Shipment shipment, int languageId)
+        {
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
+            if (order == null)
+                throw new Exception("Order cannot be loaded");
+
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ShipmentReadyForPickupCustomerNotification, store.Id);
+            if (!messageTemplates.Any())
+                return new List<int>();
+
+            //tokens
+            var commonTokens = new List<Token>();
+            await _messageTokenProvider.AddShipmentTokensAsync(commonTokens, shipment, languageId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+
+            return await messageTemplates.SelectAwait(async messageTemplate =>
+            {
+                //email account
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+                var tokens = new List<Token>(commonTokens);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+
+                //event notification
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+
+                var toEmail = billingAddress.Email;
+                var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
+
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
+        }
+
+        /// <summary>
         /// Sends a shipment delivered notification to a customer
         /// </summary>
         /// <param name="shipment">Shipment</param>

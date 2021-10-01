@@ -34,6 +34,11 @@ namespace Nop.Core.Domain.Shipping
         public DateTime? DeliveryDateUtc { get; set; }
 
         /// <summary>
+        /// Gets or sets the ready for pickup date and time
+        /// </summary>
+        public DateTime? ReadyForPickupDateUtc { get; set; }
+
+        /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
         public string AdminComment { get; set; }

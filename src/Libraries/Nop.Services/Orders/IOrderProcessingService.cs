@@ -91,7 +91,15 @@ namespace Nop.Services.Orders
         /// <param name="notifyCustomer">True to notify customer</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task ShipAsync(Shipment shipment, bool notifyCustomer);
-        
+
+        /// <summary>
+        /// Marks a shipment as ready for pickup
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <param name="notifyCustomer">True to notify customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task ReadyForPickupAsync(Shipment shipment, bool notifyCustomer);
+
         /// <summary>
         /// Marks a shipment as delivered
         /// </summary>
