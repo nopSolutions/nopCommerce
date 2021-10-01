@@ -363,11 +363,20 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.AffiliateId == affiliateId);
 
             if (createdFromUtc.HasValue)
+            {
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
+            }
 
-            if (createdToUtc.HasValue)
-                query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
-
+            if (vendorId > 0)
+            {
+                var currentDay = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59);
+                var createdToDate = (createdToUtc.Value - currentDay).Days > 0 ? currentDay : createdToUtc.Value;
+                query = query.Where(o => o.ScheduleDate <= createdToUtc.Value);
+            }
+            else if(createdToUtc.HasValue)
+            {
+                query = query.Where(o => o.CreatedOnUtc <= createdToUtc.Value);
+            }
             if (osIds != null && osIds.Any())
                 query = query.Where(o => osIds.Contains(o.OrderStatusId));
 

@@ -874,6 +874,11 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
             //searchModel.BillingPhoneEnabled = _addressSettings.PhoneEnabled;
 
+            if (searchModel.IsLoggedInAsVendor)
+            {
+                var currentDay = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59);
+                searchModel.EndDate = !searchModel.EndDate.HasValue || (searchModel.EndDate.Value - currentDay).Days > 0 ? currentDay : searchModel.EndDate.Value;
+            }
             //prepare available order, payment and shipping statuses
             await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
             if (searchModel.AvailableOrderStatuses.Any())
@@ -960,6 +965,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var shippingStatusIds = (searchModel.ShippingStatusIds?.Contains(0) ?? true) ? null : searchModel.ShippingStatusIds.ToList();
             if (await _workContext.GetCurrentVendorAsync() != null)
                 searchModel.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+
+            if (searchModel.VendorId > 0)
+            {
+                var currentDay = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59);
+                searchModel.EndDate = !searchModel.EndDate.HasValue || (searchModel.EndDate.Value - currentDay).Days > 0 ? currentDay : searchModel.EndDate.Value;
+            }
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
@@ -1007,12 +1018,12 @@ namespace Nop.Web.Areas.Admin.Factories
                         CustomerFullName = customerFullName,
                         CustomerId = order.CustomerId,
                         CustomOrderNumber = order.CustomOrderNumber,
-                        ShippingAddress = shippingAddress
+                        ShippingAddress = shippingAddress,
                     };
 
                     //convert dates to the user time
                     orderModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc);
-
+                    orderModel.ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(order.ScheduleDate, DateTimeKind.Utc);
                     //fill in additional values (not existing in the entity)
                     orderModel.StoreName = (await _storeService.GetStoreByIdAsync(order.StoreId))?.Name ?? "Deleted";
                     orderModel.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
