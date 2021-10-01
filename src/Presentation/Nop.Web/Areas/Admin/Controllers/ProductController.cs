@@ -3016,6 +3016,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
                 return Content("This is not your product");
 
+            //check if existed combinations contains the specified attribute value
+            var existedCombinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
+            if (existedCombinations?.Any() == true)
+            {
+                foreach (var combination in existedCombinations)
+                {
+                    var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(combination.AttributesXml);
+                    
+                    if (attributeValues.Where(attribute => attribute.Id == id).Any())
+                    {
+                        return Conflict(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination"),
+                            await _productAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), ", ")));
+                    }
+                }
+            }
+
             await _productAttributeService.DeleteProductAttributeValueAsync(productAttributeValue);
 
             return new NullJsonResult();

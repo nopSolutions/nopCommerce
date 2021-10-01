@@ -3759,6 +3759,9 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew">
     <Value>Add a new value</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination">
+    <Value>This attribute value cannot be removed because it is already used in this combination: {0}.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditValueDetails">
     <Value>Edit value</Value>
   </LocaleResource>

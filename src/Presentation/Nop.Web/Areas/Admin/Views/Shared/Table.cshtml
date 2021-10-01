@@ -139,7 +139,12 @@
                             $('#@Model.Name').DataTable().draw(false);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            alert(errorThrown);
+                            if (jqXHR.status === 409)
+                            {
+                                showAlert('@(Model.Name)_deleteConflict', jqXHR.responseText);
+                                return;
+                            }
+                            showAlert('@(Model.Name)_deleteCommonFailed', errorThrown);
                         }
                     });
                 }
@@ -148,6 +153,8 @@
                 }
             }
             </script>
+            <nop-alert asp-alert-id="@(Model.Name)_deleteConflict" />
+            <nop-alert asp-alert-id="@(Model.Name)_deleteCommonFailed" />
             </text>
         }
     }

@@ -91,7 +91,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
                 //#5155
                 ["Admin.System.Warnings.PluginNotInstalled"] = "You haven't installed the following plugin(s)",
-                ["Admin.System.Warnings.PluginNotInstalled.HelpText"] = "You may delete the plugins you don't use in order to increase startup time"
+                ["Admin.System.Warnings.PluginNotInstalled.HelpText"] = "You may delete the plugins you don't use in order to increase startup time",
+
+                ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination"] = "This attribute value cannot be removed because it is already used in this combination: {0}.",
             }, languageId).Wait();
 
             // rename locales
