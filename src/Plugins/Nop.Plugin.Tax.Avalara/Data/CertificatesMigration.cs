@@ -53,7 +53,7 @@ namespace Nop.Plugin.Tax.Avalara.Data
                 .FirstOrDefault(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
                 ?.Id;
 
-            _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Tax.Avalara.Configuration.Certificates"] = "Exemption certificates",
                 ["Plugins.Tax.Avalara.Configuration.Certificates.InProgress"] = "Exemption certificates",

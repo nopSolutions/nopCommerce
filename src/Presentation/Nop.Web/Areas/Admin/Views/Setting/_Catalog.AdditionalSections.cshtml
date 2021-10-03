@@ -22,7 +22,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ShowBestsellersOnHomepage">
-        <div class="form-group row advanced-setting" id="pnlNumberOfBestsellersOnHomepage">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="NumberOfBestsellersOnHomepage_OverrideForStore" asp-input="NumberOfBestsellersOnHomepage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="NumberOfBestsellersOnHomepage" />
@@ -44,7 +44,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ProductsAlsoPurchasedEnabled">
-        <div class="form-group row advanced-setting" id="pnlProductsAlsoPurchasedNumber">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ProductsAlsoPurchasedNumber_OverrideForStore" asp-input="ProductsAlsoPurchasedNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ProductsAlsoPurchasedNumber" />
@@ -66,7 +66,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="RecentlyViewedProductsEnabled">
-        <div class="form-group row advanced-setting" id="pnlRecentlyViewedProductsNumber">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="RecentlyViewedProductsNumber_OverrideForStore" asp-input="RecentlyViewedProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="RecentlyViewedProductsNumber" />
@@ -88,7 +88,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="NewProductsEnabled">
-        <div class="form-group row" id="pnlNewProductsNumber">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="NewProductsNumber_OverrideForStore" asp-input="NewProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="NewProductsNumber" />

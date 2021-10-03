@@ -5,24 +5,6 @@
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
 
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.EnableEcommerce)").click(toggleEnableEcommerce);
-        toggleEnableEcommerce();
-    });
-    
-    function toggleEnableEcommerce() {
-        if ($('#@Html.IdFor(model => model.EnableEcommerce)').is(':checked')) {
-            $('#pnlUseJsToSendEcommerceInfo').showElement();
-            $('#pnlIncludingTax').showElement();
-        }
-        else {
-            $('#pnlUseJsToSendEcommerceInfo').hideElement();
-            $('#pnlIncludingTax').hideElement();
-        }
-    }
-</script>
-
 <form asp-controller="WidgetsGoogleAnalytics" asp-action="Configure" method="post">
     <div class="cards-group">
         <div class="card card-default">
@@ -63,7 +45,7 @@
                     </div>
                 </div>
                 <nop-nested-setting asp-for="EnableEcommerce">
-                    <div class="form-group row" id="pnlUseJsToSendEcommerceInfo">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-override-store-checkbox asp-for="UseJsToSendEcommerceInfo_OverrideForStore" asp-input="UseJsToSendEcommerceInfo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                             <nop-label asp-for="UseJsToSendEcommerceInfo" />
@@ -73,7 +55,7 @@
                             <span asp-validation-for="UseJsToSendEcommerceInfo"></span>
                         </div>
                     </div>
-                    <div class="form-group row" id="pnlIncludingTax">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-override-store-checkbox asp-for="IncludingTax_OverrideForStore" asp-input="IncludingTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                             <nop-label asp-for="IncludingTax" />

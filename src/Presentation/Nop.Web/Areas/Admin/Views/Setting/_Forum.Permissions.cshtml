@@ -62,7 +62,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="AllowPostVoting">
-        <div class="form-group row advanced-setting" id="pnlMaxVotes">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="MaxVotesPerDay_OverrideForStore" asp-input="MaxVotesPerDay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="MaxVotesPerDay" />
@@ -84,7 +84,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="AllowPrivateMessages">
-        <div class="form-group row advanced-setting" id="pnlShowAlertForPM">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ShowAlertForPM_OverrideForStore" asp-input="ShowAlertForPM" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ShowAlertForPM" />

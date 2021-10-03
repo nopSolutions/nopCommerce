@@ -606,6 +606,28 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare plugins installed warning model
+        /// </summary>
+        /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PreparePluginsInstalledWarningModelAsync(List<SystemWarningModel> models)
+        {
+            var plugins = await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.NotInstalledOnly);
+
+            var notInstalled = plugins.Select(p => p.FriendlyName).ToList();
+
+            if (!notInstalled.Any())
+                return;
+
+            models.Add(new SystemWarningModel
+            {
+                Level = SystemWarningLevel.Warning,
+                DontEncode = true,
+                Text = $"{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotInstalled")}: {string.Join(", ", notInstalled)}. {await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotInstalled.HelpText")}"
+            });
+        }
+
+        /// <summary>
         /// Prepare plugins enabled warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
@@ -754,13 +776,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var currentStaticCacheManagerName = _staticCacheManager.GetType().Name;
 
-            if (_appSettings.DistributedCacheConfig.Enabled)
+            if (_appSettings.Get<DistributedCacheConfig>().Enabled)
                 currentStaticCacheManagerName +=
-                    $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.DistributedCacheConfig.DistributedCacheType)})";
+                    $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.Get<DistributedCacheConfig>().DistributedCacheType)})";
 
             model.CurrentStaticCacheManager = currentStaticCacheManagerName;
 
-            model.AzureBlobStorageEnabled = _appSettings.AzureBlobConfig.Enabled;
+            model.AzureBlobStorageEnabled = _appSettings.Get<AzureBlobConfig>().Enabled;
 
             return model;
         }
@@ -844,6 +866,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //not active plugins
             await PreparePluginsEnabledWarningModelAsync(models);
+
+            //not install plugins
+            await PreparePluginsInstalledWarningModelAsync(models);
 
             //proxy connection
             await PrepareProxyConnectionWarningModelAsync(models);

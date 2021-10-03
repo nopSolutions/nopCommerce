@@ -144,25 +144,17 @@
                     <script>
 	                    $(document).ready(function () {
                             $('#@Html.IdFor(model => model.EnableCertificates)').click(changeEnableCertificates);
-                            changeEnableCertificates();
 	                    });
 
                         function changeEnableCertificates() {
-                            var certificatesEnabled = $('#@Html.IdFor(model => model.EnableCertificates)').is(':checked');
-                            if (certificatesEnabled) {
-                                $('#pnlCertificates').showElement();
-                            } else {
-                                $('#pnlCertificates').hideElement();
-                            }
-
                             warningValidation(
                                 '@Url.Action("ChangeEnableCertificates", "Avalara")',
                                 '@Html.NameFor(model => model.EnableCertificates)',
-                                { enabled: certificatesEnabled });
+                                { enabled: $('#@Html.IdFor(model => model.EnableCertificates)').is(':checked') });
                         }
                     </script>
                 </div>
-                <nop-nested-setting asp-for="EnableCertificates" id="pnlCertificates">
+                <nop-nested-setting asp-for="EnableCertificates">
                     <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="SelectedCustomerRoleIds" />

@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Configuration;
 using Nop.Services.Plugins;
 
 namespace Nop.Web.Framework.Security

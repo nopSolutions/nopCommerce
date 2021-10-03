@@ -6,21 +6,6 @@
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
 
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.Enabled)").click(toggleEnabled);
-        toggleEnabled();
-    });
-
-    function toggleEnabled() {
-        if ($('#@Html.IdFor(model => model.Enabled)').is(':checked')) {
-            $('#script-field').showElement();
-        } else {
-            $('#script-field').hideElement();
-        }
-    }
-</script>
-
 <form asp-controller="AccessiBe" asp-action="Configure" method="post">
     <div class="cards-group">
         <div class="card card-default">
@@ -44,7 +29,7 @@
                     </div>
                 </div>
                 <nop-nested-setting asp-for="Enabled">
-                    <div class="form-group row" id="script-field">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-override-store-checkbox asp-for="Script_OverrideForStore" asp-input="Script" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                             <nop-label asp-for="Script" />

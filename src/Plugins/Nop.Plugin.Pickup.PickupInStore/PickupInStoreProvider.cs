@@ -146,7 +146,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
             await _storePickupPointService.InsertStorePickupPointAsync(pickupPoint);
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Pickup.PickupInStore.AddNew"] = "Add a new pickup point",
                 ["Plugins.Pickup.PickupInStore.Fields.Description"] = "Description",

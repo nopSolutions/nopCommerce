@@ -39,7 +39,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
                 .Select(lang => lang.Id).FirstOrDefault();
 
-            localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 //#5696
                 ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords"] = "Search keywords",
@@ -71,6 +71,29 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
                 //#5316
                 ["Account.Login.AlreadyLogin"] = "You are already logged in as {0}. You may log in to another account.",
+
+                //#5511
+                ["Admin.Configuration.AppSettings.Data"] = "Data configuration",
+                ["Admin.Configuration.AppSettings.Data.ConnectionString"] = "Connection string",
+                ["Admin.Configuration.AppSettings.Data.ConnectionString.Hint"] = "Sets a connection string.",
+                ["Admin.Configuration.AppSettings.Data.DataProvider"] = "Data provider",
+                ["Admin.Configuration.AppSettings.Data.DataProvider.Hint"] = "Sets a data provider.",
+                ["Admin.Configuration.AppSettings.Data.SQLCommandTimeout"] = "SQL command timeout",
+                ["Admin.Configuration.AppSettings.Data.SQLCommandTimeout.Hint"] = "Gets or sets the wait time (in seconds) before terminating the attempt to execute a command and generating an error. By default, timeout isn't set and a default value for the current provider used. Set 0 to use infinite timeout.",
+                ["Admin.Configuration.AppSettings.Description"] = "Configuration in ASP.NET Core is performed using a different configuration providers (e.g. external appsettings.json configuration file, environment variables, etc). These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"{0}\" target=\"_blank\">our documentation</a>. Please note that changing the values here will overwrite the external appsettings.json file, settings from other configuration providers will not be affected.",
+                ["Enums.Nop.Data.DataProviderType.Unknown"] = "Unknown",
+                ["Enums.Nop.Data.DataProviderType.SqlServer"] = "Microsoft SQL Server",
+                ["Enums.Nop.Data.DataProviderType.MySql"] = "MySQL",
+                ["Enums.Nop.Data.DataProviderType.PostgreSQL"] = "PostgreSQL",
+                
+                //#5838
+                ["Admin.Configuration.Languages.NeedRestart"] = "Since language cultures are loaded only when the application is starting, you have to restart the application for it to work correctly once the language is changed.",
+
+                //#5155
+                ["Admin.System.Warnings.PluginNotInstalled"] = "You haven't installed the following plugin(s)",
+                ["Admin.System.Warnings.PluginNotInstalled.HelpText"] = "You may delete the plugins you don't use in order to increase startup time",
+
+                ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination"] = "This attribute value cannot be removed because it is already used in this combination: {0}.",
             }, languageId).Wait();
 
             // rename locales

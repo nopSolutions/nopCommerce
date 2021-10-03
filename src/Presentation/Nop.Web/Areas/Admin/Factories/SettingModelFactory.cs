@@ -23,6 +23,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Data;
+using Nop.Data.Configuration;
 using Nop.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -779,21 +780,26 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             model ??= new AppSettingsModel
             {
-                CacheConfigModel = _appSettings.CacheConfig.ToConfigModel<CacheConfigModel>(),
-                HostingConfigModel = _appSettings.HostingConfig.ToConfigModel<HostingConfigModel>(),
-                DistributedCacheConfigModel = _appSettings.DistributedCacheConfig.ToConfigModel<DistributedCacheConfigModel>(),
-                AzureBlobConfigModel = _appSettings.AzureBlobConfig.ToConfigModel<AzureBlobConfigModel>(),
-                InstallationConfigModel = _appSettings.InstallationConfig.ToConfigModel<InstallationConfigModel>(),
-                PluginConfigModel = _appSettings.PluginConfig.ToConfigModel<PluginConfigModel>(),
-                CommonConfigModel = _appSettings.CommonConfig.ToConfigModel<CommonConfigModel>()
+                CacheConfigModel = _appSettings.Get<CacheConfig>().ToConfigModel<CacheConfigModel>(),
+                HostingConfigModel = _appSettings.Get<HostingConfig>().ToConfigModel<HostingConfigModel>(),
+                DistributedCacheConfigModel = _appSettings.Get<DistributedCacheConfig>().ToConfigModel<DistributedCacheConfigModel>(),
+                AzureBlobConfigModel = _appSettings.Get<AzureBlobConfig>().ToConfigModel<AzureBlobConfigModel>(),
+                InstallationConfigModel = _appSettings.Get<InstallationConfig>().ToConfigModel<InstallationConfigModel>(),
+                PluginConfigModel = _appSettings.Get<PluginConfig>().ToConfigModel<PluginConfigModel>(),
+                CommonConfigModel = _appSettings.Get<CommonConfig>().ToConfigModel<CommonConfigModel>(),
+                DataConfigModel = _appSettings.Get<DataConfig>().ToConfigModel<DataConfigModel>()
             };
 
-            model.DistributedCacheConfigModel.DistributedCacheTypeValues = await _appSettings.DistributedCacheConfig.DistributedCacheType.ToSelectListAsync();
+            model.DistributedCacheConfigModel.DistributedCacheTypeValues = await _appSettings.Get<DistributedCacheConfig>().DistributedCacheType.ToSelectListAsync();
 
+            model.DataConfigModel.DataProviderTypeValues = await _appSettings.Get<DataConfig>().DataProvider.ToSelectListAsync();
+
+            //Since we decided to use the naming of the DB connections section as in the .net core - "ConnectionStrings",
+            //we are forced to adjust our internal model naming to this convention in this check.
             model.EnvironmentVariables.AddRange(from property in model.GetType().GetProperties()
                                                 where property.Name != nameof(AppSettingsModel.EnvironmentVariables)
                                                 from pp in property.PropertyType.GetProperties()
-                                                where Environment.GetEnvironmentVariables().Contains($"{property.Name.Replace("Model", "")}__{pp.Name}")
+                                                where Environment.GetEnvironmentVariables().Contains($"{property.Name.Replace("Model", "").Replace("DataConfig", "ConnectionStrings")}__{pp.Name}")
                                                 select $"{property.Name}_{pp.Name}");
             return model;
         }

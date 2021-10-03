@@ -280,7 +280,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             await _settingService.SaveSettingAsync(new FixedOrByCountryStateZipTaxSettings());
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Tax.FixedOrByCountryStateZip.Fixed"] = "Fixed rate",
                 ["Plugins.Tax.FixedOrByCountryStateZip.Tax.Categories.Manage"] = "Manage tax categories",

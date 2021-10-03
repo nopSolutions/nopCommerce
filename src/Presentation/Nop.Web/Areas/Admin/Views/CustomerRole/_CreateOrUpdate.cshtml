@@ -5,20 +5,9 @@
 
 <script>
     $(document).ready(function() {
-        $("#@Html.IdFor(model => model.OverrideTaxDisplayType)").click(toggleTaxDisplayType);
-        toggleTaxDisplayType();
-
         toggleRemoveButton();
     });
     
-    function toggleTaxDisplayType() {
-        if ($('#@Html.IdFor(model => model.OverrideTaxDisplayType)').is(':checked')) {
-            $('#pnlDefaultTaxDisplayType').showElement();
-        } else {
-            $('#pnlDefaultTaxDisplayType').hideElement();
-        }
-    }
-
     function toggleRemoveButton() {
         if ($('#@Html.IdFor(model => model.PurchasedWithProductId)').val() > 0) {
             $('#purchased-with-product-name-remove').showElement();
@@ -81,7 +70,7 @@
                             </div>
                         </div>
                         <nop-nested-setting asp-for="OverrideTaxDisplayType">
-                            <div class="form-group row" id="pnlDefaultTaxDisplayType">
+                            <div class="form-group row">
                                 <div class="col-md-3">
                                     <nop-label asp-for="DefaultTaxDisplayTypeId" />
                                 </div>

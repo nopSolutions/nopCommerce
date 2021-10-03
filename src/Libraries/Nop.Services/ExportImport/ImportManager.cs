@@ -39,15 +39,6 @@ namespace Nop.Services.ExportImport
     /// </summary>
     public partial class ImportManager : IImportManager
     {
-        #region Constants
-
-        //it's quite fast hash (to cheaply distinguish between objects)
-        private const string IMAGE_HASH_ALGORITHM = "SHA512";
-
-        private const string UPLOADS_TEMP_PATH = "~/App_Data/TempUploads";
-
-        #endregion
-
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
@@ -379,12 +370,12 @@ namespace Nop.Services.ExportImport
                         {
                             var newImageHash = HashHelper.CreateHash(
                                 newPictureBinary,
-                                IMAGE_HASH_ALGORITHM,
+                                ExportImportDefaults.ImageHashAlgorithm,
                                 trimByteCount);
 
                             var newValidatedImageHash = HashHelper.CreateHash(
-                                await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType), 
-                                IMAGE_HASH_ALGORITHM,
+                                await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType),
+                                ExportImportDefaults.ImageHashAlgorithm,
                                 trimByteCount);
 
                             var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
@@ -797,7 +788,7 @@ namespace Nop.Services.ExportImport
                 return string.Empty;
 
             //ensure that temp directory is created
-            var tempDirectory = _fileProvider.MapPath(UPLOADS_TEMP_PATH);
+            var tempDirectory = _fileProvider.MapPath(ExportImportDefaults.UploadsTempPath);
             _fileProvider.CreateDirectory(tempDirectory);
 
             var fileName = _fileProvider.GetFileName(urlString);
@@ -1135,7 +1126,7 @@ namespace Nop.Services.ExportImport
                     ? metadata.ProductsInFile[curIndex - 1]
                     : metadata.EndRow;
 
-                var filePath = $"{_fileProvider.MapPath(UPLOADS_TEMP_PATH)}/{fileName}_part_{fileIndex}.xlsx";
+                var filePath = $"{_fileProvider.MapPath(ExportImportDefaults.UploadsTempPath)}/{fileName}_part_{fileIndex}.xlsx";
 
                 CopyDataToNewFile(metadata, worksheet, filePath, startRow, endRow, endCell);
 

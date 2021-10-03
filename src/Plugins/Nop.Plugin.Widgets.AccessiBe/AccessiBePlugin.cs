@@ -97,7 +97,7 @@ namespace Nop.Plugin.Widgets.AccessiBe
                 WidgetZone = PublicWidgetZones.HeadHtmlTag
             });
 
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.AccessiBe.Fields.Enabled"] = "Enable",
                 ["Plugins.Widgets.AccessiBe.Fields.Enabled.Hint"] = "Check to activate this widget.",

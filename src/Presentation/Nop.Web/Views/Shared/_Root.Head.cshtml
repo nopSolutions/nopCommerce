@@ -34,7 +34,7 @@
         Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
 
-    var displayMiniProfiler = appSettings.CommonConfig.MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
+    var displayMiniProfiler = appSettings.Get<CommonConfig>().MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
 
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));

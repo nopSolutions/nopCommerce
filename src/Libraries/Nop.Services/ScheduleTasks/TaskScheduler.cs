@@ -66,7 +66,7 @@ namespace Nop.Services.ScheduleTasks
                 .ToList();
 
             var scheduleTaskUrl = $"{_storeContext.GetCurrentStoreAsync().Result.Url.TrimEnd('/')}/{NopTaskDefaults.ScheduleTaskPath}";
-            var timeout = _appSettings.CommonConfig.ScheduleTaskRunTimeout;
+            var timeout = _appSettings.Get<CommonConfig>().ScheduleTaskRunTimeout;
 
             foreach (var scheduleTask in scheduleTasks)
             {

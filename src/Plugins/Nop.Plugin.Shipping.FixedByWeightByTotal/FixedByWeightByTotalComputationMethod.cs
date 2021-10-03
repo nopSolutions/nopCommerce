@@ -256,7 +256,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             await _settingService.SaveSettingAsync(new FixedByWeightByTotalSettings());
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Shipping.FixedByWeightByTotal.AddRecord"] = "Add record",
                 ["Plugins.Shipping.FixedByWeightByTotal.Fields.AdditionalFixedCost"] = "Additional fixed cost",

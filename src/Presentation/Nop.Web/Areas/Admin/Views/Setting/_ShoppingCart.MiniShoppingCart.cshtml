@@ -12,7 +12,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="MiniShoppingCartEnabled">
-        <div class="form-group row advanced-setting" id="pnlMiniShoppingCartProductNumber">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="MiniShoppingCartProductNumber_OverrideForStore" asp-input="MiniShoppingCartProductNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="MiniShoppingCartProductNumber" />
@@ -22,7 +22,7 @@
                 <span asp-validation-for="MiniShoppingCartProductNumber"></span>
             </div>
         </div>
-        <div class="form-group row advanced-setting" id="pnlShowProductImagesInMiniShoppingCart">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ShowProductImagesInMiniShoppingCart_OverrideForStore" asp-input="ShowProductImagesInMiniShoppingCart" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ShowProductImagesInMiniShoppingCart" />

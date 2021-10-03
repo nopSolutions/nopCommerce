@@ -82,7 +82,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ShowProductReviewsTabOnAccountPage">
-        <div class="form-group row advanced-setting" id="pnlProductReviewsPageSizeOnAccountPage">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ProductReviewsPageSizeOnAccountPage_OverrideForStore" asp-input="ProductReviewsPageSizeOnAccountPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ProductReviewsPageSizeOnAccountPage" />
@@ -104,18 +104,3 @@
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.ShowProductReviewsTabOnAccountPage)").click(toggleProductReviewsPageSizeOnAccountPage);
-
-        toggleProductReviewsPageSizeOnAccountPage();
-    });
-
-    function toggleProductReviewsPageSizeOnAccountPage() {
-        if ($('#@Html.IdFor(model => model.ShowProductReviewsTabOnAccountPage)').is(':checked')) {
-            $('#pnlProductReviewsPageSizeOnAccountPage').showElement();
-        } else {
-            $('#pnlProductReviewsPageSizeOnAccountPage').hideElement();
-        }
-    }
-</script>

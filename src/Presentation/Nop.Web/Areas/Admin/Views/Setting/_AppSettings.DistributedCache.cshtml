@@ -11,7 +11,7 @@
             <span asp-validation-for="DistributedCacheConfigModel.Enabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="DistributedCacheConfigModel.Enabled">
+    <nop-nested-setting asp-for="DistributedCacheConfigModel.Enabled" disable-auto-generation="true">
         <div class="form-group row" id="distributed-cache-type">
             <div class="col-md-3">
                 <nop-label asp-for="DistributedCacheConfigModel.DistributedCacheTypeValues" />

@@ -85,7 +85,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
             });
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 //admin config 
                 ["Plugins.MultiFactorAuth.GoogleAuthenticator.BusinessPrefix"] = "Business prefix",
