@@ -823,8 +823,7 @@ namespace Nop.Web.Factories
             //it'll load all categories anyway.
             //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
             //so we load all categories at once (we know they are cached)
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: store.Id);
+            var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
             foreach (var category in categories)
             {
@@ -843,10 +842,10 @@ namespace Nop.Web.Factories
                     //include subcategories
                     if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
                         categoryIds.AddRange(
-                            await _categoryService.GetChildCategoryIdsAsync(category.Id, store.Id));
+                            await _categoryService.GetChildCategoryIdsAsync(category.Id, (await _storeContext.GetCurrentStoreAsync()).Id));
 
                     categoryModel.NumberOfProducts =
-                        await _productService.GetNumberOfProductsInCategoryAsync(categoryIds, store.Id);
+                        await _productService.GetNumberOfProductsInCategoryAsync(categoryIds, (await _storeContext.GetCurrentStoreAsync()).Id);
                 }
 
                 if (loadSubCategories)
@@ -1234,7 +1233,6 @@ namespace Nop.Web.Factories
 
             //price range
             PriceRangeModel selectedPriceRange = null;
-            var store = await _storeContext.GetCurrentStoreAsync();
             if (_catalogSettings.EnablePriceRangeFiltering && vendor.PriceRangeFiltering)
             {
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
@@ -1246,7 +1244,7 @@ namespace Nop.Web.Factories
                     {
                         var products = await _productService.SearchProductsAsync(0, 1,
                             vendorId: vendor.Id,
-                            storeId: store.Id,
+                            storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                             visibleIndividuallyOnly: true,
                             orderBy: orderBy);
 
@@ -1278,7 +1276,7 @@ namespace Nop.Web.Factories
                 vendorId: vendor.Id,
                 priceMin: selectedPriceRange?.From,
                 priceMax: selectedPriceRange?.To,
-                storeId: store.Id,
+                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
@@ -1480,7 +1478,6 @@ namespace Nop.Web.Factories
 
             //price range
             PriceRangeModel selectedPriceRange = null;
-            var store = await _storeContext.GetCurrentStoreAsync();
             if (_catalogSettings.EnablePriceRangeFiltering && _catalogSettings.ProductsByTagPriceRangeFiltering)
             {
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
@@ -1491,7 +1488,7 @@ namespace Nop.Web.Factories
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                     {
                         var products = await _productService.SearchProductsAsync(0, 1,
-                            storeId: store.Id,
+                            storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                             productTagId: productTag.Id,
                             visibleIndividuallyOnly: true,
                             orderBy: orderBy);
@@ -1523,7 +1520,7 @@ namespace Nop.Web.Factories
                 command.PageSize,
                 priceMin: selectedPriceRange?.From,
                 priceMax: selectedPriceRange?.To,
-                storeId: store.Id,
+                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                 productTagId: productTag.Id,
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy);

@@ -9,11 +9,10 @@
 
 @{
     const string hideCommonBlockAttributeName = "BlogSettingsPage.HideCommonBlock";
-    var customer = await workContext.GetCurrentCustomerAsync();
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hideCommentsBlockAttributeName = "BlogSettingsPage.HideCommentsBlock";
-    var hideCommentsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommentsBlockAttributeName);
+    var hideCommentsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommentsBlockAttributeName);
 }
 
 

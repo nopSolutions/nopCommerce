@@ -10,14 +10,13 @@
 
 @{
     const string hideCommonBlockAttributeName = "VendorSettingsPage.HideCommonBlock";
-    var customer = await workContext.GetCurrentCustomerAsync();
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hideCatalogBlockAttributeName = "VendorSettingsPage.HideCatalogBlock";
-    var hideCatalogBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCatalogBlockAttributeName);
+    var hideCatalogBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCatalogBlockAttributeName);
 
     const string hideVendorAttributeBlockAttributeName = "VendorSettingsPage.HideVendorAttributeBlock";
-    var hideVendorAttributeBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideVendorAttributeBlockAttributeName);
+    var hideVendorAttributeBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideVendorAttributeBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Vendor" method="post">

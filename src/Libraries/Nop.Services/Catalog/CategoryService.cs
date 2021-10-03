@@ -357,11 +357,10 @@ namespace Nop.Services.Catalog
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.CategoryIdsByDiscountCacheKey,
                 discount,
                 await _customerService.GetCustomerRoleIdsAsync(customer),
-                store);
+                await _storeContext.GetCurrentStoreAsync());
 
             var result = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
@@ -374,7 +373,7 @@ namespace Nop.Services.Catalog
                     return ids;
 
                 ids.AddRange(await ids.SelectManyAwait(async categoryId =>
-                        await GetChildCategoryIdsAsync(categoryId, store.Id))
+                        await GetChildCategoryIdsAsync(categoryId, (await _storeContext.GetCurrentStoreAsync()).Id))
                     .ToListAsync());
 
                 return ids.Distinct().ToList();

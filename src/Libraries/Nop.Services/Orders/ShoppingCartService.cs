@@ -370,9 +370,8 @@ namespace Nop.Services.Orders
                 if (customerEnteredPrice < product.MinimumCustomerEnteredPrice ||
                     customerEnteredPrice > product.MaximumCustomerEnteredPrice)
                 {
-                    var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
-                    var minimumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(product.MinimumCustomerEnteredPrice, currentCurrency);
-                    var maximumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(product.MaximumCustomerEnteredPrice, currentCurrency);
+                    var minimumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(product.MinimumCustomerEnteredPrice, await _workContext.GetWorkingCurrencyAsync());
+                    var maximumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(product.MaximumCustomerEnteredPrice, await _workContext.GetWorkingCurrencyAsync());
                     warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.CustomerEnteredPrice.RangeError"),
                         await _priceFormatter.FormatPriceAsync(minimumCustomerEnteredPrice, false, false),
                         await _priceFormatter.FormatPriceAsync(maximumCustomerEnteredPrice, false, false)));
@@ -1750,9 +1749,8 @@ namespace Nop.Services.Orders
             }
 
             //move selected checkout attributes
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(fromCustomer, NopCustomerDefaults.CheckoutAttributes, store.Id);
-            await _genericAttributeService.SaveAttributeAsync(toCustomer, NopCustomerDefaults.CheckoutAttributes, checkoutAttributesXml, store.Id);
+            var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(fromCustomer, NopCustomerDefaults.CheckoutAttributes, (await _storeContext.GetCurrentStoreAsync()).Id);
+            await _genericAttributeService.SaveAttributeAsync(toCustomer, NopCustomerDefaults.CheckoutAttributes, checkoutAttributesXml, (await _storeContext.GetCurrentStoreAsync()).Id);
         }
 
         /// <summary>

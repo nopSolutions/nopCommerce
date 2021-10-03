@@ -44,16 +44,15 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             var address = await _addressService.GetAddressByIdAsync(addressId);
             if (address != null)
             {
-                var customer = await _workContext.GetCurrentCustomerAsync();
                 //add address to customer collection if it's a new
-                if (isNewAddress) await _customerService.InsertCustomerAddressAsync(customer, address);
+                if (isNewAddress) await _customerService.InsertCustomerAddressAsync(await _workContext.GetCurrentCustomerAsync(), address);
 
                 //and update appropriate customer address
                 if (_taxSettings.TaxBasedOn == TaxBasedOn.BillingAddress)
-                    (customer).BillingAddressId = address.Id;
+                    (await _workContext.GetCurrentCustomerAsync()).BillingAddressId = address.Id;
                 if (_taxSettings.TaxBasedOn == TaxBasedOn.ShippingAddress)
-                    (customer).ShippingAddressId = address.Id;
-                await _customerService.UpdateCustomerAsync(customer);
+                    (await _workContext.GetCurrentCustomerAsync()).ShippingAddressId = address.Id;
+                await _customerService.UpdateCustomerAsync(await _workContext.GetCurrentCustomerAsync());
             }
 
             //nothing to return

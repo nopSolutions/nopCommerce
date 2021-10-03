@@ -346,12 +346,11 @@ namespace Nop.Web.Factories
                 else
                 {
                     //prices
-                    var customer = await _workContext.GetCurrentCustomerAsync();
-                    var (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer);
+                    var (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync());
 
                     if (product.HasTierPrices)
                     {
-                        var (tierPriceMinPossiblePriceWithoutDiscount, tierPriceMinPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, quantity: int.MaxValue);
+                        var (tierPriceMinPossiblePriceWithoutDiscount, tierPriceMinPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), quantity: int.MaxValue);
 
                         //calculate price for the maximum quantity if we have tier prices, and choose minimal
                         minPossiblePriceWithoutDiscount = Math.Min(minPossiblePriceWithoutDiscount, tierPriceMinPossiblePriceWithoutDiscount);
@@ -361,16 +360,16 @@ namespace Nop.Web.Factories
                     var (oldPriceBase, _) = await _taxService.GetProductPriceAsync(product, product.OldPrice);
                     var (finalPriceWithoutDiscountBase, _) = await _taxService.GetProductPriceAsync(product, minPossiblePriceWithoutDiscount);
                     var (finalPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, minPossiblePriceWithDiscount);
-                    var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
-                    var oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(oldPriceBase, currentCurrency);
-                    var finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithoutDiscountBase, currentCurrency);
-                    var finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithDiscountBase, currentCurrency);
+
+                    var oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(oldPriceBase, await _workContext.GetWorkingCurrencyAsync());
+                    var finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithoutDiscountBase, await _workContext.GetWorkingCurrencyAsync());
+                    var finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithDiscountBase, await _workContext.GetWorkingCurrencyAsync());
 
                     //do we have tier prices configured?
                     var tierPrices = new List<TierPrice>();
                     if (product.HasTierPrices)
                     {
-                        tierPrices.AddRange(await _productService.GetTierPricesAsync(product, customer, (await _storeContext.GetCurrentStoreAsync()).Id));
+                        tierPrices.AddRange(await _productService.GetTierPricesAsync(product, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id));
                     }
                     //When there is just one tier price (with  qty 1), there are no actual savings in the list.
                     var displayFromMessage = tierPrices.Any() && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
@@ -448,16 +447,15 @@ namespace Nop.Web.Factories
                 //find a minimum possible price
                 decimal? minPossiblePrice = null;
                 Product minPriceProduct = null;
-                var customer = await _workContext.GetCurrentCustomerAsync();
                 foreach (var associatedProduct in associatedProducts)
                 {
-                    var (_, tmpMinPossiblePrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(associatedProduct, customer);
+                    var (_, tmpMinPossiblePrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(associatedProduct, await _workContext.GetCurrentCustomerAsync());
 
                     if (associatedProduct.HasTierPrices)
                     {
                         //calculate price for the maximum quantity if we have tier prices, and choose minimal
                         tmpMinPossiblePrice = Math.Min(tmpMinPossiblePrice,
-                            (await _priceCalculationService.GetFinalPriceAsync(associatedProduct, customer, quantity: int.MaxValue)).priceWithoutDiscounts);
+                            (await _priceCalculationService.GetFinalPriceAsync(associatedProduct, await _workContext.GetCurrentCustomerAsync(), quantity: int.MaxValue)).priceWithoutDiscounts);
                     }
 
                     if (minPossiblePrice.HasValue && tmpMinPossiblePrice >= minPossiblePrice.Value)
@@ -658,14 +656,13 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        var customer = await _workContext.GetCurrentCustomerAsync();
                         var (oldPriceBase, _) = await _taxService.GetProductPriceAsync(product, product.OldPrice);
-                        var (finalPriceWithoutDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, customer, includeDiscounts: false)).finalPrice);
-                        var (finalPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, customer)).finalPrice);
-                        var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
-                        var oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(oldPriceBase, currentCurrency);
-                        var finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithoutDiscountBase, currentCurrency);
-                        var finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithDiscountBase, currentCurrency);
+                        var (finalPriceWithoutDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false)).finalPrice);
+                        var (finalPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync())).finalPrice);
+
+                        var oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(oldPriceBase, await _workContext.GetWorkingCurrencyAsync());
+                        var finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithoutDiscountBase, await _workContext.GetWorkingCurrencyAsync());
+                        var finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithDiscountBase, await _workContext.GetWorkingCurrencyAsync());
 
                         if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
                             model.OldPrice = await _priceFormatter.FormatPriceAsync(oldPrice);
@@ -784,9 +781,8 @@ namespace Nop.Web.Factories
             if (!model.CustomerEntersPrice)
                 return model;
 
-            var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
-            var minimumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(product.MinimumCustomerEnteredPrice, currentCurrency);
-            var maximumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(product.MaximumCustomerEnteredPrice, currentCurrency);
+            var minimumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(product.MinimumCustomerEnteredPrice, await _workContext.GetWorkingCurrencyAsync());
+            var maximumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(product.MaximumCustomerEnteredPrice, await _workContext.GetWorkingCurrencyAsync());
 
             model.CustomerEnteredPrice = updatecartitem != null ? updatecartitem.CustomerEnteredPrice : minimumCustomerEnteredPrice;
             model.CustomerEnteredPriceRange = string.Format(await _localizationService.GetResourceAsync("Products.EnterProductPrice.Range"),
@@ -1030,12 +1026,11 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var model = await (await _productService.GetTierPricesAsync(product, customer, (await _storeContext.GetCurrentStoreAsync()).Id))
+            var model = await (await _productService.GetTierPricesAsync(product, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
                 .SelectAwait(async tierPrice =>
                 {
                     var priceBase = (await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product,
-                        customer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts,
+                        await _workContext.GetCurrentCustomerAsync(), decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts,
                         tierPrice.Quantity)).priceWithoutDiscounts)).price;
 
                        var price = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceBase, await _workContext.GetWorkingCurrencyAsync());
@@ -1376,13 +1371,12 @@ namespace Nop.Web.Factories
                 }
             }
 
-            var store = await _storeContext.GetCurrentStoreAsync();
             //email a friend
             model.EmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
             //compare products
             model.CompareProductsEnabled = _catalogSettings.CompareProductsEnabled;
             //store name
-            model.CurrentStoreName = await _localizationService.GetLocalizedAsync(store, x => x.Name);
+            model.CurrentStoreName = await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name);
 
             //vendor details
             if (_vendorSettings.ShowVendorOnProductDetailsPage)
@@ -1455,7 +1449,7 @@ namespace Nop.Web.Factories
 
             //'Add to cart' model
             model.AddToCart = await PrepareProductAddToCartModelAsync(product, updatecartitem);
-            var customer = await _workContext.GetCurrentCustomerAsync();
+
             //gift card
             if (product.IsGiftCard)
             {
@@ -1464,8 +1458,8 @@ namespace Nop.Web.Factories
 
                 if (updatecartitem == null)
                 {
-                    model.GiftCard.SenderName = await _customerService.GetCustomerFullNameAsync(customer);
-                    model.GiftCard.SenderEmail = customer.Email;
+                    model.GiftCard.SenderName = await _customerService.GetCustomerFullNameAsync(await _workContext.GetCurrentCustomerAsync());
+                    model.GiftCard.SenderEmail = (await _workContext.GetCurrentCustomerAsync()).Email;
                 }
                 else
                 {
@@ -1520,9 +1514,9 @@ namespace Nop.Web.Factories
             {
                 var wrappedProduct = new ShoppingCartItem
                 {
-                    StoreId = store.Id,
+                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                     ShoppingCartTypeId = (int)ShoppingCartType.ShoppingCart,
-                    CustomerId = customer.Id,
+                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
                     ProductId = product.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 };
@@ -1547,7 +1541,7 @@ namespace Nop.Web.Factories
                 //ensure no circular references
                 if (!isAssociatedProduct)
                 {
-                    var associatedProducts = await _productService.GetAssociatedProductsAsync(product.Id, store.Id);
+                    var associatedProducts = await _productService.GetAssociatedProductsAsync(product.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
                     foreach (var associatedProduct in associatedProducts)
                         model.AssociatedProducts.Add(await PrepareProductDetailsModelAsync(associatedProduct, null, true));
                 }
@@ -1598,8 +1592,6 @@ namespace Nop.Web.Factories
                 });
             }
 
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-
             //filling data from db
             foreach (var pr in productReviews)
             {
@@ -1641,7 +1633,7 @@ namespace Nop.Web.Factories
                         ProductReviewId = pr.Id,
                         Rating = q.Rating,
                         Name = await _localizationService.GetLocalizedAsync(reviewType, x => x.Name),
-                        VisibleToAllCustomers = reviewType.VisibleToAllCustomers || currentCustomer.Id == pr.CustomerId,
+                        VisibleToAllCustomers = reviewType.VisibleToAllCustomers || (await _workContext.GetCurrentCustomerAsync()).Id == pr.CustomerId,
                     });
                 }
 
@@ -1682,7 +1674,7 @@ namespace Nop.Web.Factories
                 rtm.AverageRating = (double)totalRating / (totalCount > 0 ? totalCount : 1);
             }
 
-            model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !await _customerService.IsGuestAsync(currentCustomer);
+            model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync());
             model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
             model.AddProductReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
 

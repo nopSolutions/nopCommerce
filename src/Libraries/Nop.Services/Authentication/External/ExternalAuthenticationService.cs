@@ -149,8 +149,7 @@ namespace Nop.Services.Authentication.External
                 (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation && !_externalAuthenticationSettings.RequireEmailValidation);
 
             //create registration request
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var registrationRequest = new CustomerRegistrationRequest(customer,
+            var registrationRequest = new CustomerRegistrationRequest(await _workContext.GetCurrentCustomerAsync(),
                 parameters.Email, parameters.Email,
                 CommonHelper.GenerateRandomDigitCode(20),
                 PasswordFormat.Hashed,
@@ -163,36 +162,35 @@ namespace Nop.Services.Authentication.External
                 return ErrorAuthentication(registrationResult.Errors, returnUrl);
 
             //allow to save other customer values by consuming this event
-            await _eventPublisher.PublishAsync(new CustomerAutoRegisteredByExternalMethodEvent(customer, parameters));
+            await _eventPublisher.PublishAsync(new CustomerAutoRegisteredByExternalMethodEvent(await _workContext.GetCurrentCustomerAsync(), parameters));
 
             //raise customer registered event
-            await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(customer));
+            await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(await _workContext.GetCurrentCustomerAsync()));
 
             //store owner notifications
             if (_customerSettings.NotifyNewCustomerRegistration)
-                await _workflowMessageService.SendCustomerRegisteredNotificationMessageAsync(customer, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendCustomerRegisteredNotificationMessageAsync(await _workContext.GetCurrentCustomerAsync(), _localizationSettings.DefaultAdminLanguageId);
 
             //associate external account with registered user
-            await AssociateExternalAccountWithUserAsync(customer, parameters);
+            await AssociateExternalAccountWithUserAsync(await _workContext.GetCurrentCustomerAsync(), parameters);
 
             //authenticate
-            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             if (registrationIsApproved)
             {
-                await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, currentLanguage.Id);
+                await _workflowMessageService.SendCustomerWelcomeMessageAsync(await _workContext.GetCurrentCustomerAsync(), (await _workContext.GetWorkingLanguageAsync()).Id);
 
                 //raise event       
-                await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));
+                await _eventPublisher.PublishAsync(new CustomerActivatedEvent(await _workContext.GetCurrentCustomerAsync()));
 
-                return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, true);
+                return await _customerRegistrationService.SignInCustomerAsync(await _workContext.GetCurrentCustomerAsync(), returnUrl, true);
             }
 
             //registration is succeeded but isn't activated
             if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
             {
                 //email validation message
-                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
-                await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, currentLanguage.Id);
+                await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
+                await _workflowMessageService.SendCustomerEmailValidationMessageAsync(await _workContext.GetCurrentCustomerAsync(), (await _workContext.GetWorkingLanguageAsync()).Id);
 
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
             }
@@ -252,12 +250,11 @@ namespace Nop.Services.Authentication.External
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _authenticationPluginManager.IsPluginActiveAsync(parameters.ProviderSystemName, customer, (await _storeContext.GetCurrentStoreAsync()).Id))
+            if (!await _authenticationPluginManager.IsPluginActiveAsync(parameters.ProviderSystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
                 return ErrorAuthentication(new[] { "External authentication method cannot be loaded" }, returnUrl);
 
             //get current logged-in user
-            var currentLoggedInUser = await _customerService.IsRegisteredAsync(customer) ? customer : null;
+            var currentLoggedInUser = await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()) ? await _workContext.GetCurrentCustomerAsync() : null;
 
             //authenticate associated user if already exists
             var associatedUser = await GetUserByExternalAuthenticationParametersAsync(parameters);

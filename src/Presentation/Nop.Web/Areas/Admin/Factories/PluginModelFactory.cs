@@ -387,12 +387,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<IList<AdminNavigationPluginModel>> PrepareAdminNavigationPluginModelsAsync()
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopPluginDefaults.AdminNavigationPluginsCacheKey, customer);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopPluginDefaults.AdminNavigationPluginsCacheKey, await _workContext.GetCurrentCustomerAsync());
             return await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 //get installed plugins
-                return (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.InstalledOnly, customer))
+                return (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.InstalledOnly, await _workContext.GetCurrentCustomerAsync()))
                     .Where(plugin => plugin.ShowInPluginsList)
                     .Select(plugin => new AdminNavigationPluginModel
                     {

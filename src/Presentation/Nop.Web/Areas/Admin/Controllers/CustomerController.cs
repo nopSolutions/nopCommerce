@@ -950,8 +950,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //ensure that a non-admin user cannot impersonate as an administrator
             //otherwise, that user can simply impersonate as an administrator and gain additional administrative privileges
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _customerService.IsAdminAsync(currentCustomer) && await _customerService.IsAdminAsync(customer))
+            if (!await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()) && await _customerService.IsAdminAsync(customer))
             {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.NonAdminNotImpersonateAsAdminError"));
                 return RedirectToAction("Edit", customer.Id);
@@ -961,12 +960,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             await _customerActivityService.InsertActivityAsync("Impersonation.Started",
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.Impersonation.Started.StoreOwner"), customer.Email, customer.Id), customer);
             await _customerActivityService.InsertActivityAsync(customer, "Impersonation.Started",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.Impersonation.Started.Customer"), currentCustomer.Email, currentCustomer.Id), currentCustomer);
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.Impersonation.Started.Customer"), (await _workContext.GetCurrentCustomerAsync()).Email, (await _workContext.GetCurrentCustomerAsync()).Id), await _workContext.GetCurrentCustomerAsync());
 
             //ensure login is not required
             customer.RequireReLogin = false;
             await _customerService.UpdateCustomerAsync(customer);
-            await _genericAttributeService.SaveAttributeAsync<int?>(currentCustomer, NopCustomerDefaults.ImpersonatedCustomerIdAttribute, customer.Id);
+            await _genericAttributeService.SaveAttributeAsync<int?>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.ImpersonatedCustomerIdAttribute, customer.Id);
 
             return RedirectToAction("Index", "Home", new { area = string.Empty });
         }

@@ -11,17 +11,16 @@
 
 @{
     const string hideCategoryBlockAttributeName = "Templates.HideCategoryBlock";
-    var customer = await workContext.GetCurrentCustomerAsync();
-    var hideCategoryBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCategoryBlockAttributeName);
+    var hideCategoryBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCategoryBlockAttributeName);
 
     const string hideManufacturerBlockAttributeName = "Templates.HideManufacturerBlock";
-    var hideManufacturerBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideManufacturerBlockAttributeName);
+    var hideManufacturerBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideManufacturerBlockAttributeName);
 
     const string hideProductBlockAttributeName = "Templates.HideProductBlock";
-    var hideProductBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductBlockAttributeName);
+    var hideProductBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideProductBlockAttributeName);
 
     const string hideTopicBlockAttributeName = "Templates.HideTopicBlock";
-    var hideTopicBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTopicBlockAttributeName);
+    var hideTopicBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideTopicBlockAttributeName);
 }
 
 <section class="content">

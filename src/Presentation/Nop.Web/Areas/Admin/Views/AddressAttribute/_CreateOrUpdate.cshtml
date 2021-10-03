@@ -2,11 +2,10 @@
 
 @{
     const string hideInfoBlockAttributeName = "AddressAttributePage.HideInfoBlock";
-    var customer = await workContext.GetCurrentCustomerAsync();
-    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
 
     const string hideValuesBlockAttributeName = "AddressAttributePage.HideValuesBlock";
-    var hideValuesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideValuesBlockAttributeName, defaultValue: true);
+    var hideValuesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideValuesBlockAttributeName, defaultValue: true);
 }
 
     <section class="content">

@@ -421,8 +421,7 @@ namespace Nop.Services.Orders
             //customer currency
             var currencyTmp = await _currencyService.GetCurrencyByIdAsync(
                 await _genericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.CurrencyIdAttribute, processPaymentRequest.StoreId));
-            var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
-            var customerCurrency = currencyTmp != null && currencyTmp.Published ? currencyTmp : currentCurrency;
+            var customerCurrency = currencyTmp != null && currencyTmp.Published ? currencyTmp : await _workContext.GetWorkingCurrencyAsync();
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
             details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
             details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
@@ -477,14 +476,14 @@ namespace Nop.Services.Orders
             //min totals validation
             if (!await ValidateMinOrderSubtotalAmountAsync(details.Cart))
             {
-                var minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderSubtotalAmount, currentCurrency);
+                var minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderSubtotalAmount, await _workContext.GetWorkingCurrencyAsync());
                 throw new NopException(string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderSubtotalAmount"),
                     await _priceFormatter.FormatPriceAsync(minOrderSubtotalAmount, true, false)));
             }
 
             if (!await ValidateMinOrderTotalAmountAsync(details.Cart))
             {
-                var minOrderTotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderTotalAmount, currentCurrency);
+                var minOrderTotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderTotalAmount, await _workContext.GetWorkingCurrencyAsync());
                 throw new NopException(string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderTotalAmount"),
                     await _priceFormatter.FormatPriceAsync(minOrderTotalAmount, true, false)));
             }

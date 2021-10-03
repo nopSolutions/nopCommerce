@@ -402,8 +402,6 @@ namespace Nop.Services.Orders
 
             var updatedOrder = updateOrderParameters.UpdatedOrder;
             var customer = await _customerService.GetCustomerByIdAsync(updatedOrder.CustomerId);
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
 
             if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(restoredCart))
             {
@@ -419,7 +417,7 @@ namespace Nop.Services.Orders
                             if (_shippingSettings.AllowPickupInStore)
                             {
                                 var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(updatedOrder.BillingAddressId, customer,
-                                    updatedOrder.ShippingRateComputationMethodSystemName, store.Id);
+                                    updatedOrder.ShippingRateComputationMethodSystemName, (await _storeContext.GetCurrentStoreAsync()).Id);
                                 if (pickupPointsResponse.Success)
                                 {
                                     var selectedPickupPoint =
@@ -441,7 +439,7 @@ namespace Nop.Services.Orders
                         {
                             //customer chose shipping to address, try to get chosen shipping option
                             var shippingAddress = await _addressService.GetAddressByIdAsync(updatedOrder.ShippingAddressId ?? 0);
-                            var shippingOptionsResponse = await _shippingService.GetShippingOptionsAsync(restoredCart, shippingAddress, customer, updatedOrder.ShippingRateComputationMethodSystemName, store.Id);
+                            var shippingOptionsResponse = await _shippingService.GetShippingOptionsAsync(restoredCart, shippingAddress, customer, updatedOrder.ShippingRateComputationMethodSystemName, (await _storeContext.GetCurrentStoreAsync()).Id);
                             if (shippingOptionsResponse.Success)
                             {
                                 var shippingOption = shippingOptionsResponse.ShippingOptions.FirstOrDefault(option =>
@@ -462,7 +460,7 @@ namespace Nop.Services.Orders
                         if (_shippingSettings.AllowPickupInStore)
                         {
                             //try to get the cheapest pickup point
-                            var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(updatedOrder.BillingAddressId, currentCustomer, storeId: store.Id);
+                            var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(updatedOrder.BillingAddressId, await _workContext.GetCurrentCustomerAsync(), storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
                             if (pickupPointsResponse.Success)
                             {
                                 updateOrderParameters.PickupPoint = pickupPointsResponse.PickupPoints
@@ -483,7 +481,7 @@ namespace Nop.Services.Orders
                             {
                                 var customerShippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
 
-                                var shippingOptionsResponse = await _shippingService.GetShippingOptionsAsync(restoredCart, customerShippingAddress, currentCustomer, storeId: store.Id);
+                                var shippingOptionsResponse = await _shippingService.GetShippingOptionsAsync(restoredCart, customerShippingAddress, await _workContext.GetCurrentCustomerAsync(), storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
                                 if (shippingOptionsResponse.Success)
                                 {
                                     var shippingOption = shippingOptionsResponse.ShippingOptions.OrderBy(option => option.Rate)
@@ -670,14 +668,13 @@ namespace Nop.Services.Orders
             if (!_rewardPointsSettings.Enabled)
                 return (redeemedRewardPoints, redeemedRewardPointsAmount);
 
-            var store = await _storeContext.GetCurrentStoreAsync();
             if (!useRewardPoints.HasValue)
-                useRewardPoints = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, store.Id);
+                useRewardPoints = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
 
             if (!useRewardPoints.Value)
                 return (redeemedRewardPoints, redeemedRewardPointsAmount);
 
-            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
+            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
             rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
 
             if (!CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
@@ -1070,9 +1067,8 @@ namespace Nop.Services.Orders
                 return (decimal.Zero, taxRate, appliedDiscounts);
 
             ShippingOption shippingOption = null;
-            var store = await _storeContext.GetCurrentStoreAsync();
             if (customer != null)
-                shippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
+                shippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
 
             if (shippingOption != null)
             {
@@ -1086,7 +1082,7 @@ namespace Nop.Services.Orders
                 if (customer != null)
                     shippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
 
-                var shippingRateComputationMethods = await _shippingPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), store.Id);
+                var shippingRateComputationMethods = await _shippingPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
                 if (!shippingRateComputationMethods.Any() && !_shippingSettings.AllowPickupInStore)
                     throw new NopException("Shipping rate computation method could not be loaded");
 
@@ -1096,7 +1092,7 @@ namespace Nop.Services.Orders
 
                     var shippingOptionRequests = (await _shippingService.CreateShippingOptionRequestsAsync(cart,
                         shippingAddress,
-                        store.Id)).shipmentPackages;
+                        (await _storeContext.GetCurrentStoreAsync()).Id)).shipmentPackages;
 
                     decimal? fixedRate = null;
                     foreach (var shippingOptionRequest in shippingOptionRequests)

@@ -112,8 +112,7 @@ namespace Nop.Web.Factories
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
 
             //number of news comments
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var storeId = _newsSettings.ShowNewsCommentsPerStore ? store.Id : 0;
+            var storeId = _newsSettings.ShowNewsCommentsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0;
 
             model.NumberOfComments = await _newsService.GetNewsCommentsCountAsync(newsItem, storeId, true);
 
@@ -122,7 +121,7 @@ namespace Nop.Web.Factories
                 var newsComments = await _newsService.GetAllCommentsAsync(
                     newsItemId: newsItem.Id,
                     approved: true,
-                    storeId: _newsSettings.ShowNewsCommentsPerStore ? store.Id : 0);
+                    storeId: _newsSettings.ShowNewsCommentsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0);
 
                 foreach (var nc in newsComments.OrderBy(comment => comment.CreatedOnUtc))
                 {
@@ -143,11 +142,11 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<HomepageNewsItemsModel> PrepareHomepageNewsItemsModelAsync()
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var language = await _workContext.GetWorkingLanguageAsync();
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, language, store);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, await _workContext.GetWorkingLanguageAsync(), await _storeContext.GetCurrentStoreAsync());
             var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
+                var language = await _workContext.GetWorkingLanguageAsync();
+                var store = await _storeContext.GetCurrentStoreAsync();
                 var newsItems = await _newsService.GetAllNewsAsync(language.Id, store.Id, 0, _newsSettings.MainPageNewsCount);
 
                 return new HomepageNewsItemsModel

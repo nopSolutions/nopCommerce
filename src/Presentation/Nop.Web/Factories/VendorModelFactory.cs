@@ -178,8 +178,7 @@ namespace Nop.Web.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (validateVendor && customer.VendorId > 0)
+            if (validateVendor && (await _workContext.GetCurrentCustomerAsync()).VendorId > 0)
             {
                 //already applied for vendor account
                 model.DisableFormInput = true;
@@ -192,7 +191,7 @@ namespace Nop.Web.Factories
 
             if (!excludeProperties)
             {
-                model.Email = customer.Email;
+                model.Email = (await _workContext.GetCurrentCustomerAsync()).Email;
             }
 
             //vendor attributes

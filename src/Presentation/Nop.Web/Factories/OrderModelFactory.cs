@@ -145,10 +145,8 @@ namespace Nop.Web.Factories
         public virtual async Task<CustomerOrderListModel> PrepareCustomerOrderListModelAsync()
         {
             var model = new CustomerOrderListModel();
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var orders = await _orderService.SearchOrdersAsync(storeId: store.Id,
-                customerId: customer.Id);
+            var orders = await _orderService.SearchOrdersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                customerId: (await _workContext.GetCurrentCustomerAsync()).Id);
             foreach (var order in orders)
             {
                 var orderModel = new CustomerOrderListModel.OrderDetailsModel
@@ -168,8 +166,8 @@ namespace Nop.Web.Factories
                 model.Orders.Add(orderModel);
             }
 
-            var recurringPayments = await _orderService.SearchRecurringPaymentsAsync(store.Id,
-                customer.Id);
+            var recurringPayments = await _orderService.SearchRecurringPaymentsAsync((await _storeContext.GetCurrentStoreAsync()).Id,
+                (await _workContext.GetCurrentCustomerAsync()).Id);
             foreach (var recurringPayment in recurringPayments)
             {
                 var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
@@ -184,8 +182,8 @@ namespace Nop.Web.Factories
                     CyclesRemaining = await _orderProcessingService.GetCyclesRemainingAsync(recurringPayment),
                     InitialOrderId = order.Id,
                     InitialOrderNumber = order.CustomOrderNumber,
-                    CanCancel = await _orderProcessingService.CanCancelRecurringPaymentAsync(customer, recurringPayment),
-                    CanRetryLastPayment = await _orderProcessingService.CanRetryLastRecurringPaymentAsync(customer, recurringPayment)
+                    CanCancel = await _orderProcessingService.CanCancelRecurringPaymentAsync(await _workContext.GetCurrentCustomerAsync(), recurringPayment),
+                    CanRetryLastPayment = await _orderProcessingService.CanRetryLastRecurringPaymentAsync(await _workContext.GetCurrentCustomerAsync(), recurringPayment)
                 };
 
                 model.RecurringOrders.Add(recurringPaymentModel);
@@ -628,17 +626,16 @@ namespace Nop.Web.Factories
             };
 
             //current amount/balance
-            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
+            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
             var rewardPointsAmountBase = await _orderTotalCalculationService.ConvertRewardPointsToAmountAsync(rewardPointsBalance);
-            var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
-            var rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rewardPointsAmountBase, currentCurrency);
+            var rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rewardPointsAmountBase, await _workContext.GetWorkingCurrencyAsync());
             model.RewardPointsBalance = rewardPointsBalance;
             model.RewardPointsAmount = await _priceFormatter.FormatPriceAsync(rewardPointsAmount, true, false);
 
             //minimum amount/balance
             var minimumRewardPointsBalance = _rewardPointsSettings.MinimumRewardPointsToUse;
             var minimumRewardPointsAmountBase = await _orderTotalCalculationService.ConvertRewardPointsToAmountAsync(minimumRewardPointsBalance);
-            var minimumRewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(minimumRewardPointsAmountBase, currentCurrency);
+            var minimumRewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(minimumRewardPointsAmountBase, await _workContext.GetWorkingCurrencyAsync());
             model.MinimumRewardPointsBalance = minimumRewardPointsBalance;
             model.MinimumRewardPointsAmount = await _priceFormatter.FormatPriceAsync(minimumRewardPointsAmount, true, false);
 

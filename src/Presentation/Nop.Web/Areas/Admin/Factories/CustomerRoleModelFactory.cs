@@ -182,9 +182,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
-            if (currentVendor != null)
-                searchModel.SearchVendorId = currentVendor.Id;
+            if (await _workContext.GetCurrentVendorAsync() != null)
+                searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
 
             //get products
             var products = await _productService.SearchProductsAsync(showHidden: true,

@@ -9,23 +9,22 @@
 
 @{
     const string hideCheckoutBlockAttributeName = "OrderSettingsPage.HideCheckoutBlock";
-    var customer = await workContext.GetCurrentCustomerAsync();
-    var hideCheckoutBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCheckoutBlockAttributeName);
+    var hideCheckoutBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCheckoutBlockAttributeName);
 
     const string hideOrderTotalsBlockAttributeName = "OrderSettingsPage.HideOrderTotalsBlock";
-    var hideOrderTotalsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideOrderTotalsBlockAttributeName);
+    var hideOrderTotalsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideOrderTotalsBlockAttributeName);
 
     const string hideCommonBlockAttributeName = "OrderSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hidePdfInvoiceBlockAttributeName = "OrderSettingsPage.HidePdfInvoiceBlock";
-    var hidePdfInvoiceBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePdfInvoiceBlockAttributeName);
+    var hidePdfInvoiceBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePdfInvoiceBlockAttributeName);
 
     const string hideGiftCardsBlockAttributeName = "OrderSettingsPage.HideGiftCardsBlock";
-    var hideGiftCardsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideGiftCardsBlockAttributeName);
+    var hideGiftCardsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideGiftCardsBlockAttributeName);
 
     const string hideReturnRequestBlockAttributeName = "OrderSettingsPage.HideReturnRequestBlock";
-    var hideReturnRequestBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideReturnRequestBlockAttributeName);
+    var hideReturnRequestBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideReturnRequestBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Order" method="post">

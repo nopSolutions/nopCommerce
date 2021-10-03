@@ -230,14 +230,13 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<LogoModel> PrepareLogoModelAsync()
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
             var model = new LogoModel
             {
-                StoreName = await _localizationService.GetLocalizedAsync(store, x => x.Name)
+                StoreName = await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name)
             };
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreLogoPath
-                , store, await _themeContext.GetWorkingThemeNameAsync(), _webHelper.IsCurrentConnectionSecured());
+                , await _storeContext.GetCurrentStoreAsync(), await _themeContext.GetWorkingThemeNameAsync(), _webHelper.IsCurrentConnectionSecured());
             model.LogoPath = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var logo = string.Empty;
@@ -353,7 +352,6 @@ namespace Nop.Web.Factories
         public virtual async Task<HeaderLinksModel> PrepareHeaderLinksModelAsync()
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
 
             var unreadMessageCount = await GetUnreadPrivateMessagesAsync();
             var unreadMessage = string.Empty;
@@ -364,9 +362,9 @@ namespace Nop.Web.Factories
 
                 //notifications here
                 if (_forumSettings.ShowAlertForPM &&
-                    !await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, store.Id))
+                    !await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, (await _storeContext.GetCurrentStoreAsync()).Id))
                 {
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, true, store.Id);
+                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, true, (await _storeContext.GetCurrentStoreAsync()).Id);
                     alertMessage = string.Format(await _localizationService.GetResourceAsync("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
                 }
             }
@@ -385,10 +383,10 @@ namespace Nop.Web.Factories
             //performance optimization (use "HasShoppingCartItems" property)
             if (customer.HasShoppingCartItems)
             {
-                model.ShoppingCartItems = (await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id))
+                model.ShoppingCartItems = (await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id))
                     .Sum(item => item.Quantity);
 
-                model.WishlistItems = (await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id))
+                model.WishlistItems = (await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, (await _storeContext.GetCurrentStoreAsync()).Id))
                     .Sum(item => item.Quantity);
             }
 
@@ -448,8 +446,7 @@ namespace Nop.Web.Factories
         public virtual async Task<FooterModel> PrepareFooterModelAsync()
         {
             //footer topics
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var topicModels = await (await _topicService.GetAllTopicsAsync(store.Id))
+            var topicModels = await (await _topicService.GetAllTopicsAsync((await _storeContext.GetCurrentStoreAsync()).Id))
                     .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)
                     .SelectAwait(async t => new FooterModel.FooterTopicModel
                     {
@@ -464,7 +461,7 @@ namespace Nop.Web.Factories
             //model
             var model = new FooterModel
             {
-                StoreName = await _localizationService.GetLocalizedAsync(store, x => x.Name),
+                StoreName = await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name),
                 WishlistEnabled = await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist),
                 ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart),
                 SitemapEnabled = _sitemapSettings.SitemapEnabled,
@@ -517,9 +514,8 @@ namespace Nop.Web.Factories
 
             if (!excludeProperties)
             {
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                model.Email = customer.Email;
-                model.FullName = await _customerService.GetCustomerFullNameAsync(customer);
+                model.Email = (await _workContext.GetCurrentCustomerAsync()).Email;
+                model.FullName = await _customerService.GetCustomerFullNameAsync(await _workContext.GetCurrentCustomerAsync());
             }
 
             model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
@@ -548,9 +544,8 @@ namespace Nop.Web.Factories
 
             if (!excludeProperties)
             {
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                model.Email = customer.Email;
-                model.FullName = await _customerService.GetCustomerFullNameAsync(customer);
+                model.Email = (await _workContext.GetCurrentCustomerAsync()).Email;
+                model.FullName = await _customerService.GetCustomerFullNameAsync(await _workContext.GetCurrentCustomerAsync());
             }
 
             model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;

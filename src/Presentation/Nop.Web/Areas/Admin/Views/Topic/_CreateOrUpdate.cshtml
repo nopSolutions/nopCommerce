@@ -4,14 +4,13 @@
     var showTour = ViewBag.ShowTour ?? false;
 
     const string hideInfoBlockAttributeName = "TopicDetailsPage.HideInfoBlock";
-    var customer = await workContext.GetCurrentCustomerAsync();
-    var hideInfoBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+    var hideInfoBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
 
     const string hideDisplayBlockAttributeName = "TopicDetailsPage.HideDisplayBlock";
-    var hideDisplayBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDisplayBlockAttributeName, defaultValue: true);
+    var hideDisplayBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDisplayBlockAttributeName, defaultValue: true);
 
     const string hideSeoBlockAttributeName = "TopicDetailsPage.HideSeoBlock";
-    var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSeoBlockAttributeName, defaultValue: true);
+    var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSeoBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

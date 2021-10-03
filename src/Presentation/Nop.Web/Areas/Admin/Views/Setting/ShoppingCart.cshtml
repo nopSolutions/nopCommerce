@@ -9,14 +9,13 @@
 
 @{
     const string hideCommonBlockAttributeName = "ShoppingCartSettingsPage.HideCommonBlock";
-    var customer = await workContext.GetCurrentCustomerAsync();
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hideMiniShoppingCartBlockAttributeName = "ShoppingCartSettingsPage.HideMiniShoppingCartBlock";
-    var hideMiniShoppingCartBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideMiniShoppingCartBlockAttributeName);
+    var hideMiniShoppingCartBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideMiniShoppingCartBlockAttributeName);
 
     const string hideWishlistBlockAttributeName = "ShoppingCartSettingsPage.HideWishlistBlock";
-    var hideWishlistBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideWishlistBlockAttributeName);
+    var hideWishlistBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideWishlistBlockAttributeName);
 }
 
 

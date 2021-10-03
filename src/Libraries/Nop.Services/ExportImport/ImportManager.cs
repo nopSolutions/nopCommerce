@@ -1199,15 +1199,14 @@ namespace Nop.Services.ExportImport
             }
 
             //performance optimization, load all products by SKU in one SQL request
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
-            var allProductsBySku = await _productService.GetProductsBySkuAsync(metadata.AllSku.ToArray(), currentVendor?.Id ?? 0);
+            var allProductsBySku = await _productService.GetProductsBySkuAsync(metadata.AllSku.ToArray(), (await _workContext.GetCurrentVendorAsync())?.Id ?? 0);
 
             //validate maximum number of products per vendor
             if (_vendorSettings.MaximumProductNumber > 0 &&
-                currentVendor != null)
+                await _workContext.GetCurrentVendorAsync() != null)
             {
                 var newProductsCount = metadata.CountProductsInFile - allProductsBySku.Count;
-                if (await _productService.GetNumberOfProductsByVendorIdAsync(currentVendor.Id) + newProductsCount > _vendorSettings.MaximumProductNumber)
+                if (await _productService.GetNumberOfProductsByVendorIdAsync((await _workContext.GetCurrentVendorAsync()).Id) + newProductsCount > _vendorSettings.MaximumProductNumber)
                     throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
             }
 
@@ -1317,7 +1316,7 @@ namespace Nop.Services.ExportImport
                             break;
                         case "Vendor":
                             //vendor can't change this field
-                            if (currentVendor == null)
+                            if (await _workContext.GetCurrentVendorAsync() == null)
                                 product.VendorId = property.IntValue;
                             break;
                         case "ProductTemplate":
@@ -1325,12 +1324,12 @@ namespace Nop.Services.ExportImport
                             break;
                         case "ShowOnHomepage":
                             //vendor can't change this field
-                            if (currentVendor == null)
+                            if (await _workContext.GetCurrentVendorAsync() == null)
                                 product.ShowOnHomepage = property.BooleanValue;
                             break;
                         case "DisplayOrder":
                             //vendor can't change this field
-                            if (currentVendor == null)
+                            if (await _workContext.GetCurrentVendorAsync() == null)
                                 product.DisplayOrder = property.IntValue;
                             break;
                         case "MetaKeywords":
@@ -1582,8 +1581,8 @@ namespace Nop.Services.ExportImport
                     product.Published = true;
 
                 //sets the current vendor for the new product
-                if (isNew && currentVendor != null)
-                    product.VendorId = currentVendor.Id;
+                if (isNew && await _workContext.GetCurrentVendorAsync() != null)
+                    product.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
 
                 product.UpdatedOnUtc = DateTime.UtcNow;
 

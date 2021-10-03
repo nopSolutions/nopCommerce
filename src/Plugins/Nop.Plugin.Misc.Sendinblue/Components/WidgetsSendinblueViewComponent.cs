@@ -54,9 +54,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
                 return Content(trackingScript);
 
             //get customer email
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerEmail = !await _customerService.IsGuestAsync(customer)
-                ? customer.Email?.Replace("'", "\\'")
+            var customerEmail = !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync())
+                ? (await _workContext.GetCurrentCustomerAsync()).Email?.Replace("'", "\\'")
                 : string.Empty;
 
             //prepare tracking script

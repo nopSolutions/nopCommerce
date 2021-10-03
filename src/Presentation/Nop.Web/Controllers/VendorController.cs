@@ -197,11 +197,10 @@ namespace Nop.Web.Controllers
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("Homepage");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _customerService.IsRegisteredAsync(customer))
+            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
-            if (await _customerService.IsAdminAsync(customer))
+            if (await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
                 ModelState.AddModelError("", await _localizationService.GetResourceAsync("Vendors.ApplyAccount.IsAdmin"));
 
             //validate CAPTCHA
@@ -257,8 +256,8 @@ namespace Nop.Web.Controllers
                 //associate to the current customer
                 //but a store owner will have to manually add this customer role to "Vendors" role
                 //if he wants to grant access to admin area
-                customer.VendorId = vendor.Id;
-                await _customerService.UpdateCustomerAsync(customer);
+                (await _workContext.GetCurrentCustomerAsync()).VendorId = vendor.Id;
+                await _customerService.UpdateCustomerAsync(await _workContext.GetCurrentCustomerAsync());
 
                 //update picture seo file name
                 await UpdatePictureSeoNamesAsync(vendor);
@@ -267,7 +266,7 @@ namespace Nop.Web.Controllers
                 await _genericAttributeService.SaveAttributeAsync(vendor, NopVendorDefaults.VendorAttributes, vendorAttributesXml);
 
                 //notify store owner here (email)
-                await _workflowMessageService.SendNewVendorAccountApplyStoreOwnerNotificationAsync(customer,
+                await _workflowMessageService.SendNewVendorAccountApplyStoreOwnerNotificationAsync(await _workContext.GetCurrentCustomerAsync(),
                     vendor, _localizationSettings.DefaultAdminLanguageId);
 
                 model.DisableFormInput = true;
@@ -301,8 +300,7 @@ namespace Nop.Web.Controllers
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
-            var vendor = await _workContext.GetCurrentVendorAsync();
-            if (vendor == null || !_vendorSettings.AllowVendorsToEditInfo)
+            if (await _workContext.GetCurrentVendorAsync() == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
 
             Picture picture = null;
@@ -321,6 +319,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
+            var vendor = await _workContext.GetCurrentVendorAsync();
             var prevPicture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
 
             //vendor attributes
@@ -372,10 +371,10 @@ namespace Nop.Web.Controllers
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
-            var vendor = await _workContext.GetCurrentVendorAsync();
-            if (vendor == null || !_vendorSettings.AllowVendorsToEditInfo)
+            if (await _workContext.GetCurrentVendorAsync() == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
 
+            var vendor = await _workContext.GetCurrentVendorAsync();
             var picture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
 
             if (picture != null)

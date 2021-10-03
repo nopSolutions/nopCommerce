@@ -9,14 +9,13 @@
 
 @{
     const string hideCommonBlockAttributeName = "MediaSettingsPage.HideCommonBlock";
-    var customer = await workContext.GetCurrentCustomerAsync();
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hideProductBlockAttributeName = "MediaSettingsPage.HideProductBlock";
-    var hideProductBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductBlockAttributeName);
+    var hideProductBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideProductBlockAttributeName);
 
     const string hideOtherPagesBlockAttributeName = "MediaSettingsPage.HideOtherPagesBlock";
-    var hideOtherPagesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideOtherPagesBlockAttributeName);
+    var hideOtherPagesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideOtherPagesBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Media" method="post">

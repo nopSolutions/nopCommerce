@@ -9,23 +9,22 @@
 
 @{
     const string hideCommonBlockAttributeName = "TaxSettingsPage.HideCommonBlock";
-    var customer = await workContext.GetCurrentCustomerAsync();
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hideDefaultTaxAddressBlockAttributeName = "TaxSettingsPage.HideDefaultTaxAddressBlock";
-    var hideDefaultTaxAddressBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDefaultTaxAddressBlockAttributeName);
+    var hideDefaultTaxAddressBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDefaultTaxAddressBlockAttributeName);
 
     const string hideTaxDisplayingBlockAttributeName = "TaxSettingsPage.HideTaxDisplayingBlock";
-    var hideTaxDisplayingBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTaxDisplayingBlockAttributeName);
+    var hideTaxDisplayingBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideTaxDisplayingBlockAttributeName);
 
     const string hideShippingBlockAttributeName = "TaxSettingsPage.HideShippingBlock";
-    var hideShippingBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideShippingBlockAttributeName);
+    var hideShippingBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideShippingBlockAttributeName);
 
     const string hidePaymentBlockAttributeName = "TaxSettingsPage.HidePaymentBlock";
-    var hidePaymentBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePaymentBlockAttributeName);
+    var hidePaymentBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePaymentBlockAttributeName);
 
     const string hideVATBlockAttributeName = "TaxSettingsPage.HideVATBlock";
-    var hideVATBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideVATBlockAttributeName);
+    var hideVATBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideVATBlockAttributeName);
 }
 
     <form asp-controller="Setting" asp-action="Tax" method="post">

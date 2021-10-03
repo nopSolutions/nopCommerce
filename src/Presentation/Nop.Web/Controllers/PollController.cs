@@ -58,18 +58,17 @@ namespace Nop.Web.Controllers
             if (!poll.Published || !await _storeMappingService.AuthorizeAsync(poll))
                 return Json(new { error = "Poll is not available" });
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (await _customerService.IsGuestAsync(customer) && !poll.AllowGuestsToVote)
+            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !poll.AllowGuestsToVote)
                 return Json(new { error = await _localizationService.GetResourceAsync("Polls.OnlyRegisteredUsersVote") });
 
-            var alreadyVoted = await _pollService.AlreadyVotedAsync(poll.Id, customer.Id);
+            var alreadyVoted = await _pollService.AlreadyVotedAsync(poll.Id, (await _workContext.GetCurrentCustomerAsync()).Id);
             if (!alreadyVoted)
             {
                 //vote
                 await _pollService.InsertPollVotingRecordAsync(new PollVotingRecord
                 {
                     PollAnswerId = pollAnswer.Id,
-                    CustomerId = customer.Id,
+                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
                     CreatedOnUtc = DateTime.UtcNow
                 });
 

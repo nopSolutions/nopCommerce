@@ -414,11 +414,10 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<IActionResult> SignInCustomerAsync(Customer customer, string returnUrl, bool isPersist = false)
         {
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-            if (currentCustomer?.Id != customer.Id)
+            if ((await _workContext.GetCurrentCustomerAsync())?.Id != customer.Id)
             {
                 //migrate shopping cart
-                await _shoppingCartService.MigrateShoppingCartAsync(currentCustomer, customer, true);
+                await _shoppingCartService.MigrateShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), customer, true);
 
                 await _workContext.SetCurrentCustomerAsync(customer);
             }
