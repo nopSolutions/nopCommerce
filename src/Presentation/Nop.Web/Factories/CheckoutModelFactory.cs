@@ -480,7 +480,7 @@ namespace Nop.Web.Factories
 
             //filter by country
             var paymentMethods = await (await _paymentPluginManager
-                .LoadActivePluginsAsyncAsync(customer, store.Id, filterByCountryId))
+                .LoadActivePluginsAsync(customer, store.Id, filterByCountryId))
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
                 .WhereAwait(async pm => !await pm.HidePaymentMethodAsync(cart))
                 .ToListAsync();
