@@ -1898,8 +1898,8 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException(nameof(giftCard));
 
             var order = await _orderService.GetOrderByOrderItemAsync(giftCard.PurchasedWithOrderItemId ?? 0);
-
-            var store = order != null ? await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync() : await _storeContext.GetCurrentStoreAsync();
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+            var store = order != null ? await _storeService.GetStoreByIdAsync(order.StoreId) ?? currentStore : currentStore;
 
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 

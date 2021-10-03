@@ -278,12 +278,13 @@ namespace Nop.Web.Factories
 
             model.AllowPostVoting = _forumSettings.AllowPostVoting;
 
-            //subscription                
-            if (await _forumService.IsCustomerAllowedToSubscribeAsync(await _workContext.GetCurrentCustomerAsync()))
+            //subscription
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _forumService.IsCustomerAllowedToSubscribeAsync(customer))
             {
                 model.WatchForumText = await _localizationService.GetResourceAsync("Forum.WatchForum");
 
-                var forumSubscription = (await _forumService.GetAllSubscriptionsAsync((await _workContext.GetCurrentCustomerAsync()).Id, forum.Id, 0, 0, 1)).FirstOrDefault();
+                var forumSubscription = (await _forumService.GetAllSubscriptionsAsync(customer.Id, forum.Id, 0, 0, 1)).FirstOrDefault();
                 if (forumSubscription != null)
                 {
                     model.WatchForumText = await _localizationService.GetResourceAsync("Forum.UnwatchForum");
@@ -299,7 +300,7 @@ namespace Nop.Web.Factories
                 var topicModel = await PrepareForumTopicRowModelAsync(topic);
                 model.ForumTopics.Add(topicModel);
             }
-            model.IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(await _workContext.GetCurrentCustomerAsync());
+            model.IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(customer);
             model.ForumFeedsEnabled = _forumSettings.ForumFeedsEnabled;
             model.PostsPageSize = _forumSettings.PostsPageSize;
             return model;
@@ -324,23 +325,24 @@ namespace Nop.Web.Factories
                 page - 1, _forumSettings.PostsPageSize);
 
             //prepare model
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             var model = new ForumTopicPageModel
             {
                 Id = forumTopic.Id,
                 Subject = forumTopic.Subject,
                 SeName = await _forumService.GetTopicSeNameAsync(forumTopic),
 
-                IsCustomerAllowedToEditTopic = await _forumService.IsCustomerAllowedToEditTopicAsync(await _workContext.GetCurrentCustomerAsync(), forumTopic),
-                IsCustomerAllowedToDeleteTopic = await _forumService.IsCustomerAllowedToDeleteTopicAsync(await _workContext.GetCurrentCustomerAsync(), forumTopic),
-                IsCustomerAllowedToMoveTopic = await _forumService.IsCustomerAllowedToMoveTopicAsync(await _workContext.GetCurrentCustomerAsync(), forumTopic),
-                IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(await _workContext.GetCurrentCustomerAsync())
+                IsCustomerAllowedToEditTopic = await _forumService.IsCustomerAllowedToEditTopicAsync(currentCustomer, forumTopic),
+                IsCustomerAllowedToDeleteTopic = await _forumService.IsCustomerAllowedToDeleteTopicAsync(currentCustomer, forumTopic),
+                IsCustomerAllowedToMoveTopic = await _forumService.IsCustomerAllowedToMoveTopicAsync(currentCustomer, forumTopic),
+                IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(currentCustomer)
             };
 
             if (model.IsCustomerAllowedToSubscribe)
             {
                 model.WatchTopicText = await _localizationService.GetResourceAsync("Forum.WatchTopic");
 
-                var forumTopicSubscription = (await _forumService.GetAllSubscriptionsAsync((await _workContext.GetCurrentCustomerAsync()).Id, 0, forumTopic.Id, 0, 1)).FirstOrDefault();
+                var forumTopicSubscription = (await _forumService.GetAllSubscriptionsAsync(currentCustomer.Id, 0, forumTopic.Id, 0, 1)).FirstOrDefault();
                 if (forumTopicSubscription != null)
                 {
                     model.WatchTopicText = await _localizationService.GetResourceAsync("Forum.UnwatchTopic");
@@ -362,8 +364,8 @@ namespace Nop.Web.Factories
                     ForumTopicId = post.TopicId,
                     ForumTopicSeName = await _forumService.GetTopicSeNameAsync(forumTopic),
                     FormattedText = _forumService.FormatPostText(post),
-                    IsCurrentCustomerAllowedToEditPost = await _forumService.IsCustomerAllowedToEditPostAsync(await _workContext.GetCurrentCustomerAsync(), post),
-                    IsCurrentCustomerAllowedToDeletePost = await _forumService.IsCustomerAllowedToDeletePostAsync(await _workContext.GetCurrentCustomerAsync(), post),
+                    IsCurrentCustomerAllowedToEditPost = await _forumService.IsCustomerAllowedToEditPostAsync(currentCustomer, post),
+                    IsCurrentCustomerAllowedToDeletePost = await _forumService.IsCustomerAllowedToDeletePostAsync(currentCustomer, post),
                     CustomerId = post.CustomerId,
                     AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !customerIsGuest,
                     CustomerName = await _customerService.FormatUsernameAsync(customer),
@@ -409,7 +411,7 @@ namespace Nop.Web.Factories
                 {
                     forumPostModel.AllowPostVoting = true;
                     forumPostModel.VoteCount = post.VoteCount;
-                    var postVote = await _forumService.GetPostVoteAsync(post.Id, await _workContext.GetCurrentCustomerAsync());
+                    var postVote = await _forumService.GetPostVoteAsync(post.Id, currentCustomer);
                     if (postVote != null)
                         forumPostModel.VoteIsUp = postVote.IsUp;
                 }
@@ -460,14 +462,15 @@ namespace Nop.Web.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            var customer = await _workContext.GetCurrentCustomerAsync();
             model.IsEdit = false;
             model.ForumId = forum.Id;
             model.ForumName = forum.Name;
             model.ForumSeName = await _forumService.GetForumSeNameAsync(forum);
             model.ForumEditor = _forumSettings.ForumEditor;
-            model.IsCustomerAllowedToSetTopicPriority = await _forumService.IsCustomerAllowedToSetTopicPriorityAsync(await _workContext.GetCurrentCustomerAsync());
+            model.IsCustomerAllowedToSetTopicPriority = await _forumService.IsCustomerAllowedToSetTopicPriorityAsync(customer);
             model.TopicPriorities = await ForumTopicTypesListAsync();
-            model.IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(await _workContext.GetCurrentCustomerAsync());
+            model.IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(customer);
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForum;
         }
 
@@ -490,6 +493,7 @@ namespace Nop.Web.Factories
             if (forum == null)
                 throw new ArgumentException("forum cannot be loaded");
 
+            var customer = await _workContext.GetCurrentCustomerAsync();
             model.IsEdit = true;
             model.Id = forumTopic.Id;
             model.TopicPriorities = await ForumTopicTypesListAsync();
@@ -498,8 +502,8 @@ namespace Nop.Web.Factories
             model.ForumId = forum.Id;
             model.ForumEditor = _forumSettings.ForumEditor;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForum;
-            model.IsCustomerAllowedToSetTopicPriority = await _forumService.IsCustomerAllowedToSetTopicPriorityAsync(await _workContext.GetCurrentCustomerAsync());
-            model.IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(await _workContext.GetCurrentCustomerAsync());
+            model.IsCustomerAllowedToSetTopicPriority = await _forumService.IsCustomerAllowedToSetTopicPriorityAsync(customer);
+            model.IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(customer);
 
             if (!excludeProperties)
             {
@@ -510,7 +514,7 @@ namespace Nop.Web.Factories
                 //subscription            
                 if (model.IsCustomerAllowedToSubscribe)
                 {
-                    var forumSubscription = (await _forumService.GetAllSubscriptionsAsync((await _workContext.GetCurrentCustomerAsync()).Id, 0, forumTopic.Id, 0, 1)).FirstOrDefault();
+                    var forumSubscription = (await _forumService.GetAllSubscriptionsAsync(customer.Id, 0, forumTopic.Id, 0, 1)).FirstOrDefault();
                     model.Subscribed = forumSubscription != null;
                 }
             }
@@ -535,6 +539,7 @@ namespace Nop.Web.Factories
             if (forum == null)
                 throw new ArgumentException("forum cannot be loaded");
 
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             var model = new EditForumPostModel
             {
                 ForumTopicId = forumTopic.Id,
@@ -543,7 +548,7 @@ namespace Nop.Web.Factories
                 ForumName = forum.Name,
                 ForumTopicSubject = forumTopic.Subject,
                 ForumTopicSeName = await _forumService.GetTopicSeNameAsync(forumTopic),
-                IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(await _workContext.GetCurrentCustomerAsync()),
+                IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(currentCustomer),
                 DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForum
             };
 
@@ -552,7 +557,7 @@ namespace Nop.Web.Factories
                 //subscription            
                 if (model.IsCustomerAllowedToSubscribe)
                 {
-                    var forumSubscription = (await _forumService.GetAllSubscriptionsAsync((await _workContext.GetCurrentCustomerAsync()).Id,
+                    var forumSubscription = (await _forumService.GetAllSubscriptionsAsync(currentCustomer.Id,
                         0, forumTopic.Id, 0, 1)).FirstOrDefault();
                     model.Subscribed = forumSubscription != null;
                 }
@@ -608,6 +613,7 @@ namespace Nop.Web.Factories
             if (forum == null)
                 throw new ArgumentException("forum cannot be loaded");
 
+            var customer = await _workContext.GetCurrentCustomerAsync();
             var model = new EditForumPostModel
             {
                 Id = forumPost.Id,
@@ -617,7 +623,7 @@ namespace Nop.Web.Factories
                 ForumName = forum.Name,
                 ForumTopicSubject = forumTopic.Subject,
                 ForumTopicSeName = await _forumService.GetTopicSeNameAsync(forumTopic),
-                IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(await _workContext.GetCurrentCustomerAsync()),
+                IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(customer),
                 DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForum
             };
 
@@ -627,7 +633,7 @@ namespace Nop.Web.Factories
                 //subscription
                 if (model.IsCustomerAllowedToSubscribe)
                 {
-                    var forumSubscription = (await _forumService.GetAllSubscriptionsAsync((await _workContext.GetCurrentCustomerAsync()).Id, 0, forumTopic.Id, 0, 1)).FirstOrDefault();
+                    var forumSubscription = (await _forumService.GetAllSubscriptionsAsync(customer.Id, 0, forumTopic.Id, 0, 1)).FirstOrDefault();
                     model.Subscribed = forumSubscription != null;
                 }
             }

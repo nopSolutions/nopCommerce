@@ -93,13 +93,15 @@ namespace Nop.Web.Factories
             if (string.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.PollBySystemNameModelKey,
-                systemKeyword, await _workContext.GetWorkingLanguageAsync(), await _storeContext.GetCurrentStoreAsync());
+                systemKeyword, currentLanguage, store);
 
             var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var poll = (await _pollService
-                    .GetPollsAsync((await _storeContext.GetCurrentStoreAsync()).Id, (await _workContext.GetWorkingLanguageAsync()).Id, systemKeyword: systemKeyword))
+                    .GetPollsAsync(store.Id, currentLanguage.Id, systemKeyword: systemKeyword))
                     .FirstOrDefault();
 
                 //we do not cache nulls. that's why let's return an empty record (ID = 0)

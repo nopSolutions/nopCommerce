@@ -535,13 +535,14 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> Logout()
         {
+            var customer = await _workContext.GetCurrentCustomerAsync();
             if (_workContext.OriginalCustomerIfImpersonated != null)
             {
                 //activity log
                 await _customerActivityService.InsertActivityAsync(_workContext.OriginalCustomerIfImpersonated, "Impersonation.Finished",
                     string.Format(await _localizationService.GetResourceAsync("ActivityLog.Impersonation.Finished.StoreOwner"),
-                        (await _workContext.GetCurrentCustomerAsync()).Email, (await _workContext.GetCurrentCustomerAsync()).Id),
-                    await _workContext.GetCurrentCustomerAsync());
+                        customer.Email, customer.Id),
+                    customer);
 
                 await _customerActivityService.InsertActivityAsync("Impersonation.Finished",
                     string.Format(await _localizationService.GetResourceAsync("ActivityLog.Impersonation.Finished.Customer"),
@@ -553,18 +554,18 @@ namespace Nop.Web.Controllers
                     .SaveAttributeAsync<int?>(_workContext.OriginalCustomerIfImpersonated, NopCustomerDefaults.ImpersonatedCustomerIdAttribute, null);
 
                 //redirect back to customer details page (admin area)
-                return RedirectToAction("Edit", "Customer", new { id = (await _workContext.GetCurrentCustomerAsync()).Id, area = AreaNames.Admin });
+                return RedirectToAction("Edit", "Customer", new { id = customer.Id, area = AreaNames.Admin });
             }
 
             //activity log
-            await _customerActivityService.InsertActivityAsync(await _workContext.GetCurrentCustomerAsync(), "PublicStore.Logout",
-                await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Logout"), await _workContext.GetCurrentCustomerAsync());
+            await _customerActivityService.InsertActivityAsync(customer, "PublicStore.Logout",
+                await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Logout"), customer);
 
             //standard logout 
             await _authenticationService.SignOutAsync();
 
             //raise logged out event       
-            await _eventPublisher.PublishAsync(new CustomerLoggedOutEvent(await _workContext.GetCurrentCustomerAsync()));
+            await _eventPublisher.PublishAsync(new CustomerLoggedOutEvent(customer));
 
             //EU Cookie
             if (_storeInformationSettings.DisplayEuCookieLawWarning)
@@ -765,19 +766,21 @@ namespace Nop.Web.Controllers
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled, returnUrl });
 
-            if (await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsRegisteredAsync(customer))
             {
                 //Already registered customer. 
                 await _authenticationService.SignOutAsync();
 
                 //raise logged out event       
-                await _eventPublisher.PublishAsync(new CustomerLoggedOutEvent(await _workContext.GetCurrentCustomerAsync()));
+                await _eventPublisher.PublishAsync(new CustomerLoggedOutEvent(customer));
 
                 //Save a new record
                 await _workContext.SetCurrentCustomerAsync(await _customerService.InsertGuestCustomerAsync());
             }
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            customer.RegisteredInStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
+
+            var store = await _storeContext.GetCurrentStoreAsync();
+            customer.RegisteredInStoreId = store.Id;
 
             //custom customer attributes
             var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
@@ -813,7 +816,7 @@ namespace Nop.Web.Controllers
                     _customerSettings.UsernamesEnabled ? customerUserName : customerEmail,
                     model.Password,
                     _customerSettings.DefaultPasswordFormat,
-                    (await _storeContext.GetCurrentStoreAsync()).Id,
+                    store.Id,
                     isApproved);
                 var registrationResult = await _customerRegistrationService.RegisterCustomerAsync(registrationRequest);
                 if (registrationResult.Success)
@@ -875,7 +878,7 @@ namespace Nop.Web.Controllers
                         var isNewsletterActive = _customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation;
 
                         //save newsletter value
-                        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, (await _storeContext.GetCurrentStoreAsync()).Id);
+                        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, store.Id);
                         if (newsletter != null)
                         {
                             if (model.Newsletter)
@@ -904,7 +907,7 @@ namespace Nop.Web.Controllers
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = customerEmail,
                                     Active = isNewsletterActive,
-                                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                                    StoreId = store.Id,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
 
@@ -1000,13 +1003,14 @@ namespace Nop.Web.Controllers
 
                     //raise event       
                     await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(customer));
+                    var currentLanguage = await _workContext.GetWorkingLanguageAsync();
 
                     switch (_customerSettings.UserRegistrationType)
                     {
                         case UserRegistrationType.EmailValidation:
                             //email validation message
                             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
-                            await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
+                            await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, currentLanguage.Id);
 
                             //result
                             return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
@@ -1016,7 +1020,7 @@ namespace Nop.Web.Controllers
 
                         case UserRegistrationType.Standard:
                             //send customer welcome message
-                            await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
+                            await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, currentLanguage.Id);
 
                             //raise event       
                             await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));
@@ -1065,9 +1069,10 @@ namespace Nop.Web.Controllers
             }
             else if (_customerSettings.UsernamesEnabled && !string.IsNullOrWhiteSpace(username))
             {
-                if (await _workContext.GetCurrentCustomerAsync() != null &&
-                    (await _workContext.GetCurrentCustomerAsync()).Username != null &&
-                    (await _workContext.GetCurrentCustomerAsync()).Username.Equals(username, StringComparison.InvariantCultureIgnoreCase))
+                var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+                if (currentCustomer != null &&
+                    currentCustomer.Username != null &&
+                    currentCustomer.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase))
                 {
                     statusText = await _localizationService.GetResourceAsync("Account.CheckUsernameAvailability.CurrentUsername");
                 }
@@ -1139,11 +1144,12 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> Info()
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             var model = new CustomerInfoModel();
-            model = await _customerModelFactory.PrepareCustomerInfoModelAsync(model, await _workContext.GetCurrentCustomerAsync(), false);
+            model = await _customerModelFactory.PrepareCustomerInfoModelAsync(model, customer, false);
 
             return View(model);
         }
@@ -1151,12 +1157,11 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Info(CustomerInfoModel model, IFormCollection form)
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             var oldCustomerModel = new CustomerInfoModel();
-
-            var customer = await _workContext.GetCurrentCustomerAsync();
 
             //get customer info model before changes for gdpr log
             if (_gdprSettings.GdprEnabled & _gdprSettings.LogUserProfileChanges)
@@ -1276,7 +1281,8 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.NewsletterEnabled)
                     {
                         //save newsletter value
-                        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, (await _storeContext.GetCurrentStoreAsync()).Id);
+                        var store = await _storeContext.GetCurrentStoreAsync();
+                        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
                         if (newsletter != null)
                         {
                             if (model.Newsletter)
@@ -1298,7 +1304,7 @@ namespace Nop.Web.Controllers
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = customer.Email,
                                     Active = true,
-                                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                                    StoreId = store.Id,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
                             }
@@ -1309,7 +1315,7 @@ namespace Nop.Web.Controllers
                         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SignatureAttribute, model.Signature);
 
                     //save customer attributes
-                    await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
+                    await _genericAttributeService.SaveAttributeAsync(customer,
                         NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
 
                     //GDPR
@@ -1422,10 +1428,9 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AddressDelete(int addressId)
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
-                return Challenge();
-
             var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
+                return Challenge();
 
             //find address (ensure that it belongs to the current customer)
             var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
@@ -1462,7 +1467,8 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AddressAdd(CustomerAddressEditModel model, IFormCollection form)
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             //custom address attributes
@@ -1487,7 +1493,7 @@ namespace Nop.Web.Controllers
 
                 await _addressService.InsertAddressAsync(address);
 
-                await _customerService.InsertCustomerAddressAsync(await _workContext.GetCurrentCustomerAsync(), address);
+                await _customerService.InsertCustomerAddressAsync(customer, address);
 
                 return RedirectToRoute("CustomerAddresses");
             }
@@ -1505,10 +1511,10 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> AddressEdit(int addressId)
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
             //find address (ensure that it belongs to the current customer)
             var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
             if (address == null)
@@ -1528,10 +1534,10 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, int addressId, IFormCollection form)
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
             //find address (ensure that it belongs to the current customer)
             var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
             if (address == null)
@@ -1607,13 +1613,14 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> ChangePassword()
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             var model = await _customerModelFactory.PrepareChangePasswordModelAsync();
 
             //display the cause of the change password 
-            if (await _customerService.PasswordIsExpiredAsync(await _workContext.GetCurrentCustomerAsync()))
+            if (await _customerService.PasswordIsExpiredAsync(customer))
                 ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Account.ChangePassword.PasswordIsExpired"));
 
             return View(model);
@@ -1622,10 +1629,9 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ChangePassword(ChangePasswordModel model, string returnUrl)
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
-                return Challenge();
-
             var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
+                return Challenge();
 
             if (ModelState.IsValid)
             {
@@ -1669,13 +1675,12 @@ namespace Nop.Web.Controllers
         [FormValueRequired("upload-avatar")]
         public virtual async Task<IActionResult> UploadAvatar(CustomerAvatarModel model, IFormFile uploadedFile)
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
-
-            var customer = await _workContext.GetCurrentCustomerAsync();
 
             if (ModelState.IsValid)
             {
@@ -1723,13 +1728,12 @@ namespace Nop.Web.Controllers
         [FormValueRequired("remove-avatar")]
         public virtual async Task<IActionResult> RemoveAvatar(CustomerAvatarModel model)
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
-
-            var customer = await _workContext.GetCurrentCustomerAsync();
 
             var customerAvatar = await _pictureService.GetPictureByIdAsync(await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute));
             if (customerAvatar != null)
@@ -1760,17 +1764,18 @@ namespace Nop.Web.Controllers
         [FormValueRequired("export-data")]
         public virtual async Task<IActionResult> GdprToolsExport()
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             if (!_gdprSettings.GdprEnabled)
                 return RedirectToRoute("CustomerInfo");
 
             //log
-            await _gdprService.InsertLogAsync(await _workContext.GetCurrentCustomerAsync(), 0, GdprRequestType.ExportData, await _localizationService.GetResourceAsync("Gdpr.Exported"));
+            await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ExportData, await _localizationService.GetResourceAsync("Gdpr.Exported"));
 
             //export
-            var bytes = await _exportManager.ExportCustomerGdprInfoToXlsxAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
+            var bytes = await _exportManager.ExportCustomerGdprInfoToXlsxAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
 
             return File(bytes, MimeTypes.TextXlsx, "customerdata.xlsx");
         }
@@ -1779,14 +1784,15 @@ namespace Nop.Web.Controllers
         [FormValueRequired("delete-account")]
         public virtual async Task<IActionResult> GdprToolsDelete()
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             if (!_gdprSettings.GdprEnabled)
                 return RedirectToRoute("CustomerInfo");
 
             //log
-            await _gdprService.InsertLogAsync(await _workContext.GetCurrentCustomerAsync(), 0, GdprRequestType.DeleteCustomer, await _localizationService.GetResourceAsync("Gdpr.DeleteRequested"));
+            await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.DeleteCustomer, await _localizationService.GetResourceAsync("Gdpr.DeleteRequested"));
 
             var model = await _customerModelFactory.PrepareGdprToolsModelAsync();
             model.Result = await _localizationService.GetResourceAsync("Gdpr.DeleteRequested.Success");
@@ -1862,10 +1868,9 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> MultiFactorAuthentication(MultiFactorAuthenticationModel model, IFormCollection form)
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
-                return Challenge();
-
             var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
+                return Challenge();
 
             try
             {

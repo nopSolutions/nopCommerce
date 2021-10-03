@@ -43,10 +43,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Content(string.Empty);
 
             //a vendor should have access only to his products
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
             var vendorId = 0;
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            if (currentVendor != null)
             {
-                vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                vendorId = currentVendor.Id;
             }
 
             //products

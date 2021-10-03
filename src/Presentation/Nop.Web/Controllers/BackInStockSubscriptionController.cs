@@ -70,15 +70,17 @@ namespace Nop.Web.Controllers
             if (product == null || product.Deleted)
                 throw new ArgumentException("No product found with the specified id");
 
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
             var model = new BackInStockSubscribeModel
             {
                 ProductId = product.Id,
                 ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
                 ProductSeName = await _urlRecordService.GetSeNameAsync(product),
-                IsCurrentCustomerRegistered = await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()),
+                IsCurrentCustomerRegistered = await _customerService.IsRegisteredAsync(customer),
                 MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions,
                 CurrentNumberOfBackInStockSubscriptions = (await _backInStockSubscriptionService
-                .GetAllSubscriptionsByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id, (await _storeContext.GetCurrentStoreAsync()).Id, 0, 1))
+                .GetAllSubscriptionsByCustomerIdAsync(customer.Id, store.Id, 0, 1))
                 .TotalCount
             };
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
@@ -89,7 +91,7 @@ namespace Nop.Web.Controllers
                 //out of stock
                 model.SubscriptionAllowed = true;
                 model.AlreadySubscribed = await _backInStockSubscriptionService
-                    .FindSubscriptionAsync((await _workContext.GetCurrentCustomerAsync()).Id, product.Id, (await _storeContext.GetCurrentStoreAsync()).Id) != null;
+                    .FindSubscriptionAsync(customer.Id, product.Id, store.Id) != null;
             }
 
             return PartialView(model);
@@ -103,7 +105,8 @@ namespace Nop.Web.Controllers
             if (product == null || product.Deleted)
                 throw new ArgumentException("No product found with the specified id");
 
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Content(await _localizationService.GetResourceAsync("BackInStockSubscriptions.OnlyRegistered"));
 
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
@@ -112,8 +115,9 @@ namespace Nop.Web.Controllers
                 await _productService.GetTotalStockQuantityAsync(product) <= 0)
             {
                 //out of stock
+                var store = await _storeContext.GetCurrentStoreAsync();
                 var subscription = await _backInStockSubscriptionService
-                    .FindSubscriptionAsync((await _workContext.GetCurrentCustomerAsync()).Id, product.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    .FindSubscriptionAsync(customer.Id, product.Id, store.Id);
                 if (subscription != null)
                 {
                     //subscription already exists
@@ -127,7 +131,7 @@ namespace Nop.Web.Controllers
                 //subscription does not exist
                 //subscribe
                 if ((await _backInStockSubscriptionService
-                    .GetAllSubscriptionsByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id, (await _storeContext.GetCurrentStoreAsync()).Id, 0, 1))
+                    .GetAllSubscriptionsByCustomerIdAsync(customer.Id, store.Id, 0, 1))
                     .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
                 {
                     return Json(new
@@ -137,9 +141,9 @@ namespace Nop.Web.Controllers
                 }
                 subscription = new BackInStockSubscription
                 {
-                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                    CustomerId = customer.Id,
                     ProductId = product.Id,
-                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                    StoreId = store.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 };
                 await _backInStockSubscriptionService.InsertSubscriptionAsync(subscription);
