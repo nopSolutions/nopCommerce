@@ -58,6 +58,13 @@ namespace Nop.Services.Security
         Task InstallPermissionsAsync(IPermissionProvider permissionProvider);
 
         /// <summary>
+        /// Install permissions
+        /// </summary>
+        /// <param name="permissionProvider">Permission provider</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UninstallPermissionsAsync(IPermissionProvider permissionProvider);
+
+        /// <summary>
         /// Authorize permission
         /// </summary>
         /// <param name="permission">Permission record</param>
