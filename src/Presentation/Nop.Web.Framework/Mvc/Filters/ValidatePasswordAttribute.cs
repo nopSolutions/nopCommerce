@@ -90,7 +90,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //check password expiration
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                if (!await _customerService.PasswordIsExpiredAsync(customer))
+                if (!await _customerService.IsPasswordExpiredAsync(customer))
                     return;
 
                 var returnUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
