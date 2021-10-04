@@ -1614,7 +1614,7 @@ namespace Nop.Services.Orders
                                     var secondTime = dates[1].Split('-')[1].Split(':');
                                     var thirdTime = dates[2].Split('-')[1].Split(':');
                                     //Get the first value of the first setting
-                                    var nextDayDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(time[0]), Convert.ToInt32(time[1]), Convert.ToInt32(time[2]), DateTimeKind.Utc);
+                                    var nextDayDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(firstTime[0]), Convert.ToInt32(firstTime[1]), Convert.ToInt32(firstTime[2]), DateTimeKind.Utc).AddDays(1);
                                     //Get the first value of the second setting
                                     var firstDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(firstTime[0]), Convert.ToInt32(firstTime[1]), Convert.ToInt32(firstTime[2]), DateTimeKind.Utc);
                                     //Get the second value of the second setting
@@ -1623,21 +1623,21 @@ namespace Nop.Services.Orders
                                     var thirdDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(thirdTime[0]), Convert.ToInt32(thirdTime[1]), Convert.ToInt32(thirdTime[2]), DateTimeKind.Utc);
 
                                     //check current date is less then first time of setting
-                                    if (currentDate < firstDateTime)
+                                    if (currentDate.TimeOfDay < firstDateTime.TimeOfDay)
                                         scheduleDate = firstDateTime;
 
                                     //check current date is equal to second time of setting
-                                    else if (currentDate == secondDateTime)
+                                    else if (currentDate.TimeOfDay <= secondDateTime.TimeOfDay)
                                     {
                                         scheduleDate = secondDateTime;
                                     }
                                     //check current date is equal to third Time of setting
-                                    else if (currentDate == thirdDateTime)
+                                    else if (currentDate.TimeOfDay <= thirdDateTime.TimeOfDay)
                                     {
                                         scheduleDate = thirdDateTime;
                                     }
                                     //check current date is greater then nextday Time of setting
-                                    else if (currentDate > nextDayDateTime)
+                                    else if (currentDate.TimeOfDay > nextDayDateTime.TimeOfDay)
                                     {
                                         scheduleDate = nextDayDateTime;
                                     }
@@ -1647,11 +1647,11 @@ namespace Nop.Services.Orders
 
                             var ordersAccordingToScheduleDate = orders.Where(x => x.ScheduleDate.Date == scheduleDate.Value.Date).ToList();
                             var todayOrderTotal = ordersAccordingToScheduleDate.Sum(x => x.OrderTotal) + cartTotal.shoppingCartTotal;
-                            if (todayOrderTotal > company.AmountLimit)
+                            if (todayOrderTotal > company.AmountLimit && !(await IsAccountLimitatioIgnoredAsync(details.Customer.Id)))
                                 result.Errors.Add(string.Format(await _localizationService.GetResourceAsync("Order.Company.AmountLimit"), company.AmountLimit, await _localizationService.GetResourceAsync("Customer.Company.OrderTotal"), todayOrderTotal));
                         }
                         //if there are no previous orders found then checks for company limit
-                        else if (cartTotal.shoppingCartTotal > company.AmountLimit)
+                        else if (cartTotal.shoppingCartTotal > company.AmountLimit && !(await IsAccountLimitatioIgnoredAsync(details.Customer.Id)))
                             result.Errors.Add(string.Format(await _localizationService.GetResourceAsync("Order.Company.AmountLimit"), company.AmountLimit, await _localizationService.GetResourceAsync("Customer.Company.OrderTotal"), cartTotal.shoppingCartTotal));
                     }
                     else
@@ -3236,6 +3236,24 @@ namespace Nop.Services.Orders
                 return false;
 
             return true;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether amount limitation is ignored
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether limitation is ignored
+        /// </returns>
+        public virtual async Task<bool> IsAccountLimitatioIgnoredAsync(int customerId)
+        {
+            var customer = await _customerService.GetCustomerByIdAsync(customerId);
+            if (customer != null && (await _customerService.GetCustomerRolesAsync(customer))
+                .Any(role => role.SystemName.Equals(NopCustomerDefaults.UnlimitedAccountRoleName)))
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

@@ -53,6 +53,8 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Service
 
         public async Task HandleEventAsync(CustomerRegisteredEvent eventMessage)
         {
+            return;
+            
             var customer = eventMessage.Customer;
             if(IsServiceTitanEmail(customer.Email))
             {

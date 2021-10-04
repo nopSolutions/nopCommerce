@@ -26,6 +26,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Nop.Services.Logging;
 
 namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
 {
@@ -44,6 +45,10 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly INotificationService _notificationService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IWorkContext _workContext;
+        private readonly ICustomerService _customerService;
+        private readonly ICompanyService _companyService;
+        private readonly ILogger _logger;
 
         #endregion
 
@@ -61,7 +66,11 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             IOptionsMonitorCache<MicrosoftAccountOptions> optionsMicrosoftCache,
             IAuthenticationPluginManager authenticationPluginManager,
             INotificationService notificationService,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IWorkContext workContext,
+            ICustomerService customerService,
+            ICompanyService companyService,
+            ILogger logger
             )
         {
             _externalAuthenticationService = externalAuthenticationService;
@@ -76,6 +85,10 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             _authenticationPluginManager = authenticationPluginManager;
             _notificationService = notificationService;
             _httpContextAccessor = httpContextAccessor;
+            _workContext = workContext;
+            _customerService = customerService;
+            _companyService = companyService;
+            _logger = logger;
         }
 
         #endregion
@@ -306,43 +319,8 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
                 return RedirectToRoute("Login");
 
             bool isApproved = false;
-            string email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value;
-            if (string.IsNullOrEmpty(email))
-            {
-                var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                var customerService = EngineContext.Current.Resolve<ICustomerService>();
-                var companyService = EngineContext.Current.Resolve<ICompanyService>();
-
-                //get current logged-in user
-                var currentLoggedInUser = await customerService.IsRegisteredAsync(await workContext.GetCurrentCustomerAsync()) ? await workContext.GetCurrentCustomerAsync() : null;
-
-                var companies = await companyService.GetAllCompaniesAsync(email: email.Split('@')[1]);
-                if (companies.Any())
-                {
-                    var companyId = companies.FirstOrDefault().Id;
-
-                    //whether product Company with such parameters already exists
-                    var checkCustomerCompanyMappingExist = await companyService.GetCompanyCustomersByCustomerIdAsync(currentLoggedInUser.Id);
-                    if (!checkCustomerCompanyMappingExist.Any())
-                    {
-                        await companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = companyId, CustomerId = currentLoggedInUser.Id });
-                        isApproved = true;
-
-                        var companyCustomers = await companyService.GetCompanyCustomersByCompanyIdAsync(companyId);
-                        if (companyCustomers.Any())
-                        {
-                            var addresses = await customerService.GetAddressesByCustomerIdAsync(companyCustomers.FirstOrDefault().CustomerId);
-                            foreach (var address in addresses)
-                            {
-                                await customerService.InsertCustomerAddressAsync(currentLoggedInUser, address);
-                            }
-                        }
-                    }
-                }
-                email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value + "@" + authenticateResult.Principal.Identity.AuthenticationType + ".com";
-            }
-
             //create external authentication parameters
+            string email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value;
             var authenticationParameters = new ExternalAuthenticationParameters
             {
                 ProviderSystemName = AuthenticationDefaults.PluginSystemName,
@@ -353,11 +331,45 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
                 ExternalDisplayIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value,
                 Claims = authenticateResult.Principal.Claims.Select(claim => new ExternalAuthenticationClaim(claim.Type, claim.Value)).ToList()
             };
+            var result = await _externalAuthenticationService.AuthenticateAsync(authenticationParameters, returnUrl);
+            if (!string.IsNullOrEmpty(email))
+            {
+                await _logger.InsertLogAsync(Nop.Core.Domain.Logging.LogLevel.Debug, "Email Found = " + email);
+                //get current logged-in user
+                var currentLoggedInUser = await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()) ? await _workContext.GetCurrentCustomerAsync() : null;
+                if (currentLoggedInUser != null)
+                {
+                    await _logger.InsertLogAsync(Nop.Core.Domain.Logging.LogLevel.Debug, "User Found" + currentLoggedInUser.Id);
+                    var companies = await _companyService.GetAllCompaniesAsync(email: email.Split('@')[1]);
+                    if (companies.Any())
+                    {
+                        var companyId = companies.FirstOrDefault().Id;
 
+                        //whether product Company with such parameters already exists
+                        var checkCustomerCompanyMappingExist = await _companyService.GetCompanyCustomersByCustomerIdAsync(currentLoggedInUser.Id);
+                        if (!checkCustomerCompanyMappingExist.Any())
+                        {
+                            await _logger.InsertLogAsync(Nop.Core.Domain.Logging.LogLevel.Debug, "Company Matched");
+                            await _companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = companyId, CustomerId = currentLoggedInUser.Id });
+                            isApproved = true;
+
+                            var companyCustomers = await _companyService.GetCompanyCustomersByCompanyIdAsync(companyId);
+                            if (companyCustomers.Any())
+                            {
+                                var addresses = await _customerService.GetAddressesByCustomerIdAsync(companyCustomers.FirstOrDefault().CustomerId);
+                                foreach (var address in addresses)
+                                {
+                                    await _customerService.InsertCustomerAddressAsync(currentLoggedInUser, address);
+                                }
+                            }
+                        }
+                    }
+                }
+                email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value + "@" + authenticateResult.Principal.Identity.AuthenticationType + ".com";
+            }
             //authenticate Nop user
-            return await _externalAuthenticationService.AuthenticateAsync(authenticationParameters, returnUrl);
+            return result;
         }
-
         #endregion
     }
 }
