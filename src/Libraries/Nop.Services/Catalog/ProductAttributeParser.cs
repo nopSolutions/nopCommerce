@@ -952,16 +952,16 @@ namespace Nop.Services.Catalog
 
             if (product.IsRental)
             {
-                var startControlId = $"rental_start_date_{product.Id}";
-                var endControlId = $"rental_end_date_{product.Id}";
-                var ctrlStartDate = form[startControlId];
-                var ctrlEndDate = form[endControlId];
+                var ctrlStartDate = form[$"rental_start_date_{product.Id}"];
+                var ctrlEndDate = form[$"rental_end_date_{product.Id}"];
                 try
                 {
-                    //currently we support only this format (as in the \Views\Product\_RentalInfo.cshtml file)
-                    const string datePickerFormat = "d";
-                    startDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
-                    endDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
+                    startDate = DateTime.ParseExact(ctrlStartDate, 
+                        CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, 
+                        CultureInfo.InvariantCulture);
+                    endDate = DateTime.ParseExact(ctrlEndDate, 
+                        CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, 
+                        CultureInfo.InvariantCulture);
                 }
                 catch
                 {
