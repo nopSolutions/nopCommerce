@@ -10,6 +10,7 @@ using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
+using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -19,7 +20,7 @@ namespace Nop.Services.Catalog
     /// <summary>
     /// Product attribute parser
     /// </summary>
-    public partial class ProductAttributeParser : IProductAttributeParser
+    public partial class ProductAttributeParser : BaseAttributeParser, IProductAttributeParser
     {
 
         #region Fields
@@ -573,55 +574,7 @@ namespace Nop.Services.Catalog
         /// <returns>Updated result (XML format)</returns>
         public virtual string RemoveProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping)
         {
-            var result = string.Empty;
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                if (string.IsNullOrEmpty(attributesXml))
-                {
-                    var element1 = xmlDoc.CreateElement("Attributes");
-                    xmlDoc.AppendChild(element1);
-                }
-                else
-                {
-                    xmlDoc.LoadXml(attributesXml);
-                }
-
-                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
-
-                XmlElement attributeElement = null;
-                //find existing
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes?["ID"] == null)
-                        continue;
-
-                    var str1 = node1.Attributes["ID"].InnerText.Trim();
-                    if (!int.TryParse(str1, out var id))
-                        continue;
-
-                    if (id != productAttributeMapping.Id)
-                        continue;
-
-                    attributeElement = (XmlElement)node1;
-                    break;
-                }
-
-                //found
-                if (attributeElement != null)
-                {
-                    rootElement.RemoveChild(attributeElement);
-                }
-
-                result = xmlDoc.OuterXml;
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-
-            return result;
+            return RemoveAttribute(attributesXml, productAttributeMapping.Id);
         }
 
         /// <summary>
@@ -1115,6 +1068,14 @@ namespace Nop.Services.Catalog
                 Debug.Write(exc.ToString());
             }
         }
+
+        #endregion
+
+        #region Properties
+
+        protected override string RootElementName { get; set; } = "Attributes";
+
+        protected override string ChildElementName { get; set; } = "ProductAttribute";
 
         #endregion
     }
