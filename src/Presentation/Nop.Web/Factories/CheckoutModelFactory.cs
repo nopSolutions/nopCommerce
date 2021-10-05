@@ -144,7 +144,7 @@ namespace Nop.Web.Factories
                 AllowPickupInStore = _shippingSettings.AllowPickupInStore
             };
 
-            if (!model.AllowPickupInStore) 
+            if (!model.AllowPickupInStore)
                 return model;
 
             model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
@@ -297,7 +297,7 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the shipping address model
         /// </returns>
-        public virtual async Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart, 
+        public virtual async Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart,
             int? selectedCountryId = null, bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutShippingAddressModel
@@ -346,6 +346,7 @@ namespace Nop.Web.Factories
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: await _workContext.GetCurrentCustomerAsync(),
                 overrideAttributesXml: overrideAttributesXml);
+            model.AvailableDeliverTimes = await _orderProcessingService.GetAvailableDeliverTimesAsync();
 
             return model;
         }
@@ -583,21 +584,14 @@ namespace Nop.Web.Factories
             var lunchTime = new DateTime(now.Year, now.Month, now.Day, 13, 0, 0);
 
             string message;
-            if(now < new DateTime(now.Year, now.Month, now.Day, 12, 00, 00))
+
+            if (order.ScheduleDate.Day == now.Day)
             {
-                message = "Your lunch will be delivered at 1 PM.";
-            }
-            else if(now < new DateTime(now.Year, now.Month, now.Day, 13, 30, 00))
-            {
-                message = "Your lunch will be delivered at 2 PM.";
-            }
-            else if(now < new DateTime(now.Year, now.Month, now.Day, 15, 30, 00))
-            {
-                message = "Your lunch will be delivered at 4 PM.";
+                message = $"Your lunch will be delivered at {(order.ScheduleDate.Hour + 1)} PM.";
             }
             else
             {
-                message = "Your lunch will be delivered TOMORROW at 1 PM.";
+                message = $"Your lunch will be delivered TOMORROW at {(order.ScheduleDate.Hour + 1)} PM.";
             }
 
             var model = new CheckoutCompletedModel
@@ -622,7 +616,7 @@ namespace Nop.Web.Factories
         public virtual Task<CheckoutProgressModel> PrepareCheckoutProgressModelAsync(CheckoutProgressStep step)
         {
             var model = new CheckoutProgressModel { CheckoutProgressStep = step };
-            
+
             return Task.FromResult(model);
         }
 

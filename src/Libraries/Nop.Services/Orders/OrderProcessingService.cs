@@ -24,6 +24,7 @@ using Nop.Services.Companies;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -86,6 +87,7 @@ namespace Nop.Services.Orders
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
         private readonly ICompanyService _companyService;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion
 
@@ -134,7 +136,8 @@ namespace Nop.Services.Orders
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings,
-            ICompanyService companyService)
+            ICompanyService companyService,
+            IDateTimeHelper dateTimeHelper)
         {
             _currencySettings = currencySettings;
             _addressService = addressService;
@@ -180,6 +183,7 @@ namespace Nop.Services.Orders
             _shippingSettings = shippingSettings;
             _taxSettings = taxSettings;
             _companyService = companyService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -1602,7 +1606,6 @@ namespace Nop.Services.Orders
                             //When Null the order is from Public Site else from Mobile app.
                             var scheduleDate = !string.IsNullOrWhiteSpace(processPaymentRequest.ScheduleDate) ? Convert.ToDateTime(processPaymentRequest.ScheduleDate) : (DateTime?)null;
                             var currentDate = DateTime.UtcNow;
-
                             var dates = _orderSettings.ScheduleDate.Split(',');
                             if (!scheduleDate.HasValue)
                             {
@@ -3340,6 +3343,47 @@ namespace Nop.Services.Orders
             return result;
         }
 
+        public virtual async Task<List<DateTime>> GetAvailableDeliverTimesAsync()
+        {
+            var list = new List<DateTime>();
+            var value = _orderSettings.ScheduleDate.Split(',');
+            var scheduleDate1 = value[0];
+            var scheduleDate2 = value[1];
+            var scheduleDate3 = value[2];
+
+            var lastOfDayDeliveryHour = scheduleDate3.Split('-')[1].Split(':');
+            var firstDeliveryHour = scheduleDate1.Split('-')[1].Split(':');
+            var secondDeliverHour = scheduleDate2.Split('-')[1].Split(':');
+            var now = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
+            var firstDeliverDate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(firstDeliveryHour[0]), Convert.ToInt32(firstDeliveryHour[1]), Convert.ToInt32(firstDeliveryHour[2]), DateTimeKind.Utc);
+            var secondDeliveryDate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(secondDeliverHour[0]), Convert.ToInt32(secondDeliverHour[1]), Convert.ToInt32(secondDeliverHour[2]), DateTimeKind.Utc);
+            var thirdDeliveryDate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(lastOfDayDeliveryHour[0]), Convert.ToInt32(lastOfDayDeliveryHour[1]), Convert.ToInt32(lastOfDayDeliveryHour[2]), DateTimeKind.Utc);
+            if (Convert.ToInt32(lastOfDayDeliveryHour[0]) <= now.AddHours(1).Hour)
+            {
+                list.Add(firstDeliverDate.AddDays(1));
+                list.Add(secondDeliveryDate.AddDays(1));
+                list.Add(thirdDeliveryDate.AddDays(1));
+            }
+            else
+            {
+                list.Add(firstDeliverDate);
+                list.Add(secondDeliveryDate);
+                list.Add(thirdDeliveryDate);
+                if (now.AddHours(1).Hour - Convert.ToInt32(firstDeliveryHour[0]) < 0)
+                {
+                }
+                else if (now.AddHours(1).Hour - Convert.ToInt32(secondDeliverHour[0]) < 0)
+                {
+                    list.RemoveAt(0);
+                }
+                else
+                {
+                    list.RemoveAt(0);
+                    list.RemoveAt(1);
+                }
+            }
+            return list;
+        }
         #endregion
     }
 }

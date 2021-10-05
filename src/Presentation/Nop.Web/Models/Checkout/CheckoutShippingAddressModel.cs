@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
 
@@ -11,6 +12,7 @@ namespace Nop.Web.Models.Checkout
             ExistingAddresses = new List<AddressModel>();
             InvalidExistingAddresses = new List<AddressModel>();
             ShippingNewAddress = new AddressModel();
+            AvailableDeliverTimes = new List<DateTime>();
         }
 
         public IList<AddressModel> ExistingAddresses { get; set; }
@@ -20,5 +22,6 @@ namespace Nop.Web.Models.Checkout
 
         public bool DisplayPickupInStore { get; set; }
         public CheckoutPickupPointsModel PickupPointsModel { get; set; }
+        public IList<DateTime> AvailableDeliverTimes { get; set; }
     }
 }
