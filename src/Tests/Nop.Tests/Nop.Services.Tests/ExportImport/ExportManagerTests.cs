@@ -11,6 +11,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
@@ -196,9 +197,9 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             var replacePairs = new Dictionary<string, string>
                 {
                     { "OrderId", "Id" },
-                    { "OrderStatusId", "OrderStatus" },
-                    { "PaymentStatusId", "PaymentStatus" },
-                    { "ShippingStatusId", "ShippingStatus" },
+                    { "OrderStatus", "OrderStatusId" },
+                    { "PaymentStatus", "PaymentStatusId" },
+                    { "ShippingStatus", "ShippingStatusId" },
                     { "ShippingPickupInStore", "PickupInStore" }
                 };
 
@@ -217,7 +218,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
                 "AuthorizationTransactionId", "AuthorizationTransactionCode", "AuthorizationTransactionResult",
                 "CaptureTransactionId", "CaptureTransactionResult", "SubscriptionTransactionId", "PaidDateUtc",
                 "Deleted", "PickupAddress", "RedeemedRewardPointsEntryId", "DiscountUsageHistory", "GiftCardUsageHistory",
-                "OrderNotes", "OrderItems", "Shipments", "OrderStatus", "PaymentStatus", "ShippingStatus ",
+                "OrderNotes", "OrderItems", "Shipments", "OrderStatus", "PaymentStatus", "ShippingStatus",
                 "CustomerTaxDisplayType", "CustomOrderNumber"
             });
 
@@ -227,6 +228,10 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
                "Customer", "BillingAddressId", "ShippingAddressId", "EntityCacheKey"
             });
 
+            manager.SetSelectList("OrderStatus", await OrderStatus.Pending.ToSelectListAsync(useLocalization: false));
+            manager.SetSelectList("PaymentStatus", await PaymentStatus.Pending.ToSelectListAsync(useLocalization: false));
+            manager.SetSelectList("ShippingStatus", await ShippingStatus.ShippingNotRequired.ToSelectListAsync(useLocalization: false));
+            
             AreAllObjectPropertiesPresent(order, manager, ignore.ToArray());
             PropertiesShouldEqual(order, manager, replacePairs);
 
