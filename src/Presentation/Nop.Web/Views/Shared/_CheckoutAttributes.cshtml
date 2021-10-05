@@ -284,5 +284,43 @@
                 }
             });
         }
+
+        function checkoutQuantityChange(id,val) {
+            var $input = $(id);
+            var count = parseInt($(id).val()) + val;
+            count = count < 1 ? 1 : count;
+            $input.val(count);
+            $input.change();
+
+            setTimeout(
+            $.ajax({
+                cache: false,
+                url: "@Html.Raw(Url.Action("checkoutattributechange", "shoppingcart", new { isEditable = Model.IsEditable }))",
+                data: $('#shopping-cart-form').serialize(),
+                type: "POST",
+                success: function (data, textStatus, jqXHR) {
+                    if (data.ordetotalssectionhtml) {
+                        $('.total-info').replaceWith(data.ordetotalssectionhtml);
+                    }
+                    if (data.selectedcheckoutattributesssectionhtml) {
+                        $('.selected-checkout-attributes').replaceWith(data.selectedcheckoutattributesssectionhtml);
+                    }
+                    if (data.enabledattributeids) {
+                        for (var i = 0; i < data.enabledattributeids.length; i++) {
+                            $('#checkout_attribute_label_' + data.enabledattributeids[i]).show();
+                            $('#checkout_attribute_input_' + data.enabledattributeids[i]).show();
+                        }
+                    }
+                    if (data.disabledattributeids) {
+                        for (var i = 0; i < data.disabledattributeids.length; i++) {
+                            $('#checkout_attribute_label_' + data.disabledattributeids[i]).hide();
+                            $('#checkout_attribute_input_' + data.disabledattributeids[i]).hide();
+                        }
+                    }
+                    $(document).trigger({ type: "checkout_attributes_changed", changedData: data });
+                }
+            }), 3000);
+
+        }
     </script>
 }
