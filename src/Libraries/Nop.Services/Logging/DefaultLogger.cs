@@ -101,10 +101,14 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Clears a log
         /// </summary>
+        /// <param name="olderThan">The date that sets the restriction on deleting records. Leave null to remove all records</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task ClearLogAsync()
+        public virtual async Task ClearLogAsync(DateTime? olderThan = null)
         {
-            await _logRepository.TruncateAsync();
+            if(olderThan == null)
+                await _logRepository.TruncateAsync();
+            else
+                await _logRepository.DeleteAsync(p => p.CreatedOnUtc < olderThan.Value);
         }
 
         /// <summary>
