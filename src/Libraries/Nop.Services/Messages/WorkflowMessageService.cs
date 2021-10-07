@@ -2320,8 +2320,7 @@ namespace Nop.Services.Messages
             var commonTokens = new List<Token>
             {
                 new Token("ContactUs.SenderEmail", senderEmail),
-                new Token("ContactUs.SenderName", senderName),
-                new Token("ContactUs.Body", body, true)
+                new Token("ContactUs.SenderName", senderName)
             };
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
@@ -2346,6 +2345,8 @@ namespace Nop.Services.Messages
                     fromEmail = senderEmail;
                     fromName = senderName;
                 }
+
+                tokens.Add(new Token("ContactUs.Body", body, true));
 
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
