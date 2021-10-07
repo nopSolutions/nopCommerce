@@ -563,7 +563,7 @@ label, label + * {
   height: 34px;
   width: 50px;
   text-align: center;
-  font-size: 26px;
+  font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
   display: inline-block;
@@ -573,14 +573,17 @@ label, label + * {
 .item-quantities {
   display: flex;
 }
+  .item-quantities input {
+    font-size: 16px;
+  }
 
-.minus, .plus {
-  background: transparent;
-  color: deepskyblue;
-  border-radius: 4px;
-  padding: 8px 5px 8px 5px;
-  border: transparent;
-}
+  .minus, .plus {
+    background: transparent;
+    color: deepskyblue;
+    border-radius: 4px;
+    padding: 8px 5px 8px 5px;
+    border: transparent;
+  }
 
 .fontpassword input {
   height: 34px;

@@ -1217,7 +1217,15 @@ namespace Nop.Web.Controllers
                 if (itemModel != null)
                     itemModel.Warnings = warningItem.Warnings.Concat(itemModel.Warnings).Distinct().ToList();
             }
-
+            if (!string.IsNullOrEmpty(form["updatequantity"].FirstOrDefault()))
+            {
+                var orderSummary = await _shoppingCartModelFactory.PrepareOrderTotalsModelAsync(cart, true);
+                return Json(new
+                {
+                    Model = model,
+                    OrderSummary = orderSummary
+                });
+            }
             return View(model);
         }
 
