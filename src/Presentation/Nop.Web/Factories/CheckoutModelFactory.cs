@@ -452,17 +452,12 @@ namespace Nop.Web.Factories
             //reward points
             if (_rewardPointsSettings.Enabled && !await _shoppingCartService.ShoppingCartIsRecurringAsync(cart))
             {
-                var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync((await _workContext.GetCurrentCustomerAsync()).Id, (await _storeContext.GetCurrentStoreAsync()).Id);
-                rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
-
-                var rewardPointsAmountBase = await _orderTotalCalculationService.ConvertRewardPointsToAmountAsync(rewardPointsBalance);
-                var rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rewardPointsAmountBase, await _workContext.GetWorkingCurrencyAsync());
-                if (rewardPointsAmount > decimal.Zero &&
-                    _orderTotalCalculationService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
+                var shoppingCartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, true, false);
+                if (shoppingCartTotal.redeemedRewardPoints > 0)
                 {
                     model.DisplayRewardPoints = true;
-                    model.RewardPointsAmount = await _priceFormatter.FormatPriceAsync(rewardPointsAmount, true, false);
-                    model.RewardPointsBalance = rewardPointsBalance;
+                    model.RewardPointsAmount = await _priceFormatter.FormatPriceAsync(shoppingCartTotal.redeemedRewardPointsAmount, true, false);
+                    model.RewardPointsBalance = shoppingCartTotal.redeemedRewardPoints;
 
                     //are points enough to pay for entire order? like if this option (to use them) was selected
                     model.RewardPointsEnoughToPayForOrder = !await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart, true);

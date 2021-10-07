@@ -99,7 +99,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 
                 //#5042
                 ["Admin.Help.Documentation"] = "Documentation",
-                ["Admin.Help.SolutionPartners"] = "Solution partners"
+                ["Admin.Help.SolutionPartners"] = "Solution partners",
+
+                //#4905
+                ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate"] = "Maximum redeemed rate",
+                ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate.Hint"] = "Limit the maximum order total that could be paid by reward points (in percent). For example, if set to 0.6, then only 60% of order total could be paid using reward points, but not more than the 'Maximum reward points to use per order'. Set to 0 if you do not want to use this setting.",
             }, languageId).Wait();
 
             // rename locales

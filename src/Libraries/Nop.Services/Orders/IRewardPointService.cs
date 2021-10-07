@@ -28,13 +28,6 @@ namespace Nop.Services.Orders
             bool showNotActivated = false, Guid? orderGuid = null, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
-        /// Gets reduced reward points balance per order
-        /// </summary>
-        /// <param name="rewardPointsBalance">Reward points balance</param>
-        /// <returns>Reduced balance</returns>
-        int GetReducedPointsBalance(int rewardPointsBalance);
-
-        /// <summary>
         /// Gets reward points balance
         /// </summary>
         /// <param name="customerId">Customer identifier</param>

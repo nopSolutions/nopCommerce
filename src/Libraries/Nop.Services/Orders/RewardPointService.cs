@@ -187,20 +187,6 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Gets reduced reward points balance per order
-        /// </summary>
-        /// <param name="rewardPointsBalance">Reward points balance</param>
-        /// <returns>Reduced balance</returns>
-        public virtual int GetReducedPointsBalance(int rewardPointsBalance)
-        {
-            if (_rewardPointsSettings.MaximumRewardPointsToUsePerOrder > 0 &&
-                rewardPointsBalance > _rewardPointsSettings.MaximumRewardPointsToUsePerOrder)
-                return _rewardPointsSettings.MaximumRewardPointsToUsePerOrder;
-
-            return rewardPointsBalance;
-        }
-
-        /// <summary>
         /// Add reward points history record
         /// </summary>
         /// <param name="customer">Customer</param>

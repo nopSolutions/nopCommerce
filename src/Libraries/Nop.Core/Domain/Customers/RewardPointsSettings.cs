@@ -28,6 +28,11 @@ namespace Nop.Core.Domain.Customers
         public int MaximumRewardPointsToUsePerOrder { get; set; }
 
         /// <summary>
+        /// Gets or sets the maximum redemption rate of the total order amount
+        /// </summary>
+        public decimal MaximumRedeemedRate { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of points awarded for registration
         /// </summary>
         public int PointsForRegistration { get; set; }
