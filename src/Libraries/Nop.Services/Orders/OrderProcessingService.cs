@@ -953,31 +953,26 @@ namespace Nop.Services.Orders
             if (order is null)
                 throw new ArgumentNullException(nameof(order));
 
-            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-
-            var totalForRewardPoints = _orderTotalCalculationService
-                .CalculateApplicableOrderTotalForRewardPoints(order.OrderShippingInclTax, order.OrderTotal);
-            var points = totalForRewardPoints > decimal.Zero ?
-                await _orderTotalCalculationService.CalculateRewardPointsAsync(customer, totalForRewardPoints) : 0;
-            if (points == 0)
-                return;
-
             //ensure that reward points were already earned for this order before
             if (!order.RewardPointsHistoryEntryId.HasValue)
                 return;
 
             //get appropriate history entry
             var rewardPointsHistoryEntry = await _rewardPointService.GetRewardPointsHistoryEntryByIdAsync(order.RewardPointsHistoryEntryId.Value);
-            if (rewardPointsHistoryEntry != null && rewardPointsHistoryEntry.CreatedOnUtc > DateTime.UtcNow)
+            if (rewardPointsHistoryEntry != null)
             {
-                //just delete the upcoming entry (points were not granted yet)
-                await _rewardPointService.DeleteRewardPointsHistoryEntryAsync(rewardPointsHistoryEntry);
-            }
-            else
-            {
-                //or reduce reward points if the entry already exists
-                await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, -points, order.StoreId,
-                    string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.ReducedForOrder"), order.CustomOrderNumber));
+                if (rewardPointsHistoryEntry.CreatedOnUtc > DateTime.UtcNow)
+                {
+                    //just delete the upcoming entry (points were not granted yet)
+                    await _rewardPointService.DeleteRewardPointsHistoryEntryAsync(rewardPointsHistoryEntry);
+                }
+                {
+                    var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+                    
+                    //or reduce reward points if the entry already exists
+                    await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, -rewardPointsHistoryEntry.Points, order.StoreId,
+                        string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.ReducedForOrder"), order.CustomOrderNumber));
+                }
             }
         }
 
