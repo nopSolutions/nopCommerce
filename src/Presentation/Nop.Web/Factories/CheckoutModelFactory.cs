@@ -309,7 +309,9 @@ namespace Nop.Web.Factories
                 model.PickupPointsModel = await PrepareCheckoutPickupPointsModelAsync(cart);
 
             //existing addresses
-            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
+
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
                 .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is Country country &&
                     (//published
                     country.Published &&
@@ -346,7 +348,7 @@ namespace Nop.Web.Factories
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: await _workContext.GetCurrentCustomerAsync(),
                 overrideAttributesXml: overrideAttributesXml);
-            model.AvailableDeliverTimes = await _orderProcessingService.GetAvailableDeliverTimesAsync();
+            model.AvailableDeliverTimes = await _orderProcessingService.GetAvailableDeliverTimesAsync(customer);
 
             return model;
         }
@@ -579,19 +581,17 @@ namespace Nop.Web.Factories
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var now = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
-            var untilLunchTimeDeliveryDeadline = new DateTime(now.Year, now.Month, now.Day, 11, 0, 0);
-            var lunchTime = new DateTime(now.Year, now.Month, now.Day, 13, 0, 0);
-
             string message;
-
-            if (order.ScheduleDate.Day == now.Day)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var now = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
+            var schedulDate = _dateTimeHelper.ConvertToUserTime(order.ScheduleDate, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
+            if (schedulDate.Day == now.Day)
             {
-                message = $"Your lunch will be delivered at {(order.ScheduleDate.Hour + 1)} PM.";
+                message = $"Your lunch will be delivered at {schedulDate.Hour % 12} PM.";
             }
             else
             {
-                message = $"Your lunch will be delivered TOMORROW at {(order.ScheduleDate.Hour + 1)} PM.";
+                message = $"Your lunch will be delivered TOMORROW at {schedulDate.Hour % 12} PM.";
             }
 
             var model = new CheckoutCompletedModel

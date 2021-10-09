@@ -16,6 +16,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -57,6 +58,7 @@ namespace Nop.Web.Controllers
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion
 
@@ -85,7 +87,7 @@ namespace Nop.Web.Controllers
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings, IDateTimeHelper dateTimeHelper)
         {
             _addressSettings = addressSettings;
             _customerSettings = customerSettings;
@@ -111,6 +113,7 @@ namespace Nop.Web.Controllers
             _paymentSettings = paymentSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -1255,7 +1258,7 @@ namespace Nop.Web.Controllers
             {
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
-                paymentInfo.ScheduleDate = ((DateTime)deliveryTime).ToString("MM/dd/yyyy HH:mm:ss");
+                paymentInfo.ScheduleDate = _dateTimeHelper.ConvertToUtcTime((DateTime)deliveryTime).ToString("MM/dd/yyyy HH:mm:ss");
                 //session save
                 HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
 

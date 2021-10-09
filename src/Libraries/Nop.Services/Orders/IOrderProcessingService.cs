@@ -331,6 +331,6 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         Task<int> GetCyclesRemainingAsync(RecurringPayment recurringPayment);
 
-        public Task<List<DateTime>> GetAvailableDeliverTimesAsync();
+        public Task<List<DateTime>> GetAvailableDeliverTimesAsync(Customer customer = null);
     }
 }
