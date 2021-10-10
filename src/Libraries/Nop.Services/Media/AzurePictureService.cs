@@ -102,8 +102,8 @@ namespace Nop.Services.Media
 
                 _azureBlobStorageAppendContainerName = appSettings.Get<AzureBlobConfig>().AppendContainerName;
                 _azureBlobStorageConnectionString = appSettings.Get<AzureBlobConfig>().ConnectionString;
-                _azureBlobStorageContainerName = appSettings.Get<AzureBlobConfig>().ContainerName.Trim().ToLower();
-                _azureBlobStorageEndPoint = appSettings.Get<AzureBlobConfig>().EndPoint.Trim().ToLower().TrimEnd('/');
+                _azureBlobStorageContainerName = appSettings.Get<AzureBlobConfig>().ContainerName.Trim().ToLowerInvariant();
+                _azureBlobStorageEndPoint = appSettings.Get<AzureBlobConfig>().EndPoint.Trim().ToLowerInvariant().TrimEnd('/');
 
                 _blobServiceClient = new BlobServiceClient(_azureBlobStorageConnectionString);
                 _blobContainerClient = _blobServiceClient.GetBlobContainerClient(_azureBlobStorageContainerName);

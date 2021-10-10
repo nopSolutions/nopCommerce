@@ -924,7 +924,7 @@ namespace Nop.Services.Customers
             {
                 var existingCouponCodes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
 
-                couponCode = couponCode.Trim().ToLower();
+                couponCode = couponCode.Trim().ToLowerInvariant();
 
                 var xmlDoc = new XmlDocument();
                 if (string.IsNullOrEmpty(existingCouponCodes))
@@ -947,7 +947,7 @@ namespace Nop.Services.Customers
 
                     var couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
 
-                    if (couponCodeAttribute.ToLower() != couponCode.ToLower())
+                    if (couponCodeAttribute.ToLowerInvariant() != couponCode.ToLowerInvariant())
                         continue;
 
                     gcElement = (XmlElement)node1;
@@ -1060,7 +1060,7 @@ namespace Nop.Services.Customers
             {
                 var existingCouponCodes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
 
-                couponCode = couponCode.Trim().ToLower();
+                couponCode = couponCode.Trim().ToLowerInvariant();
 
                 var xmlDoc = new XmlDocument();
                 if (string.IsNullOrEmpty(existingCouponCodes))
@@ -1082,7 +1082,7 @@ namespace Nop.Services.Customers
                         continue;
 
                     var couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
-                    if (couponCodeAttribute.ToLower() != couponCode.ToLower())
+                    if (couponCodeAttribute.ToLowerInvariant() != couponCode.ToLowerInvariant())
                         continue;
 
                     gcElement = (XmlElement)node1;

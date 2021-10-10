@@ -477,7 +477,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 //whether subscribed contact already in the list
                 var template = new { contacts = new[] { new { email = string.Empty } } };
                 var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
-                var alreadyExist = contactObjects?.contacts?.Any(contact => contact.email == subscription.Email.ToLower()) ?? false;
+                var alreadyExist = contactObjects?.contacts?.Any(contact => contact.email == subscription.Email.ToLowerInvariant()) ?? false;
 
                 //Add new contact
                 if (!alreadyExist)

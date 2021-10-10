@@ -282,11 +282,11 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 var parameters = new Dictionary<string, string>
                 {
                     ["client-id"] = settings.ClientId,
-                    ["currency"] = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode?.ToUpper(),
-                    ["intent"] = settings.PaymentType.ToString().ToLower(),
-                    ["commit"] = (settings.PaymentType == Domain.PaymentType.Capture).ToString().ToLower(),
-                    ["vault"] = false.ToString().ToLower(),
-                    ["debug"] = false.ToString().ToLower(),
+                    ["currency"] = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode?.ToUpperInvariant(),
+                    ["intent"] = settings.PaymentType.ToString().ToLowerInvariant(),
+                    ["commit"] = (settings.PaymentType == Domain.PaymentType.Capture).ToString().ToLowerInvariant(),
+                    ["vault"] = false.ToString().ToLowerInvariant(),
+                    ["debug"] = false.ToString().ToLowerInvariant(),
                     ["components"] = "buttons",
                     //["buyer-country"] = null, //available in the sandbox only
                     //["locale"] = null, //PayPal auto detects this
@@ -344,18 +344,18 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 var shipStateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress);
 
                 //prepare order details
-                var orderDetails = new OrderRequest { CheckoutPaymentIntent = settings.PaymentType.ToString().ToUpper() };
+                var orderDetails = new OrderRequest { CheckoutPaymentIntent = settings.PaymentType.ToString().ToUpperInvariant() };
 
                 //prepare some common properties
                 orderDetails.ApplicationContext = new ApplicationContext
                 {
                     BrandName = CommonHelper.EnsureMaximumLength(store.Name, 127),
-                    LandingPage = LandingPageType.Billing.ToString().ToUpper(),
+                    LandingPage = LandingPageType.Billing.ToString().ToUpperInvariant(),
                     UserAction = settings.PaymentType == Domain.PaymentType.Authorize
-                        ? UserActionType.Continue.ToString().ToUpper()
-                        : UserActionType.Pay_now.ToString().ToUpper(),
+                        ? UserActionType.Continue.ToString().ToUpperInvariant()
+                        : UserActionType.Pay_now.ToString().ToUpperInvariant(),
                     ShippingPreference = (shippingAddress != null ? ShippingPreferenceType.Set_provided_address : ShippingPreferenceType.No_shipping)
-                        .ToString().ToUpper()
+                        .ToString().ToUpperInvariant()
                 };
 
                 //prepare customer billing details
@@ -435,7 +435,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                         Sku = CommonHelper.EnsureMaximumLength(product.Sku, 127),
                         Quantity = item.Quantity.ToString(),
                         Category = (product.IsDownload ? ItemCategoryType.Digital_goods : ItemCategoryType.Physical_goods)
-                            .ToString().ToUpper(),
+                            .ToString().ToUpperInvariant(),
                         UnitAmount = new PayPalCheckoutSdk.Orders.Money { CurrencyCode = currency, Value = itemPrice.ToString("0.00", CultureInfo.InvariantCulture) }
                     };
                 }).ToListAsync();
