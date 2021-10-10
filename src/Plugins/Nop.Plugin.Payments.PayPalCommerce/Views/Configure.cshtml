@@ -125,7 +125,7 @@
                                 function onboardedCallback(authCode, sharedId) {
                                     var postData = {
                                         MerchantGuid: '@Model.OnboardingModel.MerchantGuid',
-                                        Email_OverrideForStore: '@Model.Email_OverrideForStore.ToString().ToLower()',
+                                        Email_OverrideForStore: '@Model.Email_OverrideForStore.ToString().ToLowerInvariant()',
                                         SharedId: sharedId,
                                         AuthCode: authCode
                                     };

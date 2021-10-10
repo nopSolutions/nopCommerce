@@ -845,7 +845,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 return ((await PrepareShippingOptionsAsync(rateResponse)).Select(shippingOption =>
                 {
                     //correct option name
-                    if (!shippingOption.Name.ToLower().StartsWith("ups"))
+                    if (!shippingOption.Name.ToLowerInvariant().StartsWith("ups"))
                         shippingOption.Name = $"UPS {shippingOption.Name}";
                     if (saturdayDelivery)
                         shippingOption.Name = $"{shippingOption.Name} - Saturday Delivery";

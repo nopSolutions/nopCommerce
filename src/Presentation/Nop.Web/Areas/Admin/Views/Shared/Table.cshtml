@@ -173,7 +173,7 @@
         @foreach (var column in Model.ColumnCollection.Where(x => x.Editable))
         {
             <text>
-                var obj = { 'Data': '@column.Data', 'Editable': @column.Editable.ToString().ToLower(), 'Type': '@column.EditType.ToString().ToLower()' }
+                var obj = { 'Data': '@column.Data', 'Editable': @column.Editable.ToString().ToLowerInvariant(), 'Type': '@column.EditType.ToString().ToLowerInvariant()' }
                 columnData_@(tableName).push(obj);
             </text>
         }

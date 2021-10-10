@@ -245,7 +245,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
                 foreach (var ext in appSettings.Get<CommonConfig>().PluginStaticFileExtensionsBlacklist
                     .Split(';', ',')
-                    .Select(e => e.Trim().ToLower())
+                    .Select(e => e.Trim().ToLowerInvariant())
                     .Select(e => $"{(e.StartsWith(".") ? string.Empty : ".")}{e}")
                     .Where(fileExtensionContentTypeProvider.Mappings.ContainsKey))
                 {

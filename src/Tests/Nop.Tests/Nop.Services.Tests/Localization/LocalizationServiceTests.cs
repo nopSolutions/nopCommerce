@@ -68,8 +68,8 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
         public async Task AddOrUpdateLocaleResourceShouldIgnoreKeyCase()
         {
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources);
-            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p=>p.Key.ToUpper(), p=>p.Value));
-            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToLower(), p => p.Value));
+            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p=>p.Key.ToUpperInvariant(), p=>p.Value));
+            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToLowerInvariant(), p => p.Value));
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.Camelize(), p => p.Value));
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.Pascalize(), p => p.Value));
 
@@ -88,17 +88,17 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
                 .Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase)).ToList();
             
             rez.Count.Should().Be(3);
-            rez.Count(p => p.ResourceValue == p.ResourceValue.ToUpper()).Should().Be(0);
+            rez.Count(p => p.ResourceValue == p.ResourceValue.ToUpperInvariant()).Should().Be(0);
 
             rez.Count(p => _resources.ContainsValue(p.ResourceValue)).Should().Be(3);
 
-            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToUpper(), p => p.Value.ToUpper()));
+            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToUpperInvariant(), p => p.Value.ToUpperInvariant()));
 
             rez = _lsrRepository.Table
                 .Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
             rez.Count.Should().Be(3);
-            rez.Count(p => p.ResourceValue == p.ResourceValue.ToUpper()).Should().Be(3);
+            rez.Count(p => p.ResourceValue == p.ResourceValue.ToUpperInvariant()).Should().Be(3);
             rez.Count(p => _resources.ContainsValue(p.ResourceValue)).Should().Be(0);
         }
 
@@ -108,13 +108,13 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
             LocaleResourceConsumer.UpdateCount = 0;
 
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources);
-            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToUpper(), p => p.Value));
-            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToLower(), p => p.Value));
+            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToUpperInvariant(), p => p.Value));
+            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToLowerInvariant(), p => p.Value));
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.Camelize(), p => p.Value));
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.Pascalize(), p => p.Value));
 
             LocaleResourceConsumer.UpdateCount.Should().Be(0);
-            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToUpper(), p => p.Value.ToUpper()));
+            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToUpperInvariant(), p => p.Value.ToUpperInvariant()));
 
             LocaleResourceConsumer.UpdateCount.Should().Be(3);
         }
@@ -132,7 +132,7 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources, 1);
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources, language.Id);
             LocaleResourceConsumer.UpdateCount = 0;
-            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key, p => p.Value.ToUpper()), null);
+            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key, p => p.Value.ToUpperInvariant()), null);
             await languageService.DeleteLanguageAsync(language);
             LocaleResourceConsumer.UpdateCount.Should().Be(6);
         }
@@ -165,7 +165,7 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
 
             rez.Count.Should().Be(3);
 
-            await _localizationService.DeleteLocaleResourcesAsync(PREFIX.ToUpper());
+            await _localizationService.DeleteLocaleResourcesAsync(PREFIX.ToUpperInvariant());
 
             rez = _lsrRepository.Table
                 .Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase)).ToList();
