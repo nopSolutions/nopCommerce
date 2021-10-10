@@ -236,8 +236,6 @@
                 @if (Model.IsEditable)
                 {
                     <div class="common-buttons">
-                        <button type="submit" name="updatecart" class="button-2 update-cart-button">@T("ShoppingCart.UpdateCart")</button>
-
                         <button type="submit" name="continueshopping" class="button-2 continue-shopping-button">@T("ShoppingCart.ContinueShopping")</button>
                         @await Component.InvokeAsync("ShoppingCartEstimateShipping")
                     </div>
