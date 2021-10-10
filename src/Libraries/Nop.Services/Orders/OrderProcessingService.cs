@@ -3343,22 +3343,32 @@ namespace Nop.Services.Orders
             return result;
         }
 
-        public virtual async Task<List<DateTime>> GetAvailableDeliverTimesAsync()
+        public virtual async Task<List<DateTime>> GetAvailableDeliverTimesAsync(Customer customer)
         {
+            customer = customer ?? (await _workContext.GetCurrentCustomerAsync());
             var list = new List<DateTime>();
             var value = _orderSettings.ScheduleDate.Split(',');
             var scheduleDate1 = value[0];
             var scheduleDate2 = value[1];
             var scheduleDate3 = value[2];
+            var now = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
 
-            var lastOfDayDeliveryHour = scheduleDate3.Split('-')[1].Split(':');
-            var firstDeliveryHour = scheduleDate1.Split('-')[1].Split(':');
-            var secondDeliverHour = scheduleDate2.Split('-')[1].Split(':');
-            var now = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
+            var firstOrderLastHour = scheduleDate1.Split('-')[1].Split(':');
+            var firstOrederLastdate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(firstOrderLastHour[0]), Convert.ToInt32(firstOrderLastHour[1]), Convert.ToInt32(firstOrderLastHour[2]), DateTimeKind.Utc);
+            var secondOrderLastHour = scheduleDate2.Split('-')[1].Split(':');
+            var secondOrederLastdate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(secondOrderLastHour[0]), Convert.ToInt32(secondOrderLastHour[1]), Convert.ToInt32(secondOrderLastHour[2]), DateTimeKind.Utc);
+            var thirdOrderLastHour = scheduleDate3.Split('-')[1].Split(':');
+            var thirdOrederLastdate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(thirdOrderLastHour[0]), Convert.ToInt32(thirdOrderLastHour[1]), Convert.ToInt32(thirdOrderLastHour[2]), DateTimeKind.Utc);
+
+            var firstDeliveryHour = scheduleDate1.Split('-')[2].Split(':');
+            var secondDeliverHour = scheduleDate2.Split('-')[2].Split(':');
+            var thirdDeliveryHour = scheduleDate3.Split('-')[2].Split(':');
+
             var firstDeliverDate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(firstDeliveryHour[0]), Convert.ToInt32(firstDeliveryHour[1]), Convert.ToInt32(firstDeliveryHour[2]), DateTimeKind.Utc);
             var secondDeliveryDate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(secondDeliverHour[0]), Convert.ToInt32(secondDeliverHour[1]), Convert.ToInt32(secondDeliverHour[2]), DateTimeKind.Utc);
-            var thirdDeliveryDate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(lastOfDayDeliveryHour[0]), Convert.ToInt32(lastOfDayDeliveryHour[1]), Convert.ToInt32(lastOfDayDeliveryHour[2]), DateTimeKind.Utc);
-            if (Convert.ToInt32(lastOfDayDeliveryHour[0]) <= now.AddHours(1).Hour)
+            var thirdDeliveryDate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(thirdDeliveryHour[0]), Convert.ToInt32(thirdDeliveryHour[1]), Convert.ToInt32(thirdDeliveryHour[2]), DateTimeKind.Utc);
+
+            if (now > thirdOrederLastdate)
             {
                 list.Add(firstDeliverDate.AddDays(1));
                 list.Add(secondDeliveryDate.AddDays(1));
@@ -3369,10 +3379,10 @@ namespace Nop.Services.Orders
                 list.Add(firstDeliverDate);
                 list.Add(secondDeliveryDate);
                 list.Add(thirdDeliveryDate);
-                if (now.AddHours(1).Hour - Convert.ToInt32(firstDeliveryHour[0]) < 0)
+                if (now <= firstOrederLastdate)
                 {
                 }
-                else if (now.AddHours(1).Hour - Convert.ToInt32(secondDeliverHour[0]) < 0)
+                else if (now <= secondOrederLastdate)
                 {
                     list.RemoveAt(0);
                 }

@@ -87,7 +87,7 @@
 
                                 @foreach (var date in Model.AvailableDeliverTimes)
                                 {
-                                    <option value="@(date)">@(date.AddHours(1).ToString("MM/dd/yyyy HH:mm:ss"))</option>
+                                    <option value="@(date)">@(date.ToString("MM/dd/yyyy HH:mm:ss"))</option>
                                 }
                             </select>
                         </div>
