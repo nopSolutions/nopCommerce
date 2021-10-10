@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -24,6 +25,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             settingRepository
                 .DeleteAsync(setting => setting.Name == "storeinformationsettings.displayminiprofilerforadminonly" ||
                     setting.Name == "storeinformationsettings.displayminiprofilerinpublicstore").Wait();
+
+            //#4363
+            var commonSettings = settingService.LoadSettingAsync<CommonSettings>().Result;
+
+            if (!settingService.SettingExistsAsync(commonSettings, settings => settings.ClearLogOlderThanDays).Result)
+            {
+                commonSettings.ClearLogOlderThanDays = 0;
+                settingService.SaveSettingAsync(commonSettings).Wait();
+            }
         }
 
         public override void Down()

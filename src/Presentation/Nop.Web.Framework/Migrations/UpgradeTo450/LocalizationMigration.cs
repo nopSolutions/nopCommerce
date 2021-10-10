@@ -30,7 +30,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 "Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto",
                 "Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto.Hint",
                 "Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader",
-                "Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader.Hint"
+                "Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader.Hint",
+                //#5042
+                "Admin.Help.Topics"
             }).Wait();
 
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
@@ -94,6 +96,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Admin.System.Warnings.PluginNotInstalled.HelpText"] = "You may delete the plugins you don't use in order to increase startup time",
 
                 ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination"] = "This attribute value cannot be removed because it is already used in this combination: {0}.",
+                
+                //#5042
+                ["Admin.Help.Documentation"] = "Documentation",
+                ["Admin.Help.SolutionPartners"] = "Solution partners"
             }, languageId).Wait();
 
             // rename locales
