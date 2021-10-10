@@ -1620,7 +1620,7 @@ namespace Nop.Web.Controllers
             var model = await _customerModelFactory.PrepareChangePasswordModelAsync();
 
             //display the cause of the change password 
-            if (await _customerService.PasswordIsExpiredAsync(customer))
+            if (await _customerService.IsPasswordExpiredAsync(customer))
                 ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Account.ChangePassword.PasswordIsExpired"));
 
             return View(model);
