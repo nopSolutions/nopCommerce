@@ -1539,7 +1539,7 @@ namespace Nop.Services.Customers
         /// A task that represents the asynchronous operation
         /// The task result contains the rue if password is expired; otherwise false
         /// </returns>
-        public virtual async Task<bool> PasswordIsExpiredAsync(Customer customer)
+        public virtual async Task<bool> IsPasswordExpiredAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
