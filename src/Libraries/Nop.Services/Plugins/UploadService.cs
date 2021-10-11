@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -48,7 +49,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="archivePath">Path to the archive</param>
         /// <returns>List of an uploaded item</returns>
-        protected virtual IList<UploadedItem> GetUploadedItems(string archivePath)
+        protected virtual async Task<IList<UploadedItem>> GetUploadedItemsAsync(string archivePath)
         {
             using var archive = ZipFile.OpenRead(archivePath);
             //try to get the entry containing information about the uploaded items 
@@ -61,7 +62,7 @@ namespace Nop.Services.Plugins
             //read the content of this entry if exists
             using var unzippedEntryStream = uploadedItemsFileEntry.Open();
             using var reader = new StreamReader(unzippedEntryStream);
-            return JsonConvert.DeserializeObject<IList<UploadedItem>>(reader.ReadToEnd());
+            return JsonConvert.DeserializeObject<IList<UploadedItem>>(await reader.ReadToEndAsync());
         }
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="archivePath">Path to the archive</param>
         /// <returns>Uploaded item descriptor</returns>
-        protected virtual IDescriptor UploadSingleItem(string archivePath)
+        protected virtual async Task<IDescriptor> UploadSingleItemAsync(string archivePath)
         {
             //get path to the plugins directory
             var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
@@ -115,7 +116,7 @@ namespace Nop.Services.Plugins
                     //whether a plugin is upload 
                     if (isPluginDescriptor)
                     {
-                        descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
+                        descriptor = PluginDescriptor.GetPluginDescriptorFromText(await reader.ReadToEndAsync());
 
                         //ensure that the plugin current version is supported
                         if (!((PluginDescriptor)descriptor).SupportedVersions.Contains(NopVersion.CURRENT_VERSION))
@@ -124,7 +125,7 @@ namespace Nop.Services.Plugins
 
                     //or whether a theme is upload 
                     if (isThemeDescriptor)
-                        descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
+                        descriptor = _themeProvider.GetThemeDescriptorFromText(await reader.ReadToEndAsync());
 
                     break;
                 }
@@ -158,7 +159,7 @@ namespace Nop.Services.Plugins
         /// <param name="archivePath">Path to the archive</param>
         /// <param name="uploadedItems">Uploaded items</param>
         /// <returns>List of uploaded items descriptor</returns>
-        protected virtual IList<IDescriptor> UploadMultipleItems(string archivePath, IList<UploadedItem> uploadedItems)
+        protected virtual async Task<IList<IDescriptor>> UploadMultipleItemsAsync(string archivePath, IList<UploadedItem> uploadedItems)
         {
             //get path to the plugins directory
             var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
@@ -204,11 +205,11 @@ namespace Nop.Services.Plugins
                         using var reader = new StreamReader(unzippedEntryStream);
                         //whether a plugin is upload 
                         if (item.Type == UploadedItemType.Plugin)
-                            descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
+                            descriptor = PluginDescriptor.GetPluginDescriptorFromText(await reader.ReadToEndAsync());
 
                         //or whether a theme is upload 
                         if (item.Type == UploadedItemType.Theme)
-                            descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
+                            descriptor = _themeProvider.GetThemeDescriptorFromText(await reader.ReadToEndAsync());
                     }
 
                     if (descriptor == null)
@@ -293,7 +294,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="archivefile">Archive file</param>
         /// <returns>List of uploaded items descriptor</returns>
-        public virtual IList<IDescriptor> UploadPluginsAndThemes(IFormFile archivefile)
+        public virtual async Task<IList<IDescriptor>> UploadPluginsAndThemesAsync(IFormFile archivefile)
         {
             if (archivefile == null)
                 throw new ArgumentNullException(nameof(archivefile));
@@ -313,18 +314,18 @@ namespace Nop.Services.Plugins
                 //copy original archive to the temp directory
                 zipFilePath = _fileProvider.Combine(tempDirectory, archivefile.FileName);
                 using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
-                    archivefile.CopyTo(fileStream);
+                    await archivefile.CopyToAsync(fileStream);
 
                 //try to get information about the uploaded items from the JSON file in the root of the archive
                 //you can find a sample of such descriptive file in Libraries\Nop.Core\Plugins\Samples\
-                var uploadedItems = GetUploadedItems(zipFilePath);
+                var uploadedItems = await GetUploadedItemsAsync(zipFilePath);
                 if (!uploadedItems?.Any() ?? true)
                 {
                     //JSON file doesn't exist, so there is a single plugin or theme in the archive, just unzip it
-                    descriptors.Add(UploadSingleItem(zipFilePath));
+                    descriptors.Add(await UploadSingleItemAsync(zipFilePath));
                 }
                 else
-                    descriptors.AddRange(UploadMultipleItems(zipFilePath, uploadedItems));
+                    descriptors.AddRange(await UploadMultipleItemsAsync(zipFilePath, uploadedItems));
             }
             finally
             {
@@ -340,7 +341,7 @@ namespace Nop.Services.Plugins
         /// Upload favicon and app icons archive
         /// </summary>
         /// <param name="archivefile">Archive file which contains a set of special icons for different OS and devices</param>
-        public virtual void UploadIconsArchive(IFormFile archivefile)
+        public virtual async Task UploadIconsArchiveAsync(IFormFile archivefile)
         {
             if (archivefile == null)
                 throw new ArgumentNullException(nameof(archivefile));
@@ -353,13 +354,13 @@ namespace Nop.Services.Plugins
                     throw new Exception("Only zip archives are supported (*.zip)");
 
                 //check if there is a folder for favicon and app icons for the current store (all store icons folders are in wwwroot/icons and are called icons_{storeId})
-                var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.GetActiveStoreScopeConfigurationAsync().Result));
+                var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, await _storeContext.GetActiveStoreScopeConfigurationAsync()));
 
                 CreateDirectory(storeIconsPath);
 
                 zipFilePath = _fileProvider.Combine(storeIconsPath, archivefile.FileName);
                 using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
-                    archivefile.CopyTo(fileStream);
+                    await archivefile.CopyToAsync(fileStream);
 
                 ZipFile.ExtractToDirectory(zipFilePath, storeIconsPath);
             }
@@ -375,7 +376,7 @@ namespace Nop.Services.Plugins
         /// Upload single favicon
         /// </summary>
         /// <param name="favicon">Favicon</param>
-        public virtual void UploadFavicon(IFormFile favicon)
+        public virtual async Task UploadFaviconAsync(IFormFile favicon)
         {
             if (favicon == null)
                 throw new ArgumentNullException(nameof(favicon));
@@ -385,13 +386,13 @@ namespace Nop.Services.Plugins
                 throw new Exception("Only icons are supported (*.ico)");
 
             //check if there is a folder for favicon (favicon folder is in wwwroot/icons and is called icons_{storeId})
-            var storeFaviconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.GetActiveStoreScopeConfigurationAsync().Result));
+            var storeFaviconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, await _storeContext.GetActiveStoreScopeConfigurationAsync()));
 
             CreateDirectory(storeFaviconPath);
 
             var faviconPath = _fileProvider.Combine(storeFaviconPath, favicon.FileName);
             using var fileStream = new FileStream(faviconPath, FileMode.Create);
-            favicon.CopyTo(fileStream);
+                await favicon.CopyToAsync(fileStream);
         }
 
         /// <summary>
