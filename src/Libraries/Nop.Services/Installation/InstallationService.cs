@@ -9131,6 +9131,7 @@ namespace Nop.Services.Installation
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallScheduleTasksAsync()
         {
+            var lastEnabledUtc = DateTime.UtcNow;
             var tasks = new List<ScheduleTask>
             {
                 new ScheduleTask
@@ -9139,6 +9140,7 @@ namespace Nop.Services.Installation
                     Seconds = 60,
                     Type = "Nop.Services.Messages.QueuedMessagesSendTask, Nop.Services",
                     Enabled = true,
+                    LastEnabledUtc = lastEnabledUtc,
                     StopOnError = false
                 },
                 new ScheduleTask
@@ -9147,6 +9149,7 @@ namespace Nop.Services.Installation
                     Seconds = 300,
                     Type = "Nop.Services.Common.KeepAliveTask, Nop.Services",
                     Enabled = true,
+                    LastEnabledUtc = lastEnabledUtc,
                     StopOnError = false
                 },
                 new ScheduleTask
@@ -9155,6 +9158,7 @@ namespace Nop.Services.Installation
                     Seconds = 600,
                     Type = "Nop.Services.Customers.DeleteGuestsTask, Nop.Services",
                     Enabled = true,
+                    LastEnabledUtc = lastEnabledUtc,
                     StopOnError = false
                 },
                 new ScheduleTask
@@ -9181,6 +9185,7 @@ namespace Nop.Services.Installation
                     Seconds = 3600,
                     Type = "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services",
                     Enabled = true,
+                    LastEnabledUtc = lastEnabledUtc,
                     StopOnError = false
                 }
             };
