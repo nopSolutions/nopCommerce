@@ -168,7 +168,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (archivefile == null || archivefile.Length == 0)
                     throw new NopException(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
 
-                var descriptors = _uploadService.UploadPluginsAndThemes(archivefile);
+                var descriptors = await _uploadService.UploadPluginsAndThemesAsync(archivefile);
                 var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
                 var themeDescriptors = descriptors.OfType<ThemeDescriptor>().ToList();
 
