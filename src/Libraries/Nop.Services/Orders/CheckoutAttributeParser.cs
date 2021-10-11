@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using System.Xml;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
+using Nop.Services.Common;
 
 namespace Nop.Services.Orders
 {
     /// <summary>
     /// Checkout attribute parser
     /// </summary>
-    public partial class CheckoutAttributeParser : ICheckoutAttributeParser
+    public partial class CheckoutAttributeParser : BaseAttributeParser, ICheckoutAttributeParser
     {
         #region Fields
 
@@ -367,53 +368,16 @@ namespace Nop.Services.Orders
         /// <returns>Updated result (XML format)</returns>
         public virtual string RemoveCheckoutAttribute(string attributesXml, CheckoutAttribute attribute)
         {
-            var result = string.Empty;
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                if (string.IsNullOrEmpty(attributesXml))
-                {
-                    var element1 = xmlDoc.CreateElement("Attributes");
-                    xmlDoc.AppendChild(element1);
-                }
-                else
-                    xmlDoc.LoadXml(attributesXml);
-
-                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
-
-                XmlElement attributeElement = null;
-                //find existing
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes?["ID"] == null) 
-                        continue;
-
-                    var str1 = node1.Attributes["ID"].InnerText.Trim();
-
-                    if (!int.TryParse(str1, out var id)) 
-                        continue;
-
-                    if (id != attribute.Id)
-                        continue;
-
-                    attributeElement = (XmlElement)node1;
-                    break;
-                }
-
-                //found
-                if (attributeElement != null) 
-                    rootElement.RemoveChild(attributeElement);
-
-                result = xmlDoc.OuterXml;
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-
-            return result;
+            return RemoveAttribute(attributesXml, attribute.Id);
         }
+
+        #endregion
+
+        #region Properties
+
+        protected override string RootElementName { get; set; } = "Attributes";
+
+        protected override string ChildElementName { get; set; } = "CheckoutAttribute";
 
         #endregion
     }
