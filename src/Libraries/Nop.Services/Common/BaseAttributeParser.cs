@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
 
@@ -76,6 +77,45 @@ namespace Nop.Services.Common
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets selected attribute identifiers
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>Selected attribute identifiers</returns>
+        protected virtual IList<int> ParseAttributeIds(string attributesXml)
+        {
+            var ids = new List<int>();
+            if (string.IsNullOrEmpty(attributesXml))
+                return ids;
+
+            try
+            {
+                var xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(attributesXml);
+
+                var elements = xmlDoc.SelectNodes(@$"//{RootElementName}/{ChildElementName}");
+
+                if (elements == null)
+                    return Array.Empty<int>();
+
+                foreach (XmlNode node in elements)
+                {
+                    if (node.Attributes?["ID"] == null)
+                        continue;
+
+                    var attributeValue = node.Attributes["ID"].InnerText.Trim();
+                    if (int.TryParse(attributeValue, out var id))
+                        ids.Add(id);
+                }
+            }
+            catch (Exception exc)
+            {
+                Debug.Write(exc.ToString());
+            }
+
+            return ids;
         }
 
         #endregion

@@ -89,44 +89,7 @@ namespace Nop.Services.Catalog
 
             return rez;
         }
-
-        /// <summary>
-        /// Gets selected product attribute mapping identifiers
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected product attribute mapping identifiers</returns>
-        protected virtual IList<int> ParseProductAttributeMappingIds(string attributesXml)
-        {
-            var ids = new List<int>();
-            if (string.IsNullOrEmpty(attributesXml))
-                return ids;
-
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributesXml);
-
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes?["ID"] == null)
-                        continue;
-
-                    var str1 = node1.Attributes["ID"].InnerText.Trim();
-                    if (int.TryParse(str1, out var id))
-                    {
-                        ids.Add(id);
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-
-            return ids;
-        }
-
+        
         /// <summary>
         /// Gets selected product attribute values with the quantity entered by the customer
         /// </summary>
@@ -378,7 +341,7 @@ namespace Nop.Services.Catalog
             if (string.IsNullOrEmpty(attributesXml))
                 return result;
 
-            var ids = ParseProductAttributeMappingIds(attributesXml);
+            var ids = ParseAttributeIds(attributesXml);
             foreach (var id in ids)
             {
                 var attribute = await _productAttributeService.GetProductAttributeMappingByIdAsync(id);

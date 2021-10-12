@@ -29,45 +29,7 @@ namespace Nop.Services.Orders
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Gets selected checkout attribute identifiers
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected checkout attribute identifiers</returns>
-        protected virtual IList<int> ParseCheckoutAttributeIds(string attributesXml)
-        {
-            var ids = new List<int>();
-            if (string.IsNullOrEmpty(attributesXml))
-                return ids;
-
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributesXml);
-
-                foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute"))
-                {
-                    if (node.Attributes?["ID"] == null) 
-                        continue;
-
-                    var str1 = node.Attributes["ID"].InnerText.Trim();
-                    if (int.TryParse(str1, out var id)) 
-                        ids.Add(id);
-                }
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-
-            return ids;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -84,7 +46,7 @@ namespace Nop.Services.Orders
             if (string.IsNullOrEmpty(attributesXml))
                 return result;
 
-            var ids = ParseCheckoutAttributeIds(attributesXml);
+            var ids = ParseAttributeIds(attributesXml);
             foreach (var id in ids)
             {
                 var attribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(id);
