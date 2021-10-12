@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -99,12 +100,10 @@ namespace Nop.Services.Media.RoxyFileman
             if (type == "#")
                 type = string.Empty;
 
-            var files = new List<string>();
-            foreach (var fileName in _fileProvider.GetFiles(directoryPath))
-                if (string.IsNullOrEmpty(type) || GetFileType(_fileProvider.GetFileExtension(fileName)) == type)
-                    files.Add(fileName);
-
-            return files;
+            return _fileProvider.EnumerateFiles(directoryPath, "*.*")
+                .AsParallel()
+                .Where(file => string.IsNullOrEmpty(type) || GetFileType(_fileProvider.GetFileExtension(file)) == type)
+                .ToList();
         }
 
         /// <summary>
@@ -544,7 +543,7 @@ namespace Nop.Services.Media.RoxyFileman
                 if (GetFileType(_fileProvider.GetFileExtension(files[i])) == "image")
                 {
                     await using var stream = new FileStream(physicalPath, FileMode.Open);
-                    using var image = SKBitmap.Decode(stream);
+                    var image = SKBitmap.DecodeBounds(stream);
                     width = image.Width;
                     height = image.Height;
                 }
