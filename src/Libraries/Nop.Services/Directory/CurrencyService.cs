@@ -79,7 +79,7 @@ namespace Nop.Services.Directory
                 return null;
 
             return (await GetAllCurrenciesAsync(true))
-                .FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());
+                .FirstOrDefault(c => c.CurrencyCode.ToLowerInvariant() == currencyCode.ToLowerInvariant());
         }
 
         /// <summary>

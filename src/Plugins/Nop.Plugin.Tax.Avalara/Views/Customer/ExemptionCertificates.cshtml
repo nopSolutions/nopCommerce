@@ -33,11 +33,11 @@
     function showCertificateForm() {
         GenCert.init(document.getElementById('certificate-form'), {
             token: '@Model.Token',
-            submit_to_stack: '@((!avalaraTaxSettings.AutoValidateCertificate).ToString().ToLower())',
-            edit_purchaser: '@(avalaraTaxSettings.AllowEditCustomer.ToString().ToLower())',
-            preview: '@(avalaraTaxSettings.PreviewCertificate.ToString().ToLower())',
-            fill_only: '@(avalaraTaxSettings.FillOnly.ToString().ToLower())',
-            upload_only: '@(avalaraTaxSettings.UploadOnly.ToString().ToLower())',
+            submit_to_stack: '@((!avalaraTaxSettings.AutoValidateCertificate).ToString().ToLowerInvariant())',
+            edit_purchaser: '@(avalaraTaxSettings.AllowEditCustomer.ToString().ToLowerInvariant())',
+            preview: '@(avalaraTaxSettings.PreviewCertificate.ToString().ToLowerInvariant())',
+            fill_only: '@(avalaraTaxSettings.FillOnly.ToString().ToLowerInvariant())',
+            upload_only: '@(avalaraTaxSettings.UploadOnly.ToString().ToLowerInvariant())',
 
             //we can customize colors of buttons here
             //primary_color: '#ff6600',

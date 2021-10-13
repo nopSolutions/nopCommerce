@@ -337,7 +337,7 @@ namespace Nop.Data.DataProviders
             {
                 Host = nopConnectionString.ServerName,
                 //Cast DatabaseName to lowercase to avoid case-sensitivity problems
-                Database = nopConnectionString.DatabaseName.ToLower(),
+                Database = nopConnectionString.DatabaseName.ToLowerInvariant(),
                 Username = nopConnectionString.Username,
                 Password = nopConnectionString.Password,
             };

@@ -348,7 +348,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     IsGroup = requirement.IsGroup,
                     RuleName = requirement.DiscountRequirementRuleSystemName,
                     IsLastInGroup = lastRequirement == null || lastRequirement.Id == requirement.Id,
-                    InteractionType = groupInteractionType.ToString().ToUpper()
+                    InteractionType = groupInteractionType.ToString().ToUpperInvariant()
                 };
 
                 var interactionType = requirement.InteractionType ?? RequirementGroupInteractionType.And;

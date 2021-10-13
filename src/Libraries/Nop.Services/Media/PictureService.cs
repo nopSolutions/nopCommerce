@@ -318,7 +318,7 @@ namespace Nop.Services.Media
             if (string.IsNullOrEmpty(mimeType))
                 return format;
 
-            var parts = mimeType.ToLower().Split('/');
+            var parts = mimeType.ToLowerInvariant().Split('/');
             var lastPart = parts[^1];
 
             switch (lastPart)

@@ -132,7 +132,7 @@
                         }).data("kendoProgressBar");
                         $("#progressBar").hide();
 
-                        if (@((ViewData["synchronizationStart"] != null && (bool)ViewData["synchronizationStart"]).ToString().ToLower())) {
+                        if (@((ViewData["synchronizationStart"] != null && (bool)ViewData["synchronizationStart"]).ToString().ToLowerInvariant())) {
                             $("#progressBar").show();
                             refresh();
                         }

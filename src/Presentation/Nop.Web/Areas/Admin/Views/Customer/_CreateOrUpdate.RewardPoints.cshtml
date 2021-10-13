@@ -148,7 +148,7 @@
                             $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(@Model.AddRewardPoints.ActivationDelayPeriodId);
                             $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").data("kendoNumericTextBox").value(@Model.AddRewardPoints.ActivationDelay);
                             $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").data("kendoNumericTextBox").value(0);
-                            $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").prop('checked', @(Model.AddRewardPoints.ActivatePointsImmediately.ToString().ToLower()));
+                            $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").prop('checked', @(Model.AddRewardPoints.ActivatePointsImmediately.ToString().ToLowerInvariant()));
 
                             activatePointsImmediately();
                         } else {

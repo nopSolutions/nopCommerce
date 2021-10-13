@@ -64,6 +64,7 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 # installs required packages
 RUN apk add libgdiplus --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
 RUN apk add libc-dev --no-cache
+RUN apk add tzdata --no-cache
 
 # copy entrypoint script
 COPY ./entrypoint.sh /entrypoint.sh

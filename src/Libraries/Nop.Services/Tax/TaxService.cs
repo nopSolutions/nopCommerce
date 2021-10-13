@@ -386,7 +386,7 @@ namespace Nop.Services.Tax
                 twoLetterIsoCode = string.Empty;
             if (!string.IsNullOrEmpty(twoLetterIsoCode))
                 //The service returns INVALID_INPUT for country codes that are not uppercase.
-                twoLetterIsoCode = twoLetterIsoCode.ToUpper();
+                twoLetterIsoCode = twoLetterIsoCode.ToUpperInvariant();
 
             string name;
             string address;

@@ -272,7 +272,7 @@ namespace Nop.Core
                 return string.Empty;
             var result = string.Empty;
             foreach (var c in str)
-                if (c.ToString() != c.ToString().ToLower())
+                if (c.ToString() != c.ToString().ToLowerInvariant())
                     result += " " + c.ToString();
                 else
                     result += c.ToString();

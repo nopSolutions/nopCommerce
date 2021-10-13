@@ -21,7 +21,7 @@ namespace Nop.Core.Html
             var m = Regex.Matches(text, "<.*?>", RegexOptions.IgnoreCase);
             for (var i = m.Count - 1; i >= 0; i--)
             {
-                var tag = text[(m[i].Index + 1)..(m[i].Index + m[i].Length)].Trim().ToLower();
+                var tag = text[(m[i].Index + 1)..(m[i].Index + m[i].Length)].Trim().ToLowerInvariant();
 
                 if (!IsValidTag(tag, allowedTags))
                 {
