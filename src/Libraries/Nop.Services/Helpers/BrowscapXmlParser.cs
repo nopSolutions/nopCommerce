@@ -34,7 +34,7 @@ namespace Nop.Services.Helpers
         {
             var el = browscapItem.Elements("item").FirstOrDefault(e => e.Attribute("name")?.Value == "Crawler");
 
-            return el != null && el.Attribute("value")?.Value.ToLower() == "true";
+            return el != null && el.Attribute("value")?.Value.ToLowerInvariant() == "true";
         }
 
         private static string ToRegexp(string str)
@@ -95,7 +95,7 @@ namespace Nop.Services.Helpers
             {
                 foreach (var element in crawler.Elements().ToList())
                 {
-                    if ((element.Attribute("name")?.Value.ToLower() ?? string.Empty) == "crawler")
+                    if ((element.Attribute("name")?.Value.ToLowerInvariant() ?? string.Empty) == "crawler")
                         continue;
                     element.Remove();
                 }

@@ -28,7 +28,7 @@ namespace Nop.Web.Framework.Security.Captcha
         /// </returns>
         private static async Task<string> GetReCaptchaLanguageAsync(CaptchaSettings captchaSettings)
         {
-            var language = (captchaSettings.ReCaptchaDefaultLanguage ?? string.Empty).ToLower();
+            var language = (captchaSettings.ReCaptchaDefaultLanguage ?? string.Empty).ToLowerInvariant();
             if (captchaSettings.AutomaticallyChooseLanguage)
             {
                 //this list got from this site: https://developers.google.com/recaptcha/docs/language
@@ -40,7 +40,7 @@ namespace Nop.Web.Framework.Security.Captcha
 
                 var currentLanguage = await workContext.GetWorkingLanguageAsync();
                 var twoLetterIsoCode = currentLanguage != null
-                    ? languageService.GetTwoLetterIsoLanguageName(currentLanguage).ToLower()
+                    ? languageService.GetTwoLetterIsoLanguageName(currentLanguage).ToLowerInvariant()
                     : string.Empty;
 
                 language = supportedLanguageCodes.Contains(twoLetterIsoCode) ? twoLetterIsoCode : language;
@@ -90,7 +90,7 @@ namespace Nop.Web.Framework.Security.Captcha
             var language = await GetReCaptchaLanguageAsync(captchaSettings);
 
             //prepare theme
-            var theme = (captchaSettings.ReCaptchaTheme ?? string.Empty).ToLower();
+            var theme = (captchaSettings.ReCaptchaTheme ?? string.Empty).ToLowerInvariant();
             theme = theme switch
             {
                 "blackglass" or "dark" => "dark",

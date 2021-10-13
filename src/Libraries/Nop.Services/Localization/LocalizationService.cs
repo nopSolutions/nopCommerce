@@ -126,7 +126,7 @@ namespace Nop.Services.Localization
         protected virtual async Task<IDictionary<string, string>> UpdateLocaleResourceAsync(IDictionary<string, string> resources, int? languageId = null, bool clearCache = true)
         {
             var localResources = new Dictionary<string, string>(resources, StringComparer.InvariantCultureIgnoreCase);
-            var keys = localResources.Keys.Select(key => key.ToLower()).ToArray();
+            var keys = localResources.Keys.Select(key => key.ToLowerInvariant()).ToArray();
             var resourcesToUpdate = await _lsrRepository.GetAllAsync(query =>
             {
                 var rez = query.Where(p => !languageId.HasValue || p.LanguageId == languageId)

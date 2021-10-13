@@ -72,13 +72,13 @@
 @if (Model.Processing)
 {
     <text>
-    processing: @Model.Processing.ToString().ToLower(),
+    processing: @Model.Processing.ToString().ToLowerInvariant(),
     </text>
 }
 @if (Model.ServerSide)
 {
     <text>
-    serverSide: @Model.ServerSide.ToString().ToLower(),
+    serverSide: @Model.ServerSide.ToString().ToLowerInvariant(),
     </text>
 }
 @if (!string.IsNullOrEmpty(Model.RowIdBasedOnField))
@@ -184,8 +184,8 @@ else
     </text>
 }
 scrollX: true,
-info: @Model.Info.ToString().ToLower(),
-paging: @Model.Paging.ToString().ToLower(),
+info: @Model.Info.ToString().ToLowerInvariant(),
+paging: @Model.Paging.ToString().ToLowerInvariant(),
 pagingType: '@Model.PagingType',
 language: @await Html.PartialAsync("_GridLocalization"),
 pageLength: @Model.Length,
@@ -201,7 +201,7 @@ else
         lengthChange: false,
     </text>
 }
-ordering: @Model.Ordering.ToString().ToLower(),
+ordering: @Model.Ordering.ToString().ToLowerInvariant(),
 @if (Model.RefreshButton)
 {
     <text>
@@ -212,13 +212,13 @@ ordering: @Model.Ordering.ToString().ToLower(),
                 @if (Model.ServerSide)
                 {
                     <text>
-                    updateTable('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLower());
+                    updateTable('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLowerInvariant());
                     </text>
                 }
                 else
                 {
                     <text>
-                    updateTableSrc('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLower());
+                    updateTableSrc('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLowerInvariant());
                     </text>
                 }
             }
@@ -257,12 +257,12 @@ columns: [
                 }
             }
             width: '@column.Width',
-            visible: @column.Visible.ToString().ToLower(),
-            searchable: @column.Searchable.ToString().ToLower(),
+            visible: @column.Visible.ToString().ToLowerInvariant(),
+            searchable: @column.Searchable.ToString().ToLowerInvariant(),
             @if (column.AutoWidth)
             {
                 <text>
-                autoWidth: @column.AutoWidth.ToString().ToLower(),
+                autoWidth: @column.AutoWidth.ToString().ToLowerInvariant(),
                 </text>
             }
             @if (!string.IsNullOrEmpty(column.ClassName))

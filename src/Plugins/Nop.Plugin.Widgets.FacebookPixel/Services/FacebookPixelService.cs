@@ -203,17 +203,17 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
             var userObject = FormatEventObject(new List<(string Name, object Value)>
                 {
-                    ("em", JavaScriptEncoder.Default.Encode(email?.ToLower() ?? string.Empty)),
-                    ("fn", JavaScriptEncoder.Default.Encode(firstName?.ToLower() ?? string.Empty)),
-                    ("ln", JavaScriptEncoder.Default.Encode(lastName?.ToLower() ?? string.Empty)),
+                    ("em", JavaScriptEncoder.Default.Encode(email?.ToLowerInvariant() ?? string.Empty)),
+                    ("fn", JavaScriptEncoder.Default.Encode(firstName?.ToLowerInvariant() ?? string.Empty)),
+                    ("ln", JavaScriptEncoder.Default.Encode(lastName?.ToLowerInvariant() ?? string.Empty)),
                     ("ph", new string(phone?.Where(c => char.IsDigit(c)).ToArray()) ?? string.Empty),
-                    ("external_id", (await _workContext.GetCurrentCustomerAsync()).CustomerGuid.ToString().ToLower()),
-                    ("ge", gender?.FirstOrDefault().ToString().ToLower()),
+                    ("external_id", (await _workContext.GetCurrentCustomerAsync()).CustomerGuid.ToString().ToLowerInvariant()),
+                    ("ge", gender?.FirstOrDefault().ToString().ToLowerInvariant()),
                     ("db", birthday?.ToString("yyyyMMdd")),
-                    ("ct", JavaScriptEncoder.Default.Encode(city?.ToLower() ?? string.Empty)),
-                    ("st", stateName?.ToLower()),
-                    ("zp", JavaScriptEncoder.Default.Encode(zipcode?.ToLower() ?? string.Empty)),
-                    ("cn", countryName?.ToLower())
+                    ("ct", JavaScriptEncoder.Default.Encode(city?.ToLowerInvariant() ?? string.Empty)),
+                    ("st", stateName?.ToLowerInvariant()),
+                    ("zp", JavaScriptEncoder.Default.Encode(zipcode?.ToLowerInvariant() ?? string.Empty)),
+                    ("cn", countryName?.ToLowerInvariant())
                 });
 
             return userObject;
@@ -432,7 +432,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                         ? formatObjectList(valueList)
                         : (property.Value is decimal valueDecimal
                         ? valueDecimal.ToString("F", CultureInfo.InvariantCulture)
-                        : property.Value.ToString().ToLower()));
+                        : property.Value.ToString().ToLowerInvariant()));
 
                     //format object property
                     preparedObject += $"{Environment.NewLine}{new string('\t', (tabsNumber ?? TABS_NUMBER) + 1)}{property.Name}: {value},";

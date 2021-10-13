@@ -420,10 +420,10 @@ namespace Nop.Services.Installation
             var defaultCulture = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
             var defaultLanguage = new Language
             {
-                Name = defaultCulture.TwoLetterISOLanguageName.ToUpper(),
+                Name = defaultCulture.TwoLetterISOLanguageName.ToUpperInvariant(),
                 LanguageCulture = defaultCulture.Name,
                 UniqueSeoCode = defaultCulture.TwoLetterISOLanguageName,
-                FlagImageFileName = $"{defaultCulture.Name.ToLower()[^2..]}.png",
+                FlagImageFileName = $"{defaultCulture.Name.ToLowerInvariant()[^2..]}.png",
                 Rtl = defaultCulture.TextInfo.IsRightToLeft,
                 Published = true,
                 DisplayOrder = 1
@@ -444,10 +444,10 @@ namespace Nop.Services.Installation
 
             var language = new Language
             {
-                Name = cultureInfo.TwoLetterISOLanguageName.ToUpper(),
+                Name = cultureInfo.TwoLetterISOLanguageName.ToUpperInvariant(),
                 LanguageCulture = cultureInfo.Name,
                 UniqueSeoCode = cultureInfo.TwoLetterISOLanguageName,
-                FlagImageFileName = $"{regionInfo.TwoLetterISORegionName.ToLower()}.png",
+                FlagImageFileName = $"{regionInfo.TwoLetterISORegionName.ToLowerInvariant()}.png",
                 Rtl = cultureInfo.TextInfo.IsRightToLeft,
                 Published = true,
                 DisplayOrder = 2

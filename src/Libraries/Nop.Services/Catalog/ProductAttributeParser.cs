@@ -584,7 +584,7 @@ namespace Nop.Services.Catalog
                             foreach (var str2 in values2Str)
                             {
                                 //case insensitive? 
-                                //if (str1.Trim().ToLower() == str2.Trim().ToLower())
+                                //if (str1.Trim().ToLowerInvariant() == str2.Trim().ToLowerInvariant())
                                 if (str1.Item1.Trim() != str2.Item1.Trim())
                                     continue;
 
