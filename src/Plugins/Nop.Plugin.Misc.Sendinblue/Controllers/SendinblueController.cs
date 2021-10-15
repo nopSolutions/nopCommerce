@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -617,10 +616,12 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             return await Configure();
         }
 
-        public async Task<IActionResult> ImportContacts(BaseNopModel model, IFormCollection form)
+        public async Task<IActionResult> ImportContacts(BaseNopModel model)
         {
             try
             {
+                var form = model.Form;
+
                 //logging info
                 var logInfo = string.Format("Sendinblue synchronization: New emails {1},{0} Existing emails {2},{0} Invalid emails {3},{0} Duplicates emails {4}{0}",
                     Environment.NewLine, form["new_emails"], form["emails_exists"], form["invalid_email"], form["duplicates_email"]);

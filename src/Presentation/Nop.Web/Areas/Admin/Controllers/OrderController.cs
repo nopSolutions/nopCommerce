@@ -1818,7 +1818,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> AddressEdit(OrderAddressModel model, IFormCollection form)
+        public virtual async Task<IActionResult> AddressEdit(OrderAddressModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1837,7 +1837,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No address found with the specified id");
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1971,7 +1971,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual async Task<IActionResult> AddShipment(ShipmentModel model, IFormCollection form, bool continueEditing)
+        public virtual async Task<IActionResult> AddShipment(ShipmentModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2004,6 +2004,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var shipmentItems = new List<ShipmentItem>();
 
             decimal? totalWeight = null;
+            var form = model.Form;
 
             foreach (var orderItem in orderItems)
             {

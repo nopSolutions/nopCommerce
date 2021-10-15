@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 //exclude Form and CustomProperties from mapping BaseNopModel
                 if (typeof(BaseNopModel).IsAssignableFrom(mapConfiguration.DestinationType))
                 {
-                    //map.ForMember(nameof(BaseNopModel.Form), options => options.Ignore());
+                    map.ForMember(nameof(BaseNopModel.Form), options => options.Ignore());
                     map.ForMember(nameof(BaseNopModel.CustomProperties), options => options.Ignore());
                 }
 

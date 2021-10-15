@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
@@ -80,13 +79,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("Permissions")]
-        public virtual async Task<IActionResult> PermissionsSave(PermissionMappingModel model, IFormCollection form)
+        public virtual async Task<IActionResult> PermissionsSave(PermissionMappingModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             var permissionRecords = await _permissionService.GetAllPermissionRecordsAsync();
             var customerRoles = await _customerService.GetAllCustomerRolesAsync(true);
+
+            var form = model.Form;
 
             foreach (var cr in customerRoles)
             {
