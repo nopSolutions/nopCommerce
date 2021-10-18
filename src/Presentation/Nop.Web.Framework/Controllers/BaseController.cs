@@ -309,30 +309,5 @@ namespace Nop.Web.Framework.Controllers
         }
 
         #endregion
-
-        #region DataTables
-
-        /// <summary>
-        /// Creates an object that serializes the specified object to JSON
-        /// Used to serialize data for DataTables
-        /// </summary>
-        /// <typeparam name="T">Model type</typeparam>
-        /// <param name="model">The model to serialize.</param>
-        /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
-        /// <remarks>
-        /// See also https://datatables.net/manual/server-side#Returned-data
-        /// </remarks>
-        public JsonResult Json<T>(BasePagedListModel<T> model) where T : BaseNopModel
-        {
-            return Json(new
-            {
-                draw = model.Draw,
-                recordsTotal = model.RecordsTotal,
-                recordsFiltered = model.RecordsFiltered,
-                model.Data
-            });
-        }
-
-        #endregion
     }
 }

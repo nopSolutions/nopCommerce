@@ -56,6 +56,5 @@ namespace Nop.Web.Framework.Models
         public Dictionary<string, object> CustomProperties { get; set; }
 
         #endregion
-
     }
 }
