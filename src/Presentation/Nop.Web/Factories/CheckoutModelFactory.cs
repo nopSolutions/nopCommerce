@@ -583,11 +583,11 @@ namespace Nop.Web.Factories
             var lunchTime = new DateTime(now.Year, now.Month, now.Day, 13, 0, 0);
 
             string message;
-            if(now < new DateTime(now.Year, now.Month, now.Day, 12, 00, 00))
+            if(now < new DateTime(now.Year, now.Month, now.Day, 11, 30, 00))
             {
                 message = "Your lunch will be delivered at 1 PM.";
             }
-            else if(now < new DateTime(now.Year, now.Month, now.Day, 13, 30, 00))
+            else if(now < new DateTime(now.Year, now.Month, now.Day, 12, 30, 00))
             {
                 message = "Your lunch will be delivered at 2 PM.";
             }
