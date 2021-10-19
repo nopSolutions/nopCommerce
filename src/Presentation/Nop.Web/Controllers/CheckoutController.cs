@@ -26,6 +26,7 @@ using Nop.Web.Extensions;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Models.Checkout;
+using TimeZoneConverter;
 
 namespace Nop.Web.Controllers
 {
@@ -87,7 +88,8 @@ namespace Nop.Web.Controllers
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings, IDateTimeHelper dateTimeHelper)
+            ShippingSettings shippingSettings,
+            IDateTimeHelper dateTimeHelper)
         {
             _addressSettings = addressSettings;
             _customerSettings = customerSettings;
@@ -302,7 +304,8 @@ namespace Nop.Web.Controllers
             }
 
             //model
-            var model = await _checkoutModelFactory.PrepareCheckoutCompletedModelAsync(order);
+            var timezoneInfo = HttpContext.Session.Get<TimeZoneInfo>("timezoneInfo");
+            var model = await _checkoutModelFactory.PrepareCheckoutCompletedModelAsync(order, timezoneInfo);
             return View(model);
         }
 
@@ -1258,7 +1261,8 @@ namespace Nop.Web.Controllers
             {
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
-                paymentInfo.ScheduleDate = _dateTimeHelper.ConvertToUtcTime((DateTime)deliveryTime).ToString("MM/dd/yyyy HH:mm:ss");
+                var timezoneInfo = HttpContext.Session.Get<TimeZoneInfo>("timezoneInfo");
+                paymentInfo.ScheduleDate = _dateTimeHelper.ConvertToUtcTime((DateTime)deliveryTime, timezoneInfo).ToString("MM/dd/yyyy HH:mm:ss");
                 //session save
                 HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
 
@@ -1455,6 +1459,8 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
+
+                var timezone = HttpContext.Session.Get<TimeZoneInfo>("timezoneInfo");
                 var deliveryTime = DateTime.Parse(form["deliver_time"]);
                 if (!(await _orderProcessingService.GetAvailableDeliverTimesAsync()).Contains(deliveryTime))
                 {

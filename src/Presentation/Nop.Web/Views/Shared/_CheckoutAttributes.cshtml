@@ -248,16 +248,17 @@
         </dl>
     </div>
     <script asp-location="Footer">
-        $(document).ready(function() {
+        $(document).ready(function () {
             checkoutAttributeChange();
             @Html.Raw(attributeChangeScriptsBuilder.ToString())
         });
 
         function checkoutAttributeChange() {
+            var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             $.ajax({
                 cache: false,
                 url: "@Html.Raw(Url.Action("checkoutattributechange", "shoppingcart", new { isEditable = Model.IsEditable }))",
-                data: $('#shopping-cart-form').serialize(),
+                data: $('#shopping-cart-form').serialize() + "&timezone=" + timezone,
                 type: "POST",
                 success: function (data, textStatus, jqXHR) {
                     if (data.ordetotalssectionhtml) {

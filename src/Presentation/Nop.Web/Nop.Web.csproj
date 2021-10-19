@@ -73,6 +73,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.1.4" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.11.0" />
+    <PackageReference Include="TimeZoneConverter" Version="3.5.0" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target.

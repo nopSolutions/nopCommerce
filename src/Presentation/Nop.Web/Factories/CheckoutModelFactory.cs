@@ -348,7 +348,7 @@ namespace Nop.Web.Factories
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: await _workContext.GetCurrentCustomerAsync(),
                 overrideAttributesXml: overrideAttributesXml);
-            model.AvailableDeliverTimes = await _orderProcessingService.GetAvailableDeliverTimesAsync(customer);
+            model.AvailableDeliverTimes = await _orderProcessingService.GetAvailableDeliverTimesAsync();
 
             return model;
         }
@@ -576,15 +576,15 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the checkout completed model
         /// </returns>
-        public virtual async Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order)
+        public virtual async Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order, TimeZoneInfo timeZoneInfo)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
             string message;
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var now = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
-            var schedulDate = _dateTimeHelper.ConvertToUserTime(order.ScheduleDate, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
+            var now = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, timeZoneInfo);
+            var schedulDate = _dateTimeHelper.ConvertToUserTime(order.ScheduleDate, TimeZoneInfo.Utc, timeZoneInfo);
             if (schedulDate.Day == now.Day)
             {
                 message = $"Your lunch will be delivered at {schedulDate.Hour % 12} PM.";
