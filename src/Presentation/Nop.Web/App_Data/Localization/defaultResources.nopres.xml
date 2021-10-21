@@ -2202,11 +2202,17 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceFrom.Hint">
     <Value>Enter the price 'from'.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceRangeFiltering">
+    <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceRangeFiltering">
     <Value>Price range filtering</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceRangeFiltering.Hint">
     <Value>Check to enable the price range filtering.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering">
+    <Value>Enable specification attribute filtering</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint">
+    <Value>Check to enable the price specification attribute filtering on catalog pages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceTo">
     <Value>Price 'to'</Value>
@@ -5763,12 +5769,21 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering.Hint">
     <Value>Check to enable the manufacturer filtering on catalog pages.</Value>
   </LocaleResource>
+  
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering">
     <Value>Enable price range filtering</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering.Hint">
     <Value>Check to enable the price range filtering on catalog pages.</Value>
   </LocaleResource>
+
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering">
+    <Value>Enable specification attribute filtering</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint">
+    <Value>Check to enable the price specification attribute filtering on catalog pages.</Value>
+  </LocaleResource>
+  
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages">
     <Value>Export/Import products. Allow download images</Value>
   </LocaleResource>

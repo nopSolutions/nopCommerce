@@ -3051,8 +3051,9 @@ namespace Nop.Services.Installation
                 UseAjaxCatalogProductsLoading = true,
                 EnableManufacturerFiltering = true,
                 EnablePriceRangeFiltering = true,
+                EnableSpecificationAttributeFiltering = true,
                 AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay
-            });
+            }); ;
 
             await settingService.SaveSettingAsync(new LocalizationSettings
             {
