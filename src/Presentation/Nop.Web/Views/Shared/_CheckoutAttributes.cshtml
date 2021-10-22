@@ -248,16 +248,25 @@
         </dl>
     </div>
     <script asp-location="Footer">
-        $(document).ready(function() {
+        $(document).ready(function () {
             checkoutAttributeChange();
             @Html.Raw(attributeChangeScriptsBuilder.ToString())
+
+            $(".qty-input").keypress(function (event) {
+                if (event.which == 13 || event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+
         });
 
         function checkoutAttributeChange() {
+            var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             $.ajax({
                 cache: false,
                 url: "@Html.Raw(Url.Action("checkoutattributechange", "shoppingcart", new { isEditable = Model.IsEditable }))",
-                data: $('#shopping-cart-form').serialize(),
+                data: $('#shopping-cart-form').serialize() + "&timezone=" + timezone,
                 type: "POST",
                 success: function (data, textStatus, jqXHR) {
                     if (data.ordetotalssectionhtml) {
@@ -283,15 +292,17 @@
             });
         }
         var xhr;
-        function checkoutQuantityChange(id, val) {
+        function checkoutQuantityChange(id, val, isInputChange) {
             event.preventDefault();
             if (xhr && xhr.readyState != 4) {
                 xhr.abort();
             }
             var $input = $(id);
-            var count = parseInt($(id).val()) + val;
+            var loading = ($input).closest("tr").find(".subtotal").find("i");
+            loading.css("display", "inline-block");
+            var count = parseInt($(id).val()) + parseInt(val);
             count = count < 1 ? 1 : count;
-            $input.val(count);
+            $input.val(isInputChange ? parseInt($(id).val()):count);
             var data = $('#shopping-cart-form').serialize() +"&updatecart&updatequantity=true";
             xhr = $.ajax({
                     cache: false,
@@ -300,7 +311,7 @@
                     type: "POST",
                     success: function (data, textStatus, jqXHR, event)
                     {
-                        debugger;
+                        loading.css("display", "none");
                         var items = data.Model.Items;
 
                         $.map(items, function (val, key) {
@@ -312,9 +323,15 @@
                         });
                         $(".order-subtotal").find(".value-summary").text(data.OrderSummary.SubTotal);
                         $(".order-total").find(".value-summary").find("strong").text(data.OrderSummary.OrderTotal);
-                   }
+                },
+                error: function () {
+                    loading.css("display", "none");
+                }
                 });
 
         }
+        $(".qty-input").on("keyup change", function () {
+            checkoutQuantityChange($(this), $(this).val(), true);
+        })
     </script>
 }

@@ -191,6 +191,7 @@
                                 <td class="subtotal">
                                     <label class="td-title">@T("ShoppingCart.ItemTotal"):</label>
                                     <span class="product-subtotal">@item.SubTotal</span>
+                                    <i style="display:none" class="fa fa-spinner fa-spin"></i>
                                     @if (!string.IsNullOrEmpty(item.Discount))
                                     {
                                         <div class="discount">

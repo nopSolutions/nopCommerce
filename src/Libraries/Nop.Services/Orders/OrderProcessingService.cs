@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -17,6 +18,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
+using Nop.Core.Http.Extensions;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -88,6 +90,7 @@ namespace Nop.Services.Orders
         private readonly TaxSettings _taxSettings;
         private readonly ICompanyService _companyService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 
@@ -137,7 +140,8 @@ namespace Nop.Services.Orders
             ShippingSettings shippingSettings,
             TaxSettings taxSettings,
             ICompanyService companyService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            IHttpContextAccessor httpContextAccessor)
         {
             _currencySettings = currencySettings;
             _addressService = addressService;
@@ -184,6 +188,7 @@ namespace Nop.Services.Orders
             _taxSettings = taxSettings;
             _companyService = companyService;
             _dateTimeHelper = dateTimeHelper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -3343,15 +3348,15 @@ namespace Nop.Services.Orders
             return result;
         }
 
-        public virtual async Task<List<DateTime>> GetAvailableDeliverTimesAsync(Customer customer)
+        public virtual async Task<List<DateTime>> GetAvailableDeliverTimesAsync()
         {
-            customer = customer ?? (await _workContext.GetCurrentCustomerAsync());
+            var timezoneInfo = _httpContextAccessor.HttpContext.Session.Get<TimeZoneInfo>("timezoneInfo");
             var list = new List<DateTime>();
             var value = _orderSettings.ScheduleDate.Split(',');
             var scheduleDate1 = value[0];
             var scheduleDate2 = value[1];
             var scheduleDate3 = value[2];
-            var now = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
+            var now = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, timezoneInfo);
 
             var firstOrderLastHour = scheduleDate1.Split('-')[1].Split(':');
             var firstOrederLastdate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(firstOrderLastHour[0]), Convert.ToInt32(firstOrderLastHour[1]), Convert.ToInt32(firstOrderLastHour[2]), DateTimeKind.Utc);

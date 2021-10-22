@@ -15,6 +15,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Html;
+using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -37,6 +38,7 @@ using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
+using TimeZoneConverter;
 
 namespace Nop.Web.Controllers
 {
@@ -941,6 +943,9 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> CheckoutAttributeChange(IFormCollection form, bool isEditable)
         {
+            var timezone = form["timezone"].ToString();
+            var timezoneInfo = TZConvert.GetTimeZoneInfo(timezone);
+            HttpContext.Session.Set("timezoneInfo", timezoneInfo);
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
 
             //save selected attributes
