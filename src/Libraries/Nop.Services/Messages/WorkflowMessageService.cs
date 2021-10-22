@@ -1995,6 +1995,10 @@ namespace Nop.Services.Messages
                 return new List<int>();
 
             var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId);
+            
+            //We should not send notifications to guests
+            if (await _customerService.IsGuestAsync(customer))
+                return new List<int>();
 
             //We should not send notifications to guests
             if (await _customerService.IsGuestAsync(customer))

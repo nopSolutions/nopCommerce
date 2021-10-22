@@ -338,7 +338,13 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 var billingAddress = await _addresService.GetAddressByIdAsync(customer.BillingAddressId ?? 0)
                     ?? throw new NopException("Customer billing address not set");
 
+                var shoppingCart = (await _shoppingCartService
+                    .GetShoppingCartAsync(customer, Core.Domain.Orders.ShoppingCartType.ShoppingCart, store.Id))
+                    .ToList();
+
                 var shippingAddress = await _addresService.GetAddressByIdAsync(customer.ShippingAddressId ?? 0);
+                if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(shoppingCart))
+                    shippingAddress = null;
 
                 var billStateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress);
                 var shipStateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress);
@@ -384,9 +390,6 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 }
 
                 //prepare purchase unit details
-                var shoppingCart = (await _shoppingCartService
-                    .GetShoppingCartAsync(customer, Core.Domain.Orders.ShoppingCartType.ShoppingCart, store.Id))
-                    .ToList();
                 var taxTotal = Math.Round((await _orderTotalCalculationService.GetTaxTotalAsync(shoppingCart, false)).taxTotal, 2);
                 var shippingTotal = Math.Round(await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(shoppingCart) ?? decimal.Zero, 2);
                 var (shoppingCartTotal, _, _, _, _, _) = await _orderTotalCalculationService
