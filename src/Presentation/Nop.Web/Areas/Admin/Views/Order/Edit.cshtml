@@ -68,11 +68,8 @@
                     <nop-card asp-name="order-info" asp-icon="fas fa-info" asp-title="@T("Admin.Orders.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.Info", Model)</nop-card>
                     <nop-card asp-name="order-billing-shipping" asp-icon="fas fa-truck" asp-title="@T("Admin.Orders.ShippingInfoTitle")" asp-hide-block-attribute-name="@hideShippingBlockAttributeName" asp-hide="@hideShippingBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.Shipping", Model)</nop-card>
                     <nop-card asp-name="order-products" asp-icon="fas fa-th-list" asp-title="@T("Admin.Orders.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-card>
-
-                    @if (!Model.IsLoggedInAsVendor)
-                    {
-                        <nop-card asp-name="order-notes" asp-icon="far fa-sticky-note" asp-title="@T("Admin.Orders.OrderNotes")" asp-hide-block-attribute-name="@hideNotesBlockAttributeName" asp-hide="@hideNotesBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Notes", Model)</nop-card>
-                    }
+                    <nop-card asp-name="order-notes" asp-icon="far fa-sticky-note" asp-title="@T("Admin.Orders.OrderNotes")" asp-hide-block-attribute-name="@hideNotesBlockAttributeName" asp-hide="@hideNotesBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Notes", Model)</nop-card>
+                    
 
                     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsBlock, additionalData = Model })
                 </nop-cards>
