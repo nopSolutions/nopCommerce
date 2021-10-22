@@ -1410,6 +1410,10 @@ namespace Nop.Web.Factories
 
             switch (product.ManageInventoryMethod)
             {
+                case ManageInventoryMethod.DontManageStock:
+                    model.InStock = true;
+                    break;
+
                 case ManageInventoryMethod.ManageStock:
                     model.InStock = product.BackorderMode != BackorderMode.NoBackorders
                         || await _productService.GetTotalStockQuantityAsync(product) > 0;
@@ -1545,6 +1549,7 @@ namespace Nop.Web.Factories
                     foreach (var associatedProduct in associatedProducts)
                         model.AssociatedProducts.Add(await PrepareProductDetailsModelAsync(associatedProduct, null, true));
                 }
+                model.InStock = model.AssociatedProducts.Any(associatedProduct => associatedProduct.InStock);
             }
 
             return model;
