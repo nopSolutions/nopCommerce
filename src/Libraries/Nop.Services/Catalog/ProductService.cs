@@ -834,7 +834,7 @@ namespace Nop.Services.Catalog
                         warehouseId == 0 ||
                         (
                             !p.UseMultipleWarehouses ? p.WarehouseId == warehouseId :
-                                _productWarehouseInventoryRepository.Table.Any(pwi => pwi.Id == warehouseId && pwi.ProductId == p.Id)
+                                _productWarehouseInventoryRepository.Table.Any(pwi => pwi.WarehouseId == warehouseId && pwi.ProductId == p.Id)
                         )
                     ) &&
                     (productType == null || p.ProductTypeId == (int)productType) &&
