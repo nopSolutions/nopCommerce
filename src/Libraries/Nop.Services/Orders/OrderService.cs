@@ -12,7 +12,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Html;
 using Nop.Data;
-using Nop.Data.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Shipping;
 

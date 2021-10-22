@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Data.Mapping;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Migrations.UpgradeTo450
 {
@@ -27,6 +28,16 @@ namespace Nop.Data.Migrations.UpgradeTo450
             {
                 Alter.Table(scheduleTaskTableName)
                     .AddColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime().Nullable();
+            }
+
+            //add column
+            var returnRequestTableName = NameCompatibilityManager.GetTableName(typeof(ReturnRequest));
+            var returnedQuantityColumnName = "ReturnedQuantity";
+
+            if (!Schema.Table(returnRequestTableName).Column(returnedQuantityColumnName).Exists())
+            {
+                Alter.Table(returnRequestTableName)
+                    .AddColumn(returnedQuantityColumnName).AsInt32().NotNullable().SetExistingRowsTo(0);
             }
         }
 

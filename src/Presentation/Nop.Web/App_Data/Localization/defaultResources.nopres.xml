@@ -475,7 +475,7 @@
     <Value>Log in</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.AlreadyLogin">
-      <Value>You are already logged in as {0}. You may log in to another account.</Value>
+    <Value>You are already logged in as {0}. You may log in to another account.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.CheckoutAsGuest">
     <Value>Checkout as Guest</Value>
@@ -10416,17 +10416,17 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Subject.Required">
     <Value>Subject is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore">
-    <Value>Store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore.Hint">
-    <Value>Search by a specific store.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords">
     <Value>Search keywords</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint">
     <Value>Search message template(s) by specific keywords.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test">
     <Value>Test template</Value>
@@ -12376,7 +12376,7 @@
     <Value>Community forums</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Help.SolutionPartners">
-     <Value>Solution partners</Value>
+    <Value>Solution partners</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Help.SupportServices">
     <Value>Premium support services</Value>
@@ -14403,6 +14403,12 @@
   <LocaleResource Name="Admin.ReturnRequests.Fields.Quantity.Hint">
     <Value>Entered quantity.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Quantity.MustBeEqualOrGreaterThanReturnedQuantityField">
+    <Value>The quantity must be equal or greater than the quantity to be returned to stock: {0}.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Quantity.Required">
+    <Value>The quantity is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.ReasonForReturn">
     <Value>Reason for return</Value>
   </LocaleResource>
@@ -14420,6 +14426,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.RequestedAction.Required">
     <Value>Requested action is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity">
+    <Value>Quantity returned to stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity.CannotBeLessThanQuantityAlreadyReturned">
+    <Value>The quantity to be returned to stock cannot be less than quantity already returned: {0}.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity.Hint">
+    <Value>The quantity already returned to stock.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeEqualOrGreaterThanZero">
+    <Value>The quantity to be returned to stock must be equal or greater than zero.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeLessOrEqualQuantityField">
+    <Value>The quantity to be returned to stock must be less or equal the quantity field: {0}.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.StaffNotes">
     <Value>Staff notes</Value>
@@ -14450,6 +14471,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.OrderItemDeleted">
     <Value>Order item is deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.QuantityReturnedToStock">
+    <Value>{0} item(s) have been successfully returned to the stock.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.SearchCustomNumber">
     <Value>ID</Value>
@@ -16854,17 +16878,17 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Tax.VatNumberStatus.Valid">
     <Value>Valid</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Data.DataProviderType.Unknown">
-    <Value>Unknown</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Data.DataProviderType.SqlServer">
-    <Value>Microsoft SQL Server</Value>
-  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Data.DataProviderType.MySql">
     <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Data.DataProviderType.PostgreSQL">
     <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Data.DataProviderType.SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Data.DataProviderType.Unknown">
+    <Value>Unknown</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Services.Orders.GroupByOptions.Day">
     <Value>Day</Value>

@@ -99,7 +99,17 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 
                 //#5042
                 ["Admin.Help.Documentation"] = "Documentation",
-                ["Admin.Help.SolutionPartners"] = "Solution partners"
+                ["Admin.Help.SolutionPartners"] = "Solution partners",
+
+                //#2061
+                ["Admin.ReturnRequests.QuantityReturnedToStock"] = "{0} item(s) have been successfully returned to the stock.",
+                ["Admin.ReturnRequests.Fields.ReturnedQuantity"] = "Quantity returned to stock",
+                ["Admin.ReturnRequests.Fields.ReturnedQuantity.Hint"] = "The quantity already returned to stock.",
+                ["Admin.ReturnRequests.Fields.ReturnedQuantity.CannotBeLessThanQuantityAlreadyReturned"] = "The quantity to be returned to stock cannot be less than quantity already returned: {0}.",
+                ["Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeEqualOrGreaterThanZero"] = "The quantity to be returned to stock must be equal or greater than zero.",
+                ["Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeLessOrEqualQuantityField"] = "The quantity to be returned to stock must be less or equal the quantity field: {0}.",
+                ["Admin.ReturnRequests.Fields.Quantity.MustBeEqualOrGreaterThanReturnedQuantityField"] = "The quantity must be equal or greater than the quantity to be returned to stock: {0}.",
+                ["Admin.ReturnRequests.Fields.Quantity.Required"] = "The quantity is required.",
             }, languageId).Wait();
 
             // rename locales
