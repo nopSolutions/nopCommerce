@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -89,10 +90,34 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Nop.Tests
 {
-    public abstract class BaseNopTest
+    public partial class BaseNopTest
     {
         private static readonly ServiceProvider _serviceProvider;
+        private static readonly ResourceManager _resourceManager;
 
+        protected BaseNopTest()
+        {
+            SetDataProviderType(DataProviderType.Unknown);
+        }
+
+        private static void Init()
+        {
+            
+            var dataProvider = _serviceProvider.GetService<IDataProviderManager>().DataProvider;
+            
+            dataProvider.CreateDatabase(null);
+            dataProvider.InitializeDatabase();
+
+            var languagePackInfo = (DownloadUrl: string.Empty, Progress: 0);
+            
+            _serviceProvider.GetService<IInstallationService>()
+                .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, null, null).Wait();
+            _serviceProvider.GetService<IInstallationService>().InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
+
+            var provider = (IPermissionProvider)Activator.CreateInstance(typeof(StandardPermissionProvider));
+            EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider).Wait();
+        }
+        
         protected static T PropertiesShouldEqual<T, Tm>(T entity, Tm model, params string[] filter) where T : BaseEntity
         where Tm : BaseNopModel
         {
@@ -122,6 +147,9 @@ namespace Nop.Tests
 
         static BaseNopTest()
         {
+            _resourceManager = Connections.ResourceManager;
+            SetDataProviderType(DataProviderType.Unknown);
+
             TypeDescriptor.AddAttributes(typeof(List<int>),
                 new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
             TypeDescriptor.AddAttributes(typeof(List<string>),
@@ -135,11 +163,6 @@ namespace Nop.Tests
             var typeFinder = new AppDomainTypeFinder();
             Singleton<ITypeFinder>.Instance = typeFinder;
 
-            Singleton<DataConfig>.Instance = new DataConfig
-            {
-                ConnectionString = "Data Source=nopCommerceTest.sqlite;Mode=Memory;Cache=Shared"
-            };
-
             var mAssemblies = typeFinder.FindClassesOfType<AutoReversingMigration>()
                 .Select(t => t.Assembly)
                 .Distinct()
@@ -150,6 +173,7 @@ namespace Nop.Tests
                 .FindClassesOfType<IConfig>()
                 .Select(configType => (IConfig)Activator.CreateInstance(configType))
                 .ToList();
+            
             var appSettings = new AppSettings(configurations);
             appSettings.Update(new List<IConfig> { Singleton<DataConfig>.Instance });
             Singleton<AppSettings>.Instance = appSettings;
@@ -208,6 +232,7 @@ namespace Nop.Tests
 
             //file provider
             services.AddTransient<INopFileProvider, NopFileProvider>();
+            CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment.Object);
 
             //web helper
             services.AddTransient<IWebHelper, WebHelper>();
@@ -217,7 +242,8 @@ namespace Nop.Tests
 
             //data layer
             services.AddTransient<IDataProviderManager, TestDataProviderManager>();
-            services.AddTransient<INopDataProvider, SqLiteNopDataProvider>();
+            services.AddTransient(serviceProvider =>
+                serviceProvider.GetRequiredService<IDataProviderManager>().DataProvider);
             services.AddTransient<IMappingEntityAccessor>(x => x.GetRequiredService<INopDataProvider>());
 
             //repositories
@@ -291,7 +317,7 @@ namespace Nop.Tests
             services.AddTransient<IWorkflowMessageService, WorkflowMessageService>();
             services.AddTransient<IMessageTokenProvider, MessageTokenProvider>();
             services.AddTransient<ITokenizer, Tokenizer>();
-            services.AddTransient<ISmtpBuilder, SmtpBuilder>();
+            services.AddTransient<ISmtpBuilder, TestSmtpBuilder>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ICheckoutAttributeFormatter, CheckoutAttributeFormatter>();
             services.AddTransient<ICheckoutAttributeParser, CheckoutAttributeParser>();
@@ -383,7 +409,7 @@ namespace Nop.Tests
                 .AddScoped<IMigrationManager, TestMigrationManager>()
                 .AddSingleton<IConventionSet, NopTestConventionSet>()
                 .ConfigureRunner(rb =>
-                    rb.WithVersionTable(new MigrationVersionInfo()).AddSQLite()
+                    rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres().AddSQLite()
                         // define the assembly containing the migrations
                         .ScanIn(mAssemblies).For.Migrations());
 
@@ -492,17 +518,7 @@ namespace Nop.Tests
 
             EngineContext.Replace(new NopTestEngine(_serviceProvider));
 
-            _serviceProvider.GetService<INopDataProvider>().CreateDatabase(null);
-            _serviceProvider.GetService<INopDataProvider>().InitializeDatabase();
-
-            var languagePackInfo = (DownloadUrl: string.Empty, Progress: 0);
-
-            _serviceProvider.GetService<IInstallationService>()
-                .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, null, null).Wait();
-            _serviceProvider.GetService<IInstallationService>().InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
-
-            var provider = (IPermissionProvider)Activator.CreateInstance(typeof(StandardPermissionProvider));
-            _serviceProvider.GetService<IPermissionService>().InstallPermissionsAsync(provider).Wait();
+            Init();
         }
 
         public static T GetService<T>()
@@ -515,6 +531,66 @@ namespace Nop.Tests
             {
                 return (T)EngineContext.Current.ResolveUnregistered(typeof(T));
             }
+        }
+        
+        public async Task TestCrud<TEntity>(TEntity baseEntity, Func<TEntity, Task> insert, TEntity updateEntity, Func<TEntity, Task> update, Func<int, Task<TEntity>> getById, Func<TEntity, TEntity, bool> equals, Func<TEntity, Task> delete) where TEntity : BaseEntity
+        {
+            baseEntity.Id = 0;
+
+            await insert(baseEntity);
+            baseEntity.Id.Should().BeGreaterThan(0);
+            
+            updateEntity.Id = baseEntity.Id;
+            await update(updateEntity);
+
+            var item = await getById(baseEntity.Id);
+            item.Should().NotBeNull();
+            equals(updateEntity, item).Should().BeTrue();
+
+            await delete(baseEntity);
+            item = await getById(baseEntity.Id);
+            item.Should().BeNull();
+        }
+
+        public static bool SetDataProviderType(DataProviderType type)
+        {
+            var dataConfig = Singleton<DataConfig>.Instance ?? new DataConfig();
+
+            dataConfig.DataProvider = type;
+            dataConfig.ConnectionString = string.Empty;
+
+            try
+            {
+                switch (type)
+                {
+                    case DataProviderType.SqlServer:
+                        dataConfig.ConnectionString = _resourceManager.GetString("sql server connection string");
+                        break;
+                    case DataProviderType.MySql:
+                        dataConfig.ConnectionString = _resourceManager.GetString("MySql server connection string");
+                        break;
+                    case DataProviderType.PostgreSQL:
+                        dataConfig.ConnectionString = _resourceManager.GetString("PostgreSql server connection string");
+                        break;
+                    case DataProviderType.Unknown:
+                        dataConfig.ConnectionString = "Data Source=nopCommerceTest.sqlite;Mode=Memory;Cache=Shared";
+                        break;
+                }
+            }
+            catch (MissingManifestResourceException)
+            {
+                //ignore
+            }
+
+            Singleton<DataConfig>.Instance = dataConfig;
+            var flag = !string.IsNullOrEmpty(dataConfig.ConnectionString);
+
+            if (Singleton<AppSettings>.Instance == null)
+                return flag;
+
+            Singleton<AppSettings>.Instance.Update(new List<IConfig> { Singleton<DataConfig>.Instance });
+
+            return flag;
         }
 
         #region Nested classes

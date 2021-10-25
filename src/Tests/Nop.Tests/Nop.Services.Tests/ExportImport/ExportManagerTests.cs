@@ -371,9 +371,9 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
 
             ignore.AddRange(replacePairs.Values);
 
-            var products = _productRepository.Table.ToList();
+            var product = _productRepository.Table.ToList().First();
 
-            var excelData = await _exportManager.ExportProductsToXlsxAsync(products);
+            var excelData = await _exportManager.ExportProductsToXlsxAsync(new[] {product});
             var worksheet = GetWorksheets(excelData);
             var manager = GetPropertyManager<Product>(worksheet);
 
@@ -403,7 +403,6 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             manager.Remove("ProductTags");
 
             manager.ReadFromXlsx(worksheet, 2);
-            var product = products.First();
 
             AreAllObjectPropertiesPresent(product, manager, ignore.ToArray());
             PropertiesShouldEqual(product, manager, replacePairs);
