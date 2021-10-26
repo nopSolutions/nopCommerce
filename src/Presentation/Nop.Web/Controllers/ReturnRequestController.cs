@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Localization;
@@ -101,7 +100,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ReturnRequest")]
-        public virtual async Task<IActionResult> ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, IFormCollection form)
+        public virtual async Task<IActionResult> ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
             if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
@@ -119,6 +118,8 @@ namespace Nop.Web.Controllers
                 if (download != null)
                     downloadId = download.Id;
             }
+
+            var form = model.Form;
 
             //returnable products
             var orderItems = await _orderService.GetOrderItemsAsync(order.Id, isNotReturnable: false);

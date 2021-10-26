@@ -192,7 +192,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ApplyVendor")]
         [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
-        public virtual async Task<IActionResult> ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile, IFormCollection form)
+        public virtual async Task<IActionResult> ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("Homepage");
@@ -229,7 +229,7 @@ namespace Nop.Web.Controllers
             }
 
             //vendor attributes
-            var vendorAttributesXml = await ParseVendorAttributesAsync(form);
+            var vendorAttributesXml = await ParseVendorAttributesAsync(model.Form);
             (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
@@ -295,7 +295,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("Info")]
         [AutoValidateAntiforgeryToken]
         [FormValueRequired("save-info-button")]
-        public virtual async Task<IActionResult> Info(VendorInfoModel model, IFormFile uploadedFile, IFormCollection form)
+        public virtual async Task<IActionResult> Info(VendorInfoModel model, IFormFile uploadedFile)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
@@ -323,7 +323,7 @@ namespace Nop.Web.Controllers
             var prevPicture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
 
             //vendor attributes
-            var vendorAttributesXml = await ParseVendorAttributesAsync(form);
+            var vendorAttributesXml = await ParseVendorAttributesAsync(model.Form);
             (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 

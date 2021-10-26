@@ -415,7 +415,7 @@ namespace Nop.Web.Controllers
         #region Shopping cart
 
         [HttpPost]
-        public virtual async Task<IActionResult> SelectShippingOption([FromQuery] string name, [FromQuery] EstimateShippingModel model, IFormCollection form)
+        public virtual async Task<IActionResult> SelectShippingOption([FromQuery] string name, [FromQuery] EstimateShippingModel model)
         {
             if (model == null)
                 model = new EstimateShippingModel();
@@ -436,7 +436,7 @@ namespace Nop.Web.Controllers
 
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
             //parse and save checkout attributes
-            await ParseAndSaveCheckoutAttributesAsync(cart, form);
+            await ParseAndSaveCheckoutAttributesAsync(cart, model.Form);
 
             var shippingOptions = new List<ShippingOption>();
             ShippingOption selectedShippingOption = null;
@@ -1382,7 +1382,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> GetEstimateShipping(EstimateShippingModel model, IFormCollection form)
+        public virtual async Task<IActionResult> GetEstimateShipping(EstimateShippingModel model)
         {
             if (model == null)
                 model = new EstimateShippingModel();
@@ -1407,7 +1407,7 @@ namespace Nop.Web.Controllers
 
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
             //parse and save checkout attributes
-            await ParseAndSaveCheckoutAttributesAsync(cart, form);
+            await ParseAndSaveCheckoutAttributesAsync(cart, model.Form);
 
             var result = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(cart, model, true);
 

@@ -759,7 +759,7 @@ namespace Nop.Web.Controllers
         [ValidateHoneypot]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual async Task<IActionResult> Register(RegisterModel model, string returnUrl, bool captchaValid, IFormCollection form)
+        public virtual async Task<IActionResult> Register(RegisterModel model, string returnUrl, bool captchaValid)
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
@@ -778,6 +778,8 @@ namespace Nop.Web.Controllers
             }
             var customer = await _workContext.GetCurrentCustomerAsync();
             customer.RegisteredInStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
+
+            var form = model.Form;
 
             //custom customer attributes
             var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
@@ -1149,7 +1151,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> Info(CustomerInfoModel model, IFormCollection form)
+        public virtual async Task<IActionResult> Info(CustomerInfoModel model)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
@@ -1161,6 +1163,8 @@ namespace Nop.Web.Controllers
             //get customer info model before changes for gdpr log
             if (_gdprSettings.GdprEnabled & _gdprSettings.LogUserProfileChanges)
                 oldCustomerModel = await _customerModelFactory.PrepareCustomerInfoModelAsync(oldCustomerModel, customer, false);
+
+            var form = model.Form;
 
             //custom customer attributes
             var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
@@ -1460,13 +1464,13 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> AddressAdd(CustomerAddressEditModel model, IFormCollection form)
+        public virtual async Task<IActionResult> AddressAdd(CustomerAddressEditModel model)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1526,7 +1530,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, int addressId, IFormCollection form)
+        public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, int addressId)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
@@ -1539,7 +1543,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1860,7 +1864,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> MultiFactorAuthentication(MultiFactorAuthenticationModel model, IFormCollection form)
+        public virtual async Task<IActionResult> MultiFactorAuthentication(MultiFactorAuthenticationModel model)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
@@ -1892,7 +1896,7 @@ namespace Nop.Web.Controllers
                     else
                     {
                         //save selected multi-factor authentication provider
-                        var selectedProvider = await ParseSelectedProviderAsync(form);
+                        var selectedProvider = await ParseSelectedProviderAsync(model.Form);
                         var lastSavedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
                         if (string.IsNullOrEmpty(selectedProvider) && !string.IsNullOrEmpty(lastSavedProvider))
                         {

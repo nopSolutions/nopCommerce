@@ -2689,7 +2689,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual async Task<IActionResult> ProductAttributeMappingEdit(ProductAttributeMappingModel model, bool continueEditing, IFormCollection form)
+        public virtual async Task<IActionResult> ProductAttributeMappingEdit(ProductAttributeMappingModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2727,7 +2727,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             await UpdateLocalesAsync(productAttributeMapping, model);
 
-            await SaveConditionAttributesAsync(productAttributeMapping, model.ConditionModel, form);
+            await SaveConditionAttributesAsync(productAttributeMapping, model.ConditionModel, model.Form);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Updated"));
 
@@ -3182,7 +3182,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> ProductAttributeCombinationCreatePopup(int productId, ProductAttributeCombinationModel model, IFormCollection form)
+        public virtual async Task<IActionResult> ProductAttributeCombinationCreatePopup(int productId, ProductAttributeCombinationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3198,7 +3198,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //attributes
             var warnings = new List<string>();
-            var attributesXml = await GetAttributesXmlForProductAttributeCombinationAsync(form, warnings, product.Id);
+            var attributesXml = await GetAttributesXmlForProductAttributeCombinationAsync(model.Form, warnings, product.Id);
 
             //check whether the attribute value is specified
             if (string.IsNullOrEmpty(attributesXml))
@@ -3324,7 +3324,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> ProductAttributeCombinationEditPopup(ProductAttributeCombinationModel model, IFormCollection form)
+        public virtual async Task<IActionResult> ProductAttributeCombinationEditPopup(ProductAttributeCombinationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3345,7 +3345,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //attributes
             var warnings = new List<string>();
-            var attributesXml = await GetAttributesXmlForProductAttributeCombinationAsync(form, warnings, product.Id);
+            var attributesXml = await GetAttributesXmlForProductAttributeCombinationAsync(model.Form, warnings, product.Id);
 
             //check whether the attribute value is specified
             if (string.IsNullOrEmpty(attributesXml))
