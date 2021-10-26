@@ -100,6 +100,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
+            if(!scheduleTask.Enabled && model.Enabled)
+                scheduleTask.LastEnabledUtc = DateTime.UtcNow;
+            
             scheduleTask = model.ToEntity(scheduleTask);
 
             await _scheduleTaskService.UpdateTaskAsync(scheduleTask);

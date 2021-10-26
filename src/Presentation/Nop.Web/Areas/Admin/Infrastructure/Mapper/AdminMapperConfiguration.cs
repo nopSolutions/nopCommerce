@@ -1538,7 +1538,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.Type, options => options.Ignore())
                 .ForMember(entity => entity.LastStartUtc, options => options.Ignore())
                 .ForMember(entity => entity.LastEndUtc, options => options.Ignore())
-                .ForMember(entity => entity.LastSuccessUtc, options => options.Ignore());
+                .ForMember(entity => entity.LastSuccessUtc, options => options.Ignore())
+                .ForMember(entity => entity.LastEnabledUtc, options => options.Ignore());
         }
 
         /// <summary>

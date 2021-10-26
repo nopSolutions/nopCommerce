@@ -91,6 +91,19 @@ namespace Nop.Services.ScheduleTasks
                         //and round it (so "ensureRunOncePerPeriod" parameter was fine)
                         taskThread.InitSeconds = (int)(scheduleTask.Seconds - secondsLeft) + 1;
                 }
+                else if (scheduleTask.LastEnabledUtc.HasValue)
+                {
+                    //seconds left since the last enable
+                    var secondsLeft = (DateTime.UtcNow - scheduleTask.LastEnabledUtc).Value.TotalSeconds;
+
+                    if (secondsLeft >= scheduleTask.Seconds)
+                        //run now (immediately)
+                        taskThread.InitSeconds = 0;
+                    else
+                        //calculate start time
+                        //and round it (so "ensureRunOncePerPeriod" parameter was fine)
+                        taskThread.InitSeconds = (int)(scheduleTask.Seconds - secondsLeft) + 1;
+                }
                 else
                     //first start of a task
                     taskThread.InitSeconds = scheduleTask.Seconds;

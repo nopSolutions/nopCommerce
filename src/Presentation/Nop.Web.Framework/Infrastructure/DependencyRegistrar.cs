@@ -270,9 +270,7 @@ namespace Nop.Web.Framework.Infrastructure
             //schedule tasks
             services.AddSingleton<ITaskScheduler, TaskScheduler>();
             services.AddTransient<IScheduleTaskRunner, ScheduleTaskRunner>();
-            if (DataSettingsManager.IsDatabaseInstalled()) 
-                services.AddHostedService<ScheduleTaskHostedService>();
-
+            
             //event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
             foreach (var consumer in consumers)

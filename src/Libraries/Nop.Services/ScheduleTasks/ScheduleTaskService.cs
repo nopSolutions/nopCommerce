@@ -105,6 +105,9 @@ namespace Nop.Services.ScheduleTasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
+            if (task.Enabled && !task.LastEnabledUtc.HasValue)
+                task.LastEnabledUtc = DateTime.UtcNow;
+
             await _taskRepository.InsertAsync(task, false);
         }
 

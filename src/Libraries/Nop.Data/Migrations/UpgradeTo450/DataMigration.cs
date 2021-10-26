@@ -1,4 +1,6 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.ScheduleTasks;
+using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo450
 {
@@ -17,6 +19,15 @@ namespace Nop.Data.Migrations.UpgradeTo450
         /// </summary>
         public override void Up()
         {
+            //#5547
+            var scheduleTaskTableName = NameCompatibilityManager.GetTableName(typeof(ScheduleTask));
+
+            //add column
+            if (!Schema.Table(scheduleTaskTableName).Column(nameof(ScheduleTask.LastEnabledUtc)).Exists())
+            {
+                Alter.Table(scheduleTaskTableName)
+                    .AddColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime().Nullable();
+            }
         }
 
         public override void Down()

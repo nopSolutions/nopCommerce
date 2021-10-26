@@ -28,6 +28,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Plugins;
+using Nop.Services.ScheduleTasks;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using WebMarkupMin.AspNetCore5;
@@ -69,6 +70,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
                 assembly = Assembly.GetAssembly(typeof(IMigrationManager));
                 migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
+
+                var taskScheduler = engine.Resolve<ITaskScheduler>();
+                taskScheduler.InitializeAsync().Wait();
+                taskScheduler.StartScheduler();
             }
         }
 
