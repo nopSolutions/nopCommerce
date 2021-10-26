@@ -958,14 +958,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
             var paymentStatusIds = (searchModel.PaymentStatusIds?.Contains(0) ?? true) ? null : searchModel.PaymentStatusIds.ToList();
             var shippingStatusIds = (searchModel.ShippingStatusIds?.Contains(0) ?? true) ? null : searchModel.ShippingStatusIds.ToList();
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.VendorId = currentVendor.Id;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId);
-            var filterByProductId = product != null && (await _workContext.GetCurrentVendorAsync() == null || product.VendorId == (await _workContext.GetCurrentVendorAsync()).Id)
+            var filterByProductId = product != null && (currentVendor == null || product.VendorId == currentVendor.Id)
                 ? searchModel.ProductId : 0;
 
             //get orders
@@ -1041,14 +1042,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
             var paymentStatusIds = (searchModel.PaymentStatusIds?.Contains(0) ?? true) ? null : searchModel.PaymentStatusIds.ToList();
             var shippingStatusIds = (searchModel.ShippingStatusIds?.Contains(0) ?? true) ? null : searchModel.ShippingStatusIds.ToList();
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.VendorId = currentVendor.Id;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId);
-            var filterByProductId = product != null && (await _workContext.GetCurrentVendorAsync() == null || product.VendorId == (await _workContext.GetCurrentVendorAsync()).Id)
+            var filterByProductId = product != null && (currentVendor == null || product.VendorId == currentVendor.Id)
                 ? searchModel.ProductId : 0;
 
             //prepare additional model data

@@ -213,8 +213,9 @@ namespace Nop.Web.Factories
             if (replyToPM == null)
                 return model;
 
-            if (replyToPM.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id ||
-                replyToPM.FromCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (replyToPM.ToCustomerId == customer.Id ||
+                replyToPM.FromCustomerId == customer.Id)
             {
                 model.ReplyToMessageId = replyToPM.Id;
                 model.Subject = $"Re: {replyToPM.Subject}";

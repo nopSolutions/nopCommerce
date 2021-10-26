@@ -188,18 +188,19 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         private async Task<string> GetUserObjectAsync()
         {
             //prepare user object
-            var email = (await _workContext.GetCurrentCustomerAsync()).Email;
-            var firstName = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.FirstNameAttribute);
-            var lastName = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.LastNameAttribute);
-            var phone = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.PhoneAttribute);
-            var gender = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.GenderAttribute);
-            var birthday = await _genericAttributeService.GetAttributeAsync<DateTime?>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.DateOfBirthAttribute);
-            var city = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CityAttribute);
-            var countryId = await _genericAttributeService.GetAttributeAsync<int>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CountryIdAttribute);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var email = customer.Email;
+            var firstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+            var lastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
+            var phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
+            var gender = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute);
+            var birthday = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
+            var city = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
+            var countryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
             var countryName = (await _countryService.GetCountryByIdAsync(countryId))?.TwoLetterIsoCode;
-            var stateId = await _genericAttributeService.GetAttributeAsync<int>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.StateProvinceIdAttribute);
+            var stateId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
             var stateName = (await _stateProvinceService.GetStateProvinceByIdAsync(stateId))?.Abbreviation;
-            var zipcode = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.ZipPostalCodeAttribute);
+            var zipcode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
 
             var userObject = FormatEventObject(new List<(string Name, object Value)>
                 {
@@ -207,7 +208,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                     ("fn", JavaScriptEncoder.Default.Encode(firstName?.ToLowerInvariant() ?? string.Empty)),
                     ("ln", JavaScriptEncoder.Default.Encode(lastName?.ToLowerInvariant() ?? string.Empty)),
                     ("ph", new string(phone?.Where(c => char.IsDigit(c)).ToArray()) ?? string.Empty),
-                    ("external_id", (await _workContext.GetCurrentCustomerAsync()).CustomerGuid.ToString().ToLowerInvariant()),
+                    ("external_id", customer.CustomerGuid.ToString().ToLowerInvariant()),
                     ("ge", gender?.FirstOrDefault().ToString().ToLowerInvariant()),
                     ("db", birthday?.ToString("yyyyMMdd")),
                     ("ct", JavaScriptEncoder.Default.Encode(city?.ToLowerInvariant() ?? string.Empty)),
@@ -257,16 +258,17 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 return string.Empty;
 
             //prepare user object
-            var createdOn = new DateTimeOffset((await _workContext.GetCurrentCustomerAsync()).CreatedOnUtc).ToUnixTimeSeconds().ToString();
-            var city = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CityAttribute);
-            var countryId = await _genericAttributeService.GetAttributeAsync<int>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CountryIdAttribute);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var createdOn = new DateTimeOffset(customer.CreatedOnUtc).ToUnixTimeSeconds().ToString();
+            var city = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
+            var countryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
             var countryName = (await _countryService.GetCountryByIdAsync(countryId))?.TwoLetterIsoCode;
             var currency = (await _workContext.GetWorkingCurrencyAsync())?.CurrencyCode;
-            var gender = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.GenderAttribute);
+            var gender = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute);
             var language = (await _workContext.GetWorkingLanguageAsync())?.UniqueSeoCode;
-            var stateId = await _genericAttributeService.GetAttributeAsync<int>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.StateProvinceIdAttribute);
+            var stateId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
             var stateName = (await _stateProvinceService.GetStateProvinceByIdAsync(stateId))?.Abbreviation;
-            var zipcode = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.ZipPostalCodeAttribute);
+            var zipcode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
 
             var userObject = FormatEventObject(new List<(string Name, object Value)>
             {
@@ -507,7 +509,8 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             return await HandleFunctionAsync(async () =>
             {
                 //get the enabled configurations
-                var configurations = await (await GetConfigurationsAsync((await _storeContext.GetCurrentStoreAsync()).Id)).WhereAwait(async configuration =>
+                var store = _storeContext.GetCurrentStoreAsync();
+                var configurations = await (await GetConfigurationsAsync(store.Id)).WhereAwait(async configuration =>
                 {
                     if (!configuration.Enabled)
                         return false;
@@ -517,7 +520,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
                     //don't display Pixel for users who not accepted Cookie Consent
                     var cookieConsentAccepted = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(),
-                            NopCustomerDefaults.EuCookieLawAcceptedAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                            NopCustomerDefaults.EuCookieLawAcceptedAttribute, store.Id);
                     return cookieConsentAccepted;
                 }).ToListAsync();
                 if (!configurations.Any())
@@ -581,8 +584,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         {
             await HandleFunctionAsync(async () =>
             {
+                var customer = await _workContext.GetCurrentCustomerAsync();
                 //check whether the adding was initiated by the customer
-                if (item.CustomerId != (await _workContext.GetCurrentCustomerAsync()).Id)
+                if (item.CustomerId != customer.Id)
                     return false;
 
                 //prepare event object
@@ -591,10 +595,11 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 var categoryName = (await _categoryService.GetCategoryByIdAsync(categoryMapping?.CategoryId ?? 0))?.Name;
                 var sku = product != null ? await _productService.FormatSkuAsync(product, item.AttributesXml) : string.Empty;
                 var quantity = product != null ? (int?)item.Quantity : null;
-                var (productPrice, _, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false);
+                var (productPrice, _, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, includeDiscounts: false);
                 var (price, _) = await _taxService.GetProductPriceAsync(product, productPrice);
-                var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price, await _workContext.GetWorkingCurrencyAsync());
-                var currency = (await _workContext.GetWorkingCurrencyAsync())?.CurrencyCode;
+                var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
+                var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price, currentCurrency);
+                var currency = currentCurrency?.CurrencyCode;
 
                 var contentsProperties = new List<(string Name, object Value)> { ("id", sku), ("quantity", quantity) };
                 var eventObject = FormatEventObject(new List<(string Name, object Value)>
@@ -700,8 +705,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 var cart = await _shoppingCartService
                     .GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
                 var (price, _, _, _, _, _) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, false, false);
-                var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price ?? 0, await _workContext.GetWorkingCurrencyAsync());
-                var currency = (await _workContext.GetWorkingCurrencyAsync())?.CurrencyCode;
+                var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
+                var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price ?? 0, currentCurrency);
+                var currency = currentCurrency?.CurrencyCode;
 
                 var contentsProperties = await cart.SelectAwait(async item =>
                 {

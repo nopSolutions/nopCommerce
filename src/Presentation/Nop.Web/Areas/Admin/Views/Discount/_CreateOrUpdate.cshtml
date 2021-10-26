@@ -2,22 +2,23 @@
 
 @{
     const string hideInfoBlockAttributeName = "DiscountPage.HideInfoBlock";
-    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
 
     const string hideRequirementsBlockAttributeName = "DiscountPage.HideRequirementsBlock";
-    var hideRequirementsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideRequirementsBlockAttributeName, defaultValue: true);
+    var hideRequirementsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideRequirementsBlockAttributeName, defaultValue: true);
 
     const string hideUsageHistoryBlockAttributeName = "DiscountPage.HideUsageHistoryBlock";
-    var hideUsageHistoryBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideUsageHistoryBlockAttributeName, defaultValue: true);
+    var hideUsageHistoryBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideUsageHistoryBlockAttributeName, defaultValue: true);
 
     const string hideAppliedToProductsBlockAttributeName = "DiscountPage.HideAppliedToProductsBlock";
-    var hideAppliedToProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAppliedToProductsBlockAttributeName, defaultValue: true);
+    var hideAppliedToProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAppliedToProductsBlockAttributeName, defaultValue: true);
 
     const string hideAppliedToCategoriesBlockAttributeName = "DiscountPage.HideAppliedToCategoriesBlock";
-    var hideAppliedToCategoriesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAppliedToCategoriesBlockAttributeName, defaultValue: true);
+    var hideAppliedToCategoriesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAppliedToCategoriesBlockAttributeName, defaultValue: true);
 
     const string hideAppliedToManufacturersBlockAttributeName = "DiscountPage.HideAppliedToManufacturersBlock";
-    var hideAppliedToManufacturersBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAppliedToManufacturersBlockAttributeName, defaultValue: true);
+    var hideAppliedToManufacturersBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAppliedToManufacturersBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

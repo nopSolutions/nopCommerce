@@ -78,10 +78,11 @@ namespace Nop.Web.Controllers
 
             if (_customerSettings.DownloadableProductsValidateUser)
             {
-                if (await _workContext.GetCurrentCustomerAsync() == null)
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                if (customer == null)
                     return Challenge();
 
-                if (order.CustomerId != (await _workContext.GetCurrentCustomerAsync()).Id)
+                if (order.CustomerId != customer.Id)
                     return Content("This is not your order");
             }
 
@@ -139,7 +140,8 @@ namespace Nop.Web.Controllers
 
             if (_customerSettings.DownloadableProductsValidateUser)
             {
-                if (await _workContext.GetCurrentCustomerAsync() == null || order.CustomerId != (await _workContext.GetCurrentCustomerAsync()).Id)
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                if (customer == null || order.CustomerId != customer.Id)
                     return Challenge();
             }
 
@@ -192,8 +194,8 @@ namespace Nop.Web.Controllers
                 return InvokeHttp404();
 
             var order = await _orderService.GetOrderByIdAsync(orderNote.OrderId);
-
-            if (await _workContext.GetCurrentCustomerAsync() == null || order.CustomerId != (await _workContext.GetCurrentCustomerAsync()).Id)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (customer == null || order.CustomerId != customer.Id)
                 return Challenge();
 
             var download = await _downloadService.GetDownloadByIdAsync(orderNote.DownloadId);

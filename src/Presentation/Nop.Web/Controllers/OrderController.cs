@@ -81,7 +81,8 @@ namespace Nop.Web.Controllers
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
         public virtual async Task<IActionResult> CancelRecurringPayment(IFormCollection form)
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             //get recurring payment identifier
@@ -96,7 +97,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerOrders");
             }
 
-            if (await _orderProcessingService.CanCancelRecurringPaymentAsync(await _workContext.GetCurrentCustomerAsync(), recurringPayment))
+            if (await _orderProcessingService.CanCancelRecurringPaymentAsync(customer, recurringPayment))
             {
                 var errors = await _orderProcessingService.CancelRecurringPaymentAsync(recurringPayment);
 
@@ -115,7 +116,8 @@ namespace Nop.Web.Controllers
         [FormValueRequired(FormValueRequirement.StartsWith, "retryLastPayment")]
         public virtual async Task<IActionResult> RetryLastRecurringPayment(IFormCollection form)
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             //get recurring payment identifier
@@ -130,7 +132,7 @@ namespace Nop.Web.Controllers
             if (recurringPayment == null)
                 return RedirectToRoute("CustomerOrders");
 
-            if (!await _orderProcessingService.CanRetryLastRecurringPaymentAsync(await _workContext.GetCurrentCustomerAsync(), recurringPayment))
+            if (!await _orderProcessingService.CanRetryLastRecurringPaymentAsync(customer, recurringPayment))
                 return RedirectToRoute("CustomerOrders");
 
             var errors = await _orderProcessingService.ProcessNextRecurringPaymentAsync(recurringPayment);

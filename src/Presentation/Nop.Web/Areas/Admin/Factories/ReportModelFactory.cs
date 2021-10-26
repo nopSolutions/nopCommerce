@@ -105,8 +105,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter bestsellers
             var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
             var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.VendorId = currentVendor.Id;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
@@ -492,8 +493,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get parameters to filter neverSoldReports
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.SearchVendorId = currentVendor.Id;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
