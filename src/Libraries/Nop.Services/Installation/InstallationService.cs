@@ -3053,7 +3053,7 @@ namespace Nop.Services.Installation
                 EnablePriceRangeFiltering = true,
                 EnableSpecificationAttributeFiltering = true,
                 AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay
-            }); ;
+            });
 
             await settingService.SaveSettingAsync(new LocalizationSettings
             {

@@ -200,9 +200,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AppSettings(AppSettingsModel model)
         {
-            //MAIN
-            Console.WriteLine("DDDD");
-            //MAIN
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
@@ -672,9 +669,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Catalog(CatalogSettingsModel model)
         {
-            //MAIN
-            Console.WriteLine("Catalog POST");
-            //MAIN
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
