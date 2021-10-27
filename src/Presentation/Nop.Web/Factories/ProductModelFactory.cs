@@ -370,7 +370,8 @@ namespace Nop.Web.Factories
                     var tierPrices = new List<TierPrice>();
                     if (product.HasTierPrices)
                     {
-                        tierPrices.AddRange(await _productService.GetTierPricesAsync(product, customer, (await _storeContext.GetCurrentStoreAsync()).Id));
+                        var store = await _storeContext.GetCurrentStoreAsync();
+                        tierPrices.AddRange(await _productService.GetTierPricesAsync(product, customer, store.Id));
                     }
                     //When there is just one tier price (with  qty 1), there are no actual savings in the list.
                     var displayFromMessage = tierPrices.Any() && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
@@ -424,8 +425,9 @@ namespace Nop.Web.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareGroupedProductOverviewPriceModelAsync(Product product, ProductOverviewModel.ProductPriceModel priceModel)
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
             var associatedProducts = await _productService.GetAssociatedProductsAsync(product.Id,
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             //add to cart button (ignore "DisableBuyButton" property for grouped products)
             priceModel.DisableBuyButton =
@@ -1031,7 +1033,8 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(product));
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var model = await (await _productService.GetTierPricesAsync(product, customer, (await _storeContext.GetCurrentStoreAsync()).Id))
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var model = await (await _productService.GetTierPricesAsync(product, customer, store.Id))
                 .SelectAwait(async tierPrice =>
                 {
                     var priceBase = (await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product,
@@ -1712,10 +1715,13 @@ namespace Nop.Web.Factories
                 pageIndex = page.Value - 1;
             }
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             var list = await _productService.GetAllProductReviewsAsync(
-                customerId: (await _workContext.GetCurrentCustomerAsync()).Id,
+                customerId: customer.Id,
                 approved: null,
-                storeId: _catalogSettings.ShowProductReviewsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0,
+                storeId: _catalogSettings.ShowProductReviewsPerStore ? store.Id : 0,
                 pageIndex: pageIndex,
                 pageSize: pageSize);
 
@@ -1804,7 +1810,8 @@ namespace Nop.Web.Factories
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage;
             if (!excludeProperties)
             {
-                model.YourEmailAddress = (await _workContext.GetCurrentCustomerAsync()).Email;
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                model.YourEmailAddress = customer.Email;
             }
 
             return model;

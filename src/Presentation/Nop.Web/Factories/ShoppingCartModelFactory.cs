@@ -1104,8 +1104,9 @@ namespace Nop.Web.Factories
         public virtual async Task<string> FormatSelectedCheckoutAttributesAsync()
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
             var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer,
-                NopCustomerDefaults.CheckoutAttributes, (await _storeContext.GetCurrentStoreAsync()).Id);
+                NopCustomerDefaults.CheckoutAttributes, store.Id);
 
             return await _checkoutAttributeFormatter.FormatAttributesAsync(checkoutAttributesXml, customer);
         }
@@ -1439,7 +1440,8 @@ namespace Nop.Web.Factories
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage;
             if (!excludeProperties)
             {
-                model.YourEmailAddress = (await _workContext.GetCurrentCustomerAsync()).Email;
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                model.YourEmailAddress = customer.Email;
             }
 
             return model;

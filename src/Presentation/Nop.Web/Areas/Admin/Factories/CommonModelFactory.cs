@@ -202,7 +202,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether current store URL matches the store configured URL
-            var currentStoreUrl = (await _storeContext.GetCurrentStoreAsync()).Url;
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var currentStoreUrl = store.Url;
             if (!string.IsNullOrEmpty(currentStoreUrl) &&
                 (currentStoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase) ||
                 currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)))
@@ -1070,11 +1071,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<LanguageSelectorModel> PrepareLanguageSelectorModelAsync()
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
             var model = new LanguageSelectorModel
             {
                 CurrentLanguage = (await _workContext.GetWorkingLanguageAsync()).ToModel<LanguageModel>(),
                 AvailableLanguages = (await _languageService
-                    .GetAllLanguagesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+                    .GetAllLanguagesAsync(storeId: store.Id))
                     .Select(language => language.ToModel<LanguageModel>()).ToList()
             };
 

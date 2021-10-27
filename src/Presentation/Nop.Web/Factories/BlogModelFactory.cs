@@ -111,7 +111,8 @@ namespace Nop.Web.Factories
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
 
             //number of blog comments
-            var storeId = _blogSettings.ShowBlogCommentsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0;
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var storeId = _blogSettings.ShowBlogCommentsPerStore ? store.Id : 0;
 
             model.NumberOfComments = await _blogService.GetBlogCommentsCountAsync(blogPost, storeId, true);
 
@@ -183,10 +184,11 @@ namespace Nop.Web.Factories
         public virtual async Task<BlogPostTagListModel> PrepareBlogPostTagListModelAsync()
         {
             var model = new BlogPostTagListModel();
+            var store = await _storeContext.GetCurrentStoreAsync();
 
             //get tags
             var tags = (await _blogService
-                .GetAllBlogPostTagsAsync((await _storeContext.GetCurrentStoreAsync()).Id, (await _workContext.GetWorkingLanguageAsync()).Id))
+                .GetAllBlogPostTagsAsync(store.Id, (await _workContext.GetWorkingLanguageAsync()).Id))
                 .OrderByDescending(x => x.BlogPostCount)
                 .Take(_blogSettings.NumberOfTags);
 

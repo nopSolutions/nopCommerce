@@ -269,7 +269,7 @@ namespace Nop.Services.Orders
 
                 //uncomment here for the return unused reward points if new order total less redeemed reward points amount
                 //if (rewardPoints < -rewardPointsOfOrder.Points)
-                //    _rewardPointService.AddRewardPointsHistoryEntry(customer, -rewardPointsOfOrder.Points - rewardPoints, (await _storeContext.GetCurrentStoreAsync()).Id, "Return unused reward points");
+                //    _rewardPointService.AddRewardPointsHistoryEntry(customer, -rewardPointsOfOrder.Points - rewardPoints, store.Id, "Return unused reward points");
 
                 if (rewardPointsAmount != rewardPointsOfOrder.UsedAmount)
                 {
@@ -831,7 +831,8 @@ namespace Nop.Services.Orders
             //checkout attributes
             if (customer != null)
             {
-                var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, (await _storeContext.GetCurrentStoreAsync()).Id);
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, store.Id);
                 var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
                 if (attributeValues != null)
                 {
@@ -1010,10 +1011,11 @@ namespace Nop.Services.Orders
                 return (decimal.Zero, new List<Discount>());
 
             var customer = await _customerService.GetShoppingCartCustomerAsync(cart);
+            var store = await _storeContext.GetCurrentStoreAsync();
 
             //with additional shipping charges
             var pickupPoint = await _genericAttributeService.GetAttributeAsync<PickupPoint>(customer,
-                    NopCustomerDefaults.SelectedPickupPointAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    NopCustomerDefaults.SelectedPickupPointAttribute, store.Id);
 
             var adjustedRate = shippingRate;
 
@@ -1184,12 +1186,13 @@ namespace Nop.Services.Orders
             var redeemedRewardPointsAmount = decimal.Zero;
 
             var customer = await _customerService.GetShoppingCartCustomerAsync(cart);
-
+            var store = await _storeContext.GetCurrentStoreAsync();
             var paymentMethodSystemName = string.Empty;
+
             if (customer != null)
             {
                 paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
-                    NopCustomerDefaults.SelectedPaymentMethodAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
             }
 
             //subtotal without tax

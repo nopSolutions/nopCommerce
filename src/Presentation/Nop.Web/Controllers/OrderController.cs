@@ -159,7 +159,9 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> Details(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
-            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+            if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
             var model = await _orderModelFactory.PrepareOrderDetailsModelAsync(order);
@@ -170,7 +172,8 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> PrintOrderDetails(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
-            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
             var model = await _orderModelFactory.PrepareOrderDetailsModelAsync(order);
@@ -184,7 +187,8 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> GetPdfInvoice(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
-            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
             var orders = new List<Order>();
@@ -202,7 +206,8 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> ReOrder(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
-            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
             await _orderProcessingService.ReOrderAsync(order);
@@ -216,7 +221,8 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> RePostPayment(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
-            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
             if (!await _paymentService.CanRePostProcessPaymentAsync(order))
@@ -247,8 +253,9 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-            
-            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+            if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
             var model = await _orderModelFactory.PrepareShipmentDetailsModelAsync(shipment);

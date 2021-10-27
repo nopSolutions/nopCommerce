@@ -1806,7 +1806,8 @@ namespace Nop.Services.ExportImport
 
                     var isActive = true;
 
-                    var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+                    var store = await _storeContext.GetCurrentStoreAsync();
+                    var storeId = store.Id;
 
                     //"email" field specified
                     var email = tmp[0].Trim();

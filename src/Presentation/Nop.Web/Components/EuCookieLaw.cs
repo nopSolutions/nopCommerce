@@ -39,7 +39,9 @@ namespace Nop.Web.Components
             if (customer.IsSearchEngineAccount())
                 return Content("");
 
-            if (await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.EuCookieLawAcceptedAttribute, (await _storeContext.GetCurrentStoreAsync()).Id))
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            if (await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.EuCookieLawAcceptedAttribute, store.Id))
                 //already accepted
                 return Content("");
 

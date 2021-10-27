@@ -198,13 +198,14 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
                 var comment = new BlogComment
                 {
                     BlogPostId = blogPost.Id,
                     CustomerId = customer.Id,
                     CommentText = model.AddNewComment.CommentText,
                     IsApproved = !_blogSettings.BlogCommentsMustBeApproved,
-                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                    StoreId = store.Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
 

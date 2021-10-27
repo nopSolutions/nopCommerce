@@ -100,11 +100,13 @@ namespace Nop.Web.Controllers
             if (!await CheckCategoryAvailabilityAsync(category))
                 return InvokeHttp404();
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //'Continue shopping' URL
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
@@ -165,11 +167,13 @@ namespace Nop.Web.Controllers
             if (!await CheckManufacturerAvailabilityAsync(manufacturer))
                 return InvokeHttp404();
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //'Continue shopping' URL
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
@@ -220,11 +224,13 @@ namespace Nop.Web.Controllers
             if (!await CheckVendorAvailabilityAsync(vendor))
                 return InvokeHttp404();
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //'Continue shopping' URL
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
@@ -301,11 +307,13 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> Search(SearchModel model, CatalogProductsCommand command)
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //'Continue shopping' URL
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(true),
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             if (model == null)
                 model = new SearchModel();
@@ -329,9 +337,9 @@ namespace Nop.Web.Controllers
             //products
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
                 _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
-
+            var store = await _storeContext.GetCurrentStoreAsync();
             var products = await _productService.SearchProductsAsync(0,
-                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                storeId: store.Id,
                 keywords: term,
                 languageId: (await _workContext.GetWorkingLanguageAsync()).Id,
                 visibleIndividuallyOnly: true,

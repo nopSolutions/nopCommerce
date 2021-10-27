@@ -181,6 +181,8 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
+
                 var comment = new NewsComment
                 {
                     NewsItemId = newsItem.Id,
@@ -188,7 +190,7 @@ namespace Nop.Web.Controllers
                     CommentTitle = model.AddNewComment.CommentTitle,
                     CommentText = model.AddNewComment.CommentText,
                     IsApproved = !_newsSettings.NewsCommentsMustBeApproved,
-                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                    StoreId = store.Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
 

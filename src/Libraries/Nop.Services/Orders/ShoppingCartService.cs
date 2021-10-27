@@ -338,8 +338,10 @@ namespace Nop.Services.Orders
                 warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.ProductUnpublished"));
             }
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //Store mapping
-            if (!await _storeMappingService.AuthorizeAsync(product, (await _storeContext.GetCurrentStoreAsync()).Id))
+            if (!await _storeMappingService.AuthorizeAsync(product, store.Id))
             {
                 warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.ProductUnpublished"));
             }
@@ -927,9 +929,10 @@ namespace Nop.Services.Orders
                 var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
                 if (associatedProduct != null)
                 {
+                    var store = await _storeContext.GetCurrentStoreAsync();
                     var totalQty = quantity * attributeValue.Quantity;
                     var associatedProductWarnings = await GetShoppingCartItemWarningsAsync(customer,
-                        shoppingCartType, associatedProduct, (await _storeContext.GetCurrentStoreAsync()).Id,
+                        shoppingCartType, associatedProduct, store.Id,
                         string.Empty, decimal.Zero, null, null, totalQty, false, shoppingCartItemId);
 
                     var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(productAttributeMapping.ProductAttributeId);
@@ -1177,7 +1180,8 @@ namespace Nop.Services.Orders
 
             //existing checkout attributes
             var excludeShippableAttributes = !await ShoppingCartRequiresShippingAsync(shoppingCart);
-            var attributes2 = await _checkoutAttributeService.GetAllCheckoutAttributesAsync((await _storeContext.GetCurrentStoreAsync()).Id, excludeShippableAttributes);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var attributes2 = await _checkoutAttributeService.GetAllCheckoutAttributesAsync(store.Id, excludeShippableAttributes);
 
             //validate conditional attributes only (if specified)
             attributes2 = await attributes2.WhereAwait(async x =>

@@ -69,8 +69,9 @@ namespace Nop.Web.Framework.Themes
             if (_storeInformationSettings.AllowCustomerToSelectTheme &&
                 customer != null)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
                 themeName = await _genericAttributeService.GetAttributeAsync<string>(customer,
-                    NopCustomerDefaults.WorkingThemeNameAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    NopCustomerDefaults.WorkingThemeNameAttribute, store.Id);
             }
 
             //if not, try to get default store theme
@@ -104,9 +105,10 @@ namespace Nop.Web.Framework.Themes
                 return;
 
             //save selected by customer theme system name
+            var store = await _storeContext.GetCurrentStoreAsync();
             await _genericAttributeService.SaveAttributeAsync(customer,
                 NopCustomerDefaults.WorkingThemeNameAttribute, workingThemeName,
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             //clear cache
             _cachedThemeName = null;

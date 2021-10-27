@@ -526,6 +526,7 @@ namespace Nop.Services.Customers
 
             if (backgroundTaskUser is null)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
                 //If for any reason the system user isn't in the database, then we add it
                 backgroundTaskUser = new Customer
                 {
@@ -537,7 +538,7 @@ namespace Nop.Services.Customers
                     SystemName = NopCustomerDefaults.BackgroundTaskCustomerName,
                     CreatedOnUtc = DateTime.UtcNow,
                     LastActivityDateUtc = DateTime.UtcNow,
-                    RegisteredInStoreId = (await _storeContext.GetCurrentStoreAsync()).Id
+                    RegisteredInStoreId = store.Id
                 };
 
                 await InsertCustomerAsync(backgroundTaskUser);
@@ -566,6 +567,7 @@ namespace Nop.Services.Customers
 
             if (searchEngineUser is null)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
                 //If for any reason the system user isn't in the database, then we add it
                 searchEngineUser = new Customer
                 {
@@ -577,7 +579,7 @@ namespace Nop.Services.Customers
                     SystemName = NopCustomerDefaults.SearchEngineCustomerName,
                     CreatedOnUtc = DateTime.UtcNow,
                     LastActivityDateUtc = DateTime.UtcNow,
-                    RegisteredInStoreId = (await _storeContext.GetCurrentStoreAsync()).Id
+                    RegisteredInStoreId = store.Id
                 };
 
                 await InsertCustomerAsync(searchEngineUser);

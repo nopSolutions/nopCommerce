@@ -940,7 +940,9 @@ namespace Nop.Web.Controllers
                     if (int.TryParse(id, out var forumSubscriptionId))
                     {
                         var forumSubscription = await _forumService.GetSubscriptionByIdAsync(forumSubscriptionId);
-                        if (forumSubscription != null && forumSubscription.CustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+                        var customer = await _workContext.GetCurrentCustomerAsync();
+
+                        if (forumSubscription != null && forumSubscription.CustomerId == customer.Id)
                         {
                             await _forumService.DeleteSubscriptionAsync(forumSubscription);
                         }

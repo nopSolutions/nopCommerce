@@ -126,7 +126,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var createdToFromValue = !searchModel.CreatedOnTo.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var isApprovedOnly = searchModel.SearchApprovedId == 0 ? null : searchModel.SearchApprovedId == 1 ? true : (bool?)false;
-            var vendorId = (await _workContext.GetCurrentVendorAsync())?.Id ?? 0;
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            var vendorId = vendor?.Id ?? 0;
 
             //get product reviews
             var productReviews = await _productService.GetAllProductReviewsAsync(showHidden: true,

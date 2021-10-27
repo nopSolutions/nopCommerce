@@ -742,8 +742,9 @@ namespace Nop.Web.Controllers
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
                 //search with the same cart type as specified
-                var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), (ShoppingCartType)shoppingCartTypeId, (await _storeContext.GetCurrentStoreAsync()).Id);
+                var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), (ShoppingCartType)shoppingCartTypeId, store.Id);
 
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
                 //not found? let's ignore it. in this case we'll add a new item
@@ -1155,7 +1156,8 @@ namespace Nop.Web.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("Homepage");
 
-            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, store.Id);
             var model = new ShoppingCartModel();
             model = await _shoppingCartModelFactory.PrepareShoppingCartModelAsync(model, cart);
             return View(model);
@@ -1235,7 +1237,8 @@ namespace Nop.Web.Controllers
         [FormValueRequired("continueshopping")]
         public virtual async Task<IActionResult> ContinueShopping()
         {
-            var returnUrl = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.LastContinueShoppingPageAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var returnUrl = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.LastContinueShoppingPageAttribute, store.Id);
 
             if (!string.IsNullOrEmpty(returnUrl))
                 return Redirect(returnUrl);
@@ -1295,7 +1298,8 @@ namespace Nop.Web.Controllers
 
             //cart
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             //parse and save checkout attributes
             await ParseAndSaveCheckoutAttributesAsync(cart, form);
@@ -1358,7 +1362,8 @@ namespace Nop.Web.Controllers
 
             //cart
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             //parse and save checkout attributes
             await ParseAndSaveCheckoutAttributesAsync(cart, form);
@@ -1422,7 +1427,8 @@ namespace Nop.Web.Controllers
                     Errors = errors
                 });
 
-            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, store.Id);
             //parse and save checkout attributes
             await ParseAndSaveCheckoutAttributesAsync(cart, model.Form);
 
@@ -1447,7 +1453,8 @@ namespace Nop.Web.Controllers
             if (discount != null)
                 await _customerService.RemoveDiscountCouponCodeAsync(customer, discount.CouponCode);
 
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             model = await _shoppingCartModelFactory.PrepareShoppingCartModelAsync(model, cart);
             return View(model);
@@ -1469,7 +1476,8 @@ namespace Nop.Web.Controllers
             if (gc != null)
                 await _customerService.RemoveGiftCardCouponCodeAsync(customer, gc.GiftCardCouponCode);
 
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             model = await _shoppingCartModelFactory.PrepareShoppingCartModelAsync(model, cart);
             return View(model);
@@ -1490,7 +1498,8 @@ namespace Nop.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id);
 
             var model = new WishlistModel();
             model = await _shoppingCartModelFactory.PrepareWishlistModelAsync(model, cart, !customerGuid.HasValue);
@@ -1645,7 +1654,8 @@ namespace Nop.Web.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("Homepage");
 
-            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.Wishlist, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.Wishlist, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("Homepage");
@@ -1664,7 +1674,8 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("Homepage");

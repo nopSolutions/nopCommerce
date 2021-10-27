@@ -65,7 +65,9 @@ namespace Nop.Services.ScheduleTasks
                 .OrderBy(x => x.Seconds)
                 .ToList();
 
-            var scheduleTaskUrl = $"{_storeContext.GetCurrentStoreAsync().Result.Url.TrimEnd('/')}/{NopTaskDefaults.ScheduleTaskPath}";
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            var scheduleTaskUrl = $"{store.Url.TrimEnd('/')}/{NopTaskDefaults.ScheduleTaskPath}";
             var timeout = _appSettings.Get<CommonConfig>().ScheduleTaskRunTimeout;
 
             foreach (var scheduleTask in scheduleTasks)
@@ -198,9 +200,10 @@ namespace Nop.Services.ScheduleTasks
                     var storeContext = EngineContext.Current.Resolve<IStoreContext>(scope);
 
                     var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? await localizationService.GetResourceAsync("ScheduleTasks.TimeoutError") : ex.Message;
+                    var store = await storeContext.GetCurrentStoreAsync();
 
                     message = string.Format(await localizationService.GetResourceAsync("ScheduleTasks.Error"), _scheduleTask.Name,
-                        message, _scheduleTask.Type, (await storeContext.GetCurrentStoreAsync()).Name, _scheduleTaskUrl);
+                        message, _scheduleTask.Type, store.Name, _scheduleTaskUrl);
 
                     await logger.ErrorAsync(message, ex);
                 }

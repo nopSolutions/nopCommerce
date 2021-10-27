@@ -621,10 +621,12 @@ namespace Nop.Web.Factories
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart));
 
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             var model = new OnePageCheckoutModel
             {
                 ShippingRequired = await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart),
-                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id)).Any(),
+                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && (await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).Any(),
                 BillingAddress = await PrepareBillingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true)
             };
             return model;

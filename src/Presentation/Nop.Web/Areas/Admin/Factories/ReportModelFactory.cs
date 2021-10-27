@@ -273,7 +273,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get parameters to filter comments
             var publishedOnly = searchModel.SearchPublishedId == 0 ? null : searchModel.SearchPublishedId == 1 ? true : (bool?)false;
-            var vendorId = (await _workContext.GetCurrentVendorAsync())?.Id ?? 0;
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            var vendorId = vendor?.Id ?? 0;
 
             //get low stock product and product combinations
             var products = await _productService.GetLowStockProductsAsync(vendorId: vendorId, loadPublishedOnly: publishedOnly);

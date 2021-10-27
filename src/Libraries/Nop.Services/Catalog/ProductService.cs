@@ -2389,8 +2389,9 @@ namespace Nop.Services.Catalog
             if (productReview is null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            var prh = await _productReviewHelpfulnessRepository.Table
-                .SingleOrDefaultAwaitAsync(async h => h.ProductReviewId == productReview.Id && h.CustomerId == (await _workContext.GetCurrentCustomerAsync()).Id);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var prh = _productReviewHelpfulnessRepository.Table
+                .SingleOrDefault(h => h.ProductReviewId == productReview.Id && h.CustomerId == customer.Id);
 
             if (prh is null)
             {
@@ -2398,7 +2399,7 @@ namespace Nop.Services.Catalog
                 prh = new ProductReviewHelpfulness
                 {
                     ProductReviewId = productReview.Id,
-                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                    CustomerId = customer.Id,
                     WasHelpful = helpfulness,
                 };
 
@@ -2452,8 +2453,10 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<bool> CanAddReviewAsync(int productId, int storeId = 0)
         {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             if (_catalogSettings.OneReviewPerProductFromCustomer)
-                return (await GetAllProductReviewsAsync(customerId: (await _workContext.GetCurrentCustomerAsync()).Id, productId: productId, storeId: storeId)).TotalCount == 0;
+                return (await GetAllProductReviewsAsync(customerId: customer.Id, productId: productId, storeId: storeId)).TotalCount == 0;
 
             return true;
         }

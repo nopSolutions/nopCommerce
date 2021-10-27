@@ -205,7 +205,8 @@ namespace Nop.Web.Factories
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (_forumSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer))
             {
-                var privateMessages = await _forumService.GetAllPrivateMessagesAsync((await _storeContext.GetCurrentStoreAsync()).Id,
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var privateMessages = await _forumService.GetAllPrivateMessagesAsync(store.Id,
                     0, customer.Id, false, null, false, string.Empty, 0, 1);
 
                 if (privateMessages.TotalCount > 0)
@@ -269,8 +270,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<LanguageSelectorModel> PrepareLanguageSelectorModelAsync()
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
             var availableLanguages = (await _languageService
-                    .GetAllLanguagesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+                    .GetAllLanguagesAsync(storeId: store.Id))
                     .Select(x => new LanguageModel
                     {
                         Id = x.Id,
@@ -297,8 +299,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CurrencySelectorModel> PrepareCurrencySelectorModelAsync()
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
             var availableCurrencies = await (await _currencyService
-                .GetAllCurrenciesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+                .GetAllCurrenciesAsync(storeId: store.Id))
                 .SelectAwait(async x =>
                 {
                     //currency char
@@ -963,8 +966,9 @@ namespace Nop.Web.Factories
 
                 if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                 {
+                    var store = await _storeContext.GetCurrentStoreAsync();
                     //URLs are localizable. Append SEO code
-                    foreach (var language in await _languageService.GetAllLanguagesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+                    foreach (var language in await _languageService.GetAllLanguagesAsync(storeId: store.Id))
                     {
                         foreach (var path in localizableDisallowPaths)
                         {

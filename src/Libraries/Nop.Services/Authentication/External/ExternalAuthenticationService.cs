@@ -150,11 +150,12 @@ namespace Nop.Services.Authentication.External
 
             //create registration request
             var customer = await _workContext.GetCurrentCustomerAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
             var registrationRequest = new CustomerRegistrationRequest(customer,
                 parameters.Email, parameters.Email,
                 CommonHelper.GenerateRandomDigitCode(20),
                 PasswordFormat.Hashed,
-                (await _storeContext.GetCurrentStoreAsync()).Id,
+                store.Id,
                 registrationIsApproved);
 
             //whether registration request has been completed successfully
@@ -253,7 +254,8 @@ namespace Nop.Services.Authentication.External
                 throw new ArgumentNullException(nameof(parameters));
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _authenticationPluginManager.IsPluginActiveAsync(parameters.ProviderSystemName, customer, (await _storeContext.GetCurrentStoreAsync()).Id))
+            var store = await _storeContext.GetCurrentStoreAsync();
+            if (!await _authenticationPluginManager.IsPluginActiveAsync(parameters.ProviderSystemName, customer, store.Id))
                 return ErrorAuthentication(new[] { "External authentication method cannot be loaded" }, returnUrl);
 
             //get current logged-in user

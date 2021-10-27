@@ -966,7 +966,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //remove associated products
                 if (previousProductType == ProductType.GroupedProduct && product.ProductType == ProductType.SimpleProduct)
                 {
-                    var storeId = (await _storeContext.GetCurrentStoreAsync())?.Id ?? 0;
+                    var store = await _storeContext.GetCurrentStoreAsync();
+                    var storeId = store?.Id ?? 0;
                     var vendorId = currentVendor?.Id ?? 0;
 
                     var associatedProducts = await _productService.GetAssociatedProductsAsync(product.Id, storeId, vendorId);
@@ -1125,8 +1126,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return NoContent();
 
             var currentVendor = await _workContext.GetCurrentVendorAsync();
-            await _productService.DeleteProductsAsync(await (await _productService.GetProductsByIdsAsync(selectedIds.ToArray()))
-                .WhereAwait(async p => currentVendor == null || p.VendorId == currentVendor.Id).ToListAsync());
+            await _productService.DeleteProductsAsync((await _productService.GetProductsByIdsAsync(selectedIds.ToArray()))
+                .Where(p => currentVendor == null || p.VendorId == currentVendor.Id).ToList());
 
             return Json(new { Result = true });
         }
@@ -2267,7 +2268,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var currentVendor = await _workContext.GetCurrentVendorAsync();
             if (currentVendor != null)
             {
-                products = await products.WhereAwait(async p => p.VendorId == currentVendor.Id).ToListAsync();
+                products = products.Where(p => p.VendorId == currentVendor.Id).ToList();
             }
 
             try
@@ -2354,7 +2355,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var currentVendor = await _workContext.GetCurrentVendorAsync();
             if (currentVendor != null)
             {
-                products = await products.WhereAwait(async p => p.VendorId == currentVendor.Id).ToListAsync();
+                products = products.Where(p => p.VendorId == currentVendor.Id).ToList();
             }
 
             try

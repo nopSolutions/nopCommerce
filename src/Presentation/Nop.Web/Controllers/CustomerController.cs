@@ -213,7 +213,9 @@ namespace Nop.Web.Controllers
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
 
-            var multiFactorAuthenticationProviders = await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            var multiFactorAuthenticationProviders = await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), store.Id);
             foreach (var provider in multiFactorAuthenticationProviders)
             {
                 var controlId = $"provider_{provider.PluginDescriptor.SystemName}";
@@ -319,7 +321,7 @@ namespace Nop.Web.Controllers
                 var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
                 foreach (var consent in consents)
                 {
-                    var previousConsentValue = await _gdprService.IsConsentAcceptedAsync(consent.Id, (await _workContext.GetCurrentCustomerAsync()).Id);
+                    var previousConsentValue = await _gdprService.IsConsentAcceptedAsync(consent.Id, customer.Id);
                     var controlId = $"consent{consent.Id}";
                     var cbConsent = form[controlId];
                     if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
@@ -1129,7 +1131,8 @@ namespace Nop.Web.Controllers
             await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
             //activating newsletter if need
-            var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
             if (newsletter != null && !newsletter.Active)
             {
                 newsletter.Active = true;
@@ -1778,8 +1781,10 @@ namespace Nop.Web.Controllers
             //log
             await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ExportData, await _localizationService.GetResourceAsync("Gdpr.Exported"));
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //export
-            var bytes = await _exportManager.ExportCustomerGdprInfoToXlsxAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var bytes = await _exportManager.ExportCustomerGdprInfoToXlsxAsync(customer, store.Id);
 
             return File(bytes, MimeTypes.TextXlsx, "customerdata.xlsx");
         }

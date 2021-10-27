@@ -541,8 +541,10 @@ namespace Nop.Web.Factories
             if (!_catalogSettings.UseAjaxLoadMenu)
                 cachedCategoriesModel = await PrepareCategorySimpleModelsAsync();
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //top menu topics
-            var topicModel = await (await _topicService.GetAllTopicsAsync((await _storeContext.GetCurrentStoreAsync()).Id, onlyIncludedInTopMenu: true))
+            var topicModel = await (await _topicService.GetAllTopicsAsync(store.Id, onlyIncludedInTopMenu: true))
                 .SelectAwait(async t => new TopMenuModel.TopicModel
                 {
                     Id = t.Id,
@@ -937,7 +939,8 @@ namespace Nop.Web.Factories
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
             {
-                var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var storeId = store.Id;
                 var featuredProducts = await _productService.GetManufacturerFeaturedProductsAsync(manufacturer.Id, storeId);
                 if (featuredProducts != null)
                     model.FeaturedProducts = (await _productModelFactory.PrepareProductOverviewModelsAsync(featuredProducts)).ToList();

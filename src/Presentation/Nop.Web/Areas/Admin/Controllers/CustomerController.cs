@@ -361,11 +361,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 //fill entity from model
                 var customer = model.ToEntity<Customer>();
+                var currentStore = await _storeContext.GetCurrentStoreAsync();
 
                 customer.CustomerGuid = Guid.NewGuid();
                 customer.CreatedOnUtc = DateTime.UtcNow;
                 customer.LastActivityDateUtc = DateTime.UtcNow;
-                customer.RegisteredInStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
+                customer.RegisteredInStoreId = currentStore.Id;
 
                 await _customerService.InsertCustomerAsync(customer);
 
@@ -1083,12 +1084,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     throw new NopException(await _localizationService.GetResourceAsync("PrivateMessages.SubjectCannotBeEmpty"));
                 if (string.IsNullOrWhiteSpace(model.SendPm.Message))
                     throw new NopException(await _localizationService.GetResourceAsync("PrivateMessages.MessageCannotBeEmpty"));
+                
+                var store = await _storeContext.GetCurrentStoreAsync();
 
                 var privateMessage = new PrivateMessage
                 {
-                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                    StoreId = store.Id,
                     ToCustomerId = customer.Id,
-                    FromCustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                    FromCustomerId = customer.Id,
                     Subject = model.SendPm.Subject,
                     Text = model.SendPm.Message,
                     IsDeletedByAuthor = false,
@@ -1594,7 +1597,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //_gdprService.InsertLog(customer, 0, GdprRequestType.ExportData, await _localizationService.GetResource("Gdpr.Exported"));
                 //export
                 //export
-                var bytes = await _exportManager.ExportCustomerGdprInfoToXlsxAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var bytes = await _exportManager.ExportCustomerGdprInfoToXlsxAsync(customer, store.Id);
 
                 return File(bytes, MimeTypes.TextXlsx, $"customerdata-{customer.Id}.xlsx");
             }

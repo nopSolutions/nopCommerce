@@ -527,10 +527,11 @@ namespace Nop.Services.Discounts
             if (discount.DiscountType == DiscountType.AssignedToOrderSubTotal ||
                 discount.DiscountType == DiscountType.AssignedToOrderTotal)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
                 //TODO: try to move into constructor
                 var shoppingCartService = EngineContext.Current.Resolve<IShoppingCartService>();
                 var cart = await shoppingCartService.GetShoppingCartAsync(customer,
-                    ShoppingCartType.ShoppingCart, storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                    ShoppingCartType.ShoppingCart, storeId: store.Id);
 
                 var cartProductIds = cart.Select(ci => ci.ProductId).ToArray();
                 

@@ -118,9 +118,11 @@ namespace Nop.Web.Factories
             var pageSize = _forumSettings.PrivateMessagesPageSize;
 
             var messages = new List<PrivateMessageModel>();
-
-            var list = await _forumService.GetAllPrivateMessagesAsync((await _storeContext.GetCurrentStoreAsync()).Id,
-                0, (await _workContext.GetCurrentCustomerAsync()).Id, null, null, false, string.Empty, page, pageSize);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var list = await _forumService.GetAllPrivateMessagesAsync(store.Id,
+                0, customer.Id, null, null, false, string.Empty, page, pageSize);
+            
             foreach (var pm in list)
                 messages.Add(await PreparePrivateMessageModelAsync(pm));
 
@@ -163,9 +165,10 @@ namespace Nop.Web.Factories
             var pageSize = _forumSettings.PrivateMessagesPageSize;
 
             var messages = new List<PrivateMessageModel>();
-
-            var list = await _forumService.GetAllPrivateMessagesAsync((await _storeContext.GetCurrentStoreAsync()).Id,
-                (await _workContext.GetCurrentCustomerAsync()).Id, 0, null, false, null, string.Empty, page, pageSize);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var list = await _forumService.GetAllPrivateMessagesAsync(store.Id,
+                customer.Id, 0, null, false, null, string.Empty, page, pageSize);
             foreach (var pm in list)
                 messages.Add(await PreparePrivateMessageModelAsync(pm));
 

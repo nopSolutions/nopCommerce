@@ -602,9 +602,12 @@ namespace Nop.Web.Factories
                 ItemClass = "customer-orders"
             });
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             if (_orderSettings.ReturnRequestsEnabled &&
-                (await _returnRequestService.SearchReturnRequestsAsync((await _storeContext.GetCurrentStoreAsync()).Id,
-                    (await _workContext.GetCurrentCustomerAsync()).Id, pageIndex: 0, pageSize: 1)).Any())
+                (await _returnRequestService.SearchReturnRequestsAsync(store.Id,
+                    customer.Id, pageIndex: 0, pageSize: 1)).Any())
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
@@ -744,7 +747,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CustomerAddressListModel> PrepareCustomerAddressListModelAsync()
         {
-            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
                 //enabled for the current store
                 .WhereAwait(async a => a.CountryId == null || await _storeMappingService.AuthorizeAsync(await _countryService.GetCountryByAddressAsync(a)))
                 .ToListAsync();
@@ -773,7 +778,8 @@ namespace Nop.Web.Factories
         public virtual async Task<CustomerDownloadableProductsModel> PrepareCustomerDownloadableProductsModelAsync()
         {
             var model = new CustomerDownloadableProductsModel();
-            var items = await _orderService.GetDownloadableOrderItemsAsync((await _workContext.GetCurrentCustomerAsync()).Id);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var items = await _orderService.GetDownloadableOrderItemsAsync(customer.Id);
             foreach (var item in items)
             {
                 var order = await _orderService.GetOrderByIdAsync(item.OrderId);
@@ -905,8 +911,9 @@ namespace Nop.Web.Factories
 
             model.IsEnabled = !string.IsNullOrEmpty(
                 await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute));
-
-            var multiFactorAuthenticationProviders = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id)).ToList();
+            
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var multiFactorAuthenticationProviders = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, store.Id)).ToList();
             foreach (var multiFactorAuthenticationProvider in multiFactorAuthenticationProviders)
             {
                 var providerModel = new MultiFactorAuthenticationProviderModel();
@@ -931,8 +938,9 @@ namespace Nop.Web.Factories
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var selectedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+            var store = await _storeContext.GetCurrentStoreAsync();
 
-            var multiFactorAuthenticationProvider = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id))
+            var multiFactorAuthenticationProvider = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, store.Id))
                     .FirstOrDefault(provider => provider.PluginDescriptor.SystemName == sysName);
 
             if (multiFactorAuthenticationProvider != null)

@@ -1303,10 +1303,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
+            var vendor = await _workContext.GetCurrentVendorAsync();
             //get associated products
             var associatedProducts = (await _productService.GetAssociatedProductsAsync(showHidden: true,
                 parentGroupedProductId: product.Id,
-                vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0)).ToPagedList(searchModel);
+                vendorId: vendor?.Id ?? 0)).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new AssociatedProductListModel().PrepareToGrid(searchModel, associatedProducts, () =>

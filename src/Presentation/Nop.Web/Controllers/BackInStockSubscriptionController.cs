@@ -172,8 +172,9 @@ namespace Nop.Web.Controllers
             var pageSize = 10;
 
             var customer = await _workContext.GetCurrentCustomerAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
             var list = await _backInStockSubscriptionService.GetAllSubscriptionsByCustomerIdAsync(customer.Id,
-                (await _storeContext.GetCurrentStoreAsync()).Id, pageIndex, pageSize);
+                store.Id, pageIndex, pageSize);
 
             var model = new CustomerBackInStockSubscriptionsModel();
 
@@ -222,7 +223,8 @@ namespace Nop.Web.Controllers
                     if (int.TryParse(id, out var subscriptionId))
                     {
                         var subscription = await _backInStockSubscriptionService.GetSubscriptionByIdAsync(subscriptionId);
-                        if (subscription != null && subscription.CustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+                        var customer = await _workContext.GetCurrentCustomerAsync();
+                        if (subscription != null && subscription.CustomerId == customer.Id)
                         {
                             await _backInStockSubscriptionService.DeleteSubscriptionAsync(subscription);
                         }

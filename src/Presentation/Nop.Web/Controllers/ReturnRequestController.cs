@@ -88,7 +88,8 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> ReturnRequest(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
-            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
             if (!await _orderProcessingService.IsReturnRequestAllowedAsync(order))
@@ -137,11 +138,12 @@ namespace Nop.Web.Controllers
                 {
                     var rrr = await _returnRequestService.GetReturnRequestReasonByIdAsync(model.ReturnRequestReasonId);
                     var rra = await _returnRequestService.GetReturnRequestActionByIdAsync(model.ReturnRequestActionId);
+                    var store = await _storeContext.GetCurrentStoreAsync();
 
                     var rr = new ReturnRequest
                     {
                         CustomNumber = "",
-                        StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                        StoreId = store.Id,
                         OrderItemId = orderItem.Id,
                         Quantity = quantity,
                         CustomerId = customer.Id,

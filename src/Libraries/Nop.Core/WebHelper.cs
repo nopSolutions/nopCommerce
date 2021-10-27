@@ -203,7 +203,7 @@ namespace Nop.Core
             if (string.IsNullOrEmpty(storeHost))
             {
                 //do not inject IWorkContext via constructor because it'll cause circular references
-                storeLocation = EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result?.Url
+                storeLocation = EngineContext.Current.Resolve<IStoreContext>().GetCurrentStore()?.Url
                     ?? throw new Exception("Current store cannot be loaded");
             }
 

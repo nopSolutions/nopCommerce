@@ -297,7 +297,8 @@ namespace Nop.Services.Tax
             var taxRate = decimal.Zero;
 
             //active tax provider
-            var activeTaxProvider = await _taxPluginManager.LoadPrimaryPluginAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var activeTaxProvider = await _taxPluginManager.LoadPrimaryPluginAsync(customer, store.Id);
             if (activeTaxProvider == null)
                 return (taxRate, true);
 

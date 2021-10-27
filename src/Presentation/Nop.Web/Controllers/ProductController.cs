@@ -190,7 +190,8 @@ namespace Nop.Web.Controllers
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
-                var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: store.Id);
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
                 //not found?
                 if (updatecartitem == null)
@@ -265,12 +266,15 @@ namespace Nop.Web.Controllers
                     Errors = errors
                 });
             }
+            
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
 
             var wrappedProduct = new ShoppingCartItem()
             {
-                StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                StoreId = store.Id,
                 ShoppingCartTypeId = (int)ShoppingCartType.ShoppingCart,
-                CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                CustomerId = customer.Id,
                 ProductId = product.Id,
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -335,7 +339,8 @@ namespace Nop.Web.Controllers
             if (!_catalogSettings.NewProductsEnabled)
                 return Content("");
 
-            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var storeId = store.Id;
             var products = await _productService.GetProductsMarkedAsNewAsync(storeId);
             var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
 
@@ -435,11 +440,12 @@ namespace Nop.Web.Controllers
                 if (rating < 1 || rating > 5)
                     rating = _catalogSettings.DefaultProductRatingValue;
                 var isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
+                var customer = await _workContext.GetCurrentCustomerAsync();
 
                 var productReview = new ProductReview
                 {
                     ProductId = product.Id,
-                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                    CustomerId = customer.Id,
                     Title = model.AddProductReview.Title,
                     ReviewText = model.AddProductReview.ReviewText,
                     Rating = rating,

@@ -29,10 +29,12 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Components
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             var model = new PaymentInfoModel
             {
                 DescriptionText = await _localizationService.GetLocalizedSettingAsync(_checkMoneyOrderPaymentSettings,
-                    x => x.DescriptionText, (await _workContext.GetWorkingLanguageAsync()).Id, (await _storeContext.GetCurrentStoreAsync()).Id)
+                    x => x.DescriptionText, (await _workContext.GetWorkingLanguageAsync()).Id, store.Id)
             };
 
             return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentInfo.cshtml", model);

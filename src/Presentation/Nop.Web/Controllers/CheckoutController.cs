@@ -123,8 +123,10 @@ namespace Nop.Web.Controllers
             if (_orderSettings.MinimumOrderPlacementInterval == 0)
                 return true;
 
-            var lastOrder = (await _orderService.SearchOrdersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
-                customerId: (await _workContext.GetCurrentCustomerAsync()).Id, pageSize: 1))
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            var lastOrder = (await _orderService.SearchOrdersAsync(storeId: store.Id,
+                customerId: customer.Id, pageSize: 1))
                 .FirstOrDefault();
             if (lastOrder == null)
                 return true;
@@ -161,8 +163,9 @@ namespace Nop.Web.Controllers
             var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
             var selectedPoint = (await _shippingService.GetPickupPointsAsync(customer.BillingAddressId ?? 0,
-                customer, pickupPoint[1], (await _storeContext.GetCurrentStoreAsync()).Id)).PickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
+                customer, pickupPoint[1], store.Id)).PickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
 
             if (selectedPoint == null)
                 throw new Exception("Pickup point is not allowed");
@@ -286,7 +289,8 @@ namespace Nop.Web.Controllers
             }
             if (order == null)
             {
-                order = (await _orderService.SearchOrdersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                var store = await _storeContext.GetCurrentStoreAsync();
+                order = (await _orderService.SearchOrdersAsync(storeId: store.Id,
                 customerId: customer.Id, pageSize: 1))
                     .FirstOrDefault();
             }
@@ -312,7 +316,8 @@ namespace Nop.Web.Controllers
         /// <param name="addressId"></param>
         public virtual async Task<IActionResult> GetAddressById(int addressId)
         {
-            var address = await _customerService.GetCustomerAddressAsync((await _workContext.GetCurrentCustomerAsync()).Id, addressId);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
 
@@ -337,7 +342,8 @@ namespace Nop.Web.Controllers
             try
             {
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
                 if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
@@ -386,7 +392,8 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> DeleteEditAddress(int addressId, bool opc = false)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
             if (!cart.Any())
                 throw new Exception("Your cart is empty");
 
@@ -428,7 +435,8 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("ShoppingCart");
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
@@ -588,7 +596,8 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("ShoppingCart");
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
@@ -624,8 +633,9 @@ namespace Nop.Web.Controllers
 
             if (_shippingSettings.AllowPickupInStore)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
                 //set value indicating that "pick up in store" option has not been chosen
-                await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, (await _storeContext.GetCurrentStoreAsync()).Id);
+                await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
             }
 
             return RedirectToRoute("CheckoutShippingMethod");
@@ -1078,7 +1088,8 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("ShoppingCart");
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
@@ -1181,11 +1192,12 @@ namespace Nop.Web.Controllers
             if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
                 shippingMethodModel.ShippingMethods.Count == 1)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
                 //if we have only one shipping method, then a customer doesn't have to choose a shipping method
                 await _genericAttributeService.SaveAttributeAsync(customer,
                     NopCustomerDefaults.SelectedShippingOptionAttribute,
                     shippingMethodModel.ShippingMethods.First().ShippingOption,
-                    (await _storeContext.GetCurrentStoreAsync()).Id);
+                    store.Id);
 
                 //load next step
                 return await OpcLoadStepAfterShippingMethod(cart);
@@ -1311,7 +1323,8 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("ShoppingCart");
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");

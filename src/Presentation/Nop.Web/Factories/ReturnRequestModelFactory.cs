@@ -130,8 +130,10 @@ namespace Nop.Web.Factories
         public virtual async Task<CustomerReturnRequestsModel> PrepareCustomerReturnRequestsModelAsync()
         {
             var model = new CustomerReturnRequestsModel();
-
-            var returnRequests = await _returnRequestService.SearchReturnRequestsAsync((await _storeContext.GetCurrentStoreAsync()).Id, (await _workContext.GetCurrentCustomerAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var returnRequests = await _returnRequestService.SearchReturnRequestsAsync(store.Id, customer.Id);
+            
             foreach (var returnRequest in returnRequests)
             {
                 var orderItem = await _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);

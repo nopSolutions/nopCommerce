@@ -358,11 +358,13 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     zipcode = billingAddress?.ZipPostalCode
                 };
 
+                var store = await _storeContext.GetCurrentStoreAsync();
+
                 //prepare cart data
                 var cartData = new
                 {
                     id = order.Id,
-                    affiliation = customer.AffiliateId > 0 ? customer.AffiliateId.ToString() : (await _storeContext.GetCurrentStoreAsync()).Name,
+                    affiliation = customer.AffiliateId > 0 ? customer.AffiliateId.ToString() : store.Name,
                     date = order.PaidDateUtc?.ToString("yyyy-MM-dd"),
                     subtotal = order.OrderSubtotalInclTax,
                     shipping = order.OrderShippingInclTax,

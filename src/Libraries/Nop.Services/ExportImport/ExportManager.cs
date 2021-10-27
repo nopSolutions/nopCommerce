@@ -695,7 +695,8 @@ namespace Nop.Services.ExportImport
                     await manager.WriteToXlsxAsync(worksheet, row++);
 
                     //a vendor should have access only to his products
-                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0);
+                    var vendor = await _workContext.GetCurrentVendorAsync();
+                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: vendor?.Id ?? 0);
 
                     if (!orderItems.Any())
                         continue;

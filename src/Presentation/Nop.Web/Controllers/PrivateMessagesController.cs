@@ -88,7 +88,9 @@ namespace Nop.Web.Controllers
                         var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
                         if (pm != null)
                         {
-                            if (pm.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+                            var customer = await _workContext.GetCurrentCustomerAsync();
+
+                            if (pm.ToCustomerId == customer.Id)
                             {
                                 pm.IsDeletedByRecipient = true;
                                 await _forumService.UpdatePrivateMessageAsync(pm);
@@ -116,7 +118,9 @@ namespace Nop.Web.Controllers
                         var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
                         if (pm != null)
                         {
-                            if (pm.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+                            var customer = await _workContext.GetCurrentCustomerAsync();
+
+                            if (pm.ToCustomerId == customer.Id)
                             {
                                 pm.IsRead = false;
                                 await _forumService.UpdatePrivateMessageAsync(pm);
@@ -145,7 +149,9 @@ namespace Nop.Web.Controllers
                         var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
                         if (pm != null)
                         {
-                            if (pm.FromCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+                            var customer = await _workContext.GetCurrentCustomerAsync();
+
+                            if (pm.FromCustomerId == customer.Id)
                             {
                                 pm.IsDeletedByAuthor = true;
                                 await _forumService.UpdatePrivateMessageAsync(pm);
@@ -240,10 +246,11 @@ namespace Nop.Web.Controllers
                     }
 
                     var nowUtc = DateTime.UtcNow;
+                    var store = await _storeContext.GetCurrentStoreAsync();
 
                     var privateMessage = new PrivateMessage
                     {
-                        StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                        StoreId = store.Id,
                         ToCustomerId = toCustomer.Id,
                         FromCustomerId = customer.Id,
                         Subject = subject,
