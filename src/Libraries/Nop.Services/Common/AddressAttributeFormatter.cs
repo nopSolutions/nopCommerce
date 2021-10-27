@@ -15,10 +15,10 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
+        protected IAddressAttributeParser AddressAttributeParser { get; }
+        protected IAddressAttributeService AddressAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -29,10 +29,10 @@ namespace Nop.Services.Common
             ILocalizationService localizationService,
             IWorkContext workContext)
         {
-            _addressAttributeParser = addressAttributeParser;
-            _addressAttributeService = addressAttributeService;
-            _localizationService = localizationService;
-            _workContext = workContext;
+            AddressAttributeParser = addressAttributeParser;
+            AddressAttributeService = addressAttributeService;
+            LocalizationService = localizationService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -54,12 +54,12 @@ namespace Nop.Services.Common
             bool htmlEncode = true)
         {
             var result = new StringBuilder();
-            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
-            var attributes = await _addressAttributeParser.ParseAddressAttributesAsync(attributesXml);
+            var currentLanguage = await WorkContext.GetWorkingLanguageAsync();
+            var attributes = await AddressAttributeParser.ParseAddressAttributesAsync(attributesXml);
             for (var i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
-                var valuesStr = _addressAttributeParser.ParseValues(attributesXml, attribute.Id);
+                var valuesStr = AddressAttributeParser.ParseValues(attributesXml, attribute.Id);
                 for (var j = 0; j < valuesStr.Count; j++)
                 {
                     var valueStr = valuesStr[j];
@@ -70,7 +70,7 @@ namespace Nop.Services.Common
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id);
+                            var attributeName = await LocalizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id);
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
@@ -85,7 +85,7 @@ namespace Nop.Services.Common
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {valueStr}";
+                            formattedAttribute = $"{await LocalizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {valueStr}";
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
@@ -95,10 +95,10 @@ namespace Nop.Services.Common
                     {
                         if (int.TryParse(valueStr, out var attributeValueId))
                         {
-                            var attributeValue = await _addressAttributeService.GetAddressAttributeValueByIdAsync(attributeValueId);
+                            var attributeValue = await AddressAttributeService.GetAddressAttributeValueByIdAsync(attributeValueId);
                             if (attributeValue != null)
                             {
-                                formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
+                                formattedAttribute = $"{await LocalizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {await LocalizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
                             }
                             //encode (if required)
                             if (htmlEncode)

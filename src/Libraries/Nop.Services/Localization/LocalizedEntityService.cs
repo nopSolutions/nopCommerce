@@ -19,9 +19,9 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly LocalizationSettings _localizationSettings;
+        protected IRepository<LocalizedProperty> LocalizedPropertyRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected LocalizationSettings LocalizationSettings { get; }
 
         #endregion
 
@@ -31,9 +31,9 @@ namespace Nop.Services.Localization
             IStaticCacheManager staticCacheManager,
             LocalizationSettings localizationSettings)
         {
-            _localizedPropertyRepository = localizedPropertyRepository;
-            _staticCacheManager = staticCacheManager;
-            _localizationSettings = localizationSettings;
+            LocalizedPropertyRepository = localizedPropertyRepository;
+            StaticCacheManager = staticCacheManager;
+            LocalizationSettings = localizationSettings;
         }
 
         #endregion
@@ -54,7 +54,7 @@ namespace Nop.Services.Localization
             if (entityId == 0 || string.IsNullOrEmpty(localeKeyGroup))
                 return new List<LocalizedProperty>();
 
-            var query = from lp in _localizedPropertyRepository.Table
+            var query = from lp in LocalizedPropertyRepository.Table
                         orderby lp.Id
                         where lp.EntityId == entityId &&
                               lp.LocaleKeyGroup == localeKeyGroup
@@ -74,7 +74,7 @@ namespace Nop.Services.Localization
         /// </returns>
         protected virtual async Task<IList<LocalizedProperty>> GetAllLocalizedPropertiesAsync()
         {
-            return await _localizedPropertyRepository.GetAllAsync(query =>
+            return await LocalizedPropertyRepository.GetAllAsync(query =>
             {
                 return from lp in query
                     select lp;
@@ -88,7 +88,7 @@ namespace Nop.Services.Localization
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task DeleteLocalizedPropertyAsync(LocalizedProperty localizedProperty)
         {
-            await _localizedPropertyRepository.DeleteAsync(localizedProperty);
+            await LocalizedPropertyRepository.DeleteAsync(localizedProperty);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Nop.Services.Localization
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InsertLocalizedPropertyAsync(LocalizedProperty localizedProperty)
         {
-            await _localizedPropertyRepository.InsertAsync(localizedProperty);
+            await LocalizedPropertyRepository.InsertAsync(localizedProperty);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Nop.Services.Localization
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalizedPropertyAsync(LocalizedProperty localizedProperty)
         {
-            await _localizedPropertyRepository.UpdateAsync(localizedProperty);
+            await LocalizedPropertyRepository.UpdateAsync(localizedProperty);
         }
 
         #endregion
@@ -128,16 +128,16 @@ namespace Nop.Services.Localization
         /// </returns>
         public virtual async Task<string> GetLocalizedValueAsync(int languageId, int entityId, string localeKeyGroup, string localeKey)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertyCacheKey
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertyCacheKey
                 , languageId, entityId, localeKeyGroup, localeKey);
 
-            return await _staticCacheManager.GetAsync(key, async () =>
+            return await StaticCacheManager.GetAsync(key, async () =>
             {
-                var source = _localizationSettings.LoadAllLocalizedPropertiesOnStartup
+                var source = LocalizationSettings.LoadAllLocalizedPropertiesOnStartup
                     //load all records (we know they are cached)
                     ? (await GetAllLocalizedPropertiesAsync()).AsQueryable()
                     //gradual loading
-                    : _localizedPropertyRepository.Table;
+                    : LocalizedPropertyRepository.Table;
 
                 var query = from lp in source
                     where lp.LanguageId == languageId &&

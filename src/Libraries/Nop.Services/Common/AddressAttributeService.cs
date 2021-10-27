@@ -14,9 +14,9 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IRepository<AddressAttribute> _addressAttributeRepository;
-        private readonly IRepository<AddressAttributeValue> _addressAttributeValueRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected IRepository<AddressAttribute> AddressAttributeRepository { get; }
+        protected IRepository<AddressAttributeValue> AddressAttributeValueRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
 
         #endregion
 
@@ -26,9 +26,9 @@ namespace Nop.Services.Common
             IRepository<AddressAttributeValue> addressAttributeValueRepository,
             IStaticCacheManager staticCacheManager)
         {
-            _addressAttributeRepository = addressAttributeRepository;
-            _addressAttributeValueRepository = addressAttributeValueRepository;
-            _staticCacheManager = staticCacheManager;
+            AddressAttributeRepository = addressAttributeRepository;
+            AddressAttributeValueRepository = addressAttributeValueRepository;
+            StaticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -42,7 +42,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAddressAttributeAsync(AddressAttribute addressAttribute)
         {
-            await _addressAttributeRepository.DeleteAsync(addressAttribute);
+            await AddressAttributeRepository.DeleteAsync(addressAttribute);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task<IList<AddressAttribute>> GetAllAddressAttributesAsync()
         {
-            return await _addressAttributeRepository.GetAllAsync(query=>
+            return await AddressAttributeRepository.GetAllAsync(query=>
             {
                 return from aa in query
                     orderby aa.DisplayOrder, aa.Id
@@ -72,7 +72,7 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task<AddressAttribute> GetAddressAttributeByIdAsync(int addressAttributeId)
         {
-            return await _addressAttributeRepository.GetByIdAsync(addressAttributeId, cache => default);
+            return await AddressAttributeRepository.GetByIdAsync(addressAttributeId, cache => default);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertAddressAttributeAsync(AddressAttribute addressAttribute)
         {
-            await _addressAttributeRepository.InsertAsync(addressAttribute);
+            await AddressAttributeRepository.InsertAsync(addressAttribute);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateAddressAttributeAsync(AddressAttribute addressAttribute)
         {
-            await _addressAttributeRepository.UpdateAsync(addressAttribute);
+            await AddressAttributeRepository.UpdateAsync(addressAttribute);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAddressAttributeValueAsync(AddressAttributeValue addressAttributeValue)
         {
-            await _addressAttributeValueRepository.DeleteAsync(addressAttributeValue);
+            await AddressAttributeValueRepository.DeleteAsync(addressAttributeValue);
         }
 
         /// <summary>
@@ -115,13 +115,13 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task<IList<AddressAttributeValue>> GetAddressAttributeValuesAsync(int addressAttributeId)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCommonDefaults.AddressAttributeValuesByAttributeCacheKey, addressAttributeId);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopCommonDefaults.AddressAttributeValuesByAttributeCacheKey, addressAttributeId);
 
-            var query = from aav in _addressAttributeValueRepository.Table
+            var query = from aav in AddressAttributeValueRepository.Table
                 orderby aav.DisplayOrder, aav.Id
                 where aav.AddressAttributeId == addressAttributeId
                 select aav;
-            var addressAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
+            var addressAttributeValues = await StaticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return addressAttributeValues;
         }
@@ -136,7 +136,7 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task<AddressAttributeValue> GetAddressAttributeValueByIdAsync(int addressAttributeValueId)
         {
-            return await _addressAttributeValueRepository.GetByIdAsync(addressAttributeValueId, cache => default);
+            return await AddressAttributeValueRepository.GetByIdAsync(addressAttributeValueId, cache => default);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertAddressAttributeValueAsync(AddressAttributeValue addressAttributeValue)
         {
-            await _addressAttributeValueRepository.InsertAsync(addressAttributeValue);
+            await AddressAttributeValueRepository.InsertAsync(addressAttributeValue);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateAddressAttributeValueAsync(AddressAttributeValue addressAttributeValue)
         {
-            await _addressAttributeValueRepository.UpdateAsync(addressAttributeValue);
+            await AddressAttributeValueRepository.UpdateAsync(addressAttributeValue);
         }
 
         #endregion

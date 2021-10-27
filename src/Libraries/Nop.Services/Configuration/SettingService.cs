@@ -20,8 +20,8 @@ namespace Nop.Services.Configuration
     {
         #region Fields
 
-        private readonly IRepository<Setting> _settingRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected IRepository<Setting> SettingRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
 
         #endregion
 
@@ -30,8 +30,8 @@ namespace Nop.Services.Configuration
         public SettingService(IRepository<Setting> settingRepository,
             IStaticCacheManager staticCacheManager)
         {
-            _settingRepository = settingRepository;
-            _staticCacheManager = staticCacheManager;
+            SettingRepository = settingRepository;
+            StaticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace Nop.Services.Configuration
         /// </returns>
         protected virtual async Task<IDictionary<string, IList<Setting>>> GetAllSettingsDictionaryAsync()
         {
-            return await _staticCacheManager.GetAsync(NopSettingsDefaults.SettingsAllAsDictionaryCacheKey, async () =>
+            return await StaticCacheManager.GetAsync(NopSettingsDefaults.SettingsAllAsDictionaryCacheKey, async () =>
             {
                 var settings = await GetAllSettingsAsync();
 
@@ -129,7 +129,7 @@ namespace Nop.Services.Configuration
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertSettingAsync(Setting setting, bool clearCache = true)
         {
-            await _settingRepository.InsertAsync(setting);
+            await SettingRepository.InsertAsync(setting);
 
             //cache
             if (clearCache)
@@ -147,7 +147,7 @@ namespace Nop.Services.Configuration
             if (setting == null)
                 throw new ArgumentNullException(nameof(setting));
 
-            await _settingRepository.UpdateAsync(setting);
+            await SettingRepository.UpdateAsync(setting);
 
             //cache
             if (clearCache)
@@ -161,7 +161,7 @@ namespace Nop.Services.Configuration
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteSettingAsync(Setting setting)
         {
-            await _settingRepository.DeleteAsync(setting);
+            await SettingRepository.DeleteAsync(setting);
 
             //cache
             await ClearCacheAsync();
@@ -174,7 +174,7 @@ namespace Nop.Services.Configuration
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteSettingsAsync(IList<Setting> settings)
         {
-            await _settingRepository.DeleteAsync(settings);
+            await SettingRepository.DeleteAsync(settings);
 
             //cache
             await ClearCacheAsync();
@@ -190,7 +190,7 @@ namespace Nop.Services.Configuration
         /// </returns>
         public virtual async Task<Setting> GetSettingByIdAsync(int settingId)
         {
-            return await _settingRepository.GetByIdAsync(settingId, cache => default);
+            return await SettingRepository.GetByIdAsync(settingId, cache => default);
         }
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace Nop.Services.Configuration
         /// </returns>
         public virtual async Task<IList<Setting>> GetAllSettingsAsync()
         {
-            var settings = await _settingRepository.GetAllAsync(query =>
+            var settings = await SettingRepository.GetAllAsync(query =>
             {
                 return from s in query
                        orderby s.Name, s.StoreId
@@ -492,7 +492,7 @@ namespace Nop.Services.Configuration
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ClearCacheAsync()
         {
-            await _staticCacheManager.RemoveByPrefixAsync(NopEntityCacheDefaults<Setting>.Prefix);
+            await StaticCacheManager.RemoveByPrefixAsync(NopEntityCacheDefaults<Setting>.Prefix);
         }
 
         /// <summary>

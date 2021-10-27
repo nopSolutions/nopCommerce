@@ -16,10 +16,10 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
-        private readonly IRepository<Currency> _currencyRepository;
-        private readonly IStoreMappingService _storeMappingService;
+        protected CurrencySettings CurrencySettings { get; }
+        protected IExchangeRatePluginManager ExchangeRatePluginManager { get; }
+        protected IRepository<Currency> CurrencyRepository { get; }
+        protected IStoreMappingService StoreMappingService { get; }
 
         #endregion
 
@@ -30,10 +30,10 @@ namespace Nop.Services.Directory
             IRepository<Currency> currencyRepository,
             IStoreMappingService storeMappingService)
         {
-            _currencySettings = currencySettings;
-            _exchangeRatePluginManager = exchangeRatePluginManager;
-            _currencyRepository = currencyRepository;
-            _storeMappingService = storeMappingService;
+            CurrencySettings = currencySettings;
+            ExchangeRatePluginManager = exchangeRatePluginManager;
+            CurrencyRepository = currencyRepository;
+            StoreMappingService = storeMappingService;
         }
 
         #endregion
@@ -49,7 +49,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCurrencyAsync(Currency currency)
         {
-            await _currencyRepository.DeleteAsync(currency);
+            await CurrencyRepository.DeleteAsync(currency);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<Currency> GetCurrencyByIdAsync(int currencyId)
         {
-            return await _currencyRepository.GetByIdAsync(currencyId, cache => default);
+            return await CurrencyRepository.GetByIdAsync(currencyId, cache => default);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<IList<Currency>> GetAllCurrenciesAsync(bool showHidden = false, int storeId = 0)
         {
-            var currencies = await _currencyRepository.GetAllAsync(query =>
+            var currencies = await CurrencyRepository.GetAllAsync(query =>
             {
                 if (!showHidden)
                     query = query.Where(c => c.Published);
@@ -106,7 +106,7 @@ namespace Nop.Services.Directory
             //store mapping
             if (storeId > 0)
                 currencies = await currencies
-                    .WhereAwait(async c => await _storeMappingService.AuthorizeAsync(c, storeId))
+                    .WhereAwait(async c => await StoreMappingService.AuthorizeAsync(c, storeId))
                     .ToListAsync();
 
             return currencies;
@@ -119,7 +119,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCurrencyAsync(Currency currency)
         {
-            await _currencyRepository.InsertAsync(currency);
+            await CurrencyRepository.InsertAsync(currency);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCurrencyAsync(Currency currency)
         {
-            await _currencyRepository.UpdateAsync(currency);
+            await CurrencyRepository.UpdateAsync(currency);
         }
 
         #endregion
@@ -146,10 +146,10 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<IList<ExchangeRate>> GetCurrencyLiveRatesAsync(string currencyCode = null)
         {
-            var exchangeRateProvider = await _exchangeRatePluginManager.LoadPrimaryPluginAsync()
+            var exchangeRateProvider = await ExchangeRatePluginManager.LoadPrimaryPluginAsync()
                 ?? throw new Exception("Active exchange rate provider cannot be loaded");
 
-            currencyCode ??= (await GetCurrencyByIdAsync(_currencySettings.PrimaryExchangeRateCurrencyId))?.CurrencyCode
+            currencyCode ??= (await GetCurrencyByIdAsync(CurrencySettings.PrimaryExchangeRateCurrencyId))?.CurrencyCode
                 ?? throw new NopException("Primary exchange rate currency is not set");
 
             return await exchangeRateProvider.GetCurrencyLiveRatesAsync(currencyCode);
@@ -183,7 +183,7 @@ namespace Nop.Services.Directory
             if (sourceCurrencyCode == null)
                 throw new ArgumentNullException(nameof(sourceCurrencyCode));
 
-            var primaryStoreCurrency = await GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+            var primaryStoreCurrency = await GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId);
             var result = await ConvertCurrencyAsync(amount, sourceCurrencyCode, primaryStoreCurrency);
             
             return result;
@@ -200,7 +200,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<decimal> ConvertFromPrimaryStoreCurrencyAsync(decimal amount, Currency targetCurrencyCode)
         {
-            var primaryStoreCurrency = await GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+            var primaryStoreCurrency = await GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId);
             var result = await ConvertCurrencyAsync(amount, primaryStoreCurrency, targetCurrencyCode);
             
             return result;
@@ -248,7 +248,7 @@ namespace Nop.Services.Directory
             if (sourceCurrencyCode == null)
                 throw new ArgumentNullException(nameof(sourceCurrencyCode));
 
-            var primaryExchangeRateCurrency = await GetCurrencyByIdAsync(_currencySettings.PrimaryExchangeRateCurrencyId);
+            var primaryExchangeRateCurrency = await GetCurrencyByIdAsync(CurrencySettings.PrimaryExchangeRateCurrencyId);
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
@@ -278,7 +278,7 @@ namespace Nop.Services.Directory
             if (targetCurrencyCode == null)
                 throw new ArgumentNullException(nameof(targetCurrencyCode));
 
-            var primaryExchangeRateCurrency = await GetCurrencyByIdAsync(_currencySettings.PrimaryExchangeRateCurrencyId);
+            var primaryExchangeRateCurrency = await GetCurrencyByIdAsync(CurrencySettings.PrimaryExchangeRateCurrencyId);
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 

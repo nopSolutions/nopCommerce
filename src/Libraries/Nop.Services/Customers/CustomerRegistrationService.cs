@@ -24,24 +24,24 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly IAuthenticationService _authenticationService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly INotificationService _notificationService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly RewardPointsSettings _rewardPointsSettings;
+        protected CustomerSettings CustomerSettings { get; }
+        protected IAuthenticationService AuthenticationService { get; }
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IEncryptionService EncryptionService { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IMultiFactorAuthenticationPluginManager MultiFactorAuthenticationPluginManager { get; }
+        protected INewsLetterSubscriptionService NewsLetterSubscriptionService { get; }
+        protected INotificationService NotificationService { get; }
+        protected IRewardPointService RewardPointService { get; }
+        protected IShoppingCartService ShoppingCartService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IStoreService StoreService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected IWorkflowMessageService WorkflowMessageService { get; }
+        protected RewardPointsSettings RewardPointsSettings { get; }
 
         #endregion
 
@@ -66,24 +66,24 @@ namespace Nop.Services.Customers
             IWorkflowMessageService workflowMessageService,
             RewardPointsSettings rewardPointsSettings)
         {
-            _customerSettings = customerSettings;
-            _authenticationService = authenticationService;
-            _customerActivityService = customerActivityService;
-            _customerService = customerService;
-            _encryptionService = encryptionService;
-            _eventPublisher = eventPublisher;
-            _genericAttributeService = genericAttributeService;
-            _localizationService = localizationService;
-            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
-            _notificationService = notificationService;
-            _rewardPointService = rewardPointService;
-            _shoppingCartService = shoppingCartService;
-            _storeContext = storeContext;
-            _storeService = storeService;
-            _workContext = workContext;
-            _workflowMessageService = workflowMessageService;
-            _rewardPointsSettings = rewardPointsSettings;
+            CustomerSettings = customerSettings;
+            AuthenticationService = authenticationService;
+            CustomerActivityService = customerActivityService;
+            CustomerService = customerService;
+            EncryptionService = encryptionService;
+            EventPublisher = eventPublisher;
+            GenericAttributeService = genericAttributeService;
+            LocalizationService = localizationService;
+            MultiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
+            NewsLetterSubscriptionService = newsLetterSubscriptionService;
+            NotificationService = notificationService;
+            RewardPointService = rewardPointService;
+            ShoppingCartService = shoppingCartService;
+            StoreContext = storeContext;
+            StoreService = storeService;
+            WorkContext = workContext;
+            WorkflowMessageService = workflowMessageService;
+            RewardPointsSettings = rewardPointsSettings;
         }
 
         #endregion
@@ -108,10 +108,10 @@ namespace Nop.Services.Customers
                     savedPassword = enteredPassword;
                     break;
                 case PasswordFormat.Encrypted:
-                    savedPassword = _encryptionService.EncryptText(enteredPassword);
+                    savedPassword = EncryptionService.EncryptText(enteredPassword);
                     break;
                 case PasswordFormat.Hashed:
-                    savedPassword = _encryptionService.CreatePasswordHash(enteredPassword, customerPassword.PasswordSalt, _customerSettings.HashedPasswordFormat);
+                    savedPassword = EncryptionService.CreatePasswordHash(enteredPassword, customerPassword.PasswordSalt, CustomerSettings.HashedPasswordFormat);
                     break;
             }
 
@@ -136,9 +136,9 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<CustomerLoginResults> ValidateCustomerAsync(string usernameOrEmail, string password)
         {
-            var customer = _customerSettings.UsernamesEnabled ?
-                await _customerService.GetCustomerByUsernameAsync(usernameOrEmail) :
-                await _customerService.GetCustomerByEmailAsync(usernameOrEmail);
+            var customer = CustomerSettings.UsernamesEnabled ?
+                await CustomerService.GetCustomerByUsernameAsync(usernameOrEmail) :
+                await CustomerService.GetCustomerByEmailAsync(usernameOrEmail);
 
             if (customer == null)
                 return CustomerLoginResults.CustomerNotExist;
@@ -147,44 +147,44 @@ namespace Nop.Services.Customers
             if (!customer.Active)
                 return CustomerLoginResults.NotActive;
             //only registered can login
-            if (!await _customerService.IsRegisteredAsync(customer))
+            if (!await CustomerService.IsRegisteredAsync(customer))
                 return CustomerLoginResults.NotRegistered;
             //check whether a customer is locked out
             if (customer.CannotLoginUntilDateUtc.HasValue && customer.CannotLoginUntilDateUtc.Value > DateTime.UtcNow)
                 return CustomerLoginResults.LockedOut;
 
-            if (!PasswordsMatch(await _customerService.GetCurrentPasswordAsync(customer.Id), password))
+            if (!PasswordsMatch(await CustomerService.GetCurrentPasswordAsync(customer.Id), password))
             {
                 //wrong password
                 customer.FailedLoginAttempts++;
-                if (_customerSettings.FailedPasswordAllowedAttempts > 0 &&
-                    customer.FailedLoginAttempts >= _customerSettings.FailedPasswordAllowedAttempts)
+                if (CustomerSettings.FailedPasswordAllowedAttempts > 0 &&
+                    customer.FailedLoginAttempts >= CustomerSettings.FailedPasswordAllowedAttempts)
                 {
                     //lock out
-                    customer.CannotLoginUntilDateUtc = DateTime.UtcNow.AddMinutes(_customerSettings.FailedPasswordLockoutMinutes);
+                    customer.CannotLoginUntilDateUtc = DateTime.UtcNow.AddMinutes(CustomerSettings.FailedPasswordLockoutMinutes);
                     //reset the counter
                     customer.FailedLoginAttempts = 0;
                 }
 
-                await _customerService.UpdateCustomerAsync(customer);
+                await CustomerService.UpdateCustomerAsync(customer);
 
                 return CustomerLoginResults.WrongPassword;
             }
 
-            var selectedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var methodIsActive = await _multiFactorAuthenticationPluginManager.IsPluginActiveAsync(selectedProvider, customer, store.Id);
+            var selectedProvider = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var methodIsActive = await MultiFactorAuthenticationPluginManager.IsPluginActiveAsync(selectedProvider, customer, store.Id);
             if (methodIsActive)
                 return CustomerLoginResults.MultiFactorAuthenticationRequired;
             if (!string.IsNullOrEmpty(selectedProvider))
-                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("MultiFactorAuthentication.Notification.SelectedMethodIsNotActive"));
+                NotificationService.WarningNotification(await LocalizationService.GetResourceAsync("MultiFactorAuthentication.Notification.SelectedMethodIsNotActive"));
 
             //update login details
             customer.FailedLoginAttempts = 0;
             customer.CannotLoginUntilDateUtc = null;
             customer.RequireReLogin = false;
             customer.LastLoginDateUtc = DateTime.UtcNow;
-            await _customerService.UpdateCustomerAsync(customer);
+            await CustomerService.UpdateCustomerAsync(customer);
 
             return CustomerLoginResults.Successful;
         }
@@ -218,7 +218,7 @@ namespace Nop.Services.Customers
                 return result;
             }
 
-            if (await _customerService.IsRegisteredAsync(request.Customer))
+            if (await CustomerService.IsRegisteredAsync(request.Customer))
             {
                 result.AddError("Current customer is already registered");
                 return result;
@@ -226,38 +226,38 @@ namespace Nop.Services.Customers
 
             if (string.IsNullOrEmpty(request.Email))
             {
-                result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.EmailIsNotProvided"));
+                result.AddError(await LocalizationService.GetResourceAsync("Account.Register.Errors.EmailIsNotProvided"));
                 return result;
             }
 
             if (!CommonHelper.IsValidEmail(request.Email))
             {
-                result.AddError(await _localizationService.GetResourceAsync("Common.WrongEmail"));
+                result.AddError(await LocalizationService.GetResourceAsync("Common.WrongEmail"));
                 return result;
             }
 
             if (string.IsNullOrWhiteSpace(request.Password))
             {
-                result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.PasswordIsNotProvided"));
+                result.AddError(await LocalizationService.GetResourceAsync("Account.Register.Errors.PasswordIsNotProvided"));
                 return result;
             }
 
-            if (_customerSettings.UsernamesEnabled && string.IsNullOrEmpty(request.Username))
+            if (CustomerSettings.UsernamesEnabled && string.IsNullOrEmpty(request.Username))
             {
-                result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.UsernameIsNotProvided"));
+                result.AddError(await LocalizationService.GetResourceAsync("Account.Register.Errors.UsernameIsNotProvided"));
                 return result;
             }
 
             //validate unique user
-            if (await _customerService.GetCustomerByEmailAsync(request.Email) != null)
+            if (await CustomerService.GetCustomerByEmailAsync(request.Email) != null)
             {
-                result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.EmailAlreadyExists"));
+                result.AddError(await LocalizationService.GetResourceAsync("Account.Register.Errors.EmailAlreadyExists"));
                 return result;
             }
 
-            if (_customerSettings.UsernamesEnabled && await _customerService.GetCustomerByUsernameAsync(request.Username) != null)
+            if (CustomerSettings.UsernamesEnabled && await CustomerService.GetCustomerByUsernameAsync(request.Username) != null)
             {
-                result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.UsernameAlreadyExists"));
+                result.AddError(await LocalizationService.GetResourceAsync("Account.Register.Errors.UsernameAlreadyExists"));
                 return result;
             }
 
@@ -277,43 +277,43 @@ namespace Nop.Services.Customers
                     customerPassword.Password = request.Password;
                     break;
                 case PasswordFormat.Encrypted:
-                    customerPassword.Password = _encryptionService.EncryptText(request.Password);
+                    customerPassword.Password = EncryptionService.EncryptText(request.Password);
                     break;
                 case PasswordFormat.Hashed:
-                    var saltKey = _encryptionService.CreateSaltKey(NopCustomerServicesDefaults.PasswordSaltKeySize);
+                    var saltKey = EncryptionService.CreateSaltKey(NopCustomerServicesDefaults.PasswordSaltKeySize);
                     customerPassword.PasswordSalt = saltKey;
-                    customerPassword.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
+                    customerPassword.Password = EncryptionService.CreatePasswordHash(request.Password, saltKey, CustomerSettings.HashedPasswordFormat);
                     break;
             }
 
-            await _customerService.InsertCustomerPasswordAsync(customerPassword);
+            await CustomerService.InsertCustomerPasswordAsync(customerPassword);
 
             request.Customer.Active = request.IsApproved;
 
             //add to 'Registered' role
-            var registeredRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
+            var registeredRole = await CustomerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
             if (registeredRole == null)
                 throw new NopException("'Registered' role could not be loaded");
 
-            await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = registeredRole.Id });
+            await CustomerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = registeredRole.Id });
 
             //remove from 'Guests' role            
-            if (await _customerService.IsGuestAsync(request.Customer))
+            if (await CustomerService.IsGuestAsync(request.Customer))
             {
-                var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
-                await _customerService.RemoveCustomerRoleMappingAsync(request.Customer, guestRole);
+                var guestRole = await CustomerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
+                await CustomerService.RemoveCustomerRoleMappingAsync(request.Customer, guestRole);
             }
 
             //add reward points for customer registration (if enabled)
-            if (_rewardPointsSettings.Enabled && _rewardPointsSettings.PointsForRegistration > 0)
+            if (RewardPointsSettings.Enabled && RewardPointsSettings.PointsForRegistration > 0)
             {
-                var endDate = _rewardPointsSettings.RegistrationPointsValidity > 0
-                    ? (DateTime?)DateTime.UtcNow.AddDays(_rewardPointsSettings.RegistrationPointsValidity.Value) : null;
-                await _rewardPointService.AddRewardPointsHistoryEntryAsync(request.Customer, _rewardPointsSettings.PointsForRegistration,
-                    request.StoreId, await _localizationService.GetResourceAsync("RewardPoints.Message.EarnedForRegistration"), endDate: endDate);
+                var endDate = RewardPointsSettings.RegistrationPointsValidity > 0
+                    ? (DateTime?)DateTime.UtcNow.AddDays(RewardPointsSettings.RegistrationPointsValidity.Value) : null;
+                await RewardPointService.AddRewardPointsHistoryEntryAsync(request.Customer, RewardPointsSettings.PointsForRegistration,
+                    request.StoreId, await LocalizationService.GetResourceAsync("RewardPoints.Message.EarnedForRegistration"), endDate: endDate);
             }
 
-            await _customerService.UpdateCustomerAsync(request.Customer);
+            await CustomerService.UpdateCustomerAsync(request.Customer);
 
             return result;
         }
@@ -334,40 +334,40 @@ namespace Nop.Services.Customers
             var result = new ChangePasswordResult();
             if (string.IsNullOrWhiteSpace(request.Email))
             {
-                result.AddError(await _localizationService.GetResourceAsync("Account.ChangePassword.Errors.EmailIsNotProvided"));
+                result.AddError(await LocalizationService.GetResourceAsync("Account.ChangePassword.Errors.EmailIsNotProvided"));
                 return result;
             }
 
             if (string.IsNullOrWhiteSpace(request.NewPassword))
             {
-                result.AddError(await _localizationService.GetResourceAsync("Account.ChangePassword.Errors.PasswordIsNotProvided"));
+                result.AddError(await LocalizationService.GetResourceAsync("Account.ChangePassword.Errors.PasswordIsNotProvided"));
                 return result;
             }
 
-            var customer = await _customerService.GetCustomerByEmailAsync(request.Email);
+            var customer = await CustomerService.GetCustomerByEmailAsync(request.Email);
             if (customer == null)
             {
-                result.AddError(await _localizationService.GetResourceAsync("Account.ChangePassword.Errors.EmailNotFound"));
+                result.AddError(await LocalizationService.GetResourceAsync("Account.ChangePassword.Errors.EmailNotFound"));
                 return result;
             }
 
             //request isn't valid
-            if (request.ValidateRequest && !PasswordsMatch(await _customerService.GetCurrentPasswordAsync(customer.Id), request.OldPassword))
+            if (request.ValidateRequest && !PasswordsMatch(await CustomerService.GetCurrentPasswordAsync(customer.Id), request.OldPassword))
             {
-                result.AddError(await _localizationService.GetResourceAsync("Account.ChangePassword.Errors.OldPasswordDoesntMatch"));
+                result.AddError(await LocalizationService.GetResourceAsync("Account.ChangePassword.Errors.OldPasswordDoesntMatch"));
                 return result;
             }
 
             //check for duplicates
-            if (_customerSettings.UnduplicatedPasswordsNumber > 0)
+            if (CustomerSettings.UnduplicatedPasswordsNumber > 0)
             {
                 //get some of previous passwords
-                var previousPasswords = await _customerService.GetCustomerPasswordsAsync(customer.Id, passwordsToReturn: _customerSettings.UnduplicatedPasswordsNumber);
+                var previousPasswords = await CustomerService.GetCustomerPasswordsAsync(customer.Id, passwordsToReturn: CustomerSettings.UnduplicatedPasswordsNumber);
 
                 var newPasswordMatchesWithPrevious = previousPasswords.Any(password => PasswordsMatch(password, request.NewPassword));
                 if (newPasswordMatchesWithPrevious)
                 {
-                    result.AddError(await _localizationService.GetResourceAsync("Account.ChangePassword.Errors.PasswordMatchesWithPrevious"));
+                    result.AddError(await LocalizationService.GetResourceAsync("Account.ChangePassword.Errors.PasswordMatchesWithPrevious"));
                     return result;
                 }
             }
@@ -385,20 +385,20 @@ namespace Nop.Services.Customers
                     customerPassword.Password = request.NewPassword;
                     break;
                 case PasswordFormat.Encrypted:
-                    customerPassword.Password = _encryptionService.EncryptText(request.NewPassword);
+                    customerPassword.Password = EncryptionService.EncryptText(request.NewPassword);
                     break;
                 case PasswordFormat.Hashed:
-                    var saltKey = _encryptionService.CreateSaltKey(NopCustomerServicesDefaults.PasswordSaltKeySize);
+                    var saltKey = EncryptionService.CreateSaltKey(NopCustomerServicesDefaults.PasswordSaltKeySize);
                     customerPassword.PasswordSalt = saltKey;
-                    customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey,
-                        request.HashedPasswordFormat ?? _customerSettings.HashedPasswordFormat);
+                    customerPassword.Password = EncryptionService.CreatePasswordHash(request.NewPassword, saltKey,
+                        request.HashedPasswordFormat ?? CustomerSettings.HashedPasswordFormat);
                     break;
             }
 
-            await _customerService.InsertCustomerPasswordAsync(customerPassword);
+            await CustomerService.InsertCustomerPasswordAsync(customerPassword);
 
             //publish event
-            await _eventPublisher.PublishAsync(new CustomerPasswordChangedEvent(customerPassword));
+            await EventPublisher.PublishAsync(new CustomerPasswordChangedEvent(customerPassword));
 
             return result;
         }
@@ -415,24 +415,24 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<IActionResult> SignInCustomerAsync(Customer customer, string returnUrl, bool isPersist = false)
         {
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var currentCustomer = await WorkContext.GetCurrentCustomerAsync();
             if (currentCustomer?.Id != customer.Id)
             {
                 //migrate shopping cart
-                await _shoppingCartService.MigrateShoppingCartAsync(currentCustomer, customer, true);
+                await ShoppingCartService.MigrateShoppingCartAsync(currentCustomer, customer, true);
 
-                await _workContext.SetCurrentCustomerAsync(customer);
+                await WorkContext.SetCurrentCustomerAsync(customer);
             }
 
             //sign in new customer
-            await _authenticationService.SignInAsync(customer, isPersist);
+            await AuthenticationService.SignInAsync(customer, isPersist);
 
             //raise event       
-            await _eventPublisher.PublishAsync(new CustomerLoggedinEvent(customer));
+            await EventPublisher.PublishAsync(new CustomerLoggedinEvent(customer));
 
             //activity log
-            await _customerActivityService.InsertActivityAsync(customer, "PublicStore.Login",
-                await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login"), customer);
+            await CustomerActivityService.InsertActivityAsync(customer, "PublicStore.Login",
+                await LocalizationService.GetResourceAsync("ActivityLog.PublicStore.Login"), customer);
 
             //redirect to the return URL if it's specified
             if (!string.IsNullOrEmpty(returnUrl))
@@ -460,43 +460,43 @@ namespace Nop.Services.Customers
             var oldEmail = customer.Email;
 
             if (!CommonHelper.IsValidEmail(newEmail))
-                throw new NopException(await _localizationService.GetResourceAsync("Account.EmailUsernameErrors.NewEmailIsNotValid"));
+                throw new NopException(await LocalizationService.GetResourceAsync("Account.EmailUsernameErrors.NewEmailIsNotValid"));
 
             if (newEmail.Length > 100)
-                throw new NopException(await _localizationService.GetResourceAsync("Account.EmailUsernameErrors.EmailTooLong"));
+                throw new NopException(await LocalizationService.GetResourceAsync("Account.EmailUsernameErrors.EmailTooLong"));
 
-            var customer2 = await _customerService.GetCustomerByEmailAsync(newEmail);
+            var customer2 = await CustomerService.GetCustomerByEmailAsync(newEmail);
             if (customer2 != null && customer.Id != customer2.Id)
-                throw new NopException(await _localizationService.GetResourceAsync("Account.EmailUsernameErrors.EmailAlreadyExists"));
+                throw new NopException(await LocalizationService.GetResourceAsync("Account.EmailUsernameErrors.EmailAlreadyExists"));
 
             if (requireValidation)
             {
                 //re-validate email
                 customer.EmailToRevalidate = newEmail;
-                await _customerService.UpdateCustomerAsync(customer);
+                await CustomerService.UpdateCustomerAsync(customer);
 
                 //email re-validation message
-                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute, Guid.NewGuid().ToString());
-                await _workflowMessageService.SendCustomerEmailRevalidationMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
+                await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute, Guid.NewGuid().ToString());
+                await WorkflowMessageService.SendCustomerEmailRevalidationMessageAsync(customer, (await WorkContext.GetWorkingLanguageAsync()).Id);
             }
             else
             {
                 customer.Email = newEmail;
-                await _customerService.UpdateCustomerAsync(customer);
+                await CustomerService.UpdateCustomerAsync(customer);
 
                 if (string.IsNullOrEmpty(oldEmail) || oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
                 //update newsletter subscription (if required)
-                foreach (var store in await _storeService.GetAllStoresAsync())
+                foreach (var store in await StoreService.GetAllStoresAsync())
                 {
-                    var subscriptionOld = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(oldEmail, store.Id);
+                    var subscriptionOld = await NewsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(oldEmail, store.Id);
 
                     if (subscriptionOld == null)
                         continue;
 
                     subscriptionOld.Email = newEmail;
-                    await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscriptionOld);
+                    await NewsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscriptionOld);
                 }
             }
         }
@@ -512,20 +512,20 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            if (!_customerSettings.UsernamesEnabled)
+            if (!CustomerSettings.UsernamesEnabled)
                 throw new NopException("Usernames are disabled");
 
             newUsername = newUsername.Trim();
 
             if (newUsername.Length > NopCustomerServicesDefaults.CustomerUsernameLength)
-                throw new NopException(await _localizationService.GetResourceAsync("Account.EmailUsernameErrors.UsernameTooLong"));
+                throw new NopException(await LocalizationService.GetResourceAsync("Account.EmailUsernameErrors.UsernameTooLong"));
 
-            var user2 = await _customerService.GetCustomerByUsernameAsync(newUsername);
+            var user2 = await CustomerService.GetCustomerByUsernameAsync(newUsername);
             if (user2 != null && customer.Id != user2.Id)
-                throw new NopException(await _localizationService.GetResourceAsync("Account.EmailUsernameErrors.UsernameAlreadyExists"));
+                throw new NopException(await LocalizationService.GetResourceAsync("Account.EmailUsernameErrors.UsernameAlreadyExists"));
 
             customer.Username = newUsername;
-            await _customerService.UpdateCustomerAsync(customer);
+            await CustomerService.UpdateCustomerAsync(customer);
         }
 
         #endregion

@@ -24,17 +24,17 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly IDownloadService _downloadService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IRepository<Picture> _pictureRepository;
-        private readonly IRepository<PictureBinary> _pictureBinaryRepository;
-        private readonly IRepository<ProductPicture> _productPictureRepository;
-        private readonly ISettingService _settingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly MediaSettings _mediaSettings;
+        protected IDownloadService DownloadService { get; }
+        protected IHttpContextAccessor HttpContextAccessor { get; }
+        protected INopFileProvider FileProvider { get; }
+        protected IProductAttributeParser ProductAttributeParser { get; }
+        protected IRepository<Picture> PictureRepository { get; }
+        protected IRepository<PictureBinary> PictureBinaryRepository { get; }
+        protected IRepository<ProductPicture> ProductPictureRepository { get; }
+        protected ISettingService SettingService { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWebHelper WebHelper { get; }
+        protected MediaSettings MediaSettings { get; }
 
         #endregion
 
@@ -52,17 +52,17 @@ namespace Nop.Services.Media
             IWebHelper webHelper,
             MediaSettings mediaSettings)
         {
-            _downloadService = downloadService;
-            _httpContextAccessor = httpContextAccessor;
-            _fileProvider = fileProvider;
-            _productAttributeParser = productAttributeParser;
-            _pictureRepository = pictureRepository;
-            _pictureBinaryRepository = pictureBinaryRepository;
-            _productPictureRepository = productPictureRepository;
-            _settingService = settingService;
-            _urlRecordService = urlRecordService;
-            _webHelper = webHelper;
-            _mediaSettings = mediaSettings;
+            DownloadService = downloadService;
+            HttpContextAccessor = httpContextAccessor;
+            FileProvider = fileProvider;
+            ProductAttributeParser = productAttributeParser;
+            PictureRepository = pictureRepository;
+            PictureBinaryRepository = pictureBinaryRepository;
+            ProductPictureRepository = productPictureRepository;
+            SettingService = settingService;
+            UrlRecordService = urlRecordService;
+            WebHelper = webHelper;
+            MediaSettings = mediaSettings;
         }
 
         #endregion
@@ -84,7 +84,7 @@ namespace Nop.Services.Media
             var fileName = $"{pictureId:0000000}_0.{lastPart}";
             var filePath = await GetPictureLocalPathAsync(fileName);
 
-            return await _fileProvider.ReadAllBytesAsync(filePath);
+            return await FileProvider.ReadAllBytesAsync(filePath);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Nop.Services.Media
         {
             var lastPart = await GetFileExtensionFromMimeTypeAsync(mimeType);
             var fileName = $"{pictureId:0000000}_0.{lastPart}";
-            await _fileProvider.WriteAllBytesAsync(await GetPictureLocalPathAsync(fileName), pictureBinary);
+            await FileProvider.WriteAllBytesAsync(await GetPictureLocalPathAsync(fileName), pictureBinary);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Nop.Services.Media
             var lastPart = await GetFileExtensionFromMimeTypeAsync(picture.MimeType);
             var fileName = $"{picture.Id:0000000}_0.{lastPart}";
             var filePath = await GetPictureLocalPathAsync(fileName);
-            _fileProvider.DeleteFile(filePath);
+            FileProvider.DeleteFile(filePath);
         }
 
         /// <summary>
@@ -125,11 +125,11 @@ namespace Nop.Services.Media
         protected virtual async Task DeletePictureThumbsAsync(Picture picture)
         {
             var filter = $"{picture.Id:0000000}*.*";
-            var currentFiles = _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath), filter, false);
+            var currentFiles = FileProvider.GetFiles(FileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath), filter, false);
             foreach (var currentFileName in currentFiles)
             {
                 var thumbFilePath = await GetThumbLocalPathAsync(currentFileName);
-                _fileProvider.DeleteFile(thumbFilePath);
+                FileProvider.DeleteFile(thumbFilePath);
             }
         }
 
@@ -143,21 +143,21 @@ namespace Nop.Services.Media
         /// </returns>
         protected virtual Task<string> GetThumbLocalPathAsync(string thumbFileName)
         {
-            var thumbsDirectoryPath = _fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath);
+            var thumbsDirectoryPath = FileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath);
 
-            if (_mediaSettings.MultipleThumbDirectories)
+            if (MediaSettings.MultipleThumbDirectories)
             {
                 //get the first two letters of the file name
-                var fileNameWithoutExtension = _fileProvider.GetFileNameWithoutExtension(thumbFileName);
+                var fileNameWithoutExtension = FileProvider.GetFileNameWithoutExtension(thumbFileName);
                 if (fileNameWithoutExtension != null && fileNameWithoutExtension.Length > NopMediaDefaults.MultipleThumbDirectoriesLength)
                 {
                     var subDirectoryName = fileNameWithoutExtension[0..NopMediaDefaults.MultipleThumbDirectoriesLength];
-                    thumbsDirectoryPath = _fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath, subDirectoryName);
-                    _fileProvider.CreateDirectory(thumbsDirectoryPath);
+                    thumbsDirectoryPath = FileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath, subDirectoryName);
+                    FileProvider.CreateDirectory(thumbsDirectoryPath);
                 }
             }
 
-            var thumbFilePath = _fileProvider.Combine(thumbsDirectoryPath, thumbFileName);
+            var thumbFilePath = FileProvider.Combine(thumbsDirectoryPath, thumbFileName);
             return Task.FromResult(thumbFilePath);
         }
 
@@ -171,9 +171,9 @@ namespace Nop.Services.Media
         /// </returns>
         protected virtual Task<string> GetImagesPathUrlAsync(string storeLocation = null)
         {
-            var pathBase = _httpContextAccessor.HttpContext.Request?.PathBase.Value ?? string.Empty;
-            var imagesPathUrl = _mediaSettings.UseAbsoluteImagePath ? storeLocation : $"{pathBase}/";
-            imagesPathUrl = string.IsNullOrEmpty(imagesPathUrl) ? _webHelper.GetStoreLocation() : imagesPathUrl;
+            var pathBase = HttpContextAccessor.HttpContext.Request?.PathBase.Value ?? string.Empty;
+            var imagesPathUrl = MediaSettings.UseAbsoluteImagePath ? storeLocation : $"{pathBase}/";
+            imagesPathUrl = string.IsNullOrEmpty(imagesPathUrl) ? WebHelper.GetStoreLocation() : imagesPathUrl;
             imagesPathUrl += "images/";
 
             return Task.FromResult(imagesPathUrl);
@@ -192,10 +192,10 @@ namespace Nop.Services.Media
         {
             var url = await GetImagesPathUrlAsync(storeLocation) + "thumbs/";
 
-            if (_mediaSettings.MultipleThumbDirectories)
+            if (MediaSettings.MultipleThumbDirectories)
             {
                 //get the first two letters of the file name
-                var fileNameWithoutExtension = _fileProvider.GetFileNameWithoutExtension(thumbFileName);
+                var fileNameWithoutExtension = FileProvider.GetFileNameWithoutExtension(thumbFileName);
                 if (fileNameWithoutExtension != null && fileNameWithoutExtension.Length > NopMediaDefaults.MultipleThumbDirectoriesLength)
                 {
                     var subDirectoryName = fileNameWithoutExtension[0..NopMediaDefaults.MultipleThumbDirectoriesLength];
@@ -217,7 +217,7 @@ namespace Nop.Services.Media
         /// </returns>
         protected virtual Task<string> GetPictureLocalPathAsync(string fileName)
         {
-            return Task.FromResult(_fileProvider.GetAbsolutePath("images", fileName));
+            return Task.FromResult(FileProvider.GetAbsolutePath("images", fileName));
         }
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace Nop.Services.Media
         /// </returns>
         protected virtual Task<bool> GeneratedThumbExistsAsync(string thumbFilePath, string thumbFileName)
         {
-            return Task.FromResult(_fileProvider.FileExists(thumbFilePath));
+            return Task.FromResult(FileProvider.FileExists(thumbFilePath));
         }
 
         /// <summary>
@@ -266,11 +266,11 @@ namespace Nop.Services.Media
         protected virtual async Task SaveThumbAsync(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
             //ensure \thumb directory exists
-            var thumbsDirectoryPath = _fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath);
-            _fileProvider.CreateDirectory(thumbsDirectoryPath);
+            var thumbsDirectoryPath = FileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath);
+            FileProvider.CreateDirectory(thumbsDirectoryPath);
 
             //save
-            await _fileProvider.WriteAllBytesAsync(thumbFilePath, binary);
+            await FileProvider.WriteAllBytesAsync(thumbFilePath, binary);
         }
 
         /// <summary>
@@ -300,9 +300,9 @@ namespace Nop.Services.Media
             pictureBinary.BinaryData = binaryData;
 
             if (isNew)
-                await _pictureBinaryRepository.InsertAsync(pictureBinary);
+                await PictureBinaryRepository.InsertAsync(pictureBinary);
             else
-                await _pictureBinaryRepository.UpdateAsync(pictureBinary);
+                await PictureBinaryRepository.UpdateAsync(pictureBinary);
 
             return pictureBinary;
         }
@@ -392,7 +392,7 @@ namespace Nop.Services.Media
                 using var cropImage = SKImage.FromBitmap(resizedBitmap);
 
                 //In order to exclude saving pictures in low quality at the time of installation, we will set the value of this parameter to 80 (as by default)
-                return cropImage.Encode(format, _mediaSettings.DefaultImageQuality > 0 ? _mediaSettings.DefaultImageQuality : 80).ToArray();
+                return cropImage.Encode(format, MediaSettings.DefaultImageQuality > 0 ? MediaSettings.DefaultImageQuality : 80).ToArray();
             }
             catch
             {
@@ -461,7 +461,7 @@ namespace Nop.Services.Media
         /// </returns>
         public virtual async Task<string> GetPictureSeNameAsync(string name)
         {
-            return await _urlRecordService.GetSeNameAsync(name, true, false);
+            return await UrlRecordService.GetSeNameAsync(name, true, false);
         }
 
         /// <summary>
@@ -480,11 +480,11 @@ namespace Nop.Services.Media
         {
             var defaultImageFileName = defaultPictureType switch
             {
-                PictureType.Avatar => await _settingService.GetSettingByKeyAsync("Media.Customer.DefaultAvatarImageName", NopMediaDefaults.DefaultAvatarFileName),
-                _ => await _settingService.GetSettingByKeyAsync("Media.DefaultImageName", NopMediaDefaults.DefaultImageFileName),
+                PictureType.Avatar => await SettingService.GetSettingByKeyAsync("Media.Customer.DefaultAvatarImageName", NopMediaDefaults.DefaultAvatarFileName),
+                _ => await SettingService.GetSettingByKeyAsync("Media.DefaultImageName", NopMediaDefaults.DefaultImageFileName),
             };
             var filePath = await GetPictureLocalPathAsync(defaultImageFileName);
-            if (!_fileProvider.FileExists(filePath))
+            if (!FileProvider.FileExists(filePath))
             {
                 return string.Empty;
             }
@@ -492,8 +492,8 @@ namespace Nop.Services.Media
             if (targetSize == 0)
                 return await GetImagesPathUrlAsync(storeLocation) + defaultImageFileName;
 
-            var fileExtension = _fileProvider.GetFileExtension(filePath);
-            var thumbFileName = $"{_fileProvider.GetFileNameWithoutExtension(filePath)}_{targetSize}{fileExtension}";
+            var fileExtension = FileProvider.GetFileExtension(filePath);
+            var thumbFileName = $"{FileProvider.GetFileNameWithoutExtension(filePath)}_{targetSize}{fileExtension}";
             var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
             if (!await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
             {
@@ -675,7 +675,7 @@ namespace Nop.Services.Media
             if (string.IsNullOrEmpty(url))
                 return string.Empty;
 
-            return await GetThumbLocalPathAsync(_fileProvider.GetFileName(url));
+            return await GetThumbLocalPathAsync(FileProvider.GetFileName(url));
         }
 
         #endregion
@@ -692,7 +692,7 @@ namespace Nop.Services.Media
         /// </returns>
         public virtual async Task<Picture> GetPictureByIdAsync(int pictureId)
         {
-            return await _pictureRepository.GetByIdAsync(pictureId, cache => default);
+            return await PictureRepository.GetByIdAsync(pictureId, cache => default);
         }
 
         /// <summary>
@@ -713,7 +713,7 @@ namespace Nop.Services.Media
                 await DeletePictureOnFileSystemAsync(picture);
 
             //delete from database
-            await _pictureRepository.DeleteAsync(picture);
+            await PictureRepository.DeleteAsync(picture);
         }
 
         /// <summary>
@@ -728,7 +728,7 @@ namespace Nop.Services.Media
         /// </returns>
         public virtual async Task<IPagedList<Picture>> GetPicturesAsync(string virtualPath = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _pictureRepository.Table;
+            var query = PictureRepository.Table;
 
             if (!string.IsNullOrEmpty(virtualPath))
                 query = virtualPath.EndsWith('/') ? query.Where(p => p.VirtualPath.StartsWith(virtualPath) || p.VirtualPath == virtualPath.TrimEnd('/')) : query.Where(p => p.VirtualPath == virtualPath);
@@ -752,8 +752,8 @@ namespace Nop.Services.Media
             if (productId == 0)
                 return new List<Picture>();
 
-            var query = from p in _pictureRepository.Table
-                        join pp in _productPictureRepository.Table on p.Id equals pp.PictureId
+            var query = from p in PictureRepository.Table
+                        join pp in ProductPictureRepository.Table on p.Id equals pp.PictureId
                         orderby pp.DisplayOrder, pp.Id
                         where pp.ProductId == productId
                         select p;
@@ -800,7 +800,7 @@ namespace Nop.Services.Media
                 TitleAttribute = titleAttribute,
                 IsNew = isNew
             };
-            await _pictureRepository.InsertAsync(picture);
+            await PictureRepository.InsertAsync(picture);
             await UpdatePictureBinaryAsync(picture, await IsStoreInDbAsync() ? pictureBinary : Array.Empty<byte>());
 
             if (!await IsStoreInDbAsync())
@@ -842,11 +842,11 @@ namespace Nop.Services.Media
                 fileName = defaultFileName;
 
             //remove path (passed in IE)
-            fileName = _fileProvider.GetFileName(fileName);
+            fileName = FileProvider.GetFileName(fileName);
 
             var contentType = formFile.ContentType;
 
-            var fileExtension = _fileProvider.GetFileExtension(fileName);
+            var fileExtension = FileProvider.GetFileExtension(fileName);
             if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
@@ -889,12 +889,12 @@ namespace Nop.Services.Media
                 }
             }
 
-            var picture = await InsertPictureAsync(await _downloadService.GetDownloadBitsAsync(formFile), contentType, _fileProvider.GetFileNameWithoutExtension(fileName));
+            var picture = await InsertPictureAsync(await DownloadService.GetDownloadBitsAsync(formFile), contentType, FileProvider.GetFileNameWithoutExtension(fileName));
 
             if (string.IsNullOrEmpty(virtualPath))
                 return picture;
 
-            picture.VirtualPath = _fileProvider.GetVirtualPath(virtualPath);
+            picture.VirtualPath = FileProvider.GetVirtualPath(virtualPath);
             await UpdatePictureAsync(picture);
 
             return picture;
@@ -941,7 +941,7 @@ namespace Nop.Services.Media
             picture.TitleAttribute = titleAttribute;
             picture.IsNew = isNew;
 
-            await _pictureRepository.UpdateAsync(picture);
+            await PictureRepository.UpdateAsync(picture);
             await UpdatePictureBinaryAsync(picture, await IsStoreInDbAsync() ? pictureBinary : Array.Empty<byte>());
 
             if (!await IsStoreInDbAsync())
@@ -971,7 +971,7 @@ namespace Nop.Services.Media
 
             picture.SeoFilename = seoFilename;
 
-            await _pictureRepository.UpdateAsync(picture);
+            await PictureRepository.UpdateAsync(picture);
             await UpdatePictureBinaryAsync(picture, await IsStoreInDbAsync() ? (await GetPictureBinaryByPictureIdAsync(picture.Id)).BinaryData : Array.Empty<byte>());
 
             if (!await IsStoreInDbAsync())
@@ -990,7 +990,7 @@ namespace Nop.Services.Media
         /// </returns>
         public virtual async Task<PictureBinary> GetPictureBinaryByPictureIdAsync(int pictureId)
         {
-            return await _pictureBinaryRepository.Table
+            return await PictureBinaryRepository.Table
                 .FirstOrDefaultAsync(pb => pb.PictureId == pictureId);
         }
 
@@ -1042,10 +1042,10 @@ namespace Nop.Services.Media
                 using var image = SKBitmap.Decode(pictureBinary);
 
                 //resize the image in accordance with the maximum size
-                if (Math.Max(image.Height, image.Width) > _mediaSettings.MaximumImageSize)
+                if (Math.Max(image.Height, image.Width) > MediaSettings.MaximumImageSize)
                 {
                     var format = GetImageFormatByMimeType(mimeType);
-                    pictureBinary = ImageResize(image, format, _mediaSettings.MaximumImageSize);
+                    pictureBinary = ImageResize(image, format, MediaSettings.MaximumImageSize);
                 }
                 return Task.FromResult(pictureBinary);
             }
@@ -1070,13 +1070,13 @@ namespace Nop.Services.Media
                 throw new ArgumentNullException(nameof(product));
 
             //first, try to get product attribute combination picture
-            var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
+            var combination = await ProductAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
             var combinationPicture = await GetPictureByIdAsync(combination?.PictureId ?? 0);
             if (combinationPicture != null)
                 return combinationPicture;
 
             //then, let's see whether we have attribute values with pictures
-            var attributePicture = await (await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml))
+            var attributePicture = await (await ProductAttributeParser.ParseProductAttributeValuesAsync(attributesXml))
                 .SelectAwait(async attributeValue => await GetPictureByIdAsync(attributeValue?.PictureId ?? 0))
                 .FirstOrDefaultAsync(picture => picture != null);
             if (attributePicture != null)
@@ -1101,7 +1101,7 @@ namespace Nop.Services.Media
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<bool> IsStoreInDbAsync()
         {
-            return await _settingService.GetSettingByKeyAsync("Media.Images.StoreInDB", true);
+            return await SettingService.GetSettingByKeyAsync("Media.Images.StoreInDB", true);
         }
 
         /// <summary>
@@ -1116,7 +1116,7 @@ namespace Nop.Services.Media
                 return;
 
             //save the new setting value
-            await _settingService.SetSettingAsync("Media.Images.StoreInDB", isStoreInDb);
+            await SettingService.SetSettingAsync("Media.Images.StoreInDB", isStoreInDb);
 
             var pageIndex = 0;
             const int pageSize = 400;
@@ -1160,7 +1160,7 @@ namespace Nop.Services.Media
                     }
 
                     //save all at once
-                    await _pictureRepository.UpdateAsync(pictures, false);
+                    await PictureRepository.UpdateAsync(pictures, false);
                 }
             }
             catch

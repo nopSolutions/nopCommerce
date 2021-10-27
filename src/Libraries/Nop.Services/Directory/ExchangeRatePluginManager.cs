@@ -14,7 +14,7 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
+        protected CurrencySettings CurrencySettings { get; }
 
         #endregion
 
@@ -24,7 +24,7 @@ namespace Nop.Services.Directory
             ICustomerService customerService,
             IPluginService pluginService) : base(customerService, pluginService)
         {
-            _currencySettings = currencySettings;
+            CurrencySettings = currencySettings;
         }
 
         #endregion
@@ -42,7 +42,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<IExchangeRateProvider> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0)
         {
-            return await LoadPrimaryPluginAsync(_currencySettings.ActiveExchangeRateProviderSystemName, customer, storeId);
+            return await LoadPrimaryPluginAsync(CurrencySettings.ActiveExchangeRateProviderSystemName, customer, storeId);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Nop.Services.Directory
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IExchangeRateProvider exchangeRateProvider)
         {
-            return IsPluginActive(exchangeRateProvider, new List<string> { _currencySettings.ActiveExchangeRateProviderSystemName });
+            return IsPluginActive(exchangeRateProvider, new List<string> { CurrencySettings.ActiveExchangeRateProviderSystemName });
         }
 
         #endregion

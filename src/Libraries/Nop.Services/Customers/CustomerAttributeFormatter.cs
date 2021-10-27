@@ -15,10 +15,10 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
+        protected ICustomerAttributeParser CustomerAttributeParser { get; }
+        protected ICustomerAttributeService CustomerAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -29,10 +29,10 @@ namespace Nop.Services.Customers
             ILocalizationService localizationService,
             IWorkContext workContext)
         {
-            _customerAttributeParser = customerAttributeParser;
-            _customerAttributeService = customerAttributeService;
-            _localizationService = localizationService;
-            _workContext = workContext;
+            CustomerAttributeParser = customerAttributeParser;
+            CustomerAttributeService = customerAttributeService;
+            LocalizationService = localizationService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -52,12 +52,12 @@ namespace Nop.Services.Customers
         public virtual async Task<string> FormatAttributesAsync(string attributesXml, string separator = "<br />", bool htmlEncode = true)
         {
             var result = new StringBuilder();
-            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
-            var attributes = await _customerAttributeParser.ParseCustomerAttributesAsync(attributesXml);
+            var currentLanguage = await WorkContext.GetWorkingLanguageAsync();
+            var attributes = await CustomerAttributeParser.ParseCustomerAttributesAsync(attributesXml);
             for (var i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
-                var valuesStr = _customerAttributeParser.ParseValues(attributesXml, attribute.Id);
+                var valuesStr = CustomerAttributeParser.ParseValues(attributesXml, attribute.Id);
                 for (var j = 0; j < valuesStr.Count; j++)
                 {
                     var valueStr = valuesStr[j];
@@ -68,7 +68,7 @@ namespace Nop.Services.Customers
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id);
+                            var attributeName = await LocalizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id);
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
@@ -83,7 +83,7 @@ namespace Nop.Services.Customers
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {valueStr}";
+                            formattedAttribute = $"{await LocalizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {valueStr}";
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
@@ -93,10 +93,10 @@ namespace Nop.Services.Customers
                     {
                         if (int.TryParse(valueStr, out var attributeValueId))
                         {
-                            var attributeValue = await _customerAttributeService.GetCustomerAttributeValueByIdAsync(attributeValueId);
+                            var attributeValue = await CustomerAttributeService.GetCustomerAttributeValueByIdAsync(attributeValueId);
                             if (attributeValue != null)
                             {
-                                formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
+                                formattedAttribute = $"{await LocalizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {await LocalizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
                             }
                             //encode (if required)
                             if (htmlEncode)

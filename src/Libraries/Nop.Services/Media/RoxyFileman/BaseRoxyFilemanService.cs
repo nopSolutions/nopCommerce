@@ -20,12 +20,12 @@ namespace Nop.Services.Media.RoxyFileman
         private Dictionary<string, string> _settings;
         private Dictionary<string, string> _languageResources;
 
-        protected readonly IWebHostEnvironment _webHostEnvironment;
-        protected readonly IHttpContextAccessor _httpContextAccessor;
-        protected readonly INopFileProvider _fileProvider;
-        protected readonly IWebHelper _webHelper;
-        protected readonly IWorkContext _workContext;
-        protected readonly MediaSettings _mediaSettings;
+        protected IWebHostEnvironment WebHostEnvironment { get; }
+        protected IHttpContextAccessor HttpContextAccessor { get; }
+        protected INopFileProvider FileProvider { get; }
+        protected IWebHelper WebHelper { get; }
+        protected IWorkContext WorkContext { get; }
+        protected MediaSettings MediaSettings { get; }
 
         #endregion
 
@@ -38,12 +38,12 @@ namespace Nop.Services.Media.RoxyFileman
             IWorkContext workContext,
             MediaSettings mediaSettings)
         {
-            _webHostEnvironment = webHostEnvironment;
-            _httpContextAccessor = httpContextAccessor;
-            _fileProvider = fileProvider;
-            _webHelper = webHelper;
-            _workContext = workContext;
-            _mediaSettings = mediaSettings;
+            WebHostEnvironment = webHostEnvironment;
+            HttpContextAccessor = httpContextAccessor;
+            FileProvider = fileProvider;
+            WebHelper = webHelper;
+            WorkContext = workContext;
+            MediaSettings = mediaSettings;
         }
 
         #endregion
@@ -62,7 +62,7 @@ namespace Nop.Services.Media.RoxyFileman
         {
             var result = false;
 
-            var fileExtension = _fileProvider.GetFileExtension(path).Replace(".", string.Empty).ToLowerInvariant();
+            var fileExtension = FileProvider.GetFileExtension(path).Replace(".", string.Empty).ToLowerInvariant();
 
             var forbiddenUploads = (await GetSettingAsync("FORBIDDEN_UPLOADS")).Trim().ToLowerInvariant();
             if (!string.IsNullOrEmpty(forbiddenUploads))
@@ -93,7 +93,7 @@ namespace Nop.Services.Media.RoxyFileman
         {
             var directories = new ArrayList();
 
-            var directoryNames = _fileProvider.GetDirectories(parentDirectoryPath);
+            var directoryNames = FileProvider.GetDirectories(parentDirectoryPath);
             foreach (var directory in directoryNames)
             {
                 directories.Add(directory);
@@ -155,7 +155,7 @@ namespace Nop.Services.Media.RoxyFileman
                 virtualPath = "/" + virtualPath;
             virtualPath = virtualPath.TrimEnd('/');
 
-            return _fileProvider.Combine(_webHostEnvironment.WebRootPath, virtualPath);
+            return FileProvider.Combine(WebHostEnvironment.WebRootPath, virtualPath);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>Http context</returns>
         protected virtual HttpContext GetHttpContext()
         {
-            return _httpContextAccessor.HttpContext;
+            return HttpContextAccessor.HttpContext;
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Nop.Services.Media.RoxyFileman
             var languageCode = await GetSettingAsync("LANG");
             var languageFile = $"{NopRoxyFilemanDefaults.LanguageDirectory}/{languageCode}.json";
 
-            if (!_fileProvider.FileExists(GetFullPath(languageFile)))
+            if (!FileProvider.FileExists(GetFullPath(languageFile)))
                 languageFile = $"{NopRoxyFilemanDefaults.LanguageDirectory}/en.json";
 
             return GetFullPath(languageFile);
@@ -257,9 +257,9 @@ namespace Nop.Services.Media.RoxyFileman
             var uniqueFileName = fileName;
 
             var i = 0;
-            while (_fileProvider.FileExists(_fileProvider.Combine(directoryPath, uniqueFileName)))
+            while (FileProvider.FileExists(FileProvider.Combine(directoryPath, uniqueFileName)))
             {
-                uniqueFileName = $"{_fileProvider.GetFileNameWithoutExtension(fileName)}-Copy-{++i}{_fileProvider.GetFileExtension(fileName)}";
+                uniqueFileName = $"{FileProvider.GetFileNameWithoutExtension(fileName)}-Copy-{++i}{FileProvider.GetFileExtension(fileName)}";
             }
 
             return uniqueFileName;
@@ -298,7 +298,7 @@ namespace Nop.Services.Media.RoxyFileman
             var json = string.Empty;
             try
             {
-                json = (await _fileProvider.ReadAllTextAsync(file, Encoding.UTF8))?.Trim();
+                json = (await FileProvider.ReadAllTextAsync(file, Encoding.UTF8))?.Trim();
             }
             catch
             {
@@ -353,10 +353,10 @@ namespace Nop.Services.Media.RoxyFileman
             var filePath = GetConfigurationFilePath();
 
             //create file if not exists
-            _fileProvider.CreateFile(filePath);
+            FileProvider.CreateFile(filePath);
 
             //try to read existing configuration
-            var existingText = await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
+            var existingText = await FileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
             var existingConfiguration = JsonConvert.DeserializeAnonymousType(existingText, new
             {
                 FILES_ROOT = string.Empty,
@@ -395,7 +395,7 @@ namespace Nop.Services.Media.RoxyFileman
             });
 
             //check whether the path base has changed, otherwise there is no need to overwrite the configuration file
-            var currentPathBase = _httpContextAccessor.HttpContext.Request.PathBase.ToString();
+            var currentPathBase = HttpContextAccessor.HttpContext.Request.PathBase.ToString();
             if (existingConfiguration?.RETURN_URL_PREFIX?.Equals(currentPathBase) ?? false)
                 return;
 
@@ -408,8 +408,8 @@ namespace Nop.Services.Media.RoxyFileman
                 THUMBS_VIEW_HEIGHT = existingConfiguration?.THUMBS_VIEW_HEIGHT ?? "120",
                 PREVIEW_THUMB_WIDTH = existingConfiguration?.PREVIEW_THUMB_WIDTH ?? "300",
                 PREVIEW_THUMB_HEIGHT = existingConfiguration?.PREVIEW_THUMB_HEIGHT ?? "200",
-                MAX_IMAGE_WIDTH = existingConfiguration?.MAX_IMAGE_WIDTH ?? _mediaSettings.MaximumImageSize.ToString(),
-                MAX_IMAGE_HEIGHT = existingConfiguration?.MAX_IMAGE_HEIGHT ?? _mediaSettings.MaximumImageSize.ToString(),
+                MAX_IMAGE_WIDTH = existingConfiguration?.MAX_IMAGE_WIDTH ?? MediaSettings.MaximumImageSize.ToString(),
+                MAX_IMAGE_HEIGHT = existingConfiguration?.MAX_IMAGE_HEIGHT ?? MediaSettings.MaximumImageSize.ToString(),
                 DEFAULTVIEW = existingConfiguration?.DEFAULTVIEW ?? "list",
                 FORBIDDEN_UPLOADS = existingConfiguration?.FORBIDDEN_UPLOADS ?? "zip js jsp jsb mhtml mht xhtml xht php phtml " +
                     "php3 php4 php5 phps shtml jhtml pl sh py cgi exe application gadget hta cpl msc jar vb jse ws wsf wsc wsh " +
@@ -417,7 +417,7 @@ namespace Nop.Services.Media.RoxyFileman
                 ALLOWED_UPLOADS = existingConfiguration?.ALLOWED_UPLOADS ?? string.Empty,
                 FILEPERMISSIONS = existingConfiguration?.FILEPERMISSIONS ?? "0644",
                 DIRPERMISSIONS = existingConfiguration?.DIRPERMISSIONS ?? "0755",
-                LANG = existingConfiguration?.LANG ?? (await _workContext.GetWorkingLanguageAsync()).UniqueSeoCode,
+                LANG = existingConfiguration?.LANG ?? (await WorkContext.GetWorkingLanguageAsync()).UniqueSeoCode,
                 DATEFORMAT = existingConfiguration?.DATEFORMAT ?? "dd/MM/yyyy HH:mm",
                 OPEN_LAST_DIR = existingConfiguration?.OPEN_LAST_DIR ?? "yes",
 
@@ -443,7 +443,7 @@ namespace Nop.Services.Media.RoxyFileman
 
             //save the file
             var text = JsonConvert.SerializeObject(configuration, Formatting.Indented);
-            await _fileProvider.WriteAllTextAsync(filePath, text, Encoding.UTF8);
+            await FileProvider.WriteAllTextAsync(filePath, text, Encoding.UTF8);
         }
 
         /// <summary>

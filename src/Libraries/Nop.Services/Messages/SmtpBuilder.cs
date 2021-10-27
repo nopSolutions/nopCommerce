@@ -17,8 +17,8 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly IEmailAccountService _emailAccountService;
+        protected EmailAccountSettings EmailAccountSettings { get; }
+        protected IEmailAccountService EmailAccountService { get; }
 
         #endregion
 
@@ -26,8 +26,8 @@ namespace Nop.Services.Messages
 
         public SmtpBuilder(EmailAccountSettings emailAccountSettings, IEmailAccountService emailAccountService)
         {
-            _emailAccountSettings = emailAccountSettings;
-            _emailAccountService = emailAccountService;
+            EmailAccountSettings = emailAccountSettings;
+            EmailAccountService = emailAccountService;
         }
 
         #endregion
@@ -46,7 +46,7 @@ namespace Nop.Services.Messages
         {
             if (emailAccount is null)
             {
-                emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
+                emailAccount = await EmailAccountService.GetEmailAccountByIdAsync(EmailAccountSettings.DefaultEmailAccountId)
                 ?? throw new NopException("Email account could not be loaded");
             }
 

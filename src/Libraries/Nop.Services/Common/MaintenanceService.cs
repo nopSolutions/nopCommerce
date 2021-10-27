@@ -13,7 +13,7 @@ namespace Nop.Services.Common
     {
         #region Fields
        
-        private readonly INopFileProvider _fileProvider;
+        protected INopFileProvider FileProvider { get; }
 
         #endregion
 
@@ -21,7 +21,7 @@ namespace Nop.Services.Common
 
         public MaintenanceService(INopFileProvider fileProvider)
         {
-            _fileProvider = fileProvider;
+            FileProvider = fileProvider;
         }
 
         #endregion
@@ -35,9 +35,9 @@ namespace Nop.Services.Common
         /// <returns></returns>
         protected virtual string GetBackupDirectoryPath(bool ensureFolderCreated = true)
         {
-            var path = _fileProvider.GetAbsolutePath(NopCommonDefaults.DbBackupsPath);
+            var path = FileProvider.GetAbsolutePath(NopCommonDefaults.DbBackupsPath);
             if (ensureFolderCreated)
-                _fileProvider.CreateDirectory(path);
+                FileProvider.CreateDirectory(path);
             return path;
         }
 
@@ -53,11 +53,11 @@ namespace Nop.Services.Common
         {
             var path = GetBackupDirectoryPath();
 
-            if (!_fileProvider.DirectoryExists(path)) 
+            if (!FileProvider.DirectoryExists(path)) 
                 throw new NopException("Backup directory not exists");
 
-            return _fileProvider.GetFiles(path, $"*.{NopCommonDefaults.DbBackupFileExtension}")
-                .OrderByDescending(p => _fileProvider.GetLastWriteTime(p)).ToList();
+            return FileProvider.GetFiles(path, $"*.{NopCommonDefaults.DbBackupFileExtension}")
+                .OrderByDescending(p => FileProvider.GetLastWriteTime(p)).ToList();
         }
         
         /// <summary>
@@ -67,7 +67,7 @@ namespace Nop.Services.Common
         /// <returns>The path to the backup file</returns>
         public virtual string GetBackupPath(string backupFileName)
         {
-            return _fileProvider.Combine(GetBackupDirectoryPath(), backupFileName);
+            return FileProvider.Combine(GetBackupDirectoryPath(), backupFileName);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Nop.Services.Common
         /// <returns>Path to a new database backup file</returns>
         public virtual string CreateNewBackupFilePath()
         {
-            return _fileProvider.Combine(GetBackupDirectoryPath(), $"database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.{NopCommonDefaults.DbBackupFileExtension}");
+            return FileProvider.Combine(GetBackupDirectoryPath(), $"database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.{NopCommonDefaults.DbBackupFileExtension}");
         }
 
         #endregion

@@ -16,13 +16,13 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IEmailSender _emailSender;
-        private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly IRepository<Campaign> _campaignRepository;
-        private readonly IStoreContext _storeContext;
-        private readonly ITokenizer _tokenizer;
+        protected ICustomerService CustomerService { get; }
+        protected IEmailSender EmailSender { get; }
+        protected IMessageTokenProvider MessageTokenProvider { get; }
+        protected IQueuedEmailService QueuedEmailService { get; }
+        protected IRepository<Campaign> CampaignRepository { get; }
+        protected IStoreContext StoreContext { get; }
+        protected ITokenizer Tokenizer { get; }
 
         #endregion
 
@@ -36,13 +36,13 @@ namespace Nop.Services.Messages
             IStoreContext storeContext,
             ITokenizer tokenizer)
         {
-            _customerService = customerService;
-            _emailSender = emailSender;
-            _messageTokenProvider = messageTokenProvider;
-            _queuedEmailService = queuedEmailService;
-            _campaignRepository = campaignRepository;
-            _storeContext = storeContext;
-            _tokenizer = tokenizer;
+            CustomerService = customerService;
+            EmailSender = emailSender;
+            MessageTokenProvider = messageTokenProvider;
+            QueuedEmailService = queuedEmailService;
+            CampaignRepository = campaignRepository;
+            StoreContext = storeContext;
+            Tokenizer = tokenizer;
         }
 
         #endregion
@@ -56,7 +56,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCampaignAsync(Campaign campaign)
         {
-            await _campaignRepository.InsertAsync(campaign);
+            await CampaignRepository.InsertAsync(campaign);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCampaignAsync(Campaign campaign)
         {
-            await _campaignRepository.UpdateAsync(campaign);
+            await CampaignRepository.UpdateAsync(campaign);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCampaignAsync(Campaign campaign)
         {
-            await _campaignRepository.DeleteAsync(campaign);
+            await CampaignRepository.DeleteAsync(campaign);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<Campaign> GetCampaignByIdAsync(int campaignId)
         {
-            return await _campaignRepository.GetByIdAsync(campaignId, cache => default);
+            return await CampaignRepository.GetByIdAsync(campaignId, cache => default);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<Campaign>> GetAllCampaignsAsync(int storeId = 0)
         {
-            var campaigns = await _campaignRepository.GetAllAsync(query =>
+            var campaigns = await CampaignRepository.GetAllAsync(query =>
             {
                 if (storeId > 0) 
                     query = query.Where(c => c.StoreId == storeId);
@@ -138,19 +138,19 @@ namespace Nop.Services.Messages
 
             foreach (var subscription in subscriptions)
             {
-                var customer = await _customerService.GetCustomerByEmailAsync(subscription.Email);
+                var customer = await CustomerService.GetCustomerByEmailAsync(subscription.Email);
                 //ignore deleted or inactive customers when sending newsletter campaigns
                 if (customer != null && (!customer.Active || customer.Deleted))
                     continue;
 
                 var tokens = new List<Token>();
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, await _storeContext.GetCurrentStoreAsync(), emailAccount);
-                await _messageTokenProvider.AddNewsLetterSubscriptionTokensAsync(tokens, subscription);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, await StoreContext.GetCurrentStoreAsync(), emailAccount);
+                await MessageTokenProvider.AddNewsLetterSubscriptionTokensAsync(tokens, subscription);
                 if (customer != null)
-                    await _messageTokenProvider.AddCustomerTokensAsync(tokens, customer);
+                    await MessageTokenProvider.AddCustomerTokensAsync(tokens, customer);
 
-                var subject = _tokenizer.Replace(campaign.Subject, tokens, false);
-                var body = _tokenizer.Replace(campaign.Body, tokens, true);
+                var subject = Tokenizer.Replace(campaign.Subject, tokens, false);
+                var body = Tokenizer.Replace(campaign.Body, tokens, true);
 
                 var email = new QueuedEmail
                 {
@@ -164,7 +164,7 @@ namespace Nop.Services.Messages
                     EmailAccountId = emailAccount.Id,
                     DontSendBeforeDateUtc = campaign.DontSendBeforeDateUtc
                 };
-                await _queuedEmailService.InsertQueuedEmailAsync(email);
+                await QueuedEmailService.InsertQueuedEmailAsync(email);
                 totalEmailsSent++;
             }
 
@@ -187,15 +187,15 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException(nameof(emailAccount));
 
             var tokens = new List<Token>();
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, await _storeContext.GetCurrentStoreAsync(), emailAccount);
-            var customer = await _customerService.GetCustomerByEmailAsync(email);
+            await MessageTokenProvider.AddStoreTokensAsync(tokens, await StoreContext.GetCurrentStoreAsync(), emailAccount);
+            var customer = await CustomerService.GetCustomerByEmailAsync(email);
             if (customer != null)
-                await _messageTokenProvider.AddCustomerTokensAsync(tokens, customer);
+                await MessageTokenProvider.AddCustomerTokensAsync(tokens, customer);
 
-            var subject = _tokenizer.Replace(campaign.Subject, tokens, false);
-            var body = _tokenizer.Replace(campaign.Body, tokens, true);
+            var subject = Tokenizer.Replace(campaign.Subject, tokens, false);
+            var body = Tokenizer.Replace(campaign.Body, tokens, true);
 
-            await _emailSender.SendEmailAsync(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, email, null);
+            await EmailSender.SendEmailAsync(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, email, null);
         }
 
         #endregion

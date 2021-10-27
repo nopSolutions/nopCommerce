@@ -11,10 +11,10 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
-        private readonly IQueuedEmailService _queuedEmailService;
+        protected IEmailAccountService EmailAccountService { get; }
+        protected IEmailSender EmailSender { get; }
+        protected ILogger Logger { get; }
+        protected IQueuedEmailService QueuedEmailService { get; }
 
         #endregion
 
@@ -25,10 +25,10 @@ namespace Nop.Services.Messages
             ILogger logger,
             IQueuedEmailService queuedEmailService)
         {
-            _emailAccountService = emailAccountService;
-            _emailSender = emailSender;
-            _logger = logger;
-            _queuedEmailService = queuedEmailService;
+            EmailAccountService = emailAccountService;
+            EmailSender = emailSender;
+            Logger = logger;
+            QueuedEmailService = queuedEmailService;
         }
 
         #endregion
@@ -41,7 +41,7 @@ namespace Nop.Services.Messages
         public virtual async System.Threading.Tasks.Task ExecuteAsync()
         {
             var maxTries = 3;
-            var queuedEmails = await _queuedEmailService.SearchEmailsAsync(null, null, null, null,
+            var queuedEmails = await QueuedEmailService.SearchEmailsAsync(null, null, null, null,
                 true, true, maxTries, false, 0, 500);
             foreach (var queuedEmail in queuedEmails)
             {
@@ -54,7 +54,7 @@ namespace Nop.Services.Messages
 
                 try
                 {
-                    await _emailSender.SendEmailAsync(await _emailAccountService.GetEmailAccountByIdAsync(queuedEmail.EmailAccountId),
+                    await EmailSender.SendEmailAsync(await EmailAccountService.GetEmailAccountByIdAsync(queuedEmail.EmailAccountId),
                         queuedEmail.Subject,
                         queuedEmail.Body,
                        queuedEmail.From,
@@ -73,12 +73,12 @@ namespace Nop.Services.Messages
                 }
                 catch (Exception exc)
                 {
-                    await _logger.ErrorAsync($"Error sending e-mail. {exc.Message}", exc);
+                    await Logger.ErrorAsync($"Error sending e-mail. {exc.Message}", exc);
                 }
                 finally
                 {
                     queuedEmail.SentTries += 1;
-                    await _queuedEmailService.UpdateQueuedEmailAsync(queuedEmail);
+                    await QueuedEmailService.UpdateQueuedEmailAsync(queuedEmail);
                 }
             }
         }

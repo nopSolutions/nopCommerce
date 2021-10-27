@@ -17,10 +17,9 @@ namespace Nop.Services.Logging
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
-        
-        private readonly IRepository<Log> _logRepository;
-        private readonly IWebHelper _webHelper;
+        protected CommonSettings CommonSettings { get; }
+        protected IRepository<Log> LogRepository { get; }
+        protected IWebHelper WebHelper { get; }
 
         #endregion
 
@@ -30,9 +29,9 @@ namespace Nop.Services.Logging
             IRepository<Log> logRepository,
             IWebHelper webHelper)
         {
-            _commonSettings = commonSettings;
-            _logRepository = logRepository;
-            _webHelper = webHelper;
+            CommonSettings = commonSettings;
+            LogRepository = logRepository;
+            WebHelper = webHelper;
         }
 
         #endregion
@@ -46,13 +45,13 @@ namespace Nop.Services.Logging
         /// <returns>Result</returns>
         protected virtual bool IgnoreLog(string message)
         {
-            if (!_commonSettings.IgnoreLogWordlist.Any())
+            if (!CommonSettings.IgnoreLogWordlist.Any())
                 return false;
 
             if (string.IsNullOrWhiteSpace(message))
                 return false;
 
-            return _commonSettings
+            return CommonSettings
                 .IgnoreLogWordlist
                 .Any(x => message.Contains(x, StringComparison.InvariantCultureIgnoreCase));
         }
@@ -85,7 +84,7 @@ namespace Nop.Services.Logging
             if (log == null)
                 throw new ArgumentNullException(nameof(log));
 
-            await _logRepository.DeleteAsync(log, false);
+            await LogRepository.DeleteAsync(log, false);
         }
 
         /// <summary>
@@ -95,7 +94,7 @@ namespace Nop.Services.Logging
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteLogsAsync(IList<Log> logs)
         {
-            await _logRepository.DeleteAsync(logs, false);
+            await LogRepository.DeleteAsync(logs, false);
         }
 
         /// <summary>
@@ -106,9 +105,9 @@ namespace Nop.Services.Logging
         public virtual async Task ClearLogAsync(DateTime? olderThan = null)
         {
             if(olderThan == null)
-                await _logRepository.TruncateAsync();
+                await LogRepository.TruncateAsync();
             else
-                await _logRepository.DeleteAsync(p => p.CreatedOnUtc < olderThan.Value);
+                await LogRepository.DeleteAsync(p => p.CreatedOnUtc < olderThan.Value);
         }
 
         /// <summary>
@@ -128,7 +127,7 @@ namespace Nop.Services.Logging
             string message = "", LogLevel? logLevel = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var logs = await _logRepository.GetAllPagedAsync(query =>
+            var logs = await LogRepository.GetAllPagedAsync(query =>
             {
                 if (fromUtc.HasValue)
                     query = query.Where(l => fromUtc.Value <= l.CreatedOnUtc);
@@ -160,7 +159,7 @@ namespace Nop.Services.Logging
         /// </returns>
         public virtual async Task<Log> GetLogByIdAsync(int logId)
         {
-            return await _logRepository.GetByIdAsync(logId);
+            return await LogRepository.GetByIdAsync(logId);
         }
 
         /// <summary>
@@ -173,7 +172,7 @@ namespace Nop.Services.Logging
         /// </returns>
         public virtual async Task<IList<Log>> GetLogByIdsAsync(int[] logIds)
         {
-            return await _logRepository.GetByIdsAsync(logIds);
+            return await LogRepository.GetByIdsAsync(logIds);
         }
 
         /// <summary>
@@ -198,14 +197,14 @@ namespace Nop.Services.Logging
                 LogLevel = logLevel,
                 ShortMessage = shortMessage,
                 FullMessage = fullMessage,
-                IpAddress = _webHelper.GetCurrentIpAddress(),
+                IpAddress = WebHelper.GetCurrentIpAddress(),
                 CustomerId = customer?.Id,
-                PageUrl = _webHelper.GetThisPageUrl(true),
-                ReferrerUrl = _webHelper.GetUrlReferrer(),
+                PageUrl = WebHelper.GetThisPageUrl(true),
+                ReferrerUrl = WebHelper.GetUrlReferrer(),
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            await _logRepository.InsertAsync(log, false);
+            await LogRepository.InsertAsync(log, false);
 
             return log;
         }

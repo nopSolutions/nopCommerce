@@ -16,8 +16,8 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly ILogger _logger;
-        private readonly INopFileProvider _fileProvider;
+        protected ILogger Logger { get; }
+        protected INopFileProvider FileProvider { get; }
 
         #endregion
 
@@ -26,8 +26,8 @@ namespace Nop.Services.Directory
         public GeoLookupService(ILogger logger,
             INopFileProvider fileProvider)
         {
-            _logger = logger;
-            _fileProvider = fileProvider;
+            Logger = logger;
+            FileProvider = fileProvider;
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace Nop.Services.Directory
             try
             {
                 //This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
-                var databasePath = _fileProvider.MapPath("~/App_Data/GeoLite2-Country.mmdb");
+                var databasePath = FileProvider.MapPath("~/App_Data/GeoLite2-Country.mmdb");
                 var reader = new DatabaseReader(databasePath);
                 var omni = reader.Country(ipAddress);
                 return omni;
@@ -74,7 +74,7 @@ namespace Nop.Services.Directory
             catch (Exception exc)
             {
                 //do not throw exceptions
-                _logger.WarningAsync("Cannot load MaxMind record", exc).Wait();
+                Logger.WarningAsync("Cannot load MaxMind record", exc).Wait();
                 return null;
             }
         }

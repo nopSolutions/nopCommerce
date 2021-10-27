@@ -16,10 +16,10 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger _logger;
-        private readonly ITempDataDictionaryFactory _tempDataDictionaryFactory;
-        private readonly IWorkContext _workContext;
+        protected IHttpContextAccessor HttpContextAccessor { get; }
+        protected ILogger Logger { get; }
+        protected ITempDataDictionaryFactory TempDataDictionaryFactory { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -30,10 +30,10 @@ namespace Nop.Services.Messages
             ITempDataDictionaryFactory tempDataDictionaryFactory,
             IWorkContext workContext)
         {
-            _httpContextAccessor = httpContextAccessor;
-            _logger = logger;
-            _tempDataDictionaryFactory = tempDataDictionaryFactory;
-            _workContext = workContext;
+            HttpContextAccessor = httpContextAccessor;
+            Logger = logger;
+            TempDataDictionaryFactory = tempDataDictionaryFactory;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -48,8 +48,8 @@ namespace Nop.Services.Messages
         /// <param name="encode">A value indicating whether the message should not be encoded</param>
         protected virtual void PrepareTempData(NotifyType type, string message, bool encode = true)
         {
-            var context = _httpContextAccessor.HttpContext;
-            var tempData = _tempDataDictionaryFactory.GetTempData(context);
+            var context = HttpContextAccessor.HttpContext;
+            var tempData = TempDataDictionaryFactory.GetTempData(context);
 
             //Messages have stored in a serialized list
             var messages = tempData.ContainsKey(NopMessageDefaults.NotificationListKey)
@@ -75,8 +75,8 @@ namespace Nop.Services.Messages
         {
             if (exception == null)
                 return;
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            await _logger.ErrorAsync(exception.Message, exception, customer);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            await Logger.ErrorAsync(exception.Message, exception, customer);
         }
 
         #endregion

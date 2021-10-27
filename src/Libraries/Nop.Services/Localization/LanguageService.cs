@@ -18,11 +18,11 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly IRepository<Language> _languageRepository;
-        private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly LocalizationSettings _localizationSettings;
+        protected IRepository<Language> LanguageRepository { get; }
+        protected ISettingService SettingService { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected LocalizationSettings LocalizationSettings { get; }
 
         #endregion
 
@@ -34,11 +34,11 @@ namespace Nop.Services.Localization
             IStoreMappingService storeMappingService,
             LocalizationSettings localizationSettings)
         {
-            _languageRepository = languageRepository;
-            _settingService = settingService;
-            _staticCacheManager = staticCacheManager;
-            _storeMappingService = storeMappingService;
-            _localizationSettings = localizationSettings;
+            LanguageRepository = languageRepository;
+            SettingService = settingService;
+            StaticCacheManager = staticCacheManager;
+            StoreMappingService = storeMappingService;
+            LocalizationSettings = localizationSettings;
         }
 
         #endregion
@@ -56,18 +56,18 @@ namespace Nop.Services.Localization
                 throw new ArgumentNullException(nameof(language));
             
             //update default admin area language (if required)
-            if (_localizationSettings.DefaultAdminLanguageId == language.Id)
+            if (LocalizationSettings.DefaultAdminLanguageId == language.Id)
                 foreach (var activeLanguage in await GetAllLanguagesAsync())
                 {
                     if (activeLanguage.Id == language.Id) 
                         continue;
 
-                    _localizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
-                    await _settingService.SaveSettingAsync(_localizationSettings);
+                    LocalizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
+                    await SettingService.SaveSettingAsync(LocalizationSettings);
                     break;
                 }
 
-            await _languageRepository.DeleteAsync(language);
+            await LanguageRepository.DeleteAsync(language);
         }
 
         /// <summary>
@@ -82,11 +82,11 @@ namespace Nop.Services.Localization
         public virtual async Task<IList<Language>> GetAllLanguagesAsync(bool showHidden = false, int storeId = 0)
         {
             //cacheable copy
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
             
-            var languages = await _staticCacheManager.GetAsync(key, async () =>
+            var languages = await StaticCacheManager.GetAsync(key, async () =>
             {
-                var allLanguages = await _languageRepository.GetAllAsync(query =>
+                var allLanguages = await LanguageRepository.GetAllAsync(query =>
                 {
                     if (!showHidden)
                         query = query.Where(l => l.Published);
@@ -98,7 +98,7 @@ namespace Nop.Services.Localization
                 //store mapping
                 if (storeId > 0)
                     allLanguages = await allLanguages
-                        .WhereAwait(async l => await _storeMappingService.AuthorizeAsync(l, storeId))
+                        .WhereAwait(async l => await StoreMappingService.AuthorizeAsync(l, storeId))
                         .ToListAsync();
 
                 return allLanguages;
@@ -117,7 +117,7 @@ namespace Nop.Services.Localization
         /// </returns>
         public virtual async Task<Language> GetLanguageByIdAsync(int languageId)
         {
-            return await _languageRepository.GetByIdAsync(languageId, cache => default);
+            return await LanguageRepository.GetByIdAsync(languageId, cache => default);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Nop.Services.Localization
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertLanguageAsync(Language language)
         {
-            await _languageRepository.InsertAsync(language);
+            await LanguageRepository.InsertAsync(language);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Nop.Services.Localization
         public virtual async Task UpdateLanguageAsync(Language language)
         {
             //update language
-            await _languageRepository.UpdateAsync(language);
+            await LanguageRepository.UpdateAsync(language);
         }
 
         /// <summary>

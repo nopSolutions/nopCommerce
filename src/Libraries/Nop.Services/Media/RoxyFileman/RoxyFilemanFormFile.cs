@@ -14,9 +14,9 @@ namespace Nop.Services.Media.RoxyFileman
     {
         #region Fields
 
-        private readonly Picture _picture;
-        private readonly PictureBinary _pictureBinary;
-        private readonly string _fileExtension;
+        protected Picture Picture { get; }
+        protected PictureBinary PictureBinary { get; }
+        protected string FileExtension { get; }
 
         #endregion
 
@@ -24,9 +24,9 @@ namespace Nop.Services.Media.RoxyFileman
 
         public RoxyFilemanFormFile(Picture picture, PictureBinary pictureBinary, string fileExtension)
         {
-            _picture = picture;
-            _pictureBinary = pictureBinary;
-            _fileExtension = fileExtension;
+            Picture = picture;
+            PictureBinary = pictureBinary;
+            FileExtension = fileExtension;
         }
 
         #endregion
@@ -38,7 +38,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         public Stream OpenReadStream()
         {
-            return new MemoryStream(_pictureBinary.BinaryData);
+            return new MemoryStream(PictureBinary.BinaryData);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Gets the raw Content-Type header of the uploaded file.
         /// </summary>
-        public string ContentType => _picture.MimeType;
+        public string ContentType => Picture.MimeType;
 
         /// <summary>
         /// Gets the raw Content-Disposition header of the uploaded file.
@@ -83,7 +83,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Gets the file length in bytes.
         /// </summary>
-        public long Length => _pictureBinary.BinaryData.Length;
+        public long Length => PictureBinary.BinaryData.Length;
 
         /// <summary>
         /// Gets the form field name from the Content-Disposition header.
@@ -93,7 +93,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Gets the file name from the Content-Disposition header.
         /// </summary>
-        public string FileName => $"{_picture.SeoFilename}{_fileExtension}";
+        public string FileName => $"{Picture.SeoFilename}{FileExtension}";
 
         #endregion
     }

@@ -16,8 +16,8 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IRepository<GenericAttribute> _genericAttributeRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected IRepository<GenericAttribute> GenericAttributeRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
 
         #endregion
 
@@ -26,8 +26,8 @@ namespace Nop.Services.Common
         public GenericAttributeService(IRepository<GenericAttribute> genericAttributeRepository,
             IStaticCacheManager staticCacheManager)
         {
-            _genericAttributeRepository = genericAttributeRepository;
-            _staticCacheManager = staticCacheManager;
+            GenericAttributeRepository = genericAttributeRepository;
+            StaticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -41,7 +41,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAttributeAsync(GenericAttribute attribute)
         {
-            await _genericAttributeRepository.DeleteAsync(attribute);
+            await GenericAttributeRepository.DeleteAsync(attribute);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAttributesAsync(IList<GenericAttribute> attributes)
         {
-            await _genericAttributeRepository.DeleteAsync(attributes);
+            await GenericAttributeRepository.DeleteAsync(attributes);
         }
         
         /// <summary>
@@ -66,7 +66,7 @@ namespace Nop.Services.Common
 
             attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
 
-            await _genericAttributeRepository.InsertAsync(attribute);
+            await GenericAttributeRepository.InsertAsync(attribute);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nop.Services.Common
 
             attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
 
-            await _genericAttributeRepository.UpdateAsync(attribute);
+            await GenericAttributeRepository.UpdateAsync(attribute);
         }
 
         /// <summary>
@@ -95,13 +95,13 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task<IList<GenericAttribute>> GetAttributesForEntityAsync(int entityId, string keyGroup)
         {
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
+            var key = StaticCacheManager.PrepareKeyForShortTermCache(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
             
-            var query = from ga in _genericAttributeRepository.Table
+            var query = from ga in GenericAttributeRepository.Table
                 where ga.EntityId == entityId &&
                       ga.KeyGroup == keyGroup
                 select ga;
-            var attributes = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
+            var attributes = await StaticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return attributes;
         }

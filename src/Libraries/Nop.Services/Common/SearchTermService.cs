@@ -14,7 +14,7 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IRepository<SearchTerm> _searchTermRepository;
+        protected IRepository<SearchTerm> SearchTermRepository { get; }
 
         #endregion
 
@@ -22,7 +22,7 @@ namespace Nop.Services.Common
 
         public SearchTermService(IRepository<SearchTerm> searchTermRepository)
         {
-            _searchTermRepository = searchTermRepository;
+            SearchTermRepository = searchTermRepository;
         }
 
         #endregion
@@ -43,7 +43,7 @@ namespace Nop.Services.Common
             if (string.IsNullOrEmpty(keyword))
                 return null;
 
-            var query = from st in _searchTermRepository.Table
+            var query = from st in SearchTermRepository.Table
                         where st.Keyword == keyword && st.StoreId == storeId
                         orderby st.Id
                         select st;
@@ -63,7 +63,7 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task<IPagedList<SearchTermReportLine>> GetStatsAsync(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = (from st in _searchTermRepository.Table
+            var query = (from st in SearchTermRepository.Table
                          group st by st.Keyword into groupedResult
                          select new
                          {
@@ -89,7 +89,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertSearchTermAsync(SearchTerm searchTerm)
         {
-            await _searchTermRepository.InsertAsync(searchTerm);
+            await SearchTermRepository.InsertAsync(searchTerm);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateSearchTermAsync(SearchTerm searchTerm)
         {
-            await _searchTermRepository.UpdateAsync(searchTerm);
+            await SearchTermRepository.UpdateAsync(searchTerm);
         }
 
         #endregion

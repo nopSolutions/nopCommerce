@@ -15,7 +15,7 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly MessageTemplatesSettings _messageTemplatesSettings;
+        protected MessageTemplatesSettings MessageTemplatesSettings { get; }
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace Nop.Services.Messages
 
         public Tokenizer(MessageTemplatesSettings messageTemplatesSettings)
         {
-            _messageTemplatesSettings = messageTemplatesSettings;
+            MessageTemplatesSettings = messageTemplatesSettings;
         }
 
         #endregion
@@ -40,7 +40,7 @@ namespace Nop.Services.Messages
         protected string Replace(string original, string pattern, string replacement)
         {
             //for case sensitive comparison use base string.Replace() method
-            var stringComparison = _messageTemplatesSettings.CaseInvariantReplacement ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            var stringComparison = MessageTemplatesSettings.CaseInvariantReplacement ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
             if (stringComparison == StringComparison.Ordinal)
                 return original.Replace(pattern, replacement);
 

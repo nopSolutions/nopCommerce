@@ -20,10 +20,10 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Order> _orderRepository;
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IRepository<Customer> CustomerRepository { get; }
+        protected IRepository<Order> OrderRepository { get; }
 
         #endregion
 
@@ -34,10 +34,10 @@ namespace Nop.Services.Customers
             IRepository<Customer> customerRepository,
             IRepository<Order> orderRepository)
         {
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _customerRepository = customerRepository;
-            _orderRepository = orderRepository;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            CustomerRepository = customerRepository;
+            OrderRepository = orderRepository;
         }
 
         #endregion
@@ -74,8 +74,8 @@ namespace Nop.Services.Customers
             int? shippingStatusId = null;
             if (ss.HasValue)
                 shippingStatusId = (int)ss.Value;
-            var query1 = from c in _customerRepository.Table
-                         join o in _orderRepository.Table on c.Id equals o.CustomerId
+            var query1 = from c in CustomerRepository.Table
+                         join o in OrderRepository.Table on c.Id equals o.CustomerId
                          where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                          (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
                          (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
@@ -119,13 +119,13 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<int> GetRegisteredCustomersReportAsync(int days)
         {
-            var date = (await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).AddDays(-days);
+            var date = (await DateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).AddDays(-days);
 
-            var registeredCustomerRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
+            var registeredCustomerRole = await CustomerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
             if (registeredCustomerRole == null)
                 return 0;
 
-            return (await _customerService.GetAllCustomersAsync(
+            return (await CustomerService.GetAllCustomersAsync(
                 date,
                 customerRoleIds: new[] { registeredCustomerRole.Id })).Count;
         }

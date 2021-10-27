@@ -16,9 +16,9 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly ILocalizationService _localizationService;
-        private readonly IRepository<StateProvince> _stateProvinceRepository;
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IRepository<StateProvince> StateProvinceRepository { get; }
 
         #endregion
 
@@ -28,9 +28,9 @@ namespace Nop.Services.Directory
             ILocalizationService localizationService,
             IRepository<StateProvince> stateProvinceRepository)
         {
-            _staticCacheManager = staticCacheManager;
-            _localizationService = localizationService;
-            _stateProvinceRepository = stateProvinceRepository;
+            StaticCacheManager = staticCacheManager;
+            LocalizationService = localizationService;
+            StateProvinceRepository = stateProvinceRepository;
         }
 
         #endregion
@@ -43,7 +43,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteStateProvinceAsync(StateProvince stateProvince)
         {
-            await _stateProvinceRepository.DeleteAsync(stateProvince);
+            await StateProvinceRepository.DeleteAsync(stateProvince);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<StateProvince> GetStateProvinceByIdAsync(int stateProvinceId)
         {
-            return await _stateProvinceRepository.GetByIdAsync(stateProvinceId, cache => default);
+            return await StateProvinceRepository.GetByIdAsync(stateProvinceId, cache => default);
         }
 
         /// <summary>
@@ -73,16 +73,16 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(abbreviation))
                 return null;
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesByAbbreviationCacheKey
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesByAbbreviationCacheKey
                 , abbreviation, countryId ?? 0);
 
-            var query = _stateProvinceRepository.Table.Where(state => state.Abbreviation == abbreviation);
+            var query = StateProvinceRepository.Table.Where(state => state.Abbreviation == abbreviation);
 
             //filter by country
             if (countryId.HasValue)
                 query = query.Where(state => state.CountryId == countryId);
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
+            return await StaticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
         /// <summary>
@@ -110,11 +110,11 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<IList<StateProvince>> GetStateProvincesByCountryIdAsync(int countryId, int languageId = 0, bool showHidden = false)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesByCountryCacheKey, countryId, languageId, showHidden);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesByCountryCacheKey, countryId, languageId, showHidden);
 
-            return await _staticCacheManager.GetAsync(key, async () =>
+            return await StaticCacheManager.GetAsync(key, async () =>
             {
-                var query = from sp in _stateProvinceRepository.Table
+                var query = from sp in StateProvinceRepository.Table
                             orderby sp.DisplayOrder, sp.Name
                             where sp.CountryId == countryId &&
                             (showHidden || sp.Published)
@@ -125,7 +125,7 @@ namespace Nop.Services.Directory
                     //we should sort states by localized names when they have the same display order
                     stateProvinces = await stateProvinces.ToAsyncEnumerable()
                         .OrderBy(c => c.DisplayOrder)
-                        .ThenByAwait(async c => await _localizationService.GetLocalizedAsync(c, x => x.Name, languageId))
+                        .ThenByAwait(async c => await LocalizationService.GetLocalizedAsync(c, x => x.Name, languageId))
                         .ToListAsync();
 
                 return stateProvinces;
@@ -142,13 +142,13 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<IList<StateProvince>> GetStateProvincesAsync(bool showHidden = false)
         {
-            var query = from sp in _stateProvinceRepository.Table
+            var query = from sp in StateProvinceRepository.Table
                         orderby sp.CountryId, sp.DisplayOrder, sp.Name
                         where showHidden || sp.Published
                         select sp;
 
 
-            var stateProvinces = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesAllCacheKey, showHidden), async () => await query.ToListAsync());
+            var stateProvinces = await StaticCacheManager.GetAsync(StaticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesAllCacheKey, showHidden), async () => await query.ToListAsync());
 
             return stateProvinces;
         }
@@ -160,7 +160,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertStateProvinceAsync(StateProvince stateProvince)
         {
-            await _stateProvinceRepository.InsertAsync(stateProvince);
+            await StateProvinceRepository.InsertAsync(stateProvince);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateStateProvinceAsync(StateProvince stateProvince)
         {
-            await _stateProvinceRepository.UpdateAsync(stateProvince);
+            await StateProvinceRepository.UpdateAsync(stateProvince);
         }
 
         #endregion

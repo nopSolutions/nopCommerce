@@ -30,28 +30,28 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IRepository<Address> _customerAddressRepository;
-        private readonly IRepository<BlogComment> _blogCommentRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<CustomerAddressMapping> _customerAddressMappingRepository;
-        private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
-        private readonly IRepository<CustomerPassword> _customerPasswordRepository;
-        private readonly IRepository<CustomerRole> _customerRoleRepository;
-        private readonly IRepository<ForumPost> _forumPostRepository;
-        private readonly IRepository<ForumTopic> _forumTopicRepository;
-        private readonly IRepository<GenericAttribute> _gaRepository;
-        private readonly IRepository<NewsComment> _newsCommentRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<ProductReview> _productReviewRepository;
-        private readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
-        private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
-        private readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        protected CustomerSettings CustomerSettings { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected INopDataProvider DataProvider { get; }
+        protected IRepository<Address> CustomerAddressRepository { get; }
+        protected IRepository<BlogComment> BlogCommentRepository { get; }
+        protected IRepository<Customer> CustomerRepository { get; }
+        protected IRepository<CustomerAddressMapping> CustomerAddressMappingRepository { get; }
+        protected IRepository<CustomerCustomerRoleMapping> CustomerCustomerRoleMappingRepository { get; }
+        protected IRepository<CustomerPassword> CustomerPasswordRepository { get; }
+        protected IRepository<CustomerRole> CustomerRoleRepository { get; }
+        protected IRepository<ForumPost> ForumPostRepository { get; }
+        protected IRepository<ForumTopic> ForumTopicRepository { get; }
+        protected IRepository<GenericAttribute> GaRepository { get; }
+        protected IRepository<NewsComment> NewsCommentRepository { get; }
+        protected IRepository<Order> OrderRepository { get; }
+        protected IRepository<ProductReview> ProductReviewRepository { get; }
+        protected IRepository<ProductReviewHelpfulness> ProductReviewHelpfulnessRepository { get; }
+        protected IRepository<PollVotingRecord> PollVotingRecordRepository { get; }
+        protected IRepository<ShoppingCartItem> ShoppingCartRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreContext StoreContext { get; }
+        protected ShoppingCartSettings ShoppingCartSettings { get; }
 
         #endregion
 
@@ -80,28 +80,28 @@ namespace Nop.Services.Customers
             IStoreContext storeContext,
             ShoppingCartSettings shoppingCartSettings)
         {
-            _customerSettings = customerSettings;
-            _genericAttributeService = genericAttributeService;
-            _dataProvider = dataProvider;
-            _customerAddressRepository = customerAddressRepository;
-            _blogCommentRepository = blogCommentRepository;
-            _customerRepository = customerRepository;
-            _customerAddressMappingRepository = customerAddressMappingRepository;
-            _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
-            _customerPasswordRepository = customerPasswordRepository;
-            _customerRoleRepository = customerRoleRepository;
-            _forumPostRepository = forumPostRepository;
-            _forumTopicRepository = forumTopicRepository;
-            _gaRepository = gaRepository;
-            _newsCommentRepository = newsCommentRepository;
-            _orderRepository = orderRepository;
-            _productReviewRepository = productReviewRepository;
-            _productReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
-            _pollVotingRecordRepository = pollVotingRecordRepository;
-            _shoppingCartRepository = shoppingCartRepository;
-            _staticCacheManager = staticCacheManager;
-            _storeContext = storeContext;
-            _shoppingCartSettings = shoppingCartSettings;
+            CustomerSettings = customerSettings;
+            GenericAttributeService = genericAttributeService;
+            DataProvider = dataProvider;
+            CustomerAddressRepository = customerAddressRepository;
+            BlogCommentRepository = blogCommentRepository;
+            CustomerRepository = customerRepository;
+            CustomerAddressMappingRepository = customerAddressMappingRepository;
+            CustomerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
+            CustomerPasswordRepository = customerPasswordRepository;
+            CustomerRoleRepository = customerRoleRepository;
+            ForumPostRepository = forumPostRepository;
+            ForumTopicRepository = forumTopicRepository;
+            GaRepository = gaRepository;
+            NewsCommentRepository = newsCommentRepository;
+            OrderRepository = orderRepository;
+            ProductReviewRepository = productReviewRepository;
+            ProductReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
+            PollVotingRecordRepository = pollVotingRecordRepository;
+            ShoppingCartRepository = shoppingCartRepository;
+            StaticCacheManager = staticCacheManager;
+            StoreContext = storeContext;
+            ShoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -142,7 +142,7 @@ namespace Nop.Services.Customers
             string company = null, string phone = null, string zipPostalCode = null, string ipAddress = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
-            var customers = await _customerRepository.GetAllPagedAsync(query =>
+            var customers = await CustomerRepository.GetAllPagedAsync(query =>
             {
                 if (createdFromUtc.HasValue)
                     query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
@@ -157,7 +157,7 @@ namespace Nop.Services.Customers
 
                 if (customerRoleIds != null && customerRoleIds.Length > 0)
                 {
-                    query = query.Join(_customerCustomerRoleMappingRepository.Table, x => x.Id, y => y.CustomerId,
+                    query = query.Join(CustomerCustomerRoleMappingRepository.Table, x => x.Id, y => y.CustomerId,
                             (x, y) => new { Customer = x, Mapping = y })
                         .Where(z => customerRoleIds.Contains(z.Mapping.CustomerRoleId))
                         .Select(z => z.Customer)
@@ -171,7 +171,7 @@ namespace Nop.Services.Customers
                 if (!string.IsNullOrWhiteSpace(firstName))
                 {
                     query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
+                        .Join(GaRepository.Table, x => x.Id, y => y.EntityId,
                             (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.FirstNameAttribute &&
@@ -182,7 +182,7 @@ namespace Nop.Services.Customers
                 if (!string.IsNullOrWhiteSpace(lastName))
                 {
                     query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
+                        .Join(GaRepository.Table, x => x.Id, y => y.EntityId,
                             (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.LastNameAttribute &&
@@ -202,7 +202,7 @@ namespace Nop.Services.Customers
                     //z.Attribute.Value.Length - dateOfBirthStr.Length = 5
                     //dateOfBirthStr.Length = 5
                     query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
+                        .Join(GaRepository.Table, x => x.Id, y => y.EntityId,
                             (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
@@ -217,7 +217,7 @@ namespace Nop.Services.Customers
                     //z.Attribute.Value.Length - dateOfBirthStr.Length = 8
                     //dateOfBirthStr.Length = 2
                     query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
+                        .Join(GaRepository.Table, x => x.Id, y => y.EntityId,
                             (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
@@ -229,7 +229,7 @@ namespace Nop.Services.Customers
                     //only month is specified
                     var dateOfBirthStr = "-" + monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-";
                     query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
+                        .Join(GaRepository.Table, x => x.Id, y => y.EntityId,
                             (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
@@ -241,7 +241,7 @@ namespace Nop.Services.Customers
                 if (!string.IsNullOrWhiteSpace(company))
                 {
                     query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
+                        .Join(GaRepository.Table, x => x.Id, y => y.EntityId,
                             (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.CompanyAttribute &&
@@ -253,7 +253,7 @@ namespace Nop.Services.Customers
                 if (!string.IsNullOrWhiteSpace(phone))
                 {
                     query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
+                        .Join(GaRepository.Table, x => x.Id, y => y.EntityId,
                             (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.PhoneAttribute &&
@@ -265,7 +265,7 @@ namespace Nop.Services.Customers
                 if (!string.IsNullOrWhiteSpace(zipPostalCode))
                 {
                     query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
+                        .Join(GaRepository.Table, x => x.Id, y => y.EntityId,
                             (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.ZipPostalCodeAttribute &&
@@ -301,12 +301,12 @@ namespace Nop.Services.Customers
         public virtual async Task<IPagedList<Customer>> GetOnlineCustomersAsync(DateTime lastActivityFromUtc,
             int[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _customerRepository.Table;
+            var query = CustomerRepository.Table;
             query = query.Where(c => lastActivityFromUtc <= c.LastActivityDateUtc);
             query = query.Where(c => !c.Deleted);
 
             if (customerRoleIds != null && customerRoleIds.Length > 0)
-                query = query.Where(c => _customerCustomerRoleMappingRepository.Table.Any(ccrm => ccrm.CustomerId == c.Id && customerRoleIds.Contains(ccrm.CustomerRoleId)));
+                query = query.Where(c => CustomerCustomerRoleMappingRepository.Table.Any(ccrm => ccrm.CustomerId == c.Id && customerRoleIds.Contains(ccrm.CustomerRoleId)));
 
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
             var customers = await query.ToPagedListAsync(pageIndex, pageSize);
@@ -335,14 +335,14 @@ namespace Nop.Services.Customers
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             //get all shopping cart items
-            var items = _shoppingCartRepository.Table;
+            var items = ShoppingCartRepository.Table;
 
             //filter by type
             if (shoppingCartType.HasValue)
                 items = items.Where(item => item.ShoppingCartTypeId == (int)shoppingCartType.Value);
 
             //filter shopping cart items by store
-            if (storeId > 0 && !_shoppingCartSettings.CartsSharedBetweenStores)
+            if (storeId > 0 && !ShoppingCartSettings.CartsSharedBetweenStores)
                 items = items.Where(item => item.StoreId == storeId);
 
             //filter shopping cart items by product
@@ -356,19 +356,19 @@ namespace Nop.Services.Customers
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
             //get all active customers
-            var customers = _customerRepository.Table.Where(customer => customer.Active && !customer.Deleted);
+            var customers = CustomerRepository.Table.Where(customer => customer.Active && !customer.Deleted);
 
             //filter customers by billing country
             if (countryId > 0)
                 customers = from c in customers
-                            join a in _customerAddressRepository.Table on c.BillingAddressId equals a.Id
+                            join a in CustomerAddressRepository.Table on c.BillingAddressId equals a.Id
                             where a.CountryId == countryId
                             select c;
 
             var customersWithCarts = from c in customers
                                      join item in items on c.Id equals item.CustomerId
                                      //we change ordering for the MySQL engine to avoid problems with the ONLY_FULL_GROUP_BY server property that is set by default since the 5.7.5 version
-                                     orderby _dataProvider.ConfigurationName == "MySql" ? c.CreatedOnUtc : item.CreatedOnUtc descending
+                                     orderby DataProvider.ConfigurationName == "MySql" ? c.CreatedOnUtc : item.CreatedOnUtc descending
                                      select c;
 
             return await customersWithCarts.Distinct().ToPagedListAsync(pageIndex, pageSize);
@@ -404,7 +404,7 @@ namespace Nop.Services.Customers
 
             customer.Deleted = true;
 
-            if (_customerSettings.SuffixDeletedCustomers)
+            if (CustomerSettings.SuffixDeletedCustomers)
             {
                 if (!string.IsNullOrEmpty(customer.Email))
                     customer.Email += "-DELETED";
@@ -412,8 +412,8 @@ namespace Nop.Services.Customers
                     customer.Username += "-DELETED";
             }
 
-            await _customerRepository.UpdateAsync(customer, false);
-            await _customerRepository.DeleteAsync(customer);
+            await CustomerRepository.UpdateAsync(customer, false);
+            await CustomerRepository.DeleteAsync(customer);
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<Customer> GetCustomerByIdAsync(int customerId)
         {
-            return await _customerRepository.GetByIdAsync(customerId,
+            return await CustomerRepository.GetByIdAsync(customerId,
                 cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<Customer>.ByIdCacheKey, customerId));
         }
 
@@ -440,7 +440,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<IList<Customer>> GetCustomersByIdsAsync(int[] customerIds)
         {
-            return await _customerRepository.GetByIdsAsync(customerIds, includeDeleted: false);
+            return await CustomerRepository.GetByIdsAsync(customerIds, includeDeleted: false);
         }
 
         /// <summary>
@@ -456,14 +456,14 @@ namespace Nop.Services.Customers
             if (customerGuid == Guid.Empty)
                 return null;
 
-            var query = from c in _customerRepository.Table
+            var query = from c in CustomerRepository.Table
                         where c.CustomerGuid == customerGuid
                         orderby c.Id
                         select c;
            
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerByGuidCacheKey, customerGuid);
+            var key = StaticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerByGuidCacheKey, customerGuid);
             
-            return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
+            return await StaticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
         /// <summary>
@@ -479,7 +479,7 @@ namespace Nop.Services.Customers
             if (string.IsNullOrWhiteSpace(email))
                 return null;
 
-            var query = from c in _customerRepository.Table
+            var query = from c in CustomerRepository.Table
                         orderby c.Id
                         where c.Email == email
                         select c;
@@ -501,14 +501,14 @@ namespace Nop.Services.Customers
             if (string.IsNullOrWhiteSpace(systemName))
                 return null;
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerBySystemNameCacheKey, systemName);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerBySystemNameCacheKey, systemName);
 
-            var query = from c in _customerRepository.Table
+            var query = from c in CustomerRepository.Table
                         orderby c.Id
                         where c.SystemName == systemName
                         select c;
 
-            var customer = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
+            var customer = await StaticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
 
             return customer;
         }
@@ -526,7 +526,7 @@ namespace Nop.Services.Customers
 
             if (backgroundTaskUser is null)
             {
-                var store = await _storeContext.GetCurrentStoreAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
                 //If for any reason the system user isn't in the database, then we add it
                 backgroundTaskUser = new Customer
                 {
@@ -567,7 +567,7 @@ namespace Nop.Services.Customers
 
             if (searchEngineUser is null)
             {
-                var store = await _storeContext.GetCurrentStoreAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
                 //If for any reason the system user isn't in the database, then we add it
                 searchEngineUser = new Customer
                 {
@@ -608,7 +608,7 @@ namespace Nop.Services.Customers
             if (string.IsNullOrWhiteSpace(username))
                 return null;
 
-            var query = from c in _customerRepository.Table
+            var query = from c in CustomerRepository.Table
                         orderby c.Id
                         where c.Username == username
                         select c;
@@ -639,7 +639,7 @@ namespace Nop.Services.Customers
             if (guestRole == null)
                 throw new NopException("'Guests' role could not be loaded");
 
-            await _customerRepository.InsertAsync(customer);
+            await CustomerRepository.InsertAsync(customer);
 
             await AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id });
 
@@ -653,7 +653,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCustomerAsync(Customer customer)
         {
-            await _customerRepository.InsertAsync(customer);
+            await CustomerRepository.InsertAsync(customer);
         }
 
         /// <summary>
@@ -663,7 +663,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCustomerAsync(Customer customer)
         {
-            await _customerRepository.UpdateAsync(customer);
+            await CustomerRepository.UpdateAsync(customer);
         }
 
         /// <summary>
@@ -688,29 +688,29 @@ namespace Nop.Services.Customers
             //clear entered coupon codes
             if (clearCouponCodes)
             {
-                await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, null);
-                await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, null);
+                await GenericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, null);
+                await GenericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, null);
             }
 
             //clear checkout attributes
             if (clearCheckoutAttributes)
-                await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, null, storeId);
+                await GenericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, null, storeId);
 
             //clear reward points flag
             if (clearRewardPoints)
-                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, false, storeId);
+                await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, false, storeId);
 
             //clear selected shipping method
             if (clearShippingMethod)
             {
-                await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, storeId);
-                await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.OfferedShippingOptionsAttribute, null, storeId);
-                await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, storeId);
+                await GenericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, storeId);
+                await GenericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.OfferedShippingOptionsAttribute, null, storeId);
+                await GenericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, storeId);
             }
 
             //clear selected payment method
             if (clearPaymentMethod)
-                await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, null, storeId);
+                await GenericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, null, storeId);
 
             await UpdateCustomerAsync(customer);
         }
@@ -729,22 +729,22 @@ namespace Nop.Services.Customers
         {
             var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
 
-            var allGuestCustomers = from guest in _customerRepository.Table
-                                    join ccm in _customerCustomerRoleMappingRepository.Table on guest.Id equals ccm.CustomerId
+            var allGuestCustomers = from guest in CustomerRepository.Table
+                                    join ccm in CustomerCustomerRoleMappingRepository.Table on guest.Id equals ccm.CustomerId
                                     where ccm.CustomerRoleId == guestRole.Id
                                     select guest;
 
-            var guestsToDelete = from guest in _customerRepository.Table
+            var guestsToDelete = from guest in CustomerRepository.Table
                                  join g in allGuestCustomers on guest.Id equals g.Id
-                                 from sCart in _shoppingCartRepository.Table.Where(sci => sci.CustomerId == guest.Id).DefaultIfEmpty()
-                                 from order in _orderRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-                                 from blogComment in _blogCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-                                 from newsComment in _newsCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-                                 from productReview in _productReviewRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-                                 from productReviewHelpfulness in _productReviewHelpfulnessRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-                                 from pollVotingRecord in _pollVotingRecordRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-                                 from forumTopic in _forumTopicRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-                                 from forumPost in _forumPostRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from sCart in ShoppingCartRepository.Table.Where(sci => sci.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from order in OrderRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from blogComment in BlogCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from newsComment in NewsCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from productReview in ProductReviewRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from productReviewHelpfulness in ProductReviewHelpfulnessRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from pollVotingRecord in PollVotingRecordRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from forumTopic in ForumTopicRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from forumPost in ForumPostRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
                                  where (!onlyWithoutShoppingCart || sCart == null) &&
                                      order == null && blogComment == null && newsComment == null && productReview == null && productReviewHelpfulness == null &&
                                      pollVotingRecord == null && forumTopic == null && forumPost == null &&
@@ -753,20 +753,20 @@ namespace Nop.Services.Customers
                                      (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
                                  select new { CustomerId = guest.Id };
 
-            await using var tmpGuests = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsToDelete", guestsToDelete);
-            await using var tmpAddresses = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsAddressesToDelete",
-                _customerAddressMappingRepository.Table
+            await using var tmpGuests = await DataProvider.CreateTempDataStorageAsync("tmp_guestsToDelete", guestsToDelete);
+            await using var tmpAddresses = await DataProvider.CreateTempDataStorageAsync("tmp_guestsAddressesToDelete",
+                CustomerAddressMappingRepository.Table
                     .Where(ca => tmpGuests.Any(c => c.CustomerId == ca.CustomerId))
                     .Select(ca => new { AddressId = ca.AddressId }));
 
             //delete guests
-            var totalRecordsDeleted = await _customerRepository.DeleteAsync(c => tmpGuests.Any(tmp => tmp.CustomerId == c.Id));
+            var totalRecordsDeleted = await CustomerRepository.DeleteAsync(c => tmpGuests.Any(tmp => tmp.CustomerId == c.Id));
 
             //delete attributes
-            await _gaRepository.DeleteAsync(ga => tmpGuests.Any(c => c.CustomerId == ga.EntityId) && ga.KeyGroup == nameof(Customer));
+            await GaRepository.DeleteAsync(ga => tmpGuests.Any(c => c.CustomerId == ga.EntityId) && ga.KeyGroup == nameof(Customer));
 
             //delete m -> m addresses
-            await _customerAddressRepository.DeleteAsync(a => tmpAddresses.Any(tmp => tmp.AddressId == a.Id));
+            await CustomerAddressRepository.DeleteAsync(a => tmpAddresses.Any(tmp => tmp.AddressId == a.Id));
 
             return totalRecordsDeleted;
         }
@@ -804,8 +804,8 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var firstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-            var lastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
+            var firstName = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+            var lastName = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
 
             var fullName = string.Empty;
             if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
@@ -842,7 +842,7 @@ namespace Nop.Services.Customers
                 return await EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync("Customer.Guest");
 
             var result = string.Empty;
-            switch (_customerSettings.CustomerNameFormat)
+            switch (CustomerSettings.CustomerNameFormat)
             {
                 case CustomerNameFormat.ShowEmails:
                     result = customer.Email;
@@ -854,7 +854,7 @@ namespace Nop.Services.Customers
                     result = await GetCustomerFullNameAsync(customer);
                     break;
                 case CustomerNameFormat.ShowFirstName:
-                    result = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                    result = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
                     break;
                 default:
                     break;
@@ -879,7 +879,7 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var existingCouponCodes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
+            var existingCouponCodes = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
 
             var couponCodes = new List<string>();
             if (string.IsNullOrEmpty(existingCouponCodes))
@@ -924,7 +924,7 @@ namespace Nop.Services.Customers
             var result = string.Empty;
             try
             {
-                var existingCouponCodes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
+                var existingCouponCodes = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
 
                 couponCode = couponCode.Trim().ToLowerInvariant();
 
@@ -972,7 +972,7 @@ namespace Nop.Services.Customers
             }
 
             //apply new value
-            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, result);
+            await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, result);
         }
 
         /// <summary>
@@ -993,7 +993,7 @@ namespace Nop.Services.Customers
             var existingCouponCodes = await ParseAppliedDiscountCouponCodesAsync(customer);
 
             //clear them
-            await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, null);
+            await GenericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, null);
 
             //save again except removed one
             foreach (var existingCouponCode in existingCouponCodes)
@@ -1014,7 +1014,7 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var existingCouponCodes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
+            var existingCouponCodes = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
 
             var couponCodes = new List<string>();
             if (string.IsNullOrEmpty(existingCouponCodes))
@@ -1060,7 +1060,7 @@ namespace Nop.Services.Customers
             var result = string.Empty;
             try
             {
-                var existingCouponCodes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
+                var existingCouponCodes = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
 
                 couponCode = couponCode.Trim().ToLowerInvariant();
 
@@ -1107,7 +1107,7 @@ namespace Nop.Services.Customers
             }
 
             //apply new value
-            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, result);
+            await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, result);
         }
 
         /// <summary>
@@ -1128,7 +1128,7 @@ namespace Nop.Services.Customers
             var existingCouponCodes = await ParseAppliedGiftCardCouponCodesAsync(customer);
 
             //clear them
-            await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, null);
+            await GenericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, null);
 
             //save again except removed one
             foreach (var existingCouponCode in existingCouponCodes)
@@ -1147,7 +1147,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task AddCustomerRoleMappingAsync(CustomerCustomerRoleMapping roleMapping)
         {
-            await _customerCustomerRoleMappingRepository.InsertAsync(roleMapping);
+            await CustomerCustomerRoleMappingRepository.InsertAsync(roleMapping);
         }
 
         /// <summary>
@@ -1164,11 +1164,11 @@ namespace Nop.Services.Customers
             if (role is null)
                 throw new ArgumentNullException(nameof(role));
 
-            var mapping = await _customerCustomerRoleMappingRepository.Table
+            var mapping = await CustomerCustomerRoleMappingRepository.Table
                 .SingleOrDefaultAsync(ccrm => ccrm.CustomerId == customer.Id && ccrm.CustomerRoleId == role.Id);
 
             if (mapping != null)
-                await _customerCustomerRoleMappingRepository.DeleteAsync(mapping);
+                await CustomerCustomerRoleMappingRepository.DeleteAsync(mapping);
         }
 
         /// <summary>
@@ -1184,7 +1184,7 @@ namespace Nop.Services.Customers
             if (customerRole.IsSystemRole)
                 throw new NopException("System role could not be deleted");
 
-            await _customerRoleRepository.DeleteAsync(customerRole);
+            await CustomerRoleRepository.DeleteAsync(customerRole);
         }
 
         /// <summary>
@@ -1197,7 +1197,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<CustomerRole> GetCustomerRoleByIdAsync(int customerRoleId)
         {
-            return await _customerRoleRepository.GetByIdAsync(customerRoleId, cache => default);
+            return await CustomerRoleRepository.GetByIdAsync(customerRoleId, cache => default);
         }
 
         /// <summary>
@@ -1213,14 +1213,14 @@ namespace Nop.Services.Customers
             if (string.IsNullOrWhiteSpace(systemName))
                 return null;
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesBySystemNameCacheKey, systemName);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesBySystemNameCacheKey, systemName);
 
-            var query = from cr in _customerRoleRepository.Table
+            var query = from cr in CustomerRoleRepository.Table
                         orderby cr.Id
                         where cr.SystemName == systemName
                         select cr;
 
-            var customerRole = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
+            var customerRole = await StaticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
 
             return customerRole;
         }
@@ -1239,15 +1239,15 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var query = from cr in _customerRoleRepository.Table
-                        join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
+            var query = from cr in CustomerRoleRepository.Table
+                        join crm in CustomerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
                         where crm.CustomerId == customer.Id &&
                         (showHidden || cr.Active)
                         select cr.Id;
 
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRoleIdsCacheKey, customer, showHidden);
+            var key = StaticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRoleIdsCacheKey, customer, showHidden);
 
-            return await _staticCacheManager.GetAsync(key, () => query.ToArray());
+            return await StaticCacheManager.GetAsync(key, () => query.ToArray());
         }
 
         /// <summary>
@@ -1264,10 +1264,10 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            return await _customerRoleRepository.GetAllAsync(query =>
+            return await CustomerRoleRepository.GetAllAsync(query =>
             {
                 return from cr in query
-                       join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
+                       join crm in CustomerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
                        where crm.CustomerId == customer.Id &&
                              (showHidden || cr.Active)
                        select cr;
@@ -1285,14 +1285,14 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<IList<CustomerRole>> GetAllCustomerRolesAsync(bool showHidden = false)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesAllCacheKey, showHidden);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesAllCacheKey, showHidden);
 
-            var query = from cr in _customerRoleRepository.Table
+            var query = from cr in CustomerRoleRepository.Table
                         orderby cr.Name
                         where showHidden || cr.Active
                         select cr;
 
-            var customerRoles = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
+            var customerRoles = await StaticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return customerRoles;
         }
@@ -1304,7 +1304,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCustomerRoleAsync(CustomerRole customerRole)
         {
-            await _customerRoleRepository.InsertAsync(customerRole);
+            await CustomerRoleRepository.InsertAsync(customerRole);
         }
 
         /// <summary>
@@ -1408,7 +1408,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCustomerRoleAsync(CustomerRole customerRole)
         {
-            await _customerRoleRepository.UpdateAsync(customerRole);
+            await CustomerRoleRepository.UpdateAsync(customerRole);
         }
 
         #endregion
@@ -1428,7 +1428,7 @@ namespace Nop.Services.Customers
         public virtual async Task<IList<CustomerPassword>> GetCustomerPasswordsAsync(int? customerId = null,
             PasswordFormat? passwordFormat = null, int? passwordsToReturn = null)
         {
-            var query = _customerPasswordRepository.Table;
+            var query = CustomerPasswordRepository.Table;
 
             //filter by customer
             if (customerId.HasValue)
@@ -1469,7 +1469,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCustomerPasswordAsync(CustomerPassword customerPassword)
         {
-            await _customerPasswordRepository.InsertAsync(customerPassword);
+            await CustomerPasswordRepository.InsertAsync(customerPassword);
         }
 
         /// <summary>
@@ -1479,7 +1479,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCustomerPasswordAsync(CustomerPassword customerPassword)
         {
-            await _customerPasswordRepository.UpdateAsync(customerPassword);
+            await CustomerPasswordRepository.UpdateAsync(customerPassword);
         }
 
         /// <summary>
@@ -1496,7 +1496,7 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var cPrt = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute);
+            var cPrt = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute);
             if (string.IsNullOrEmpty(cPrt))
                 return false;
 
@@ -1519,15 +1519,15 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            if (_customerSettings.PasswordRecoveryLinkDaysValid == 0)
+            if (CustomerSettings.PasswordRecoveryLinkDaysValid == 0)
                 return false;
 
-            var generatedDate = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.PasswordRecoveryTokenDateGeneratedAttribute);
+            var generatedDate = await GenericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.PasswordRecoveryTokenDateGeneratedAttribute);
             if (!generatedDate.HasValue)
                 return false;
 
             var daysPassed = (DateTime.UtcNow - generatedDate.Value).TotalDays;
-            if (daysPassed > _customerSettings.PasswordRecoveryLinkDaysValid)
+            if (daysPassed > CustomerSettings.PasswordRecoveryLinkDaysValid)
                 return true;
 
             return false;
@@ -1555,13 +1555,13 @@ namespace Nop.Services.Customers
                 return false;
 
             //setting disabled for all
-            if (_customerSettings.PasswordLifetime == 0)
+            if (CustomerSettings.PasswordLifetime == 0)
                 return false;
 
-            var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey, customer);
+            var cacheKey = StaticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey, customer);
 
             //get current password usage time
-            var currentLifetime = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var currentLifetime = await StaticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var customerPassword = await GetCurrentPasswordAsync(customer.Id);
                 //password is not found, so return max value to force customer to change password
@@ -1571,7 +1571,7 @@ namespace Nop.Services.Customers
                 return (DateTime.UtcNow - customerPassword.CreatedOnUtc).Days;
             });
 
-            return currentLifetime >= _customerSettings.PasswordLifetime;
+            return currentLifetime >= CustomerSettings.PasswordLifetime;
         }
 
         #endregion
@@ -1589,7 +1589,7 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            if (await _customerAddressMappingRepository.Table
+            if (await CustomerAddressMappingRepository.Table
                 .FirstOrDefaultAsync(m => m.AddressId == address.Id && m.CustomerId == customer.Id)
                 is CustomerAddressMapping mapping)
             {
@@ -1598,7 +1598,7 @@ namespace Nop.Services.Customers
                 if (customer.ShippingAddressId == address.Id)
                     customer.ShippingAddressId = null;
 
-                await _customerAddressMappingRepository.DeleteAsync(mapping);
+                await CustomerAddressMappingRepository.DeleteAsync(mapping);
             }
         }
 
@@ -1616,7 +1616,7 @@ namespace Nop.Services.Customers
             if (address is null)
                 throw new ArgumentNullException(nameof(address));
 
-            if (await _customerAddressMappingRepository.Table
+            if (await CustomerAddressMappingRepository.Table
                 .FirstOrDefaultAsync(m => m.AddressId == address.Id && m.CustomerId == customer.Id)
                 is null)
             {
@@ -1626,7 +1626,7 @@ namespace Nop.Services.Customers
                     CustomerId = customer.Id
                 };
 
-                await _customerAddressMappingRepository.InsertAsync(mapping);
+                await CustomerAddressMappingRepository.InsertAsync(mapping);
             }
         }
 
@@ -1640,14 +1640,14 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<IList<Address>> GetAddressesByCustomerIdAsync(int customerId)
         {
-            var query = from address in _customerAddressRepository.Table
-                        join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+            var query = from address in CustomerAddressRepository.Table
+                        join cam in CustomerAddressMappingRepository.Table on address.Id equals cam.AddressId
                         where cam.CustomerId == customerId
                         select address;
 
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressesCacheKey, customerId);
+            var key = StaticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressesCacheKey, customerId);
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
+            return await StaticCacheManager.GetAsync(key, async () => await query.ToListAsync());
         }
 
         /// <summary>
@@ -1664,14 +1664,14 @@ namespace Nop.Services.Customers
             if (customerId == 0 || addressId == 0)
                 return null;
 
-            var query = from address in _customerAddressRepository.Table
-                        join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+            var query = from address in CustomerAddressRepository.Table
+                        join cam in CustomerAddressMappingRepository.Table on address.Id equals cam.AddressId
                         where cam.CustomerId == customerId && address.Id == addressId
                         select address;
 
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressCacheKey, customerId, addressId);
+            var key = StaticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressCacheKey, customerId, addressId);
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
+            return await StaticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
         /// <summary>

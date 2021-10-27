@@ -16,12 +16,12 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly ICountryService _countryService;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IStateProvinceService _stateProvinceService;
+        protected AddressSettings AddressSettings { get; }
+        protected IAddressAttributeParser AddressAttributeParser { get; }
+        protected IAddressAttributeService AddressAttributeService { get; }
+        protected ICountryService CountryService { get; }
+        protected IRepository<Address> AddressRepository { get; }
+        protected IStateProvinceService StateProvinceService { get; }
 
         #endregion
 
@@ -34,12 +34,12 @@ namespace Nop.Services.Common
             IRepository<Address> addressRepository,
             IStateProvinceService stateProvinceService)
         {
-            _addressSettings = addressSettings;
-            _addressAttributeParser = addressAttributeParser;
-            _addressAttributeService = addressAttributeService;
-            _countryService = countryService;
-            _addressRepository = addressRepository;
-            _stateProvinceService = stateProvinceService;
+            AddressSettings = addressSettings;
+            AddressAttributeParser = addressAttributeParser;
+            AddressAttributeService = addressAttributeService;
+            CountryService = countryService;
+            AddressRepository = addressRepository;
+            StateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -53,7 +53,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAddressAsync(Address address)
         {
-            await _addressRepository.DeleteAsync(address);
+            await AddressRepository.DeleteAsync(address);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Nop.Services.Common
             if (countryId == 0)
                 return 0;
 
-            var query = from a in _addressRepository.Table
+            var query = from a in AddressRepository.Table
                         where a.CountryId == countryId
                         select a;
 
@@ -89,7 +89,7 @@ namespace Nop.Services.Common
             if (stateProvinceId == 0)
                 return 0;
 
-            var query = from a in _addressRepository.Table
+            var query = from a in AddressRepository.Table
                         where a.StateProvinceId == stateProvinceId
                         select a;
 
@@ -106,7 +106,7 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task<Address> GetAddressByIdAsync(int addressId)
         {
-            return await _addressRepository.GetByIdAsync(addressId,
+            return await AddressRepository.GetByIdAsync(addressId,
                 cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<Address>.ByIdCacheKey, addressId));
         }
 
@@ -128,7 +128,7 @@ namespace Nop.Services.Common
             if (address.StateProvinceId == 0)
                 address.StateProvinceId = null;
 
-            await _addressRepository.InsertAsync(address);
+            await AddressRepository.InsertAsync(address);
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace Nop.Services.Common
             if (address.StateProvinceId == 0)
                 address.StateProvinceId = null;
 
-            await _addressRepository.UpdateAsync(address);
+            await AddressRepository.UpdateAsync(address);
         }
 
         /// <summary>
@@ -172,35 +172,35 @@ namespace Nop.Services.Common
             if (string.IsNullOrWhiteSpace(address.Email))
                 return false;
 
-            if (_addressSettings.CompanyEnabled &&
-                _addressSettings.CompanyRequired &&
+            if (AddressSettings.CompanyEnabled &&
+                AddressSettings.CompanyRequired &&
                 string.IsNullOrWhiteSpace(address.Company))
                 return false;
 
-            if (_addressSettings.StreetAddressEnabled &&
-                _addressSettings.StreetAddressRequired &&
+            if (AddressSettings.StreetAddressEnabled &&
+                AddressSettings.StreetAddressRequired &&
                 string.IsNullOrWhiteSpace(address.Address1))
                 return false;
 
-            if (_addressSettings.StreetAddress2Enabled &&
-                _addressSettings.StreetAddress2Required &&
+            if (AddressSettings.StreetAddress2Enabled &&
+                AddressSettings.StreetAddress2Required &&
                 string.IsNullOrWhiteSpace(address.Address2))
                 return false;
 
-            if (_addressSettings.ZipPostalCodeEnabled &&
-                _addressSettings.ZipPostalCodeRequired &&
+            if (AddressSettings.ZipPostalCodeEnabled &&
+                AddressSettings.ZipPostalCodeRequired &&
                 string.IsNullOrWhiteSpace(address.ZipPostalCode))
                 return false;
 
-            if (_addressSettings.CountryEnabled)
+            if (AddressSettings.CountryEnabled)
             {
-                var country = await _countryService.GetCountryByAddressAsync(address);
+                var country = await CountryService.GetCountryByAddressAsync(address);
                 if (country == null)
                     return false;
 
-                if (_addressSettings.StateProvinceEnabled)
+                if (AddressSettings.StateProvinceEnabled)
                 {
-                    var states = await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id);
+                    var states = await StateProvinceService.GetStateProvincesByCountryIdAsync(country.Id);
                     if (states.Any())
                     {
                         if (address.StateProvinceId == null || address.StateProvinceId.Value == 0)
@@ -213,31 +213,31 @@ namespace Nop.Services.Common
                 }
             }
 
-            if (_addressSettings.CountyEnabled &&
-                _addressSettings.CountyRequired &&
+            if (AddressSettings.CountyEnabled &&
+                AddressSettings.CountyRequired &&
                 string.IsNullOrWhiteSpace(address.County))
                 return false;
 
-            if (_addressSettings.CityEnabled &&
-                _addressSettings.CityRequired &&
+            if (AddressSettings.CityEnabled &&
+                AddressSettings.CityRequired &&
                 string.IsNullOrWhiteSpace(address.City))
                 return false;
 
-            if (_addressSettings.PhoneEnabled &&
-                _addressSettings.PhoneRequired &&
+            if (AddressSettings.PhoneEnabled &&
+                AddressSettings.PhoneRequired &&
                 string.IsNullOrWhiteSpace(address.PhoneNumber))
                 return false;
 
-            if (_addressSettings.FaxEnabled &&
-                _addressSettings.FaxRequired &&
+            if (AddressSettings.FaxEnabled &&
+                AddressSettings.FaxRequired &&
                 string.IsNullOrWhiteSpace(address.FaxNumber))
                 return false;
 
-            var requiredAttributes = (await _addressAttributeService.GetAllAddressAttributesAsync()).Where(x => x.IsRequired);
+            var requiredAttributes = (await AddressAttributeService.GetAllAddressAttributesAsync()).Where(x => x.IsRequired);
 
             foreach (var requiredAttribute in requiredAttributes)
             {
-                var value = _addressAttributeParser.ParseValues(address.CustomAttributes, requiredAttribute.Id);
+                var value = AddressAttributeParser.ParseValues(address.CustomAttributes, requiredAttribute.Id);
 
                 if (!value.Any() || string.IsNullOrEmpty(value[0]))
                     return false;

@@ -16,8 +16,8 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly ILocalizationService _localizationService;
+        protected ICustomerAttributeService CustomerAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
 
         #endregion
 
@@ -26,8 +26,8 @@ namespace Nop.Services.Customers
         public CustomerAttributeParser(ICustomerAttributeService customerAttributeService,
             ILocalizationService localizationService)
         {
-            _customerAttributeService = customerAttributeService;
-            _localizationService = localizationService;
+            CustomerAttributeService = customerAttributeService;
+            LocalizationService = localizationService;
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace Nop.Services.Customers
             var ids = ParseCustomerAttributeIds(attributesXml);
             foreach (var id in ids)
             {
-                var attribute = await _customerAttributeService.GetCustomerAttributeByIdAsync(id);
+                var attribute = await CustomerAttributeService.GetCustomerAttributeByIdAsync(id);
                 if (attribute != null) 
                     result.Add(attribute);
             }
@@ -126,7 +126,7 @@ namespace Nop.Services.Customers
                     if (!int.TryParse(valueStr, out var id)) 
                         continue;
 
-                    var value = await _customerAttributeService.GetCustomerAttributeValueByIdAsync(id);
+                    var value = await CustomerAttributeService.GetCustomerAttributeValueByIdAsync(id);
                     if (value != null)
                         values.Add(value);
                 }
@@ -266,7 +266,7 @@ namespace Nop.Services.Customers
             var attributes1 = await ParseCustomerAttributesAsync(attributesXml);
 
             //validate required customer attributes (whether they're chosen/selected/entered)
-            var attributes2 = await _customerAttributeService.GetAllCustomerAttributesAsync();
+            var attributes2 = await CustomerAttributeService.GetAllCustomerAttributesAsync();
             foreach (var a2 in attributes2)
             {
                 if (!a2.IsRequired) 
@@ -288,7 +288,7 @@ namespace Nop.Services.Customers
                     continue;
 
                 //if not found
-                var notFoundWarning = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.SelectAttribute"), await _localizationService.GetLocalizedAsync(a2, a => a.Name));
+                var notFoundWarning = string.Format(await LocalizationService.GetResourceAsync("ShoppingCart.SelectAttribute"), await LocalizationService.GetLocalizedAsync(a2, a => a.Name));
 
                 warnings.Add(notFoundWarning);
             }

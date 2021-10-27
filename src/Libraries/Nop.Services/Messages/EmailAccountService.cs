@@ -15,7 +15,7 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IRepository<EmailAccount> _emailAccountRepository;
+        protected IRepository<EmailAccount> EmailAccountRepository { get; }
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace Nop.Services.Messages
 
         public EmailAccountService(IRepository<EmailAccount> emailAccountRepository)
         {
-            _emailAccountRepository = emailAccountRepository;
+            EmailAccountRepository = emailAccountRepository;
         }
 
         #endregion
@@ -58,7 +58,7 @@ namespace Nop.Services.Messages
             emailAccount.Username = CommonHelper.EnsureMaximumLength(emailAccount.Username, 255);
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
-            await _emailAccountRepository.InsertAsync(emailAccount);
+            await EmailAccountRepository.InsertAsync(emailAccount);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Nop.Services.Messages
             emailAccount.Username = CommonHelper.EnsureMaximumLength(emailAccount.Username, 255);
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
-            await _emailAccountRepository.UpdateAsync(emailAccount);
+            await EmailAccountRepository.UpdateAsync(emailAccount);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Nop.Services.Messages
             if ((await GetAllEmailAccountsAsync()).Count == 1)
                 throw new NopException("You cannot delete this email account. At least one account is required.");
 
-            await _emailAccountRepository.DeleteAsync(emailAccount);
+            await EmailAccountRepository.DeleteAsync(emailAccount);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<EmailAccount> GetEmailAccountByIdAsync(int emailAccountId)
         {
-            return await _emailAccountRepository.GetByIdAsync(emailAccountId, cache => default);
+            return await EmailAccountRepository.GetByIdAsync(emailAccountId, cache => default);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<EmailAccount>> GetAllEmailAccountsAsync()
         {
-            var emailAccounts = await _emailAccountRepository.GetAllAsync(query =>
+            var emailAccounts = await EmailAccountRepository.GetAllAsync(query =>
             {
                 return from ea in query
                     orderby ea.Id

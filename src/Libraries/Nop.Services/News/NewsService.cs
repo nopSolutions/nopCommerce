@@ -17,10 +17,10 @@ namespace Nop.Services.News
     {
         #region Fields
 
-        private readonly IRepository<NewsComment> _newsCommentRepository;
-        private readonly IRepository<NewsItem> _newsItemRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
+        protected IRepository<NewsComment> NewsCommentRepository { get; }
+        protected IRepository<NewsItem> NewsItemRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreMappingService StoreMappingService { get; }
 
         #endregion
 
@@ -32,10 +32,10 @@ namespace Nop.Services.News
             IStaticCacheManager staticCacheManager,
             IStoreMappingService storeMappingService)
         {
-            _newsCommentRepository = newsCommentRepository;
-            _newsItemRepository = newsItemRepository;
-            _staticCacheManager = staticCacheManager;
-            _storeMappingService = storeMappingService;
+            NewsCommentRepository = newsCommentRepository;
+            NewsItemRepository = newsItemRepository;
+            StaticCacheManager = staticCacheManager;
+            StoreMappingService = storeMappingService;
 
         }
 
@@ -52,7 +52,7 @@ namespace Nop.Services.News
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteNewsAsync(NewsItem newsItem)
         {
-            await _newsItemRepository.DeleteAsync(newsItem);
+            await NewsItemRepository.DeleteAsync(newsItem);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Nop.Services.News
         /// </returns>
         public virtual async Task<NewsItem> GetNewsByIdAsync(int newsId)
         {
-            return await _newsItemRepository.GetByIdAsync(newsId, cache => default);
+            return await NewsItemRepository.GetByIdAsync(newsId, cache => default);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Nop.Services.News
         public virtual async Task<IPagedList<NewsItem>> GetAllNewsAsync(int languageId = 0, int storeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null)
         {
-            var news = await _newsItemRepository.GetAllPagedAsync(async query =>
+            var news = await NewsItemRepository.GetAllPagedAsync(async query =>
             {
                 if (languageId > 0)
                     query = query.Where(n => languageId == n.LanguageId);
@@ -101,7 +101,7 @@ namespace Nop.Services.News
                 }
 
                 //apply store mapping constraints
-                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                query = await StoreMappingService.ApplyStoreMapping(query, storeId);
 
                 return query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
             }, pageIndex, pageSize);
@@ -116,7 +116,7 @@ namespace Nop.Services.News
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertNewsAsync(NewsItem news)
         {
-            await _newsItemRepository.InsertAsync(news);
+            await NewsItemRepository.InsertAsync(news);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Nop.Services.News
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateNewsAsync(NewsItem news)
         {
-            await _newsItemRepository.UpdateAsync(news);
+            await NewsItemRepository.UpdateAsync(news);
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Nop.Services.News
         public virtual async Task<IList<NewsComment>> GetAllCommentsAsync(int customerId = 0, int storeId = 0, int? newsItemId = null,
             bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
         {
-            return await _newsCommentRepository.GetAllAsync(query =>
+            return await NewsCommentRepository.GetAllAsync(query =>
             {
                 if (approved.HasValue)
                     query = query.Where(comment => comment.IsApproved == approved);
@@ -209,7 +209,7 @@ namespace Nop.Services.News
         /// </returns>
         public virtual async Task<NewsComment> GetNewsCommentByIdAsync(int newsCommentId)
         {
-            return await _newsCommentRepository.GetByIdAsync(newsCommentId, cache => default);
+            return await NewsCommentRepository.GetByIdAsync(newsCommentId, cache => default);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Nop.Services.News
         /// </returns>
         public virtual async Task<IList<NewsComment>> GetNewsCommentsByIdsAsync(int[] commentIds)
         {
-            return await _newsCommentRepository.GetByIdsAsync(commentIds);
+            return await NewsCommentRepository.GetByIdsAsync(commentIds);
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace Nop.Services.News
         /// </returns>
         public virtual async Task<int> GetNewsCommentsCountAsync(NewsItem newsItem, int storeId = 0, bool? isApproved = null)
         {
-            var query = _newsCommentRepository.Table.Where(comment => comment.NewsItemId == newsItem.Id);
+            var query = NewsCommentRepository.Table.Where(comment => comment.NewsItemId == newsItem.Id);
 
             if (storeId > 0)
                 query = query.Where(comment => comment.StoreId == storeId);
@@ -245,9 +245,9 @@ namespace Nop.Services.News
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopNewsDefaults.NewsCommentsNumberCacheKey, newsItem, storeId, isApproved);
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopNewsDefaults.NewsCommentsNumberCacheKey, newsItem, storeId, isApproved);
 
-            return await _staticCacheManager.GetAsync(cacheKey, async () => await query.CountAsync());
+            return await StaticCacheManager.GetAsync(cacheKey, async () => await query.CountAsync());
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace Nop.Services.News
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteNewsCommentAsync(NewsComment newsComment)
         {
-            await _newsCommentRepository.DeleteAsync(newsComment);
+            await NewsCommentRepository.DeleteAsync(newsComment);
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace Nop.Services.News
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertNewsCommentAsync(NewsComment comment)
         {
-            await _newsCommentRepository.InsertAsync(comment);
+            await NewsCommentRepository.InsertAsync(comment);
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace Nop.Services.News
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateNewsCommentAsync(NewsComment comment)
         {
-            await _newsCommentRepository.UpdateAsync(comment);
+            await NewsCommentRepository.UpdateAsync(comment);
         }
 
         #endregion

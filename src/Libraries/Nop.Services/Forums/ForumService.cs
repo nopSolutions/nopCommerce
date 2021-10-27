@@ -24,22 +24,22 @@ namespace Nop.Services.Forums
     {
         #region Fields
 
-        private readonly ForumSettings _forumSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Forum> _forumRepository;
-        private readonly IRepository<ForumGroup> _forumGroupRepository;
-        private readonly IRepository<ForumPost> _forumPostRepository;
-        private readonly IRepository<ForumPostVote> _forumPostVoteRepository;
-        private readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
-        private readonly IRepository<ForumTopic> _forumTopicRepository;
-        private readonly IRepository<PrivateMessage> _forumPrivateMessageRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly SeoSettings _seoSettings;
+        protected ForumSettings ForumSettings { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IRepository<Customer> CustomerRepository { get; }
+        protected IRepository<Forum> ForumRepository { get; }
+        protected IRepository<ForumGroup> ForumGroupRepository{ get; }
+        protected IRepository<ForumPost> ForumPostRepository { get; }
+        protected IRepository<ForumPostVote> ForumPostVoteRepository { get; }
+        protected IRepository<ForumSubscription> ForumSubscriptionRepository { get; }
+        protected IRepository<ForumTopic> ForumTopicRepository { get; }
+        protected IRepository<PrivateMessage> ForumPrivateMessageRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected IWorkflowMessageService WorkflowMessageService { get; }
+        protected SeoSettings SeoSettings { get; }
 
         #endregion
 
@@ -62,22 +62,22 @@ namespace Nop.Services.Forums
             IWorkflowMessageService workflowMessageService,
             SeoSettings seoSettings)
         {
-            _forumSettings = forumSettings;
-            _customerService = customerService;
-            _genericAttributeService = genericAttributeService;
-            _customerRepository = customerRepository;
-            _forumRepository = forumRepository;
-            _forumGroupRepository = forumGroupRepository;
-            _forumPostRepository = forumPostRepository;
-            _forumPostVoteRepository = forumPostVoteRepository;
-            _forumSubscriptionRepository = forumSubscriptionRepository;
-            _forumTopicRepository = forumTopicRepository;
-            _forumPrivateMessageRepository = forumPrivateMessageRepository;
-            _staticCacheManager = staticCacheManager;
-            _urlRecordService = urlRecordService;
-            _workContext = workContext;
-            _workflowMessageService = workflowMessageService;
-            _seoSettings = seoSettings;
+            ForumSettings = forumSettings;
+            CustomerService = customerService;
+            GenericAttributeService = genericAttributeService;
+            CustomerRepository = customerRepository;
+            ForumRepository = forumRepository;
+            ForumGroupRepository = forumGroupRepository;
+            ForumPostRepository = forumPostRepository;
+            ForumPostVoteRepository = forumPostVoteRepository;
+            ForumSubscriptionRepository = forumSubscriptionRepository;
+            ForumTopicRepository = forumTopicRepository;
+            ForumPrivateMessageRepository = forumPrivateMessageRepository;
+            StaticCacheManager = staticCacheManager;
+            UrlRecordService = urlRecordService;
+            WorkContext = workContext;
+            WorkflowMessageService = workflowMessageService;
+            SeoSettings = seoSettings;
         }
 
         #endregion
@@ -99,14 +99,14 @@ namespace Nop.Services.Forums
                 return;
 
             //number of topics
-            var queryNumTopics = from ft in _forumTopicRepository.Table
+            var queryNumTopics = from ft in ForumTopicRepository.Table
                                  where ft.ForumId == forumId
                                  select ft.Id;
             var numTopics = await queryNumTopics.CountAsync();
 
             //number of posts
-            var queryNumPosts = from ft in _forumTopicRepository.Table
-                                join fp in _forumPostRepository.Table on ft.Id equals fp.TopicId
+            var queryNumPosts = from ft in ForumTopicRepository.Table
+                                join fp in ForumPostRepository.Table on ft.Id equals fp.TopicId
                                 where ft.ForumId == forumId
                                 select fp.Id;
             var numPosts = await queryNumPosts.CountAsync();
@@ -116,8 +116,8 @@ namespace Nop.Services.Forums
             var lastPostId = 0;
             var lastPostCustomerId = 0;
             DateTime? lastPostTime = null;
-            var queryLastValues = from ft in _forumTopicRepository.Table
-                                  join fp in _forumPostRepository.Table on ft.Id equals fp.TopicId
+            var queryLastValues = from ft in ForumTopicRepository.Table
+                                  join fp in ForumPostRepository.Table on ft.Id equals fp.TopicId
                                   where ft.ForumId == forumId
                                   orderby fp.CreatedOnUtc descending, ft.CreatedOnUtc descending
                                   select new
@@ -161,7 +161,7 @@ namespace Nop.Services.Forums
                 return;
 
             //number of posts
-            var queryNumPosts = from fp in _forumPostRepository.Table
+            var queryNumPosts = from fp in ForumPostRepository.Table
                                 where fp.TopicId == forumTopicId
                                 select fp.Id;
             var numPosts = await queryNumPosts.CountAsync();
@@ -170,7 +170,7 @@ namespace Nop.Services.Forums
             var lastPostId = 0;
             var lastPostCustomerId = 0;
             DateTime? lastPostTime = null;
-            var queryLastValues = from fp in _forumPostRepository.Table
+            var queryLastValues = from fp in ForumPostRepository.Table
                                   where fp.TopicId == forumTopicId
                                   orderby fp.CreatedOnUtc descending
                                   select new
@@ -206,17 +206,17 @@ namespace Nop.Services.Forums
             if (customerId == 0) 
                 return;
 
-            var customer = await _customerService.GetCustomerByIdAsync(customerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(customerId);
 
             if (customer == null) 
                 return;
 
-            var query = from fp in _forumPostRepository.Table
+            var query = from fp in ForumPostRepository.Table
                         where fp.CustomerId == customerId
                         select fp.Id;
             var numPosts = await query.CountAsync();
 
-            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.ForumPostCountAttribute, numPosts);
+            await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.ForumPostCountAttribute, numPosts);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace Nop.Services.Forums
         /// </returns>
         protected virtual async Task<ForumTopic> GetTopicByIdAsync(int forumTopicId, bool increaseViews)
         {
-            var forumTopic = await _forumTopicRepository.GetByIdAsync(forumTopicId, cache => default);
+            var forumTopic = await ForumTopicRepository.GetByIdAsync(forumTopicId, cache => default);
 
             if (forumTopic == null)
                 return null;
@@ -255,7 +255,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteForumGroupAsync(ForumGroup forumGroup)
         {
-            await _forumGroupRepository.DeleteAsync(forumGroup);
+            await ForumGroupRepository.DeleteAsync(forumGroup);
         }
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<ForumGroup> GetForumGroupByIdAsync(int forumGroupId)
         {
-            return await _forumGroupRepository.GetByIdAsync(forumGroupId, cache => default);
+            return await ForumGroupRepository.GetByIdAsync(forumGroupId, cache => default);
         }
 
         /// <summary>
@@ -280,7 +280,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<IList<ForumGroup>> GetAllForumGroupsAsync()
         {
-            return await _forumGroupRepository.GetAllAsync(query =>
+            return await ForumGroupRepository.GetAllAsync(query =>
             {
                 return from fg in query
                     orderby fg.DisplayOrder, fg.Id
@@ -295,7 +295,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertForumGroupAsync(ForumGroup forumGroup)
         {
-            await _forumGroupRepository.InsertAsync(forumGroup);
+            await ForumGroupRepository.InsertAsync(forumGroup);
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateForumGroupAsync(ForumGroup forumGroup)
         {
-            await _forumGroupRepository.UpdateAsync(forumGroup);
+            await ForumGroupRepository.UpdateAsync(forumGroup);
         }
 
         /// <summary>
@@ -319,24 +319,24 @@ namespace Nop.Services.Forums
                 throw new ArgumentNullException(nameof(forum));
 
             //delete forum subscriptions (topics)
-            var queryTopicIds = from ft in _forumTopicRepository.Table
+            var queryTopicIds = from ft in ForumTopicRepository.Table
                                 where ft.ForumId == forum.Id
                                 select ft.Id;
-            var queryFs1 = from fs in _forumSubscriptionRepository.Table
+            var queryFs1 = from fs in ForumSubscriptionRepository.Table
                            where queryTopicIds.Contains(fs.TopicId)
                            select fs;
 
-            await _forumSubscriptionRepository.DeleteAsync(queryFs1.ToList());
+            await ForumSubscriptionRepository.DeleteAsync(queryFs1.ToList());
 
             //delete forum subscriptions (forum)
-            var queryFs2 = from fs in _forumSubscriptionRepository.Table
+            var queryFs2 = from fs in ForumSubscriptionRepository.Table
                            where fs.ForumId == forum.Id
                            select fs;
 
-            await _forumSubscriptionRepository.DeleteAsync(queryFs2.ToList());
+            await ForumSubscriptionRepository.DeleteAsync(queryFs2.ToList());
 
             //delete forum
-            await _forumRepository.DeleteAsync(forum);
+            await ForumRepository.DeleteAsync(forum);
         }
 
         /// <summary>
@@ -349,7 +349,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<Forum> GetForumByIdAsync(int forumId)
         {
-            return await _forumRepository.GetByIdAsync(forumId, cache => default);
+            return await ForumRepository.GetByIdAsync(forumId, cache => default);
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<IList<Forum>> GetAllForumsByGroupIdAsync(int forumGroupId)
         {
-            var forums = await _forumRepository.GetAllAsync(query =>
+            var forums = await ForumRepository.GetAllAsync(query =>
             {
                 return from f in query
                     orderby f.DisplayOrder, f.Id
@@ -380,7 +380,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertForumAsync(Forum forum)
         {
-            await _forumRepository.InsertAsync(forum);
+            await ForumRepository.InsertAsync(forum);
         }
 
         /// <summary>
@@ -392,11 +392,11 @@ namespace Nop.Services.Forums
         {
             // if the forum group is changed then clear cache for the previous group 
             // (we can't use the event consumer because it will work after saving the changes in DB)
-            var forumToUpdate = await _forumRepository.LoadOriginalCopyAsync(forum);
+            var forumToUpdate = await ForumRepository.LoadOriginalCopyAsync(forum);
             if (forumToUpdate.ForumGroupId != forum.ForumGroupId)
-                await _staticCacheManager.RemoveAsync(NopForumDefaults.ForumByForumGroupCacheKey, forumToUpdate.ForumGroupId);
+                await StaticCacheManager.RemoveAsync(NopForumDefaults.ForumByForumGroupCacheKey, forumToUpdate.ForumGroupId);
 
-            await _forumRepository.UpdateAsync(forum);
+            await ForumRepository.UpdateAsync(forum);
         }
 
         /// <summary>
@@ -412,15 +412,15 @@ namespace Nop.Services.Forums
             var forumId = forumTopic.ForumId;
 
             //delete topic
-            await _forumTopicRepository.DeleteAsync(forumTopic);
+            await ForumTopicRepository.DeleteAsync(forumTopic);
 
             //delete forum subscriptions
-            var queryFs = from ft in _forumSubscriptionRepository.Table
+            var queryFs = from ft in ForumSubscriptionRepository.Table
                           where ft.TopicId == forumTopic.Id
                           select ft;
             var forumSubscriptions = queryFs.ToList();
 
-            await _forumSubscriptionRepository.DeleteAsync(forumSubscriptions);
+            await ForumSubscriptionRepository.DeleteAsync(forumSubscriptions);
 
             //update stats
             await UpdateForumStatsAsync(forumId);
@@ -465,10 +465,10 @@ namespace Nop.Services.Forums
             var searchTopicTitles = searchType == ForumSearchType.All || searchType == ForumSearchType.TopicTitlesOnly;
             var searchPostText = searchType == ForumSearchType.All || searchType == ForumSearchType.PostTextOnly;
 
-            var topics = await _forumTopicRepository.GetAllPagedAsync(query =>
+            var topics = await ForumTopicRepository.GetAllPagedAsync(query =>
             {
                 var query1 = from ft in query
-                    join fp in _forumPostRepository.Table on ft.Id equals fp.TopicId
+                    join fp in ForumPostRepository.Table on ft.Id equals fp.TopicId
                     where
                         (forumId == 0 || ft.ForumId == forumId) &&
                         (customerId == 0 || ft.CustomerId == customerId) &&
@@ -502,13 +502,13 @@ namespace Nop.Services.Forums
         public virtual async Task<IPagedList<ForumTopic>> GetActiveTopicsAsync(int forumId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query1 = from ft in _forumTopicRepository.Table
+            var query1 = from ft in ForumTopicRepository.Table
                          where
                          (forumId == 0 || ft.ForumId == forumId) &&
                          ft.LastPostTime.HasValue
                          select ft.Id;
 
-            var query2 = from ft in _forumTopicRepository.Table
+            var query2 = from ft in ForumTopicRepository.Table
                          where query1.Contains(ft.Id)
                          orderby ft.LastPostTime descending
                          select ft;
@@ -526,7 +526,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertTopicAsync(ForumTopic forumTopic, bool sendNotifications)
         {
-            await _forumTopicRepository.InsertAsync(forumTopic);
+            await ForumTopicRepository.InsertAsync(forumTopic);
 
             //update stats
             await UpdateForumStatsAsync(forumTopic.ForumId);
@@ -537,16 +537,16 @@ namespace Nop.Services.Forums
             //send notifications
             var forum = await GetForumByIdAsync(forumTopic.ForumId);
             var subscriptions = await GetAllSubscriptionsAsync(forumId: forum.Id);
-            var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+            var languageId = (await WorkContext.GetWorkingLanguageAsync()).Id;
 
             foreach (var subscription in subscriptions)
             {
                 if (subscription.CustomerId == forumTopic.CustomerId) continue;
 
-                var customer = await _customerService.GetCustomerByIdAsync(subscription.CustomerId);
+                var customer = await CustomerService.GetCustomerByIdAsync(subscription.CustomerId);
 
                 if (!string.IsNullOrEmpty(customer?.Email)) 
-                    await _workflowMessageService.SendNewForumTopicMessageAsync(customer, forumTopic, forum, languageId);
+                    await WorkflowMessageService.SendNewForumTopicMessageAsync(customer, forumTopic, forum, languageId);
             }
         }
 
@@ -557,7 +557,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateTopicAsync(ForumTopic forumTopic)
         {
-            await _forumTopicRepository.UpdateAsync(forumTopic);
+            await ForumTopicRepository.UpdateAsync(forumTopic);
         }
 
         /// <summary>
@@ -575,7 +575,7 @@ namespace Nop.Services.Forums
             if (forumTopic == null)
                 return null;
 
-            if (!await IsCustomerAllowedToMoveTopicAsync(await _workContext.GetCurrentCustomerAsync(), forumTopic))
+            if (!await IsCustomerAllowedToMoveTopicAsync(await WorkContext.GetCurrentCustomerAsync(), forumTopic))
                 return forumTopic;
 
             var previousForumId = forumTopic.ForumId;
@@ -619,7 +619,7 @@ namespace Nop.Services.Forums
                 deleteTopic = true;
 
             //delete forum post
-            await _forumPostRepository.DeleteAsync(forumPost);
+            await ForumPostRepository.DeleteAsync(forumPost);
 
             //delete topic
             if (deleteTopic) 
@@ -643,7 +643,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<ForumPost> GetPostByIdAsync(int forumPostId)
         {
-            return await _forumPostRepository.GetByIdAsync(forumPostId, cache => default);
+            return await ForumPostRepository.GetByIdAsync(forumPostId, cache => default);
         }
 
         /// <summary>
@@ -683,7 +683,7 @@ namespace Nop.Services.Forums
             string keywords = "", bool ascSort = false,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var forumPosts = await _forumPostRepository.GetAllPagedAsync(query =>
+            var forumPosts = await ForumPostRepository.GetAllPagedAsync(query =>
             {
                 if (forumTopicId > 0) 
                     query = query.Where(fp => forumTopicId == fp.TopicId);
@@ -712,7 +712,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertPostAsync(ForumPost forumPost, bool sendNotifications)
         {
-            await _forumPostRepository.InsertAsync(forumPost);
+            await ForumPostRepository.InsertAsync(forumPost);
 
             //update stats
             var customerId = forumPost.CustomerId;
@@ -730,10 +730,10 @@ namespace Nop.Services.Forums
             var forum = await GetForumByIdAsync(forumTopic.ForumId);
             var subscriptions = await GetAllSubscriptionsAsync(topicId: forumTopic.Id);
 
-            var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+            var languageId = (await WorkContext.GetWorkingLanguageAsync()).Id;
 
             var friendlyTopicPageIndex = await CalculateTopicPageIndexAsync(forumPost.TopicId,
-                                             _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10,
+                                             ForumSettings.PostsPageSize > 0 ? ForumSettings.PostsPageSize : 10,
                                              forumPost.Id) + 1;
 
             foreach (var subscription in subscriptions)
@@ -741,10 +741,10 @@ namespace Nop.Services.Forums
                 if (subscription.CustomerId == forumPost.CustomerId) 
                     continue;
 
-                var customer = await _customerService.GetCustomerByIdAsync(subscription.CustomerId);
+                var customer = await CustomerService.GetCustomerByIdAsync(subscription.CustomerId);
 
                 if (!string.IsNullOrEmpty(customer?.Email)) 
-                    await _workflowMessageService.SendNewForumPostMessageAsync(customer, forumPost, forumTopic, forum, friendlyTopicPageIndex, languageId);
+                    await WorkflowMessageService.SendNewForumPostMessageAsync(customer, forumPost, forumTopic, forum, friendlyTopicPageIndex, languageId);
             }
         }
 
@@ -755,7 +755,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdatePostAsync(ForumPost forumPost)
         {
-            await _forumPostRepository.UpdateAsync(forumPost);
+            await ForumPostRepository.UpdateAsync(forumPost);
         }
 
         /// <summary>
@@ -765,7 +765,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeletePrivateMessageAsync(PrivateMessage privateMessage)
         {
-            await _forumPrivateMessageRepository.DeleteAsync(privateMessage);
+            await ForumPrivateMessageRepository.DeleteAsync(privateMessage);
         }
 
         /// <summary>
@@ -778,7 +778,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<PrivateMessage> GetPrivateMessageByIdAsync(int privateMessageId)
         {
-            return await _forumPrivateMessageRepository.GetByIdAsync(privateMessageId, cache => default);
+            return await ForumPrivateMessageRepository.GetByIdAsync(privateMessageId, cache => default);
         }
 
         /// <summary>
@@ -801,7 +801,7 @@ namespace Nop.Services.Forums
             int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
             string keywords, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var privateMessages = await _forumPrivateMessageRepository.GetAllPagedAsync(query =>
+            var privateMessages = await ForumPrivateMessageRepository.GetAllPagedAsync(query =>
             {
                 if (storeId > 0)
                     query = query.Where(pm => storeId == pm.StoreId);
@@ -836,18 +836,18 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertPrivateMessageAsync(PrivateMessage privateMessage)
         {
-            await _forumPrivateMessageRepository.InsertAsync(privateMessage);
+            await ForumPrivateMessageRepository.InsertAsync(privateMessage);
 
-            var customerTo = await _customerService.GetCustomerByIdAsync(privateMessage.ToCustomerId);
+            var customerTo = await CustomerService.GetCustomerByIdAsync(privateMessage.ToCustomerId);
             if (customerTo == null)
                 throw new NopException("Recipient could not be loaded");
 
             //UI notification
-            await _genericAttributeService.SaveAttributeAsync(customerTo, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, false, privateMessage.StoreId);
+            await GenericAttributeService.SaveAttributeAsync(customerTo, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, false, privateMessage.StoreId);
 
             //Email notification
-            if (_forumSettings.NotifyAboutPrivateMessages) 
-                await _workflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, (await _workContext.GetWorkingLanguageAsync()).Id);
+            if (ForumSettings.NotifyAboutPrivateMessages) 
+                await WorkflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, (await WorkContext.GetWorkingLanguageAsync()).Id);
         }
 
         /// <summary>
@@ -861,9 +861,9 @@ namespace Nop.Services.Forums
                 throw new ArgumentNullException(nameof(privateMessage));
 
             if (privateMessage.IsDeletedByAuthor && privateMessage.IsDeletedByRecipient)
-                await _forumPrivateMessageRepository.DeleteAsync(privateMessage);
+                await ForumPrivateMessageRepository.DeleteAsync(privateMessage);
             else
-                await _forumPrivateMessageRepository.UpdateAsync(privateMessage);
+                await ForumPrivateMessageRepository.UpdateAsync(privateMessage);
         }
 
         /// <summary>
@@ -873,7 +873,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteSubscriptionAsync(ForumSubscription forumSubscription)
         {
-            await _forumSubscriptionRepository.DeleteAsync(forumSubscription);
+            await ForumSubscriptionRepository.DeleteAsync(forumSubscription);
         }
 
         /// <summary>
@@ -886,7 +886,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<ForumSubscription> GetSubscriptionByIdAsync(int forumSubscriptionId)
         {
-            return await _forumSubscriptionRepository.GetByIdAsync(forumSubscriptionId, cache => default);
+            return await ForumSubscriptionRepository.GetByIdAsync(forumSubscriptionId, cache => default);
         }
 
         /// <summary>
@@ -904,10 +904,10 @@ namespace Nop.Services.Forums
         public virtual async Task<IPagedList<ForumSubscription>> GetAllSubscriptionsAsync(int customerId = 0, int forumId = 0,
             int topicId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var forumSubscriptions = await _forumSubscriptionRepository.GetAllPagedAsync(query =>
+            var forumSubscriptions = await ForumSubscriptionRepository.GetAllPagedAsync(query =>
             {
                 var fsQuery = from fs in query
-                    join c in _customerRepository.Table on fs.CustomerId equals c.Id
+                    join c in CustomerRepository.Table on fs.CustomerId equals c.Id
                     where
                         (customerId == 0 || fs.CustomerId == customerId) &&
                         (forumId == 0 || fs.ForumId == forumId) &&
@@ -934,7 +934,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertSubscriptionAsync(ForumSubscription forumSubscription)
         {
-            await _forumSubscriptionRepository.InsertAsync(forumSubscription);
+            await ForumSubscriptionRepository.InsertAsync(forumSubscription);
         }
         
         /// <summary>
@@ -954,7 +954,7 @@ namespace Nop.Services.Forums
             if (customer == null) 
                 return false;
 
-            if (await _customerService.IsGuestAsync(customer) && !_forumSettings.AllowGuestsToCreateTopics) 
+            if (await CustomerService.IsGuestAsync(customer) && !ForumSettings.AllowGuestsToCreateTopics) 
                 return false;
 
             return true;
@@ -977,13 +977,13 @@ namespace Nop.Services.Forums
             if (customer == null) 
                 return false;
 
-            if (await _customerService.IsGuestAsync(customer)) 
+            if (await CustomerService.IsGuestAsync(customer)) 
                 return false;
 
-            if (await _customerService.IsForumModeratorAsync(customer)) 
+            if (await CustomerService.IsForumModeratorAsync(customer)) 
                 return true;
 
-            if (!_forumSettings.AllowCustomersToEditPosts) 
+            if (!ForumSettings.AllowCustomersToEditPosts) 
                 return false;
 
             var ownTopic = customer.Id == topic.CustomerId;
@@ -1008,10 +1008,10 @@ namespace Nop.Services.Forums
             if (customer == null) 
                 return false;
 
-            if (await _customerService.IsGuestAsync(customer)) 
+            if (await CustomerService.IsGuestAsync(customer)) 
                 return false;
 
-            return await _customerService.IsForumModeratorAsync(customer);
+            return await CustomerService.IsForumModeratorAsync(customer);
         }
 
         /// <summary>
@@ -1031,13 +1031,13 @@ namespace Nop.Services.Forums
             if (customer == null) 
                 return false;
 
-            if (await _customerService.IsGuestAsync(customer)) 
+            if (await CustomerService.IsGuestAsync(customer)) 
                 return false;
 
-            if (await _customerService.IsForumModeratorAsync(customer)) 
+            if (await CustomerService.IsForumModeratorAsync(customer)) 
                 return true;
 
-            if (!_forumSettings.AllowCustomersToDeletePosts) 
+            if (!ForumSettings.AllowCustomersToDeletePosts) 
                 return false;
 
             var ownTopic = customer.Id == topic.CustomerId;
@@ -1062,7 +1062,7 @@ namespace Nop.Services.Forums
             if (customer == null) 
                 return false;
 
-            if (await _customerService.IsGuestAsync(customer) && !_forumSettings.AllowGuestsToCreatePosts) 
+            if (await CustomerService.IsGuestAsync(customer) && !ForumSettings.AllowGuestsToCreatePosts) 
                 return false;
 
             return true;
@@ -1085,13 +1085,13 @@ namespace Nop.Services.Forums
             if (customer == null) 
                 return false;
 
-            if (await _customerService.IsGuestAsync(customer)) 
+            if (await CustomerService.IsGuestAsync(customer)) 
                 return false;
 
-            if (await _customerService.IsForumModeratorAsync(customer)) 
+            if (await CustomerService.IsForumModeratorAsync(customer)) 
                 return true;
 
-            if (!_forumSettings.AllowCustomersToEditPosts) 
+            if (!ForumSettings.AllowCustomersToEditPosts) 
                 return false;
 
             var ownPost = customer.Id == post.CustomerId;
@@ -1116,13 +1116,13 @@ namespace Nop.Services.Forums
             if (customer == null) 
                 return false;
 
-            if (await _customerService.IsGuestAsync(customer)) 
+            if (await CustomerService.IsGuestAsync(customer)) 
                 return false;
 
-            if (await _customerService.IsForumModeratorAsync(customer)) 
+            if (await CustomerService.IsForumModeratorAsync(customer)) 
                 return true;
 
-            if (!_forumSettings.AllowCustomersToDeletePosts)
+            if (!ForumSettings.AllowCustomersToDeletePosts)
                 return false;
 
             var ownPost = customer.Id == post.CustomerId;
@@ -1143,10 +1143,10 @@ namespace Nop.Services.Forums
             if (customer == null) 
                 return false;
 
-            if (await _customerService.IsGuestAsync(customer)) 
+            if (await CustomerService.IsGuestAsync(customer)) 
                 return false;
 
-            return await _customerService.IsForumModeratorAsync(customer);
+            return await CustomerService.IsForumModeratorAsync(customer);
         }
 
         /// <summary>
@@ -1162,7 +1162,7 @@ namespace Nop.Services.Forums
             if (customer == null) 
                 return false;
 
-            if (await _customerService.IsGuestAsync(customer)) 
+            if (await CustomerService.IsGuestAsync(customer)) 
                 return false;
 
             return true;
@@ -1208,7 +1208,7 @@ namespace Nop.Services.Forums
             if (customer == null)
                 return null;
 
-            return await _forumPostVoteRepository.Table
+            return await ForumPostVoteRepository.Table
                 .FirstOrDefaultAsync(pv => pv.ForumPostId == postId && pv.CustomerId == customer.Id);
         }
 
@@ -1226,7 +1226,7 @@ namespace Nop.Services.Forums
             if (customer == null)
                 return 0;
 
-            return await _forumPostVoteRepository.Table
+            return await ForumPostVoteRepository.Table
                 .CountAsync(pv => pv.CustomerId == customer.Id && pv.CreatedOnUtc > сreatedFromUtc);
         }
 
@@ -1237,7 +1237,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertPostVoteAsync(ForumPostVote postVote)
         {
-            await _forumPostVoteRepository.InsertAsync(postVote);
+            await ForumPostVoteRepository.InsertAsync(postVote);
 
             //update post
             var post = await GetPostByIdAsync(postVote.ForumPostId);
@@ -1256,7 +1256,7 @@ namespace Nop.Services.Forums
             if (postVote == null)
                 throw new ArgumentNullException(nameof(postVote));
 
-            await _forumPostVoteRepository.DeleteAsync(postVote);
+            await ForumPostVoteRepository.DeleteAsync(postVote);
 
             // update post
             var post = await GetPostByIdAsync(postVote.ForumPostId);
@@ -1277,7 +1277,7 @@ namespace Nop.Services.Forums
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            switch (_forumSettings.ForumEditor)
+            switch (ForumSettings.ForumEditor)
             {
                 case EditorType.SimpleTextBox:
                     {
@@ -1308,7 +1308,7 @@ namespace Nop.Services.Forums
             var subject = forumTopic.Subject;
             if (string.IsNullOrEmpty(subject)) return subject;
 
-            var strippedTopicMaxLength = _forumSettings.StrippedTopicMaxLength;
+            var strippedTopicMaxLength = ForumSettings.StrippedTopicMaxLength;
             if (strippedTopicMaxLength <= 0)
                 return subject;
 
@@ -1390,7 +1390,7 @@ namespace Nop.Services.Forums
             if (forumGroup == null)
                 throw new ArgumentNullException(nameof(forumGroup));
 
-            var seName = await _urlRecordService.GetSeNameAsync(forumGroup.Name, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            var seName = await UrlRecordService.GetSeNameAsync(forumGroup.Name, SeoSettings.ConvertNonWesternChars, SeoSettings.AllowUnicodeCharsInUrls);
             
             return seName;
         }
@@ -1408,7 +1408,7 @@ namespace Nop.Services.Forums
             if (forum == null)
                 throw new ArgumentNullException(nameof(forum));
 
-            var seName = await _urlRecordService.GetSeNameAsync(forum.Name, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            var seName = await UrlRecordService.GetSeNameAsync(forum.Name, SeoSettings.ConvertNonWesternChars, SeoSettings.AllowUnicodeCharsInUrls);
             
             return seName;
         }
@@ -1426,7 +1426,7 @@ namespace Nop.Services.Forums
             if (forumTopic == null)
                 throw new ArgumentNullException(nameof(forumTopic));
 
-            var seName = await _urlRecordService.GetSeNameAsync(forumTopic.Subject, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            var seName = await UrlRecordService.GetSeNameAsync(forumTopic.Subject, SeoSettings.ConvertNonWesternChars, SeoSettings.AllowUnicodeCharsInUrls);
 
             // Trim SE name to avoid URLs that are too long
             var maxLength = NopSeoDefaults.ForumTopicLength;

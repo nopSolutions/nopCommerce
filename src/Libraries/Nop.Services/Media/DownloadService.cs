@@ -15,7 +15,7 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly IRepository<Download> _downloadRepository;
+        protected IRepository<Download> DownloadRepository { get; }
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace Nop.Services.Media
 
         public DownloadService(IRepository<Download> downloadRepository)
         {
-            _downloadRepository = downloadRepository;
+            DownloadRepository = downloadRepository;
         }
 
         #endregion
@@ -40,7 +40,7 @@ namespace Nop.Services.Media
         /// </returns>
         public virtual async Task<Download> GetDownloadByIdAsync(int downloadId)
         {
-            return await _downloadRepository.GetByIdAsync(downloadId);
+            return await DownloadRepository.GetByIdAsync(downloadId);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Nop.Services.Media
             if (downloadGuid == Guid.Empty)
                 return null;
 
-            var query = from o in _downloadRepository.Table
+            var query = from o in DownloadRepository.Table
                         where o.DownloadGuid == downloadGuid
                         select o;
 
@@ -70,7 +70,7 @@ namespace Nop.Services.Media
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteDownloadAsync(Download download)
         {
-            await _downloadRepository.DeleteAsync(download);
+            await DownloadRepository.DeleteAsync(download);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Nop.Services.Media
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertDownloadAsync(Download download)
         {
-            await _downloadRepository.InsertAsync(download);
+            await DownloadRepository.InsertAsync(download);
         }
 
         /// <summary>

@@ -18,11 +18,11 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly ILocalizationService _localizationService;
-        private readonly IRepository<Country> _countryRepository;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IRepository<Country> CountryRepository { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IStoreMappingService StoreMappingService { get; }
 
         #endregion
 
@@ -35,11 +35,11 @@ namespace Nop.Services.Directory
             IStoreContext storeContext,
             IStoreMappingService storeMappingService)
         {
-            _staticCacheManager = staticCacheManager;
-            _localizationService = localizationService;
-            _countryRepository = countryRepository;
-            _storeContext = storeContext;
-            _storeMappingService = storeMappingService;
+            StaticCacheManager = staticCacheManager;
+            LocalizationService = localizationService;
+            CountryRepository = countryRepository;
+            StoreContext = storeContext;
+            StoreMappingService = storeMappingService;
         }
 
         #endregion
@@ -53,7 +53,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCountryAsync(Country country)
         {
-            await _countryRepository.DeleteAsync(country);
+            await CountryRepository.DeleteAsync(country);
         }
 
         /// <summary>
@@ -67,20 +67,20 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<IList<Country>> GetAllCountriesAsync(int languageId = 0, bool showHidden = false)
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesAllCacheKey, languageId,
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesAllCacheKey, languageId,
                 showHidden, store);
 
-            return await _staticCacheManager.GetAsync(key, async () =>
+            return await StaticCacheManager.GetAsync(key, async () =>
             {
-                var countries = await _countryRepository.GetAllAsync(async query =>
+                var countries = await CountryRepository.GetAllAsync(async query =>
                 {
                     if (!showHidden)
                         query = query.Where(c => c.Published);
 
                     //apply store mapping constraints
                     if (!showHidden)
-                        query = await _storeMappingService.ApplyStoreMapping(query, store.Id);
+                        query = await StoreMappingService.ApplyStoreMapping(query, store.Id);
 
                     return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
                 });
@@ -91,7 +91,7 @@ namespace Nop.Services.Directory
                     countries = await countries
                         .ToAsyncEnumerable()
                         .OrderBy(c => c.DisplayOrder)
-                        .ThenByAwait(async c => await _localizationService.GetLocalizedAsync(c, x => x.Name, languageId))
+                        .ThenByAwait(async c => await LocalizationService.GetLocalizedAsync(c, x => x.Name, languageId))
                         .ToListAsync();
                 }
 
@@ -150,7 +150,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<Country> GetCountryByIdAsync(int countryId)
         {
-            return await _countryRepository.GetByIdAsync(countryId, cache => default);
+            return await CountryRepository.GetByIdAsync(countryId, cache => default);
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<IList<Country>> GetCountriesByIdsAsync(int[] countryIds)
         {
-            return await _countryRepository.GetByIdsAsync(countryIds);
+            return await CountryRepository.GetByIdsAsync(countryIds);
         }
 
         /// <summary>
@@ -179,13 +179,13 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey, twoLetterIsoCode);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey, twoLetterIsoCode);
 
-            var query = from c in _countryRepository.Table
+            var query = from c in CountryRepository.Table
                         where c.TwoLetterIsoCode == twoLetterIsoCode
                         select c;
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
+            return await StaticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
         /// <summary>
@@ -201,13 +201,13 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey, threeLetterIsoCode);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey, threeLetterIsoCode);
 
-            var query = from c in _countryRepository.Table
+            var query = from c in CountryRepository.Table
                         where c.ThreeLetterIsoCode == threeLetterIsoCode
                         select c;
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
+            return await StaticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCountryAsync(Country country)
         {
-            await _countryRepository.InsertAsync(country);
+            await CountryRepository.InsertAsync(country);
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCountryAsync(Country country)
         {
-            await _countryRepository.UpdateAsync(country);
+            await CountryRepository.UpdateAsync(country);
         }
 
         #endregion

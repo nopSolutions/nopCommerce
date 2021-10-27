@@ -54,41 +54,41 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressService _addressService;
-        private readonly IBlogService _blogService;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGiftCardService _giftCardService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsService _newsService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductService _productService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorAttributeFormatter _vendorAttributeFormatter;
-        private readonly IWorkContext _workContext;
-        private readonly MessageTemplatesSettings _templatesSettings;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly TaxSettings _taxSettings;
+        protected CatalogSettings CatalogSettings { get; }
+        protected CurrencySettings CurrencySettings { get; }
+        protected IActionContextAccessor ActionContextAccessor { get; }
+        protected IAddressAttributeFormatter AddressAttributeFormatter { get; }
+        protected IAddressService AddressService { get; }
+        protected IBlogService BlogService { get; }
+        protected ICountryService CountryService { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected ICustomerAttributeFormatter CustomerAttributeFormatter { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IGiftCardService GiftCardService { get; }
+        protected ILanguageService LanguageService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected INewsService NewsService { get; }
+        protected IOrderService OrderService { get; }
+        protected IPaymentPluginManager PaymentPluginManager { get; }
+        protected IPaymentService PaymentService { get; }
+        protected IPriceFormatter PriceFormatter { get; }
+        protected IProductService ProductService { get; }
+        protected IRewardPointService RewardPointService { get; }
+        protected IShipmentService ShipmentService { get; }
+        protected IStateProvinceService StateProvinceService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IStoreService StoreService { get; }
+        protected IUrlHelperFactory UrlHelperFactory { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IVendorAttributeFormatter VendorAttributeFormatter { get; }
+        protected IWorkContext WorkContext { get; }
+        protected MessageTemplatesSettings TemplatesSettings { get; }
+        protected PaymentSettings PaymentSettings { get; }
+        protected StoreInformationSettings StoreInformationSettings { get; }
+        protected TaxSettings TaxSettings { get; }
 
         private Dictionary<string, IEnumerable<string>> _allowedTokens;
 
@@ -132,41 +132,41 @@ namespace Nop.Services.Messages
             StoreInformationSettings storeInformationSettings,
             TaxSettings taxSettings)
         {
-            _catalogSettings = catalogSettings;
-            _currencySettings = currencySettings;
-            _actionContextAccessor = actionContextAccessor;
-            _addressAttributeFormatter = addressAttributeFormatter;
-            _addressService = addressService;
-            _blogService = blogService;
-            _countryService = countryService;
-            _currencyService = currencyService;
-            _customerAttributeFormatter = customerAttributeFormatter;
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _eventPublisher = eventPublisher;
-            _genericAttributeService = genericAttributeService;
-            _giftCardService = giftCardService;
-            _languageService = languageService;
-            _localizationService = localizationService;
-            _newsService = newsService;
-            _orderService = orderService;
-            _paymentPluginManager = paymentPluginManager;
-            _paymentService = paymentService;
-            _priceFormatter = priceFormatter;
-            _productService = productService;
-            _rewardPointService = rewardPointService;
-            _shipmentService = shipmentService;
-            _stateProvinceService = stateProvinceService;
-            _storeContext = storeContext;
-            _storeService = storeService;
-            _urlHelperFactory = urlHelperFactory;
-            _urlRecordService = urlRecordService;
-            _vendorAttributeFormatter = vendorAttributeFormatter;
-            _workContext = workContext;
-            _templatesSettings = templatesSettings;
-            _paymentSettings = paymentSettings;
-            _storeInformationSettings = storeInformationSettings;
-            _taxSettings = taxSettings;
+            CatalogSettings = catalogSettings;
+            CurrencySettings = currencySettings;
+            ActionContextAccessor = actionContextAccessor;
+            AddressAttributeFormatter = addressAttributeFormatter;
+            AddressService = addressService;
+            BlogService = blogService;
+            CountryService = countryService;
+            CurrencyService = currencyService;
+            CustomerAttributeFormatter = customerAttributeFormatter;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            EventPublisher = eventPublisher;
+            GenericAttributeService = genericAttributeService;
+            GiftCardService = giftCardService;
+            LanguageService = languageService;
+            LocalizationService = localizationService;
+            NewsService = newsService;
+            OrderService = orderService;
+            PaymentPluginManager = paymentPluginManager;
+            PaymentService = paymentService;
+            PriceFormatter = priceFormatter;
+            ProductService = productService;
+            RewardPointService = rewardPointService;
+            ShipmentService = shipmentService;
+            StateProvinceService = stateProvinceService;
+            StoreContext = storeContext;
+            StoreService = storeService;
+            UrlHelperFactory = urlHelperFactory;
+            UrlRecordService = urlRecordService;
+            VendorAttributeFormatter = vendorAttributeFormatter;
+            WorkContext = workContext;
+            TemplatesSettings = templatesSettings;
+            PaymentSettings = paymentSettings;
+            StoreInformationSettings = storeInformationSettings;
+            TaxSettings = taxSettings;
         }
 
         #endregion
@@ -469,47 +469,47 @@ namespace Nop.Services.Messages
         /// </returns>
         protected virtual async Task<string> ProductListToHtmlTableAsync(Order order, int languageId, int vendorId)
         {
-            var language = await _languageService.GetLanguageByIdAsync(languageId);
+            var language = await LanguageService.GetLanguageByIdAsync(languageId);
 
             var sb = new StringBuilder();
             sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
 
-            sb.AppendLine($"<tr style=\"background-color:{_templatesSettings.Color1};text-align:center;\">");
-            sb.AppendLine($"<th>{await _localizationService.GetResourceAsync("Messages.Order.Product(s).Name", languageId)}</th>");
-            sb.AppendLine($"<th>{await _localizationService.GetResourceAsync("Messages.Order.Product(s).Price", languageId)}</th>");
-            sb.AppendLine($"<th>{await _localizationService.GetResourceAsync("Messages.Order.Product(s).Quantity", languageId)}</th>");
-            sb.AppendLine($"<th>{await _localizationService.GetResourceAsync("Messages.Order.Product(s).Total", languageId)}</th>");
+            sb.AppendLine($"<tr style=\"background-color:{TemplatesSettings.Color1};text-align:center;\">");
+            sb.AppendLine($"<th>{await LocalizationService.GetResourceAsync("Messages.Order.Product(s).Name", languageId)}</th>");
+            sb.AppendLine($"<th>{await LocalizationService.GetResourceAsync("Messages.Order.Product(s).Price", languageId)}</th>");
+            sb.AppendLine($"<th>{await LocalizationService.GetResourceAsync("Messages.Order.Product(s).Quantity", languageId)}</th>");
+            sb.AppendLine($"<th>{await LocalizationService.GetResourceAsync("Messages.Order.Product(s).Total", languageId)}</th>");
             sb.AppendLine("</tr>");
 
-            var table = await _orderService.GetOrderItemsAsync(order.Id, vendorId: vendorId);
+            var table = await OrderService.GetOrderItemsAsync(order.Id, vendorId: vendorId);
             for (var i = 0; i <= table.Count - 1; i++)
             {
                 var orderItem = table[i];
 
-                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                var product = await ProductService.GetProductByIdAsync(orderItem.ProductId);
 
                 if (product == null)
                     continue;
 
-                sb.AppendLine($"<tr style=\"background-color: {_templatesSettings.Color2};text-align: center;\">");
+                sb.AppendLine($"<tr style=\"background-color: {TemplatesSettings.Color2};text-align: center;\">");
                 //product name
-                var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name, languageId);
+                var productName = await LocalizationService.GetLocalizedAsync(product, x => x.Name, languageId);
 
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
 
                 //add download link
-                if (await _orderService.IsDownloadAllowedAsync(orderItem))
+                if (await OrderService.IsDownloadAllowedAsync(orderItem))
                 {
                     var downloadUrl  = await RouteUrlAsync(order.StoreId, "GetDownload", new { orderItemId = orderItem.OrderItemGuid });
-                    var downloadLink = $"<a class=\"link\" href=\"{downloadUrl}\">{await _localizationService.GetResourceAsync("Messages.Order.Product(s).Download", languageId)}</a>";
+                    var downloadLink = $"<a class=\"link\" href=\"{downloadUrl}\">{await LocalizationService.GetResourceAsync("Messages.Order.Product(s).Download", languageId)}</a>";
                     sb.AppendLine("<br />");
                     sb.AppendLine(downloadLink);
                 }
                 //add download link
-                if (await _orderService.IsLicenseDownloadAllowedAsync(orderItem))
+                if (await OrderService.IsLicenseDownloadAllowedAsync(orderItem))
                 {
                     var licenseUrl  = await RouteUrlAsync(order.StoreId, "GetLicense", new { orderItemId = orderItem.OrderItemGuid });
-                    var licenseLink = $"<a class=\"link\" href=\"{licenseUrl}\">{await _localizationService.GetResourceAsync("Messages.Order.Product(s).License", languageId)}</a>";
+                    var licenseLink = $"<a class=\"link\" href=\"{licenseUrl}\">{await LocalizationService.GetResourceAsync("Messages.Order.Product(s).License", languageId)}</a>";
                     sb.AppendLine("<br />");
                     sb.AppendLine(licenseLink);
                 }
@@ -523,22 +523,22 @@ namespace Nop.Services.Messages
                 if (product.IsRental)
                 {
                     var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
-                        ? _productService.FormatRentalDate(product, orderItem.RentalStartDateUtc.Value) : string.Empty;
+                        ? ProductService.FormatRentalDate(product, orderItem.RentalStartDateUtc.Value) : string.Empty;
                     var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
-                        ? _productService.FormatRentalDate(product, orderItem.RentalEndDateUtc.Value) : string.Empty;
-                    var rentalInfo = string.Format(await _localizationService.GetResourceAsync("Order.Rental.FormattedDate"),
+                        ? ProductService.FormatRentalDate(product, orderItem.RentalEndDateUtc.Value) : string.Empty;
+                    var rentalInfo = string.Format(await LocalizationService.GetResourceAsync("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                     sb.AppendLine("<br />");
                     sb.AppendLine(rentalInfo);
                 }
                 //SKU
-                if (_catalogSettings.ShowSkuOnProductDetailsPage)
+                if (CatalogSettings.ShowSkuOnProductDetailsPage)
                 {
-                    var sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml);
+                    var sku = await ProductService.FormatSkuAsync(product, orderItem.AttributesXml);
                     if (!string.IsNullOrEmpty(sku))
                     {
                         sb.AppendLine("<br />");
-                        sb.AppendLine(string.Format(await _localizationService.GetResourceAsync("Messages.Order.Product(s).SKU", languageId), WebUtility.HtmlEncode(sku)));
+                        sb.AppendLine(string.Format(await LocalizationService.GetResourceAsync("Messages.Order.Product(s).SKU", languageId), WebUtility.HtmlEncode(sku)));
                     }
                 }
 
@@ -548,14 +548,14 @@ namespace Nop.Services.Messages
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     //including tax
-                    var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                    unitPriceStr = await _priceFormatter.FormatPriceAsync(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+                    var unitPriceInclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                    unitPriceStr = await PriceFormatter.FormatPriceAsync(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
                 }
                 else
                 {
                     //excluding tax
-                    var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                    unitPriceStr = await _priceFormatter.FormatPriceAsync(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
+                    var unitPriceExclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                    unitPriceStr = await PriceFormatter.FormatPriceAsync(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
                 }
 
                 sb.AppendLine($"<td style=\"padding: 0.6em 0.4em;text-align: right;\">{unitPriceStr}</td>");
@@ -566,14 +566,14 @@ namespace Nop.Services.Messages
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     //including tax
-                    var priceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceInclTax, order.CurrencyRate);
-                    priceStr = await _priceFormatter.FormatPriceAsync(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+                    var priceInclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(orderItem.PriceInclTax, order.CurrencyRate);
+                    priceStr = await PriceFormatter.FormatPriceAsync(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
                 }
                 else
                 {
                     //excluding tax
-                    var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
-                    priceStr = await _priceFormatter.FormatPriceAsync(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
+                    var priceExclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
+                    priceStr = await PriceFormatter.FormatPriceAsync(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
                 }
 
                 sb.AppendLine($"<td style=\"padding: 0.6em 0.4em;text-align: right;\">{priceStr}</td>");
@@ -615,18 +615,18 @@ namespace Nop.Services.Messages
             var displaySubTotalDiscount = false;
             var cusSubTotalDiscount = string.Empty;
             var languageId = language.Id;
-            if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
+            if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !TaxSettings.ForceTaxExclusionFromOrderSubtotal)
             {
                 //including tax
 
                 //subtotal
-                var orderSubtotalInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalInclTax, order.CurrencyRate);
-                cusSubTotal = await _priceFormatter.FormatPriceAsync(orderSubtotalInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+                var orderSubtotalInclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(order.OrderSubtotalInclTax, order.CurrencyRate);
+                cusSubTotal = await PriceFormatter.FormatPriceAsync(orderSubtotalInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
                 //discount (applied to order subtotal)
-                var orderSubTotalDiscountInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountInclTax, order.CurrencyRate);
+                var orderSubTotalDiscountInclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(order.OrderSubTotalDiscountInclTax, order.CurrencyRate);
                 if (orderSubTotalDiscountInclTaxInCustomerCurrency > decimal.Zero)
                 {
-                    cusSubTotalDiscount = await _priceFormatter.FormatPriceAsync(-orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+                    cusSubTotalDiscount = await PriceFormatter.FormatPriceAsync(-orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
                     displaySubTotalDiscount = true;
                 }
             }
@@ -635,13 +635,13 @@ namespace Nop.Services.Messages
                 //excluding tax
 
                 //subtotal
-                var orderSubtotalExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalExclTax, order.CurrencyRate);
-                cusSubTotal = await _priceFormatter.FormatPriceAsync(orderSubtotalExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
+                var orderSubtotalExclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(order.OrderSubtotalExclTax, order.CurrencyRate);
+                cusSubTotal = await PriceFormatter.FormatPriceAsync(orderSubtotalExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
                 //discount (applied to order subtotal)
-                var orderSubTotalDiscountExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountExclTax, order.CurrencyRate);
+                var orderSubTotalDiscountExclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(order.OrderSubTotalDiscountExclTax, order.CurrencyRate);
                 if (orderSubTotalDiscountExclTaxInCustomerCurrency > decimal.Zero)
                 {
-                    cusSubTotalDiscount = await _priceFormatter.FormatPriceAsync(-orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
+                    cusSubTotalDiscount = await PriceFormatter.FormatPriceAsync(-orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
                     displaySubTotalDiscount = true;
                 }
             }
@@ -657,22 +657,22 @@ namespace Nop.Services.Messages
                 //including tax
 
                 //shipping
-                var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
-                cusShipTotal = await _priceFormatter.FormatShippingPriceAsync(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+                var orderShippingInclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
+                cusShipTotal = await PriceFormatter.FormatShippingPriceAsync(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
                 //payment method additional fee
-                var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
-                cusPaymentMethodAdditionalFee = await _priceFormatter.FormatPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+                var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
+                cusPaymentMethodAdditionalFee = await PriceFormatter.FormatPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
             }
             else
             {
                 //excluding tax
 
                 //shipping
-                var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
-                cusShipTotal = await _priceFormatter.FormatShippingPriceAsync(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
+                var orderShippingExclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
+                cusShipTotal = await PriceFormatter.FormatShippingPriceAsync(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
                 //payment method additional fee
-                var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
-                cusPaymentMethodAdditionalFee = await _priceFormatter.FormatPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
+                var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
+                cusPaymentMethodAdditionalFee = await PriceFormatter.FormatPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
             }
 
             //shipping
@@ -684,14 +684,14 @@ namespace Nop.Services.Messages
             //tax
             bool displayTax;
             bool displayTaxRates;
-            if (_taxSettings.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+            if (TaxSettings.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
             {
                 displayTax = false;
                 displayTaxRates = false;
             }
             else
             {
-                if (order.OrderTax == 0 && _taxSettings.HideZeroTax)
+                if (order.OrderTax == 0 && TaxSettings.HideZeroTax)
                 {
                     displayTax = false;
                     displayTaxRates = false;
@@ -699,14 +699,14 @@ namespace Nop.Services.Messages
                 else
                 {
                     taxRates = new SortedDictionary<decimal, decimal>();
-                    foreach (var tr in _orderService.ParseTaxRates(order, order.TaxRates))
-                        taxRates.Add(tr.Key, _currencyService.ConvertCurrency(tr.Value, order.CurrencyRate));
+                    foreach (var tr in OrderService.ParseTaxRates(order, order.TaxRates))
+                        taxRates.Add(tr.Key, CurrencyService.ConvertCurrency(tr.Value, order.CurrencyRate));
 
-                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
+                    displayTaxRates = TaxSettings.DisplayTaxRates && taxRates.Any();
                     displayTax = !displayTaxRates;
 
-                    var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
-                    var taxStr = await _priceFormatter.FormatPriceAsync(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode,
+                    var orderTaxInCustomerCurrency = CurrencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
+                    var taxStr = await PriceFormatter.FormatPriceAsync(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode,
                         false, languageId);
                     cusTaxTotal = taxStr;
                 }
@@ -716,82 +716,82 @@ namespace Nop.Services.Messages
             var displayDiscount = false;
             if (order.OrderDiscount > decimal.Zero)
             {
-                var orderDiscountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);
-                cusDiscount = await _priceFormatter.FormatPriceAsync(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false, languageId);
+                var orderDiscountInCustomerCurrency = CurrencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);
+                cusDiscount = await PriceFormatter.FormatPriceAsync(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false, languageId);
                 displayDiscount = true;
             }
 
             //total
-            var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-            var cusTotal = await _priceFormatter.FormatPriceAsync(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, languageId);
+            var orderTotalInCustomerCurrency = CurrencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
+            var cusTotal = await PriceFormatter.FormatPriceAsync(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, languageId);
 
             //subtotal
-            sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{await _localizationService.GetResourceAsync("Messages.Order.SubTotal", languageId)}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusSubTotal}</strong></td></tr>");
+            sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{await LocalizationService.GetResourceAsync("Messages.Order.SubTotal", languageId)}</strong></td> <td style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusSubTotal}</strong></td></tr>");
 
             //discount (applied to order subtotal)
             if (displaySubTotalDiscount)
             {
-                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{await _localizationService.GetResourceAsync("Messages.Order.SubTotalDiscount", languageId)}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusSubTotalDiscount}</strong></td></tr>");
+                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{await LocalizationService.GetResourceAsync("Messages.Order.SubTotalDiscount", languageId)}</strong></td> <td style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusSubTotalDiscount}</strong></td></tr>");
             }
 
             //shipping
             if (displayShipping)
             {
-                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{await _localizationService.GetResourceAsync("Messages.Order.Shipping", languageId)}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusShipTotal}</strong></td></tr>");
+                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{await LocalizationService.GetResourceAsync("Messages.Order.Shipping", languageId)}</strong></td> <td style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusShipTotal}</strong></td></tr>");
             }
 
             //payment method fee
             if (displayPaymentMethodFee)
             {
-                var paymentMethodFeeTitle = await _localizationService.GetResourceAsync("Messages.Order.PaymentMethodAdditionalFee", languageId);
-                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{paymentMethodFeeTitle}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusPaymentMethodAdditionalFee}</strong></td></tr>");
+                var paymentMethodFeeTitle = await LocalizationService.GetResourceAsync("Messages.Order.PaymentMethodAdditionalFee", languageId);
+                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{paymentMethodFeeTitle}</strong></td> <td style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusPaymentMethodAdditionalFee}</strong></td></tr>");
             }
 
             //tax
             if (displayTax)
             {
-                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{await _localizationService.GetResourceAsync("Messages.Order.Tax", languageId)}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusTaxTotal}</strong></td></tr>");
+                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{await LocalizationService.GetResourceAsync("Messages.Order.Tax", languageId)}</strong></td> <td style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusTaxTotal}</strong></td></tr>");
             }
 
             if (displayTaxRates)
             {
                 foreach (var item in taxRates)
                 {
-                    var taxRate = string.Format(await _localizationService.GetResourceAsync("Messages.Order.TaxRateLine"),
-                        _priceFormatter.FormatTaxRate(item.Key));
-                    var taxValue = await _priceFormatter.FormatPriceAsync(item.Value, true, order.CustomerCurrencyCode, false, languageId);
-                    sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{taxRate}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{taxValue}</strong></td></tr>");
+                    var taxRate = string.Format(await LocalizationService.GetResourceAsync("Messages.Order.TaxRateLine"),
+                        PriceFormatter.FormatTaxRate(item.Key));
+                    var taxValue = await PriceFormatter.FormatPriceAsync(item.Value, true, order.CustomerCurrencyCode, false, languageId);
+                    sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{taxRate}</strong></td> <td style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{taxValue}</strong></td></tr>");
                 }
             }
 
             //discount
             if (displayDiscount)
             {
-                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{await _localizationService.GetResourceAsync("Messages.Order.TotalDiscount", languageId)}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusDiscount}</strong></td></tr>");
+                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{await LocalizationService.GetResourceAsync("Messages.Order.TotalDiscount", languageId)}</strong></td> <td style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusDiscount}</strong></td></tr>");
             }
 
             //gift cards
-            foreach (var gcuh in await _giftCardService.GetGiftCardUsageHistoryAsync(order))
+            foreach (var gcuh in await GiftCardService.GetGiftCardUsageHistoryAsync(order))
             {
-                var giftCardText = string.Format(await _localizationService.GetResourceAsync("Messages.Order.GiftCardInfo", languageId),
-                    WebUtility.HtmlEncode((await _giftCardService.GetGiftCardByIdAsync(gcuh.GiftCardId))?.GiftCardCouponCode));
-                var giftCardAmount = await _priceFormatter.FormatPriceAsync(-_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate), true, order.CustomerCurrencyCode,
+                var giftCardText = string.Format(await LocalizationService.GetResourceAsync("Messages.Order.GiftCardInfo", languageId),
+                    WebUtility.HtmlEncode((await GiftCardService.GetGiftCardByIdAsync(gcuh.GiftCardId))?.GiftCardCouponCode));
+                var giftCardAmount = await PriceFormatter.FormatPriceAsync(-CurrencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate), true, order.CustomerCurrencyCode,
                     false, languageId);
-                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{giftCardText}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{giftCardAmount}</strong></td></tr>");
+                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{giftCardText}</strong></td> <td style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{giftCardAmount}</strong></td></tr>");
             }
 
             //reward points
-            if (order.RedeemedRewardPointsEntryId.HasValue && await _rewardPointService.GetRewardPointsHistoryEntryByIdAsync(order.RedeemedRewardPointsEntryId.Value) is RewardPointsHistory redeemedRewardPointsEntry)
+            if (order.RedeemedRewardPointsEntryId.HasValue && await RewardPointService.GetRewardPointsHistoryEntryByIdAsync(order.RedeemedRewardPointsEntryId.Value) is RewardPointsHistory redeemedRewardPointsEntry)
             {
-                var rpTitle = string.Format(await _localizationService.GetResourceAsync("Messages.Order.RewardPoints", languageId),
+                var rpTitle = string.Format(await LocalizationService.GetResourceAsync("Messages.Order.RewardPoints", languageId),
                     -redeemedRewardPointsEntry.Points);
-                var rpAmount = await _priceFormatter.FormatPriceAsync(-_currencyService.ConvertCurrency(redeemedRewardPointsEntry.UsedAmount, order.CurrencyRate), true,
+                var rpAmount = await PriceFormatter.FormatPriceAsync(-CurrencyService.ConvertCurrency(redeemedRewardPointsEntry.UsedAmount, order.CurrencyRate), true,
                     order.CustomerCurrencyCode, false, languageId);
-                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{rpTitle}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{rpAmount}</strong></td></tr>");
+                sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{rpTitle}</strong></td> <td style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{rpAmount}</strong></td></tr>");
             }
 
             //total
-            sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{await _localizationService.GetResourceAsync("Messages.Order.OrderTotal", languageId)}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusTotal}</strong></td></tr>");
+            sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{await LocalizationService.GetResourceAsync("Messages.Order.OrderTotal", languageId)}</strong></td> <td style=\"background-color: {TemplatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{cusTotal}</strong></td></tr>");
         }
 
         /// <summary>
@@ -808,28 +808,28 @@ namespace Nop.Services.Messages
             var sb = new StringBuilder();
             sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
 
-            sb.AppendLine($"<tr style=\"background-color:{_templatesSettings.Color1};text-align:center;\">");
-            sb.AppendLine($"<th>{await _localizationService.GetResourceAsync("Messages.Order.Product(s).Name", languageId)}</th>");
-            sb.AppendLine($"<th>{await _localizationService.GetResourceAsync("Messages.Order.Product(s).Quantity", languageId)}</th>");
+            sb.AppendLine($"<tr style=\"background-color:{TemplatesSettings.Color1};text-align:center;\">");
+            sb.AppendLine($"<th>{await LocalizationService.GetResourceAsync("Messages.Order.Product(s).Name", languageId)}</th>");
+            sb.AppendLine($"<th>{await LocalizationService.GetResourceAsync("Messages.Order.Product(s).Quantity", languageId)}</th>");
             sb.AppendLine("</tr>");
 
-            var table = await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id);
+            var table = await ShipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id);
             for (var i = 0; i <= table.Count - 1; i++)
             {
                 var si = table[i];
-                var orderItem = await _orderService.GetOrderItemByIdAsync(si.OrderItemId);
+                var orderItem = await OrderService.GetOrderItemByIdAsync(si.OrderItemId);
 
                 if (orderItem == null)
                     continue;
 
-                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                var product = await ProductService.GetProductByIdAsync(orderItem.ProductId);
 
                 if (product == null)
                     continue;
 
-                sb.AppendLine($"<tr style=\"background-color: {_templatesSettings.Color2};text-align: center;\">");
+                sb.AppendLine($"<tr style=\"background-color: {TemplatesSettings.Color2};text-align: center;\">");
                 //product name
-                var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name, languageId);
+                var productName = await LocalizationService.GetLocalizedAsync(product, x => x.Name, languageId);
 
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
 
@@ -844,23 +844,23 @@ namespace Nop.Services.Messages
                 if (product.IsRental)
                 {
                     var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
-                        ? _productService.FormatRentalDate(product, orderItem.RentalStartDateUtc.Value) : string.Empty;
+                        ? ProductService.FormatRentalDate(product, orderItem.RentalStartDateUtc.Value) : string.Empty;
                     var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
-                        ? _productService.FormatRentalDate(product, orderItem.RentalEndDateUtc.Value) : string.Empty;
-                    var rentalInfo = string.Format(await _localizationService.GetResourceAsync("Order.Rental.FormattedDate"),
+                        ? ProductService.FormatRentalDate(product, orderItem.RentalEndDateUtc.Value) : string.Empty;
+                    var rentalInfo = string.Format(await LocalizationService.GetResourceAsync("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                     sb.AppendLine("<br />");
                     sb.AppendLine(rentalInfo);
                 }
 
                 //SKU
-                if (_catalogSettings.ShowSkuOnProductDetailsPage)
+                if (CatalogSettings.ShowSkuOnProductDetailsPage)
                 {
-                    var sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml);
+                    var sku = await ProductService.FormatSkuAsync(product, orderItem.AttributesXml);
                     if (!string.IsNullOrEmpty(sku))
                     {
                         sb.AppendLine("<br />");
-                        sb.AppendLine(string.Format(await _localizationService.GetResourceAsync("Messages.Order.Product(s).SKU", languageId), WebUtility.HtmlEncode(sku)));
+                        sb.AppendLine(string.Format(await LocalizationService.GetResourceAsync("Messages.Order.Product(s).SKU", languageId), WebUtility.HtmlEncode(sku)));
                     }
                 }
 
@@ -889,7 +889,7 @@ namespace Nop.Services.Messages
         protected virtual async Task<string> RouteUrlAsync(int storeId = 0, string routeName = null, object routeValues = null)
         {
             //try to get a store by the passed identifier
-            var store = await _storeService.GetStoreByIdAsync(storeId) ?? await _storeContext.GetCurrentStoreAsync()
+            var store = await StoreService.GetStoreByIdAsync(storeId) ?? await StoreContext.GetCurrentStoreAsync()
                 ?? throw new Exception("No store could be loaded");
 
             //ensure that the store URL is specified
@@ -897,11 +897,11 @@ namespace Nop.Services.Messages
                 throw new Exception("URL cannot be null");
 
             //generate a URL with an absolute path
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            var urlHelper = UrlHelperFactory.GetUrlHelper(ActionContextAccessor.ActionContext);
             var url = new PathString(urlHelper.RouteUrl(routeName, routeValues));
 
             //remove the application path from the generated URL if exists
-            var pathBase = _actionContextAccessor.ActionContext?.HttpContext?.Request?.PathBase ?? PathString.Empty;
+            var pathBase = ActionContextAccessor.ActionContext?.HttpContext?.Request?.PathBase ?? PathString.Empty;
             url.StartsWithSegments(pathBase, out url);
 
             //compose the result
@@ -924,7 +924,7 @@ namespace Nop.Services.Messages
             if (emailAccount == null)
                 throw new ArgumentNullException(nameof(emailAccount));
 
-            tokens.Add(new Token("Store.Name", await _localizationService.GetLocalizedAsync(store, x => x.Name)));
+            tokens.Add(new Token("Store.Name", await LocalizationService.GetLocalizedAsync(store, x => x.Name)));
             tokens.Add(new Token("Store.URL", store.Url, true));
             tokens.Add(new Token("Store.Email", emailAccount.Email));
             tokens.Add(new Token("Store.CompanyName", store.CompanyName));
@@ -932,12 +932,12 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Store.CompanyPhoneNumber", store.CompanyPhoneNumber));
             tokens.Add(new Token("Store.CompanyVat", store.CompanyVat));
 
-            tokens.Add(new Token("Facebook.URL", _storeInformationSettings.FacebookLink));
-            tokens.Add(new Token("Twitter.URL", _storeInformationSettings.TwitterLink));
-            tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
+            tokens.Add(new Token("Facebook.URL", StoreInformationSettings.FacebookLink));
+            tokens.Add(new Token("Twitter.URL", StoreInformationSettings.TwitterLink));
+            tokens.Add(new Token("YouTube.URL", StoreInformationSettings.YoutubeLink));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(store, tokens);
+            await EventPublisher.EntityTokensAddedAsync(store, tokens);
         }
 
         /// <summary>
@@ -951,9 +951,9 @@ namespace Nop.Services.Messages
         public virtual async Task AddOrderTokensAsync(IList<Token> tokens, Order order, int languageId, int vendorId = 0)
         {
             //lambda expression for choosing correct order address
-            async Task<Address> orderAddress(Order o) => await _addressService.GetAddressByIdAsync((o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) ?? 0);
+            async Task<Address> orderAddress(Order o) => await AddressService.GetAddressByIdAsync((o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) ?? 0);
 
-            var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+            var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
             tokens.Add(new Token("Order.OrderId", order.Id));
             tokens.Add(new Token("Order.OrderNumber", order.CustomOrderNumber));
@@ -971,10 +971,10 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.BillingAddress2", billingAddress.Address2));
             tokens.Add(new Token("Order.BillingCity", billingAddress.City));
             tokens.Add(new Token("Order.BillingCounty", billingAddress.County));
-            tokens.Add(new Token("Order.BillingStateProvince", await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress) is StateProvince billingStateProvince ? await _localizationService.GetLocalizedAsync(billingStateProvince, x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.BillingStateProvince", await StateProvinceService.GetStateProvinceByAddressAsync(billingAddress) is StateProvince billingStateProvince ? await LocalizationService.GetLocalizedAsync(billingStateProvince, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.BillingZipPostalCode", billingAddress.ZipPostalCode));
-            tokens.Add(new Token("Order.BillingCountry", await _countryService.GetCountryByAddressAsync(billingAddress) is Country billingCountry ? await _localizationService.GetLocalizedAsync(billingCountry, x => x.Name) : string.Empty));
-            tokens.Add(new Token("Order.BillingCustomAttributes", await _addressAttributeFormatter.FormatAttributesAsync(billingAddress.CustomAttributes), true));
+            tokens.Add(new Token("Order.BillingCountry", await CountryService.GetCountryByAddressAsync(billingAddress) is Country billingCountry ? await LocalizationService.GetLocalizedAsync(billingCountry, x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.BillingCustomAttributes", await AddressAttributeFormatter.FormatAttributesAsync(billingAddress.CustomAttributes), true));
 
             tokens.Add(new Token("Order.Shippable", !string.IsNullOrEmpty(order.ShippingMethod)));
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
@@ -989,17 +989,17 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingAddress2", (await orderAddress(order))?.Address2 ?? string.Empty));
             tokens.Add(new Token("Order.ShippingCity", (await orderAddress(order))?.City ?? string.Empty));
             tokens.Add(new Token("Order.ShippingCounty", (await orderAddress(order))?.County ?? string.Empty));
-            tokens.Add(new Token("Order.ShippingStateProvince", await _stateProvinceService.GetStateProvinceByAddressAsync(await orderAddress(order)) is StateProvince shippingStateProvince ? await _localizationService.GetLocalizedAsync(shippingStateProvince, x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.ShippingStateProvince", await StateProvinceService.GetStateProvinceByAddressAsync(await orderAddress(order)) is StateProvince shippingStateProvince ? await LocalizationService.GetLocalizedAsync(shippingStateProvince, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingZipPostalCode", (await orderAddress(order))?.ZipPostalCode ?? string.Empty));
-            tokens.Add(new Token("Order.ShippingCountry", await _countryService.GetCountryByAddressAsync(await orderAddress(order)) is Country orderCountry ? await _localizationService.GetLocalizedAsync(orderCountry, x => x.Name) : string.Empty));
-            tokens.Add(new Token("Order.ShippingCustomAttributes", await _addressAttributeFormatter.FormatAttributesAsync((await orderAddress(order))?.CustomAttributes ?? string.Empty), true));
+            tokens.Add(new Token("Order.ShippingCountry", await CountryService.GetCountryByAddressAsync(await orderAddress(order)) is Country orderCountry ? await LocalizationService.GetLocalizedAsync(orderCountry, x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.ShippingCustomAttributes", await AddressAttributeFormatter.FormatAttributesAsync((await orderAddress(order))?.CustomAttributes ?? string.Empty), true));
 
-            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(order.PaymentMethodSystemName);
-            var paymentMethodName = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, (await _workContext.GetWorkingLanguageAsync()).Id) : order.PaymentMethodSystemName;
+            var paymentMethod = await PaymentPluginManager.LoadPluginBySystemNameAsync(order.PaymentMethodSystemName);
+            var paymentMethodName = paymentMethod != null ? await LocalizationService.GetLocalizedFriendlyNameAsync(paymentMethod, (await WorkContext.GetWorkingLanguageAsync()).Id) : order.PaymentMethodSystemName;
             tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
             tokens.Add(new Token("Order.VatNumber", order.VatNumber));
             var sbCustomValues = new StringBuilder();
-            var customValues = _paymentService.DeserializeCustomValues(order);
+            var customValues = PaymentService.DeserializeCustomValues(order);
             if (customValues != null)
             {
                 foreach (var item in customValues)
@@ -1013,11 +1013,11 @@ namespace Nop.Services.Messages
 
             tokens.Add(new Token("Order.Product(s)", await ProductListToHtmlTableAsync(order, languageId, vendorId), true));
 
-            var language = await _languageService.GetLanguageByIdAsync(languageId);
+            var language = await LanguageService.GetLanguageByIdAsync(languageId);
             if (language != null && !string.IsNullOrEmpty(language.LanguageCulture))
             {
-                var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-                var createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
+                var customer = await CustomerService.GetCustomerByIdAsync(order.CustomerId);
+                var createdOn = DateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, await DateTimeHelper.GetCustomerTimeZoneAsync(customer));
                 tokens.Add(new Token("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture))));
             }
             else
@@ -1029,7 +1029,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.OrderURLForCustomer", orderUrl, true));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(order, tokens);
+            await EventPublisher.EntityTokensAddedAsync(order, tokens);
         }
 
         /// <summary>
@@ -1046,13 +1046,13 @@ namespace Nop.Services.Messages
             //furthermore, exchange rate could be changed
             //so let's display it the primary store currency
 
-            var primaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
-            var refundedAmountStr = await _priceFormatter.FormatPriceAsync(refundedAmount, true, primaryStoreCurrencyCode, false, (await _workContext.GetWorkingLanguageAsync()).Id);
+            var primaryStoreCurrencyCode = (await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+            var refundedAmountStr = await PriceFormatter.FormatPriceAsync(refundedAmount, true, primaryStoreCurrencyCode, false, (await WorkContext.GetWorkingLanguageAsync()).Id);
 
             tokens.Add(new Token("Order.AmountRefunded", refundedAmountStr));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(order, tokens);
+            await EventPublisher.EntityTokensAddedAsync(order, tokens);
         }
 
         /// <summary>
@@ -1078,11 +1078,11 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));
             tokens.Add(new Token("Shipment.Product(s)", await ProductListToHtmlTableAsync(shipment, languageId), true));
 
-            var shipmentUrl  = await RouteUrlAsync((await _orderService.GetOrderByIdAsync(shipment.OrderId)).StoreId, "ShipmentDetails", new { shipmentId = shipment.Id });
+            var shipmentUrl  = await RouteUrlAsync((await OrderService.GetOrderByIdAsync(shipment.OrderId)).StoreId, "ShipmentDetails", new { shipmentId = shipment.Id });
             tokens.Add(new Token("Shipment.URLForCustomer", shipmentUrl, true));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(shipment, tokens);
+            await EventPublisher.EntityTokensAddedAsync(shipment, tokens);
         }
 
         /// <summary>
@@ -1093,14 +1093,14 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddOrderNoteTokensAsync(IList<Token> tokens, OrderNote orderNote)
         {
-            var order = await _orderService.GetOrderByIdAsync(orderNote.OrderId);
+            var order = await OrderService.GetOrderByIdAsync(orderNote.OrderId);
 
-            tokens.Add(new Token("Order.NewNoteText", _orderService.FormatOrderNoteText(orderNote), true));
+            tokens.Add(new Token("Order.NewNoteText", OrderService.FormatOrderNoteText(orderNote), true));
             var orderNoteAttachmentUrl  = await RouteUrlAsync(order.StoreId, "GetOrderNoteFile", new { ordernoteid = orderNote.Id });
             tokens.Add(new Token("Order.OrderNoteAttachmentUrl", orderNoteAttachmentUrl, true));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(orderNote, tokens);
+            await EventPublisher.EntityTokensAddedAsync(orderNote, tokens);
         }
 
         /// <summary>
@@ -1113,12 +1113,12 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("RecurringPayment.ID", recurringPayment.Id));
             tokens.Add(new Token("RecurringPayment.CancelAfterFailedPayment",
-                recurringPayment.LastPaymentFailed && _paymentSettings.CancelRecurringPaymentsAfterFailedPayment));
-            if (await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId) is Order order)
-                tokens.Add(new Token("RecurringPayment.RecurringPaymentType", (await _paymentService.GetRecurringPaymentTypeAsync(order.PaymentMethodSystemName)).ToString()));
+                recurringPayment.LastPaymentFailed && PaymentSettings.CancelRecurringPaymentsAfterFailedPayment));
+            if (await OrderService.GetOrderByIdAsync(recurringPayment.InitialOrderId) is Order order)
+                tokens.Add(new Token("RecurringPayment.RecurringPaymentType", (await PaymentService.GetRecurringPaymentTypeAsync(order.PaymentMethodSystemName)).ToString()));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(recurringPayment, tokens);
+            await EventPublisher.EntityTokensAddedAsync(recurringPayment, tokens);
         }
 
         /// <summary>
@@ -1131,20 +1131,20 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddReturnRequestTokensAsync(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem, int languageId)
         {
-            var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+            var product = await ProductService.GetProductByIdAsync(orderItem.ProductId);
 
             tokens.Add(new Token("ReturnRequest.CustomNumber", returnRequest.CustomNumber));
             tokens.Add(new Token("ReturnRequest.OrderId", orderItem.OrderId));
             tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity));
-            tokens.Add(new Token("ReturnRequest.Product.Name", await _localizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
+            tokens.Add(new Token("ReturnRequest.Product.Name", await LocalizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
             tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
             tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
             tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
             tokens.Add(new Token("ReturnRequest.StaffNotes", HtmlHelper.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
-            tokens.Add(new Token("ReturnRequest.Status", await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus, languageId)));
+            tokens.Add(new Token("ReturnRequest.Status", await LocalizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus, languageId)));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(returnRequest, tokens);
+            await EventPublisher.EntityTokensAddedAsync(returnRequest, tokens);
         }
 
         /// <summary>
@@ -1159,7 +1159,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("GiftCard.SenderEmail", giftCard.SenderEmail));
             tokens.Add(new Token("GiftCard.RecipientName", giftCard.RecipientName));
             tokens.Add(new Token("GiftCard.RecipientEmail", giftCard.RecipientEmail));
-            tokens.Add(new Token("GiftCard.Amount", await _priceFormatter.FormatPriceAsync(giftCard.Amount, true, false)));
+            tokens.Add(new Token("GiftCard.Amount", await PriceFormatter.FormatPriceAsync(giftCard.Amount, true, false)));
             tokens.Add(new Token("GiftCard.CouponCode", giftCard.GiftCardCouponCode));
 
             var giftCardMessage = !string.IsNullOrWhiteSpace(giftCard.Message) ?
@@ -1168,7 +1168,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("GiftCard.Message", giftCardMessage, true));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(giftCard, tokens);
+            await EventPublisher.EntityTokensAddedAsync(giftCard, tokens);
         }
 
         /// <summary>
@@ -1182,7 +1182,7 @@ namespace Nop.Services.Messages
             if (customerId <= 0)
                 throw new ArgumentOutOfRangeException(nameof(customerId));
 
-            var customer = await _customerService.GetCustomerByIdAsync(customerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(customerId);
 
             await AddCustomerTokensAsync(tokens, customer);
         }
@@ -1197,19 +1197,19 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Customer.Email", customer.Email));
             tokens.Add(new Token("Customer.Username", customer.Username));
-            tokens.Add(new Token("Customer.FullName", await _customerService.GetCustomerFullNameAsync(customer)));
-            tokens.Add(new Token("Customer.FirstName", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute)));
-            tokens.Add(new Token("Customer.LastName", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute)));
-            tokens.Add(new Token("Customer.VatNumber", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute)));
-            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute)).ToString()));
+            tokens.Add(new Token("Customer.FullName", await CustomerService.GetCustomerFullNameAsync(customer)));
+            tokens.Add(new Token("Customer.FirstName", await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute)));
+            tokens.Add(new Token("Customer.LastName", await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute)));
+            tokens.Add(new Token("Customer.VatNumber", await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute)));
+            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)await GenericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute)).ToString()));
 
-            var customAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
-            tokens.Add(new Token("Customer.CustomAttributes", await _customerAttributeFormatter.FormatAttributesAsync(customAttributesXml), true));
+            var customAttributesXml = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+            tokens.Add(new Token("Customer.CustomAttributes", await CustomerAttributeFormatter.FormatAttributesAsync(customAttributesXml), true));
 
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
-            var passwordRecoveryUrl  = await RouteUrlAsync(routeName: "PasswordRecoveryConfirm", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
-            var accountActivationUrl  = await RouteUrlAsync(routeName: "AccountActivation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
-            var emailRevalidationUrl  = await RouteUrlAsync(routeName: "EmailRevalidation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
+            var passwordRecoveryUrl  = await RouteUrlAsync(routeName: "PasswordRecoveryConfirm", routeValues: new { token = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
+            var accountActivationUrl  = await RouteUrlAsync(routeName: "AccountActivation", routeValues: new { token = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
+            var emailRevalidationUrl  = await RouteUrlAsync(routeName: "EmailRevalidation", routeValues: new { token = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
             var wishlistUrl  = await RouteUrlAsync(routeName: "Wishlist", routeValues: new { customerGuid = customer.CustomerGuid });
             tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
             tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
@@ -1217,7 +1217,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(customer, tokens);
+            await EventPublisher.EntityTokensAddedAsync(customer, tokens);
         }
 
         /// <summary>
@@ -1231,11 +1231,11 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Vendor.Name", vendor.Name));
             tokens.Add(new Token("Vendor.Email", vendor.Email));
 
-            var vendorAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(vendor, NopVendorDefaults.VendorAttributes);
-            tokens.Add(new Token("Vendor.VendorAttributes", await _vendorAttributeFormatter.FormatAttributesAsync(vendorAttributesXml), true));
+            var vendorAttributesXml = await GenericAttributeService.GetAttributeAsync<string>(vendor, NopVendorDefaults.VendorAttributes);
+            tokens.Add(new Token("Vendor.VendorAttributes", await VendorAttributeFormatter.FormatAttributesAsync(vendorAttributesXml), true));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(vendor, tokens);
+            await EventPublisher.EntityTokensAddedAsync(vendor, tokens);
         }
 
         /// <summary>
@@ -1255,7 +1255,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deactivationUrl, true));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(subscription, tokens);
+            await EventPublisher.EntityTokensAddedAsync(subscription, tokens);
         }
 
         /// <summary>
@@ -1266,14 +1266,14 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddProductReviewTokensAsync(IList<Token> tokens, ProductReview productReview)
         {
-            tokens.Add(new Token("ProductReview.ProductName", (await _productService.GetProductByIdAsync(productReview.ProductId))?.Name));
+            tokens.Add(new Token("ProductReview.ProductName", (await ProductService.GetProductByIdAsync(productReview.ProductId))?.Name));
             tokens.Add(new Token("ProductReview.Title", productReview.Title));
             tokens.Add(new Token("ProductReview.IsApproved", productReview.IsApproved));
             tokens.Add(new Token("ProductReview.ReviewText", productReview.ReviewText));
             tokens.Add(new Token("ProductReview.ReplyText", productReview.ReplyText));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(productReview, tokens);
+            await EventPublisher.EntityTokensAddedAsync(productReview, tokens);
         }
 
         /// <summary>
@@ -1284,12 +1284,12 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddBlogCommentTokensAsync(IList<Token> tokens, BlogComment blogComment)
         {
-            var blogPost = await _blogService.GetBlogPostByIdAsync(blogComment.BlogPostId);
+            var blogPost = await BlogService.GetBlogPostByIdAsync(blogComment.BlogPostId);
 
             tokens.Add(new Token("BlogComment.BlogPostTitle", blogPost.Title));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(blogComment, tokens);
+            await EventPublisher.EntityTokensAddedAsync(blogComment, tokens);
         }
 
         /// <summary>
@@ -1300,12 +1300,12 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddNewsCommentTokensAsync(IList<Token> tokens, NewsComment newsComment)
         {
-            var newsItem = await _newsService.GetNewsByIdAsync(newsComment.NewsItemId);
+            var newsItem = await NewsService.GetNewsByIdAsync(newsComment.NewsItemId);
 
             tokens.Add(new Token("NewsComment.NewsTitle", newsItem.Title));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(newsComment, tokens);
+            await EventPublisher.EntityTokensAddedAsync(newsComment, tokens);
         }
 
         /// <summary>
@@ -1318,16 +1318,16 @@ namespace Nop.Services.Messages
         public virtual async Task AddProductTokensAsync(IList<Token> tokens, Product product, int languageId)
         {
             tokens.Add(new Token("Product.ID", product.Id));
-            tokens.Add(new Token("Product.Name", await _localizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
-            tokens.Add(new Token("Product.ShortDescription", await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription, languageId), true));
+            tokens.Add(new Token("Product.Name", await LocalizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
+            tokens.Add(new Token("Product.ShortDescription", await LocalizationService.GetLocalizedAsync(product, x => x.ShortDescription, languageId), true));
             tokens.Add(new Token("Product.SKU", product.Sku));
-            tokens.Add(new Token("Product.StockQuantity", await _productService.GetTotalStockQuantityAsync(product)));
+            tokens.Add(new Token("Product.StockQuantity", await ProductService.GetTotalStockQuantityAsync(product)));
 
-            var productUrl = await RouteUrlAsync(routeName: "Product", routeValues: new { SeName = await _urlRecordService.GetSeNameAsync(product) });
+            var productUrl = await RouteUrlAsync(routeName: "Product", routeValues: new { SeName = await UrlRecordService.GetSeNameAsync(product) });
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(product, tokens);
+            await EventPublisher.EntityTokensAddedAsync(product, tokens);
         }
 
         /// <summary>
@@ -1344,19 +1344,19 @@ namespace Nop.Services.Messages
             //that's why we resolve it here this way
             var productAttributeFormatter = EngineContext.Current.Resolve<IProductAttributeFormatter>();
 
-            var product = await _productService.GetProductByIdAsync(combination.ProductId);
+            var product = await ProductService.GetProductByIdAsync(combination.ProductId);
 
             var attributes = await productAttributeFormatter.FormatAttributesAsync(product,
                 combination.AttributesXml,
-                await _workContext.GetCurrentCustomerAsync(),
+                await WorkContext.GetCurrentCustomerAsync(),
                 renderPrices: false);
 
             tokens.Add(new Token("AttributeCombination.Formatted", attributes, true));
-            tokens.Add(new Token("AttributeCombination.SKU", await _productService.FormatSkuAsync(await _productService.GetProductByIdAsync(combination.ProductId), combination.AttributesXml)));
+            tokens.Add(new Token("AttributeCombination.SKU", await ProductService.FormatSkuAsync(await ProductService.GetProductByIdAsync(combination.ProductId), combination.AttributesXml)));
             tokens.Add(new Token("AttributeCombination.StockQuantity", combination.StockQuantity));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(combination, tokens);
+            await EventPublisher.EntityTokensAddedAsync(combination, tokens);
         }
 
         /// <summary>
@@ -1386,7 +1386,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Forums.TopicName", forumTopic.Subject));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(forumTopic, tokens);
+            await EventPublisher.EntityTokensAddedAsync(forumTopic, tokens);
         }
 
         /// <summary>
@@ -1402,13 +1402,13 @@ namespace Nop.Services.Messages
             //that's why we resolve it here this way
             var forumService = EngineContext.Current.Resolve<IForumService>();
 
-            var customer = await _customerService.GetCustomerByIdAsync(forumPost.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(forumPost.CustomerId);
 
-            tokens.Add(new Token("Forums.PostAuthor", await _customerService.FormatUsernameAsync(customer)));
+            tokens.Add(new Token("Forums.PostAuthor", await CustomerService.FormatUsernameAsync(customer)));
             tokens.Add(new Token("Forums.PostBody", forumService.FormatPostText(forumPost), true));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(forumPost, tokens);
+            await EventPublisher.EntityTokensAddedAsync(forumPost, tokens);
         }
 
         /// <summary>
@@ -1429,7 +1429,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Forums.ForumName", forum.Name));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(forum, tokens);
+            await EventPublisher.EntityTokensAddedAsync(forum, tokens);
         }
 
         /// <summary>
@@ -1449,7 +1449,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("PrivateMessage.Text", forumService.FormatPrivateMessageText(privateMessage), true));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(privateMessage, tokens);
+            await EventPublisher.EntityTokensAddedAsync(privateMessage, tokens);
         }
 
         /// <summary>
@@ -1460,14 +1460,14 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddBackInStockTokensAsync(IList<Token> tokens, BackInStockSubscription subscription)
         {
-            var product = await _productService.GetProductByIdAsync(subscription.ProductId);
+            var product = await ProductService.GetProductByIdAsync(subscription.ProductId);
 
             tokens.Add(new Token("BackInStockSubscription.ProductName", product.Name));
-            var productUrl = await RouteUrlAsync(subscription.StoreId, "Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) });
+            var productUrl = await RouteUrlAsync(subscription.StoreId, "Product", new { SeName = await UrlRecordService.GetSeNameAsync(product) });
             tokens.Add(new Token("BackInStockSubscription.ProductUrl", productUrl, true));
 
             //event notification
-            await _eventPublisher.EntityTokensAddedAsync(subscription, tokens);
+            await EventPublisher.EntityTokensAddedAsync(subscription, tokens);
         }
 
         /// <summary>
@@ -1480,7 +1480,7 @@ namespace Nop.Services.Messages
         public virtual async Task<IEnumerable<string>> GetListOfCampaignAllowedTokensAsync()
         {
             var additionalTokens = new CampaignAdditionalTokensAddedEvent();
-            await _eventPublisher.PublishAsync(additionalTokens);
+            await EventPublisher.PublishAsync(additionalTokens);
 
             var allowedTokens = (await GetListOfAllowedTokensAsync(new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens })).ToList();
             allowedTokens.AddRange(additionalTokens.AdditionalTokens);
@@ -1499,7 +1499,7 @@ namespace Nop.Services.Messages
         public virtual async Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IEnumerable<string> tokenGroups = null)
         {
             var additionalTokens = new AdditionalTokensAddedEvent();
-            await _eventPublisher.PublishAsync(additionalTokens);
+            await EventPublisher.PublishAsync(additionalTokens);
 
             var allowedTokens = AllowedTokens.Where(x => tokenGroups == null || tokenGroups.Contains(x.Key))
                 .SelectMany(x => x.Value).ToList();

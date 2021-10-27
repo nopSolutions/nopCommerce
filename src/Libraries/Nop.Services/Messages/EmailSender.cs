@@ -19,9 +19,9 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IDownloadService _downloadService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly ISmtpBuilder _smtpBuilder;
+        protected IDownloadService DownloadService { get; }
+        protected INopFileProvider FileProvider { get; }
+        protected ISmtpBuilder SmtpBuilder { get; }
 
         #endregion
 
@@ -29,9 +29,9 @@ namespace Nop.Services.Messages
 
         public EmailSender(IDownloadService downloadService, INopFileProvider fileProvider, ISmtpBuilder smtpBuilder)
         {
-            _downloadService = downloadService;
-            _fileProvider = fileProvider;
-            _smtpBuilder = smtpBuilder;
+            DownloadService = downloadService;
+            FileProvider = fileProvider;
+            SmtpBuilder = smtpBuilder;
         }
 
         #endregion
@@ -72,10 +72,10 @@ namespace Nop.Services.Messages
 
             return CreateMimeAttachment(
                     attachmentFileName,
-                    await _fileProvider.ReadAllBytesAsync(filePath),
-                    _fileProvider.GetCreationTime(filePath),
-                    _fileProvider.GetLastWriteTime(filePath),
-                    _fileProvider.GetLastAccessTime(filePath));
+                    await FileProvider.ReadAllBytesAsync(filePath),
+                    FileProvider.GetCreationTime(filePath),
+                    FileProvider.GetLastWriteTime(filePath),
+                    FileProvider.GetLastAccessTime(filePath));
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Nop.Services.Messages
             };
 
             //create the file attachment for this e-mail message
-            if (!string.IsNullOrEmpty(attachmentFilePath) && _fileProvider.FileExists(attachmentFilePath))
+            if (!string.IsNullOrEmpty(attachmentFilePath) && FileProvider.FileExists(attachmentFilePath))
             {
                 multipart.Add(await CreateMimeAttachmentAsync(attachmentFilePath, attachmentFileName));
             }
@@ -188,7 +188,7 @@ namespace Nop.Services.Messages
             //another attachment?
             if (attachedDownloadId > 0)
             {
-                var download = await _downloadService.GetDownloadByIdAsync(attachedDownloadId);
+                var download = await DownloadService.GetDownloadByIdAsync(attachedDownloadId);
                 //we do not support URLs as attachments
                 if (!download?.UseDownloadUrl ?? false)
                 {
@@ -199,7 +199,7 @@ namespace Nop.Services.Messages
             message.Body = multipart;
 
             //send email
-            using var smtpClient = await _smtpBuilder.BuildAsync(emailAccount);
+            using var smtpClient = await SmtpBuilder.BuildAsync(emailAccount);
             await smtpClient.SendAsync(message);
             await smtpClient.DisconnectAsync(true);
         }

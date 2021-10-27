@@ -17,11 +17,11 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
-        private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
+        protected ICustomerService CustomerService { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected IRepository<Customer> CustomerRepository { get; }
+        protected IRepository<CustomerCustomerRoleMapping> CustomerCustomerRoleMappingRepository { get; }
+        protected IRepository<NewsLetterSubscription> SubscriptionRepository { get; }
 
         #endregion
 
@@ -33,11 +33,11 @@ namespace Nop.Services.Messages
             IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
             IRepository<NewsLetterSubscription> subscriptionRepository)
         {
-            _customerService = customerService;
-            _eventPublisher = eventPublisher;
-            _customerRepository = customerRepository;
-            _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
-            _subscriptionRepository = subscriptionRepository;
+            CustomerService = customerService;
+            EventPublisher = eventPublisher;
+            CustomerRepository = customerRepository;
+            CustomerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
+            SubscriptionRepository = subscriptionRepository;
         }
 
         #endregion
@@ -58,11 +58,11 @@ namespace Nop.Services.Messages
 
             if (isSubscribe)
             {
-                await _eventPublisher.PublishNewsletterSubscribeAsync(subscription);
+                await EventPublisher.PublishNewsletterSubscribeAsync(subscription);
             }
             else
             {
-                await _eventPublisher.PublishNewsletterUnsubscribeAsync(subscription);
+                await EventPublisher.PublishNewsletterUnsubscribeAsync(subscription);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Nop.Services.Messages
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
             //Persist
-            await _subscriptionRepository.InsertAsync(newsLetterSubscription);
+            await SubscriptionRepository.InsertAsync(newsLetterSubscription);
             
             //Publish the subscription event 
             if (newsLetterSubscription.Active) 
@@ -111,10 +111,10 @@ namespace Nop.Services.Messages
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
             //Get original subscription record
-            var originalSubscription = await _subscriptionRepository.LoadOriginalCopyAsync(newsLetterSubscription);
+            var originalSubscription = await SubscriptionRepository.LoadOriginalCopyAsync(newsLetterSubscription);
 
             //Persist
-            await _subscriptionRepository.UpdateAsync(newsLetterSubscription);
+            await SubscriptionRepository.UpdateAsync(newsLetterSubscription);
             
             //Publish the subscription event 
             if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
@@ -147,7 +147,7 @@ namespace Nop.Services.Messages
             if (newsLetterSubscription == null) 
                 throw new ArgumentNullException(nameof(newsLetterSubscription));
 
-            await _subscriptionRepository.DeleteAsync(newsLetterSubscription);
+            await SubscriptionRepository.DeleteAsync(newsLetterSubscription);
             
             //Publish the unsubscribe event 
             await PublishSubscriptionEventAsync(newsLetterSubscription, false, publishSubscriptionEvents);
@@ -163,7 +163,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByIdAsync(int newsLetterSubscriptionId)
         {
-            return await _subscriptionRepository.GetByIdAsync(newsLetterSubscriptionId, cache => default);
+            return await SubscriptionRepository.GetByIdAsync(newsLetterSubscriptionId, cache => default);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Nop.Services.Messages
         {
             if (newsLetterSubscriptionGuid == Guid.Empty) return null;
 
-            var newsLetterSubscriptions = from nls in _subscriptionRepository.Table
+            var newsLetterSubscriptions = from nls in SubscriptionRepository.Table
                                           where nls.NewsLetterSubscriptionGuid == newsLetterSubscriptionGuid
                                           orderby nls.Id
                                           select nls;
@@ -202,7 +202,7 @@ namespace Nop.Services.Messages
 
             email = email.Trim();
 
-            var newsLetterSubscriptions = from nls in _subscriptionRepository.Table
+            var newsLetterSubscriptions = from nls in SubscriptionRepository.Table
                                           where nls.Email == email && nls.StoreId == storeId
                                           orderby nls.Id
                                           select nls;
@@ -233,7 +233,7 @@ namespace Nop.Services.Messages
             if (customerRoleId == 0)
             {
                 //do not filter by customer role
-                var subscriptions = await _subscriptionRepository.GetAllPagedAsync(query =>
+                var subscriptions = await SubscriptionRepository.GetAllPagedAsync(query =>
                 {
                     if (!string.IsNullOrEmpty(email))
                         query = query.Where(nls => nls.Email.Contains(email));
@@ -254,14 +254,14 @@ namespace Nop.Services.Messages
             }
 
             //filter by customer role
-            var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
+            var guestRole = await CustomerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
             if (guestRole == null)
                 throw new NopException("'Guests' role could not be loaded");
 
             if (guestRole.Id == customerRoleId)
             {
                 //guests
-                var subscriptions = await _subscriptionRepository.GetAllPagedAsync(query =>
+                var subscriptions = await SubscriptionRepository.GetAllPagedAsync(query =>
                 {
                     if (!string.IsNullOrEmpty(email))
                         query = query.Where(nls => nls.Email.Contains(email));
@@ -273,7 +273,7 @@ namespace Nop.Services.Messages
                         query = query.Where(nls => nls.StoreId == storeId);
                     if (isActive.HasValue)
                         query = query.Where(nls => nls.Active == isActive.Value);
-                    query = query.Where(nls => !_customerRepository.Table.Any(c => c.Email == nls.Email));
+                    query = query.Where(nls => !CustomerRepository.Table.Any(c => c.Email == nls.Email));
                     query = query.OrderBy(nls => nls.Email);
 
                     return query;
@@ -283,15 +283,15 @@ namespace Nop.Services.Messages
             }
             else
             {
-                var subscriptions = await _subscriptionRepository.GetAllPagedAsync(query =>
+                var subscriptions = await SubscriptionRepository.GetAllPagedAsync(query =>
                 {
                     //other customer roles (not guests)
-                    var joindQuery = query.Join(_customerRepository.Table,
+                    var joindQuery = query.Join(CustomerRepository.Table,
                         nls => nls.Email,
                         c => c.Email,
                         (nls, c) => new {NewsletterSubscribers = nls, Customer = c});
 
-                    joindQuery = joindQuery.Where(x => _customerCustomerRoleMappingRepository.Table.Any(ccrm =>
+                    joindQuery = joindQuery.Where(x => CustomerCustomerRoleMappingRepository.Table.Any(ccrm =>
                         ccrm.CustomerId == x.Customer.Id && ccrm.CustomerRoleId == customerRoleId));
 
                     if (!string.IsNullOrEmpty(email))

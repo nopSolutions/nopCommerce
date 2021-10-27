@@ -33,8 +33,7 @@ namespace Nop.Services.Media
         private static string _azureBlobStorageContainerName;
         private static string _azureBlobStorageEndPoint;
 
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly MediaSettings _mediaSettings;
+        protected IStaticCacheManager StaticCacheManager { get; }
 
         private readonly object _locker = new();
 
@@ -67,8 +66,7 @@ namespace Nop.Services.Media
                   webHelper,
                   mediaSettings)
         {
-            _staticCacheManager = staticCacheManager;
-            _mediaSettings = mediaSettings;
+            StaticCacheManager = staticCacheManager;
 
             OneTimeInit(appSettings);
         }
@@ -169,7 +167,7 @@ namespace Nop.Services.Media
             }
             await Task.WhenAll(tasks);
 
-            await _staticCacheManager.RemoveByPrefixAsync(NopMediaDefaults.ThumbsExistsPrefix);
+            await StaticCacheManager.RemoveByPrefixAsync(NopMediaDefaults.ThumbsExistsPrefix);
         }
 
         /// <summary>
@@ -185,9 +183,9 @@ namespace Nop.Services.Media
         {
             try
             {
-                var key = _staticCacheManager.PrepareKeyForDefaultCache(NopMediaDefaults.ThumbExistsCacheKey, thumbFileName);
+                var key = StaticCacheManager.PrepareKeyForDefaultCache(NopMediaDefaults.ThumbExistsCacheKey, thumbFileName);
 
-                return await _staticCacheManager.GetAsync(key, async () =>
+                return await StaticCacheManager.GetAsync(key, async () =>
                 {
                     return await _blobContainerClient.GetBlobClient(thumbFileName).ExistsAsync();
                 });
@@ -222,10 +220,10 @@ namespace Nop.Services.Media
             }
 
             //set cache control
-            if (!string.IsNullOrWhiteSpace(_mediaSettings.AzureCacheControlHeader))
+            if (!string.IsNullOrWhiteSpace(MediaSettings.AzureCacheControlHeader))
             {
                 headers ??= new BlobHttpHeaders();
-                headers.CacheControl = _mediaSettings.AzureCacheControlHeader;
+                headers.CacheControl = MediaSettings.AzureCacheControlHeader;
             }
 
             if (headers is null)
@@ -235,7 +233,7 @@ namespace Nop.Services.Media
             else
                 await blobClient.UploadAsync(ms, new BlobUploadOptions { HttpHeaders = headers });
 
-            await _staticCacheManager.RemoveByPrefixAsync(NopMediaDefaults.ThumbsExistsPrefix);
+            await StaticCacheManager.RemoveByPrefixAsync(NopMediaDefaults.ThumbsExistsPrefix);
         }
 
         #endregion

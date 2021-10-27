@@ -33,23 +33,23 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly IAddressService _addressService;
-        private readonly IAffiliateService _affiliateService;
-        private readonly ICustomerService _customerService;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMessageTemplateService _messageTemplateService;
-        private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly ITokenizer _tokenizer;
+        protected CommonSettings CommonSettings { get; }
+        protected EmailAccountSettings EmailAccountSettings { get; }
+        protected IAddressService AddressService { get; }
+        protected IAffiliateService AffiliateService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IEmailAccountService EmailAccountService { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected ILanguageService LanguageService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IMessageTemplateService MessageTemplateService { get; }
+        protected IMessageTokenProvider MessageTokenProvider { get; }
+        protected IOrderService OrderService { get; }
+        protected IProductService ProductService { get; }
+        protected IQueuedEmailService QueuedEmailService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IStoreService StoreService { get; }
+        protected ITokenizer Tokenizer { get; }
 
         #endregion
 
@@ -73,23 +73,23 @@ namespace Nop.Services.Messages
             IStoreService storeService,
             ITokenizer tokenizer)
         {
-            _commonSettings = commonSettings;
-            _emailAccountSettings = emailAccountSettings;
-            _addressService = addressService;
-            _affiliateService = affiliateService;
-            _customerService = customerService;
-            _emailAccountService = emailAccountService;
-            _eventPublisher = eventPublisher;
-            _languageService = languageService;
-            _localizationService = localizationService;
-            _messageTemplateService = messageTemplateService;
-            _messageTokenProvider = messageTokenProvider;
-            _orderService = orderService;
-            _productService = productService;
-            _queuedEmailService = queuedEmailService;
-            _storeContext = storeContext;
-            _storeService = storeService;
-            _tokenizer = tokenizer;
+            CommonSettings = commonSettings;
+            EmailAccountSettings = emailAccountSettings;
+            AddressService = addressService;
+            AffiliateService = affiliateService;
+            CustomerService = customerService;
+            EmailAccountService = emailAccountService;
+            EventPublisher = eventPublisher;
+            LanguageService = languageService;
+            LocalizationService = localizationService;
+            MessageTemplateService = messageTemplateService;
+            MessageTokenProvider = messageTokenProvider;
+            OrderService = orderService;
+            ProductService = productService;
+            QueuedEmailService = queuedEmailService;
+            StoreContext = storeContext;
+            StoreService = storeService;
+            Tokenizer = tokenizer;
         }
 
         #endregion
@@ -108,7 +108,7 @@ namespace Nop.Services.Messages
         protected virtual async Task<IList<MessageTemplate>> GetActiveMessageTemplatesAsync(string messageTemplateName, int storeId)
         {
             //get message templates by the name
-            var messageTemplates = await _messageTemplateService.GetMessageTemplatesByNameAsync(messageTemplateName, storeId);
+            var messageTemplates = await MessageTemplateService.GetMessageTemplatesByNameAsync(messageTemplateName, storeId);
 
             //no template found
             if (!messageTemplates?.Any() ?? true)
@@ -131,13 +131,13 @@ namespace Nop.Services.Messages
         /// </returns>
         protected virtual async Task<EmailAccount> GetEmailAccountOfMessageTemplateAsync(MessageTemplate messageTemplate, int languageId)
         {
-            var emailAccountId = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.EmailAccountId, languageId);
+            var emailAccountId = await LocalizationService.GetLocalizedAsync(messageTemplate, mt => mt.EmailAccountId, languageId);
             //some 0 validation (for localizable "Email account" dropdownlist which saves 0 if "Standard" value is chosen)
             if (emailAccountId == 0)
                 emailAccountId = messageTemplate.EmailAccountId;
 
-            var emailAccount = (await _emailAccountService.GetEmailAccountByIdAsync(emailAccountId) ?? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)) ??
-                               (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
+            var emailAccount = (await EmailAccountService.GetEmailAccountByIdAsync(emailAccountId) ?? await EmailAccountService.GetEmailAccountByIdAsync(EmailAccountSettings.DefaultEmailAccountId)) ??
+                               (await EmailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
             return emailAccount;
         }
 
@@ -153,18 +153,18 @@ namespace Nop.Services.Messages
         protected virtual async Task<int> EnsureLanguageIsActiveAsync(int languageId, int storeId)
         {
             //load language by specified ID
-            var language = await _languageService.GetLanguageByIdAsync(languageId);
+            var language = await LanguageService.GetLanguageByIdAsync(languageId);
 
             if (language == null || !language.Published)
             {
                 //load any language from the specified store
-                language = (await _languageService.GetAllLanguagesAsync(storeId: storeId)).FirstOrDefault();
+                language = (await LanguageService.GetAllLanguagesAsync(storeId: storeId)).FirstOrDefault();
             }
 
             if (language == null || !language.Published)
             {
                 //load any language
-                language = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
+                language = (await LanguageService.GetAllLanguagesAsync()).FirstOrDefault();
             }
 
             if (language == null)
@@ -193,7 +193,7 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerRegisteredNotification, store.Id);
@@ -202,7 +202,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -210,10 +210,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -236,7 +236,7 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerWelcomeMessage, store.Id);
@@ -245,7 +245,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -253,13 +253,13 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = await CustomerService.GetCustomerFullNameAsync(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -279,7 +279,7 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerEmailValidationMessage, store.Id);
@@ -288,7 +288,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -296,13 +296,13 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = await CustomerService.GetCustomerFullNameAsync(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -322,7 +322,7 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerEmailRevalidationMessage, store.Id);
@@ -331,7 +331,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -339,14 +339,14 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 //email to re-validate
                 var toEmail = customer.EmailToRevalidate;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = await CustomerService.GetCustomerFullNameAsync(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -366,7 +366,7 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerPasswordRecoveryMessage, store.Id);
@@ -375,7 +375,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -383,13 +383,13 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = await CustomerService.GetCustomerFullNameAsync(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -417,7 +417,7 @@ namespace Nop.Services.Messages
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPlacedVendorNotification, store.Id);
@@ -426,8 +426,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId, vendor.Id);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId, vendor.Id);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -435,10 +435,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = vendor.Email;
                 var toName = vendor.Name;
@@ -461,7 +461,7 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification, store.Id);
@@ -470,8 +470,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -479,10 +479,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -505,12 +505,12 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var affiliate = await _affiliateService.GetAffiliateByIdAsync(order.AffiliateId);
+            var affiliate = await AffiliateService.GetAffiliateByIdAsync(order.AffiliateId);
 
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPlacedAffiliateNotification, store.Id);
@@ -519,8 +519,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -528,12 +528,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var affiliateAddress = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
+                var affiliateAddress = await AddressService.GetAddressByIdAsync(affiliate.AddressId);
                 var toEmail = affiliateAddress.Email;
                 var toName = $"{affiliateAddress.FirstName} {affiliateAddress.LastName}";
 
@@ -555,7 +555,7 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPaidStoreOwnerNotification, store.Id);
@@ -564,8 +564,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -573,10 +573,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -599,12 +599,12 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var affiliate = await _affiliateService.GetAffiliateByIdAsync(order.AffiliateId);
+            var affiliate = await AffiliateService.GetAffiliateByIdAsync(order.AffiliateId);
 
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPaidAffiliateNotification, store.Id);
@@ -613,8 +613,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -622,12 +622,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var affiliateAddress = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
+                var affiliateAddress = await AddressService.GetAddressByIdAsync(affiliate.AddressId);
                 var toEmail = affiliateAddress.Email;
                 var toName = $"{affiliateAddress.FirstName} {affiliateAddress.LastName}";
 
@@ -652,7 +652,7 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPaidCustomerNotification, store.Id);
@@ -661,8 +661,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -670,12 +670,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
@@ -703,7 +703,7 @@ namespace Nop.Services.Messages
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPaidVendorNotification, store.Id);
@@ -712,8 +712,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId, vendor.Id);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId, vendor.Id);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -721,10 +721,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = vendor.Email;
                 var toName = vendor.Name;
@@ -750,7 +750,7 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPlacedCustomerNotification, store.Id);
@@ -759,8 +759,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -768,12 +768,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
@@ -797,11 +797,11 @@ namespace Nop.Services.Messages
             if (shipment == null)
                 throw new ArgumentNullException(nameof(shipment));
 
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
+            var order = await OrderService.GetOrderByIdAsync(shipment.OrderId);
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ShipmentSentCustomerNotification, store.Id);
@@ -810,9 +810,9 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddShipmentTokensAsync(commonTokens, shipment, languageId);
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddShipmentTokensAsync(commonTokens, shipment, languageId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -820,12 +820,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
@@ -848,12 +848,12 @@ namespace Nop.Services.Messages
             if (shipment == null)
                 throw new ArgumentNullException(nameof(shipment));
 
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
+            var order = await OrderService.GetOrderByIdAsync(shipment.OrderId);
 
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification, store.Id);
@@ -862,9 +862,9 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddShipmentTokensAsync(commonTokens, shipment, languageId);
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddShipmentTokensAsync(commonTokens, shipment, languageId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -872,12 +872,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
@@ -903,7 +903,7 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderCompletedCustomerNotification, store.Id);
@@ -912,8 +912,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -921,12 +921,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
@@ -950,7 +950,7 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderCancelledCustomerNotification, store.Id);
@@ -959,8 +959,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -968,12 +968,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
@@ -997,7 +997,7 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification, store.Id);
@@ -1006,9 +1006,9 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddOrderRefundedTokensAsync(commonTokens, order, refundedAmount);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddOrderRefundedTokensAsync(commonTokens, order, refundedAmount);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1016,10 +1016,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -1043,7 +1043,7 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderRefundedCustomerNotification, store.Id);
@@ -1052,9 +1052,9 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddOrderRefundedTokensAsync(commonTokens, order, refundedAmount);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddOrderRefundedTokensAsync(commonTokens, order, refundedAmount);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1062,12 +1062,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
@@ -1090,12 +1090,12 @@ namespace Nop.Services.Messages
             if (orderNote == null)
                 throw new ArgumentNullException(nameof(orderNote));
 
-            var order = await _orderService.GetOrderByIdAsync(orderNote.OrderId);
+            var order = await OrderService.GetOrderByIdAsync(orderNote.OrderId);
 
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewOrderNoteAddedCustomerNotification, store.Id);
@@ -1104,9 +1104,9 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderNoteTokensAsync(commonTokens, orderNote);
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddOrderNoteTokensAsync(commonTokens, orderNote);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1114,12 +1114,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
@@ -1142,12 +1142,12 @@ namespace Nop.Services.Messages
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
+            var order = await OrderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
 
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification, store.Id);
@@ -1156,9 +1156,9 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
-            await _messageTokenProvider.AddRecurringPaymentTokensAsync(commonTokens, recurringPayment);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddRecurringPaymentTokensAsync(commonTokens, recurringPayment);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1166,10 +1166,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -1192,12 +1192,12 @@ namespace Nop.Services.Messages
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
+            var order = await OrderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
 
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification, store.Id);
@@ -1206,9 +1206,9 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
-            await _messageTokenProvider.AddRecurringPaymentTokensAsync(commonTokens, recurringPayment);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddRecurringPaymentTokensAsync(commonTokens, recurringPayment);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1216,12 +1216,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
@@ -1244,12 +1244,12 @@ namespace Nop.Services.Messages
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
+            var order = await OrderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
 
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification, store.Id);
@@ -1258,9 +1258,9 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
-            await _messageTokenProvider.AddRecurringPaymentTokensAsync(commonTokens, recurringPayment);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await MessageTokenProvider.AddRecurringPaymentTokensAsync(commonTokens, recurringPayment);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1268,12 +1268,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
@@ -1300,7 +1300,7 @@ namespace Nop.Services.Messages
             if (subscription == null)
                 throw new ArgumentNullException(nameof(subscription));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage, store.Id);
@@ -1309,7 +1309,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddNewsLetterSubscriptionTokensAsync(commonTokens, subscription);
+            await MessageTokenProvider.AddNewsLetterSubscriptionTokensAsync(commonTokens, subscription);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1317,10 +1317,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, subscription.Email, string.Empty);
             }).ToListAsync();
@@ -1340,7 +1340,7 @@ namespace Nop.Services.Messages
             if (subscription == null)
                 throw new ArgumentNullException(nameof(subscription));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage, store.Id);
@@ -1349,7 +1349,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddNewsLetterSubscriptionTokensAsync(commonTokens, subscription);
+            await MessageTokenProvider.AddNewsLetterSubscriptionTokensAsync(commonTokens, subscription);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1357,10 +1357,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, subscription.Email, string.Empty);
             }).ToListAsync();
@@ -1392,7 +1392,7 @@ namespace Nop.Services.Messages
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.EmailAFriendMessage, store.Id);
@@ -1401,8 +1401,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-            await _messageTokenProvider.AddProductTokensAsync(commonTokens, product, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddProductTokensAsync(commonTokens, product, languageId);
             commonTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage, true));
             commonTokens.Add(new Token("EmailAFriend.Email", customerEmail));
 
@@ -1412,10 +1412,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, friendsEmail, string.Empty);
             }).ToListAsync();
@@ -1439,7 +1439,7 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.WishlistToFriendMessage, store.Id);
@@ -1448,7 +1448,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
             commonTokens.Add(new Token("Wishlist.PersonalMessage", personalMessage, true));
             commonTokens.Add(new Token("Wishlist.Email", customerEmail));
 
@@ -1458,10 +1458,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, friendsEmail, string.Empty);
             }).ToListAsync();
@@ -1493,7 +1493,7 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification, store.Id);
@@ -1502,9 +1502,9 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, returnRequest.CustomerId);
-            await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, returnRequest.CustomerId);
+            await MessageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1512,10 +1512,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -1545,20 +1545,20 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             var languageId = await EnsureLanguageIsActiveAsync(order.CustomerLanguageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewReturnRequestCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
-            var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(returnRequest.CustomerId);
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-            await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1566,19 +1566,19 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
-                var toEmail = (await _customerService.IsGuestAsync(customer))
+                var toEmail = (await CustomerService.IsGuestAsync(customer))
                     ? billingAddress.Email
                     : customer.Email;
-                var toName = (await _customerService.IsGuestAsync(customer))
+                var toName = (await CustomerService.IsGuestAsync(customer))
                     ? billingAddress.FirstName
-                    : await _customerService.GetCustomerFullNameAsync(customer);
+                    : await CustomerService.GetCustomerFullNameAsync(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1605,20 +1605,20 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(order.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             var languageId = await EnsureLanguageIsActiveAsync(order.CustomerLanguageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
-            var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(returnRequest.CustomerId);
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-            await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
+            await MessageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1626,19 +1626,19 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
-                var toEmail = (await _customerService.IsGuestAsync(customer))
+                var toEmail = (await CustomerService.IsGuestAsync(customer))
                     ? billingAddress.Email
                     : customer.Email;
-                var toName = (await _customerService.IsGuestAsync(customer))
+                var toName = (await CustomerService.IsGuestAsync(customer))
                     ? billingAddress.FirstName
-                    : await _customerService.GetCustomerFullNameAsync(customer);
+                    : await CustomerService.GetCustomerFullNameAsync(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1664,7 +1664,7 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewForumTopicMessage, store.Id);
             if (!messageTemplates.Any())
@@ -1672,9 +1672,9 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddForumTopicTokensAsync(commonTokens, forumTopic);
-            await _messageTokenProvider.AddForumTokensAsync(commonTokens, forum);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddForumTopicTokensAsync(commonTokens, forumTopic);
+            await MessageTokenProvider.AddForumTokensAsync(commonTokens, forum);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1682,13 +1682,13 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = await CustomerService.GetCustomerFullNameAsync(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1713,7 +1713,7 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewForumPostMessage, store.Id);
             if (!messageTemplates.Any())
@@ -1721,10 +1721,10 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddForumPostTokensAsync(commonTokens, forumPost);
-            await _messageTokenProvider.AddForumTopicTokensAsync(commonTokens, forumTopic, friendlyForumTopicPageIndex, forumPost.Id);
-            await _messageTokenProvider.AddForumTokensAsync(commonTokens, forum);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddForumPostTokensAsync(commonTokens, forumPost);
+            await MessageTokenProvider.AddForumTopicTokensAsync(commonTokens, forumTopic, friendlyForumTopicPageIndex, forumPost.Id);
+            await MessageTokenProvider.AddForumTokensAsync(commonTokens, forum);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1732,13 +1732,13 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = await CustomerService.GetCustomerFullNameAsync(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1758,7 +1758,7 @@ namespace Nop.Services.Messages
             if (privateMessage == null)
                 throw new ArgumentNullException(nameof(privateMessage));
 
-            var store = await _storeService.GetStoreByIdAsync(privateMessage.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(privateMessage.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.PrivateMessageNotification, store.Id);
             if (!messageTemplates.Any())
@@ -1766,8 +1766,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddPrivateMessageTokensAsync(commonTokens, privateMessage);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, privateMessage.ToCustomerId);
+            await MessageTokenProvider.AddPrivateMessageTokensAsync(commonTokens, privateMessage);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, privateMessage.ToCustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1775,14 +1775,14 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var customer = await _customerService.GetCustomerByIdAsync(privateMessage.ToCustomerId);
+                var customer = await CustomerService.GetCustomerByIdAsync(privateMessage.ToCustomerId);
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = await CustomerService.GetCustomerFullNameAsync(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1810,7 +1810,7 @@ namespace Nop.Services.Messages
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewVendorAccountApplyStoreOwnerNotification, store.Id);
@@ -1819,8 +1819,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-            await _messageTokenProvider.AddVendorTokensAsync(commonTokens, vendor);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddVendorTokensAsync(commonTokens, vendor);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1828,10 +1828,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -1854,7 +1854,7 @@ namespace Nop.Services.Messages
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.VendorInformationChangeNotification, store.Id);
@@ -1863,7 +1863,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddVendorTokensAsync(commonTokens, vendor);
+            await MessageTokenProvider.AddVendorTokensAsync(commonTokens, vendor);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1871,10 +1871,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -1897,9 +1897,9 @@ namespace Nop.Services.Messages
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
 
-            var order = await _orderService.GetOrderByOrderItemAsync(giftCard.PurchasedWithOrderItemId ?? 0);
-            var currentStore = await _storeContext.GetCurrentStoreAsync();
-            var store = order != null ? await _storeService.GetStoreByIdAsync(order.StoreId) ?? currentStore : currentStore;
+            var order = await OrderService.GetOrderByOrderItemAsync(giftCard.PurchasedWithOrderItemId ?? 0);
+            var currentStore = await StoreContext.GetCurrentStoreAsync();
+            var store = order != null ? await StoreService.GetStoreByIdAsync(order.StoreId) ?? currentStore : currentStore;
 
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
@@ -1909,7 +1909,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddGiftCardTokensAsync(commonTokens, giftCard);
+            await MessageTokenProvider.AddGiftCardTokensAsync(commonTokens, giftCard);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1917,10 +1917,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = giftCard.RecipientEmail;
                 var toName = giftCard.RecipientName;
@@ -1943,7 +1943,7 @@ namespace Nop.Services.Messages
             if (productReview == null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ProductReviewStoreOwnerNotification, store.Id);
@@ -1952,8 +1952,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddProductReviewTokensAsync(commonTokens, productReview);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, productReview.CustomerId);
+            await MessageTokenProvider.AddProductReviewTokensAsync(commonTokens, productReview);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, productReview.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1961,10 +1961,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -1987,27 +1987,27 @@ namespace Nop.Services.Messages
             if (productReview == null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            var store = await _storeService.GetStoreByIdAsync(productReview.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(productReview.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ProductReviewReplyCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
-            var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(productReview.CustomerId);
             
             //We should not send notifications to guests
-            if (await _customerService.IsGuestAsync(customer))
+            if (await CustomerService.IsGuestAsync(customer))
                 return new List<int>();
 
             //We should not send notifications to guests
-            if (await _customerService.IsGuestAsync(customer))
+            if (await CustomerService.IsGuestAsync(customer))
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddProductReviewTokensAsync(commonTokens, productReview);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddProductReviewTokensAsync(commonTokens, productReview);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -2015,13 +2015,13 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = await CustomerService.GetCustomerFullNameAsync(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -2041,7 +2041,7 @@ namespace Nop.Services.Messages
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification, store.Id);
@@ -2049,7 +2049,7 @@ namespace Nop.Services.Messages
                 return new List<int>();
 
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddProductTokensAsync(commonTokens, product, languageId);
+            await MessageTokenProvider.AddProductTokensAsync(commonTokens, product, languageId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -2057,10 +2057,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -2083,7 +2083,7 @@ namespace Nop.Services.Messages
             if (combination == null)
                 throw new ArgumentNullException(nameof(combination));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.QuantityBelowAttributeCombinationStoreOwnerNotification, store.Id);
@@ -2091,10 +2091,10 @@ namespace Nop.Services.Messages
                 return new List<int>();
 
             var commonTokens = new List<Token>();
-            var product = await _productService.GetProductByIdAsync(combination.ProductId);
+            var product = await ProductService.GetProductByIdAsync(combination.ProductId);
 
-            await _messageTokenProvider.AddProductTokensAsync(commonTokens, product, languageId);
-            await _messageTokenProvider.AddAttributeCombinationTokensAsync(commonTokens, combination, languageId);
+            await MessageTokenProvider.AddProductTokensAsync(commonTokens, product, languageId);
+            await MessageTokenProvider.AddAttributeCombinationTokensAsync(commonTokens, combination, languageId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -2102,10 +2102,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -2131,7 +2131,7 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewVatSubmittedStoreOwnerNotification, store.Id);
@@ -2140,7 +2140,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
             commonTokens.Add(new Token("VatValidatio.Name", vatName));
             commonTokens.Add(new Token("VatValidatio.Address", vatAddress));
 
@@ -2150,9 +2150,9 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -2175,7 +2175,7 @@ namespace Nop.Services.Messages
             if (blogComment == null)
                 throw new ArgumentNullException(nameof(blogComment));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.BlogCommentNotification, store.Id);
@@ -2184,8 +2184,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddBlogCommentTokensAsync(commonTokens, blogComment);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, blogComment.CustomerId);
+            await MessageTokenProvider.AddBlogCommentTokensAsync(commonTokens, blogComment);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, blogComment.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -2193,10 +2193,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -2219,7 +2219,7 @@ namespace Nop.Services.Messages
             if (newsComment == null)
                 throw new ArgumentNullException(nameof(newsComment));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewsCommentNotification, store.Id);
@@ -2228,8 +2228,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddNewsCommentTokensAsync(commonTokens, newsComment);
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, newsComment.CustomerId);
+            await MessageTokenProvider.AddNewsCommentTokensAsync(commonTokens, newsComment);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, newsComment.CustomerId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -2237,10 +2237,10 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -2263,7 +2263,7 @@ namespace Nop.Services.Messages
             if (subscription == null)
                 throw new ArgumentNullException(nameof(subscription));
 
-            var customer = await _customerService.GetCustomerByIdAsync(subscription.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(subscription.CustomerId);
 
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -2272,7 +2272,7 @@ namespace Nop.Services.Messages
             if (!CommonHelper.IsValidEmail(customer.Email))
                 return new List<int>();
 
-            var store = await _storeService.GetStoreByIdAsync(subscription.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreService.GetStoreByIdAsync(subscription.StoreId) ?? await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.BackInStockNotification, store.Id);
@@ -2281,8 +2281,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-            await _messageTokenProvider.AddBackInStockTokensAsync(commonTokens, subscription);
+            await MessageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await MessageTokenProvider.AddBackInStockTokensAsync(commonTokens, subscription);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -2290,13 +2290,13 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = await CustomerService.GetCustomerFullNameAsync(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -2317,7 +2317,7 @@ namespace Nop.Services.Messages
         public virtual async Task<IList<int>> SendContactUsMessageAsync(int languageId, string senderEmail,
             string senderName, string subject, string body)
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ContactUsMessage, store.Id);
@@ -2337,12 +2337,12 @@ namespace Nop.Services.Messages
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 string fromEmail;
                 string fromName;
                 //required for some SMTP servers
-                if (_commonSettings.UseSystemEmailForContactUsForm)
+                if (CommonSettings.UseSystemEmailForContactUsForm)
                 {
                     fromEmail = emailAccount.Email;
                     fromName = emailAccount.DisplayName;
@@ -2357,7 +2357,7 @@ namespace Nop.Services.Messages
                 tokens.Add(new Token("ContactUs.Body", body, true));
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
@@ -2390,7 +2390,7 @@ namespace Nop.Services.Messages
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
             var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ContactVendorMessage, store.Id);
@@ -2413,7 +2413,7 @@ namespace Nop.Services.Messages
                 string fromEmail;
                 string fromName;
                 //required for some SMTP servers
-                if (_commonSettings.UseSystemEmailForContactUsForm)
+                if (CommonSettings.UseSystemEmailForContactUsForm)
                 {
                     fromEmail = emailAccount.Email;
                     fromName = emailAccount.DisplayName;
@@ -2426,10 +2426,10 @@ namespace Nop.Services.Messages
                 }
 
                 var tokens = new List<Token>(commonTokens);
-                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+                await MessageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+                await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = vendor.Email;
                 var toName = vendor.Name;
@@ -2456,7 +2456,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<int> SendTestEmailAsync(int messageTemplateId, string sendToEmail, List<Token> tokens, int languageId)
         {
-            var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(messageTemplateId);
+            var messageTemplate = await MessageTemplateService.GetMessageTemplateByIdAsync(messageTemplateId);
             if (messageTemplate == null)
                 throw new ArgumentException("Template cannot be loaded");
 
@@ -2464,7 +2464,7 @@ namespace Nop.Services.Messages
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             //event notification
-            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+            await EventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
             //force sending
             messageTemplate.DelayBeforeSend = null;
@@ -2510,14 +2510,14 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException(nameof(emailAccount));
 
             //retrieve localized message template data
-            var bcc = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.BccEmailAddresses, languageId);
+            var bcc = await LocalizationService.GetLocalizedAsync(messageTemplate, mt => mt.BccEmailAddresses, languageId);
             if (string.IsNullOrEmpty(subject))
-                subject = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.Subject, languageId);
-            var body = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.Body, languageId);
+                subject = await LocalizationService.GetLocalizedAsync(messageTemplate, mt => mt.Subject, languageId);
+            var body = await LocalizationService.GetLocalizedAsync(messageTemplate, mt => mt.Body, languageId);
 
             //Replace subject and body tokens 
-            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
-            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
+            var subjectReplaced = Tokenizer.Replace(subject, tokens, false);
+            var bodyReplaced = Tokenizer.Replace(body, tokens, true);
 
             //limit name length
             toName = CommonHelper.EnsureMaximumLength(toName, 300);
@@ -2544,7 +2544,7 @@ namespace Nop.Services.Messages
                     : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
             };
 
-            await _queuedEmailService.InsertQueuedEmailAsync(email);
+            await QueuedEmailService.InsertQueuedEmailAsync(email);
             return email.Id;
         }
 

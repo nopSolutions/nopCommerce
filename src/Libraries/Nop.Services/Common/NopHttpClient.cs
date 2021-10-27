@@ -18,13 +18,13 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly AdminAreaSettings _adminAreaSettings;
-        private readonly HttpClient _httpClient;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILanguageService _languageService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        protected AdminAreaSettings AdminAreaSettings { get; }
+        protected HttpClient HttpClient { get; }
+        protected IHttpContextAccessor HttpContextAccessor { get; }
+        protected ILanguageService LanguageService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IWebHelper WebHelper { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -43,13 +43,13 @@ namespace Nop.Services.Common
             client.Timeout = TimeSpan.FromSeconds(5);
             client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CURRENT_VERSION}");
 
-            _adminAreaSettings = adminAreaSettings;
-            _httpClient = client;
-            _httpContextAccessor = httpContextAccessor;
-            _languageService = languageService;
-            _storeContext = storeContext;
-            _webHelper = webHelper;
-            _workContext = workContext;
+            AdminAreaSettings = adminAreaSettings;
+            HttpClient = client;
+            HttpContextAccessor = httpContextAccessor;
+            LanguageService = languageService;
+            StoreContext = storeContext;
+            WebHelper = webHelper;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -65,7 +65,7 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task PingAsync()
         {
-            await _httpClient.GetStringAsync("/");
+            await HttpClient.GetStringAsync("/");
         }
 
         /// <summary>
@@ -78,15 +78,15 @@ namespace Nop.Services.Common
         public virtual async Task<string> GetCopyrightWarningAsync()
         {
             //prepare URL to request
-            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var language = LanguageService.GetTwoLetterIsoLanguageName(await WorkContext.GetWorkingLanguageAsync());
+            var store = await StoreContext.GetCurrentStoreAsync();
             var url = string.Format(NopCommonDefaults.NopCopyrightWarningPath,
                 store.Url,
-                _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
+                WebHelper.IsLocalRequest(HttpContextAccessor.HttpContext.Request),
                 language).ToLowerInvariant();
 
             //get the message
-            return await _httpClient.GetStringAsync(url);
+            return await HttpClient.GetStringAsync(url);
         }
 
         /// <summary>
@@ -99,16 +99,16 @@ namespace Nop.Services.Common
         public virtual async Task<RssFeed> GetNewsRssAsync()
         {
             //prepare URL to request
-            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
+            var language = LanguageService.GetTwoLetterIsoLanguageName(await WorkContext.GetWorkingLanguageAsync());
             var url = string.Format(NopCommonDefaults.NopNewsRssPath,
                 NopVersion.CURRENT_VERSION,
-                _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
-                _adminAreaSettings.HideAdvertisementsOnAdminArea,
-                _webHelper.GetStoreLocation(),
+                WebHelper.IsLocalRequest(HttpContextAccessor.HttpContext.Request),
+                AdminAreaSettings.HideAdvertisementsOnAdminArea,
+                WebHelper.GetStoreLocation(),
                 language).ToLowerInvariant();
 
             //get news feed
-            await using var stream = await _httpClient.GetStreamAsync(url);
+            await using var stream = await HttpClient.GetStreamAsync(url);
             return await RssFeed.LoadAsync(stream);
         }
 
@@ -127,17 +127,17 @@ namespace Nop.Services.Common
             //prepare URL to request
             var url = string.Format(NopCommonDefaults.NopInstallationCompletedPath,
                 NopVersion.CURRENT_VERSION,
-                _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
+                WebHelper.IsLocalRequest(HttpContextAccessor.HttpContext.Request),
                 WebUtility.UrlEncode(email),
-                _webHelper.GetStoreLocation(),
+                WebHelper.GetStoreLocation(),
                 languageCode,
                 culture)
                 .ToLowerInvariant();
 
             //this request takes some more time
-            _httpClient.Timeout = TimeSpan.FromSeconds(30);
+            HttpClient.Timeout = TimeSpan.FromSeconds(30);
 
-            return await _httpClient.GetStringAsync(url);
+            return await HttpClient.GetStringAsync(url);
         }
 
         /// <summary>
@@ -150,11 +150,11 @@ namespace Nop.Services.Common
         public virtual async Task<string> GetExtensionsCategoriesAsync()
         {
             //prepare URL to request
-            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
+            var language = LanguageService.GetTwoLetterIsoLanguageName(await WorkContext.GetWorkingLanguageAsync());
             var url = string.Format(NopCommonDefaults.NopExtensionsCategoriesPath, language).ToLowerInvariant();
 
             //get XML response
-            return await _httpClient.GetStringAsync(url);
+            return await HttpClient.GetStringAsync(url);
         }
 
         /// <summary>
@@ -167,11 +167,11 @@ namespace Nop.Services.Common
         public virtual async Task<string> GetExtensionsVersionsAsync()
         {
             //prepare URL to request
-            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
+            var language = LanguageService.GetTwoLetterIsoLanguageName(await WorkContext.GetWorkingLanguageAsync());
             var url = string.Format(NopCommonDefaults.NopExtensionsVersionsPath, language).ToLowerInvariant();
 
             //get XML response
-            return await _httpClient.GetStringAsync(url);
+            return await HttpClient.GetStringAsync(url);
         }
 
         /// <summary>
@@ -192,12 +192,12 @@ namespace Nop.Services.Common
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             //prepare URL to request
-            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
+            var language = LanguageService.GetTwoLetterIsoLanguageName(await WorkContext.GetWorkingLanguageAsync());
             var url = string.Format(NopCommonDefaults.NopExtensionsPath,
                 categoryId, versionId, price, WebUtility.UrlEncode(searchTerm), pageIndex, pageSize, language).ToLowerInvariant();
 
             //get XML response
-            return await _httpClient.GetStringAsync(url);
+            return await HttpClient.GetStringAsync(url);
         }
 
         #endregion

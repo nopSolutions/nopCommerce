@@ -19,9 +19,9 @@ namespace Nop.Services.Helpers
         private static readonly Regex _firstMobileDeviceRegex;
         private static readonly Regex _secondMobileDeviceRegex;
 
-        private readonly AppSettings _appSettings;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly INopFileProvider _fileProvider;
+        protected AppSettings AppSettings { get; }
+        protected IHttpContextAccessor HttpContextAccessor { get; }
+        protected INopFileProvider FileProvider { get; }
 
         #endregion
 
@@ -37,9 +37,9 @@ namespace Nop.Services.Helpers
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider)
         {
-            _appSettings = appSettings;
-            _httpContextAccessor = httpContextAccessor;
-            _fileProvider = fileProvider;
+            AppSettings = appSettings;
+            HttpContextAccessor = httpContextAccessor;
+            FileProvider = fileProvider;
         }
 
         #endregion
@@ -57,7 +57,7 @@ namespace Nop.Services.Helpers
                 return Singleton<BrowscapXmlHelper>.Instance;
 
             //no database created
-            if (string.IsNullOrEmpty(_appSettings.Get<CommonConfig>().UserAgentStringsPath))
+            if (string.IsNullOrEmpty(AppSettings.Get<CommonConfig>().UserAgentStringsPath))
                 return null;
 
             //prevent multi loading data
@@ -67,12 +67,12 @@ namespace Nop.Services.Helpers
                 if (Singleton<BrowscapXmlHelper>.Instance != null)
                     return Singleton<BrowscapXmlHelper>.Instance;
 
-                var userAgentStringsPath = _fileProvider.MapPath(_appSettings.Get<CommonConfig>().UserAgentStringsPath);
-                var crawlerOnlyUserAgentStringsPath = !string.IsNullOrEmpty(_appSettings.Get<CommonConfig>().CrawlerOnlyUserAgentStringsPath)
-                    ? _fileProvider.MapPath(_appSettings.Get<CommonConfig>().CrawlerOnlyUserAgentStringsPath)
+                var userAgentStringsPath = FileProvider.MapPath(AppSettings.Get<CommonConfig>().UserAgentStringsPath);
+                var crawlerOnlyUserAgentStringsPath = !string.IsNullOrEmpty(AppSettings.Get<CommonConfig>().CrawlerOnlyUserAgentStringsPath)
+                    ? FileProvider.MapPath(AppSettings.Get<CommonConfig>().CrawlerOnlyUserAgentStringsPath)
                     : string.Empty;
 
-                var browscapXmlHelper = new BrowscapXmlHelper(userAgentStringsPath, crawlerOnlyUserAgentStringsPath, _fileProvider);
+                var browscapXmlHelper = new BrowscapXmlHelper(userAgentStringsPath, crawlerOnlyUserAgentStringsPath, FileProvider);
                 Singleton<BrowscapXmlHelper>.Instance = browscapXmlHelper;
 
                 return Singleton<BrowscapXmlHelper>.Instance;
@@ -89,7 +89,7 @@ namespace Nop.Services.Helpers
         /// <returns>Result</returns>
         public virtual bool IsSearchEngine()
         {
-            if (_httpContextAccessor?.HttpContext == null)
+            if (HttpContextAccessor?.HttpContext == null)
                 return false;
 
             //we put required logic in try-catch block
@@ -102,7 +102,7 @@ namespace Nop.Services.Helpers
                 if (browscapXmlHelper == null)
                     return false;
 
-                var userAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent];
+                var userAgent = HttpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent];
                 return !string.IsNullOrWhiteSpace(userAgent) && browscapXmlHelper.IsCrawler(userAgent);
             }
             catch
@@ -119,7 +119,7 @@ namespace Nop.Services.Helpers
         /// <returns></returns>
         public virtual bool IsMobileDevice()
         {
-            if (_httpContextAccessor?.HttpContext == null)
+            if (HttpContextAccessor?.HttpContext == null)
                 return false;
 
             //we put required logic in try-catch block
@@ -129,7 +129,7 @@ namespace Nop.Services.Helpers
                 //we don't parse browscap library here
                 //in 99% of cases it's enough to use the approach suggested by http://detectmobilebrowsers.com/
 
-                var userAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent].ToString();
+                var userAgent = HttpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent].ToString();
                 var mobile = _firstMobileDeviceRegex.IsMatch(userAgent) || _secondMobileDeviceRegex.IsMatch(userAgent[0..4]);
                 return mobile;
             }

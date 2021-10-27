@@ -16,7 +16,7 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IRepository<QueuedEmail> _queuedEmailRepository;
+        protected IRepository<QueuedEmail> QueuedEmailRepository { get; }
 
         #endregion
 
@@ -24,7 +24,7 @@ namespace Nop.Services.Messages
 
         public QueuedEmailService(IRepository<QueuedEmail> queuedEmailRepository)
         {
-            _queuedEmailRepository = queuedEmailRepository;
+            QueuedEmailRepository = queuedEmailRepository;
         }
 
         #endregion
@@ -38,7 +38,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertQueuedEmailAsync(QueuedEmail queuedEmail)
         {
-            await _queuedEmailRepository.InsertAsync(queuedEmail);
+            await QueuedEmailRepository.InsertAsync(queuedEmail);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateQueuedEmailAsync(QueuedEmail queuedEmail)
         {
-            await _queuedEmailRepository.UpdateAsync(queuedEmail);
+            await QueuedEmailRepository.UpdateAsync(queuedEmail);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteQueuedEmailAsync(QueuedEmail queuedEmail)
         {
-            await _queuedEmailRepository.DeleteAsync(queuedEmail);
+            await QueuedEmailRepository.DeleteAsync(queuedEmail);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteQueuedEmailsAsync(IList<QueuedEmail> queuedEmails)
         {
-            await _queuedEmailRepository.DeleteAsync(queuedEmails);
+            await QueuedEmailRepository.DeleteAsync(queuedEmails);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<QueuedEmail> GetQueuedEmailByIdAsync(int queuedEmailId)
         {
-            return await _queuedEmailRepository.GetByIdAsync(queuedEmailId, cache => default);
+            return await QueuedEmailRepository.GetByIdAsync(queuedEmailId, cache => default);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<QueuedEmail>> GetQueuedEmailsByIdsAsync(int[] queuedEmailIds)
         {
-            return await _queuedEmailRepository.GetByIdsAsync(queuedEmailIds);
+            return await QueuedEmailRepository.GetByIdsAsync(queuedEmailIds);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Nop.Services.Messages
             fromEmail = (fromEmail ?? string.Empty).Trim();
             toEmail = (toEmail ?? string.Empty).Trim();
 
-            var query = _queuedEmailRepository.Table;
+            var query = QueuedEmailRepository.Table;
             if (!string.IsNullOrEmpty(fromEmail))
                 query = query.Where(qe => qe.From.Contains(fromEmail));
             if (!string.IsNullOrEmpty(toEmail))
@@ -162,7 +162,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<int> DeleteAlreadySentEmailsAsync(DateTime? createdFromUtc, DateTime? createdToUtc)
         {
-            var query = _queuedEmailRepository.Table;
+            var query = QueuedEmailRepository.Table;
 
             // only sent emails
             query = query.Where(qe => qe.SentOnUtc.HasValue);
@@ -185,7 +185,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAllEmailsAsync()
         {
-            await _queuedEmailRepository.TruncateAsync();
+            await QueuedEmailRepository.TruncateAsync();
         }
 
         #endregion

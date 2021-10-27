@@ -15,9 +15,9 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly IRepository<MeasureDimension> _measureDimensionRepository;
-        private readonly IRepository<MeasureWeight> _measureWeightRepository;
-        private readonly MeasureSettings _measureSettings;
+        protected IRepository<MeasureDimension> MeasureDimensionRepository { get; }
+        protected IRepository<MeasureWeight> MeasureWeightRepository { get; }
+        protected MeasureSettings MeasureSettings { get; }
 
         #endregion
 
@@ -27,9 +27,9 @@ namespace Nop.Services.Directory
             IRepository<MeasureWeight> measureWeightRepository,
             MeasureSettings measureSettings)
         {
-            _measureDimensionRepository = measureDimensionRepository;
-            _measureWeightRepository = measureWeightRepository;
-            _measureSettings = measureSettings;
+            MeasureDimensionRepository = measureDimensionRepository;
+            MeasureWeightRepository = measureWeightRepository;
+            MeasureSettings = measureSettings;
         }
 
         #endregion
@@ -45,7 +45,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteMeasureDimensionAsync(MeasureDimension measureDimension)
         {
-            await _measureDimensionRepository.DeleteAsync(measureDimension);
+            await MeasureDimensionRepository.DeleteAsync(measureDimension);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<MeasureDimension> GetMeasureDimensionByIdAsync(int measureDimensionId)
         {
-            return await _measureDimensionRepository.GetByIdAsync(measureDimensionId, cache => default);
+            return await MeasureDimensionRepository.GetByIdAsync(measureDimensionId, cache => default);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<IList<MeasureDimension>> GetAllMeasureDimensionsAsync()
         {
-            var measureDimensions = await _measureDimensionRepository.GetAllAsync(query =>
+            var measureDimensions = await MeasureDimensionRepository.GetAllAsync(query =>
             {
                 return from md in query
                     orderby md.DisplayOrder, md.Id
@@ -107,7 +107,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertMeasureDimensionAsync(MeasureDimension measure)
         {
-            await _measureDimensionRepository.InsertAsync(measure);
+            await MeasureDimensionRepository.InsertAsync(measure);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateMeasureDimensionAsync(MeasureDimension measure)
         {
-            await _measureDimensionRepository.UpdateAsync(measure);
+            await MeasureDimensionRepository.UpdateAsync(measure);
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(targetMeasureDimension));
 
             var result = value;
-            var baseDimensionIn = await GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId);
+            var baseDimensionIn = await GetMeasureDimensionByIdAsync(MeasureSettings.BaseDimensionId);
             if (result == decimal.Zero || targetMeasureDimension.Id == baseDimensionIn.Id) 
                 return result;
 
@@ -197,7 +197,7 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(sourceMeasureDimension));
 
             var result = value;
-            var baseDimensionIn = await GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId);
+            var baseDimensionIn = await GetMeasureDimensionByIdAsync(MeasureSettings.BaseDimensionId);
             if (result == decimal.Zero || sourceMeasureDimension.Id == baseDimensionIn.Id)
                 return result;
 
@@ -221,7 +221,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteMeasureWeightAsync(MeasureWeight measureWeight)
         {
-            await _measureWeightRepository.DeleteAsync(measureWeight);
+            await MeasureWeightRepository.DeleteAsync(measureWeight);
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<MeasureWeight> GetMeasureWeightByIdAsync(int measureWeightId)
         {
-            return await _measureWeightRepository.GetByIdAsync(measureWeightId, cache => default);
+            return await MeasureWeightRepository.GetByIdAsync(measureWeightId, cache => default);
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<IList<MeasureWeight>> GetAllMeasureWeightsAsync()
         {
-            var measureWeights = await _measureWeightRepository.GetAllAsync(query =>
+            var measureWeights = await MeasureWeightRepository.GetAllAsync(query =>
             {
                 return from mw in query
                     orderby mw.DisplayOrder, mw.Id
@@ -283,7 +283,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertMeasureWeightAsync(MeasureWeight measure)
         {
-            await _measureWeightRepository.InsertAsync(measure);
+            await MeasureWeightRepository.InsertAsync(measure);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace Nop.Services.Directory
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateMeasureWeightAsync(MeasureWeight measure)
         {
-            await _measureWeightRepository.UpdateAsync(measure);
+            await MeasureWeightRepository.UpdateAsync(measure);
         }
 
         /// <summary>
@@ -345,7 +345,7 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(targetMeasureWeight));
 
             var result = value;
-            var baseWeightIn = await GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId);
+            var baseWeightIn = await GetMeasureWeightByIdAsync(MeasureSettings.BaseWeightId);
             if (result == decimal.Zero || targetMeasureWeight.Id == baseWeightIn.Id) 
                 return result;
 
@@ -372,7 +372,7 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(sourceMeasureWeight));
 
             var result = value;
-            var baseWeightIn = await GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId);
+            var baseWeightIn = await GetMeasureWeightByIdAsync(MeasureSettings.BaseWeightId);
             if (result == decimal.Zero || sourceMeasureWeight.Id == baseWeightIn.Id)
                 return result;
 

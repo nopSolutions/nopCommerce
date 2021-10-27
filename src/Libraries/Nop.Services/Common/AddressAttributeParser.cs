@@ -19,8 +19,8 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly ILocalizationService _localizationService;
+        protected IAddressAttributeService AddressAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
 
         #endregion
 
@@ -29,8 +29,8 @@ namespace Nop.Services.Common
         public AddressAttributeParser(IAddressAttributeService addressAttributeService,
             ILocalizationService localizationService)
         {
-            _addressAttributeService = addressAttributeService;
-            _localizationService = localizationService;
+            AddressAttributeService = addressAttributeService;
+            LocalizationService = localizationService;
         }
 
         #endregion
@@ -94,7 +94,7 @@ namespace Nop.Services.Common
             var ids = ParseAddressAttributeIds(attributesXml);
             foreach (var id in ids)
             {
-                var attribute = await _addressAttributeService.GetAddressAttributeByIdAsync(id);
+                var attribute = await AddressAttributeService.GetAddressAttributeByIdAsync(id);
                 if (attribute != null) 
                     result.Add(attribute);
             }
@@ -131,7 +131,7 @@ namespace Nop.Services.Common
                     if (!int.TryParse(valueStr, out var id))
                         continue;
 
-                    var value = await _addressAttributeService.GetAddressAttributeValueByIdAsync(id);
+                    var value = await AddressAttributeService.GetAddressAttributeValueByIdAsync(id);
                     if (value != null)
                         values.Add(value);
                 }
@@ -271,7 +271,7 @@ namespace Nop.Services.Common
             var attributes1 = await ParseAddressAttributesAsync(attributesXml);
 
             //validate required address attributes (whether they're chosen/selected/entered)
-            var attributes2 = await _addressAttributeService.GetAllAddressAttributesAsync();
+            var attributes2 = await AddressAttributeService.GetAllAddressAttributesAsync();
             foreach (var a2 in attributes2)
             {
                 if (!a2.IsRequired) 
@@ -293,7 +293,7 @@ namespace Nop.Services.Common
                     continue;
 
                 //if not found
-                var notFoundWarning = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.SelectAttribute"), await _localizationService.GetLocalizedAsync(a2, a => a.Name));
+                var notFoundWarning = string.Format(await LocalizationService.GetResourceAsync("ShoppingCart.SelectAttribute"), await LocalizationService.GetLocalizedAsync(a2, a => a.Name));
 
                 warnings.Add(notFoundWarning);
             }
@@ -316,7 +316,7 @@ namespace Nop.Services.Common
 
             var attributesXml = string.Empty;
 
-            foreach (var attribute in await _addressAttributeService.GetAllAddressAttributesAsync())
+            foreach (var attribute in await AddressAttributeService.GetAllAddressAttributesAsync())
             {
                 var controlId = string.Format(NopCommonDefaults.AddressAttributeControlName, attribute.Id);
                 var attributeValues = form[controlId];
@@ -339,7 +339,7 @@ namespace Nop.Services.Common
 
                     case AttributeControlType.ReadonlyCheckboxes:
                         //load read-only (already server-side selected) values
-                        var addressAttributeValues = await _addressAttributeService.GetAddressAttributeValuesAsync(attribute.Id);
+                        var addressAttributeValues = await AddressAttributeService.GetAddressAttributeValuesAsync(attribute.Id);
                         foreach (var addressAttributeValue in addressAttributeValues)
                         {
                             if (addressAttributeValue.IsPreSelected)

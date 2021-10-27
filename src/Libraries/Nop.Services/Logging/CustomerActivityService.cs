@@ -16,10 +16,10 @@ namespace Nop.Services.Logging
     {
         #region Fields
 
-        private readonly IRepository<ActivityLog> _activityLogRepository;
-        private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        protected IRepository<ActivityLog> ActivityLogRepository { get; }
+        protected IRepository<ActivityLogType> ActivityLogTypeRepository { get; }
+        protected IWebHelper WebHelper { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -30,10 +30,10 @@ namespace Nop.Services.Logging
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            _activityLogRepository = activityLogRepository;
-            _activityLogTypeRepository = activityLogTypeRepository;
-            _webHelper = webHelper;
-            _workContext = workContext;
+            ActivityLogRepository = activityLogRepository;
+            ActivityLogTypeRepository = activityLogTypeRepository;
+            WebHelper = webHelper;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace Nop.Services.Logging
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateActivityTypeAsync(ActivityLogType activityLogType)
         {
-            await _activityLogTypeRepository.UpdateAsync(activityLogType);
+            await ActivityLogTypeRepository.UpdateAsync(activityLogType);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Nop.Services.Logging
         /// </returns>
         public virtual async Task<IList<ActivityLogType>> GetAllActivityTypesAsync()
         {
-            var activityLogTypes = await _activityLogTypeRepository.GetAllAsync(query=>
+            var activityLogTypes = await ActivityLogTypeRepository.GetAllAsync(query=>
             {
                 return from alt in query
                     orderby alt.Name
@@ -79,7 +79,7 @@ namespace Nop.Services.Logging
         /// </returns>
         public virtual async Task<ActivityLogType> GetActivityTypeByIdAsync(int activityLogTypeId)
         {
-            return await _activityLogTypeRepository.GetByIdAsync(activityLogTypeId, cache => default);
+            return await ActivityLogTypeRepository.GetByIdAsync(activityLogTypeId, cache => default);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Nop.Services.Logging
         /// </returns>
         public virtual async Task<ActivityLog> InsertActivityAsync(string systemKeyword, string comment, BaseEntity entity = null)
         {
-            return await InsertActivityAsync(await _workContext.GetCurrentCustomerAsync(), systemKeyword, comment, entity);
+            return await InsertActivityAsync(await WorkContext.GetCurrentCustomerAsync(), systemKeyword, comment, entity);
         }
 
         /// <summary>
@@ -127,9 +127,9 @@ namespace Nop.Services.Logging
                 CustomerId = customer.Id,
                 Comment = CommonHelper.EnsureMaximumLength(comment ?? string.Empty, 4000),
                 CreatedOnUtc = DateTime.UtcNow,
-                IpAddress = _webHelper.GetCurrentIpAddress()
+                IpAddress = WebHelper.GetCurrentIpAddress()
             };
-            await _activityLogRepository.InsertAsync(logItem);
+            await ActivityLogRepository.InsertAsync(logItem);
 
             return logItem;
         }
@@ -141,7 +141,7 @@ namespace Nop.Services.Logging
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteActivityAsync(ActivityLog activityLog)
         {
-            await _activityLogRepository.DeleteAsync(activityLog);
+            await ActivityLogRepository.DeleteAsync(activityLog);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Nop.Services.Logging
             int? customerId = null, int? activityLogTypeId = null, string ipAddress = null, string entityName = null, int? entityId = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            return await _activityLogRepository.GetAllPagedAsync(query =>
+            return await ActivityLogRepository.GetAllPagedAsync(query =>
             {
                 //filter by IP
                 if (!string.IsNullOrEmpty(ipAddress))
@@ -206,7 +206,7 @@ namespace Nop.Services.Logging
         /// </returns>
         public virtual async Task<ActivityLog> GetActivityByIdAsync(int activityLogId)
         {
-            return await _activityLogRepository.GetByIdAsync(activityLogId);
+            return await ActivityLogRepository.GetByIdAsync(activityLogId);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace Nop.Services.Logging
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ClearAllActivitiesAsync()
         {
-            await _activityLogRepository.TruncateAsync();
+            await ActivityLogRepository.TruncateAsync();
         }
 
         #endregion
