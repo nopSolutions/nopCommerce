@@ -1145,7 +1145,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.CustomOrderNumber = order.CustomOrderNumber;
                 model.CustomerIp = order.CustomerIp;
                 model.CustomerId = customer.Id;
-                model.ScheduleDate = order.ScheduleDate;
+                model.ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(order.ScheduleDate, DateTimeKind.Utc);
                 model.Rating = order.Rating;
                 model.RatingText = order.RatingText;
                 model.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
