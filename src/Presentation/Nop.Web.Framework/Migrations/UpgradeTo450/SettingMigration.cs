@@ -34,6 +34,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 commonSettings.ClearLogOlderThanDays = 0;
                 settingService.SaveSettingAsync(commonSettings).Wait();
             }
+
+            //#5551
+            settingService.SetSettingAsync("catalogsettings.enablespecificationattributefiltering", true).Wait();
         }
 
         public override void Down()
