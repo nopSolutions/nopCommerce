@@ -5773,7 +5773,7 @@
     <Value>Enable specification attribute filtering</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint">
-    <Value>Check to enable the price specification attribute filtering on catalog pages.</Value>
+    <Value>Check to enable the specification attribute filtering on catalog pages.</Value>
   </LocaleResource>
     <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages">
     <Value>Export/Import products. Allow download images</Value>

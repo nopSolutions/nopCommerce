@@ -100,6 +100,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 //#5042
                 ["Admin.Help.Documentation"] = "Documentation",
                 ["Admin.Help.SolutionPartners"] = "Solution partners"
+
+
             }, languageId).Wait();
 
             // rename locales
