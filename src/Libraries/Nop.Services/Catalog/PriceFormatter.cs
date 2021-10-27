@@ -18,12 +18,12 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMeasureService _measureService;
-        private readonly IWorkContext _workContext;
-        private readonly TaxSettings _taxSettings;
+        protected CurrencySettings CurrencySettings { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IMeasureService MeasureService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected TaxSettings TaxSettings { get; }
 
         #endregion
 
@@ -36,12 +36,12 @@ namespace Nop.Services.Catalog
             IWorkContext workContext,
             TaxSettings taxSettings)
         {
-            _currencySettings = currencySettings;
-            _currencyService = currencyService;
-            _localizationService = localizationService;
-            _measureService = measureService;
-            _workContext = workContext;
-            _taxSettings = taxSettings;
+            CurrencySettings = currencySettings;
+            CurrencyService = currencyService;
+            LocalizationService = localizationService;
+            MeasureService = measureService;
+            WorkContext = workContext;
+            TaxSettings = taxSettings;
         }
 
         #endregion
@@ -80,7 +80,7 @@ namespace Nop.Services.Catalog
             }
 
             //display currency code?
-            if (showCurrency && _currencySettings.DisplayCurrencyLabel)
+            if (showCurrency && CurrencySettings.DisplayCurrencyLabel)
                 result = $"{result} ({targetCurrency.CurrencyCode})";
             return result;
         }
@@ -138,7 +138,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string> FormatPriceAsync(decimal price)
         {
-            return await FormatPriceAsync(price, true, await _workContext.GetWorkingCurrencyAsync());
+            return await FormatPriceAsync(price, true, await WorkContext.GetWorkingCurrencyAsync());
         }
 
         /// <summary>
@@ -153,8 +153,8 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string> FormatPriceAsync(decimal price, bool showCurrency, Currency targetCurrency)
         {
-            var priceIncludesTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
-            return await FormatPriceAsync(price, showCurrency, targetCurrency, (await _workContext.GetWorkingLanguageAsync()).Id, priceIncludesTax);
+            var priceIncludesTax = await WorkContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+            return await FormatPriceAsync(price, showCurrency, targetCurrency, (await WorkContext.GetWorkingLanguageAsync()).Id, priceIncludesTax);
         }
 
         /// <summary>
@@ -169,8 +169,8 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string> FormatPriceAsync(decimal price, bool showCurrency, bool showTax)
         {
-            var priceIncludesTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
-            return await FormatPriceAsync(price, showCurrency, await _workContext.GetWorkingCurrencyAsync(), (await _workContext.GetWorkingLanguageAsync()).Id, priceIncludesTax, showTax);
+            var priceIncludesTax = await WorkContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+            return await FormatPriceAsync(price, showCurrency, await WorkContext.GetWorkingCurrencyAsync(), (await WorkContext.GetWorkingLanguageAsync()).Id, priceIncludesTax, showTax);
         }
 
         /// <summary>
@@ -188,12 +188,12 @@ namespace Nop.Services.Catalog
         public virtual async Task<string> FormatPriceAsync(decimal price, bool showCurrency,
             string currencyCode, bool showTax, int languageId)
         {
-            var currency = await _currencyService.GetCurrencyByCodeAsync(currencyCode) ?? new Currency
+            var currency = await CurrencyService.GetCurrencyByCodeAsync(currencyCode) ?? new Currency
             {
                 CurrencyCode = currencyCode
             };
 
-            var priceIncludesTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+            var priceIncludesTax = await WorkContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
             return await FormatPriceAsync(price, showCurrency, currency, languageId, priceIncludesTax, showTax);
         }
 
@@ -217,16 +217,16 @@ namespace Nop.Services.Catalog
             Currency primaryStoreCurrency, int languageId, bool? priceIncludesTax = null, bool? showTax = null)
         {
             var needAddPriceOnCustomerCurrency = primaryStoreCurrency.CurrencyCode != customerCurrencyCode && displayCustomerCurrency;
-            var includesTax = priceIncludesTax ?? await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+            var includesTax = priceIncludesTax ?? await WorkContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
             var priceText = await FormatPriceAsync(price, true, primaryStoreCurrency,
-                languageId, includesTax, showTax ?? _taxSettings.DisplayTaxSuffix);
+                languageId, includesTax, showTax ?? TaxSettings.DisplayTaxSuffix);
 
-            if (!needAddPriceOnCustomerCurrency || await _currencyService.GetCurrencyByCodeAsync(customerCurrencyCode) is not Currency currency)
+            if (!needAddPriceOnCustomerCurrency || await CurrencyService.GetCurrencyByCodeAsync(customerCurrencyCode) is not Currency currency)
                 return priceText;
 
-            var customerPrice = _currencyService.ConvertCurrency(price, currencyRate);
+            var customerPrice = CurrencyService.ConvertCurrency(price, currencyRate);
             var customerPriceText = await FormatPriceAsync(customerPrice, true, currency,
-                languageId, includesTax, showTax ?? _taxSettings.DisplayTaxSuffix);
+                languageId, includesTax, showTax ?? TaxSettings.DisplayTaxSuffix);
             priceText += $"<br />[{customerPriceText}]";
 
             return priceText;
@@ -247,7 +247,7 @@ namespace Nop.Services.Catalog
         public virtual async Task<string> FormatPriceAsync(decimal price, bool showCurrency,
             string currencyCode, int languageId, bool priceIncludesTax)
         {
-            var currency = await _currencyService.GetCurrencyByCodeAsync(currencyCode)
+            var currency = await CurrencyService.GetCurrencyByCodeAsync(currencyCode)
                 ?? new Currency
                 {
                     CurrencyCode = currencyCode
@@ -271,7 +271,7 @@ namespace Nop.Services.Catalog
             Currency targetCurrency, int languageId, bool priceIncludesTax)
         {
             return await FormatPriceAsync(price, showCurrency, targetCurrency, languageId,
-                priceIncludesTax, _taxSettings.DisplayTaxSuffix);
+                priceIncludesTax, TaxSettings.DisplayTaxSuffix);
         }
 
         /// <summary>
@@ -302,13 +302,13 @@ namespace Nop.Services.Catalog
             string formatStr;
             if (priceIncludesTax)
             {
-                formatStr = await _localizationService.GetResourceAsync("Products.InclTaxSuffix", languageId, false);
+                formatStr = await LocalizationService.GetResourceAsync("Products.InclTaxSuffix", languageId, false);
                 if (string.IsNullOrEmpty(formatStr))
                     formatStr = "{0} incl tax";
             }
             else
             {
-                formatStr = await _localizationService.GetResourceAsync("Products.ExclTaxSuffix", languageId, false);
+                formatStr = await LocalizationService.GetResourceAsync("Products.ExclTaxSuffix", languageId, false);
                 if (string.IsNullOrEmpty(formatStr))
                     formatStr = "{0} excl tax";
             }
@@ -337,10 +337,10 @@ namespace Nop.Services.Catalog
                 return price;
             var result = product.RentalPricePeriod switch
             {
-                RentalPricePeriod.Days => string.Format(await _localizationService.GetResourceAsync("Products.Price.Rental.Days"), price, product.RentalPriceLength),
-                RentalPricePeriod.Weeks => string.Format(await _localizationService.GetResourceAsync("Products.Price.Rental.Weeks"), price, product.RentalPriceLength),
-                RentalPricePeriod.Months => string.Format(await _localizationService.GetResourceAsync("Products.Price.Rental.Months"), price, product.RentalPriceLength),
-                RentalPricePeriod.Years => string.Format(await _localizationService.GetResourceAsync("Products.Price.Rental.Years"), price, product.RentalPriceLength),
+                RentalPricePeriod.Days => string.Format(await LocalizationService.GetResourceAsync("Products.Price.Rental.Days"), price, product.RentalPriceLength),
+                RentalPricePeriod.Weeks => string.Format(await LocalizationService.GetResourceAsync("Products.Price.Rental.Weeks"), price, product.RentalPriceLength),
+                RentalPricePeriod.Months => string.Format(await LocalizationService.GetResourceAsync("Products.Price.Rental.Months"), price, product.RentalPriceLength),
+                RentalPricePeriod.Years => string.Format(await LocalizationService.GetResourceAsync("Products.Price.Rental.Years"), price, product.RentalPriceLength),
                 _ => throw new NopException("Not supported rental period"),
             };
             return result;
@@ -357,8 +357,8 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency)
         {
-            var priceIncludesTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
-            return await FormatShippingPriceAsync(price, showCurrency, await _workContext.GetWorkingCurrencyAsync(), (await _workContext.GetWorkingLanguageAsync()).Id, priceIncludesTax);
+            var priceIncludesTax = await WorkContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+            return await FormatShippingPriceAsync(price, showCurrency, await WorkContext.GetWorkingCurrencyAsync(), (await WorkContext.GetWorkingLanguageAsync()).Id, priceIncludesTax);
         }
 
         /// <summary>
@@ -376,7 +376,7 @@ namespace Nop.Services.Catalog
         public virtual async Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax)
         {
-            var showTax = _taxSettings.ShippingIsTaxable && _taxSettings.DisplayTaxSuffix;
+            var showTax = TaxSettings.ShippingIsTaxable && TaxSettings.DisplayTaxSuffix;
             return await FormatShippingPriceAsync(price, showCurrency, targetCurrency, languageId, priceIncludesTax, showTax);
         }
 
@@ -395,7 +395,7 @@ namespace Nop.Services.Catalog
         public virtual async Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency,
             string currencyCode, int languageId, bool priceIncludesTax)
         {
-            var currency = await _currencyService.GetCurrencyByCodeAsync(currencyCode)
+            var currency = await CurrencyService.GetCurrencyByCodeAsync(currencyCode)
                 ?? new Currency
                 {
                     CurrencyCode = currencyCode
@@ -414,10 +414,10 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency)
         {
-            var priceIncludesTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+            var priceIncludesTax = await WorkContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
 
-            return await FormatPaymentMethodAdditionalFeeAsync(price, showCurrency, await _workContext.GetWorkingCurrencyAsync(),
-                (await _workContext.GetWorkingLanguageAsync()).Id, priceIncludesTax);
+            return await FormatPaymentMethodAdditionalFeeAsync(price, showCurrency, await WorkContext.GetWorkingCurrencyAsync(),
+                (await WorkContext.GetWorkingLanguageAsync()).Id, priceIncludesTax);
         }
 
         /// <summary>
@@ -435,7 +435,7 @@ namespace Nop.Services.Catalog
         public virtual async Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax)
         {
-            var showTax = _taxSettings.PaymentMethodAdditionalFeeIsTaxable && _taxSettings.DisplayTaxSuffix;
+            var showTax = TaxSettings.PaymentMethodAdditionalFeeIsTaxable && TaxSettings.DisplayTaxSuffix;
             return await FormatPaymentMethodAdditionalFeeAsync(price, showCurrency, targetCurrency, languageId, priceIncludesTax, showTax);
         }
 
@@ -454,7 +454,7 @@ namespace Nop.Services.Catalog
         public virtual async Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency,
             string currencyCode, int languageId, bool priceIncludesTax)
         {
-            var currency = await _currencyService.GetCurrencyByCodeAsync(currencyCode)
+            var currency = await CurrencyService.GetCurrencyByCodeAsync(currencyCode)
                 ?? new Currency
                 {
                     CurrencyCode = currencyCode
@@ -496,11 +496,11 @@ namespace Nop.Services.Catalog
             if (productAmount == 0)
                 return null;
             var referenceAmount = product.BasepriceBaseAmount;
-            var productUnit = await _measureService.GetMeasureWeightByIdAsync(product.BasepriceUnitId);
+            var productUnit = await MeasureService.GetMeasureWeightByIdAsync(product.BasepriceUnitId);
             //measure weight cannot be loaded
             if (productUnit == null)
                 return null;
-            var referenceUnit = await _measureService.GetMeasureWeightByIdAsync(product.BasepriceBaseUnitId);
+            var referenceUnit = await MeasureService.GetMeasureWeightByIdAsync(product.BasepriceBaseUnitId);
             //measure weight cannot be loaded
             if (referenceUnit == null)
                 return null;
@@ -509,12 +509,12 @@ namespace Nop.Services.Catalog
 
             var basePrice = productPrice.Value /
                 //do not round. otherwise, it can cause issues
-                await _measureService.ConvertWeightAsync(productAmount, productUnit, referenceUnit, false) *
+                await MeasureService.ConvertWeightAsync(productAmount, productUnit, referenceUnit, false) *
                 referenceAmount;
-            var basePriceInCurrentCurrency = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(basePrice, await _workContext.GetWorkingCurrencyAsync());
+            var basePriceInCurrentCurrency = await CurrencyService.ConvertFromPrimaryStoreCurrencyAsync(basePrice, await WorkContext.GetWorkingCurrencyAsync());
             var basePriceStr = await FormatPriceAsync(basePriceInCurrentCurrency, true, false);
 
-            var result = string.Format(await _localizationService.GetResourceAsync("Products.BasePrice"),
+            var result = string.Format(await LocalizationService.GetResourceAsync("Products.BasePrice"),
                 basePriceStr, referenceAmount.ToString("G29"), referenceUnit.Name);
             return result;
         }

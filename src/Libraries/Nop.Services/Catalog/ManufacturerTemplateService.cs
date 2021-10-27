@@ -13,7 +13,7 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
+        protected IRepository<ManufacturerTemplate> ManufacturerTemplateRepository { get; }
 
         #endregion
 
@@ -21,7 +21,7 @@ namespace Nop.Services.Catalog
 
         public ManufacturerTemplateService(IRepository<ManufacturerTemplate> manufacturerTemplateRepository)
         {
-            _manufacturerTemplateRepository = manufacturerTemplateRepository;
+            ManufacturerTemplateRepository = manufacturerTemplateRepository;
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteManufacturerTemplateAsync(ManufacturerTemplate manufacturerTemplate)
         {
-            await _manufacturerTemplateRepository.DeleteAsync(manufacturerTemplate);
+            await ManufacturerTemplateRepository.DeleteAsync(manufacturerTemplate);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<ManufacturerTemplate>> GetAllManufacturerTemplatesAsync()
         {
-            var templates = await _manufacturerTemplateRepository.GetAllAsync(query =>
+            var templates = await ManufacturerTemplateRepository.GetAllAsync(query =>
             {
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
@@ -67,7 +67,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<ManufacturerTemplate> GetManufacturerTemplateByIdAsync(int manufacturerTemplateId)
         {
-            return await _manufacturerTemplateRepository.GetByIdAsync(manufacturerTemplateId, cache => default);
+            return await ManufacturerTemplateRepository.GetByIdAsync(manufacturerTemplateId, cache => default);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertManufacturerTemplateAsync(ManufacturerTemplate manufacturerTemplate)
         {
-            await _manufacturerTemplateRepository.InsertAsync(manufacturerTemplate);
+            await ManufacturerTemplateRepository.InsertAsync(manufacturerTemplate);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateManufacturerTemplateAsync(ManufacturerTemplate manufacturerTemplate)
         {
-            await _manufacturerTemplateRepository.UpdateAsync(manufacturerTemplate);
+            await ManufacturerTemplateRepository.UpdateAsync(manufacturerTemplate);
         }
 
         #endregion

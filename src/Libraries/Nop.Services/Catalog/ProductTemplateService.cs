@@ -13,7 +13,7 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<ProductTemplate> _productTemplateRepository;
+        protected IRepository<ProductTemplate> ProductTemplateRepository { get; }
 
         #endregion
 
@@ -21,7 +21,7 @@ namespace Nop.Services.Catalog
 
         public ProductTemplateService(IRepository<ProductTemplate> productTemplateRepository)
         {
-            _productTemplateRepository = productTemplateRepository;
+            ProductTemplateRepository = productTemplateRepository;
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductTemplateAsync(ProductTemplate productTemplate)
         {
-            await _productTemplateRepository.DeleteAsync(productTemplate);
+            await ProductTemplateRepository.DeleteAsync(productTemplate);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<ProductTemplate>> GetAllProductTemplatesAsync()
         {
-            var templates = await _productTemplateRepository.GetAllAsync(query =>
+            var templates = await ProductTemplateRepository.GetAllAsync(query =>
             {
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
@@ -67,7 +67,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<ProductTemplate> GetProductTemplateByIdAsync(int productTemplateId)
         {
-            return await _productTemplateRepository.GetByIdAsync(productTemplateId, cache => default);
+            return await ProductTemplateRepository.GetByIdAsync(productTemplateId, cache => default);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductTemplateAsync(ProductTemplate productTemplate)
         {
-            await _productTemplateRepository.InsertAsync(productTemplate);
+            await ProductTemplateRepository.InsertAsync(productTemplate);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductTemplateAsync(ProductTemplate productTemplate)
         {
-            await _productTemplateRepository.UpdateAsync(productTemplate);
+            await ProductTemplateRepository.UpdateAsync(productTemplate);
         }
 
         #endregion

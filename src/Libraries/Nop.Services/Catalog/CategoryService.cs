@@ -23,17 +23,17 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IRepository<Category> _categoryRepository;
-        private readonly IRepository<DiscountCategoryMapping> _discountCategoryMappingRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkContext _workContext;
+        protected IAclService AclService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IRepository<Category> CategoryRepository { get; }
+        protected IRepository<DiscountCategoryMapping> DiscountCategoryMappingRepository { get; }
+        protected IRepository<Product> ProductRepository { get; }
+        protected IRepository<ProductCategory> ProductCategoryRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -52,17 +52,17 @@ namespace Nop.Services.Catalog
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            _aclService = aclService;
-            _customerService = customerService;
-            _localizationService = localizationService;
-            _categoryRepository = categoryRepository;
-            _discountCategoryMappingRepository = discountCategoryMappingRepository;
-            _productRepository = productRepository;
-            _productCategoryRepository = productCategoryRepository;
-            _staticCacheManager = staticCacheManager;
-            _storeContext = storeContext;
-            _storeMappingService = storeMappingService;
-            _workContext = workContext;
+            AclService = aclService;
+            CustomerService = customerService;
+            LocalizationService = localizationService;
+            CategoryRepository = categoryRepository;
+            DiscountCategoryMappingRepository = discountCategoryMappingRepository;
+            ProductRepository = productRepository;
+            ProductCategoryRepository = productCategoryRepository;
+            StaticCacheManager = staticCacheManager;
+            StoreContext = storeContext;
+            StoreMappingService = storeMappingService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -85,19 +85,19 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductCategory>();
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
 
-            return await _productCategoryRepository.GetAllAsync(async query =>
+            return await ProductCategoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
                 {
-                    var categoriesQuery = _categoryRepository.Table.Where(c => c.Published);
+                    var categoriesQuery = CategoryRepository.Table.Where(c => c.Published);
 
                     //apply store mapping constraints
-                    categoriesQuery = await _storeMappingService.ApplyStoreMapping(categoriesQuery, storeId);
+                    categoriesQuery = await StoreMappingService.ApplyStoreMapping(categoriesQuery, storeId);
 
                     //apply ACL constraints
-                    categoriesQuery = await _aclService.ApplyAcl(categoriesQuery, customer);
+                    categoriesQuery = await AclService.ApplyAcl(categoriesQuery, customer);
 
                     query = query.Where(pc => categoriesQuery.Any(c => !c.Deleted && c.Id == pc.CategoryId));
                 }
@@ -107,7 +107,7 @@ namespace Nop.Services.Catalog
                     .OrderBy(pc => pc.DisplayOrder)
                     .ThenBy(pc => pc.Id);
 
-            }, cache => _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductCategoriesByProductCacheKey,
+            }, cache => StaticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductCategoriesByProductCacheKey,
                 productId, showHidden, customer, storeId));
         }
 
@@ -160,9 +160,9 @@ namespace Nop.Services.Catalog
             if (discount is null)
                 throw new ArgumentNullException(nameof(discount));
 
-            var mappings = _discountCategoryMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
+            var mappings = DiscountCategoryMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
-            await _discountCategoryMappingRepository.DeleteAsync(mappings.ToList());
+            await DiscountCategoryMappingRepository.DeleteAsync(mappings.ToList());
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCategoryAsync(Category category)
         {
-            await _categoryRepository.DeleteAsync(category);
+            await CategoryRepository.DeleteAsync(category);
 
             //reset a "Parent category" property of all child subcategories
             var subcategories = await GetAllCategoriesByParentCategoryIdAsync(category.Id, true);
@@ -208,12 +208,12 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<Category>> GetAllCategoriesAsync(int storeId = 0, bool showHidden = false)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesAllCacheKey,
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesAllCacheKey,
                 storeId,
-                await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
+                await CustomerService.GetCustomerRoleIdsAsync(await WorkContext.GetCurrentCustomerAsync()),
                 showHidden);
 
-            var categories = await _staticCacheManager
+            var categories = await StaticCacheManager
                 .GetAsync(key, async () => (await GetAllCategoriesAsync(string.Empty, storeId, showHidden: showHidden)).ToList());
 
             return categories;
@@ -239,7 +239,7 @@ namespace Nop.Services.Catalog
         public virtual async Task<IPagedList<Category>> GetAllCategoriesAsync(string categoryName, int storeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, bool? overridePublished = null)
         {
-            var unsortedCategories = await _categoryRepository.GetAllAsync(async query =>
+            var unsortedCategories = await CategoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
                     query = query.Where(c => c.Published);
@@ -247,13 +247,13 @@ namespace Nop.Services.Catalog
                     query = query.Where(c => c.Published == overridePublished.Value);
 
                 //apply store mapping constraints
-                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                query = await StoreMappingService.ApplyStoreMapping(query, storeId);
 
                 //apply ACL constraints
                 if (!showHidden)
                 {
-                    var customer = await _workContext.GetCurrentCustomerAsync();
-                    query = await _aclService.ApplyAcl(query, customer);
+                    var customer = await WorkContext.GetCurrentCustomerAsync();
+                    query = await AclService.ApplyAcl(query, customer);
                 }
 
                 if (!string.IsNullOrWhiteSpace(categoryName))
@@ -283,19 +283,19 @@ namespace Nop.Services.Catalog
         public virtual async Task<IList<Category>> GetAllCategoriesByParentCategoryIdAsync(int parentCategoryId,
             bool showHidden = false)
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var categories = await _categoryRepository.GetAllAsync(async query =>
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var categories = await CategoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
                 {
                     query = query.Where(c => c.Published);
 
                     //apply store mapping constraints
-                    query = await _storeMappingService.ApplyStoreMapping(query, store.Id);
+                    query = await StoreMappingService.ApplyStoreMapping(query, store.Id);
 
                     //apply ACL constraints
-                    query = await _aclService.ApplyAcl(query, customer);
+                    query = await AclService.ApplyAcl(query, customer);
                 }
 
                 query = query.Where(c => !c.Deleted && c.ParentCategoryId == parentCategoryId);
@@ -317,7 +317,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<Category>> GetAllCategoriesDisplayedOnHomepageAsync(bool showHidden = false)
         {
-            var categories = await _categoryRepository.GetAllAsync(query =>
+            var categories = await CategoryRepository.GetAllAsync(query =>
             {
                 return from c in query
                        orderby c.DisplayOrder, c.Id
@@ -330,13 +330,13 @@ namespace Nop.Services.Catalog
             if (showHidden)
                 return categories;
 
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesHomepageWithoutHiddenCacheKey,
-                await _storeContext.GetCurrentStoreAsync(), await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()));
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesHomepageWithoutHiddenCacheKey,
+                await StoreContext.GetCurrentStoreAsync(), await CustomerService.GetCustomerRoleIdsAsync(await WorkContext.GetCurrentCustomerAsync()));
 
-            var result = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var result = await StaticCacheManager.GetAsync(cacheKey, async () =>
             {
                 return await categories
-                    .WhereAwait(async c => await _aclService.AuthorizeAsync(c) && await _storeMappingService.AuthorizeAsync(c))
+                    .WhereAwait(async c => await AclService.AuthorizeAsync(c) && await StoreMappingService.AuthorizeAsync(c))
                     .ToListAsync();
             });
 
@@ -357,15 +357,15 @@ namespace Nop.Services.Catalog
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.CategoryIdsByDiscountCacheKey,
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.CategoryIdsByDiscountCacheKey,
                 discount,
-                await _customerService.GetCustomerRoleIdsAsync(customer),
+                await CustomerService.GetCustomerRoleIdsAsync(customer),
                 store);
 
-            var result = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var result = await StaticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var ids = await _discountCategoryMappingRepository.Table
+                var ids = await DiscountCategoryMappingRepository.Table
                     .Where(dmm => dmm.DiscountId == discount.Id).Select(dmm => dmm.EntityId)
                     .Distinct()
                     .ToListAsync();
@@ -395,13 +395,13 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<int>> GetChildCategoryIdsAsync(int parentCategoryId, int storeId = 0, bool showHidden = false)
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesChildIdsCacheKey,
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesChildIdsCacheKey,
                 parentCategoryId,
-                await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
+                await CustomerService.GetCustomerRoleIdsAsync(await WorkContext.GetCurrentCustomerAsync()),
                 storeId,
                 showHidden);
 
-            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            return await StaticCacheManager.GetAsync(cacheKey, async () =>
             {
                 //little hack for performance optimization
                 //there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
@@ -428,7 +428,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<Category> GetCategoryByIdAsync(int categoryId)
         {
-            return await _categoryRepository.GetByIdAsync(categoryId, cache => default);
+            return await CategoryRepository.GetByIdAsync(categoryId, cache => default);
         }
 
         /// <summary>
@@ -445,11 +445,11 @@ namespace Nop.Services.Catalog
         public virtual async Task<IPagedList<Category>> GetCategoriesByAppliedDiscountAsync(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var categories = _categoryRepository.Table;
+            var categories = CategoryRepository.Table;
 
             if (discountId.HasValue)
                 categories = from category in categories
-                             join dcm in _discountCategoryMappingRepository.Table on category.Id equals dcm.EntityId
+                             join dcm in DiscountCategoryMappingRepository.Table on category.Id equals dcm.EntityId
                              where dcm.DiscountId == discountId.Value
                              select category;
 
@@ -468,7 +468,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCategoryAsync(Category category)
         {
-            await _categoryRepository.InsertAsync(category);
+            await CategoryRepository.InsertAsync(category);
         }
 
         /// <summary>
@@ -482,7 +482,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<DiscountCategoryMapping> GetDiscountAppliedToCategoryAsync(int categoryId, int discountId)
         {
-            return await _discountCategoryMappingRepository.Table
+            return await DiscountCategoryMappingRepository.Table
                 .FirstOrDefaultAsync(dcm => dcm.EntityId == categoryId && dcm.DiscountId == discountId);
         }
 
@@ -493,7 +493,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertDiscountCategoryMappingAsync(DiscountCategoryMapping discountCategoryMapping)
         {
-            await _discountCategoryMappingRepository.InsertAsync(discountCategoryMapping);
+            await DiscountCategoryMappingRepository.InsertAsync(discountCategoryMapping);
         }
 
         /// <summary>
@@ -503,7 +503,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteDiscountCategoryMappingAsync(DiscountCategoryMapping discountCategoryMapping)
         {
-            await _discountCategoryMappingRepository.DeleteAsync(discountCategoryMapping);
+            await DiscountCategoryMappingRepository.DeleteAsync(discountCategoryMapping);
         }
 
         /// <summary>
@@ -529,7 +529,7 @@ namespace Nop.Services.Catalog
                 parentCategory = await GetCategoryByIdAsync(parentCategory.ParentCategoryId);
             }
 
-            await _categoryRepository.UpdateAsync(category);
+            await CategoryRepository.UpdateAsync(category);
         }
 
         /// <summary>
@@ -539,7 +539,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductCategoryAsync(ProductCategory productCategory)
         {
-            await _productCategoryRepository.DeleteAsync(productCategory);
+            await ProductCategoryRepository.DeleteAsync(productCategory);
         }
 
         /// <summary>
@@ -559,23 +559,23 @@ namespace Nop.Services.Catalog
             if (categoryId == 0)
                 return new PagedList<ProductCategory>(new List<ProductCategory>(), pageIndex, pageSize);
 
-            var query = from pc in _productCategoryRepository.Table
-                        join p in _productRepository.Table on pc.ProductId equals p.Id
+            var query = from pc in ProductCategoryRepository.Table
+                        join p in ProductRepository.Table on pc.ProductId equals p.Id
                         where pc.CategoryId == categoryId && !p.Deleted
                         orderby pc.DisplayOrder, pc.Id
                         select pc;
 
             if (!showHidden)
             {
-                var categoriesQuery = _categoryRepository.Table.Where(c => c.Published);
+                var categoriesQuery = CategoryRepository.Table.Where(c => c.Published);
 
                 //apply store mapping constraints
-                var store = await _storeContext.GetCurrentStoreAsync();
-                categoriesQuery = await _storeMappingService.ApplyStoreMapping(categoriesQuery, store.Id);
+                var store = await StoreContext.GetCurrentStoreAsync();
+                categoriesQuery = await StoreMappingService.ApplyStoreMapping(categoriesQuery, store.Id);
 
                 //apply ACL constraints
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                categoriesQuery = await _aclService.ApplyAcl(categoriesQuery, customer);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                categoriesQuery = await AclService.ApplyAcl(categoriesQuery, customer);
 
                 query = query.Where(pc => categoriesQuery.Any(c => c.Id == pc.CategoryId));
             }
@@ -594,7 +594,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<ProductCategory>> GetProductCategoriesByProductIdAsync(int productId, bool showHidden = false)
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
 
             return await GetProductCategoriesByProductIdAsync(productId, store.Id, showHidden);
         }
@@ -609,7 +609,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<ProductCategory> GetProductCategoryByIdAsync(int productCategoryId)
         {
-            return await _productCategoryRepository.GetByIdAsync(productCategoryId, cache => default);
+            return await ProductCategoryRepository.GetByIdAsync(productCategoryId, cache => default);
         }
 
         /// <summary>
@@ -619,7 +619,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductCategoryAsync(ProductCategory productCategory)
         {
-            await _productCategoryRepository.InsertAsync(productCategory);
+            await ProductCategoryRepository.InsertAsync(productCategory);
         }
 
         /// <summary>
@@ -629,7 +629,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductCategoryAsync(ProductCategory productCategory)
         {
-            await _productCategoryRepository.UpdateAsync(productCategory);
+            await ProductCategoryRepository.UpdateAsync(productCategory);
         }
 
         /// <summary>
@@ -645,7 +645,7 @@ namespace Nop.Services.Catalog
             if (categoryIdsNames == null)
                 throw new ArgumentNullException(nameof(categoryIdsNames));
 
-            var query = _categoryRepository.Table;
+            var query = CategoryRepository.Table;
             var queryFilter = categoryIdsNames.Distinct().ToArray();
             //filtering by name
             var filter = await query.Select(c => c.Name)
@@ -676,7 +676,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IDictionary<int, int[]>> GetProductCategoryIdsAsync(int[] productIds)
         {
-            var query = _productCategoryRepository.Table;
+            var query = ProductCategoryRepository.Table;
 
             return (await query.Where(p => productIds.Contains(p.ProductId))
                 .Select(p => new { p.ProductId, p.CategoryId })
@@ -695,7 +695,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<Category>> GetCategoriesByIdsAsync(int[] categoryIds)
         {
-            return await _categoryRepository.GetByIdsAsync(categoryIds, includeDeleted: false);
+            return await CategoryRepository.GetByIdsAsync(categoryIds, includeDeleted: false);
         }
 
         /// <summary>
@@ -734,7 +734,7 @@ namespace Nop.Services.Catalog
             var breadcrumb = await GetCategoryBreadCrumbAsync(category, allCategories, true);
             for (var i = 0; i <= breadcrumb.Count - 1; i++)
             {
-                var categoryName = await _localizationService.GetLocalizedAsync(breadcrumb[i], x => x.Name, languageId);
+                var categoryName = await LocalizationService.GetLocalizedAsync(breadcrumb[i], x => x.Name, languageId);
                 result = string.IsNullOrEmpty(result) ? categoryName : $"{result} {separator} {categoryName}";
             }
 
@@ -756,13 +756,13 @@ namespace Nop.Services.Catalog
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
 
-            var breadcrumbCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryBreadcrumbCacheKey,
+            var breadcrumbCacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryBreadcrumbCacheKey,
                 category,
-                await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
-                await _storeContext.GetCurrentStoreAsync(),
-                await _workContext.GetWorkingLanguageAsync());
+                await CustomerService.GetCustomerRoleIdsAsync(await WorkContext.GetCurrentCustomerAsync()),
+                await StoreContext.GetCurrentStoreAsync(),
+                await WorkContext.GetWorkingLanguageAsync());
 
-            return await _staticCacheManager.GetAsync(breadcrumbCacheKey, async () =>
+            return await StaticCacheManager.GetAsync(breadcrumbCacheKey, async () =>
             {
                 var result = new List<Category>();
 
@@ -772,8 +772,8 @@ namespace Nop.Services.Catalog
                 while (category != null && //not null
                        !category.Deleted && //not deleted
                        (showHidden || category.Published) && //published
-                       (showHidden || await _aclService.AuthorizeAsync(category)) && //ACL
-                       (showHidden || await _storeMappingService.AuthorizeAsync(category)) && //Store mapping
+                       (showHidden || await AclService.AuthorizeAsync(category)) && //ACL
+                       (showHidden || await StoreMappingService.AuthorizeAsync(category)) && //Store mapping
                        !alreadyProcessedCategoryIds.Contains(category.Id)) //prevent circular references
                 {
                     result.Add(category);

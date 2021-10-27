@@ -16,7 +16,7 @@ namespace Nop.Services.Cms
     {
         #region Fields
 
-        private readonly WidgetSettings _widgetSettings;
+        protected WidgetSettings WidgetSettings { get; }
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace Nop.Services.Cms
             IPluginService pluginService,
             WidgetSettings widgetSettings) : base(customerService, pluginService)
         {
-            _widgetSettings = widgetSettings;
+            WidgetSettings = widgetSettings;
         }
 
         #endregion
@@ -45,7 +45,7 @@ namespace Nop.Services.Cms
         /// </returns>
         public virtual async Task<IList<IWidgetPlugin>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0, string widgetZone = null)
         {
-            var widgets = await LoadActivePluginsAsync(_widgetSettings.ActiveWidgetSystemNames, customer, storeId);
+            var widgets = await LoadActivePluginsAsync(WidgetSettings.ActiveWidgetSystemNames, customer, storeId);
 
             //filter by widget zone
             if (!string.IsNullOrEmpty(widgetZone))
@@ -62,7 +62,7 @@ namespace Nop.Services.Cms
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IWidgetPlugin widget)
         {
-            return IsPluginActive(widget, _widgetSettings.ActiveWidgetSystemNames);
+            return IsPluginActive(widget, WidgetSettings.ActiveWidgetSystemNames);
         }
 
         /// <summary>

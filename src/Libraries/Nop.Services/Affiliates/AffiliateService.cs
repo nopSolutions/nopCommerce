@@ -19,13 +19,13 @@ namespace Nop.Services.Affiliates
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Affiliate> _affiliateRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly SeoSettings _seoSettings;
+        protected IAddressService AddressService { get; }
+        protected IRepository<Address> AddressRepository { get; }
+        protected IRepository<Affiliate> AffiliateRepository { get; }
+        protected IRepository<Order> OrderRepository { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWebHelper WebHelper { get; }
+        protected SeoSettings SeoSettings { get; }
 
         #endregion
 
@@ -39,13 +39,13 @@ namespace Nop.Services.Affiliates
             IWebHelper webHelper,
             SeoSettings seoSettings)
         {
-            _addressService = addressService;
-            _addressRepository = addressRepository;
-            _affiliateRepository = affiliateRepository;
-            _orderRepository = orderRepository;
-            _urlRecordService = urlRecordService;
-            _webHelper = webHelper;
-            _seoSettings = seoSettings;
+            AddressService = addressService;
+            AddressRepository = addressRepository;
+            AffiliateRepository = affiliateRepository;
+            OrderRepository = orderRepository;
+            UrlRecordService = urlRecordService;
+            WebHelper = webHelper;
+            SeoSettings = seoSettings;
         }
 
         #endregion
@@ -62,7 +62,7 @@ namespace Nop.Services.Affiliates
         /// </returns>
         public virtual async Task<Affiliate> GetAffiliateByIdAsync(int affiliateId)
         {
-            return await _affiliateRepository.GetByIdAsync(affiliateId, cache => default);
+            return await AffiliateRepository.GetByIdAsync(affiliateId, cache => default);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Nop.Services.Affiliates
             if (string.IsNullOrWhiteSpace(friendlyUrlName))
                 return null;
 
-            var query = from a in _affiliateRepository.Table
+            var query = from a in AffiliateRepository.Table
                         orderby a.Id
                         where a.FriendlyUrlName == friendlyUrlName
                         select a;
@@ -94,7 +94,7 @@ namespace Nop.Services.Affiliates
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAffiliateAsync(Affiliate affiliate)
         {
-            await _affiliateRepository.DeleteAsync(affiliate);
+            await AffiliateRepository.DeleteAsync(affiliate);
         }
 
         /// <summary>
@@ -120,20 +120,20 @@ namespace Nop.Services.Affiliates
             int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false)
         {
-            return await _affiliateRepository.GetAllPagedAsync(query =>
+            return await AffiliateRepository.GetAllPagedAsync(query =>
             {
                 if (!string.IsNullOrWhiteSpace(friendlyUrlName))
                     query = query.Where(a => a.FriendlyUrlName.Contains(friendlyUrlName));
 
                 if (!string.IsNullOrWhiteSpace(firstName))
                     query = from aff in query
-                        join addr in _addressRepository.Table on aff.AddressId equals addr.Id
+                        join addr in AddressRepository.Table on aff.AddressId equals addr.Id
                         where addr.FirstName.Contains(firstName)
                         select aff;
 
                 if (!string.IsNullOrWhiteSpace(lastName))
                     query = from aff in query
-                        join addr in _addressRepository.Table on aff.AddressId equals addr.Id
+                        join addr in AddressRepository.Table on aff.AddressId equals addr.Id
                         where addr.LastName.Contains(lastName)
                         select aff;
 
@@ -143,7 +143,7 @@ namespace Nop.Services.Affiliates
 
                 if (loadOnlyWithOrders)
                 {
-                    var ordersQuery = _orderRepository.Table;
+                    var ordersQuery = OrderRepository.Table;
                     if (ordersCreatedFromUtc.HasValue)
                         ordersQuery = ordersQuery.Where(o => ordersCreatedFromUtc.Value <= o.CreatedOnUtc);
                     if (ordersCreatedToUtc.HasValue)
@@ -168,7 +168,7 @@ namespace Nop.Services.Affiliates
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertAffiliateAsync(Affiliate affiliate)
         {
-            await _affiliateRepository.InsertAsync(affiliate);
+            await AffiliateRepository.InsertAsync(affiliate);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Nop.Services.Affiliates
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateAffiliateAsync(Affiliate affiliate)
         {
-            await _affiliateRepository.UpdateAsync(affiliate);
+            await AffiliateRepository.UpdateAsync(affiliate);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace Nop.Services.Affiliates
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            var affiliateAddress = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
+            var affiliateAddress = await AddressService.GetAddressByIdAsync(affiliate.AddressId);
 
             if (affiliateAddress == null)
                 return string.Empty;
@@ -217,12 +217,12 @@ namespace Nop.Services.Affiliates
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            var storeUrl = _webHelper.GetStoreLocation();
+            var storeUrl = WebHelper.GetStoreLocation();
             var url = !string.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
                 //use friendly URL
-                _webHelper.ModifyQueryString(storeUrl, NopAffiliateDefaults.AffiliateQueryParameter, affiliate.FriendlyUrlName) :
+                WebHelper.ModifyQueryString(storeUrl, NopAffiliateDefaults.AffiliateQueryParameter, affiliate.FriendlyUrlName) :
                 //use ID
-                _webHelper.ModifyQueryString(storeUrl, NopAffiliateDefaults.AffiliateIdQueryParameter, affiliate.Id.ToString());
+                WebHelper.ModifyQueryString(storeUrl, NopAffiliateDefaults.AffiliateIdQueryParameter, affiliate.Id.ToString());
 
             return Task.FromResult(url);
         }
@@ -242,7 +242,7 @@ namespace Nop.Services.Affiliates
                 throw new ArgumentNullException(nameof(affiliate));
 
             //ensure we have only valid chars
-            friendlyUrlName = await _urlRecordService.GetSeNameAsync(friendlyUrlName, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            friendlyUrlName = await UrlRecordService.GetSeNameAsync(friendlyUrlName, SeoSettings.ConvertNonWesternChars, SeoSettings.AllowUnicodeCharsInUrls);
 
             //max length
             //(consider a store URL + probably added {0}-{1} below)

@@ -21,17 +21,17 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly ICurrencyService _currencyService;
-        private readonly IDownloadService _downloadService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly ITaxService _taxService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        protected ICurrencyService CurrencyService { get; }
+        protected IDownloadService DownloadService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IPriceCalculationService PriceCalculationService { get; }
+        protected IPriceFormatter PriceFormatter { get; }
+        protected IProductAttributeParser ProductAttributeParser { get; }
+        protected IProductAttributeService ProductAttributeService { get; }
+        protected ITaxService TaxService { get; }
+        protected IWebHelper WebHelper { get; }
+        protected IWorkContext WorkContext { get; }
+        protected ShoppingCartSettings ShoppingCartSettings { get; }
 
         #endregion
 
@@ -49,17 +49,17 @@ namespace Nop.Services.Catalog
             IWorkContext workContext,
             ShoppingCartSettings shoppingCartSettings)
         {
-            _currencyService = currencyService;
-            _downloadService = downloadService;
-            _localizationService = localizationService;
-            _priceCalculationService = priceCalculationService;
-            _priceFormatter = priceFormatter;
-            _productAttributeParser = productAttributeParser;
-            _productAttributeService = productAttributeService;
-            _taxService = taxService;
-            _webHelper = webHelper;
-            _workContext = workContext;
-            _shoppingCartSettings = shoppingCartSettings;
+            CurrencyService = currencyService;
+            DownloadService = downloadService;
+            LocalizationService = localizationService;
+            PriceCalculationService = priceCalculationService;
+            PriceFormatter = priceFormatter;
+            ProductAttributeParser = productAttributeParser;
+            ProductAttributeService = productAttributeService;
+            TaxService = taxService;
+            WebHelper = webHelper;
+            WorkContext = workContext;
+            ShoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -77,7 +77,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string> FormatAttributesAsync(Product product, string attributesXml)
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
             return await FormatAttributesAsync(product, attributesXml, customer);
         }
 
@@ -103,19 +103,19 @@ namespace Nop.Services.Catalog
             bool allowHyperlinks = true)
         {
             var result = new StringBuilder();
-            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+            var currentLanguage = await WorkContext.GetWorkingLanguageAsync();
             //attributes
             if (renderProductAttributes)
             {
-                foreach (var attribute in await _productAttributeParser.ParseProductAttributeMappingsAsync(attributesXml))
+                foreach (var attribute in await ProductAttributeParser.ParseProductAttributeMappingsAsync(attributesXml))
                 {
-                    var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId);
-                    var attributeName = await _localizationService.GetLocalizedAsync(productAttribute, a => a.Name, currentLanguage.Id);
+                    var productAttribute = await ProductAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId);
+                    var attributeName = await LocalizationService.GetLocalizedAsync(productAttribute, a => a.Name, currentLanguage.Id);
 
                     //attributes without values
                     if (!attribute.ShouldHaveValues())
                     {
-                        foreach (var value in _productAttributeParser.ParseValues(attributesXml, attribute.Id))
+                        foreach (var value in ProductAttributeParser.ParseValues(attributesXml, attribute.Id))
                         {
                             var formattedAttribute = string.Empty;
                             if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
@@ -131,7 +131,7 @@ namespace Nop.Services.Catalog
                             {
                                 //file upload
                                 Guid.TryParse(value, out var downloadGuid);
-                                var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
+                                var download = await DownloadService.GetDownloadByGuidAsync(downloadGuid);
                                 if (download != null)
                                 {
                                     var fileName = $"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}";
@@ -140,7 +140,7 @@ namespace Nop.Services.Catalog
                                     if (htmlEncode)
                                         fileName = WebUtility.HtmlEncode(fileName);
 
-                                    var attributeText = allowHyperlinks ? $"<a href=\"{_webHelper.GetStoreLocation()}download/getfileupload/?downloadId={download.DownloadGuid}\" class=\"fileuploadattribute\">{fileName}</a>"
+                                    var attributeText = allowHyperlinks ? $"<a href=\"{WebHelper.GetStoreLocation()}download/getfileupload/?downloadId={download.DownloadGuid}\" class=\"fileuploadattribute\">{fileName}</a>"
                                         : fileName;
 
                                     //encode (if required)
@@ -171,9 +171,9 @@ namespace Nop.Services.Catalog
                     //product attribute values
                     else
                     {
-                        foreach (var attributeValue in await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml, attribute.Id))
+                        foreach (var attributeValue in await ProductAttributeParser.ParseProductAttributeValuesAsync(attributesXml, attribute.Id))
                         {
-                            var formattedAttribute = $"{attributeName}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
+                            var formattedAttribute = $"{attributeName}: {await LocalizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
 
                             if (renderPrices)
                             {
@@ -182,43 +182,43 @@ namespace Nop.Services.Catalog
                                     if (attributeValue.PriceAdjustment > decimal.Zero)
                                     {
                                         formattedAttribute += string.Format(
-                                                await _localizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
+                                                await LocalizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
                                                 "+", attributeValue.PriceAdjustment.ToString("G29"), "%");
                                     }
                                     else if (attributeValue.PriceAdjustment < decimal.Zero)
                                     {
                                         formattedAttribute += string.Format(
-                                                await _localizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
+                                                await LocalizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
                                                 string.Empty, attributeValue.PriceAdjustment.ToString("G29"), "%");
                                     }
                                 }
                                 else
                                 {
-                                    var attributeValuePriceAdjustment = await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer);
-                                    var (priceAdjustmentBase, _) = await _taxService.GetProductPriceAsync(product, attributeValuePriceAdjustment, customer);
-                                    var priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceAdjustmentBase, await _workContext.GetWorkingCurrencyAsync());
+                                    var attributeValuePriceAdjustment = await PriceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer);
+                                    var (priceAdjustmentBase, _) = await TaxService.GetProductPriceAsync(product, attributeValuePriceAdjustment, customer);
+                                    var priceAdjustment = await CurrencyService.ConvertFromPrimaryStoreCurrencyAsync(priceAdjustmentBase, await WorkContext.GetWorkingCurrencyAsync());
 
                                     if (priceAdjustmentBase > decimal.Zero)
                                     {
                                         formattedAttribute += string.Format(
-                                                await _localizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
-                                                "+", await _priceFormatter.FormatPriceAsync(priceAdjustment, false, false), string.Empty);
+                                                await LocalizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
+                                                "+", await PriceFormatter.FormatPriceAsync(priceAdjustment, false, false), string.Empty);
                                     }
                                     else if (priceAdjustmentBase < decimal.Zero)
                                     {
                                         formattedAttribute += string.Format(
-                                                await _localizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
-                                                "-", await _priceFormatter.FormatPriceAsync(-priceAdjustment, false, false), string.Empty);
+                                                await LocalizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
+                                                "-", await PriceFormatter.FormatPriceAsync(-priceAdjustment, false, false), string.Empty);
                                     }
                                 }
                             }
 
                             //display quantity
-                            if (_shoppingCartSettings.RenderAssociatedAttributeValueQuantity && attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                            if (ShoppingCartSettings.RenderAssociatedAttributeValueQuantity && attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
                             {
                                 //render only when more than 1
                                 if (attributeValue.Quantity > 1)
-                                    formattedAttribute += string.Format(await _localizationService.GetResourceAsync("ProductAttributes.Quantity"), attributeValue.Quantity);
+                                    formattedAttribute += string.Format(await LocalizationService.GetResourceAsync("ProductAttributes.Quantity"), attributeValue.Quantity);
                             }
 
                             //encode (if required)
@@ -243,16 +243,16 @@ namespace Nop.Services.Catalog
             if (!product.IsGiftCard)
                 return result.ToString();
 
-            _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName, out var giftCardRecipientEmail, out var giftCardSenderName, out var giftCardSenderEmail, out var _);
+            ProductAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName, out var giftCardRecipientEmail, out var giftCardSenderName, out var giftCardSenderEmail, out var _);
 
             //sender
             var giftCardFrom = product.GiftCardType == GiftCardType.Virtual ?
-                string.Format(await _localizationService.GetResourceAsync("GiftCardAttribute.From.Virtual"), giftCardSenderName, giftCardSenderEmail) :
-                string.Format(await _localizationService.GetResourceAsync("GiftCardAttribute.From.Physical"), giftCardSenderName);
+                string.Format(await LocalizationService.GetResourceAsync("GiftCardAttribute.From.Virtual"), giftCardSenderName, giftCardSenderEmail) :
+                string.Format(await LocalizationService.GetResourceAsync("GiftCardAttribute.From.Physical"), giftCardSenderName);
             //recipient
             var giftCardFor = product.GiftCardType == GiftCardType.Virtual ?
-                string.Format(await _localizationService.GetResourceAsync("GiftCardAttribute.For.Virtual"), giftCardRecipientName, giftCardRecipientEmail) :
-                string.Format(await _localizationService.GetResourceAsync("GiftCardAttribute.For.Physical"), giftCardRecipientName);
+                string.Format(await LocalizationService.GetResourceAsync("GiftCardAttribute.For.Virtual"), giftCardRecipientName, giftCardRecipientEmail) :
+                string.Format(await LocalizationService.GetResourceAsync("GiftCardAttribute.For.Physical"), giftCardRecipientName);
 
             //encode (if required)
             if (htmlEncode)

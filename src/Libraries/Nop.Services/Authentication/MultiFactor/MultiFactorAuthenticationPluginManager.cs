@@ -14,7 +14,7 @@ namespace Nop.Services.Authentication.MultiFactor
     {
         #region Fields
 
-        private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
+        protected MultiFactorAuthenticationSettings MultiFactorAuthenticationSettings { get; }
 
         #endregion
 
@@ -24,7 +24,7 @@ namespace Nop.Services.Authentication.MultiFactor
             ICustomerService customerService,
             IPluginService pluginService) : base(customerService, pluginService)
         {
-            _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
+            MultiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
         }
 
         #endregion
@@ -42,7 +42,7 @@ namespace Nop.Services.Authentication.MultiFactor
         /// </returns>
         public virtual async Task<bool> HasActivePluginsAsync(Customer customer = null, int storeId = 0)
         {
-            return (await LoadActivePluginsAsync(_multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames, customer, storeId)).Any();
+            return (await LoadActivePluginsAsync(MultiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames, customer, storeId)).Any();
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Nop.Services.Authentication.MultiFactor
         /// </returns>
         public virtual async Task<IList<IMultiFactorAuthenticationMethod>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0)
         {
-            return await LoadActivePluginsAsync(_multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames, customer, storeId);
+            return await LoadActivePluginsAsync(MultiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames, customer, storeId);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Nop.Services.Authentication.MultiFactor
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IMultiFactorAuthenticationMethod authenticationMethod)
         {
-            return IsPluginActive(authenticationMethod, _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames);
+            return IsPluginActive(authenticationMethod, MultiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames);
         }
 
         /// <summary>

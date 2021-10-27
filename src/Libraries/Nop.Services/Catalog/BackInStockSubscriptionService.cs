@@ -17,11 +17,11 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IRepository<BackInStockSubscription> _backInStockSubscriptionRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IWorkflowMessageService _workflowMessageService;
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IRepository<BackInStockSubscription> BackInStockSubscriptionRepository { get; }
+        protected IRepository<Customer> CustomerRepository { get; }
+        protected IRepository<Product> ProductRepository { get; }
+        protected IWorkflowMessageService WorkflowMessageService { get; }
 
         #endregion
 
@@ -33,11 +33,11 @@ namespace Nop.Services.Catalog
             IRepository<Product> productRepository,
             IWorkflowMessageService workflowMessageService)
         {
-            _genericAttributeService = genericAttributeService;
-            _backInStockSubscriptionRepository = backInStockSubscriptionRepository;
-            _customerRepository = customerRepository;
-            _productRepository = productRepository;
-            _workflowMessageService = workflowMessageService;
+            GenericAttributeService = genericAttributeService;
+            BackInStockSubscriptionRepository = backInStockSubscriptionRepository;
+            CustomerRepository = customerRepository;
+            ProductRepository = productRepository;
+            WorkflowMessageService = workflowMessageService;
         }
 
         #endregion
@@ -51,7 +51,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteSubscriptionAsync(BackInStockSubscription subscription)
         {
-            await _backInStockSubscriptionRepository.DeleteAsync(subscription);
+            await BackInStockSubscriptionRepository.DeleteAsync(subscription);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Nop.Services.Catalog
         public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByCustomerIdAsync(int customerId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            return await _backInStockSubscriptionRepository.GetAllPagedAsync(query =>
+            return await BackInStockSubscriptionRepository.GetAllPagedAsync(query =>
             {
                 //customer
                 query = query.Where(biss => biss.CustomerId == customerId);
@@ -79,7 +79,7 @@ namespace Nop.Services.Catalog
 
                 //product
                 query = from q in query
-                    join p in _productRepository.Table on q.ProductId equals p.Id
+                    join p in ProductRepository.Table on q.ProductId equals p.Id
                     where !p.Deleted
                     select q;
 
@@ -101,7 +101,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<BackInStockSubscription> FindSubscriptionAsync(int customerId, int productId, int storeId)
         {
-            var query = from biss in _backInStockSubscriptionRepository.Table
+            var query = from biss in BackInStockSubscriptionRepository.Table
                         orderby biss.CreatedOnUtc descending
                         where biss.CustomerId == customerId &&
                               biss.ProductId == productId &&
@@ -123,7 +123,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<BackInStockSubscription> GetSubscriptionByIdAsync(int subscriptionId)
         {
-            return await _backInStockSubscriptionRepository.GetByIdAsync(subscriptionId, cache => default);
+            return await BackInStockSubscriptionRepository.GetByIdAsync(subscriptionId, cache => default);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertSubscriptionAsync(BackInStockSubscription subscription)
         {
-            await _backInStockSubscriptionRepository.InsertAsync(subscription);
+            await BackInStockSubscriptionRepository.InsertAsync(subscription);
         }
         
         /// <summary>
@@ -153,9 +153,9 @@ namespace Nop.Services.Catalog
             var subscriptions = await GetAllSubscriptionsByProductIdAsync(product.Id);
             foreach (var subscription in subscriptions)
             {
-                var customerLanguageId = await _genericAttributeService.GetAttributeAsync<Customer, int>(subscription.CustomerId, NopCustomerDefaults.LanguageIdAttribute, subscription.StoreId);
+                var customerLanguageId = await GenericAttributeService.GetAttributeAsync<Customer, int>(subscription.CustomerId, NopCustomerDefaults.LanguageIdAttribute, subscription.StoreId);
 
-                result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, customerLanguageId)).Count;
+                result += (await WorkflowMessageService.SendBackInStockNotificationAsync(subscription, customerLanguageId)).Count;
             }
 
             for (var i = 0; i <= subscriptions.Count - 1; i++)
@@ -178,7 +178,7 @@ namespace Nop.Services.Catalog
         public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductIdAsync(int productId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            return await _backInStockSubscriptionRepository.GetAllPagedAsync(query =>
+            return await BackInStockSubscriptionRepository.GetAllPagedAsync(query =>
             {
                 //product
                 query = query.Where(biss => biss.ProductId == productId);
@@ -187,7 +187,7 @@ namespace Nop.Services.Catalog
                     query = query.Where(biss => biss.StoreId == storeId);
                 //customer
                 query = from biss in query
-                    join c in _customerRepository.Table on biss.CustomerId equals c.Id
+                    join c in CustomerRepository.Table on biss.CustomerId equals c.Id
                     where c.Active && !c.Deleted
                     select biss;
 

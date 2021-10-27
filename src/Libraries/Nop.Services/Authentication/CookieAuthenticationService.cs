@@ -16,9 +16,9 @@ namespace Nop.Services.Authentication
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        protected CustomerSettings CustomerSettings { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IHttpContextAccessor HttpContextAccessor { get; }
 
         private Customer _cachedCustomer;
 
@@ -30,9 +30,9 @@ namespace Nop.Services.Authentication
             ICustomerService customerService,
             IHttpContextAccessor httpContextAccessor)
         {
-            _customerSettings = customerSettings;
-            _customerService = customerService;
-            _httpContextAccessor = httpContextAccessor;
+            CustomerSettings = customerSettings;
+            CustomerService = customerService;
+            HttpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -71,7 +71,7 @@ namespace Nop.Services.Authentication
             };
 
             //sign in
-            await _httpContextAccessor.HttpContext.SignInAsync(NopAuthenticationDefaults.AuthenticationScheme, userPrincipal, authenticationProperties);
+            await HttpContextAccessor.HttpContext.SignInAsync(NopAuthenticationDefaults.AuthenticationScheme, userPrincipal, authenticationProperties);
 
             //cache authenticated customer
             _cachedCustomer = customer;
@@ -87,7 +87,7 @@ namespace Nop.Services.Authentication
             _cachedCustomer = null;
 
             //and sign out from the current authentication scheme
-            await _httpContextAccessor.HttpContext.SignOutAsync(NopAuthenticationDefaults.AuthenticationScheme);
+            await HttpContextAccessor.HttpContext.SignOutAsync(NopAuthenticationDefaults.AuthenticationScheme);
         }
 
         /// <summary>
@@ -104,18 +104,18 @@ namespace Nop.Services.Authentication
                 return _cachedCustomer;
 
             //try to get authenticated user identity
-            var authenticateResult = await _httpContextAccessor.HttpContext.AuthenticateAsync(NopAuthenticationDefaults.AuthenticationScheme);
+            var authenticateResult = await HttpContextAccessor.HttpContext.AuthenticateAsync(NopAuthenticationDefaults.AuthenticationScheme);
             if (!authenticateResult.Succeeded)
                 return null;
 
             Customer customer = null;
-            if (_customerSettings.UsernamesEnabled)
+            if (CustomerSettings.UsernamesEnabled)
             {
                 //try to get customer by username
                 var usernameClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name
                     && claim.Issuer.Equals(NopAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (usernameClaim != null)
-                    customer = await _customerService.GetCustomerByUsernameAsync(usernameClaim.Value);
+                    customer = await CustomerService.GetCustomerByUsernameAsync(usernameClaim.Value);
             }
             else
             {
@@ -123,11 +123,11 @@ namespace Nop.Services.Authentication
                 var emailClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email
                     && claim.Issuer.Equals(NopAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (emailClaim != null)
-                    customer = await _customerService.GetCustomerByEmailAsync(emailClaim.Value);
+                    customer = await CustomerService.GetCustomerByEmailAsync(emailClaim.Value);
             }
 
             //whether the found customer is available
-            if (customer == null || !customer.Active || customer.RequireReLogin || customer.Deleted || !await _customerService.IsRegisteredAsync(customer))
+            if (customer == null || !customer.Active || customer.RequireReLogin || customer.Deleted || !await CustomerService.IsRegisteredAsync(customer))
                 return null;
 
             //cache authenticated customer

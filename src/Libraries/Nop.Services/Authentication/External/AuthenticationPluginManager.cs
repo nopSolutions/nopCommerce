@@ -13,7 +13,7 @@ namespace Nop.Services.Authentication.External
     {
         #region Fields
 
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+        protected ExternalAuthenticationSettings ExternalAuthenticationSettings { get; }
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace Nop.Services.Authentication.External
             ICustomerService customerService,
             IPluginService pluginService) : base(customerService, pluginService)
         {
-            _externalAuthenticationSettings = externalAuthenticationSettings;
+            ExternalAuthenticationSettings = externalAuthenticationSettings;
         }
 
         #endregion
@@ -41,7 +41,7 @@ namespace Nop.Services.Authentication.External
         /// </returns>
         public virtual async Task<IList<IExternalAuthenticationMethod>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0)
         {
-            return await LoadActivePluginsAsync(_externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames, customer, storeId);
+            return await LoadActivePluginsAsync(ExternalAuthenticationSettings.ActiveAuthenticationMethodSystemNames, customer, storeId);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IExternalAuthenticationMethod authenticationMethod)
         {
-            return IsPluginActive(authenticationMethod, _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames);
+            return IsPluginActive(authenticationMethod, ExternalAuthenticationSettings.ActiveAuthenticationMethodSystemNames);
         }
 
         /// <summary>

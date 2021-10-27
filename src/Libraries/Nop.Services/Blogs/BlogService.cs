@@ -17,10 +17,10 @@ namespace Nop.Services.Blogs
     {
         #region Fields
 
-        private readonly IRepository<BlogComment> _blogCommentRepository;
-        private readonly IRepository<BlogPost> _blogPostRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
+        protected IRepository<BlogComment> BlogCommentRepository { get; }
+        protected IRepository<BlogPost> BlogPostRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreMappingService StoreMappingService { get; }
 
         #endregion
 
@@ -32,10 +32,10 @@ namespace Nop.Services.Blogs
             IStaticCacheManager staticCacheManager,
             IStoreMappingService storeMappingService)
         {
-            _blogCommentRepository = blogCommentRepository;
-            _blogPostRepository = blogPostRepository;
-            _staticCacheManager = staticCacheManager;
-            _storeMappingService = storeMappingService;
+            BlogCommentRepository = blogCommentRepository;
+            BlogPostRepository = blogPostRepository;
+            StaticCacheManager = staticCacheManager;
+            StoreMappingService = storeMappingService;
         }
 
         #endregion
@@ -51,7 +51,7 @@ namespace Nop.Services.Blogs
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteBlogPostAsync(BlogPost blogPost)
         {
-            await _blogPostRepository.DeleteAsync(blogPost);
+            await BlogPostRepository.DeleteAsync(blogPost);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<BlogPost> GetBlogPostByIdAsync(int blogPostId)
         {
-            return await _blogPostRepository.GetByIdAsync(blogPostId, cache => default);
+            return await BlogPostRepository.GetByIdAsync(blogPostId, cache => default);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Nop.Services.Blogs
             DateTime? dateFrom = null, DateTime? dateTo = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null)
         {
-            return await _blogPostRepository.GetAllPagedAsync(async query =>
+            return await BlogPostRepository.GetAllPagedAsync(async query =>
             {
                 if (dateFrom.HasValue)
                     query = query.Where(b => dateFrom.Value <= (b.StartDateUtc ?? b.CreatedOnUtc));
@@ -107,7 +107,7 @@ namespace Nop.Services.Blogs
                 }
 
                 //apply store mapping constraints
-                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                query = await StoreMappingService.ApplyStoreMapping(query, storeId);
 
                 query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
 
@@ -161,9 +161,9 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<IList<BlogPostTag>> GetAllBlogPostTagsAsync(int storeId, int languageId, bool showHidden = false)
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogTagsCacheKey, languageId, storeId, showHidden);
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogTagsCacheKey, languageId, storeId, showHidden);
 
-            var blogPostTags = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var blogPostTags = await StaticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var rezBlogPostTags = new List<BlogPostTag>();
 
@@ -203,7 +203,7 @@ namespace Nop.Services.Blogs
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertBlogPostAsync(BlogPost blogPost)
         {
-            await _blogPostRepository.InsertAsync(blogPost);
+            await BlogPostRepository.InsertAsync(blogPost);
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace Nop.Services.Blogs
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateBlogPostAsync(BlogPost blogPost)
         {
-            await _blogPostRepository.UpdateAsync(blogPost);
+            await BlogPostRepository.UpdateAsync(blogPost);
         }
 
         /// <summary>
@@ -303,7 +303,7 @@ namespace Nop.Services.Blogs
         public virtual async Task<IList<BlogComment>> GetAllCommentsAsync(int customerId = 0, int storeId = 0, int? blogPostId = null,
             bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
         {
-            return await _blogCommentRepository.GetAllAsync(query =>
+            return await BlogCommentRepository.GetAllAsync(query =>
             {
                 if (approved.HasValue)
                     query = query.Where(comment => comment.IsApproved == approved);
@@ -342,7 +342,7 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<BlogComment> GetBlogCommentByIdAsync(int blogCommentId)
         {
-            return await _blogCommentRepository.GetByIdAsync(blogCommentId, cache => default);
+            return await BlogCommentRepository.GetByIdAsync(blogCommentId, cache => default);
         }
 
         /// <summary>
@@ -355,7 +355,7 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<IList<BlogComment>> GetBlogCommentsByIdsAsync(int[] commentIds)
         {
-            return await _blogCommentRepository.GetByIdsAsync(commentIds);
+            return await BlogCommentRepository.GetByIdsAsync(commentIds);
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<int> GetBlogCommentsCountAsync(BlogPost blogPost, int storeId = 0, bool? isApproved = null)
         {
-            var query = _blogCommentRepository.Table.Where(comment => comment.BlogPostId == blogPost.Id);
+            var query = BlogCommentRepository.Table.Where(comment => comment.BlogPostId == blogPost.Id);
 
             if (storeId > 0)
                 query = query.Where(comment => comment.StoreId == storeId);
@@ -378,9 +378,9 @@ namespace Nop.Services.Blogs
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogCommentsNumberCacheKey, blogPost, storeId, isApproved);
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogCommentsNumberCacheKey, blogPost, storeId, isApproved);
 
-            return await _staticCacheManager.GetAsync(cacheKey, async () => await query.CountAsync());
+            return await StaticCacheManager.GetAsync(cacheKey, async () => await query.CountAsync());
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace Nop.Services.Blogs
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteBlogCommentAsync(BlogComment blogComment)
         {
-            await _blogCommentRepository.DeleteAsync(blogComment);
+            await BlogCommentRepository.DeleteAsync(blogComment);
         }
 
         /// <summary>
@@ -400,7 +400,7 @@ namespace Nop.Services.Blogs
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteBlogCommentsAsync(IList<BlogComment> blogComments)
         {
-            await _blogCommentRepository.DeleteAsync(blogComments);
+            await BlogCommentRepository.DeleteAsync(blogComments);
         }
 
         /// <summary>
@@ -410,7 +410,7 @@ namespace Nop.Services.Blogs
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertBlogCommentAsync(BlogComment blogComment)
         {
-            await _blogCommentRepository.InsertAsync(blogComment);
+            await BlogCommentRepository.InsertAsync(blogComment);
         }
 
         /// <summary>
@@ -420,7 +420,7 @@ namespace Nop.Services.Blogs
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateBlogCommentAsync(BlogComment blogComment)
         {
-            await _blogCommentRepository.UpdateAsync(blogComment);
+            await BlogCommentRepository.UpdateAsync(blogComment);
         }
 
         #endregion

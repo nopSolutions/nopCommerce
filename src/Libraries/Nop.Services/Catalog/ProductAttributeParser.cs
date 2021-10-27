@@ -25,12 +25,12 @@ namespace Nop.Services.Catalog
 
         #region Fields
 
-        private readonly ICurrencyService _currencyService;
-        private readonly IDownloadService _downloadService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
-        private readonly IWorkContext _workContext;
+        protected ICurrencyService CurrencyService { get; }
+        protected IDownloadService DownloadService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IProductAttributeService ProductAttributeService { get; }
+        protected IRepository<ProductAttributeValue> ProductAttributeValueRepository { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -43,12 +43,12 @@ namespace Nop.Services.Catalog
             IRepository<ProductAttributeValue> productAttributeValueRepository,
             IWorkContext workContext)
         {
-            _currencyService = currencyService;
-            _downloadService = downloadService;
-            _productAttributeService = productAttributeService;
-            _productAttributeValueRepository = productAttributeValueRepository;
-            _workContext = workContext;
-            _localizationService = localizationService;
+            CurrencyService = currencyService;
+            DownloadService = downloadService;
+            ProductAttributeService = productAttributeService;
+            ProductAttributeValueRepository = productAttributeValueRepository;
+            WorkContext = workContext;
+            LocalizationService = localizationService;
         }
 
         #endregion
@@ -192,7 +192,7 @@ namespace Nop.Services.Catalog
         protected virtual async Task<string> GetProductAttributesXmlAsync(Product product, IFormCollection form, List<string> errors)
         {
             var attributesXml = string.Empty;
-            var productAttributes = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
+            var productAttributes = await ProductAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
             foreach (var attribute in productAttributes)
             {
                 var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
@@ -214,7 +214,7 @@ namespace Nop.Services.Catalog
                                     var quantityStr = form[$"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}_{selectedAttributeId}_qty"];
                                     if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                         (!int.TryParse(quantityStr, out quantity) || quantity < 1))
-                                        errors.Add(await _localizationService.GetResourceAsync("Products.QuantityShouldBePositive"));
+                                        errors.Add(await LocalizationService.GetResourceAsync("Products.QuantityShouldBePositive"));
 
                                     attributesXml = AddProductAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
@@ -238,7 +238,7 @@ namespace Nop.Services.Catalog
                                         var quantityStr = form[$"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}_{item}_qty"];
                                         if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                             (!int.TryParse(quantityStr, out quantity) || quantity < 1))
-                                            errors.Add(await _localizationService.GetResourceAsync("Products.QuantityShouldBePositive"));
+                                            errors.Add(await LocalizationService.GetResourceAsync("Products.QuantityShouldBePositive"));
 
                                         attributesXml = AddProductAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
@@ -250,7 +250,7 @@ namespace Nop.Services.Catalog
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(attribute.Id);
+                            var attributeValues = await ProductAttributeService.GetProductAttributeValuesAsync(attribute.Id);
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)
@@ -261,7 +261,7 @@ namespace Nop.Services.Catalog
                                 var quantityStr = form[$"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}_{selectedAttributeId}_qty"];
                                 if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                     (!int.TryParse(quantityStr, out quantity) || quantity < 1))
-                                    errors.Add(await _localizationService.GetResourceAsync("Products.QuantityShouldBePositive"));
+                                    errors.Add(await LocalizationService.GetResourceAsync("Products.QuantityShouldBePositive"));
 
                                 attributesXml = AddProductAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
@@ -301,7 +301,7 @@ namespace Nop.Services.Catalog
                     case AttributeControlType.FileUpload:
                         {
                             Guid.TryParse(form[controlId], out var downloadGuid);
-                            var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
+                            var download = await DownloadService.GetDownloadByGuidAsync(downloadGuid);
                             if (download != null)
                                 attributesXml = AddProductAttribute(attributesXml,
                                     attribute, download.DownloadGuid.ToString());
@@ -344,7 +344,7 @@ namespace Nop.Services.Catalog
             var ids = ParseAttributeIds(attributesXml);
             foreach (var id in ids)
             {
-                var attribute = await _productAttributeService.GetProductAttributeMappingByIdAsync(id);
+                var attribute = await ProductAttributeService.GetProductAttributeMappingByIdAsync(id);
                 if (attribute != null) 
                     result.Add(attribute);
             }
@@ -383,7 +383,7 @@ namespace Nop.Services.Catalog
                     if (string.IsNullOrEmpty(attributeValue.Item1) || !int.TryParse(attributeValue.Item1, out var attributeValueId))
                         continue;
 
-                    var value = await _productAttributeService.GetProductAttributeValueByIdAsync(attributeValueId);
+                    var value = await ProductAttributeService.GetProductAttributeValueByIdAsync(attributeValueId);
                     if (value == null)
                         continue;
 
@@ -391,7 +391,7 @@ namespace Nop.Services.Catalog
                     {
                         //if customer enters quantity, use new entity with new quantity
 
-                        var oldValue = await _productAttributeValueRepository.LoadOriginalCopyAsync(value);
+                        var oldValue = await ProductAttributeValueRepository.LoadOriginalCopyAsync(value);
 
                         oldValue.ProductAttributeMappingId = attribute.Id;
                         oldValue.Quantity = quantity;
@@ -686,7 +686,7 @@ namespace Nop.Services.Catalog
             if (string.IsNullOrEmpty(attributesXml))
                 return null;
 
-            var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
+            var combinations = await ProductAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
             return await combinations.FirstOrDefaultAwaitAsync(async x =>
                 await AreProductAttributesEqualAsync(x.AttributesXml, attributesXml, ignoreNonCombinableAttributes));
         }
@@ -706,7 +706,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var allProductAttributeMappings = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
+            var allProductAttributeMappings = await ProductAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
             
             if (ignoreNonCombinableAttributes) 
                 allProductAttributeMappings = allProductAttributeMappings.Where(x => !x.IsNonCombinable()).ToList();
@@ -725,7 +725,7 @@ namespace Nop.Services.Catalog
                         continue;
 
                     //get product attribute values
-                    var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(productAttributeMapping.Id);
+                    var attributeValues = await ProductAttributeService.GetProductAttributeValuesAsync(productAttributeMapping.Id);
 
                     //filter product attribute values
                     if (allowedAttributeIds?.Any() ?? false) 
@@ -817,7 +817,7 @@ namespace Nop.Services.Catalog
                     if (formKey.Equals($"addtocart_{product.Id}.CustomerEnteredPrice", StringComparison.InvariantCultureIgnoreCase))
                     {
                         if (decimal.TryParse(form[formKey], out var customerEnteredPrice))
-                            customerEnteredPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrencyAsync(customerEnteredPrice, await _workContext.GetWorkingCurrencyAsync());
+                            customerEnteredPriceConverted = await CurrencyService.ConvertToPrimaryStoreCurrencyAsync(customerEnteredPrice, await WorkContext.GetWorkingCurrencyAsync());
                         break;
                     }
                 }

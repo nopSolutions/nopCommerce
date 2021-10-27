@@ -14,9 +14,9 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingRepository;
-        private readonly IRepository<ReviewType> _reviewTypeRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected IRepository<ProductReviewReviewTypeMapping> ProductReviewReviewTypeMappingRepository { get; }
+        protected IRepository<ReviewType> ReviewTypeRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
 
         #endregion
 
@@ -26,9 +26,9 @@ namespace Nop.Services.Catalog
             IRepository<ReviewType> reviewTypeRepository,
             IStaticCacheManager staticCacheManager)
         {
-            _productReviewReviewTypeMappingRepository = productReviewReviewTypeMappingRepository;
-            _reviewTypeRepository = reviewTypeRepository;
-            _staticCacheManager = staticCacheManager;
+            ProductReviewReviewTypeMappingRepository = productReviewReviewTypeMappingRepository;
+            ReviewTypeRepository = reviewTypeRepository;
+            StaticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -46,7 +46,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<ReviewType>> GetAllReviewTypesAsync()
         {
-            return await _reviewTypeRepository.GetAllAsync(
+            return await ReviewTypeRepository.GetAllAsync(
                 query => query.OrderBy(reviewType => reviewType.DisplayOrder).ThenBy(reviewType => reviewType.Id),
                 cache => default);
         }
@@ -61,7 +61,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<ReviewType> GetReviewTypeByIdAsync(int reviewTypeId)
         {
-            return await _reviewTypeRepository.GetByIdAsync(reviewTypeId, cache => default);
+            return await ReviewTypeRepository.GetByIdAsync(reviewTypeId, cache => default);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertReviewTypeAsync(ReviewType reviewType)
         {
-            await _reviewTypeRepository.InsertAsync(reviewType);
+            await ReviewTypeRepository.InsertAsync(reviewType);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateReviewTypeAsync(ReviewType reviewType)
         {
-            await _reviewTypeRepository.UpdateAsync(reviewType);
+            await ReviewTypeRepository.UpdateAsync(reviewType);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteReviewTypeAsync(ReviewType reviewType)
         {
-            await _reviewTypeRepository.DeleteAsync(reviewType);
+            await ReviewTypeRepository.DeleteAsync(reviewType);
         }
 
         #endregion
@@ -109,14 +109,14 @@ namespace Nop.Services.Catalog
         public async Task<IList<ProductReviewReviewTypeMapping>> GetProductReviewReviewTypeMappingsByProductReviewIdAsync(
             int productReviewId)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductReviewTypeMappingByReviewTypeCacheKey, productReviewId);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductReviewTypeMappingByReviewTypeCacheKey, productReviewId);
 
-            var query = from pam in _productReviewReviewTypeMappingRepository.Table
+            var query = from pam in ProductReviewReviewTypeMappingRepository.Table
                 orderby pam.Id
                 where pam.ProductReviewId == productReviewId
                 select pam;
 
-            var productReviewReviewTypeMappings = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
+            var productReviewReviewTypeMappings = await StaticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return productReviewReviewTypeMappings;
         }
@@ -128,7 +128,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductReviewReviewTypeMappingsAsync(ProductReviewReviewTypeMapping productReviewReviewType)
         {
-            await _productReviewReviewTypeMappingRepository.InsertAsync(productReviewReviewType);
+            await ProductReviewReviewTypeMappingRepository.InsertAsync(productReviewReviewType);
         }
 
         #endregion

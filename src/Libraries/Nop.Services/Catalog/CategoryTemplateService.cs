@@ -13,7 +13,7 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
+        protected IRepository<CategoryTemplate> CategoryTemplateRepository { get; }
 
         #endregion
 
@@ -21,7 +21,7 @@ namespace Nop.Services.Catalog
 
         public CategoryTemplateService(IRepository<CategoryTemplate> categoryTemplateRepository)
         {
-            _categoryTemplateRepository = categoryTemplateRepository;
+            CategoryTemplateRepository = categoryTemplateRepository;
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCategoryTemplateAsync(CategoryTemplate categoryTemplate)
         {
-            await _categoryTemplateRepository.DeleteAsync(categoryTemplate);
+            await CategoryTemplateRepository.DeleteAsync(categoryTemplate);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<CategoryTemplate>> GetAllCategoryTemplatesAsync()
         {
-            var templates = await _categoryTemplateRepository.GetAllAsync(query =>
+            var templates = await CategoryTemplateRepository.GetAllAsync(query =>
             {
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
@@ -67,7 +67,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<CategoryTemplate> GetCategoryTemplateByIdAsync(int categoryTemplateId)
         {
-            return await _categoryTemplateRepository.GetByIdAsync(categoryTemplateId, cache => default);
+            return await CategoryTemplateRepository.GetByIdAsync(categoryTemplateId, cache => default);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCategoryTemplateAsync(CategoryTemplate categoryTemplate)
         {
-            await _categoryTemplateRepository.InsertAsync(categoryTemplate);
+            await CategoryTemplateRepository.InsertAsync(categoryTemplate);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCategoryTemplateAsync(CategoryTemplate categoryTemplate)
         {
-            await _categoryTemplateRepository.UpdateAsync(categoryTemplate);
+            await CategoryTemplateRepository.UpdateAsync(categoryTemplate);
         }
 
         #endregion
