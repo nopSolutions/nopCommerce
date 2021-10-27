@@ -1034,8 +1034,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     shoppingCartItemModel.AttributeInfo = await _productAttributeFormatter.FormatAttributesAsync(product, item.AttributesXml);
                     var (unitPrice, _, _) = await _shoppingCartService.GetUnitPriceAsync(item, true);
                     shoppingCartItemModel.UnitPrice = await _priceFormatter.FormatPriceAsync((await _taxService.GetProductPriceAsync(product, unitPrice)).price);
+                    shoppingCartItemModel.UnitPriceValue = (await _taxService.GetProductPriceAsync(product, unitPrice)).price;
                     var (subTotal, _, _, _) = await _shoppingCartService.GetSubTotalAsync(item, true);
                     shoppingCartItemModel.Total = await _priceFormatter.FormatPriceAsync((await _taxService.GetProductPriceAsync(product, subTotal)).price);
+                    shoppingCartItemModel.TotalValue = (await _taxService.GetProductPriceAsync(product, subTotal)).price;
 
                     //convert dates to the user time
                     shoppingCartItemModel.UpdatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(item.UpdatedOnUtc, DateTimeKind.Utc);

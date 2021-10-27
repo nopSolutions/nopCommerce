@@ -1348,9 +1348,11 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.Store, options => options.Ignore())
                 .ForMember(model => model.AttributeInfo, options => options.Ignore())
                 .ForMember(model => model.UnitPrice, options => options.Ignore())
+                .ForMember(model => model.UnitPriceValue, options => options.Ignore())
                 .ForMember(model => model.UpdatedOn, options => options.Ignore())
                 .ForMember(model => model.ProductName, options => options.Ignore())
-                .ForMember(model => model.Total, options => options.Ignore());
+                .ForMember(model => model.Total, options => options.Ignore())
+                .ForMember(model => model.TotalValue, options => options.Ignore());
         }
 
         /// <summary>
