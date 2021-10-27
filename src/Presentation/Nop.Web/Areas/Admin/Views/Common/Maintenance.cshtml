@@ -9,22 +9,23 @@
 
 @{
     const string hideDeleteGuestsBlockAttributeName = "MaintenancePage.HideDeleteGuestsBlock";
-    var hideDeleteGuestsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDeleteGuestsBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideDeleteGuestsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDeleteGuestsBlockAttributeName);
 
     const string hideDeleteFilesBlockAttributeName = "MaintenancePage.HideDeleteFilesBlock";
-    var hideDeleteFilesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDeleteFilesBlockAttributeName);
+    var hideDeleteFilesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDeleteFilesBlockAttributeName);
 
     const string hideDeleteCartsBlockAttributeName = "MaintenancePage.HideDeleteCartsBlock";
-    var hideDeleteCartsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDeleteCartsBlockAttributeName);
+    var hideDeleteCartsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDeleteCartsBlockAttributeName);
 
     const string hideReindexBlockAttributeName = "MaintenancePage.HideReindexBlock";
-    var hideReindexBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideReindexBlockAttributeName);
+    var hideReindexBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideReindexBlockAttributeName);
 
     const string hideBackupsBlockAttributeName = "MaintenancePage.HideBackupsBlock";
-    var hideBackupsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideBackupsBlockAttributeName);
+    var hideBackupsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideBackupsBlockAttributeName);
 
     const string hideDeleteAlreadySentQueuedEmailsBlockAttributeName = "MaintenancePage.HideDeleteAlreadySentQueuedEmailsBlock";
-    var hideDeleteAlreadySentQueuedEmailsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDeleteAlreadySentQueuedEmailsBlockAttributeName);
+    var hideDeleteAlreadySentQueuedEmailsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDeleteAlreadySentQueuedEmailsBlockAttributeName);
 }
 
 <div class="content-header clearfix">

@@ -73,8 +73,9 @@ namespace Nop.Plugin.Pickup.PickupInStore
         public async Task<GetPickupPointsResponse> GetPickupPointsAsync(Address address)
         {
             var result = new GetPickupPointsResponse();
+            var store = await _storeContext.GetCurrentStoreAsync();
 
-            foreach (var point in await _storePickupPointService.GetAllStorePickupPointsAsync((await _storeContext.GetCurrentStoreAsync()).Id))
+            foreach (var point in await _storePickupPointService.GetAllStorePickupPointsAsync(store.Id))
             {
                 var pointAddress = await _addressService.GetAddressByIdAsync(point.AddressId);
                 if (pointAddress == null)

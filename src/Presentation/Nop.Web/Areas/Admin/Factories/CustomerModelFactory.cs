@@ -181,9 +181,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             model.Message = string.Empty;
             model.ActivatePointsImmediately = true;
-            model.StoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            model.StoreId = store.Id;
 
             //prepare available stores
             await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores, false);

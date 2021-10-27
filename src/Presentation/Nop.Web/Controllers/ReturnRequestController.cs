@@ -88,7 +88,8 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> ReturnRequest(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
-            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
             if (!await _orderProcessingService.IsReturnRequestAllowedAsync(order))
@@ -103,7 +104,8 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
-            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
             if (!await _orderProcessingService.IsReturnRequestAllowedAsync(order))
@@ -136,14 +138,15 @@ namespace Nop.Web.Controllers
                 {
                     var rrr = await _returnRequestService.GetReturnRequestReasonByIdAsync(model.ReturnRequestReasonId);
                     var rra = await _returnRequestService.GetReturnRequestActionByIdAsync(model.ReturnRequestActionId);
+                    var store = await _storeContext.GetCurrentStoreAsync();
 
                     var rr = new ReturnRequest
                     {
                         CustomNumber = "",
-                        StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                        StoreId = store.Id,
                         OrderItemId = orderItem.Id,
                         Quantity = quantity,
-                        CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                        CustomerId = customer.Id,
                         ReasonForReturn = rrr != null ? await _localizationService.GetLocalizedAsync(rrr, x => x.Name) : "not available",
                         RequestedAction = rra != null ? await _localizationService.GetLocalizedAsync(rra, x => x.Name) : "not available",
                         CustomerComments = model.Comments,
@@ -158,7 +161,7 @@ namespace Nop.Web.Controllers
 
                     //set return request custom number
                     rr.CustomNumber = _customNumberFormatter.GenerateReturnRequestCustomNumber(rr);
-                    await _customerService.UpdateCustomerAsync(await _workContext.GetCurrentCustomerAsync());
+                    await _customerService.UpdateCustomerAsync(customer);
                     await _returnRequestService.UpdateReturnRequestAsync(rr);
 
                     //notify store owner

@@ -227,7 +227,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
 
             //get order items
-            var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0);
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: vendor?.Id ?? 0);
 
             foreach (var orderItem in orderItems)
             {
@@ -958,14 +959,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
             var paymentStatusIds = (searchModel.PaymentStatusIds?.Contains(0) ?? true) ? null : searchModel.PaymentStatusIds.ToList();
             var shippingStatusIds = (searchModel.ShippingStatusIds?.Contains(0) ?? true) ? null : searchModel.ShippingStatusIds.ToList();
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.VendorId = currentVendor.Id;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId);
-            var filterByProductId = product != null && (await _workContext.GetCurrentVendorAsync() == null || product.VendorId == (await _workContext.GetCurrentVendorAsync()).Id)
+            var filterByProductId = product != null && (currentVendor == null || product.VendorId == currentVendor.Id)
                 ? searchModel.ProductId : 0;
 
             //get orders
@@ -1041,14 +1043,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
             var paymentStatusIds = (searchModel.PaymentStatusIds?.Contains(0) ?? true) ? null : searchModel.PaymentStatusIds.ToList();
             var shippingStatusIds = (searchModel.ShippingStatusIds?.Contains(0) ?? true) ? null : searchModel.ShippingStatusIds.ToList();
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.VendorId = currentVendor.Id;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId);
-            var filterByProductId = product != null && (await _workContext.GetCurrentVendorAsync() == null || product.VendorId == (await _workContext.GetCurrentVendorAsync()).Id)
+            var filterByProductId = product != null && (currentVendor == null || product.VendorId == currentVendor.Id)
                 ? searchModel.ProductId : 0;
 
             //prepare additional model data
@@ -1398,7 +1401,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get parameters to filter shipments
-            var vendorId = (await _workContext.GetCurrentVendorAsync())?.Id ?? 0;
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            var vendorId = vendor?.Id ?? 0;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
@@ -1533,7 +1537,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.OrderId = order.Id;
             model.CustomOrderNumber = order.CustomOrderNumber;
 
-            var orderItems = (await _orderService.GetOrderItemsAsync(order.Id, isShipEnabled: true, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0)).ToList();
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            var orderItems = (await _orderService.GetOrderItemsAsync(order.Id, isShipEnabled: true, vendorId: vendor?.Id ?? 0)).ToList();
 
             foreach (var orderItem in orderItems)
             {
@@ -1606,11 +1611,12 @@ namespace Nop.Web.Areas.Admin.Factories
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
+            var vendor = await _workContext.GetCurrentVendorAsync();
             //get shipments
             var shipments = (await _shipmentService.GetAllShipmentsAsync(
                 orderId: order.Id,
                 //a vendor should have access only to his products
-                vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0))
+                vendorId: vendor?.Id ?? 0))
                 .OrderBy(shipment => shipment.CreatedOnUtc)
                 .ToList();
 
@@ -1789,9 +1795,10 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            var vendor = await _workContext.GetCurrentVendorAsync();
             //get bestsellers
             var bestsellers = await _orderReportService.BestSellersReportAsync(showHidden: true,
-                vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0,
+                vendorId: vendor?.Id ?? 0,
                 orderBy: searchModel.OrderBy,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 

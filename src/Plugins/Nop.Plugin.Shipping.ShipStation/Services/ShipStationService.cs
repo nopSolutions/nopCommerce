@@ -563,7 +563,9 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             await writer.WriteStartDocumentAsync();
             await writer.WriteStartElementAsync("Orders");
 
-            foreach (var order in await _orderService.SearchOrdersAsync(createdFromUtc: startDate, createdToUtc: endDate, storeId: (await _storeContext.GetCurrentStoreAsync()).Id, pageIndex: pageIndex, pageSize: 200))
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            foreach (var order in await _orderService.SearchOrdersAsync(createdFromUtc: startDate, createdToUtc: endDate, storeId: store.Id, pageIndex: pageIndex, pageSize: 200))
             {
                 await WriteOrderToXmlAsync(writer, order);
             }

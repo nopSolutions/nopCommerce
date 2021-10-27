@@ -695,7 +695,8 @@ namespace Nop.Services.ExportImport
                     await manager.WriteToXlsxAsync(worksheet, row++);
 
                     //a vendor should have access only to his products
-                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0);
+                    var vendor = await _workContext.GetCurrentVendorAsync();
+                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: vendor?.Id ?? 0);
 
                     if (!orderItems.Any())
                         continue;
@@ -945,6 +946,7 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteStartDocumentAsync();
             await xmlWriter.WriteStartElementAsync("Products");
             await xmlWriter.WriteAttributeStringAsync("Version", NopVersion.CURRENT_VERSION);
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
 
             foreach (var product in products)
             {
@@ -959,12 +961,12 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteStringAsync("FullDescription", product.FullDescription);
                 await xmlWriter.WriteStringAsync("AdminComment", product.AdminComment, await IgnoreExportProductPropertyAsync(p => p.AdminComment));
                 //vendor can't change this field
-                await xmlWriter.WriteStringAsync("VendorId", product.VendorId, await IgnoreExportProductPropertyAsync(p => p.Vendor) || await _workContext.GetCurrentVendorAsync() != null);
+                await xmlWriter.WriteStringAsync("VendorId", product.VendorId, await IgnoreExportProductPropertyAsync(p => p.Vendor) || currentVendor != null);
                 await xmlWriter.WriteStringAsync("ProductTemplateId", product.ProductTemplateId, await IgnoreExportProductPropertyAsync(p => p.ProductTemplate));
                 //vendor can't change this field
-                await xmlWriter.WriteStringAsync("ShowOnHomepage", product.ShowOnHomepage, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || await _workContext.GetCurrentVendorAsync() != null);
+                await xmlWriter.WriteStringAsync("ShowOnHomepage", product.ShowOnHomepage, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null);
                 //vendor can't change this field
-                await xmlWriter.WriteStringAsync("DisplayOrder", product.DisplayOrder, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || await _workContext.GetCurrentVendorAsync() != null);
+                await xmlWriter.WriteStringAsync("DisplayOrder", product.DisplayOrder, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null);
                 await xmlWriter.WriteStringAsync("MetaKeywords", product.MetaKeywords, await IgnoreExportProductPropertyAsync(p => p.Seo));
                 await xmlWriter.WriteStringAsync("MetaDescription", product.MetaDescription, await IgnoreExportProductPropertyAsync(p => p.Seo));
                 await xmlWriter.WriteStringAsync("MetaTitle", product.MetaTitle, await IgnoreExportProductPropertyAsync(p => p.Seo));
@@ -1263,6 +1265,7 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportProductsToXlsxAsync(IEnumerable<Product> products)
         {
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
             var properties = new[]
             {
                 new PropertyByName<Product>("ProductId", p => p.Id),
@@ -1276,7 +1279,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("ShortDescription", p => p.ShortDescription),
                 new PropertyByName<Product>("FullDescription", p => p.FullDescription),
                 //vendor can't change this field
-                new PropertyByName<Product>("Vendor", p => p.VendorId, await IgnoreExportProductPropertyAsync(p => p.Vendor) || await _workContext.GetCurrentVendorAsync() != null)
+                new PropertyByName<Product>("Vendor", p => p.VendorId, await IgnoreExportProductPropertyAsync(p => p.Vendor) || currentVendor != null)
                 {
                     DropDownElements = (await _vendorService.GetAllVendorsAsync(showHidden: true)).Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor)?.Name ?? string.Empty),
                     AllowBlank = true
@@ -1286,9 +1289,9 @@ namespace Nop.Services.ExportImport
                     DropDownElements = (await _productTemplateService.GetAllProductTemplatesAsync()).Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate)?.Name ?? string.Empty)
                 },
                 //vendor can't change this field
-                new PropertyByName<Product>("ShowOnHomepage", p => p.ShowOnHomepage, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || await _workContext.GetCurrentVendorAsync() != null),
+                new PropertyByName<Product>("ShowOnHomepage", p => p.ShowOnHomepage, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null),
                 //vendor can't change this field
-                new PropertyByName<Product>("DisplayOrder", p => p.DisplayOrder, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || await _workContext.GetCurrentVendorAsync() != null),
+                new PropertyByName<Product>("DisplayOrder", p => p.DisplayOrder, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null),
                 new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords, await IgnoreExportProductPropertyAsync(p => p.Seo)),
                 new PropertyByName<Product>("MetaDescription", p => p.MetaDescription, await IgnoreExportProductPropertyAsync(p => p.Seo)),
                 new PropertyByName<Product>("MetaTitle", p => p.MetaTitle, await IgnoreExportProductPropertyAsync(p => p.Seo)),
@@ -1452,7 +1455,8 @@ namespace Nop.Services.ExportImport
         public virtual async Task<string> ExportOrdersToXmlAsync(IList<Order> orders)
         {
             //a vendor should have access only to part of order information
-            var ignore = await _workContext.GetCurrentVendorAsync() != null;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var ignore = currentVendor != null;
 
             var settings = new XmlWriterSettings
             {
@@ -1523,7 +1527,7 @@ namespace Nop.Services.ExportImport
                 if (_orderSettings.ExportWithProducts)
                 {
                     //a vendor should have access only to his products
-                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0);
+                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: currentVendor?.Id ?? 0);
 
                     if (orderItems.Any())
                     {
@@ -1986,11 +1990,12 @@ namespace Nop.Services.ExportImport
             }, _catalogSettings);
 
             //customer orders
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             var orderManager = new PropertyManager<Order>(new[]
             {
                 new PropertyByName<Order>("Order Number", p => p.CustomOrderNumber),
                 new PropertyByName<Order>("Order status", async p => await _localizationService.GetLocalizedEnumAsync(p.OrderStatus)),
-                new PropertyByName<Order>("Order total", async p => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency(p.OrderTotal, p.CurrencyRate), true, p.CustomerCurrencyCode, false, (await _workContext.GetWorkingLanguageAsync()).Id)),
+                new PropertyByName<Order>("Order total", async p => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency(p.OrderTotal, p.CurrencyRate), true, p.CustomerCurrencyCode, false, currentLanguage.Id)),
                 new PropertyByName<Order>("Shipping method", p => p.ShippingMethod),
                 new PropertyByName<Order>("Created on", async p => (await _dateTimeHelper.ConvertToUserTimeAsync(p.CreatedOnUtc, DateTimeKind.Utc)).ToString("D")),
                 new PropertyByName<Order>("Billing first name", async p => (await orderBillingAddress(p))?.FirstName ?? string.Empty),
@@ -2026,7 +2031,7 @@ namespace Nop.Services.ExportImport
             { 
                 new PropertyByName<OrderItem>("SKU", async oi => (await _productService.GetProductByIdAsync(oi.ProductId)).Sku),
                 new PropertyByName<OrderItem>("Name", async oi => await _localizationService.GetLocalizedAsync(await _productService.GetProductByIdAsync(oi.ProductId), p => p.Name)),
-                new PropertyByName<OrderItem>("Price", async oi => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency((await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CurrencyRate), true, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerCurrencyCode, false, (await _workContext.GetWorkingLanguageAsync()).Id)),
+                new PropertyByName<OrderItem>("Price", async oi => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency((await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CurrencyRate), true, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerCurrencyCode, false, currentLanguage.Id)),
                 new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
                 new PropertyByName<OrderItem>("Total", async oi => await _priceFormatter.FormatPriceAsync((await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.PriceInclTax : oi.PriceExclTax))
             }, _catalogSettings);

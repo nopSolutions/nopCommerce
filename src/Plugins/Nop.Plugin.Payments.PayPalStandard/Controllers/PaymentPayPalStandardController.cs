@@ -315,8 +315,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         public async Task<IActionResult> CancelOrder()
         {
-            var order = (await _orderService.SearchOrdersAsync((await _storeContext.GetCurrentStoreAsync()).Id,
-                customerId: (await _workContext.GetCurrentCustomerAsync()).Id, pageSize: 1)).FirstOrDefault();
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var order = (await _orderService.SearchOrdersAsync(store.Id,
+                customerId: customer.Id, pageSize: 1)).FirstOrDefault();
 
             if (order != null)
                 return RedirectToRoute("OrderDetails", new { orderId = order.Id });

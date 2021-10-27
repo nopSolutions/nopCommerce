@@ -79,8 +79,9 @@ namespace Nop.Services.Common
         {
             //prepare URL to request
             var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
+            var store = await _storeContext.GetCurrentStoreAsync();
             var url = string.Format(NopCommonDefaults.NopCopyrightWarningPath,
-                (await _storeContext.GetCurrentStoreAsync()).Url,
+                store.Url,
                 _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
                 language).ToLowerInvariant();
 

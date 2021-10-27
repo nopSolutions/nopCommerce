@@ -148,7 +148,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                     return response;
                 }
 
-                var storeId = getShippingOptionRequest.StoreId != 0 ? getShippingOptionRequest.StoreId : (await _storeContext.GetCurrentStoreAsync()).Id;
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var storeId = getShippingOptionRequest.StoreId != 0 ? getShippingOptionRequest.StoreId : store.Id;
                 var countryId = getShippingOptionRequest.ShippingAddress.CountryId ?? 0;
                 var stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId ?? 0;
                 var warehouseId = getShippingOptionRequest.WarehouseFrom?.Id ?? 0;
