@@ -99,8 +99,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 
                 //#5042
                 ["Admin.Help.Documentation"] = "Documentation",
-                ["Admin.Help.SolutionPartners"] = "Solution partners"
+                ["Admin.Help.SolutionPartners"] = "Solution partners",
 
+                //#5551
+                ["Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering"] = "Enable specification attribute filtering",
+                ["Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint"] = "Check to enable the specification attribute filtering on catalog pages."
 
             }, languageId).Wait();
 
