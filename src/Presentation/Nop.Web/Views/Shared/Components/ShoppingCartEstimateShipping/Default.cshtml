@@ -54,7 +54,7 @@
 
                     $.ajax({
                         cache: false,
-                        url: '@Html.Raw(Url.Action("selectshippingoption", "shoppingcart"))' + (params ? '?$' + params : ''),
+                        url: '@Html.Raw(Url.Action("selectshippingoption", "shoppingcart"))' + (params ? '?' + params : ''),
                         data: $('#shopping-cart-form').serialize(),
                         type: 'POST',
                         beforeSend: function () {
