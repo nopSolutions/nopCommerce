@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -42,38 +42,38 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly GdprSettings _gdprSettings;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressService _addressService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly ICustomerModelFactory _customerModelFactory;
-        private readonly ICustomerRegistrationService _customerRegistrationService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IExportManager _exportManager;
-        private readonly IForumService _forumService;
-        private readonly IGdprService _gdprService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly ITaxService _taxService;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly TaxSettings _taxSettings;
+        protected CustomerSettings CustomerSettings { get; }
+        protected DateTimeSettings DateTimeSettings { get; }
+        protected EmailAccountSettings EmailAccountSettings { get; }
+        protected ForumSettings ForumSettings { get; }
+        protected GdprSettings GdprSettings { get; }
+        protected IAddressAttributeParser AddressAttributeParser { get; }
+        protected IAddressService AddressService { get; }
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected ICustomerAttributeParser CustomerAttributeParser { get; }
+        protected ICustomerAttributeService CustomerAttributeService { get; }
+        protected ICustomerModelFactory CustomerModelFactory { get; }
+        protected ICustomerRegistrationService CustomerRegistrationService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IEmailAccountService EmailAccountService { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected IExportManager ExportManager { get; }
+        protected IForumService ForumService { get; }
+        protected IGdprService GdprService { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected INewsLetterSubscriptionService NewsLetterSubscriptionService { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IQueuedEmailService QueuedEmailService { get; }
+        protected IRewardPointService RewardPointService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IStoreService StoreService { get; }
+        protected ITaxService TaxService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected IWorkflowMessageService WorkflowMessageService { get; }
+        protected TaxSettings TaxSettings { get; }
 
         #endregion
 
@@ -112,38 +112,38 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService,
             TaxSettings taxSettings)
         {
-            _customerSettings = customerSettings;
-            _dateTimeSettings = dateTimeSettings;
-            _emailAccountSettings = emailAccountSettings;
-            _forumSettings = forumSettings;
-            _gdprSettings = gdprSettings;
-            _addressAttributeParser = addressAttributeParser;
-            _addressService = addressService;
-            _customerActivityService = customerActivityService;
-            _customerAttributeParser = customerAttributeParser;
-            _customerAttributeService = customerAttributeService;
-            _customerModelFactory = customerModelFactory;
-            _customerRegistrationService = customerRegistrationService;
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _emailAccountService = emailAccountService;
-            _eventPublisher = eventPublisher;
-            _exportManager = exportManager;
-            _forumService = forumService;
-            _gdprService = gdprService;
-            _genericAttributeService = genericAttributeService;
-            _localizationService = localizationService;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
-            _queuedEmailService = queuedEmailService;
-            _rewardPointService = rewardPointService;
-            _storeContext = storeContext;
-            _storeService = storeService;
-            _taxService = taxService;
-            _workContext = workContext;
-            _workflowMessageService = workflowMessageService;
-            _taxSettings = taxSettings;
+            CustomerSettings = customerSettings;
+            DateTimeSettings = dateTimeSettings;
+            EmailAccountSettings = emailAccountSettings;
+            ForumSettings = forumSettings;
+            GdprSettings = gdprSettings;
+            AddressAttributeParser = addressAttributeParser;
+            AddressService = addressService;
+            CustomerActivityService = customerActivityService;
+            CustomerAttributeParser = customerAttributeParser;
+            CustomerAttributeService = customerAttributeService;
+            CustomerModelFactory = customerModelFactory;
+            CustomerRegistrationService = customerRegistrationService;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            EmailAccountService = emailAccountService;
+            EventPublisher = eventPublisher;
+            ExportManager = exportManager;
+            ForumService = forumService;
+            GdprService = gdprService;
+            GenericAttributeService = genericAttributeService;
+            LocalizationService = localizationService;
+            NewsLetterSubscriptionService = newsLetterSubscriptionService;
+            NotificationService = notificationService;
+            PermissionService = permissionService;
+            QueuedEmailService = queuedEmailService;
+            RewardPointService = rewardPointService;
+            StoreContext = storeContext;
+            StoreService = storeService;
+            TaxService = taxService;
+            WorkContext = workContext;
+            WorkflowMessageService = workflowMessageService;
+            TaxSettings = taxSettings;
         }
 
         #endregion
@@ -163,8 +163,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var rolesToDelete = existingCustomerRoles.Except(customerRoles);
             if (rolesToAdd.Any(role => role.SystemName != NopCustomerDefaults.RegisteredRoleName) || rolesToDelete.Any())
             {
-                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
-                    return await _localizationService.GetResourceAsync("Admin.Customers.Customers.CustomerRolesManagingError");
+                if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
+                    return await LocalizationService.GetResourceAsync("Admin.Customers.Customers.CustomerRolesManagingError");
             }
 
             //ensure a customer is not added to both 'Guests' and 'Registered' customer roles
@@ -172,9 +172,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             var isInGuestsRole = customerRoles.FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.GuestsRoleName) != null;
             var isInRegisteredRole = customerRoles.FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.RegisteredRoleName) != null;
             if (isInGuestsRole && isInRegisteredRole)
-                return await _localizationService.GetResourceAsync("Admin.Customers.Customers.GuestsAndRegisteredRolesError");
+                return await LocalizationService.GetResourceAsync("Admin.Customers.Customers.GuestsAndRegisteredRolesError");
             if (!isInGuestsRole && !isInRegisteredRole)
-                return await _localizationService.GetResourceAsync("Admin.Customers.Customers.AddCustomerToGuestsOrRegisteredRoleError");
+                return await LocalizationService.GetResourceAsync("Admin.Customers.Customers.AddCustomerToGuestsOrRegisteredRoleError");
 
             //no errors
             return string.Empty;
@@ -186,7 +186,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new ArgumentNullException(nameof(form));
 
             var attributesXml = string.Empty;
-            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributesAsync();
+            var customerAttributes = await CustomerAttributeService.GetAllCustomerAttributesAsync();
             foreach (var attribute in customerAttributes)
             {
                 var controlId = $"{NopCustomerServicesDefaults.CustomerAttributePrefix}{attribute.Id}";
@@ -201,7 +201,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             var selectedAttributeId = int.Parse(ctrlAttributes);
                             if (selectedAttributeId > 0)
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                                attributesXml = CustomerAttributeParser.AddCustomerAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                         }
 
@@ -215,7 +215,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             {
                                 var selectedAttributeId = int.Parse(item);
                                 if (selectedAttributeId > 0)
-                                    attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                                    attributesXml = CustomerAttributeParser.AddCustomerAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -223,13 +223,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
                         //load read-only (already server-side selected) values
-                        var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
+                        var attributeValues = await CustomerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
                         foreach (var selectedAttributeId in attributeValues
                             .Where(v => v.IsPreSelected)
                             .Select(v => v.Id)
                             .ToList())
                         {
-                            attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                            attributesXml = CustomerAttributeParser.AddCustomerAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
                         }
 
@@ -240,7 +240,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                         {
                             var enteredText = ctrlAttributes.ToString().Trim();
-                            attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                            attributesXml = CustomerAttributeParser.AddCustomerAttribute(attributesXml,
                                 attribute, enteredText);
                         }
 
@@ -260,7 +260,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private async Task<bool> SecondAdminAccountExistsAsync(Customer customer)
         {
-            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: new[] { (await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.AdministratorsRoleName)).Id });
+            var customers = await CustomerService.GetAllCustomersAsync(customerRoleIds: new[] { (await CustomerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.AdministratorsRoleName)).Id });
 
             return customers.Any(c => c.Active && c.Id != customer.Id);
         }
@@ -276,11 +276,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _customerModelFactory.PrepareCustomerSearchModelAsync(new CustomerSearchModel());
+            var model = await CustomerModelFactory.PrepareCustomerSearchModelAsync(new CustomerSearchModel());
 
             return View(model);
         }
@@ -288,22 +288,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CustomerList(CustomerSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _customerModelFactory.PrepareCustomerListModelAsync(searchModel);
+            var model = await CustomerModelFactory.PrepareCustomerListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _customerModelFactory.PrepareCustomerModelAsync(new CustomerModel(), null);
+            var model = await CustomerModelFactory.PrepareCustomerModelAsync(new CustomerModel(), null);
 
             return View(model);
         }
@@ -312,20 +312,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public virtual async Task<IActionResult> Create(CustomerModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            if (!string.IsNullOrWhiteSpace(model.Email) && await _customerService.GetCustomerByEmailAsync(model.Email) != null)
+            if (!string.IsNullOrWhiteSpace(model.Email) && await CustomerService.GetCustomerByEmailAsync(model.Email) != null)
                 ModelState.AddModelError(string.Empty, "Email is already registered");
 
-            if (!string.IsNullOrWhiteSpace(model.Username) && _customerSettings.UsernamesEnabled &&
-                await _customerService.GetCustomerByUsernameAsync(model.Username) != null)
+            if (!string.IsNullOrWhiteSpace(model.Username) && CustomerSettings.UsernamesEnabled &&
+                await CustomerService.GetCustomerByUsernameAsync(model.Username) != null)
             {
                 ModelState.AddModelError(string.Empty, "Username is already registered");
             }
 
             //validate customer roles
-            var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
+            var allCustomerRoles = await CustomerService.GetAllCustomerRolesAsync(true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
@@ -334,23 +334,23 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!string.IsNullOrEmpty(customerRolesError))
             {
                 ModelState.AddModelError(string.Empty, customerRolesError);
-                _notificationService.ErrorNotification(customerRolesError);
+                NotificationService.ErrorNotification(customerRolesError);
             }
 
             // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
             if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null &&
                 !CommonHelper.IsValidEmail(model.Email))
             {
-                ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
+                ModelState.AddModelError(string.Empty, await LocalizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
 
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
+                NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
             }
 
             //custom customer attributes
             var customerAttributesXml = await ParseCustomCustomerAttributesAsync(model.Form);
             if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
             {
-                var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
+                var customerAttributeWarnings = await CustomerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
                 foreach (var error in customerAttributeWarnings)
                 {
                     ModelState.AddModelError(string.Empty, error);
@@ -361,57 +361,57 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 //fill entity from model
                 var customer = model.ToEntity<Customer>();
-                var currentStore = await _storeContext.GetCurrentStoreAsync();
+                var currentStore = await StoreContext.GetCurrentStoreAsync();
 
                 customer.CustomerGuid = Guid.NewGuid();
                 customer.CreatedOnUtc = DateTime.UtcNow;
                 customer.LastActivityDateUtc = DateTime.UtcNow;
                 customer.RegisteredInStoreId = currentStore.Id;
 
-                await _customerService.InsertCustomerAsync(customer);
+                await CustomerService.InsertCustomerAsync(customer);
 
                 //form fields
-                if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.TimeZoneIdAttribute, model.TimeZoneId);
-                if (_customerSettings.GenderEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.GenderAttribute, model.Gender);
-                if (_customerSettings.FirstNameEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
-                if (_customerSettings.LastNameEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
-                if (_customerSettings.DateOfBirthEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DateOfBirthAttribute, model.DateOfBirth);
-                if (_customerSettings.CompanyEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CompanyAttribute, model.Company);
-                if (_customerSettings.StreetAddressEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StreetAddressAttribute, model.StreetAddress);
-                if (_customerSettings.StreetAddress2Enabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StreetAddress2Attribute, model.StreetAddress2);
-                if (_customerSettings.ZipPostalCodeEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.ZipPostalCodeAttribute, model.ZipPostalCode);
-                if (_customerSettings.CityEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CityAttribute, model.City);
-                if (_customerSettings.CountyEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CountyAttribute, model.County);
-                if (_customerSettings.CountryEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CountryIdAttribute, model.CountryId);
-                if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StateProvinceIdAttribute, model.StateProvinceId);
-                if (_customerSettings.PhoneEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PhoneAttribute, model.Phone);
-                if (_customerSettings.FaxEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.FaxAttribute, model.Fax);
+                if (DateTimeSettings.AllowCustomersToSetTimeZone)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.TimeZoneIdAttribute, model.TimeZoneId);
+                if (CustomerSettings.GenderEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.GenderAttribute, model.Gender);
+                if (CustomerSettings.FirstNameEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
+                if (CustomerSettings.LastNameEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
+                if (CustomerSettings.DateOfBirthEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DateOfBirthAttribute, model.DateOfBirth);
+                if (CustomerSettings.CompanyEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CompanyAttribute, model.Company);
+                if (CustomerSettings.StreetAddressEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StreetAddressAttribute, model.StreetAddress);
+                if (CustomerSettings.StreetAddress2Enabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StreetAddress2Attribute, model.StreetAddress2);
+                if (CustomerSettings.ZipPostalCodeEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.ZipPostalCodeAttribute, model.ZipPostalCode);
+                if (CustomerSettings.CityEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CityAttribute, model.City);
+                if (CustomerSettings.CountyEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CountyAttribute, model.County);
+                if (CustomerSettings.CountryEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CountryIdAttribute, model.CountryId);
+                if (CustomerSettings.CountryEnabled && CustomerSettings.StateProvinceEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StateProvinceIdAttribute, model.StateProvinceId);
+                if (CustomerSettings.PhoneEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PhoneAttribute, model.Phone);
+                if (CustomerSettings.FaxEnabled)
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.FaxAttribute, model.Fax);
 
                 //custom customer attributes
-                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
+                await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
 
                 //newsletter subscriptions
                 if (!string.IsNullOrEmpty(customer.Email))
                 {
-                    var allStores = await _storeService.GetAllStoresAsync();
+                    var allStores = await StoreService.GetAllStoresAsync();
                     foreach (var store in allStores)
                     {
-                        var newsletterSubscription = await _newsLetterSubscriptionService
+                        var newsletterSubscription = await NewsLetterSubscriptionService
                             .GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
                         if (model.SelectedNewsletterSubscriptionStoreIds != null &&
                             model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))
@@ -419,7 +419,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             //subscribed
                             if (newsletterSubscription == null)
                             {
-                                await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
+                                await NewsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = customer.Email,
@@ -434,7 +434,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             //not subscribed
                             if (newsletterSubscription != null)
                             {
-                                await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletterSubscription);
+                                await NewsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletterSubscription);
                             }
                         }
                     }
@@ -443,12 +443,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //password
                 if (!string.IsNullOrWhiteSpace(model.Password))
                 {
-                    var changePassRequest = new ChangePasswordRequest(model.Email, false, _customerSettings.DefaultPasswordFormat, model.Password);
-                    var changePassResult = await _customerRegistrationService.ChangePasswordAsync(changePassRequest);
+                    var changePassRequest = new ChangePasswordRequest(model.Email, false, CustomerSettings.DefaultPasswordFormat, model.Password);
+                    var changePassResult = await CustomerRegistrationService.ChangePasswordAsync(changePassRequest);
                     if (!changePassResult.Success)
                     {
                         foreach (var changePassError in changePassResult.Errors)
-                            _notificationService.ErrorNotification(changePassError);
+                            NotificationService.ErrorNotification(changePassError);
                     }
                 }
 
@@ -456,38 +456,38 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var customerRole in newCustomerRoles)
                 {
                     //ensure that the current customer cannot add to "Administrators" system role if he's not an admin himself
-                    if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName && !await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
+                    if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName && !await CustomerService.IsAdminAsync(await WorkContext.GetCurrentCustomerAsync()))
                         continue;
 
-                    await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
+                    await CustomerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
                 }
 
-                await _customerService.UpdateCustomerAsync(customer);
+                await CustomerService.UpdateCustomerAsync(customer);
 
                 //ensure that a customer with a vendor associated is not in "Administrators" role
                 //otherwise, he won't have access to other functionality in admin area
-                if (await _customerService.IsAdminAsync(customer) && customer.VendorId > 0)
+                if (await CustomerService.IsAdminAsync(customer) && customer.VendorId > 0)
                 {
                     customer.VendorId = 0;
-                    await _customerService.UpdateCustomerAsync(customer);
+                    await CustomerService.UpdateCustomerAsync(customer);
 
-                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.AdminCouldNotbeVendor"));
+                    NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                 }
 
                 //ensure that a customer in the Vendors role has a vendor account associated.
                 //otherwise, he will have access to ALL products
-                if (await _customerService.IsVendorAsync(customer) && customer.VendorId == 0)
+                if (await CustomerService.IsVendorAsync(customer) && customer.VendorId == 0)
                 {
-                    var vendorRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.VendorsRoleName);
-                    await _customerService.RemoveCustomerRoleMappingAsync(customer, vendorRole);
+                    var vendorRole = await CustomerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.VendorsRoleName);
+                    await CustomerService.RemoveCustomerRoleMappingAsync(customer, vendorRole);
 
-                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
+                    NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                 }
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("AddNewCustomer",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewCustomer"), customer.Id), customer);
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.Added"));
+                await CustomerActivityService.InsertActivityAsync("AddNewCustomer",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.AddNewCustomer"), customer.Id), customer);
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -496,7 +496,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _customerModelFactory.PrepareCustomerModelAsync(model, null, true);
+            model = await CustomerModelFactory.PrepareCustomerModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -504,16 +504,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(id);
+            var customer = await CustomerService.GetCustomerByIdAsync(id);
             if (customer == null || customer.Deleted)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _customerModelFactory.PrepareCustomerModelAsync(null, customer);
+            var model = await CustomerModelFactory.PrepareCustomerModelAsync(null, customer);
 
             return View(model);
         }
@@ -522,42 +522,42 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public virtual async Task<IActionResult> Edit(CustomerModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(model.Id);
+            var customer = await CustomerService.GetCustomerByIdAsync(model.Id);
             if (customer == null || customer.Deleted)
                 return RedirectToAction("List");
 
             //validate customer roles
-            var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
+            var allCustomerRoles = await CustomerService.GetAllCustomerRolesAsync(true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
 
-            var customerRolesError = await ValidateCustomerRolesAsync(newCustomerRoles, await _customerService.GetCustomerRolesAsync(customer));
+            var customerRolesError = await ValidateCustomerRolesAsync(newCustomerRoles, await CustomerService.GetCustomerRolesAsync(customer));
 
             if (!string.IsNullOrEmpty(customerRolesError))
             {
                 ModelState.AddModelError(string.Empty, customerRolesError);
-                _notificationService.ErrorNotification(customerRolesError);
+                NotificationService.ErrorNotification(customerRolesError);
             }
 
             // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
             if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null &&
                 !CommonHelper.IsValidEmail(model.Email))
             {
-                ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
+                ModelState.AddModelError(string.Empty, await LocalizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
+                NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
             }
 
             //custom customer attributes
             var customerAttributesXml = await ParseCustomCustomerAttributesAsync(model.Form);
             if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
             {
-                var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
+                var customerAttributeWarnings = await CustomerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
                 foreach (var error in customerAttributeWarnings)
                 {
                     ModelState.AddModelError(string.Empty, error);
@@ -572,45 +572,45 @@ namespace Nop.Web.Areas.Admin.Controllers
                     customer.IsTaxExempt = model.IsTaxExempt;
 
                     //prevent deactivation of the last active administrator
-                    if (!await _customerService.IsAdminAsync(customer) || model.Active || await SecondAdminAccountExistsAsync(customer))
+                    if (!await CustomerService.IsAdminAsync(customer) || model.Active || await SecondAdminAccountExistsAsync(customer))
                         customer.Active = model.Active;
                     else
-                        _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.AdminAccountShouldExists.Deactivate"));
+                        NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.AdminAccountShouldExists.Deactivate"));
 
                     //email
                     if (!string.IsNullOrWhiteSpace(model.Email))
-                        await _customerRegistrationService.SetEmailAsync(customer, model.Email, false);
+                        await CustomerRegistrationService.SetEmailAsync(customer, model.Email, false);
                     else
                         customer.Email = model.Email;
 
                     //username
-                    if (_customerSettings.UsernamesEnabled)
+                    if (CustomerSettings.UsernamesEnabled)
                     {
                         if (!string.IsNullOrWhiteSpace(model.Username))
-                            await _customerRegistrationService.SetUsernameAsync(customer, model.Username);
+                            await CustomerRegistrationService.SetUsernameAsync(customer, model.Username);
                         else
                             customer.Username = model.Username;
                     }
 
                     //VAT number
-                    if (_taxSettings.EuVatEnabled)
+                    if (TaxSettings.EuVatEnabled)
                     {
-                        var prevVatNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
+                        var prevVatNumber = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
 
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.VatNumberAttribute, model.VatNumber);
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.VatNumberAttribute, model.VatNumber);
                         //set VAT number status
                         if (!string.IsNullOrEmpty(model.VatNumber))
                         {
                             if (!model.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
                             {
-                                await _genericAttributeService.SaveAttributeAsync(customer,
+                                await GenericAttributeService.SaveAttributeAsync(customer,
                                     NopCustomerDefaults.VatNumberStatusIdAttribute,
-                                    (int)(await _taxService.GetVatNumberStatusAsync(model.VatNumber)).vatNumberStatus);
+                                    (int)(await TaxService.GetVatNumberStatusAsync(model.VatNumber)).vatNumberStatus);
                             }
                         }
                         else
                         {
-                            await _genericAttributeService.SaveAttributeAsync(customer,
+                            await GenericAttributeService.SaveAttributeAsync(customer,
                                 NopCustomerDefaults.VatNumberStatusIdAttribute,
                                 (int)VatNumberStatus.Empty);
                         }
@@ -620,47 +620,47 @@ namespace Nop.Web.Areas.Admin.Controllers
                     customer.VendorId = model.VendorId;
 
                     //form fields
-                    if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.TimeZoneIdAttribute, model.TimeZoneId);
-                    if (_customerSettings.GenderEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.GenderAttribute, model.Gender);
-                    if (_customerSettings.FirstNameEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
-                    if (_customerSettings.LastNameEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
-                    if (_customerSettings.DateOfBirthEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DateOfBirthAttribute, model.DateOfBirth);
-                    if (_customerSettings.CompanyEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CompanyAttribute, model.Company);
-                    if (_customerSettings.StreetAddressEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StreetAddressAttribute, model.StreetAddress);
-                    if (_customerSettings.StreetAddress2Enabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StreetAddress2Attribute, model.StreetAddress2);
-                    if (_customerSettings.ZipPostalCodeEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.ZipPostalCodeAttribute, model.ZipPostalCode);
-                    if (_customerSettings.CityEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CityAttribute, model.City);
-                    if (_customerSettings.CountyEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CountyAttribute, model.County);
-                    if (_customerSettings.CountryEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CountryIdAttribute, model.CountryId);
-                    if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StateProvinceIdAttribute, model.StateProvinceId);
-                    if (_customerSettings.PhoneEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PhoneAttribute, model.Phone);
-                    if (_customerSettings.FaxEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.FaxAttribute, model.Fax);
+                    if (DateTimeSettings.AllowCustomersToSetTimeZone)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.TimeZoneIdAttribute, model.TimeZoneId);
+                    if (CustomerSettings.GenderEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.GenderAttribute, model.Gender);
+                    if (CustomerSettings.FirstNameEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
+                    if (CustomerSettings.LastNameEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
+                    if (CustomerSettings.DateOfBirthEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DateOfBirthAttribute, model.DateOfBirth);
+                    if (CustomerSettings.CompanyEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CompanyAttribute, model.Company);
+                    if (CustomerSettings.StreetAddressEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StreetAddressAttribute, model.StreetAddress);
+                    if (CustomerSettings.StreetAddress2Enabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StreetAddress2Attribute, model.StreetAddress2);
+                    if (CustomerSettings.ZipPostalCodeEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.ZipPostalCodeAttribute, model.ZipPostalCode);
+                    if (CustomerSettings.CityEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CityAttribute, model.City);
+                    if (CustomerSettings.CountyEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CountyAttribute, model.County);
+                    if (CustomerSettings.CountryEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CountryIdAttribute, model.CountryId);
+                    if (CustomerSettings.CountryEnabled && CustomerSettings.StateProvinceEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StateProvinceIdAttribute, model.StateProvinceId);
+                    if (CustomerSettings.PhoneEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PhoneAttribute, model.Phone);
+                    if (CustomerSettings.FaxEnabled)
+                        await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.FaxAttribute, model.Fax);
 
                     //custom customer attributes
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
+                    await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
 
                     //newsletter subscriptions
                     if (!string.IsNullOrEmpty(customer.Email))
                     {
-                        var allStores = await _storeService.GetAllStoresAsync();
+                        var allStores = await StoreService.GetAllStoresAsync();
                         foreach (var store in allStores)
                         {
-                            var newsletterSubscription = await _newsLetterSubscriptionService
+                            var newsletterSubscription = await NewsLetterSubscriptionService
                                 .GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
                             if (model.SelectedNewsletterSubscriptionStoreIds != null &&
                                 model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))
@@ -668,7 +668,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 //subscribed
                                 if (newsletterSubscription == null)
                                 {
-                                    await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
+                                    await NewsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
                                     {
                                         NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                         Email = customer.Email,
@@ -683,13 +683,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 //not subscribed
                                 if (newsletterSubscription != null)
                                 {
-                                    await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletterSubscription);
+                                    await NewsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletterSubscription);
                                 }
                             }
                         }
                     }
 
-                    var currentCustomerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer, true);
+                    var currentCustomerRoleIds = await CustomerService.GetCustomerRoleIdsAsync(customer, true);
 
                     //customer roles
                     foreach (var customerRole in allCustomerRoles)
@@ -697,56 +697,56 @@ namespace Nop.Web.Areas.Admin.Controllers
                         //ensure that the current customer cannot add/remove to/from "Administrators" system role
                         //if he's not an admin himself
                         if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName &&
-                            !await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
+                            !await CustomerService.IsAdminAsync(await WorkContext.GetCurrentCustomerAsync()))
                             continue;
 
                         if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                         {
                             //new role
                             if (currentCustomerRoleIds.All(roleId => roleId != customerRole.Id))
-                                await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
+                                await CustomerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
                         }
                         else
                         {
                             //prevent attempts to delete the administrator role from the user, if the user is the last active administrator
                             if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName && !await SecondAdminAccountExistsAsync(customer))
                             {
-                                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.AdminAccountShouldExists.DeleteRole"));
+                                NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.AdminAccountShouldExists.DeleteRole"));
                                 continue;
                             }
 
                             //remove role
                             if (currentCustomerRoleIds.Any(roleId => roleId == customerRole.Id))
-                                await _customerService.RemoveCustomerRoleMappingAsync(customer, customerRole);
+                                await CustomerService.RemoveCustomerRoleMappingAsync(customer, customerRole);
                         }
                     }
 
-                    await _customerService.UpdateCustomerAsync(customer);
+                    await CustomerService.UpdateCustomerAsync(customer);
 
                     //ensure that a customer with a vendor associated is not in "Administrators" role
                     //otherwise, he won't have access to the other functionality in admin area
-                    if (await _customerService.IsAdminAsync(customer) && customer.VendorId > 0)
+                    if (await CustomerService.IsAdminAsync(customer) && customer.VendorId > 0)
                     {
                         customer.VendorId = 0;
-                        await _customerService.UpdateCustomerAsync(customer);
-                        _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.AdminCouldNotbeVendor"));
+                        await CustomerService.UpdateCustomerAsync(customer);
+                        NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                     }
 
                     //ensure that a customer in the Vendors role has a vendor account associated.
                     //otherwise, he will have access to ALL products
-                    if (await _customerService.IsVendorAsync(customer) && customer.VendorId == 0)
+                    if (await CustomerService.IsVendorAsync(customer) && customer.VendorId == 0)
                     {
-                        var vendorRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.VendorsRoleName);
-                        await _customerService.RemoveCustomerRoleMappingAsync(customer, vendorRole);
+                        var vendorRole = await CustomerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.VendorsRoleName);
+                        await CustomerService.RemoveCustomerRoleMappingAsync(customer, vendorRole);
 
-                        _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
+                        NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                     }
 
                     //activity log
-                    await _customerActivityService.InsertActivityAsync("EditCustomer",
-                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditCustomer"), customer.Id), customer);
+                    await CustomerActivityService.InsertActivityAsync("EditCustomer",
+                        string.Format(await LocalizationService.GetResourceAsync("ActivityLog.EditCustomer"), customer.Id), customer);
 
-                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.Updated"));
+                    NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.Updated"));
 
                     if (!continueEditing)
                         return RedirectToAction("List");
@@ -755,12 +755,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
                 catch (Exception exc)
                 {
-                    _notificationService.ErrorNotification(exc.Message);
+                    NotificationService.ErrorNotification(exc.Message);
                 }
             }
 
             //prepare model
-            model = await _customerModelFactory.PrepareCustomerModelAsync(model, customer, true);
+            model = await CustomerModelFactory.PrepareCustomerModelAsync(model, customer, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -770,18 +770,18 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("changepassword")]
         public virtual async Task<IActionResult> ChangePassword(CustomerModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(model.Id);
+            var customer = await CustomerService.GetCustomerByIdAsync(model.Id);
             if (customer == null)
                 return RedirectToAction("List");
 
             //ensure that the current customer cannot change passwords of "Administrators" if he's not an admin himself
-            if (await _customerService.IsAdminAsync(customer) && !await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
+            if (await CustomerService.IsAdminAsync(customer) && !await CustomerService.IsAdminAsync(await WorkContext.GetCurrentCustomerAsync()))
             {
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.OnlyAdminCanChangePassword"));
+                NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.OnlyAdminCanChangePassword"));
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
 
@@ -789,13 +789,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("Edit", new { id = customer.Id });
 
             var changePassRequest = new ChangePasswordRequest(model.Email,
-                false, _customerSettings.DefaultPasswordFormat, model.Password);
-            var changePassResult = await _customerRegistrationService.ChangePasswordAsync(changePassRequest);
+                false, CustomerSettings.DefaultPasswordFormat, model.Password);
+            var changePassResult = await CustomerRegistrationService.ChangePasswordAsync(changePassRequest);
             if (changePassResult.Success)
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.PasswordChanged"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.PasswordChanged"));
             else
                 foreach (var error in changePassResult.Errors)
-                    _notificationService.ErrorNotification(error);
+                    NotificationService.ErrorNotification(error);
 
             return RedirectToAction("Edit", new { id = customer.Id });
         }
@@ -804,15 +804,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("markVatNumberAsValid")]
         public virtual async Task<IActionResult> MarkVatNumberAsValid(CustomerModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(model.Id);
+            var customer = await CustomerService.GetCustomerByIdAsync(model.Id);
             if (customer == null)
                 return RedirectToAction("List");
 
-            await _genericAttributeService.SaveAttributeAsync(customer,
+            await GenericAttributeService.SaveAttributeAsync(customer,
                 NopCustomerDefaults.VatNumberStatusIdAttribute,
                 (int)VatNumberStatus.Valid);
 
@@ -823,15 +823,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("markVatNumberAsInvalid")]
         public virtual async Task<IActionResult> MarkVatNumberAsInvalid(CustomerModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(model.Id);
+            var customer = await CustomerService.GetCustomerByIdAsync(model.Id);
             if (customer == null)
                 return RedirectToAction("List");
 
-            await _genericAttributeService.SaveAttributeAsync(customer,
+            await GenericAttributeService.SaveAttributeAsync(customer,
                 NopCustomerDefaults.VatNumberStatusIdAttribute,
                 (int)VatNumberStatus.Invalid);
 
@@ -842,16 +842,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("remove-affiliate")]
         public virtual async Task<IActionResult> RemoveAffiliate(CustomerModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(model.Id);
+            var customer = await CustomerService.GetCustomerByIdAsync(model.Id);
             if (customer == null)
                 return RedirectToAction("List");
 
             customer.AffiliateId = 0;
-            await _customerService.UpdateCustomerAsync(customer);
+            await CustomerService.UpdateCustomerAsync(customer);
 
             return RedirectToAction("Edit", new { id = customer.Id });
         }
@@ -859,20 +859,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> RemoveBindMFA(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(id);
+            var customer = await CustomerService.GetCustomerByIdAsync(id);
             if (customer == null)
                 return RedirectToAction("List");
 
-            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, string.Empty);
+            await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, string.Empty);
 
             //raise event       
-            await _eventPublisher.PublishAsync(new CustomerChangeMultiFactorAuthenticationProviderEvent(customer));
+            await EventPublisher.PublishAsync(new CustomerChangeMultiFactorAuthenticationProviderEvent(customer));
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.UnbindMFAProvider"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.UnbindMFAProvider"));
 
             return RedirectToAction("Edit", new { id = customer.Id });
         }
@@ -880,52 +880,52 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(id);
+            var customer = await CustomerService.GetCustomerByIdAsync(id);
             if (customer == null)
                 return RedirectToAction("List");
 
             try
             {
                 //prevent attempts to delete the user, if it is the last active administrator
-                if (await _customerService.IsAdminAsync(customer) && !await SecondAdminAccountExistsAsync(customer))
+                if (await CustomerService.IsAdminAsync(customer) && !await SecondAdminAccountExistsAsync(customer))
                 {
-                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
+                    NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
                 //ensure that the current customer cannot delete "Administrators" if he's not an admin himself
-                if (await _customerService.IsAdminAsync(customer) && !await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
+                if (await CustomerService.IsAdminAsync(customer) && !await CustomerService.IsAdminAsync(await WorkContext.GetCurrentCustomerAsync()))
                 {
-                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
+                    NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
                 //delete
-                await _customerService.DeleteCustomerAsync(customer);
+                await CustomerService.DeleteCustomerAsync(customer);
 
                 //remove newsletter subscription (if exists)
-                foreach (var store in await _storeService.GetAllStoresAsync())
+                foreach (var store in await StoreService.GetAllStoresAsync())
                 {
-                    var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
+                    var subscription = await NewsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
                     if (subscription != null)
-                        await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
+                        await NewsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
                 }
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("DeleteCustomer",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteCustomer"), customer.Id), customer);
+                await CustomerActivityService.InsertActivityAsync("DeleteCustomer",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.DeleteCustomer"), customer.Id), customer);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.Deleted"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.Deleted"));
 
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc.Message);
+                NotificationService.ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
         }
@@ -934,40 +934,40 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("impersonate")]
         public virtual async Task<IActionResult> Impersonate(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.AllowCustomerImpersonation))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.AllowCustomerImpersonation))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(id);
+            var customer = await CustomerService.GetCustomerByIdAsync(id);
             if (customer == null)
                 return RedirectToAction("List");
 
             if (!customer.Active)
             {
-                _notificationService.WarningNotification(
-                    await _localizationService.GetResourceAsync("Admin.Customers.Customers.Impersonate.Inactive"));
+                NotificationService.WarningNotification(
+                    await LocalizationService.GetResourceAsync("Admin.Customers.Customers.Impersonate.Inactive"));
                 return RedirectToAction("Edit", customer.Id);
             }
 
             //ensure that a non-admin user cannot impersonate as an administrator
             //otherwise, that user can simply impersonate as an administrator and gain additional administrative privileges
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _customerService.IsAdminAsync(currentCustomer) && await _customerService.IsAdminAsync(customer))
+            var currentCustomer = await WorkContext.GetCurrentCustomerAsync();
+            if (!await CustomerService.IsAdminAsync(currentCustomer) && await CustomerService.IsAdminAsync(customer))
             {
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.NonAdminNotImpersonateAsAdminError"));
+                NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.NonAdminNotImpersonateAsAdminError"));
                 return RedirectToAction("Edit", customer.Id);
             }
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("Impersonation.Started",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.Impersonation.Started.StoreOwner"), customer.Email, customer.Id), customer);
-            await _customerActivityService.InsertActivityAsync(customer, "Impersonation.Started",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.Impersonation.Started.Customer"), currentCustomer.Email, currentCustomer.Id), currentCustomer);
+            await CustomerActivityService.InsertActivityAsync("Impersonation.Started",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.Impersonation.Started.StoreOwner"), customer.Email, customer.Id), customer);
+            await CustomerActivityService.InsertActivityAsync(customer, "Impersonation.Started",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.Impersonation.Started.Customer"), currentCustomer.Email, currentCustomer.Id), currentCustomer);
 
             //ensure login is not required
             customer.RequireReLogin = false;
-            await _customerService.UpdateCustomerAsync(customer);
-            await _genericAttributeService.SaveAttributeAsync<int?>(currentCustomer, NopCustomerDefaults.ImpersonatedCustomerIdAttribute, customer.Id);
+            await CustomerService.UpdateCustomerAsync(customer);
+            await GenericAttributeService.SaveAttributeAsync<int?>(currentCustomer, NopCustomerDefaults.ImpersonatedCustomerIdAttribute, customer.Id);
 
             return RedirectToAction("Index", "Home", new { area = string.Empty });
         }
@@ -976,17 +976,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("send-welcome-message")]
         public virtual async Task<IActionResult> SendWelcomeMessage(CustomerModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(model.Id);
+            var customer = await CustomerService.GetCustomerByIdAsync(model.Id);
             if (customer == null)
                 return RedirectToAction("List");
 
-            await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
+            await WorkflowMessageService.SendCustomerWelcomeMessageAsync(customer, (await WorkContext.GetWorkingLanguageAsync()).Id);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.SendWelcomeMessage.Success"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.SendWelcomeMessage.Success"));
 
             return RedirectToAction("Edit", new { id = customer.Id });
         }
@@ -995,30 +995,30 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("resend-activation-message")]
         public virtual async Task<IActionResult> ReSendActivationMessage(CustomerModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(model.Id);
+            var customer = await CustomerService.GetCustomerByIdAsync(model.Id);
             if (customer == null)
                 return RedirectToAction("List");
 
             //email validation message
-            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
-            await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
+            await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
+            await WorkflowMessageService.SendCustomerEmailValidationMessageAsync(customer, (await WorkContext.GetWorkingLanguageAsync()).Id);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.ReSendActivationMessage.Success"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.ReSendActivationMessage.Success"));
 
             return RedirectToAction("Edit", new { id = customer.Id });
         }
 
         public virtual async Task<IActionResult> SendEmail(CustomerModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(model.Id);
+            var customer = await CustomerService.GetCustomerByIdAsync(model.Id);
             if (customer == null)
                 return RedirectToAction("List");
 
@@ -1033,9 +1033,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (string.IsNullOrWhiteSpace(model.SendEmail.Body))
                     throw new NopException("Email body is empty");
 
-                var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId);
+                var emailAccount = await EmailAccountService.GetEmailAccountByIdAsync(EmailAccountSettings.DefaultEmailAccountId);
                 if (emailAccount == null)
-                    emailAccount = (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
+                    emailAccount = (await EmailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
                 if (emailAccount == null)
                     throw new NopException("Email account can't be loaded");
                 var email = new QueuedEmail
@@ -1044,21 +1044,21 @@ namespace Nop.Web.Areas.Admin.Controllers
                     EmailAccountId = emailAccount.Id,
                     FromName = emailAccount.DisplayName,
                     From = emailAccount.Email,
-                    ToName = await _customerService.GetCustomerFullNameAsync(customer),
+                    ToName = await CustomerService.GetCustomerFullNameAsync(customer),
                     To = customer.Email,
                     Subject = model.SendEmail.Subject,
                     Body = model.SendEmail.Body,
                     CreatedOnUtc = DateTime.UtcNow,
                     DontSendBeforeDateUtc = model.SendEmail.SendImmediately || !model.SendEmail.DontSendBeforeDate.HasValue ?
-                        null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SendEmail.DontSendBeforeDate.Value)
+                        null : (DateTime?)DateTimeHelper.ConvertToUtcTime(model.SendEmail.DontSendBeforeDate.Value)
                 };
-                await _queuedEmailService.InsertQueuedEmailAsync(email);
+                await QueuedEmailService.InsertQueuedEmailAsync(email);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.SendEmail.Queued"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.SendEmail.Queued"));
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc.Message);
+                NotificationService.ErrorNotification(exc.Message);
             }
 
             return RedirectToAction("Edit", new { id = customer.Id });
@@ -1066,26 +1066,26 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> SendPm(CustomerModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(model.Id);
+            var customer = await CustomerService.GetCustomerByIdAsync(model.Id);
             if (customer == null)
                 return RedirectToAction("List");
 
             try
             {
-                if (!_forumSettings.AllowPrivateMessages)
+                if (!ForumSettings.AllowPrivateMessages)
                     throw new NopException("Private messages are disabled");
-                if (await _customerService.IsGuestAsync(customer))
+                if (await CustomerService.IsGuestAsync(customer))
                     throw new NopException("Customer should be registered");
                 if (string.IsNullOrWhiteSpace(model.SendPm.Subject))
-                    throw new NopException(await _localizationService.GetResourceAsync("PrivateMessages.SubjectCannotBeEmpty"));
+                    throw new NopException(await LocalizationService.GetResourceAsync("PrivateMessages.SubjectCannotBeEmpty"));
                 if (string.IsNullOrWhiteSpace(model.SendPm.Message))
-                    throw new NopException(await _localizationService.GetResourceAsync("PrivateMessages.MessageCannotBeEmpty"));
+                    throw new NopException(await LocalizationService.GetResourceAsync("PrivateMessages.MessageCannotBeEmpty"));
                 
-                var store = await _storeContext.GetCurrentStoreAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
 
                 var privateMessage = new PrivateMessage
                 {
@@ -1100,13 +1100,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                     CreatedOnUtc = DateTime.UtcNow
                 };
 
-                await _forumService.InsertPrivateMessageAsync(privateMessage);
+                await ForumService.InsertPrivateMessageAsync(privateMessage);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.SendPM.Sent"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.SendPM.Sent"));
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc.Message);
+                NotificationService.ErrorNotification(exc.Message);
             }
 
             return RedirectToAction("Edit", new { id = customer.Id });
@@ -1119,30 +1119,30 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> RewardPointsHistorySelect(CustomerRewardPointsSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
+            var customer = await CustomerService.GetCustomerByIdAsync(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
-            var model = await _customerModelFactory.PrepareRewardPointsListModelAsync(searchModel, customer);
+            var model = await CustomerModelFactory.PrepareRewardPointsListModelAsync(searchModel, customer);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> RewardPointsHistoryAdd(AddRewardPointsToCustomerModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //prevent adding a new row with zero value
             if (model.Points == 0)
-                return ErrorJson(await _localizationService.GetResourceAsync("Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed"));
+                return ErrorJson(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed"));
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(model.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(model.CustomerId);
             if (customer == null)
                 return ErrorJson("Customer cannot be loaded");
 
@@ -1161,7 +1161,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 endDate = (activatingDate ?? DateTime.UtcNow).AddDays(model.PointsValidity.Value);
 
             //add reward points
-            await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, model.Points, model.StoreId, model.Message,
+            await RewardPointService.AddRewardPointsHistoryEntryAsync(customer, model.Points, model.StoreId, model.Message,
                 activatingDate: activatingDate, endDate: endDate);
 
             return Json(new { Result = true });
@@ -1174,15 +1174,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AddressesSelect(CustomerAddressSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
+            var customer = await CustomerService.GetCustomerByIdAsync(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
-            var model = await _customerModelFactory.PrepareCustomerAddressListModelAsync(searchModel, customer);
+            var model = await CustomerModelFactory.PrepareCustomerAddressListModelAsync(searchModel, customer);
 
             return Json(model);
         }
@@ -1190,40 +1190,40 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AddressDelete(int id, int customerId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(customerId)
+            var customer = await CustomerService.GetCustomerByIdAsync(customerId)
                 ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
 
             //try to get an address with the specified id
-            var address = await _customerService.GetCustomerAddressAsync(customer.Id, id);            
+            var address = await CustomerService.GetCustomerAddressAsync(customer.Id, id);            
 
             if (address == null)
                 return Content("No address found with the specified id");
 
-            await _customerService.RemoveCustomerAddressAsync(customer, address);
-            await _customerService.UpdateCustomerAsync(customer);
+            await CustomerService.RemoveCustomerAddressAsync(customer, address);
+            await CustomerService.UpdateCustomerAsync(customer);
 
             //now delete the address record
-            await _addressService.DeleteAddressAsync(address);
+            await AddressService.DeleteAddressAsync(address);
 
             return new NullJsonResult();
         }
 
         public virtual async Task<IActionResult> AddressCreate(int customerId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(customerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(customerId);
             if (customer == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _customerModelFactory.PrepareCustomerAddressModelAsync(new CustomerAddressModel(), customer, null);
+            var model = await CustomerModelFactory.PrepareCustomerAddressModelAsync(new CustomerAddressModel(), customer, null);
 
             return View(model);
         }
@@ -1231,17 +1231,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AddressCreate(CustomerAddressModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(model.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(model.CustomerId);
             if (customer == null)
                 return RedirectToAction("List");
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
-            var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
+            var customAttributes = await AddressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
+            var customAttributeWarnings = await AddressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError(string.Empty, error);
@@ -1259,17 +1259,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
 
-                await _addressService.InsertAddressAsync(address);
+                await AddressService.InsertAddressAsync(address);
 
-                await _customerService.InsertCustomerAddressAsync(customer, address);
+                await CustomerService.InsertCustomerAddressAsync(customer, address);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.Addresses.Added"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.Addresses.Added"));
 
                 return RedirectToAction("AddressEdit", new { addressId = address.Id, customerId = model.CustomerId });
             }
 
             //prepare model
-            model = await _customerModelFactory.PrepareCustomerAddressModelAsync(model, customer, null, true);
+            model = await CustomerModelFactory.PrepareCustomerAddressModelAsync(model, customer, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -1277,21 +1277,21 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> AddressEdit(int addressId, int customerId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(customerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(customerId);
             if (customer == null)
                 return RedirectToAction("List");
 
             //try to get an address with the specified id
-            var address = await _addressService.GetAddressByIdAsync(addressId);
+            var address = await AddressService.GetAddressByIdAsync(addressId);
             if (address == null)
                 return RedirectToAction("Edit", new { id = customer.Id });
 
             //prepare model
-            var model = await _customerModelFactory.PrepareCustomerAddressModelAsync(null, customer, address);
+            var model = await CustomerModelFactory.PrepareCustomerAddressModelAsync(null, customer, address);
 
             return View(model);
         }
@@ -1299,22 +1299,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AddressEdit(CustomerAddressModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(model.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(model.CustomerId);
             if (customer == null)
                 return RedirectToAction("List");
 
             //try to get an address with the specified id
-            var address = await _addressService.GetAddressByIdAsync(model.Address.Id);
+            var address = await AddressService.GetAddressByIdAsync(model.Address.Id);
             if (address == null)
                 return RedirectToAction("Edit", new { id = customer.Id });
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
-            var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
+            var customAttributes = await AddressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
+            var customAttributeWarnings = await AddressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError(string.Empty, error);
@@ -1324,15 +1324,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 address = model.Address.ToEntity(address);
                 address.CustomAttributes = customAttributes;
-                await _addressService.UpdateAddressAsync(address);
+                await AddressService.UpdateAddressAsync(address);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.Addresses.Updated"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.Addresses.Updated"));
 
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, customerId = model.CustomerId });
             }
 
             //prepare model
-            model = await _customerModelFactory.PrepareCustomerAddressModelAsync(model, customer, address, true);
+            model = await CustomerModelFactory.PrepareCustomerAddressModelAsync(model, customer, address, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -1345,15 +1345,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> OrderList(CustomerOrderSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
+            var customer = await CustomerService.GetCustomerByIdAsync(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
-            var model = await _customerModelFactory.PrepareCustomerOrderListModelAsync(searchModel, customer);
+            var model = await CustomerModelFactory.PrepareCustomerOrderListModelAsync(searchModel, customer);
 
             return Json(model);
         }
@@ -1364,16 +1364,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> LoadCustomerStatistics(string period)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return Content(string.Empty);
 
             var result = new List<object>();
 
-            var nowDt = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
-            var timeZone = await _dateTimeHelper.GetCurrentTimeZoneAsync();
-            var searchCustomerRoleIds = new[] { (await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName)).Id };
+            var nowDt = await DateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
+            var timeZone = await DateTimeHelper.GetCurrentTimeZoneAsync();
+            var searchCustomerRoleIds = new[] { (await CustomerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName)).Id };
 
-            var culture = new CultureInfo((await _workContext.GetWorkingLanguageAsync()).LanguageCulture);
+            var culture = new CultureInfo((await WorkContext.GetWorkingLanguageAsync()).LanguageCulture);
 
             switch (period)
             {
@@ -1386,9 +1386,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                         result.Add(new
                         {
                             date = searchYearDateUser.Date.ToString("Y", culture),
-                            value = (await _customerService.GetAllCustomersAsync(
-                                createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
-                                createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
+                            value = (await CustomerService.GetAllCustomersAsync(
+                                createdFromUtc: DateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
+                                createdToUtc: DateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
                                 customerRoleIds: searchCustomerRoleIds,
                                 pageIndex: 0,
                                 pageSize: 1, getOnlyTotalCount: true)).TotalCount.ToString()
@@ -1407,9 +1407,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                         result.Add(new
                         {
                             date = searchMonthDateUser.Date.ToString("M", culture),
-                            value = (await _customerService.GetAllCustomersAsync(
-                                createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
-                                createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
+                            value = (await CustomerService.GetAllCustomersAsync(
+                                createdFromUtc: DateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
+                                createdToUtc: DateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
                                 customerRoleIds: searchCustomerRoleIds,
                                 pageIndex: 0,
                                 pageSize: 1, getOnlyTotalCount: true)).TotalCount.ToString()
@@ -1429,9 +1429,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                         result.Add(new
                         {
                             date = searchWeekDateUser.Date.ToString("d dddd", culture),
-                            value = (await _customerService.GetAllCustomersAsync(
-                                createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
-                                createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
+                            value = (await CustomerService.GetAllCustomersAsync(
+                                createdFromUtc: DateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
+                                createdToUtc: DateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
                                 customerRoleIds: searchCustomerRoleIds,
                                 pageIndex: 0,
                                 pageSize: 1, getOnlyTotalCount: true)).TotalCount.ToString()
@@ -1453,15 +1453,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> GetCartList(CustomerShoppingCartSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
+            var customer = await CustomerService.GetCustomerByIdAsync(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
-            var model = await _customerModelFactory.PrepareCustomerShoppingCartListModelAsync(searchModel, customer);
+            var model = await CustomerModelFactory.PrepareCustomerShoppingCartListModelAsync(searchModel, customer);
 
             return Json(model);
         }
@@ -1473,15 +1473,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ListActivityLog(CustomerActivityLogSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
+            var customer = await CustomerService.GetCustomerByIdAsync(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
-            var model = await _customerModelFactory.PrepareCustomerActivityLogListModelAsync(searchModel, customer);
+            var model = await CustomerModelFactory.PrepareCustomerActivityLogListModelAsync(searchModel, customer);
 
             return Json(model);
         }
@@ -1493,15 +1493,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> BackInStockSubscriptionList(CustomerBackInStockSubscriptionSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
+            var customer = await CustomerService.GetCustomerByIdAsync(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
-            var model = await _customerModelFactory.PrepareCustomerBackInStockSubscriptionListModelAsync(searchModel, customer);
+            var model = await CustomerModelFactory.PrepareCustomerBackInStockSubscriptionListModelAsync(searchModel, customer);
 
             return Json(model);
         }
@@ -1512,11 +1512,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> GdprLog()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _customerModelFactory.PrepareGdprLogSearchModelAsync(new GdprLogSearchModel());
+            var model = await CustomerModelFactory.PrepareGdprLogSearchModelAsync(new GdprLogSearchModel());
 
             return View(model);
         }
@@ -1524,11 +1524,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> GdprLogList(GdprLogSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _customerModelFactory.PrepareGdprLogListModelAsync(searchModel);
+            var model = await CustomerModelFactory.PrepareGdprLogListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -1536,75 +1536,75 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> GdprDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(id);
+            var customer = await CustomerService.GetCustomerByIdAsync(id);
             if (customer == null)
                 return RedirectToAction("List");
 
-            if (!_gdprSettings.GdprEnabled)
+            if (!GdprSettings.GdprEnabled)
                 return RedirectToAction("List");
 
             try
             {
                 //prevent attempts to delete the user, if it is the last active administrator
-                if (await _customerService.IsAdminAsync(customer) && !await SecondAdminAccountExistsAsync(customer))
+                if (await CustomerService.IsAdminAsync(customer) && !await SecondAdminAccountExistsAsync(customer))
                 {
-                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
+                    NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
                 //ensure that the current customer cannot delete "Administrators" if he's not an admin himself
-                if (await _customerService.IsAdminAsync(customer) && !await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
+                if (await CustomerService.IsAdminAsync(customer) && !await CustomerService.IsAdminAsync(await WorkContext.GetCurrentCustomerAsync()))
                 {
-                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
+                    NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
                 //delete
-                await _gdprService.PermanentDeleteCustomerAsync(customer);
+                await GdprService.PermanentDeleteCustomerAsync(customer);
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("DeleteCustomer",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteCustomer"), customer.Id), customer);
+                await CustomerActivityService.InsertActivityAsync("DeleteCustomer",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.DeleteCustomer"), customer.Id), customer);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.Deleted"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.Customers.Deleted"));
 
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc.Message);
+                NotificationService.ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
         }
 
         public virtual async Task<IActionResult> GdprExport(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(id);
+            var customer = await CustomerService.GetCustomerByIdAsync(id);
             if (customer == null)
                 return RedirectToAction("List");
 
             try
             {
                 //log
-                //_gdprService.InsertLog(customer, 0, GdprRequestType.ExportData, await _localizationService.GetResource("Gdpr.Exported"));
+                //GdprService.InsertLog(customer, 0, GdprRequestType.ExportData, await LocalizationService.GetResource("Gdpr.Exported"));
                 //export
                 //export
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var bytes = await _exportManager.ExportCustomerGdprInfoToXlsxAsync(customer, store.Id);
+                var store = await StoreContext.GetCurrentStoreAsync();
+                var bytes = await ExportManager.ExportCustomerGdprInfoToXlsxAsync(customer, store.Id);
 
                 return File(bytes, MimeTypes.TextXlsx, $"customerdata-{customer.Id}.xlsx");
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
         }
@@ -1616,10 +1616,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("exportexcel-all")]
         public virtual async Task<IActionResult> ExportExcelAll(CustomerSearchModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: model.SelectedCustomerRoleIds.ToArray(),
+            var customers = await CustomerService.GetAllCustomersAsync(customerRoleIds: model.SelectedCustomerRoleIds.ToArray(),
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
@@ -1632,12 +1632,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var bytes = await _exportManager.ExportCustomersToXlsxAsync(customers);
+                var bytes = await ExportManager.ExportCustomersToXlsxAsync(customers);
                 return File(bytes, MimeTypes.TextXlsx, "customers.xlsx");
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -1645,7 +1645,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ExportExcelSelected(string selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             var customers = new List<Customer>();
@@ -1655,17 +1655,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
-                customers.AddRange(await _customerService.GetCustomersByIdsAsync(ids));
+                customers.AddRange(await CustomerService.GetCustomersByIdsAsync(ids));
             }
 
             try
             {
-                var bytes = await _exportManager.ExportCustomersToXlsxAsync(customers);
+                var bytes = await ExportManager.ExportCustomersToXlsxAsync(customers);
                 return File(bytes, MimeTypes.TextXlsx, "customers.xlsx");
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -1674,10 +1674,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("exportxml-all")]
         public virtual async Task<IActionResult> ExportXmlAll(CustomerSearchModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: model.SelectedCustomerRoleIds.ToArray(),
+            var customers = await CustomerService.GetAllCustomersAsync(customerRoleIds: model.SelectedCustomerRoleIds.ToArray(),
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
@@ -1690,12 +1690,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var xml = await _exportManager.ExportCustomersToXmlAsync(customers);
+                var xml = await ExportManager.ExportCustomersToXmlAsync(customers);
                 return File(Encoding.UTF8.GetBytes(xml), "application/xml", "customers.xml");
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -1703,7 +1703,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ExportXmlSelected(string selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             var customers = new List<Customer>();
@@ -1713,17 +1713,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
-                customers.AddRange(await _customerService.GetCustomersByIdsAsync(ids));
+                customers.AddRange(await CustomerService.GetCustomersByIdsAsync(ids));
             }
 
             try
             {
-                var xml = await _exportManager.ExportCustomersToXmlAsync(customers);
+                var xml = await ExportManager.ExportCustomersToXmlAsync(customers);
                 return File(Encoding.UTF8.GetBytes(xml), "application/xml", "customers.xml");
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }

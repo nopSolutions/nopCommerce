@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Events;
@@ -16,12 +16,12 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IWidgetModelFactory _widgetModelFactory;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly WidgetSettings _widgetSettings;
+        protected IEventPublisher EventPublisher { get; }
+        protected IPermissionService PermissionService { get; }
+        protected ISettingService SettingService { get; }
+        protected IWidgetModelFactory WidgetModelFactory { get; }
+        protected IWidgetPluginManager WidgetPluginManager { get; }
+        protected WidgetSettings WidgetSettings { get; }
 
         #endregion
 
@@ -34,12 +34,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWidgetPluginManager widgetPluginManager,
             WidgetSettings widgetSettings)
         {
-            _eventPublisher = eventPublisher;
-            _permissionService = permissionService;
-            _settingService = settingService;
-            _widgetModelFactory = widgetModelFactory;
-            _widgetPluginManager = widgetPluginManager;
-            _widgetSettings = widgetSettings;
+            EventPublisher = eventPublisher;
+            PermissionService = permissionService;
+            SettingService = settingService;
+            WidgetModelFactory = widgetModelFactory;
+            WidgetPluginManager = widgetPluginManager;
+            WidgetSettings = widgetSettings;
         }
 
         #endregion
@@ -53,11 +53,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _widgetModelFactory.PrepareWidgetSearchModelAsync(new WidgetSearchModel());
+            var model = await WidgetModelFactory.PrepareWidgetSearchModelAsync(new WidgetSearchModel());
 
             return View(model);
         }
@@ -65,11 +65,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(WidgetSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _widgetModelFactory.PrepareWidgetListModelAsync(searchModel);
+            var model = await WidgetModelFactory.PrepareWidgetListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -77,17 +77,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> WidgetUpdate(WidgetModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
-            var widget = await _widgetPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
-            if (_widgetPluginManager.IsPluginActive(widget, _widgetSettings.ActiveWidgetSystemNames))
+            var widget = await WidgetPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
+            if (WidgetPluginManager.IsPluginActive(widget, WidgetSettings.ActiveWidgetSystemNames))
             {
                 if (!model.IsActive)
                 {
                     //mark as disabled
-                    _widgetSettings.ActiveWidgetSystemNames.Remove(widget.PluginDescriptor.SystemName);
-                    await _settingService.SaveSettingAsync(_widgetSettings);
+                    WidgetSettings.ActiveWidgetSystemNames.Remove(widget.PluginDescriptor.SystemName);
+                    await SettingService.SaveSettingAsync(WidgetSettings);
                 }
             }
             else
@@ -95,8 +95,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.IsActive)
                 {
                     //mark as active
-                    _widgetSettings.ActiveWidgetSystemNames.Add(widget.PluginDescriptor.SystemName);
-                    await _settingService.SaveSettingAsync(_widgetSettings);
+                    WidgetSettings.ActiveWidgetSystemNames.Add(widget.PluginDescriptor.SystemName);
+                    await SettingService.SaveSettingAsync(WidgetSettings);
                 }
             }
 
@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //raise event
-            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
+            await EventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }

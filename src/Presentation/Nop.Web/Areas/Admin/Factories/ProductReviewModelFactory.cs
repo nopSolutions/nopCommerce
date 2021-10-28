@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -25,15 +25,15 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductService _productService;
-        private readonly IReviewTypeService _reviewTypeService;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
+        protected CatalogSettings CatalogSettings { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IProductService ProductService { get; }
+        protected IReviewTypeService ReviewTypeService { get; }
+        protected IStoreService StoreService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -49,15 +49,15 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreService storeService,
             IWorkContext workContext)
         {
-            _catalogSettings = catalogSettings;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _localizationService = localizationService;
-            _productService = productService;
-            _reviewTypeService = reviewTypeService;
-            _storeService = storeService;
-            _workContext = workContext;
+            CatalogSettings = catalogSettings;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            LocalizationService = localizationService;
+            ProductService = productService;
+            ReviewTypeService = reviewTypeService;
+            StoreService = storeService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -77,29 +77,29 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            searchModel.IsLoggedInAsVendor = await WorkContext.GetCurrentVendorAsync() != null;
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare "approved" property (0 - all; 1 - approved only; 2 - disapproved only)
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResourceAsync("Admin.Catalog.ProductReviews.List.SearchApproved.All"),
+                Text = await LocalizationService.GetResourceAsync("Admin.Catalog.ProductReviews.List.SearchApproved.All"),
                 Value = "0"
             });
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResourceAsync("Admin.Catalog.ProductReviews.List.SearchApproved.ApprovedOnly"),
+                Text = await LocalizationService.GetResourceAsync("Admin.Catalog.ProductReviews.List.SearchApproved.ApprovedOnly"),
                 Value = "1"
             });
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResourceAsync("Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly"),
+                Text = await LocalizationService.GetResourceAsync("Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly"),
                 Value = "2"
             });
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+            searchModel.HideStoresList = CatalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -122,15 +122,15 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get parameters to filter reviews
             var createdOnFromValue = !searchModel.CreatedOnFrom.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, await DateTimeHelper.GetCurrentTimeZoneAsync());
             var createdToFromValue = !searchModel.CreatedOnTo.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var isApprovedOnly = searchModel.SearchApprovedId == 0 ? null : searchModel.SearchApprovedId == 1 ? true : (bool?)false;
-            var vendor = await _workContext.GetCurrentVendorAsync();
+            var vendor = await WorkContext.GetCurrentVendorAsync();
             var vendorId = vendor?.Id ?? 0;
 
             //get product reviews
-            var productReviews = await _productService.GetAllProductReviewsAsync(showHidden: true,
+            var productReviews = await ProductService.GetAllProductReviewsAsync(showHidden: true,
                 customerId: 0,
                 approved: isApprovedOnly,
                 fromUtc: createdOnFromValue,
@@ -150,14 +150,14 @@ namespace Nop.Web.Areas.Admin.Factories
                     var productReviewModel = productReview.ToModel<ProductReviewModel>();
 
                     //convert dates to the user time
-                    productReviewModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(productReview.CreatedOnUtc, DateTimeKind.Utc);
+                    productReviewModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(productReview.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    productReviewModel.StoreName = (await _storeService.GetStoreByIdAsync(productReview.StoreId))?.Name;
-                    productReviewModel.ProductName = (await _productService.GetProductByIdAsync(productReview.ProductId))?.Name;
-                    productReviewModel.CustomerInfo = (await _customerService.GetCustomerByIdAsync(productReview.CustomerId)) is Customer customer && (await _customerService.IsRegisteredAsync(customer))
+                    productReviewModel.StoreName = (await StoreService.GetStoreByIdAsync(productReview.StoreId))?.Name;
+                    productReviewModel.ProductName = (await ProductService.GetProductByIdAsync(productReview.ProductId))?.Name;
+                    productReviewModel.CustomerInfo = (await CustomerService.GetCustomerByIdAsync(productReview.CustomerId)) is Customer customer && (await CustomerService.IsRegisteredAsync(customer))
                         ? customer.Email
-                        : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
+                        : await LocalizationService.GetResourceAsync("Admin.Customers.Guest");
 
                     productReviewModel.ReviewText = HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
                     productReviewModel.ReplyText = HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
@@ -184,25 +184,25 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (productReview != null)
             {
-                var showStoreName = (await _storeService.GetAllStoresAsync()).Count > 1;
+                var showStoreName = (await StoreService.GetAllStoresAsync()).Count > 1;
 
                 //fill in model values from the entity
                 model ??= new ProductReviewModel
                 {
                     Id = productReview.Id,
-                    StoreName = showStoreName ? (await _storeService.GetStoreByIdAsync(productReview.StoreId))?.Name : string.Empty,
+                    StoreName = showStoreName ? (await StoreService.GetStoreByIdAsync(productReview.StoreId))?.Name : string.Empty,
                     ProductId = productReview.ProductId,
-                    ProductName = (await _productService.GetProductByIdAsync(productReview.ProductId))?.Name,
+                    ProductName = (await ProductService.GetProductByIdAsync(productReview.ProductId))?.Name,
                     CustomerId = productReview.CustomerId,
                     Rating = productReview.Rating
                 };
 
                 model.ShowStoreName = showStoreName;
 
-                model.CustomerInfo = await _customerService.GetCustomerByIdAsync(productReview.CustomerId) is Customer customer && await _customerService.IsRegisteredAsync(customer)
-                    ? customer.Email : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
+                model.CustomerInfo = await CustomerService.GetCustomerByIdAsync(productReview.CustomerId) is Customer customer && await CustomerService.IsRegisteredAsync(customer)
+                    ? customer.Email : await LocalizationService.GetResourceAsync("Admin.Customers.Guest");
 
-                model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(productReview.CreatedOnUtc, DateTimeKind.Utc);
+                model.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(productReview.CreatedOnUtc, DateTimeKind.Utc);
 
                 if (!excludeProperties)
                 {
@@ -216,7 +216,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 await PrepareProductReviewReviewTypeMappingSearchModelAsync(model.ProductReviewReviewTypeMappingSearchModel, productReview);
             }
 
-            model.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            model.IsLoggedInAsVendor = await WorkContext.GetCurrentVendorAsync() != null;
 
             return model;
         }
@@ -241,7 +241,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             searchModel.ProductReviewId = productReview.Id;
 
-            searchModel.IsAnyReviewTypes = (await _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewIdAsync(productReview.Id)).Any();
+            searchModel.IsAnyReviewTypes = (await ReviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewIdAsync(productReview.Id)).Any();
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -267,7 +267,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productReview));
 
             //get product review and review type mappings
-            var productReviewReviewTypeMappings = (await _reviewTypeService
+            var productReviewReviewTypeMappings = (await ReviewTypeService
                 .GetProductReviewReviewTypeMappingsByProductReviewIdAsync(productReview.Id)).ToPagedList(searchModel);
 
             //prepare grid model
@@ -280,10 +280,10 @@ namespace Nop.Web.Areas.Admin.Factories
                         .ToModel<ProductReviewReviewTypeMappingModel>();
 
                     //fill in additional values (not existing in the entity)
-                    var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(productReviewReviewTypeMapping.ReviewTypeId);
+                    var reviewType = await ReviewTypeService.GetReviewTypeByIdAsync(productReviewReviewTypeMapping.ReviewTypeId);
 
-                    productReviewReviewTypeMappingModel.Name = await _localizationService.GetLocalizedAsync(reviewType, entity => entity.Name);
-                    productReviewReviewTypeMappingModel.Description = await _localizationService.GetLocalizedAsync(reviewType, entity => entity.Description);
+                    productReviewReviewTypeMappingModel.Name = await LocalizationService.GetLocalizedAsync(reviewType, entity => entity.Name);
+                    productReviewReviewTypeMappingModel.Description = await LocalizationService.GetLocalizedAsync(reviewType, entity => entity.Description);
                     productReviewReviewTypeMappingModel.VisibleToAllCustomers = reviewType.VisibleToAllCustomers;
 
                     return productReviewReviewTypeMappingModel;

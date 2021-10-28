@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,20 +30,20 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICategoryService _categoryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDiscountPluginManager _discountPluginManager;
-        private readonly IDiscountService _discountService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IOrderService _orderService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductService _productService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
+        protected CurrencySettings CurrencySettings { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICategoryService CategoryService { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IDiscountPluginManager DiscountPluginManager { get; }
+        protected IDiscountService DiscountService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IManufacturerService ManufacturerService { get; }
+        protected IOrderService OrderService { get; }
+        protected IPriceFormatter PriceFormatter { get; }
+        protected IProductService ProductService { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWebHelper WebHelper { get; }
 
         #endregion
 
@@ -64,20 +64,20 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService,
             IWebHelper webHelper)
         {
-            _currencySettings = currencySettings;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _categoryService = categoryService;
-            _currencyService = currencyService;
-            _dateTimeHelper = dateTimeHelper;
-            _discountPluginManager = discountPluginManager;
-            _discountService = discountService;
-            _localizationService = localizationService;
-            _manufacturerService = manufacturerService;
-            _orderService = orderService;
-            _priceFormatter = priceFormatter;
-            _productService = productService;
-            _urlRecordService = urlRecordService;
-            _webHelper = webHelper;
+            CurrencySettings = currencySettings;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            CategoryService = categoryService;
+            CurrencyService = currencyService;
+            DateTimeHelper = dateTimeHelper;
+            DiscountPluginManager = discountPluginManager;
+            DiscountService = discountService;
+            LocalizationService = localizationService;
+            ManufacturerService = manufacturerService;
+            OrderService = orderService;
+            PriceFormatter = priceFormatter;
+            ProductService = productService;
+            UrlRecordService = urlRecordService;
+            WebHelper = webHelper;
         }
 
         #endregion
@@ -192,7 +192,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available discount types
-            await _baseAdminModelFactory.PrepareDiscountTypesAsync(searchModel.AvailableDiscountTypes);
+            await BaseAdminModelFactory.PrepareDiscountTypesAsync(searchModel.AvailableDiscountTypes);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -216,12 +216,12 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter discounts
             var discountType = searchModel.SearchDiscountTypeId > 0 ? (DiscountType?)searchModel.SearchDiscountTypeId : null;
             var startDateUtc = searchModel.SearchStartDate.HasValue ?
-                (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchStartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()) : null;
+                (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.SearchStartDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()) : null;
             var endDateUtc = searchModel.SearchEndDate.HasValue ?
-                (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchEndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1) : null;
+                (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.SearchEndDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1) : null;
 
             //get discounts
-            var discounts = (await _discountService.GetAllDiscountsAsync(showHidden: true,
+            var discounts = (await DiscountService.GetAllDiscountsAsync(showHidden: true,
                 discountType: discountType,
                 couponCode: searchModel.SearchDiscountCouponCode,
                 discountName: searchModel.SearchDiscountName,
@@ -237,10 +237,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     var discountModel = discount.ToModel<DiscountModel>();
 
                     //fill in additional values (not existing in the entity)
-                    discountModel.DiscountTypeName = await _localizationService.GetLocalizedEnumAsync(discount.DiscountType);
-                    discountModel.PrimaryStoreCurrencyCode = (await _currencyService
-                        .GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
-                    discountModel.TimesUsed = (await _discountService.GetAllDiscountUsageHistoryAsync(discount.Id, pageSize: 1)).TotalCount;
+                    discountModel.DiscountTypeName = await LocalizationService.GetLocalizedEnumAsync(discount.DiscountType);
+                    discountModel.PrimaryStoreCurrencyCode = (await CurrencyService
+                        .GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+                    discountModel.TimesUsed = (await DiscountService.GetAllDiscountUsageHistoryAsync(discount.Id, pageSize: 1)).TotalCount;
 
                     return discountModel;
                 });
@@ -267,7 +267,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= discount.ToModel<DiscountModel>();
 
                 //prepare available discount requirement rules
-                var discountRules = await _discountPluginManager.LoadAllPluginsAsync();
+                var discountRules = await DiscountPluginManager.LoadAllPluginsAsync();
                 foreach (var discountRule in discountRules)
                 {
                     model.AvailableDiscountRequirementRules.Add(new SelectListItem
@@ -279,18 +279,18 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 model.AvailableDiscountRequirementRules.Insert(0, new SelectListItem
                 {
-                    Text = await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.AddGroup"),
+                    Text = await LocalizationService.GetResourceAsync("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.AddGroup"),
                     Value = "AddGroup"
                 });
 
                 model.AvailableDiscountRequirementRules.Insert(0, new SelectListItem
                 {
-                    Text = await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"),
+                    Text = await LocalizationService.GetResourceAsync("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"),
                     Value = string.Empty
                 });
 
                 //prepare available requirement groups
-                var requirementGroups = (await _discountService.GetAllDiscountRequirementsAsync(discount.Id)).Where(requirement => requirement.IsGroup);
+                var requirementGroups = (await DiscountService.GetAllDiscountRequirementsAsync(discount.Id)).Where(requirement => requirement.IsGroup);
                 model.AvailableRequirementGroups = requirementGroups.Select(requirement =>
                     new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();
 
@@ -301,12 +301,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 PrepareDiscountManufacturerSearchModel(model.DiscountManufacturerSearchModel, discount);
             }
 
-            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+            model.PrimaryStoreCurrencyCode = (await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
             //get URL of discount with coupon code
             if (model.RequiresCouponCode && !string.IsNullOrEmpty(model.CouponCode))
             {
-                model.DiscountUrl = QueryHelpers.AddQueryString((_webHelper.GetStoreLocation()).TrimEnd('/'),
+                model.DiscountUrl = QueryHelpers.AddQueryString((WebHelper.GetStoreLocation()).TrimEnd('/'),
                     NopDiscountDefaults.DiscountCouponQueryParameter, model.CouponCode);
             }
 
@@ -357,7 +357,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (requirement.IsGroup)
                 {
                     //get child requirements for the group
-                    var childRequirements = await _discountService.GetDiscountRequirementsByParentAsync(requirement);
+                    var childRequirements = await DiscountService.GetDiscountRequirementsByParentAsync(requirement);
 
                     requirementModel.ChildRequirements = await PrepareDiscountRequirementRuleModelsAsync(childRequirements, discount, interactionType);
 
@@ -365,7 +365,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
 
                 //or try to get name and configuration URL for the requirement
-                var requirementRule = await _discountPluginManager.LoadPluginBySystemNameAsync(requirement.DiscountRequirementRuleSystemName);
+                var requirementRule = await DiscountPluginManager.LoadPluginBySystemNameAsync(requirement.DiscountRequirementRuleSystemName);
                 if (requirementRule == null)
                     return null;
 
@@ -396,7 +396,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get discount usage history
-            var history = await _discountService.GetAllDiscountUsageHistoryAsync(discountId: discount.Id,
+            var history = await DiscountService.GetAllDiscountUsageHistoryAsync(discountId: discount.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
@@ -408,13 +408,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     var discountUsageHistoryModel = historyEntry.ToModel<DiscountUsageHistoryModel>();
 
                     //convert dates to the user time
-                    discountUsageHistoryModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+                    discountUsageHistoryModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    var order = await _orderService.GetOrderByIdAsync(historyEntry.OrderId);
+                    var order = await OrderService.GetOrderByIdAsync(historyEntry.OrderId);
                     if (order != null)
                     {
-                        discountUsageHistoryModel.OrderTotal = await _priceFormatter.FormatPriceAsync(order.OrderTotal, true, false);
+                        discountUsageHistoryModel.OrderTotal = await PriceFormatter.FormatPriceAsync(order.OrderTotal, true, false);
                         discountUsageHistoryModel.CustomOrderNumber = order.CustomOrderNumber;
                     }
 
@@ -443,7 +443,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get products with applied discount
-            var discountProducts = await _productService.GetProductsWithAppliedDiscountAsync(discountId: discount.Id,
+            var discountProducts = await ProductService.GetProductsWithAppliedDiscountAsync(discountId: discount.Id,
                 showHidden: false,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -478,19 +478,19 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
+            await BaseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
+            await BaseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+            await BaseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare available product types
-            await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
+            await BaseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
@@ -512,7 +512,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get products
-            var products = await _productService.SearchProductsAsync(showHidden: true,
+            var products = await ProductService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
@@ -527,7 +527,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return products.SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
+                    productModel.SeName = await UrlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });
@@ -554,7 +554,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get categories with applied discount
-            var discountCategories = await _categoryService.GetCategoriesByAppliedDiscountAsync(discountId: discount.Id,
+            var discountCategories = await CategoryService.GetCategoriesByAppliedDiscountAsync(discountId: discount.Id,
                 showHidden: false,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -566,7 +566,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var discountCategoryModel = category.ToModel<DiscountCategoryModel>();
 
-                    discountCategoryModel.CategoryName = await _categoryService.GetFormattedBreadCrumbAsync(category);
+                    discountCategoryModel.CategoryName = await CategoryService.GetFormattedBreadCrumbAsync(category);
                     discountCategoryModel.CategoryId = category.Id;
 
                     return discountCategoryModel;
@@ -609,7 +609,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get categories
-            var categories = await _categoryService.GetAllCategoriesAsync(showHidden: true,
+            var categories = await CategoryService.GetAllCategoriesAsync(showHidden: true,
                 categoryName: searchModel.SearchCategoryName,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -622,8 +622,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     var categoryModel = category.ToModel<CategoryModel>();
 
                     //fill in additional values (not existing in the entity)
-                    categoryModel.Breadcrumb = await _categoryService.GetFormattedBreadCrumbAsync(category);
-                    categoryModel.SeName = await _urlRecordService.GetSeNameAsync(category, 0, true, false);
+                    categoryModel.Breadcrumb = await CategoryService.GetFormattedBreadCrumbAsync(category);
+                    categoryModel.SeName = await UrlRecordService.GetSeNameAsync(category, 0, true, false);
 
                     return categoryModel;
                 });
@@ -651,7 +651,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get manufacturers with applied discount
-            var discountManufacturers = await _manufacturerService.GetManufacturersWithAppliedDiscountAsync(discountId: discount.Id,
+            var discountManufacturers = await ManufacturerService.GetManufacturersWithAppliedDiscountAsync(discountId: discount.Id,
                 showHidden: false,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -705,7 +705,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get manufacturers
-            var manufacturers = await _manufacturerService.GetAllManufacturersAsync(showHidden: true,
+            var manufacturers = await ManufacturerService.GetAllManufacturersAsync(showHidden: true,
                 manufacturerName: searchModel.SearchManufacturerName,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -715,7 +715,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return manufacturers.SelectAwait(async manufacturer =>
                 {
                     var manufacturerModel = manufacturer.ToModel<ManufacturerModel>();
-                    manufacturerModel.SeName = await _urlRecordService.GetSeNameAsync(manufacturer, 0, true, false);
+                    manufacturerModel.SeName = await UrlRecordService.GetSeNameAsync(manufacturer, 0, true, false);
 
                     return manufacturerModel;
                 });

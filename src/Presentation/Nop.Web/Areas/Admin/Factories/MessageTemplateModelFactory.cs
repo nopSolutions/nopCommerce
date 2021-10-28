@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,14 +22,14 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IMessageTemplateService _messageTemplateService;
-        private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IStoreService _storeService;
+        protected CatalogSettings CatalogSettings { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IMessageTemplateService MessageTemplateService { get; }
+        protected IMessageTokenProvider MessageTokenProvider { get; }
+        protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
+        protected IStoreService StoreService { get; }
 
         #endregion
 
@@ -44,14 +44,14 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStoreService storeService)
         {
-            _catalogSettings = catalogSettings;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _messageTemplateService = messageTemplateService;
-            _messageTokenProvider = messageTokenProvider;
-            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            _storeService = storeService;
+            CatalogSettings = catalogSettings;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            MessageTemplateService = messageTemplateService;
+            MessageTokenProvider = messageTokenProvider;
+            StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            StoreService = storeService;
         }
 
         #endregion
@@ -72,9 +72,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+            searchModel.HideStoresList = CatalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -96,11 +96,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get message templates
-            var messageTemplates = (await _messageTemplateService
+            var messageTemplates = (await MessageTemplateService
                 .GetAllMessageTemplatesAsync(searchModel.SearchStoreId, searchModel.SearchKeywords)).ToPagedList(searchModel);
 
             //prepare store names (to avoid loading for each message template)
-            var stores = (await _storeService.GetAllStoresAsync()).Select(store => new { store.Id, store.Name }).ToList();
+            var stores = (await StoreService.GetAllStoresAsync()).Select(store => new { store.Id, store.Name }).ToList();
 
             //prepare list model
             var model = await new MessageTemplateListModel().PrepareToGridAsync(searchModel, messageTemplates, () =>
@@ -114,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var storeNames = stores.Select(store => store.Name);
                     if (messageTemplate.LimitedToStores)
                     {
-                        await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(messageTemplateModel, messageTemplate, false);
+                        await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(messageTemplateModel, messageTemplate, false);
                         storeNames = stores
                             .Where(store => messageTemplateModel.SelectedStoreIds.Contains(store.Id)).Select(store => store.Name);
                     }
@@ -151,14 +151,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.BccEmailAddresses = await _localizationService.GetLocalizedAsync(messageTemplate, entity => entity.BccEmailAddresses, languageId, false, false);
-                    locale.Subject = await _localizationService.GetLocalizedAsync(messageTemplate, entity => entity.Subject, languageId, false, false);
-                    locale.Body = await _localizationService.GetLocalizedAsync(messageTemplate, entity => entity.Body, languageId, false, false);
-                    locale.EmailAccountId = await _localizationService.GetLocalizedAsync(messageTemplate, entity => entity.EmailAccountId, languageId, false, false);
+                    locale.BccEmailAddresses = await LocalizationService.GetLocalizedAsync(messageTemplate, entity => entity.BccEmailAddresses, languageId, false, false);
+                    locale.Subject = await LocalizationService.GetLocalizedAsync(messageTemplate, entity => entity.Subject, languageId, false, false);
+                    locale.Body = await LocalizationService.GetLocalizedAsync(messageTemplate, entity => entity.Body, languageId, false, false);
+                    locale.EmailAccountId = await LocalizationService.GetLocalizedAsync(messageTemplate, entity => entity.EmailAccountId, languageId, false, false);
 
                     //prepare available email accounts
-                    await _baseAdminModelFactory.PrepareEmailAccountsAsync(locale.AvailableEmailAccounts,
-                        defaultItemText: await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard"));
+                    await BaseAdminModelFactory.PrepareEmailAccountsAsync(locale.AvailableEmailAccounts,
+                        defaultItemText: await LocalizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard"));
 
                     //PrepareEmailAccounts only gets available accounts, we need to set the item as selected manually
                     if (locale.AvailableEmailAccounts?.FirstOrDefault(x => x.Value == locale.EmailAccountId.ToString()) is SelectListItem emailAccountListItem)
@@ -172,19 +172,19 @@ namespace Nop.Web.Areas.Admin.Factories
             model.SendImmediately = !model.DelayBeforeSend.HasValue;
             model.HasAttachedDownload = model.AttachedDownloadId > 0;
 
-            var allowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfAllowedTokensAsync(_messageTokenProvider.GetTokenGroups(messageTemplate)));
+            var allowedTokens = string.Join(", ", await MessageTokenProvider.GetListOfAllowedTokensAsync(MessageTokenProvider.GetTokenGroups(messageTemplate)));
             model.AllowedTokens = $"{allowedTokens}{Environment.NewLine}{Environment.NewLine}" +
-                $"{await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement")}{Environment.NewLine}";
+                $"{await LocalizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement")}{Environment.NewLine}";
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare available email accounts
-            await _baseAdminModelFactory.PrepareEmailAccountsAsync(model.AvailableEmailAccounts);
+            await BaseAdminModelFactory.PrepareEmailAccountsAsync(model.AvailableEmailAccounts);
 
             //prepare available stores
-            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, messageTemplate, excludeProperties);
+            await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(model, messageTemplate, excludeProperties);
 
             return model;
         }
@@ -212,9 +212,9 @@ namespace Nop.Web.Areas.Admin.Factories
             model.LanguageId = languageId;
 
             //filter tokens to the current template
-            var subject = await _localizationService.GetLocalizedAsync(messageTemplate, entity => entity.Subject, languageId);
-            var body = await _localizationService.GetLocalizedAsync(messageTemplate, entity => entity.Body, languageId);
-            model.Tokens = (await _messageTokenProvider.GetListOfAllowedTokensAsync())
+            var subject = await LocalizationService.GetLocalizedAsync(messageTemplate, entity => entity.Subject, languageId);
+            var body = await LocalizationService.GetLocalizedAsync(messageTemplate, entity => entity.Body, languageId);
+            model.Tokens = (await MessageTokenProvider.GetListOfAllowedTokensAsync())
                 .Where(token => subject.Contains(token) || body.Contains(token)).ToList();
 
             return model;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Forums;
@@ -17,8 +17,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IForumService _forumService;
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IForumService ForumService { get; }
 
         #endregion
 
@@ -26,8 +26,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public ForumModelFactory(IDateTimeHelper dateTimeHelper, IForumService forumService)
         {
-            _dateTimeHelper = dateTimeHelper;
-            _forumService = forumService;
+            DateTimeHelper = dateTimeHelper;
+            ForumService = forumService;
         }
 
         #endregion
@@ -90,7 +90,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get forum groups
-            var forumGroups = (await _forumService.GetAllForumGroupsAsync()).ToPagedList(searchModel);
+            var forumGroups = (await ForumService.GetAllForumGroupsAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = await new ForumGroupListModel().PrepareToGridAsync(searchModel, forumGroups, () =>
@@ -101,7 +101,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var forumGroupModel = forumGroup.ToModel<ForumGroupModel>();
 
                     //convert dates to the user time
-                    forumGroupModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(forumGroup.CreatedOnUtc, DateTimeKind.Utc);
+                    forumGroupModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(forumGroup.CreatedOnUtc, DateTimeKind.Utc);
 
                     return forumGroupModel;
                 });
@@ -151,7 +151,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(forumGroup));
             
             //get forums
-            var forums = (await _forumService.GetAllForumsByGroupIdAsync(forumGroup.Id)).ToPagedList(searchModel);
+            var forums = (await ForumService.GetAllForumsByGroupIdAsync(forumGroup.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = await new ForumListModel().PrepareToGridAsync(searchModel, forums, () =>
@@ -162,7 +162,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var forumModel = forum.ToModel<ForumModel>();
 
                     //convert dates to the user time
-                    forumModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(forum.CreatedOnUtc, DateTimeKind.Utc);
+                    forumModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(forum.CreatedOnUtc, DateTimeKind.Utc);
 
                     return forumModel;
                 });
@@ -192,7 +192,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.DisplayOrder = 1;
 
             //prepare available forum groups
-            foreach (var forumGroup in await _forumService.GetAllForumGroupsAsync())
+            foreach (var forumGroup in await ForumService.GetAllForumGroupsAsync())
             {
                 model.ForumGroups.Add(forumGroup.ToModel<ForumGroupModel>());
             }

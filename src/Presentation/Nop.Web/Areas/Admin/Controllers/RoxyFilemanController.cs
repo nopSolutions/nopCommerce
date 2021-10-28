@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +16,8 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
-        private readonly IRoxyFilemanService _roxyFilemanService;
+        protected IPermissionService PermissionService { get; }
+        protected IRoxyFilemanService RoxyFilemanService { get; }
 
         #endregion
 
@@ -27,8 +27,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             IRoxyFilemanService roxyFilemanService)
         {
-            _permissionService = permissionService;
-            _roxyFilemanService = roxyFilemanService;
+            PermissionService = permissionService;
+            RoxyFilemanService = roxyFilemanService;
         }
 
         #endregion
@@ -40,7 +40,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// </summary>
         public virtual async Task CreateConfiguration()
         {
-            await _roxyFilemanService.CreateConfigurationAsync();
+            await RoxyFilemanService.CreateConfigurationAsync();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var action = "DIRLIST";
             try
             {
-                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
                     throw new Exception("You don't have required permission");
 
                 if (!StringValues.IsNullOrEmpty(HttpContext.Request.Query["a"]))
@@ -76,61 +76,61 @@ namespace Nop.Web.Areas.Admin.Controllers
                 switch (action.ToUpperInvariant())
                 {
                     case "DIRLIST":
-                        await _roxyFilemanService.GetDirectoriesAsync(HttpContext.Request.Query["type"]);
+                        await RoxyFilemanService.GetDirectoriesAsync(HttpContext.Request.Query["type"]);
                         break;
                     case "FILESLIST":
-                        await _roxyFilemanService.GetFilesAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["type"]);
+                        await RoxyFilemanService.GetFilesAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["type"]);
                         break;
                     case "COPYDIR":
-                        await _roxyFilemanService.CopyDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
+                        await RoxyFilemanService.CopyDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
                         break;
                     case "COPYFILE":
-                        await _roxyFilemanService.CopyFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
+                        await RoxyFilemanService.CopyFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "CREATEDIR":
-                        await _roxyFilemanService.CreateDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
+                        await RoxyFilemanService.CreateDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
                         break;
                     case "DELETEDIR":
-                        await _roxyFilemanService.DeleteDirectoryAsync(HttpContext.Request.Query["d"]);
+                        await RoxyFilemanService.DeleteDirectoryAsync(HttpContext.Request.Query["d"]);
                         break;
                     case "DELETEFILE":
-                        await _roxyFilemanService.DeleteFileAsync(HttpContext.Request.Query["f"]);
+                        await RoxyFilemanService.DeleteFileAsync(HttpContext.Request.Query["f"]);
                         break;
                     case "DOWNLOAD":
-                        await _roxyFilemanService.DownloadFileAsync(HttpContext.Request.Query["f"]);
+                        await RoxyFilemanService.DownloadFileAsync(HttpContext.Request.Query["f"]);
                         break;
                     case "DOWNLOADDIR":
-                        await _roxyFilemanService.DownloadDirectoryAsync(HttpContext.Request.Query["d"]);
+                        await RoxyFilemanService.DownloadDirectoryAsync(HttpContext.Request.Query["d"]);
                         break;
                     case "MOVEDIR":
-                        await _roxyFilemanService.MoveDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
+                        await RoxyFilemanService.MoveDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
                         break;
                     case "MOVEFILE":
-                        await _roxyFilemanService.MoveFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
+                        await RoxyFilemanService.MoveFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "RENAMEDIR":
-                        await _roxyFilemanService.RenameDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
+                        await RoxyFilemanService.RenameDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
                         break;
                     case "RENAMEFILE":
-                        await _roxyFilemanService.RenameFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
+                        await RoxyFilemanService.RenameFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "GENERATETHUMB":
-                        await _roxyFilemanService.CreateImageThumbnailAsync(HttpContext.Request.Query["f"]);
+                        await RoxyFilemanService.CreateImageThumbnailAsync(HttpContext.Request.Query["f"]);
                         break;
                     case "UPLOAD":
-                        await _roxyFilemanService.UploadFilesAsync(HttpContext.Request.Form["d"]);
+                        await RoxyFilemanService.UploadFilesAsync(HttpContext.Request.Form["d"]);
                         break;
                     default:
-                        await HttpContext.Response.WriteAsync(_roxyFilemanService.GetErrorResponse("This action is not implemented."));
+                        await HttpContext.Response.WriteAsync(RoxyFilemanService.GetErrorResponse("This action is not implemented."));
                         break;
                 }
             }
             catch (Exception ex)
             {
-                if (action == "UPLOAD" && !_roxyFilemanService.IsAjaxRequest())
-                    await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({_roxyFilemanService.GetErrorResponse(await _roxyFilemanService.GetLanguageResourceAsync("E_UploadNoFiles"))});</script>");
+                if (action == "UPLOAD" && !RoxyFilemanService.IsAjaxRequest())
+                    await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({RoxyFilemanService.GetErrorResponse(await RoxyFilemanService.GetLanguageResourceAsync("E_UploadNoFiles"))});</script>");
                 else
-                    await HttpContext.Response.WriteAsync(_roxyFilemanService.GetErrorResponse(ex.Message));
+                    await HttpContext.Response.WriteAsync(RoxyFilemanService.GetErrorResponse(ex.Message));
             }
         }
 

@@ -20,9 +20,9 @@ namespace Nop.Web.Infrastructure.Installation
     {
         #region Fields
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IWebHelper _webHelper;
+        protected IHttpContextAccessor HttpContextAccessor { get; }
+        protected INopFileProvider FileProvider { get; }
+        protected IWebHelper WebHelper { get; }
 
         private IList<InstallationLanguage> _availableLanguages;
 
@@ -34,9 +34,9 @@ namespace Nop.Web.Infrastructure.Installation
             INopFileProvider fileProvider,
             IWebHelper webHelper)
         {
-            _httpContextAccessor = httpContextAccessor;
-            _fileProvider = fileProvider;
-            _webHelper = webHelper;
+            HttpContextAccessor = httpContextAccessor;
+            FileProvider = fileProvider;
+            WebHelper = webHelper;
         }
 
         #endregion
@@ -70,7 +70,7 @@ namespace Nop.Web.Infrastructure.Installation
         /// <returns>Current culture</returns>
         public string GetBrowserCulture()
         {
-            _httpContextAccessor.HttpContext.Request.Headers.TryGetValue(HeaderNames.AcceptLanguage, out var userLanguages);
+            HttpContextAccessor.HttpContext.Request.Headers.TryGetValue(HeaderNames.AcceptLanguage, out var userLanguages);
             return userLanguages.FirstOrDefault()?.Split(',').FirstOrDefault() ?? NopCommonDefaults.DefaultLanguageCulture;
         }
 
@@ -80,7 +80,7 @@ namespace Nop.Web.Infrastructure.Installation
         /// <returns>Current language</returns>
         public virtual InstallationLanguage GetCurrentLanguage()
         {
-            var httpContext = _httpContextAccessor.HttpContext;
+            var httpContext = HttpContextAccessor.HttpContext;
 
             //try to get cookie
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.InstallationLanguageCookie}";
@@ -125,12 +125,12 @@ namespace Nop.Web.Infrastructure.Installation
         /// <param name="languageCode">Language code</param>
         public virtual void SaveCurrentLanguage(string languageCode)
         {
-            var httpContext = _httpContextAccessor.HttpContext;
+            var httpContext = HttpContextAccessor.HttpContext;
             var cookieOptions = new CookieOptions
             {
                 Expires = DateTime.Now.AddHours(24),
                 HttpOnly = true,
-                Secure = _webHelper.IsCurrentConnectionSecured()
+                Secure = WebHelper.IsCurrentConnectionSecured()
             };
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.InstallationLanguageCookie}";
             httpContext.Response.Cookies.Delete(cookieName);
@@ -147,7 +147,7 @@ namespace Nop.Web.Infrastructure.Installation
                 return _availableLanguages;
 
             _availableLanguages = new List<InstallationLanguage>();
-            foreach (var filePath in _fileProvider.EnumerateFiles(_fileProvider.MapPath("~/App_Data/Localization/Installation/"), "*.xml"))
+            foreach (var filePath in FileProvider.EnumerateFiles(FileProvider.MapPath("~/App_Data/Localization/Installation/"), "*.xml"))
             {
                 var xmlDocument = new XmlDocument();
                 xmlDocument.Load(filePath);
@@ -156,7 +156,7 @@ namespace Nop.Web.Infrastructure.Installation
                 var languageCode = "";
                 //we file name format: installation.{languagecode}.xml
                 var r = new Regex(Regex.Escape("installation.") + "(.*?)" + Regex.Escape(".xml"));
-                var matches = r.Matches(_fileProvider.GetFileName(filePath));
+                var matches = r.Matches(FileProvider.GetFileName(filePath));
                 foreach (Match match in matches)
                     languageCode = match.Groups[1].Value;
 

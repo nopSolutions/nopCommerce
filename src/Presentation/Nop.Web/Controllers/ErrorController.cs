@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Nop.Web.Controllers

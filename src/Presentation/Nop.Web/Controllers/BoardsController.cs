@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,15 +23,15 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IForumModelFactory _forumModelFactory;
-        private readonly IForumService _forumService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        protected CaptchaSettings CaptchaSettings { get; }
+        protected ForumSettings ForumSettings { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IForumModelFactory ForumModelFactory { get; }
+        protected IForumService ForumService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IWebHelper WebHelper { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -47,15 +47,15 @@ namespace Nop.Web.Controllers
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            _captchaSettings = captchaSettings;
-            _forumSettings = forumSettings;
-            _customerService = customerService;
-            _forumModelFactory = forumModelFactory;
-            _forumService = forumService;
-            _localizationService = localizationService;
-            _storeContext = storeContext;
-            _webHelper = webHelper;
-            _workContext = workContext;
+            CaptchaSettings = captchaSettings;
+            ForumSettings = forumSettings;
+            CustomerService = customerService;
+            ForumModelFactory = forumModelFactory;
+            ForumService = forumService;
+            LocalizationService = localizationService;
+            StoreContext = storeContext;
+            WebHelper = webHelper;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -64,20 +64,20 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> Index()
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _forumModelFactory.PrepareBoardsIndexModelAsync();
+            var model = await ForumModelFactory.PrepareBoardsIndexModelAsync();
             
             return View(model);
         }
 
         public virtual async Task<IActionResult> ActiveDiscussions(int forumId = 0, int pageNumber = 1)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _forumModelFactory.PrepareActiveDiscussionsModelAsync(forumId, pageNumber);
+            var model = await ForumModelFactory.PrepareActiveDiscussionsModelAsync(forumId, pageNumber);
             
             return View(model);
         }
@@ -85,33 +85,33 @@ namespace Nop.Web.Controllers
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> ActiveDiscussionsRss(int forumId = 0)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            if (!_forumSettings.ActiveDiscussionsFeedEnabled)
+            if (!ForumSettings.ActiveDiscussionsFeedEnabled)
                 return RedirectToRoute("Boards");
 
-            var topics = await _forumService.GetActiveTopicsAsync(forumId, 0, _forumSettings.ActiveDiscussionsFeedCount);
-            var url = Url.RouteUrl("ActiveDiscussionsRSS", null, _webHelper.GetCurrentRequestProtocol());
+            var topics = await ForumService.GetActiveTopicsAsync(forumId, 0, ForumSettings.ActiveDiscussionsFeedCount);
+            var url = Url.RouteUrl("ActiveDiscussionsRSS", null, WebHelper.GetCurrentRequestProtocol());
 
-            var feedTitle = await _localizationService.GetResourceAsync("Forum.ActiveDiscussionsFeedTitle");
-            var feedDescription = await _localizationService.GetResourceAsync("Forum.ActiveDiscussionsFeedDescription");
+            var feedTitle = await LocalizationService.GetResourceAsync("Forum.ActiveDiscussionsFeedTitle");
+            var feedDescription = await LocalizationService.GetResourceAsync("Forum.ActiveDiscussionsFeedDescription");
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             var feed = new RssFeed(
-                string.Format(feedTitle, await _localizationService.GetLocalizedAsync(store, x => x.Name)),
+                string.Format(feedTitle, await LocalizationService.GetLocalizedAsync(store, x => x.Name)),
                 feedDescription,
                 new Uri(url),
                 DateTime.UtcNow);
 
             var items = new List<RssItem>();
 
-            var viewsText = await _localizationService.GetResourceAsync("Forum.Views");
-            var repliesText = await _localizationService.GetResourceAsync("Forum.Replies");
+            var viewsText = await LocalizationService.GetResourceAsync("Forum.Views");
+            var repliesText = await LocalizationService.GetResourceAsync("Forum.Replies");
 
             foreach (var topic in topics)
             {
-                var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, _webHelper.GetCurrentRequestProtocol());
+                var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await ForumService.GetTopicSeNameAsync(topic) }, WebHelper.GetCurrentRequestProtocol());
                 var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
                 items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl),
@@ -119,74 +119,74 @@ namespace Nop.Web.Controllers
             }
             feed.Items = items;
 
-            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
+            return new RssActionResult(feed, WebHelper.GetThisPageUrl(false));
         }
 
         public virtual async Task<IActionResult> ForumGroup(int id)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forumGroup = await _forumService.GetForumGroupByIdAsync(id);
+            var forumGroup = await ForumService.GetForumGroupByIdAsync(id);
             if (forumGroup == null)
                 return RedirectToRoute("Boards");
 
-            var model = await _forumModelFactory.PrepareForumGroupModelAsync(forumGroup);
+            var model = await ForumModelFactory.PrepareForumGroupModelAsync(forumGroup);
             
             return View(model);
         }
 
         public virtual async Task<IActionResult> Forum(int id, int pageNumber = 1)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forum = await _forumService.GetForumByIdAsync(id);
+            var forum = await ForumService.GetForumByIdAsync(id);
             if (forum == null)
                 return RedirectToRoute("Boards");
 
-            var model = await _forumModelFactory.PrepareForumPageModelAsync(forum, pageNumber);
+            var model = await ForumModelFactory.PrepareForumPageModelAsync(forum, pageNumber);
             
             return View(model);
         }
 
         public virtual async Task<IActionResult> ForumRss(int id)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            if (!_forumSettings.ForumFeedsEnabled)
+            if (!ForumSettings.ForumFeedsEnabled)
                 return RedirectToRoute("Boards");
 
-            var topicLimit = _forumSettings.ForumFeedCount;
-            var forum = await _forumService.GetForumByIdAsync(id);
+            var topicLimit = ForumSettings.ForumFeedCount;
+            var forum = await ForumService.GetForumByIdAsync(id);
 
             if (forum != null)
             {
                 //Order by newest topic posts & limit the number of topics to return
-                var topics = await _forumService.GetAllTopicsAsync(forum.Id, 0, string.Empty,
+                var topics = await ForumService.GetAllTopicsAsync(forum.Id, 0, string.Empty,
                      ForumSearchType.All, 0, 0, topicLimit);
 
-                var url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, _webHelper.GetCurrentRequestProtocol());
+                var url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, WebHelper.GetCurrentRequestProtocol());
 
-                var feedTitle = await _localizationService.GetResourceAsync("Forum.ForumFeedTitle");
-                var feedDescription = await _localizationService.GetResourceAsync("Forum.ForumFeedDescription");
+                var feedTitle = await LocalizationService.GetResourceAsync("Forum.ForumFeedTitle");
+                var feedDescription = await LocalizationService.GetResourceAsync("Forum.ForumFeedDescription");
 
-                var store = await _storeContext.GetCurrentStoreAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
                 var feed = new RssFeed(
-                    string.Format(feedTitle, await _localizationService.GetLocalizedAsync(store, x => x.Name), forum.Name),
+                    string.Format(feedTitle, await LocalizationService.GetLocalizedAsync(store, x => x.Name), forum.Name),
                     feedDescription,
                     new Uri(url),
                     DateTime.UtcNow);
 
                 var items = new List<RssItem>();
 
-                var viewsText = await _localizationService.GetResourceAsync("Forum.Views");
-                var repliesText = await _localizationService.GetResourceAsync("Forum.Replies");
+                var viewsText = await LocalizationService.GetResourceAsync("Forum.Views");
+                var repliesText = await LocalizationService.GetResourceAsync("Forum.Replies");
 
                 foreach (var topic in topics)
                 {
-                    var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, _webHelper.GetCurrentRequestProtocol());
+                    var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await ForumService.GetTopicSeNameAsync(topic) }, WebHelper.GetCurrentRequestProtocol());
                     var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
                     items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), $"urn:store:{store.Id}:forum:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
@@ -194,29 +194,29 @@ namespace Nop.Web.Controllers
 
                 feed.Items = items;
 
-                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
+                return new RssActionResult(feed, WebHelper.GetThisPageUrl(false));
             }
 
-            return new RssActionResult(new RssFeed(new Uri(_webHelper.GetStoreLocation())), _webHelper.GetThisPageUrl(false));
+            return new RssActionResult(new RssFeed(new Uri(WebHelper.GetStoreLocation())), WebHelper.GetThisPageUrl(false));
         }
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> ForumWatch(int id)
         {
-            var watchTopic = await _localizationService.GetResourceAsync("Forum.WatchForum");
-            var unwatchTopic = await _localizationService.GetResourceAsync("Forum.UnwatchForum");
+            var watchTopic = await LocalizationService.GetResourceAsync("Forum.WatchForum");
+            var unwatchTopic = await LocalizationService.GetResourceAsync("Forum.UnwatchForum");
             var returnText = watchTopic;
 
-            var forum = await _forumService.GetForumByIdAsync(id);
+            var forum = await ForumService.GetForumByIdAsync(id);
             if (forum == null)
                 return Json(new { Subscribed = false, Text = returnText, Error = true });
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _forumService.IsCustomerAllowedToSubscribeAsync(customer))
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (!await ForumService.IsCustomerAllowedToSubscribeAsync(customer))
                 return Json(new { Subscribed = false, Text = returnText, Error = true });
 
-            var forumSubscription = (await _forumService.GetAllSubscriptionsAsync(customer.Id,
+            var forumSubscription = (await ForumService.GetAllSubscriptionsAsync(customer.Id,
                 forum.Id, 0, 0, 1)).FirstOrDefault();
 
             bool subscribed;
@@ -229,13 +229,13 @@ namespace Nop.Web.Controllers
                     ForumId = forum.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 };
-                await _forumService.InsertSubscriptionAsync(forumSubscription);
+                await ForumService.InsertSubscriptionAsync(forumSubscription);
                 subscribed = true;
                 returnText = unwatchTopic;
             }
             else
             {
-                await _forumService.DeleteSubscriptionAsync(forumSubscription);
+                await ForumService.DeleteSubscriptionAsync(forumSubscription);
                 subscribed = false;
             }
 
@@ -244,21 +244,21 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> Topic(int id, int pageNumber = 1)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(id);
+            var forumTopic = await ForumService.GetTopicByIdAsync(id);
             if (forumTopic == null)
                 return RedirectToRoute("Boards");
 
-            var model = await _forumModelFactory.PrepareForumTopicPageModelAsync(forumTopic, pageNumber);
+            var model = await ForumModelFactory.PrepareForumTopicPageModelAsync(forumTopic, pageNumber);
             //if no posts loaded, redirect to the first page
             if (!model.ForumPostModels.Any() && pageNumber > 1)
-                return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
+                return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await ForumService.GetTopicSeNameAsync(forumTopic) });
 
             //update view count
             forumTopic.Views += 1;
-            await _forumService.UpdateTopicAsync(forumTopic);
+            await ForumService.UpdateTopicAsync(forumTopic);
 
             return View(model);
         }
@@ -267,19 +267,19 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> TopicWatch(int id)
         {
-            var watchTopic = await _localizationService.GetResourceAsync("Forum.WatchTopic");
-            var unwatchTopic = await _localizationService.GetResourceAsync("Forum.UnwatchTopic");
+            var watchTopic = await LocalizationService.GetResourceAsync("Forum.WatchTopic");
+            var unwatchTopic = await LocalizationService.GetResourceAsync("Forum.UnwatchTopic");
             var returnText = watchTopic;
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(id);
+            var forumTopic = await ForumService.GetTopicByIdAsync(id);
             if (forumTopic == null)
                 return Json(new { Subscribed = false, Text = returnText, Error = true });
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _forumService.IsCustomerAllowedToSubscribeAsync(customer))
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (!await ForumService.IsCustomerAllowedToSubscribeAsync(customer))
                 return Json(new { Subscribed = false, Text = returnText, Error = true });
 
-            var forumSubscription = (await _forumService.GetAllSubscriptionsAsync(customer.Id,
+            var forumSubscription = (await ForumService.GetAllSubscriptionsAsync(customer.Id,
                 0, forumTopic.Id, 0, 1)).FirstOrDefault();
 
             bool subscribed;
@@ -292,13 +292,13 @@ namespace Nop.Web.Controllers
                     TopicId = forumTopic.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 };
-                await _forumService.InsertSubscriptionAsync(forumSubscription);
+                await ForumService.InsertSubscriptionAsync(forumSubscription);
                 subscribed = true;
                 returnText = unwatchTopic;
             }
             else
             {
-                await _forumService.DeleteSubscriptionAsync(forumSubscription);
+                await ForumService.DeleteSubscriptionAsync(forumSubscription);
                 subscribed = false;
             }
 
@@ -307,14 +307,14 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> TopicMove(int id)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(id);
+            var forumTopic = await ForumService.GetTopicByIdAsync(id);
             if (forumTopic == null)
                 return RedirectToRoute("Boards");
 
-            var model = await _forumModelFactory.PrepareTopicMoveAsync(forumTopic);
+            var model = await ForumModelFactory.PrepareTopicMoveAsync(forumTopic);
             
             return View(model);
         }
@@ -322,46 +322,46 @@ namespace Nop.Web.Controllers
         [HttpPost]        
         public virtual async Task<IActionResult> TopicMove(TopicMoveModel model)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(model.Id);
+            var forumTopic = await ForumService.GetTopicByIdAsync(model.Id);
 
             if (forumTopic == null)
                 return RedirectToRoute("Boards");
 
             var newForumId = model.ForumSelected;
-            var forum = await _forumService.GetForumByIdAsync(newForumId);
+            var forum = await ForumService.GetForumByIdAsync(newForumId);
 
             if (forum != null && forumTopic.ForumId != newForumId)
-                await _forumService.MoveTopicAsync(forumTopic.Id, newForumId);
+                await ForumService.MoveTopicAsync(forumTopic.Id, newForumId);
 
-            return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
+            return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await ForumService.GetTopicSeNameAsync(forumTopic) });
         }
 
         [HttpPost]
         public virtual async Task<IActionResult> TopicDelete(int id)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return Json(new
                 {
                     redirect = Url.RouteUrl("Homepage"),
                 });
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(id);
+            var forumTopic = await ForumService.GetTopicByIdAsync(id);
             if (forumTopic != null)
             {
-                if (!await _forumService.IsCustomerAllowedToDeleteTopicAsync(await _workContext.GetCurrentCustomerAsync(), forumTopic))
+                if (!await ForumService.IsCustomerAllowedToDeleteTopicAsync(await WorkContext.GetCurrentCustomerAsync(), forumTopic))
                     return Challenge();
 
-                var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId);
+                var forum = await ForumService.GetForumByIdAsync(forumTopic.ForumId);
 
-                await _forumService.DeleteTopicAsync(forumTopic);
+                await ForumService.DeleteTopicAsync(forumTopic);
 
                 if (forum != null)
                     return Json(new
                     {
-                        redirect = Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = await _forumService.GetForumSeNameAsync(forum) }),
+                        redirect = Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = await ForumService.GetForumSeNameAsync(forum) }),
                     });
             }
 
@@ -373,18 +373,18 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> TopicCreate(int id)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forum = await _forumService.GetForumByIdAsync(id);
+            var forum = await ForumService.GetForumByIdAsync(id);
             if (forum == null)
                 return RedirectToRoute("Boards");
 
-            if (await _forumService.IsCustomerAllowedToCreateTopicAsync(await _workContext.GetCurrentCustomerAsync(), forum) == false)
+            if (await ForumService.IsCustomerAllowedToCreateTopicAsync(await WorkContext.GetCurrentCustomerAsync(), forum) == false)
                 return Challenge();
 
             var model = new EditForumTopicModel();
-            await _forumModelFactory.PrepareTopicCreateModelAsync(forum, model);
+            await ForumModelFactory.PrepareTopicCreateModelAsync(forum, model);
             return View(model);
         }
 
@@ -392,46 +392,46 @@ namespace Nop.Web.Controllers
         [ValidateCaptcha]
         public virtual async Task<IActionResult> TopicCreate(EditForumTopicModel model, bool captchaValid)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forum = await _forumService.GetForumByIdAsync(model.ForumId);
+            var forum = await ForumService.GetForumByIdAsync(model.ForumId);
             if (forum == null)
                 return RedirectToRoute("Boards");
 
             //validate CAPTCHA
-            if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
+            if (CaptchaSettings.Enabled && CaptchaSettings.ShowOnForum && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await LocalizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var customer = await _workContext.GetCurrentCustomerAsync();
-                    if (!await _forumService.IsCustomerAllowedToCreateTopicAsync(customer, forum))
+                    var customer = await WorkContext.GetCurrentCustomerAsync();
+                    if (!await ForumService.IsCustomerAllowedToCreateTopicAsync(customer, forum))
                     {
                         return Challenge();
                     }
 
                     var subject = model.Subject;
-                    var maxSubjectLength = _forumSettings.TopicSubjectMaxLength;
+                    var maxSubjectLength = ForumSettings.TopicSubjectMaxLength;
                     if (maxSubjectLength > 0 && subject.Length > maxSubjectLength)
                     {
                         subject = subject[0..maxSubjectLength];
                     }
 
                     var text = model.Text;
-                    var maxPostLength = _forumSettings.PostMaxLength;
+                    var maxPostLength = ForumSettings.PostMaxLength;
                     if (maxPostLength > 0 && text.Length > maxPostLength)
                         text = text[0..maxPostLength];
 
                     var topicType = ForumTopicType.Normal;
-                    var ipAddress = _webHelper.GetCurrentIpAddress();
+                    var ipAddress = WebHelper.GetCurrentIpAddress();
                     var nowUtc = DateTime.UtcNow;
 
-                    if (await _forumService.IsCustomerAllowedToSetTopicPriorityAsync(customer))
+                    if (await ForumService.IsCustomerAllowedToSetTopicPriorityAsync(customer))
                         topicType = (ForumTopicType)Enum.ToObject(typeof(ForumTopicType), model.TopicTypeId);
 
                     //forum topic
@@ -444,7 +444,7 @@ namespace Nop.Web.Controllers
                         CreatedOnUtc = nowUtc,
                         UpdatedOnUtc = nowUtc
                     };
-                    await _forumService.InsertTopicAsync(forumTopic, true);
+                    await ForumService.InsertTopicAsync(forumTopic, true);
 
                     //forum post
                     var forumPost = new ForumPost
@@ -456,7 +456,7 @@ namespace Nop.Web.Controllers
                         CreatedOnUtc = nowUtc,
                         UpdatedOnUtc = nowUtc
                     };
-                    await _forumService.InsertPostAsync(forumPost, false);
+                    await ForumService.InsertPostAsync(forumPost, false);
 
                     //update forum topic
                     forumTopic.NumPosts = 1;
@@ -464,10 +464,10 @@ namespace Nop.Web.Controllers
                     forumTopic.LastPostCustomerId = forumPost.CustomerId;
                     forumTopic.LastPostTime = forumPost.CreatedOnUtc;
                     forumTopic.UpdatedOnUtc = nowUtc;
-                    await _forumService.UpdateTopicAsync(forumTopic);
+                    await ForumService.UpdateTopicAsync(forumTopic);
 
                     //subscription                
-                    if (await _forumService.IsCustomerAllowedToSubscribeAsync(customer))
+                    if (await ForumService.IsCustomerAllowedToSubscribeAsync(customer))
                     {
                         if (model.Subscribed)
                         {
@@ -479,11 +479,11 @@ namespace Nop.Web.Controllers
                                 CreatedOnUtc = nowUtc
                             };
 
-                            await _forumService.InsertSubscriptionAsync(forumSubscription);
+                            await ForumService.InsertSubscriptionAsync(forumSubscription);
                         }
                     }
 
-                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
+                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await ForumService.GetTopicSeNameAsync(forumTopic) });
                 }
                 catch (Exception ex)
                 {
@@ -492,25 +492,25 @@ namespace Nop.Web.Controllers
             }
 
             //redisplay form
-            await _forumModelFactory.PrepareTopicCreateModelAsync(forum, model);
+            await ForumModelFactory.PrepareTopicCreateModelAsync(forum, model);
             
             return View(model);
         }
 
         public virtual async Task<IActionResult> TopicEdit(int id)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(id);
+            var forumTopic = await ForumService.GetTopicByIdAsync(id);
             if (forumTopic == null)
                 return RedirectToRoute("Boards");
 
-            if (!await _forumService.IsCustomerAllowedToEditTopicAsync(await _workContext.GetCurrentCustomerAsync(), forumTopic))
+            if (!await ForumService.IsCustomerAllowedToEditTopicAsync(await WorkContext.GetCurrentCustomerAsync(), forumTopic))
                 return Challenge();
 
             var model = new EditForumTopicModel();
-            await _forumModelFactory.PrepareTopicEditModelAsync(forumTopic, model, false);
+            await ForumModelFactory.PrepareTopicEditModelAsync(forumTopic, model, false);
             
             return View(model);
         }
@@ -519,64 +519,64 @@ namespace Nop.Web.Controllers
         [ValidateCaptcha]
         public virtual async Task<IActionResult> TopicEdit(EditForumTopicModel model, bool captchaValid)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(model.Id);
+            var forumTopic = await ForumService.GetTopicByIdAsync(model.Id);
 
             if (forumTopic == null)
                 return RedirectToRoute("Boards");
 
-            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId);
+            var forum = await ForumService.GetForumByIdAsync(forumTopic.ForumId);
             if (forum == null)
                 return RedirectToRoute("Boards");
 
             //validate CAPTCHA
-            if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
+            if (CaptchaSettings.Enabled && CaptchaSettings.ShowOnForum && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await LocalizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var customer = await _workContext.GetCurrentCustomerAsync();
-                    if (!await _forumService.IsCustomerAllowedToEditTopicAsync(customer, forumTopic))
+                    var customer = await WorkContext.GetCurrentCustomerAsync();
+                    if (!await ForumService.IsCustomerAllowedToEditTopicAsync(customer, forumTopic))
                         return Challenge();
 
                     var subject = model.Subject;
-                    var maxSubjectLength = _forumSettings.TopicSubjectMaxLength;
+                    var maxSubjectLength = ForumSettings.TopicSubjectMaxLength;
                     if (maxSubjectLength > 0 && subject.Length > maxSubjectLength)
                     {
                         subject = subject[0..maxSubjectLength];
                     }
 
                     var text = model.Text;
-                    var maxPostLength = _forumSettings.PostMaxLength;
+                    var maxPostLength = ForumSettings.PostMaxLength;
                     if (maxPostLength > 0 && text.Length > maxPostLength)
                         text = text[0..maxPostLength];
 
                     var topicType = ForumTopicType.Normal;
-                    var ipAddress = _webHelper.GetCurrentIpAddress();
+                    var ipAddress = WebHelper.GetCurrentIpAddress();
                     var nowUtc = DateTime.UtcNow;
 
-                    if (await _forumService.IsCustomerAllowedToSetTopicPriorityAsync(customer))
+                    if (await ForumService.IsCustomerAllowedToSetTopicPriorityAsync(customer))
                         topicType = (ForumTopicType)Enum.ToObject(typeof(ForumTopicType), model.TopicTypeId);
 
                     //forum topic
                     forumTopic.TopicTypeId = (int)topicType;
                     forumTopic.Subject = subject;
                     forumTopic.UpdatedOnUtc = nowUtc;
-                    await _forumService.UpdateTopicAsync(forumTopic);
+                    await ForumService.UpdateTopicAsync(forumTopic);
 
                     //forum post                
-                    var firstPost = await _forumService.GetFirstPostAsync(forumTopic);
+                    var firstPost = await ForumService.GetFirstPostAsync(forumTopic);
                     if (firstPost != null)
                     {
                         firstPost.Text = text;
                         firstPost.UpdatedOnUtc = nowUtc;
-                        await _forumService.UpdatePostAsync(firstPost);
+                        await ForumService.UpdatePostAsync(firstPost);
                     }
                     else
                     {
@@ -590,13 +590,13 @@ namespace Nop.Web.Controllers
                             UpdatedOnUtc = nowUtc
                         };
 
-                        await _forumService.InsertPostAsync(firstPost, false);
+                        await ForumService.InsertPostAsync(firstPost, false);
                     }
 
                     //subscription
-                    if (await _forumService.IsCustomerAllowedToSubscribeAsync(customer))
+                    if (await ForumService.IsCustomerAllowedToSubscribeAsync(customer))
                     {
-                        var forumSubscription = (await _forumService.GetAllSubscriptionsAsync(customer.Id,
+                        var forumSubscription = (await ForumService.GetAllSubscriptionsAsync(customer.Id,
                             0, forumTopic.Id, 0, 1)).FirstOrDefault();
                         if (model.Subscribed)
                         {
@@ -610,20 +610,20 @@ namespace Nop.Web.Controllers
                                     CreatedOnUtc = nowUtc
                                 };
 
-                                await _forumService.InsertSubscriptionAsync(forumSubscription);
+                                await ForumService.InsertSubscriptionAsync(forumSubscription);
                             }
                         }
                         else
                         {
                             if (forumSubscription != null)
                             {
-                                await _forumService.DeleteSubscriptionAsync(forumSubscription);
+                                await ForumService.DeleteSubscriptionAsync(forumSubscription);
                             }
                         }
                     }
 
                     // redirect to the topic page with the topic slug
-                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
+                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await ForumService.GetTopicSeNameAsync(forumTopic) });
                 }
                 catch (Exception ex)
                 {
@@ -632,7 +632,7 @@ namespace Nop.Web.Controllers
             }
 
             //redisplay form
-            await _forumModelFactory.PrepareTopicEditModelAsync(forumTopic, model, true);
+            await ForumModelFactory.PrepareTopicEditModelAsync(forumTopic, model, true);
 
             return View(model);
         }
@@ -640,29 +640,29 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PostDelete(int id)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return Json(new
                 {
                     redirect = Url.RouteUrl("Homepage"),
                 });
 
-            var forumPost = await _forumService.GetPostByIdAsync(id);
+            var forumPost = await ForumService.GetPostByIdAsync(id);
 
             if (forumPost == null)
                 return Json(new {redirect = Url.RouteUrl("Boards")});
 
-            if (!await _forumService.IsCustomerAllowedToDeletePostAsync(await _workContext.GetCurrentCustomerAsync(), forumPost))
+            if (!await ForumService.IsCustomerAllowedToDeletePostAsync(await WorkContext.GetCurrentCustomerAsync(), forumPost))
                 return Challenge();
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(forumPost.TopicId);
+            var forumTopic = await ForumService.GetTopicByIdAsync(forumPost.TopicId);
             var forumId = forumTopic.ForumId;
-            var forum = await _forumService.GetForumByIdAsync(forumId);
-            var forumSlug = await _forumService.GetForumSeNameAsync(forum);
+            var forum = await ForumService.GetForumByIdAsync(forumId);
+            var forumSlug = await ForumService.GetForumSeNameAsync(forum);
 
-            await _forumService.DeletePostAsync(forumPost);
+            await ForumService.DeletePostAsync(forumPost);
 
             //get topic one more time because it can be deleted (first or only post deleted)
-            forumTopic = await _forumService.GetTopicByIdAsync(forumPost.TopicId);
+            forumTopic = await ForumService.GetTopicByIdAsync(forumPost.TopicId);
             if (forumTopic == null)
                 return Json(new
                 {
@@ -671,24 +671,24 @@ namespace Nop.Web.Controllers
 
             return Json(new
             {
-                redirect = Url.RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) }),
+                redirect = Url.RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = await ForumService.GetTopicSeNameAsync(forumTopic) }),
             });
 
         }
 
         public virtual async Task<IActionResult> PostCreate(int id, int? quote)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(id);
+            var forumTopic = await ForumService.GetTopicByIdAsync(id);
             if (forumTopic == null)
                 return RedirectToRoute("Boards");
 
-            if (!await _forumService.IsCustomerAllowedToCreatePostAsync(await _workContext.GetCurrentCustomerAsync(), forumTopic))
+            if (!await ForumService.IsCustomerAllowedToCreatePostAsync(await WorkContext.GetCurrentCustomerAsync(), forumTopic))
                 return Challenge();
 
-            var model = await _forumModelFactory.PreparePostCreateModelAsync(forumTopic, quote, false);
+            var model = await ForumModelFactory.PreparePostCreateModelAsync(forumTopic, quote, false);
             
             return View(model);
         }
@@ -697,33 +697,33 @@ namespace Nop.Web.Controllers
         [ValidateCaptcha]
         public virtual async Task<IActionResult> PostCreate(EditForumPostModel model, bool captchaValid)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(model.ForumTopicId);
+            var forumTopic = await ForumService.GetTopicByIdAsync(model.ForumTopicId);
             if (forumTopic == null)
                 return RedirectToRoute("Boards");
 
             //validate CAPTCHA
-            if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
+            if (CaptchaSettings.Enabled && CaptchaSettings.ShowOnForum && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await LocalizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var customer = await _workContext.GetCurrentCustomerAsync();
-                    if (!await _forumService.IsCustomerAllowedToCreatePostAsync(customer, forumTopic))
+                    var customer = await WorkContext.GetCurrentCustomerAsync();
+                    if (!await ForumService.IsCustomerAllowedToCreatePostAsync(customer, forumTopic))
                         return Challenge();
 
                     var text = model.Text;
-                    var maxPostLength = _forumSettings.PostMaxLength;
+                    var maxPostLength = ForumSettings.PostMaxLength;
                     if (maxPostLength > 0 && text.Length > maxPostLength)
                         text = text[0..maxPostLength];
 
-                    var ipAddress = _webHelper.GetCurrentIpAddress();
+                    var ipAddress = WebHelper.GetCurrentIpAddress();
 
                     var nowUtc = DateTime.UtcNow;
 
@@ -736,12 +736,12 @@ namespace Nop.Web.Controllers
                         CreatedOnUtc = nowUtc,
                         UpdatedOnUtc = nowUtc
                     };
-                    await _forumService.InsertPostAsync(forumPost, true);
+                    await ForumService.InsertPostAsync(forumPost, true);
 
                     //subscription
-                    if (await _forumService.IsCustomerAllowedToSubscribeAsync(customer))
+                    if (await ForumService.IsCustomerAllowedToSubscribeAsync(customer))
                     {
-                        var forumSubscription = (await _forumService.GetAllSubscriptionsAsync(customer.Id,
+                        var forumSubscription = (await ForumService.GetAllSubscriptionsAsync(customer.Id,
                             0, forumPost.TopicId, 0, 1)).FirstOrDefault();
                         if (model.Subscribed)
                         {
@@ -755,26 +755,26 @@ namespace Nop.Web.Controllers
                                     CreatedOnUtc = nowUtc
                                 };
 
-                                await _forumService.InsertSubscriptionAsync(forumSubscription);
+                                await ForumService.InsertSubscriptionAsync(forumSubscription);
                             }
                         }
                         else
                         {
                             if (forumSubscription != null)
                             {
-                                await _forumService.DeleteSubscriptionAsync(forumSubscription);
+                                await ForumService.DeleteSubscriptionAsync(forumSubscription);
                             }
                         }
                     }
 
-                    var pageSize = _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10;
+                    var pageSize = ForumSettings.PostsPageSize > 0 ? ForumSettings.PostsPageSize : 10;
 
-                    var pageIndex = await _forumService.CalculateTopicPageIndexAsync(forumPost.TopicId, pageSize, forumPost.Id) + 1;
+                    var pageIndex = await ForumService.CalculateTopicPageIndexAsync(forumPost.TopicId, pageSize, forumPost.Id) + 1;
                     string url;
                     if (pageIndex > 1)
-                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic), pageNumber = pageIndex });
+                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = await ForumService.GetTopicSeNameAsync(forumTopic), pageNumber = pageIndex });
                     else
-                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
+                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = await ForumService.GetTopicSeNameAsync(forumTopic) });
                     return LocalRedirect($"{url}#{forumPost.Id}");
                 }
                 catch (Exception ex)
@@ -784,24 +784,24 @@ namespace Nop.Web.Controllers
             }
 
             //redisplay form
-            model = await _forumModelFactory.PreparePostCreateModelAsync(forumTopic, 0, true);
+            model = await ForumModelFactory.PreparePostCreateModelAsync(forumTopic, 0, true);
 
             return View(model);
         }
 
         public virtual async Task<IActionResult> PostEdit(int id)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forumPost = await _forumService.GetPostByIdAsync(id);
+            var forumPost = await ForumService.GetPostByIdAsync(id);
             if (forumPost == null)
                 return RedirectToRoute("Boards");
 
-            if (!await _forumService.IsCustomerAllowedToEditPostAsync(await _workContext.GetCurrentCustomerAsync(), forumPost))
+            if (!await ForumService.IsCustomerAllowedToEditPostAsync(await WorkContext.GetCurrentCustomerAsync(), forumPost))
                 return Challenge();
 
-            var model = await _forumModelFactory.PreparePostEditModelAsync(forumPost, false);
+            var model = await ForumModelFactory.PreparePostEditModelAsync(forumPost, false);
             
             return View(model);
         }
@@ -810,29 +810,29 @@ namespace Nop.Web.Controllers
         [ValidateCaptcha]
         public virtual async Task<IActionResult> PostEdit(EditForumPostModel model, bool captchaValid)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var forumPost = await _forumService.GetPostByIdAsync(model.Id);
+            var forumPost = await ForumService.GetPostByIdAsync(model.Id);
             if (forumPost == null)
                 return RedirectToRoute("Boards");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _forumService.IsCustomerAllowedToEditPostAsync(customer, forumPost))
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (!await ForumService.IsCustomerAllowedToEditPostAsync(customer, forumPost))
                 return Challenge();
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(forumPost.TopicId);
+            var forumTopic = await ForumService.GetTopicByIdAsync(forumPost.TopicId);
             if (forumTopic == null)
                 return RedirectToRoute("Boards");
 
-            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId);
+            var forum = await ForumService.GetForumByIdAsync(forumTopic.ForumId);
             if (forum == null)
                 return RedirectToRoute("Boards");
 
             //validate CAPTCHA
-            if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
+            if (CaptchaSettings.Enabled && CaptchaSettings.ShowOnForum && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await LocalizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
@@ -842,7 +842,7 @@ namespace Nop.Web.Controllers
                     var nowUtc = DateTime.UtcNow;
 
                     var text = model.Text;
-                    var maxPostLength = _forumSettings.PostMaxLength;
+                    var maxPostLength = ForumSettings.PostMaxLength;
                     if (maxPostLength > 0 && text.Length > maxPostLength)
                     {
                         text = text[0..maxPostLength];
@@ -850,12 +850,12 @@ namespace Nop.Web.Controllers
 
                     forumPost.UpdatedOnUtc = nowUtc;
                     forumPost.Text = text;
-                    await _forumService.UpdatePostAsync(forumPost);
+                    await ForumService.UpdatePostAsync(forumPost);
 
                     //subscription
-                    if (await _forumService.IsCustomerAllowedToSubscribeAsync(customer))
+                    if (await ForumService.IsCustomerAllowedToSubscribeAsync(customer))
                     {
-                        var forumSubscription = (await _forumService.GetAllSubscriptionsAsync(customer.Id,
+                        var forumSubscription = (await ForumService.GetAllSubscriptionsAsync(customer.Id,
                             0, forumPost.TopicId, 0, 1)).FirstOrDefault();
                         if (model.Subscribed)
                         {
@@ -868,28 +868,28 @@ namespace Nop.Web.Controllers
                                     TopicId = forumPost.TopicId,
                                     CreatedOnUtc = nowUtc
                                 };
-                                await _forumService.InsertSubscriptionAsync(forumSubscription);
+                                await ForumService.InsertSubscriptionAsync(forumSubscription);
                             }
                         }
                         else
                         {
                             if (forumSubscription != null)
                             {
-                                await _forumService.DeleteSubscriptionAsync(forumSubscription);
+                                await ForumService.DeleteSubscriptionAsync(forumSubscription);
                             }
                         }
                     }
 
-                    var pageSize = _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10;
-                    var pageIndex = (await _forumService.CalculateTopicPageIndexAsync(forumPost.TopicId, pageSize, forumPost.Id) + 1);
+                    var pageSize = ForumSettings.PostsPageSize > 0 ? ForumSettings.PostsPageSize : 10;
+                    var pageIndex = (await ForumService.CalculateTopicPageIndexAsync(forumPost.TopicId, pageSize, forumPost.Id) + 1);
                     string url;
                     if (pageIndex > 1)
                     {
-                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic), pageNumber = pageIndex });
+                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = await ForumService.GetTopicSeNameAsync(forumTopic), pageNumber = pageIndex });
                     }
                     else
                     {
-                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
+                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = await ForumService.GetTopicSeNameAsync(forumTopic) });
                     }
                     return LocalRedirect($"{url}#{forumPost.Id}");
                 }
@@ -900,7 +900,7 @@ namespace Nop.Web.Controllers
             }
 
             //redisplay form
-            model = await _forumModelFactory.PreparePostEditModelAsync(forumPost, true);
+            model = await ForumModelFactory.PreparePostEditModelAsync(forumPost, true);
 
             return View(model);
         }
@@ -908,20 +908,20 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> Search(string searchterms, bool? advs, string forumId,
             string within, string limitDays, int pageNumber = 1)
         {
-            if (!_forumSettings.ForumsEnabled)
+            if (!ForumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _forumModelFactory.PrepareSearchModelAsync(searchterms, advs, forumId, within, limitDays, pageNumber);
+            var model = await ForumModelFactory.PrepareSearchModelAsync(searchterms, advs, forumId, within, limitDays, pageNumber);
             
             return View(model);
         }
 
         public virtual async Task<IActionResult> CustomerForumSubscriptions(int? pageNumber)
         {
-            if (!_forumSettings.AllowCustomersToManageSubscriptions)
+            if (!ForumSettings.AllowCustomersToManageSubscriptions)
                 return RedirectToRoute("CustomerInfo");
 
-            var model = await _forumModelFactory.PrepareCustomerForumSubscriptionsModelAsync(pageNumber);
+            var model = await ForumModelFactory.PrepareCustomerForumSubscriptionsModelAsync(pageNumber);
             
             return View(model);
         }
@@ -939,12 +939,12 @@ namespace Nop.Web.Controllers
                     var id = key.Replace("fs", "").Trim();
                     if (int.TryParse(id, out var forumSubscriptionId))
                     {
-                        var forumSubscription = await _forumService.GetSubscriptionByIdAsync(forumSubscriptionId);
-                        var customer = await _workContext.GetCurrentCustomerAsync();
+                        var forumSubscription = await ForumService.GetSubscriptionByIdAsync(forumSubscriptionId);
+                        var customer = await WorkContext.GetCurrentCustomerAsync();
 
                         if (forumSubscription != null && forumSubscription.CustomerId == customer.Id)
                         {
-                            await _forumService.DeleteSubscriptionAsync(forumSubscription);
+                            await ForumService.DeleteSubscriptionAsync(forumSubscription);
                         }
                     }
                 }
@@ -956,50 +956,50 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PostVote(int postId, bool isUp)
         {
-            if (!_forumSettings.AllowPostVoting)
+            if (!ForumSettings.AllowPostVoting)
                 return new NullJsonResult();
 
-            var forumPost = await _forumService.GetPostByIdAsync(postId);
+            var forumPost = await ForumService.GetPostByIdAsync(postId);
             if (forumPost == null)
                 return new NullJsonResult();
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _customerService.IsRegisteredAsync(customer))
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (!await CustomerService.IsRegisteredAsync(customer))
                 return Json(new
                 {
-                    Error = await _localizationService.GetResourceAsync("Forum.Votes.Login"),
+                    Error = await LocalizationService.GetResourceAsync("Forum.Votes.Login"),
                     VoteCount = forumPost.VoteCount
                 });
 
             if (customer.Id == forumPost.CustomerId)
                 return Json(new
                 {
-                    Error = await _localizationService.GetResourceAsync("Forum.Votes.OwnPost"),
+                    Error = await LocalizationService.GetResourceAsync("Forum.Votes.OwnPost"),
                     VoteCount = forumPost.VoteCount
                 });
 
-            var forumPostVote = await _forumService.GetPostVoteAsync(postId, customer);
+            var forumPostVote = await ForumService.GetPostVoteAsync(postId, customer);
             if (forumPostVote != null)
             {
                 if ((forumPostVote.IsUp && isUp) || (!forumPostVote.IsUp && !isUp))
                     return Json(new
                     {
-                        Error = await _localizationService.GetResourceAsync("Forum.Votes.AlreadyVoted"),
+                        Error = await LocalizationService.GetResourceAsync("Forum.Votes.AlreadyVoted"),
                         VoteCount = forumPost.VoteCount
                     });
 
-                await _forumService.DeletePostVoteAsync(forumPostVote);
+                await ForumService.DeletePostVoteAsync(forumPostVote);
                 return Json(new { VoteCount = forumPost.VoteCount });
             }
 
-            if (await _forumService.GetNumberOfPostVotesAsync(customer, DateTime.UtcNow.AddDays(-1)) >= _forumSettings.MaxVotesPerDay)
+            if (await ForumService.GetNumberOfPostVotesAsync(customer, DateTime.UtcNow.AddDays(-1)) >= ForumSettings.MaxVotesPerDay)
                 return Json(new
                 {
-                    Error = string.Format(await _localizationService.GetResourceAsync("Forum.Votes.MaxVotesReached"), _forumSettings.MaxVotesPerDay),
+                    Error = string.Format(await LocalizationService.GetResourceAsync("Forum.Votes.MaxVotesReached"), ForumSettings.MaxVotesPerDay),
                     VoteCount = forumPost.VoteCount
                 });
 
-            await _forumService.InsertPostVoteAsync(new ForumPostVote
+            await ForumService.InsertPostVoteAsync(new ForumPostVote
             {
                 CustomerId = customer.Id,
                 ForumPostId = postId,

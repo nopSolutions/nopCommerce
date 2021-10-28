@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,8 +18,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
+        protected IWidgetPluginManager WidgetPluginManager { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -28,8 +28,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public WidgetModelFactory(IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext)
         {
-            _widgetPluginManager = widgetPluginManager;
-            _workContext = workContext;
+            WidgetPluginManager = widgetPluginManager;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get widgets
-            var widgets = (await _widgetPluginManager.LoadAllPluginsAsync())
+            var widgets = (await WidgetPluginManager.LoadAllPluginsAsync())
                 .Where(widget => !widget.HideInWidgetList).ToList()
                 .ToPagedList(searchModel);
 
@@ -82,7 +82,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var widgetMethodModel = widget.ToPluginModel<WidgetModel>();
 
                     //fill in additional values (not existing in the entity)
-                    widgetMethodModel.IsActive = _widgetPluginManager.IsPluginActive(widget);
+                    widgetMethodModel.IsActive = WidgetPluginManager.IsPluginActive(widget);
                     widgetMethodModel.ConfigurationUrl = widget.GetConfigurationPageUrl();
 
                     return widgetMethodModel;
@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<IList<RenderWidgetModel>> PrepareRenderWidgetModelsAsync(string widgetZone, object additionalData = null)
         {
             //get active widgets by widget zone
-            var widgets = await _widgetPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), widgetZone: widgetZone);
+            var widgets = await WidgetPluginManager.LoadActivePluginsAsync(await WorkContext.GetCurrentCustomerAsync(), widgetZone: widgetZone);
 
             //prepare models
             var models = widgets.Select(widget => new RenderWidgetModel

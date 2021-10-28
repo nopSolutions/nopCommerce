@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,22 +30,22 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly IPluginService _pluginService;
-        private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
-        private readonly OfficialFeedManager _officialFeedManager;
+        protected IAclSupportedModelFactory AclSupportedModelFactory { get; }
+        protected IAuthenticationPluginManager AuthenticationPluginManager { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IMultiFactorAuthenticationPluginManager MultiFactorAuthenticationPluginManager { get; }
+        protected IPaymentPluginManager PaymentPluginManager { get; }
+        protected IPickupPluginManager PickupPluginManager { get; }
+        protected IPluginService PluginService { get; }
+        protected IShippingPluginManager ShippingPluginManager { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
+        protected ITaxPluginManager TaxPluginManager { get; }
+        protected IWidgetPluginManager WidgetPluginManager { get; }
+        protected IWorkContext WorkContext { get; }
+        protected OfficialFeedManager OfficialFeedManager { get; }
 
         #endregion
 
@@ -68,22 +68,22 @@ namespace Nop.Web.Areas.Admin.Factories
             IWorkContext workContext,
             OfficialFeedManager officialFeedManager)
         {
-            _aclSupportedModelFactory = aclSupportedModelFactory;
-            _authenticationPluginManager = authenticationPluginManager;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
-            _paymentPluginManager = paymentPluginManager;
-            _pickupPluginManager = pickupPluginManager;
-            _pluginService = pluginService;
-            _shippingPluginManager = shippingPluginManager;
-            _staticCacheManager = staticCacheManager;
-            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            _taxPluginManager = taxPluginManager;
-            _widgetPluginManager = widgetPluginManager;
-            _workContext = workContext;
-            _officialFeedManager = officialFeedManager;
+            AclSupportedModelFactory = aclSupportedModelFactory;
+            AuthenticationPluginManager = authenticationPluginManager;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            MultiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
+            PaymentPluginManager = paymentPluginManager;
+            PickupPluginManager = pickupPluginManager;
+            PluginService = pluginService;
+            ShippingPluginManager = shippingPluginManager;
+            StaticCacheManager = staticCacheManager;
+            StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            TaxPluginManager = taxPluginManager;
+            WidgetPluginManager = widgetPluginManager;
+            WorkContext = workContext;
+            OfficialFeedManager = officialFeedManager;
         }
 
         #endregion
@@ -111,31 +111,31 @@ namespace Nop.Web.Areas.Admin.Factories
             switch (plugin)
             {
                 case IPaymentMethod paymentMethod:
-                    model.IsEnabled = _paymentPluginManager.IsPluginActive(paymentMethod);
+                    model.IsEnabled = PaymentPluginManager.IsPluginActive(paymentMethod);
                     break;
 
                 case IShippingRateComputationMethod shippingRateComputationMethod:
-                    model.IsEnabled = _shippingPluginManager.IsPluginActive(shippingRateComputationMethod);
+                    model.IsEnabled = ShippingPluginManager.IsPluginActive(shippingRateComputationMethod);
                     break;
 
                 case IPickupPointProvider pickupPointProvider:
-                    model.IsEnabled = _pickupPluginManager.IsPluginActive(pickupPointProvider);
+                    model.IsEnabled = PickupPluginManager.IsPluginActive(pickupPointProvider);
                     break;
 
                 case ITaxProvider taxProvider:
-                    model.IsEnabled = _taxPluginManager.IsPluginActive(taxProvider);
+                    model.IsEnabled = TaxPluginManager.IsPluginActive(taxProvider);
                     break;
 
                 case IExternalAuthenticationMethod externalAuthenticationMethod:
-                    model.IsEnabled = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
+                    model.IsEnabled = AuthenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
                     break;
 
                 case IMultiFactorAuthenticationMethod multiFactorAuthenticationMethod:
-                    model.IsEnabled = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
+                    model.IsEnabled = MultiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
                     break;
 
                 case IWidgetPlugin widgetPlugin:
-                    model.IsEnabled = _widgetPluginManager.IsPluginActive(widgetPlugin);
+                    model.IsEnabled = WidgetPluginManager.IsPluginActive(widgetPlugin);
                     break;
 
                 default:
@@ -162,15 +162,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available load plugin modes
-            await _baseAdminModelFactory.PrepareLoadPluginModesAsync(searchModel.AvailableLoadModes, false);
+            await BaseAdminModelFactory.PrepareLoadPluginModesAsync(searchModel.AvailableLoadModes, false);
 
             //prepare available groups
-            await _baseAdminModelFactory.PreparePluginGroupsAsync(searchModel.AvailableGroups);
+            await BaseAdminModelFactory.PreparePluginGroupsAsync(searchModel.AvailableGroups);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            searchModel.NeedToRestart = _pluginService.IsRestartRequired();
+            searchModel.NeedToRestart = PluginService.IsRestartRequired();
 
             return searchModel;
         }
@@ -195,7 +195,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var author = string.IsNullOrEmpty(searchModel.SearchAuthor) ? null : searchModel.SearchAuthor;
 
             //filter visible plugins
-            var plugins = (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(group: group, loadMode: loadMode, friendlyName: friendlyName, author: author))
+            var plugins = (await PluginService.GetPluginDescriptorsAsync<IPlugin>(group: group, loadMode: loadMode, friendlyName: friendlyName, author: author))
                 .Where(p => p.ShowInPluginsList)
                 .OrderBy(plugin => plugin.Group).ToList()
                 .ToPagedList(searchModel);
@@ -209,7 +209,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var pluginModel = pluginDescriptor.ToPluginModel<PluginModel>();
 
                     //fill in additional values (not existing in the entity)
-                    pluginModel.LogoUrl = await _pluginService.GetPluginLogoUrlAsync(pluginDescriptor);
+                    pluginModel.LogoUrl = await PluginService.GetPluginLogoUrlAsync(pluginDescriptor);
 
                     if (pluginDescriptor.Installed)
                         PrepareInstalledPluginModel(pluginModel, pluginDescriptor.Instance<IPlugin>());
@@ -240,7 +240,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 model ??= pluginDescriptor.ToPluginModel(model);
 
-                model.LogoUrl = await _pluginService.GetPluginLogoUrlAsync(pluginDescriptor);
+                model.LogoUrl = await PluginService.GetPluginLogoUrlAsync(pluginDescriptor);
                 model.SelectedStoreIds = pluginDescriptor.LimitedToStores;
                 model.SelectedCustomerRoleIds = pluginDescriptor.LimitedToCustomerRoles;
                 var plugin = pluginDescriptor.Instance<IPlugin>();
@@ -250,19 +250,19 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.FriendlyName = await _localizationService.GetLocalizedFriendlyNameAsync(plugin, languageId, false);
+                    locale.FriendlyName = await LocalizationService.GetLocalizedFriendlyNameAsync(plugin, languageId, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare model customer roles
-            await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model);
+            await AclSupportedModelFactory.PrepareModelCustomerRolesAsync(model);
 
             //prepare available stores
-            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model);
+            await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(model);
 
             return model;
         }
@@ -281,8 +281,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available versions
-            var pluginVersions = await _officialFeedManager.GetVersionsAsync();
-            searchModel.AvailableVersions.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.All"), Value = "0" });
+            var pluginVersions = await OfficialFeedManager.GetVersionsAsync();
+            searchModel.AvailableVersions.Add(new SelectListItem { Text = await LocalizationService.GetResourceAsync("Admin.Common.All"), Value = "0" });
             foreach (var version in pluginVersions)
                 searchModel.AvailableVersions.Add(new SelectListItem { Text = version.Name, Value = version.Id.ToString() });
 
@@ -296,8 +296,8 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available plugin categories
-            var pluginCategories = await _officialFeedManager.GetCategoriesAsync();
-            searchModel.AvailableCategories.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.All"), Value = "0" });
+            var pluginCategories = await OfficialFeedManager.GetCategoriesAsync();
+            searchModel.AvailableCategories.Add(new SelectListItem { Text = await LocalizationService.GetResourceAsync("Admin.Common.All"), Value = "0" });
             foreach (var pluginCategory in pluginCategories)
             {
                 var pluginCategoryNames = new List<string>();
@@ -321,17 +321,17 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.AvailablePrices.Add(new SelectListItem
             {
                 Value = "0",
-                Text = await _localizationService.GetResourceAsync("Admin.Common.All")
+                Text = await LocalizationService.GetResourceAsync("Admin.Common.All")
             });
             searchModel.AvailablePrices.Add(new SelectListItem
             {
                 Value = "10",
-                Text = await _localizationService.GetResourceAsync("Admin.Configuration.Plugins.OfficialFeed.Price.Free")
+                Text = await LocalizationService.GetResourceAsync("Admin.Configuration.Plugins.OfficialFeed.Price.Free")
             });
             searchModel.AvailablePrices.Add(new SelectListItem
             {
                 Value = "20",
-                Text = await _localizationService.GetResourceAsync("Admin.Configuration.Plugins.OfficialFeed.Price.Commercial")
+                Text = await LocalizationService.GetResourceAsync("Admin.Configuration.Plugins.OfficialFeed.Price.Commercial")
             });
 
             //prepare page parameters
@@ -354,7 +354,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get plugins
-            var plugins = await _officialFeedManager.GetAllPluginsAsync(categoryId: searchModel.SearchCategoryId,
+            var plugins = await OfficialFeedManager.GetAllPluginsAsync(categoryId: searchModel.SearchCategoryId,
                 versionId: searchModel.SearchVersionId,
                 price: searchModel.SearchPriceId,
                 searchTerm: searchModel.SearchName,
@@ -387,12 +387,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<IList<AdminNavigationPluginModel>> PrepareAdminNavigationPluginModelsAsync()
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopPluginDefaults.AdminNavigationPluginsCacheKey, customer);
-            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopPluginDefaults.AdminNavigationPluginsCacheKey, customer);
+            return await StaticCacheManager.GetAsync(cacheKey, async () =>
             {
                 //get installed plugins
-                return (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.InstalledOnly, customer))
+                return (await PluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.InstalledOnly, customer))
                     .Where(plugin => plugin.ShowInPluginsList)
                     .Select(plugin => new AdminNavigationPluginModel
                     {

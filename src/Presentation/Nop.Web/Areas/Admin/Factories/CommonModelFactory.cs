@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -56,47 +56,47 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly AdminAreaSettings _adminAreaSettings;
-        private readonly AppSettings _appSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMaintenanceService _maintenanceService;
-        private readonly IMeasureService _measureService;
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly IPluginService _pluginService;
-        private readonly IProductService _productService;
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly ISearchTermService _searchTermService;
-        private readonly IServiceCollection _serviceCollection;
-        private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
-        private readonly MeasureSettings _measureSettings;
-        private readonly NopHttpClient _nopHttpClient;
-        private readonly ProxySettings _proxySettings;
+        protected AdminAreaSettings AdminAreaSettings { get; }
+        protected AppSettings AppSettings { get; }
+        protected CatalogSettings CatalogSettings { get; }
+        protected CurrencySettings CurrencySettings { get; }
+        protected IActionContextAccessor ActionContextAccessor { get; }
+        protected IAuthenticationPluginManager AuthenticationPluginManager { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected INopDataProvider DataProvider { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IExchangeRatePluginManager ExchangeRatePluginManager { get; }
+        protected IHttpContextAccessor HttpContextAccessor { get; }
+        protected ILanguageService LanguageService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IMaintenanceService MaintenanceService { get; }
+        protected IMeasureService MeasureService { get; }
+        protected IMultiFactorAuthenticationPluginManager MultiFactorAuthenticationPluginManager { get; }
+        protected INopFileProvider FileProvider { get; }
+        protected IOrderService OrderService { get; }
+        protected IPaymentPluginManager PaymentPluginManager { get; }
+        protected IPickupPluginManager PickupPluginManager { get; }
+        protected IPluginService PluginService { get; }
+        protected IProductService ProductService { get; }
+        protected IReturnRequestService ReturnRequestService { get; }
+        protected ISearchTermService SearchTermService { get; }
+        protected IServiceCollection ServiceCollection { get; }
+        protected IShippingPluginManager ShippingPluginManager { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IStoreService StoreService { get; }
+        protected ITaxPluginManager TaxPluginManager { get; }
+        protected IUrlHelperFactory UrlHelperFactory { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWebHelper WebHelper { get; }
+        protected IWidgetPluginManager WidgetPluginManager { get; }
+        protected IWorkContext WorkContext { get; }
+        protected MeasureSettings MeasureSettings { get; }
+        protected NopHttpClient NopHttpClient { get; }
+        protected ProxySettings ProxySettings { get; }
 
         #endregion
 
@@ -144,47 +144,47 @@ namespace Nop.Web.Areas.Admin.Factories
             NopHttpClient nopHttpClient,
             ProxySettings proxySettings)
         {
-            _adminAreaSettings = adminAreaSettings;
-            _appSettings = appSettings;
-            _catalogSettings = catalogSettings;
-            _currencySettings = currencySettings;
-            _actionContextAccessor = actionContextAccessor;
-            _authenticationPluginManager = authenticationPluginManager;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _currencyService = currencyService;
-            _customerService = customerService;
-            _eventPublisher = eventPublisher;
-            _dataProvider = dataProvider;
-            _dateTimeHelper = dateTimeHelper;
-            _exchangeRatePluginManager = exchangeRatePluginManager;
-            _httpContextAccessor = httpContextAccessor;
-            _languageService = languageService;
-            _localizationService = localizationService;
-            _maintenanceService = maintenanceService;
-            _measureService = measureService;
-            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
-            _fileProvider = fileProvider;
-            _orderService = orderService;
-            _paymentPluginManager = paymentPluginManager;
-            _pickupPluginManager = pickupPluginManager;
-            _pluginService = pluginService;
-            _productService = productService;
-            _returnRequestService = returnRequestService;
-            _searchTermService = searchTermService;
-            _serviceCollection = serviceCollection;
-            _shippingPluginManager = shippingPluginManager;
-            _staticCacheManager = staticCacheManager;
-            _storeContext = storeContext;
-            _storeService = storeService;
-            _taxPluginManager = taxPluginManager;
-            _urlHelperFactory = urlHelperFactory;
-            _urlRecordService = urlRecordService;
-            _webHelper = webHelper;
-            _widgetPluginManager = widgetPluginManager;
-            _workContext = workContext;
-            _measureSettings = measureSettings;
-            _nopHttpClient = nopHttpClient;
-            _proxySettings = proxySettings;
+            AdminAreaSettings = adminAreaSettings;
+            AppSettings = appSettings;
+            CatalogSettings = catalogSettings;
+            CurrencySettings = currencySettings;
+            ActionContextAccessor = actionContextAccessor;
+            AuthenticationPluginManager = authenticationPluginManager;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            CurrencyService = currencyService;
+            CustomerService = customerService;
+            EventPublisher = eventPublisher;
+            DataProvider = dataProvider;
+            DateTimeHelper = dateTimeHelper;
+            ExchangeRatePluginManager = exchangeRatePluginManager;
+            HttpContextAccessor = httpContextAccessor;
+            LanguageService = languageService;
+            LocalizationService = localizationService;
+            MaintenanceService = maintenanceService;
+            MeasureService = measureService;
+            MultiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
+            FileProvider = fileProvider;
+            OrderService = orderService;
+            PaymentPluginManager = paymentPluginManager;
+            PickupPluginManager = pickupPluginManager;
+            PluginService = pluginService;
+            ProductService = productService;
+            ReturnRequestService = returnRequestService;
+            SearchTermService = searchTermService;
+            ServiceCollection = serviceCollection;
+            ShippingPluginManager = shippingPluginManager;
+            StaticCacheManager = staticCacheManager;
+            StoreContext = storeContext;
+            StoreService = storeService;
+            TaxPluginManager = taxPluginManager;
+            UrlHelperFactory = urlHelperFactory;
+            UrlRecordService = urlRecordService;
+            WebHelper = webHelper;
+            WidgetPluginManager = widgetPluginManager;
+            WorkContext = workContext;
+            MeasureSettings = measureSettings;
+            NopHttpClient = nopHttpClient;
+            ProxySettings = proxySettings;
         }
 
         #endregion
@@ -202,16 +202,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether current store URL matches the store configured URL
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             var currentStoreUrl = store.Url;
             if (!string.IsNullOrEmpty(currentStoreUrl) &&
-                (currentStoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase) ||
-                currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)))
+                (currentStoreUrl.Equals(WebHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase) ||
+                currentStoreUrl.Equals(WebHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)))
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.URL.Match")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.URL.Match")
                 });
                 return;
             }
@@ -219,8 +219,8 @@ namespace Nop.Web.Areas.Admin.Factories
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Fail,
-                Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.URL.NoMatch"),
-                    currentStoreUrl, _webHelper.GetStoreLocation(false))
+                Text = string.Format(await LocalizationService.GetResourceAsync("Admin.System.Warnings.URL.NoMatch"),
+                    currentStoreUrl, WebHelper.GetStoreLocation(false))
             });
         }
 
@@ -234,14 +234,14 @@ namespace Nop.Web.Areas.Admin.Factories
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
-            if (!_adminAreaSettings.CheckCopyrightRemovalKey)
+            if (!AdminAreaSettings.CheckCopyrightRemovalKey)
                 return;
 
             //try to get a warning
             var warning = string.Empty;
             try
             {
-                warning = await _nopHttpClient.GetCopyrightWarningAsync();
+                warning = await NopHttpClient.GetCopyrightWarningAsync();
             }
             catch
             {
@@ -270,13 +270,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether primary exchange rate currency set
-            var primaryExchangeRateCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryExchangeRateCurrencyId);
+            var primaryExchangeRateCurrency = await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryExchangeRateCurrencyId);
             if (primaryExchangeRateCurrency == null)
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.ExchangeCurrency.NotSet")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.ExchangeCurrency.NotSet")
                 });
                 return;
             }
@@ -284,7 +284,7 @@ namespace Nop.Web.Areas.Admin.Factories
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Pass,
-                Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.ExchangeCurrency.Set")
+                Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.ExchangeCurrency.Set")
             });
 
             //check whether primary exchange rate currency rate configured
@@ -293,7 +293,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.ExchangeCurrency.Rate1")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.ExchangeCurrency.Rate1")
                 });
             }
         }
@@ -309,13 +309,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether primary store currency set
-            var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+            var primaryStoreCurrency = await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId);
             if (primaryStoreCurrency == null)
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.PrimaryCurrency.NotSet")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.PrimaryCurrency.NotSet")
                 });
                 return;
             }
@@ -323,7 +323,7 @@ namespace Nop.Web.Areas.Admin.Factories
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Pass,
-                Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.PrimaryCurrency.Set")
+                Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.PrimaryCurrency.Set")
             });
         }
 
@@ -338,13 +338,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether base measure weight set
-            var baseWeight = await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId);
+            var baseWeight = await MeasureService.GetMeasureWeightByIdAsync(MeasureSettings.BaseWeightId);
             if (baseWeight == null)
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.DefaultWeight.NotSet")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.DefaultWeight.NotSet")
                 });
                 return;
             }
@@ -352,7 +352,7 @@ namespace Nop.Web.Areas.Admin.Factories
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Pass,
-                Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.DefaultWeight.Set")
+                Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.DefaultWeight.Set")
             });
 
             //check whether base measure weight ratio configured
@@ -361,7 +361,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.DefaultWeight.Ratio1")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.DefaultWeight.Ratio1")
                 });
             }
         }
@@ -377,13 +377,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether base measure dimension set
-            var baseDimension = await _measureService.GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId);
+            var baseDimension = await MeasureService.GetMeasureDimensionByIdAsync(MeasureSettings.BaseDimensionId);
             if (baseDimension == null)
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.DefaultDimension.NotSet")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.DefaultDimension.NotSet")
                 });
                 return;
             }
@@ -391,7 +391,7 @@ namespace Nop.Web.Areas.Admin.Factories
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Pass,
-                Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.DefaultDimension.Set")
+                Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.DefaultDimension.Set")
             });
 
             //check whether base measure dimension ratio configured
@@ -400,7 +400,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.DefaultDimension.Ratio1")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.DefaultDimension.Ratio1")
                 });
             }
         }
@@ -416,12 +416,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether payment methods activated
-            if ((await _paymentPluginManager.LoadAllPluginsAsync()).Any())
+            if ((await PaymentPluginManager.LoadAllPluginsAsync()).Any())
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.PaymentMethods.OK")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.PaymentMethods.OK")
                 });
                 return;
             }
@@ -429,7 +429,7 @@ namespace Nop.Web.Areas.Admin.Factories
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Fail,
-                Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.PaymentMethods.NoActive")
+                Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.PaymentMethods.NoActive")
             });
         }
 
@@ -444,35 +444,35 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether there are incompatible plugins
-            foreach (var pluginName in _pluginService.GetIncompatiblePlugins())
+            foreach (var pluginName in PluginService.GetIncompatiblePlugins())
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotLoaded"), pluginName)
+                    Text = string.Format(await LocalizationService.GetResourceAsync("Admin.System.Warnings.PluginNotLoaded"), pluginName)
                 });
             }
 
             //check whether there are any collision of loaded assembly
-            foreach (var assembly in _pluginService.GetAssemblyCollisions())
+            foreach (var assembly in PluginService.GetAssemblyCollisions())
             {
                 //get plugin references message
                 var message = (await assembly.Collisions
-                    .SelectAwait(async item => string.Format(await _localizationService
+                    .SelectAwait(async item => string.Format(await LocalizationService
                         .GetResourceAsync("Admin.System.Warnings.PluginRequiredAssembly"), item.PluginName, item.AssemblyName))
                     .AggregateAsync("", (curent, all) => all + ", " + curent)).TrimEnd(',', ' ');
 
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.AssemblyHasCollision"),
+                    Text = string.Format(await LocalizationService.GetResourceAsync("Admin.System.Warnings.AssemblyHasCollision"),
                         assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
                 });
             }
             
             //check whether there are different plugins which try to override the same interface
             var baseLibraries = new[] { "Nop.Core", "Nop.Data", "Nop.Services", "Nop.Web", "Nop.Web.Framework" };
-            var overridenServices = _serviceCollection.Where(p =>
+            var overridenServices = ServiceCollection.Where(p =>
                     p.ServiceType.FullName != null &&
                     p.ServiceType.FullName.StartsWith("Nop.", StringComparison.InvariantCulture) &&
                     !p.ServiceType.FullName.StartsWith(
@@ -493,7 +493,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginsOverrideSameService"), overridenService.Key, assemblies)
+                    Text = string.Format(await LocalizationService.GetResourceAsync("Admin.System.Warnings.PluginsOverrideSameService"), overridenService.Key, assemblies)
                 });
             }
         }
@@ -509,22 +509,22 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether "IgnoreStoreLimitations" setting disabled
-            if (!_catalogSettings.IgnoreStoreLimitations && (await _storeService.GetAllStoresAsync()).Count == 1)
+            if (!CatalogSettings.IgnoreStoreLimitations && (await StoreService.GetAllStoresAsync()).Count == 1)
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Recommendation,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.Performance.IgnoreStoreLimitations")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.Performance.IgnoreStoreLimitations")
                 });
             }
 
             //check whether "IgnoreAcl" setting disabled
-            if (!_catalogSettings.IgnoreAcl)
+            if (!CatalogSettings.IgnoreAcl)
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Recommendation,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.Performance.IgnoreAcl")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.Performance.IgnoreAcl")
                 });
             }
         }
@@ -549,7 +549,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.DirectoryPermission.Wrong"),
+                    Text = string.Format(await LocalizationService.GetResourceAsync("Admin.System.Warnings.DirectoryPermission.Wrong"),
                         CurrentOSUser.FullName, dir)
                 });
                 dirPermissionsOk = false;
@@ -560,7 +560,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.DirectoryPermission.OK")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.DirectoryPermission.OK")
                 });
             }
 
@@ -574,7 +574,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.FilePermission.Wrong"),
+                    Text = string.Format(await LocalizationService.GetResourceAsync("Admin.System.Warnings.FilePermission.Wrong"),
                         CurrentOSUser.FullName, file)
                 });
                 filePermissionsOk = false;
@@ -585,7 +585,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.FilePermission.OK")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.FilePermission.OK")
                 });
             }
         }
@@ -613,7 +613,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PreparePluginsInstalledWarningModelAsync(List<SystemWarningModel> models)
         {
-            var plugins = await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.NotInstalledOnly);
+            var plugins = await PluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.NotInstalledOnly);
 
             var notInstalled = plugins.Select(p => p.FriendlyName).ToList();
 
@@ -624,7 +624,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Level = SystemWarningLevel.Warning,
                 DontEncode = true,
-                Text = $"{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotInstalled")}: {string.Join(", ", notInstalled)}. {await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotInstalled.HelpText")}"
+                Text = $"{await LocalizationService.GetResourceAsync("Admin.System.Warnings.PluginNotInstalled")}: {string.Join(", ", notInstalled)}. {await LocalizationService.GetResourceAsync("Admin.System.Warnings.PluginNotInstalled.HelpText")}"
             });
         }
 
@@ -635,7 +635,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PreparePluginsEnabledWarningModelAsync(List<SystemWarningModel> models)
         {
-            var plugins = await _pluginService.GetPluginsAsync<IPlugin>();
+            var plugins = await PluginService.GetPluginsAsync<IPlugin>();
 
             var notEnabled = new List<string>();
             var notEnabledSystemNames = new List<string>();
@@ -647,35 +647,35 @@ namespace Nop.Web.Areas.Admin.Factories
                 switch (plugin)
                 {
                     case IPaymentMethod paymentMethod:
-                        isEnabled = _paymentPluginManager.IsPluginActive(paymentMethod);
+                        isEnabled = PaymentPluginManager.IsPluginActive(paymentMethod);
                         break;
 
                     case IShippingRateComputationMethod shippingRateComputationMethod:
-                        isEnabled = _shippingPluginManager.IsPluginActive(shippingRateComputationMethod);
+                        isEnabled = ShippingPluginManager.IsPluginActive(shippingRateComputationMethod);
                         break;
 
                     case IPickupPointProvider pickupPointProvider:
-                        isEnabled = _pickupPluginManager.IsPluginActive(pickupPointProvider);
+                        isEnabled = PickupPluginManager.IsPluginActive(pickupPointProvider);
                         break;
 
                     case ITaxProvider taxProvider:
-                        isEnabled = _taxPluginManager.IsPluginActive(taxProvider);
+                        isEnabled = TaxPluginManager.IsPluginActive(taxProvider);
                         break;
 
                     case IExternalAuthenticationMethod externalAuthenticationMethod:
-                        isEnabled = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
+                        isEnabled = AuthenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
                         break;
 
                     case IMultiFactorAuthenticationMethod multiFactorAuthenticationMethod:
-                        isEnabled = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
+                        isEnabled = MultiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
                         break;
 
                     case IWidgetPlugin widgetPlugin:
-                        isEnabled = _widgetPluginManager.IsPluginActive(widgetPlugin);
+                        isEnabled = WidgetPluginManager.IsPluginActive(widgetPlugin);
                         break;
 
                     case IExchangeRateProvider exchangeRateProvider:
-                        isEnabled = _exchangeRatePluginManager.IsPluginActive(exchangeRateProvider);
+                        isEnabled = ExchangeRatePluginManager.IsPluginActive(exchangeRateProvider);
                         break;
                 }
 
@@ -689,14 +689,14 @@ namespace Nop.Web.Areas.Admin.Factories
             if (notEnabled.Any())
             {
                 //get URL helper
-                var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+                var urlHelper = UrlHelperFactory.GetUrlHelper(ActionContextAccessor.ActionContext);
 
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
                     DontEncode = true,
 
-                    Text = $"{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{urlHelper.Action("UninstallAndDeleteUnusedPlugins", "Plugin", new { names = notEnabledSystemNames.ToArray() })}\">{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
+                    Text = $"{await LocalizationService.GetResourceAsync("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{urlHelper.Action("UninstallAndDeleteUnusedPlugins", "Plugin", new { names = notEnabledSystemNames.ToArray() })}\">{await LocalizationService.GetResourceAsync("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
                 });
             }
         }
@@ -722,8 +722,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.ServerTimeZone = TimeZoneInfo.Local.StandardName;
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
-            model.CurrentUserTime = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
-            model.HttpHost = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
+            model.CurrentUserTime = await DateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
+            model.HttpHost = HttpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
 
             //ensure no exception is thrown
             try
@@ -737,7 +737,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 // ignored
             }
 
-            foreach (var header in _httpContextAccessor.HttpContext.Request.Headers)
+            foreach (var header in HttpContextAccessor.HttpContext.Request.Headers)
             {
                 model.Headers.Add(new SystemInfoModel.HeaderModel
                 {
@@ -763,7 +763,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //https://stackoverflow.com/questions/2050396/getting-the-date-of-a-net-assembly
                     //we use a simple method because the more Jeff Atwood's solution doesn't work anymore 
                     //more info at https://blog.codinghorror.com/determining-build-date-the-hard-way/
-                    loadedAssemblyModel.BuildDate = assembly.IsDynamic ? null : (DateTime?)TimeZoneInfo.ConvertTimeFromUtc(_fileProvider.GetLastWriteTimeUtc(assembly.Location), TimeZoneInfo.Local);
+                    loadedAssemblyModel.BuildDate = assembly.IsDynamic ? null : (DateTime?)TimeZoneInfo.ConvertTimeFromUtc(FileProvider.GetLastWriteTimeUtc(assembly.Location), TimeZoneInfo.Local);
 
                 }
                 catch
@@ -775,15 +775,15 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
 
-            var currentStaticCacheManagerName = _staticCacheManager.GetType().Name;
+            var currentStaticCacheManagerName = StaticCacheManager.GetType().Name;
 
-            if (_appSettings.Get<DistributedCacheConfig>().Enabled)
+            if (AppSettings.Get<DistributedCacheConfig>().Enabled)
                 currentStaticCacheManagerName +=
-                    $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.Get<DistributedCacheConfig>().DistributedCacheType)})";
+                    $"({await LocalizationService.GetLocalizedEnumAsync(AppSettings.Get<DistributedCacheConfig>().DistributedCacheType)})";
 
             model.CurrentStaticCacheManager = currentStaticCacheManagerName;
 
-            model.AzureBlobStorageEnabled = _appSettings.Get<AzureBlobConfig>().Enabled;
+            model.AzureBlobStorageEnabled = AppSettings.Get<AzureBlobConfig>().Enabled;
 
             return model;
         }
@@ -799,18 +799,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //whether proxy is enabled
-            if (!_proxySettings.Enabled)
+            if (!ProxySettings.Enabled)
                 return;
 
             try
             {
-                await _nopHttpClient.PingAsync();
+                await NopHttpClient.PingAsync();
 
                 //connection is OK
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.ProxyConnection.OK")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.ProxyConnection.OK")
                 });
             }
             catch
@@ -819,7 +819,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.ProxyConnection.Failed")
+                    Text = await LocalizationService.GetResourceAsync("Admin.System.Warnings.ProxyConnection.Failed")
                 });
             }
         }
@@ -876,7 +876,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //publish event
             var warningEvent = new SystemWarningCreatedEvent();
-            await _eventPublisher.PublishAsync(warningEvent);
+            await EventPublisher.PublishAsync(warningEvent);
             //add another warnings (for example from plugins) 
             models.AddRange(warningEvent.SystemWarnings);
 
@@ -902,7 +902,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.DeleteAlreadySentQueuedEmails.EndDate = DateTime.UtcNow.AddDays(-7);
 
-            model.BackupSupported = _dataProvider.BackupSupported;
+            model.BackupSupported = DataProvider.BackupSupported;
 
             //prepare nested search model
             PrepareBackupFileSearchModel(model.BackupFileSearchModel);
@@ -924,19 +924,19 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get backup files
-            var backupFiles = _maintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
+            var backupFiles = MaintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
 
             //prepare list model
             var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, () =>
             {
                 return backupFiles.Select(file => new BackupFileModel
                 {
-                    Name = _fileProvider.GetFileName(file),
+                    Name = FileProvider.GetFileName(file),
 
                     //fill in additional values (not existing in the entity)
-                    Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb",
+                    Length = $"{FileProvider.FileLength(file) / 1024f / 1024f:F2} Mb",
 
-                    Link = $"{_webHelper.GetStoreLocation()}db_backups/{_fileProvider.GetFileName(file)}"
+                    Link = $"{WebHelper.GetStoreLocation()}db_backups/{FileProvider.GetFileName(file)}"
                 });
             });
 
@@ -959,27 +959,27 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available languages
             //we insert 0 as 'Standard' language.
             //let's insert -1 for 'All' language selection.
-            await _baseAdminModelFactory.PrepareLanguagesAsync(searchModel.AvailableLanguages,
-                defaultItemText: await _localizationService.GetResourceAsync("Admin.System.SeNames.List.Language.Standard"));
+            await BaseAdminModelFactory.PrepareLanguagesAsync(searchModel.AvailableLanguages,
+                defaultItemText: await LocalizationService.GetResourceAsync("Admin.System.SeNames.List.Language.Standard"));
             searchModel.AvailableLanguages.Insert(0,
-                new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.All"), Value = "-1" });
+                new SelectListItem { Text = await LocalizationService.GetResourceAsync("Admin.Common.All"), Value = "-1" });
             searchModel.LanguageId = -1;
 
             //prepare "is active" filter (0 - all; 1 - active only; 2 - inactive only)
             searchModel.AvailableActiveOptions.Add(new SelectListItem
             {
                 Value = "0",
-                Text = await _localizationService.GetResourceAsync("Admin.System.SeNames.List.IsActive.All")
+                Text = await LocalizationService.GetResourceAsync("Admin.System.SeNames.List.IsActive.All")
             });
             searchModel.AvailableActiveOptions.Add(new SelectListItem
             {
                 Value = "1",
-                Text = await _localizationService.GetResourceAsync("Admin.System.SeNames.List.IsActive.ActiveOnly")
+                Text = await LocalizationService.GetResourceAsync("Admin.System.SeNames.List.IsActive.ActiveOnly")
             });
             searchModel.AvailableActiveOptions.Add(new SelectListItem
             {
                 Value = "2",
-                Text = await _localizationService.GetResourceAsync("Admin.System.SeNames.List.IsActive.InactiveOnly")
+                Text = await LocalizationService.GetResourceAsync("Admin.System.SeNames.List.IsActive.InactiveOnly")
             });
 
             //prepare page parameters
@@ -1005,12 +1005,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var languageId = searchModel.LanguageId < 0 ? null : (int?)(searchModel.LanguageId);
 
             //get URL records
-            var urlRecords = await _urlRecordService.GetAllUrlRecordsAsync(slug: searchModel.SeName,
+            var urlRecords = await UrlRecordService.GetAllUrlRecordsAsync(slug: searchModel.SeName,
                 languageId: languageId, isActive: isActive,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //get URL helper
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            var urlHelper = UrlHelperFactory.GetUrlHelper(ActionContextAccessor.ActionContext);
 
             //prepare list model
             var model = await new UrlRecordListModel().PrepareToGridAsync(searchModel, urlRecords, () =>
@@ -1023,8 +1023,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     urlRecordModel.Name = urlRecord.Slug;
                     urlRecordModel.Language = urlRecord.LanguageId == 0
-                        ? await _localizationService.GetResourceAsync("Admin.System.SeNames.Language.Standard")
-                        : (await _languageService.GetLanguageByIdAsync(urlRecord.LanguageId))?.Name ?? "Unknown";
+                        ? await LocalizationService.GetResourceAsync("Admin.System.SeNames.Language.Standard")
+                        : (await LanguageService.GetLanguageByIdAsync(urlRecord.LanguageId))?.Name ?? "Unknown";
 
                     //details URL
                     var detailsUrl = string.Empty;
@@ -1071,11 +1071,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<LanguageSelectorModel> PrepareLanguageSelectorModelAsync()
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             var model = new LanguageSelectorModel
             {
-                CurrentLanguage = (await _workContext.GetWorkingLanguageAsync()).ToModel<LanguageModel>(),
-                AvailableLanguages = (await _languageService
+                CurrentLanguage = (await WorkContext.GetWorkingLanguageAsync()).ToModel<LanguageModel>(),
+                AvailableLanguages = (await LanguageService
                     .GetAllLanguagesAsync(storeId: store.Id))
                     .Select(language => language.ToModel<LanguageModel>()).ToList()
             };
@@ -1116,7 +1116,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get popular search terms
-            var searchTermRecordLines = await _searchTermService.GetStatsAsync(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            var searchTermRecordLines = await SearchTermService.GetStatsAsync(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
             var model = new PopularSearchTermListModel().PrepareToGrid(searchModel, searchTermRecordLines, () =>
@@ -1142,20 +1142,20 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             var model = new CommonStatisticsModel
             {
-                NumberOfOrders = (await _orderService.SearchOrdersAsync(pageIndex: 0, pageSize: 1, getOnlyTotalCount: true)).TotalCount
+                NumberOfOrders = (await OrderService.SearchOrdersAsync(pageIndex: 0, pageSize: 1, getOnlyTotalCount: true)).TotalCount
             };
 
-            var customerRoleIds = new[] { (await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName)).Id };
-            model.NumberOfCustomers = (await _customerService.GetAllCustomersAsync(customerRoleIds: customerRoleIds,
+            var customerRoleIds = new[] { (await CustomerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName)).Id };
+            model.NumberOfCustomers = (await CustomerService.GetAllCustomersAsync(customerRoleIds: customerRoleIds,
                 pageIndex: 0, pageSize: 1, getOnlyTotalCount: true)).TotalCount;
 
             var returnRequestStatus = ReturnRequestStatus.Pending;
-            model.NumberOfPendingReturnRequests = (await _returnRequestService.SearchReturnRequestsAsync(rs: returnRequestStatus,
+            model.NumberOfPendingReturnRequests = (await ReturnRequestService.SearchReturnRequestsAsync(rs: returnRequestStatus,
                 pageIndex: 0, pageSize: 1, getOnlyTotalCount: true)).TotalCount;
 
             model.NumberOfLowStockProducts =
-                (await _productService.GetLowStockProductsAsync(getOnlyTotalCount: true)).TotalCount +
-                (await _productService.GetLowStockProductCombinationsAsync(getOnlyTotalCount: true)).TotalCount;
+                (await ProductService.GetLowStockProductsAsync(getOnlyTotalCount: true)).TotalCount +
+                (await ProductService.GetLowStockProductCombinationsAsync(getOnlyTotalCount: true)).TotalCount;
 
             return model;
         }

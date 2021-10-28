@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
@@ -21,12 +21,12 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILanguageService _languageService;
-        private readonly IPollService _pollService;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
+        protected CatalogSettings CatalogSettings { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected ILanguageService LanguageService { get; }
+        protected IPollService PollService { get; }
+        protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
 
         #endregion
 
@@ -39,12 +39,12 @@ namespace Nop.Web.Areas.Admin.Factories
             IPollService pollService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
-            _catalogSettings = catalogSettings;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _dateTimeHelper = dateTimeHelper;
-            _languageService = languageService;
-            _pollService = pollService;
-            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            CatalogSettings = catalogSettings;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            DateTimeHelper = dateTimeHelper;
+            LanguageService = languageService;
+            PollService = pollService;
+            StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         }
 
         #endregion
@@ -91,9 +91,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+            searchModel.HideStoresList = CatalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get polls
-            var polls = await _pollService.GetPollsAsync(showHidden: true,
+            var polls = await PollService.GetPollsAsync(showHidden: true,
                 storeId: searchModel.SearchStoreId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -129,12 +129,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //convert dates to the user time
                     if (poll.StartDateUtc.HasValue)
-                        pollModel.StartDateUtc = await _dateTimeHelper.ConvertToUserTimeAsync(poll.StartDateUtc.Value, DateTimeKind.Utc);
+                        pollModel.StartDateUtc = await DateTimeHelper.ConvertToUserTimeAsync(poll.StartDateUtc.Value, DateTimeKind.Utc);
                     if (poll.EndDateUtc.HasValue)
-                        pollModel.EndDateUtc = await _dateTimeHelper.ConvertToUserTimeAsync(poll.EndDateUtc.Value, DateTimeKind.Utc);
+                        pollModel.EndDateUtc = await DateTimeHelper.ConvertToUserTimeAsync(poll.EndDateUtc.Value, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    pollModel.LanguageName = (await _languageService.GetLanguageByIdAsync(poll.LanguageId))?.Name;
+                    pollModel.LanguageName = (await LanguageService.GetLanguageByIdAsync(poll.LanguageId))?.Name;
 
                     return pollModel;
                 });
@@ -175,10 +175,10 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available languages
-            await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
+            await BaseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
 
             //prepare available stores
-            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, poll, excludeProperties);
+            await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(model, poll, excludeProperties);
 
             return model;
         }
@@ -201,7 +201,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(poll));
 
             //get poll answers
-            var pollAnswers = await _pollService.GetPollAnswerByPollAsync(poll.Id, searchModel.Page - 1, searchModel.PageSize);
+            var pollAnswers = await PollService.GetPollAnswerByPollAsync(poll.Id, searchModel.Page - 1, searchModel.PageSize);
 
             //prepare list model
             var model = new PollAnswerListModel().PrepareToGrid(searchModel, pollAnswers,

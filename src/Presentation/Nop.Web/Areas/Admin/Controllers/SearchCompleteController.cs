@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
+        protected IPermissionService PermissionService { get; }
+        protected IProductService ProductService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -24,9 +24,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             IProductService productService,
             IWorkContext workContext)
         {
-            _permissionService = permissionService;
-            _productService = productService;
-            _workContext = workContext;
+            PermissionService = permissionService;
+            ProductService = productService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> SearchAutoComplete(string term)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel))
                 return Content(string.Empty);
 
             const int searchTermMinimumLength = 3;
@@ -43,7 +43,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Content(string.Empty);
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             var vendorId = 0;
             if (currentVendor != null)
             {
@@ -52,7 +52,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //products
             const int productNumber = 15;
-            var products = await _productService.SearchProductsAsync(0,
+            var products = await ProductService.SearchProductsAsync(0,
                 vendorId: vendorId,
                 keywords: term,
                 pageSize: productNumber,

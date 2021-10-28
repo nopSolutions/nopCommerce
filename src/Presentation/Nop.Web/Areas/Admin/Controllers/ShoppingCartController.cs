@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Customers;
@@ -14,10 +14,10 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IPermissionService _permissionService;
-        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
-        private readonly IShoppingCartService _shoppingCartService;
+        protected ICustomerService CustomerService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IShoppingCartModelFactory ShoppingCartModelFactory { get; }
+        protected IShoppingCartService ShoppingCartService { get; }
         #endregion
 
         #region Ctor
@@ -27,10 +27,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             IShoppingCartService shoppingCartService,
             IShoppingCartModelFactory shoppingCartModelFactory)
         {
-            _customerService = customerService;
-            _permissionService = permissionService;
-            _shoppingCartModelFactory = shoppingCartModelFactory;
-            _shoppingCartService = shoppingCartService;
+            CustomerService = customerService;
+            PermissionService = permissionService;
+            ShoppingCartModelFactory = shoppingCartModelFactory;
+            ShoppingCartService = shoppingCartService;
         }
 
         #endregion
@@ -39,11 +39,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         
         public virtual async Task<IActionResult> CurrentCarts()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _shoppingCartModelFactory.PrepareShoppingCartSearchModelAsync(new ShoppingCartSearchModel());
+            var model = await ShoppingCartModelFactory.PrepareShoppingCartSearchModelAsync(new ShoppingCartSearchModel());
 
             return View(model);
         }
@@ -51,11 +51,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CurrentCarts(ShoppingCartSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _shoppingCartModelFactory.PrepareShoppingCartListModelAsync(searchModel);
+            var model = await ShoppingCartModelFactory.PrepareShoppingCartListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -63,15 +63,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> GetCartDetails(ShoppingCartItemSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
-            var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
+            var customer = await CustomerService.GetCustomerByIdAsync(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
-            var model = await _shoppingCartModelFactory.PrepareShoppingCartItemListModelAsync(searchModel, customer);
+            var model = await ShoppingCartModelFactory.PrepareShoppingCartItemListModelAsync(searchModel, customer);
 
             return Json(model);
         }
@@ -79,10 +79,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteItem(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
                 return await AccessDeniedDataTablesJson();
             
-            await _shoppingCartService.DeleteShoppingCartItemAsync(id);
+            await ShoppingCartService.DeleteShoppingCartItemAsync(id);
 
             return new NullJsonResult();
         }

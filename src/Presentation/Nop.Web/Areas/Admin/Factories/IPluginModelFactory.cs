@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Services.Plugins;
 using Nop.Web.Areas.Admin.Models.Plugins;

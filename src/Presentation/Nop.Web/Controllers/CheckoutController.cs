@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,30 +33,30 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressService _addressService;
-        private readonly ICheckoutModelFactory _checkoutModelFactory;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IProductService _productService;
-        private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly OrderSettings _orderSettings;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly ShippingSettings _shippingSettings;
+        protected AddressSettings AddressSettings { get; }
+        protected CustomerSettings CustomerSettings { get; }
+        protected IAddressAttributeParser AddressAttributeParser { get; }
+        protected IAddressService AddressService { get; }
+        protected ICheckoutModelFactory CheckoutModelFactory { get; }
+        protected ICountryService CountryService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILogger Logger { get; }
+        protected IOrderProcessingService OrderProcessingService { get; }
+        protected IOrderService OrderService { get; }
+        protected IPaymentPluginManager PaymentPluginManager { get; }
+        protected IPaymentService PaymentService { get; }
+        protected IProductService ProductService { get; }
+        protected IShippingService ShippingService { get; }
+        protected IShoppingCartService ShoppingCartService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IWebHelper WebHelper { get; }
+        protected IWorkContext WorkContext { get; }
+        protected OrderSettings OrderSettings { get; }
+        protected PaymentSettings PaymentSettings { get; }
+        protected RewardPointsSettings RewardPointsSettings { get; }
+        protected ShippingSettings ShippingSettings { get; }
 
         #endregion
 
@@ -87,30 +87,30 @@ namespace Nop.Web.Controllers
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings)
         {
-            _addressSettings = addressSettings;
-            _customerSettings = customerSettings;
-            _addressAttributeParser = addressAttributeParser;
-            _addressService = addressService;
-            _checkoutModelFactory = checkoutModelFactory;
-            _countryService = countryService;
-            _customerService = customerService;
-            _genericAttributeService = genericAttributeService;
-            _localizationService = localizationService;
-            _logger = logger;
-            _orderProcessingService = orderProcessingService;
-            _orderService = orderService;
-            _paymentPluginManager = paymentPluginManager;
-            _paymentService = paymentService;
-            _productService = productService;
-            _shippingService = shippingService;
-            _shoppingCartService = shoppingCartService;
-            _storeContext = storeContext;
-            _webHelper = webHelper;
-            _workContext = workContext;
-            _orderSettings = orderSettings;
-            _paymentSettings = paymentSettings;
-            _rewardPointsSettings = rewardPointsSettings;
-            _shippingSettings = shippingSettings;
+            AddressSettings = addressSettings;
+            CustomerSettings = customerSettings;
+            AddressAttributeParser = addressAttributeParser;
+            AddressService = addressService;
+            CheckoutModelFactory = checkoutModelFactory;
+            CountryService = countryService;
+            CustomerService = customerService;
+            GenericAttributeService = genericAttributeService;
+            LocalizationService = localizationService;
+            Logger = logger;
+            OrderProcessingService = orderProcessingService;
+            OrderService = orderService;
+            PaymentPluginManager = paymentPluginManager;
+            PaymentService = paymentService;
+            ProductService = productService;
+            ShippingService = shippingService;
+            ShoppingCartService = shoppingCartService;
+            StoreContext = storeContext;
+            WebHelper = webHelper;
+            WorkContext = workContext;
+            OrderSettings = orderSettings;
+            PaymentSettings = paymentSettings;
+            RewardPointsSettings = rewardPointsSettings;
+            ShippingSettings = shippingSettings;
         }
 
         #endregion
@@ -120,19 +120,19 @@ namespace Nop.Web.Controllers
         protected virtual async Task<bool> IsMinimumOrderPlacementIntervalValidAsync(Customer customer)
         {
             //prevent 2 orders being placed within an X seconds time frame
-            if (_orderSettings.MinimumOrderPlacementInterval == 0)
+            if (OrderSettings.MinimumOrderPlacementInterval == 0)
                 return true;
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
 
-            var lastOrder = (await _orderService.SearchOrdersAsync(storeId: store.Id,
+            var lastOrder = (await OrderService.SearchOrdersAsync(storeId: store.Id,
                 customerId: customer.Id, pageSize: 1))
                 .FirstOrDefault();
             if (lastOrder == null)
                 return true;
 
             var interval = DateTime.UtcNow - lastOrder.CreatedOnUtc;
-            return interval.TotalSeconds > _orderSettings.MinimumOrderPlacementInterval;
+            return interval.TotalSeconds > OrderSettings.MinimumOrderPlacementInterval;
         }
 
         /// <summary>
@@ -162,9 +162,9 @@ namespace Nop.Web.Controllers
         {
             var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var selectedPoint = (await _shippingService.GetPickupPointsAsync(customer.BillingAddressId ?? 0,
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var selectedPoint = (await ShippingService.GetPickupPointsAsync(customer.BillingAddressId ?? 0,
                 customer, pickupPoint[1], store.Id)).PickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
 
             if (selectedPoint == null)
@@ -180,8 +180,8 @@ namespace Nop.Web.Controllers
         protected virtual async Task SavePickupOptionAsync(PickupPoint pickupPoint)
         {
             var name = !string.IsNullOrEmpty(pickupPoint.Name) ?
-                string.Format(await _localizationService.GetResourceAsync("Checkout.PickupPoints.Name"), pickupPoint.Name) :
-                await _localizationService.GetResourceAsync("Checkout.PickupPoints.NullName");
+                string.Format(await LocalizationService.GetResourceAsync("Checkout.PickupPoints.Name"), pickupPoint.Name) :
+                await LocalizationService.GetResourceAsync("Checkout.PickupPoints.NullName");
             var pickUpInStoreShippingOption = new ShippingOption
             {
                 Name = name,
@@ -191,10 +191,10 @@ namespace Nop.Web.Controllers
                 IsPickupInStore = true
             };
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, pickUpInStoreShippingOption, store.Id);
-            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedPickupPointAttribute, pickupPoint, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, pickUpInStoreShippingOption, store.Id);
+            await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedPickupPointAttribute, pickupPoint, store.Id);
         }
 
         #endregion
@@ -204,27 +204,27 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> Index()
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             var cartProductIds = cart.Select(ci => ci.ProductId).ToArray();
             var downloadableProductsRequireRegistration =
-                _customerSettings.RequireRegistrationForDownloadableProducts && await _productService.HasAnyDownloadableProductAsync(cartProductIds);
+                CustomerSettings.RequireRegistrationForDownloadableProducts && await ProductService.HasAnyDownloadableProductAsync(cartProductIds);
 
-            if (await _customerService.IsGuestAsync(customer) && (!_orderSettings.AnonymousCheckoutAllowed || downloadableProductsRequireRegistration))
+            if (await CustomerService.IsGuestAsync(customer) && (!OrderSettings.AnonymousCheckoutAllowed || downloadableProductsRequireRegistration))
                 return Challenge();
 
             //if we have only "button" payment methods available (displayed on the shopping cart page, not during checkout),
             //then we should allow standard checkout
             //all payment methods (do not filter by country here as it could be not specified yet)
-            var paymentMethods = await (await _paymentPluginManager
+            var paymentMethods = await (await PaymentPluginManager
                 .LoadActivePluginsAsync(customer, store.Id))
                 .WhereAwait(async pm => !await pm.HidePaymentMethodAsync(cart)).ToListAsync();
             //payment methods displayed during checkout (not with "Button" type)
@@ -239,20 +239,20 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("ShoppingCart");
 
             //reset checkout data
-            await _customerService.ResetCheckoutDataAsync(customer, store.Id);
+            await CustomerService.ResetCheckoutDataAsync(customer, store.Id);
 
             //validation (cart)
-            var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer,
+            var checkoutAttributesXml = await GenericAttributeService.GetAttributeAsync<string>(customer,
                 NopCustomerDefaults.CheckoutAttributes, store.Id);
-            var scWarnings = await _shoppingCartService.GetShoppingCartWarningsAsync(cart, checkoutAttributesXml, true);
+            var scWarnings = await ShoppingCartService.GetShoppingCartWarningsAsync(cart, checkoutAttributesXml, true);
             if (scWarnings.Any())
                 return RedirectToRoute("ShoppingCart");
             //validation (each shopping cart item)
             foreach (var sci in cart)
             {
-                var product = await _productService.GetProductByIdAsync(sci.ProductId);
+                var product = await ProductService.GetProductByIdAsync(sci.ProductId);
 
-                var sciWarnings = await _shoppingCartService.GetShoppingCartItemWarningsAsync(customer,
+                var sciWarnings = await ShoppingCartService.GetShoppingCartItemWarningsAsync(customer,
                     sci.ShoppingCartType,
                     product,
                     sci.StoreId,
@@ -267,7 +267,7 @@ namespace Nop.Web.Controllers
                     return RedirectToRoute("ShoppingCart");
             }
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
             return RedirectToRoute("CheckoutBillingAddress");
@@ -277,20 +277,20 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> Completed(int? orderId)
         {
             //validation
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
             Order order = null;
             if (orderId.HasValue)
             {
                 //load order by identifier (if provided)
-                order = await _orderService.GetOrderByIdAsync(orderId.Value);
+                order = await OrderService.GetOrderByIdAsync(orderId.Value);
             }
             if (order == null)
             {
-                var store = await _storeContext.GetCurrentStoreAsync();
-                order = (await _orderService.SearchOrdersAsync(storeId: store.Id,
+                var store = await StoreContext.GetCurrentStoreAsync();
+                order = (await OrderService.SearchOrdersAsync(storeId: store.Id,
                 customerId: customer.Id, pageSize: 1))
                     .FirstOrDefault();
             }
@@ -300,13 +300,13 @@ namespace Nop.Web.Controllers
             }
 
             //disable "order completed" page?
-            if (_orderSettings.DisableOrderCompletedPage)
+            if (OrderSettings.DisableOrderCompletedPage)
             {
                 return RedirectToRoute("OrderDetails", new { orderId = order.Id });
             }
 
             //model
-            var model = await _checkoutModelFactory.PrepareCheckoutCompletedModelAsync(order);
+            var model = await CheckoutModelFactory.PrepareCheckoutCompletedModelAsync(order);
             return View(model);
         }
 
@@ -316,8 +316,8 @@ namespace Nop.Web.Controllers
         /// <param name="addressId"></param>
         public virtual async Task<IActionResult> GetAddressById(int addressId)
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var address = await CustomerService.GetCustomerAddressAsync(customer.Id, addressId);
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
 
@@ -341,22 +341,22 @@ namespace Nop.Web.Controllers
         {
             try
             {
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
+                var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
                 if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
                 //find address (ensure that it belongs to the current customer)
-                var address = await _customerService.GetCustomerAddressAsync(customer.Id, model.BillingNewAddress.Id);
+                var address = await CustomerService.GetCustomerAddressAsync(customer.Id, model.BillingNewAddress.Id);
                 if (address == null)
                     throw new Exception("Address can't be loaded");
 
                 address = model.BillingNewAddress.ToEntity(address);
-                await _addressService.UpdateAddressAsync(address);
+                await AddressService.UpdateAddressAsync(address);
 
                 customer.BillingAddressId = address.Id;
-                await _customerService.UpdateCustomerAsync(customer);
+                await CustomerService.UpdateCustomerAsync(customer);
 
                 if (!opc)
                 {
@@ -366,7 +366,7 @@ namespace Nop.Web.Controllers
                     });
                 }
 
-                var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart, address.CountryId);
+                var billingAddressModel = await CheckoutModelFactory.PrepareBillingAddressModelAsync(cart, address.CountryId);
                 return Json(new
                 {
                     selected_id = model.BillingNewAddress.Id,
@@ -379,7 +379,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception exc)
             {
-                await _logger.WarningAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
+                await Logger.WarningAsync(exc.Message, exc, await WorkContext.GetCurrentCustomerAsync());
                 return Json(new { error = 1, message = exc.Message });
             }
         }
@@ -391,18 +391,18 @@ namespace Nop.Web.Controllers
         /// <param name="opc"></param>
         public virtual async Task<IActionResult> DeleteEditAddress(int addressId, bool opc = false)
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
             if (!cart.Any())
                 throw new Exception("Your cart is empty");
 
-            var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
+            var address = await CustomerService.GetCustomerAddressAsync(customer.Id, addressId);
             if (address != null)
             {
-                await _customerService.RemoveCustomerAddressAsync(customer, address);
-                await _customerService.UpdateCustomerAsync(customer);
-                await _addressService.DeleteAddressAsync(address);
+                await CustomerService.RemoveCustomerAddressAsync(customer, address);
+                await CustomerService.UpdateCustomerAsync(customer);
+                await AddressService.DeleteAddressAsync(address);
             }
 
             if (!opc)
@@ -413,7 +413,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart);
+            var billingAddressModel = await CheckoutModelFactory.PrepareBillingAddressModelAsync(cart);
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel
@@ -431,27 +431,27 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> BillingAddress(IFormCollection form)
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
             //model
-            var model = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true);
+            var model = await CheckoutModelFactory.PrepareBillingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true);
 
             //check whether "billing address" step is enabled
-            if (_orderSettings.DisableBillingAddressCheckoutStep && model.ExistingAddresses.Any())
+            if (OrderSettings.DisableBillingAddressCheckoutStep && model.ExistingAddresses.Any())
             {
                 if (model.ExistingAddresses.Any())
                 {
@@ -470,31 +470,31 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> SelectBillingAddress(int addressId, bool shipToSameAddress = false)
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var address = await CustomerService.GetCustomerAddressAsync(customer.Id, addressId);
 
             if (address == null)
                 return RedirectToRoute("CheckoutBillingAddress");
 
             customer.BillingAddressId = address.Id;
-            await _customerService.UpdateCustomerAsync(customer);
+            await CustomerService.UpdateCustomerAsync(customer);
 
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             //ship to the same address?
             //by default Shipping is available if the country is not specified
-            var shippingAllowed = !_addressSettings.CountryEnabled || ((await _countryService.GetCountryByAddressAsync(address))?.AllowsShipping ?? false);
-            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart) && shippingAllowed)
+            var shippingAllowed = !AddressSettings.CountryEnabled || ((await CountryService.GetCountryByAddressAsync(address))?.AllowsShipping ?? false);
+            if (ShippingSettings.ShipToSameAddress && shipToSameAddress && await ShoppingCartService.ShoppingCartRequiresShippingAsync(cart) && shippingAllowed)
             {
                 customer.ShippingAddressId = customer.BillingAddressId;
-                await _customerService.UpdateCustomerAsync(customer);
+                await CustomerService.UpdateCustomerAsync(customer);
                 //reset selected shipping method (in case if "pick up in store" was selected)
-                await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
-                await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
+                await GenericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
+                await GenericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
                 //limitation - "Ship to the same address" doesn't properly work in "pick up in store only" case (when no shipping plugins are available) 
                 return RedirectToRoute("CheckoutShippingMethod");
             }
@@ -507,25 +507,25 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> NewBillingAddress(CheckoutBillingAddressModel model)
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
-            var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
+            var customAttributes = await AddressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
+            var customAttributeWarnings = await AddressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -536,7 +536,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 //try to find an address with the same values (don't duplicate records)
-                var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
+                var address = AddressService.FindAddress((await CustomerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
                     newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                     newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                     newAddress.Address1, newAddress.Address2, newAddress.City,
@@ -556,24 +556,24 @@ namespace Nop.Web.Controllers
                     if (address.StateProvinceId == 0)
                         address.StateProvinceId = null;
 
-                    await _addressService.InsertAddressAsync(address);
+                    await AddressService.InsertAddressAsync(address);
 
-                    await _customerService.InsertCustomerAddressAsync(customer, address);
+                    await CustomerService.InsertCustomerAddressAsync(customer, address);
                 }
 
                 customer.BillingAddressId = address.Id;
 
-                await _customerService.UpdateCustomerAsync(customer);
+                await CustomerService.UpdateCustomerAsync(customer);
 
                 //ship to the same address?
-                if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
+                if (ShippingSettings.ShipToSameAddress && model.ShipToSameAddress && await ShoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                 {
                     customer.ShippingAddressId = customer.BillingAddressId;
-                    await _customerService.UpdateCustomerAsync(customer);
+                    await CustomerService.UpdateCustomerAsync(customer);
 
                     //reset selected shipping method (in case if "pick up in store" was selected)
-                    await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
-                    await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
+                    await GenericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
+                    await GenericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
 
                     //limitation - "Ship to the same address" doesn't properly work in "pick up in store only" case (when no shipping plugins are available) 
                     return RedirectToRoute("CheckoutShippingMethod");
@@ -583,7 +583,7 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
+            model = await CheckoutModelFactory.PrepareBillingAddressModelAsync(cart,
                 selectedCountryId: newAddress.CountryId,
                 overrideAttributesXml: customAttributes);
             return View(model);
@@ -592,50 +592,50 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> ShippingAddress()
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
+            if (!await ShoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                 return RedirectToRoute("CheckoutShippingMethod");
 
             //model
-            var model = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true);
+            var model = await CheckoutModelFactory.PrepareShippingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true);
             return View(model);
         }
 
         public virtual async Task<IActionResult> SelectShippingAddress(int addressId)
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var address = await CustomerService.GetCustomerAddressAsync(customer.Id, addressId);
 
             if (address == null)
                 return RedirectToRoute("CheckoutShippingAddress");
 
             customer.ShippingAddressId = address.Id;
-            await _customerService.UpdateCustomerAsync(customer);
+            await CustomerService.UpdateCustomerAsync(customer);
 
-            if (_shippingSettings.AllowPickupInStore)
+            if (ShippingSettings.AllowPickupInStore)
             {
-                var store = await _storeContext.GetCurrentStoreAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
                 //set value indicating that "pick up in store" option has not been chosen
-                await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
+                await GenericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
             }
 
             return RedirectToRoute("CheckoutShippingMethod");
@@ -646,29 +646,29 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> NewShippingAddress(CheckoutShippingAddressModel model)
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
+            if (!await ShoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                 return RedirectToRoute("CheckoutShippingMethod");
 
             var form = model.Form;
 
             //pickup point
-            if (_shippingSettings.AllowPickupInStore && !_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+            if (ShippingSettings.AllowPickupInStore && !OrderSettings.DisplayPickupInStoreOnShippingMethodPage)
             {
                 var pickupInStore = ParsePickupInStore(form);
                 if (pickupInStore)
@@ -680,12 +680,12 @@ namespace Nop.Web.Controllers
                 }
 
                 //set value indicating that "pick up in store" option has not been chosen
-                await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
+                await GenericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
             }
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
-            var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
+            var customAttributes = await AddressAttributeParser.ParseCustomAddressAttributesAsync(form);
+            var customAttributeWarnings = await AddressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -696,7 +696,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 //try to find an address with the same values (don't duplicate records)
-                var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
+                var address = AddressService.FindAddress((await CustomerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
                     newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                     newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                     newAddress.Address1, newAddress.Address2, newAddress.City,
@@ -714,20 +714,20 @@ namespace Nop.Web.Controllers
                     if (address.StateProvinceId == 0)
                         address.StateProvinceId = null;
 
-                    await _addressService.InsertAddressAsync(address);
+                    await AddressService.InsertAddressAsync(address);
 
-                    await _customerService.InsertCustomerAddressAsync(customer, address);
+                    await CustomerService.InsertCustomerAddressAsync(customer, address);
 
                 }
 
                 customer.ShippingAddressId = address.Id;
-                await _customerService.UpdateCustomerAsync(customer);
+                await CustomerService.UpdateCustomerAsync(customer);
 
                 return RedirectToRoute("CheckoutShippingMethod");
             }
 
             //If we got this far, something failed, redisplay form
-            model = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart,
+            model = await CheckoutModelFactory.PrepareShippingAddressModelAsync(cart,
                 selectedCountryId: newAddress.CountryId,
                 overrideAttributesXml: customAttributes);
             return View(model);
@@ -736,45 +736,45 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> ShippingMethod()
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
+            if (!await ShoppingCartService.ShoppingCartRequiresShippingAsync(cart))
             {
-                await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
+                await GenericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
 
             //check if pickup point is selected on the shipping address step
-            if (!_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+            if (!OrderSettings.DisplayPickupInStoreOnShippingMethodPage)
             {
-                var selectedPickUpPoint = await _genericAttributeService
+                var selectedPickUpPoint = await GenericAttributeService
                     .GetAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, store.Id);
                 if (selectedPickUpPoint != null)
                     return RedirectToRoute("CheckoutPaymentMethod");
             }
 
             //model
-            var model = await _checkoutModelFactory.PrepareShippingMethodModelAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer));
+            var model = await CheckoutModelFactory.PrepareShippingMethodModelAsync(cart, await CustomerService.GetCustomerShippingAddressAsync(customer));
 
-            if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
+            if (ShippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
                 model.ShippingMethods.Count == 1)
             {
                 //if we have only one shipping method, then a customer doesn't have to choose a shipping method
-                await _genericAttributeService.SaveAttributeAsync(customer,
+                await GenericAttributeService.SaveAttributeAsync(customer,
                     NopCustomerDefaults.SelectedShippingOptionAttribute,
                     model.ShippingMethods.First().ShippingOption,
                     store.Id);
@@ -790,31 +790,31 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> SelectShippingMethod(string shippingoption, IFormCollection form)
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
+            if (!await ShoppingCartService.ShoppingCartRequiresShippingAsync(cart))
             {
-                await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer,
+                await GenericAttributeService.SaveAttributeAsync<ShippingOption>(customer,
                     NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
 
             //pickup point
-            if (_shippingSettings.AllowPickupInStore && _orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+            if (ShippingSettings.AllowPickupInStore && OrderSettings.DisplayPickupInStoreOnShippingMethodPage)
             {
                 var pickupInStore = ParsePickupInStore(form);
                 if (pickupInStore)
@@ -826,7 +826,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //set value indicating that "pick up in store" option has not been chosen
-                await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
+                await GenericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
             }
 
             //parse selected method 
@@ -840,12 +840,12 @@ namespace Nop.Web.Controllers
 
             //find it
             //performance optimization. try cache first
-            var shippingOptions = await _genericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
+            var shippingOptions = await GenericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
                 NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
             if (shippingOptions == null || !shippingOptions.Any())
             {
                 //not found? let's load them using shipping service
-                shippingOptions = (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
+                shippingOptions = (await ShippingService.GetShippingOptionsAsync(cart, await CustomerService.GetCustomerShippingAddressAsync(customer),
                     customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions.ToList();
             }
             else
@@ -861,7 +861,7 @@ namespace Nop.Web.Controllers
                 return await ShippingMethod();
 
             //save
-            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOption, store.Id);
+            await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOption, store.Id);
 
             return RedirectToRoute("CheckoutPaymentMethod");
         }
@@ -869,49 +869,49 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> PaymentMethod()
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart, false);
+            var isPaymentWorkflowRequired = await OrderProcessingService.IsPaymentWorkflowRequiredAsync(cart, false);
             if (!isPaymentWorkflowRequired)
             {
-                await _genericAttributeService.SaveAttributeAsync<string>(customer,
+                await GenericAttributeService.SaveAttributeAsync<string>(customer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, null, store.Id);
                 return RedirectToRoute("CheckoutPaymentInfo");
             }
 
             //filter by country
             var filterByCountryId = 0;
-            if (_addressSettings.CountryEnabled)
+            if (AddressSettings.CountryEnabled)
             {
-                filterByCountryId = (await _customerService.GetCustomerBillingAddressAsync(customer))?.CountryId ?? 0;
+                filterByCountryId = (await CustomerService.GetCustomerBillingAddressAsync(customer))?.CountryId ?? 0;
             }
 
             //model
-            var paymentMethodModel = await _checkoutModelFactory.PreparePaymentMethodModelAsync(cart, filterByCountryId);
+            var paymentMethodModel = await CheckoutModelFactory.PreparePaymentMethodModelAsync(cart, filterByCountryId);
 
-            if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
+            if (PaymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
                 paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
             {
                 //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
                 //so customer doesn't have to choose a payment method
 
-                await _genericAttributeService.SaveAttributeAsync(customer,
+                await GenericAttributeService.SaveAttributeAsync(customer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute,
                     paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName,
                     store.Id);
@@ -926,35 +926,35 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> SelectPaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
             //reward points
-            if (_rewardPointsSettings.Enabled)
+            if (RewardPointsSettings.Enabled)
             {
-                await _genericAttributeService.SaveAttributeAsync(customer,
+                await GenericAttributeService.SaveAttributeAsync(customer,
                     NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, model.UseRewardPoints,
                     store.Id);
             }
 
             //Check whether payment workflow is required
-            var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
+            var isPaymentWorkflowRequired = await OrderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
             if (!isPaymentWorkflowRequired)
             {
-                await _genericAttributeService.SaveAttributeAsync<string>(customer,
+                await GenericAttributeService.SaveAttributeAsync<string>(customer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, null, store.Id);
                 return RedirectToRoute("CheckoutPaymentInfo");
             }
@@ -962,11 +962,11 @@ namespace Nop.Web.Controllers
             if (string.IsNullOrEmpty(paymentmethod))
                 return await PaymentMethod();
 
-            if (!await _paymentPluginManager.IsPluginActiveAsync(paymentmethod, customer, store.Id))
+            if (!await PaymentPluginManager.IsPluginActiveAsync(paymentmethod, customer, store.Id))
                 return await PaymentMethod();
 
             //save
-            await _genericAttributeService.SaveAttributeAsync(customer,
+            await GenericAttributeService.SaveAttributeAsync(customer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, paymentmethod, store.Id);
 
             return RedirectToRoute("CheckoutPaymentInfo");
@@ -975,40 +975,40 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> PaymentInfo()
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
             //Check whether payment workflow is required
-            var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
+            var isPaymentWorkflowRequired = await OrderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
             }
 
             //load payment method
-            var paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
+            var paymentMethodSystemName = await GenericAttributeService.GetAttributeAsync<string>(customer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
-            var paymentMethod = await _paymentPluginManager
+            var paymentMethod = await PaymentPluginManager
                 .LoadPluginBySystemNameAsync(paymentMethodSystemName, customer, store.Id);
             if (paymentMethod == null)
                 return RedirectToRoute("CheckoutPaymentMethod");
 
             //Check whether payment info should be skipped
             if (paymentMethod.SkipPaymentInfo ||
-                (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection && _paymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods))
+                (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection && PaymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods))
             {
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
@@ -1020,7 +1020,7 @@ namespace Nop.Web.Controllers
             }
 
             //model
-            var model = await _checkoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
+            var model = await CheckoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
             return View(model);
         }
 
@@ -1029,33 +1029,33 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> EnterPaymentInfo(IFormCollection form)
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
             //Check whether payment workflow is required
-            var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
+            var isPaymentWorkflowRequired = await OrderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
             }
 
             //load payment method
-            var paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
+            var paymentMethodSystemName = await GenericAttributeService.GetAttributeAsync<string>(customer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
-            var paymentMethod = await _paymentPluginManager
+            var paymentMethod = await PaymentPluginManager
                 .LoadPluginBySystemNameAsync(paymentMethodSystemName, customer, store.Id);
             if (paymentMethod == null)
                 return RedirectToRoute("CheckoutPaymentMethod");
@@ -1068,7 +1068,7 @@ namespace Nop.Web.Controllers
                 //get payment info
                 var paymentInfo = await paymentMethod.GetPaymentInfoAsync(form);
                 //set previous order GUID (if exists)
-                _paymentService.GenerateOrderGuid(paymentInfo);
+                PaymentService.GenerateOrderGuid(paymentInfo);
 
                 //session save
                 HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
@@ -1077,31 +1077,31 @@ namespace Nop.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             //model
-            var model = await _checkoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
+            var model = await CheckoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
             return View(model);
         }
 
         public virtual async Task<IActionResult> Confirm()
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
             //model
-            var model = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
+            var model = await CheckoutModelFactory.PrepareConfirmOrderModelAsync(cart);
             return View(model);
         }
 
@@ -1109,47 +1109,47 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> ConfirmOrder()
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
             //model
-            var model = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
+            var model = await CheckoutModelFactory.PrepareConfirmOrderModelAsync(cart);
             try
             {
                 //prevent 2 orders being placed within an X seconds time frame
                 if (!await IsMinimumOrderPlacementIntervalValidAsync(customer))
-                    throw new Exception(await _localizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
+                    throw new Exception(await LocalizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
 
                 //place order
                 var processPaymentRequest = HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
-                    if (await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart))
+                    if (await OrderProcessingService.IsPaymentWorkflowRequiredAsync(cart))
                         return RedirectToRoute("CheckoutPaymentInfo");
 
                     processPaymentRequest = new ProcessPaymentRequest();
                 }
-                _paymentService.GenerateOrderGuid(processPaymentRequest);
+                PaymentService.GenerateOrderGuid(processPaymentRequest);
                 processPaymentRequest.StoreId = store.Id;
                 processPaymentRequest.CustomerId = customer.Id;
-                processPaymentRequest.PaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
+                processPaymentRequest.PaymentMethodSystemName = await GenericAttributeService.GetAttributeAsync<string>(customer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
                 HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", processPaymentRequest);
-                var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
+                var placeOrderResult = await OrderProcessingService.PlaceOrderAsync(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
                     HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
@@ -1157,12 +1157,12 @@ namespace Nop.Web.Controllers
                     {
                         Order = placeOrderResult.PlacedOrder
                     };
-                    await _paymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
+                    await PaymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
 
-                    if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
+                    if (WebHelper.IsRequestBeingRedirected || WebHelper.IsPostBeingDone)
                     {
                         //redirection or POST has been done in PostProcessPayment
-                        return Content(await _localizationService.GetResourceAsync("Checkout.RedirectMessage"));
+                        return Content(await LocalizationService.GetResourceAsync("Checkout.RedirectMessage"));
                     }
 
                     return RedirectToRoute("CheckoutCompleted", new { orderId = placeOrderResult.PlacedOrder.Id });
@@ -1173,7 +1173,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception exc)
             {
-                await _logger.WarningAsync(exc.Message, exc);
+                await Logger.WarningAsync(exc.Message, exc);
                 model.Warnings.Add(exc.Message);
             }
 
@@ -1187,14 +1187,14 @@ namespace Nop.Web.Controllers
 
         protected virtual async Task<JsonResult> OpcLoadStepAfterShippingAddress(IList<ShoppingCartItem> cart)
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var shippingMethodModel = await _checkoutModelFactory.PrepareShippingMethodModelAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer));
-            if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var shippingMethodModel = await CheckoutModelFactory.PrepareShippingMethodModelAsync(cart, await CustomerService.GetCustomerShippingAddressAsync(customer));
+            if (ShippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
                 shippingMethodModel.ShippingMethods.Count == 1)
             {
-                var store = await _storeContext.GetCurrentStoreAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
                 //if we have only one shipping method, then a customer doesn't have to choose a shipping method
-                await _genericAttributeService.SaveAttributeAsync(customer,
+                await GenericAttributeService.SaveAttributeAsync(customer,
                     NopCustomerDefaults.SelectedShippingOptionAttribute,
                     shippingMethodModel.ShippingMethods.First().ShippingOption,
                     store.Id);
@@ -1218,35 +1218,35 @@ namespace Nop.Web.Controllers
         {
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart, false);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var isPaymentWorkflowRequired = await OrderProcessingService.IsPaymentWorkflowRequiredAsync(cart, false);
             if (isPaymentWorkflowRequired)
             {
                 //filter by country
                 var filterByCountryId = 0;
-                if (_addressSettings.CountryEnabled)
+                if (AddressSettings.CountryEnabled)
                 {
-                    filterByCountryId = (await _customerService.GetCustomerBillingAddressAsync(customer))?.CountryId ?? 0;
+                    filterByCountryId = (await CustomerService.GetCustomerBillingAddressAsync(customer))?.CountryId ?? 0;
                 }
 
                 //payment is required
-                var paymentMethodModel = await _checkoutModelFactory.PreparePaymentMethodModelAsync(cart, filterByCountryId);
+                var paymentMethodModel = await CheckoutModelFactory.PreparePaymentMethodModelAsync(cart, filterByCountryId);
 
-                if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
+                if (PaymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
                     paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
                 {
                     //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
                     //so customer doesn't have to choose a payment method
 
                     var selectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
-                    await _genericAttributeService.SaveAttributeAsync(customer,
+                    await GenericAttributeService.SaveAttributeAsync(customer,
                         NopCustomerDefaults.SelectedPaymentMethodAttribute,
                         selectedPaymentMethodSystemName, store.Id);
 
-                    var paymentMethodInst = await _paymentPluginManager
+                    var paymentMethodInst = await PaymentPluginManager
                         .LoadPluginBySystemNameAsync(selectedPaymentMethodSystemName, customer, store.Id);
-                    if (!_paymentPluginManager.IsPluginActive(paymentMethodInst))
+                    if (!PaymentPluginManager.IsPluginActive(paymentMethodInst))
                         throw new Exception("Selected payment method can't be parsed");
 
                     return await OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
@@ -1265,10 +1265,10 @@ namespace Nop.Web.Controllers
             }
 
             //payment is not required
-            await _genericAttributeService.SaveAttributeAsync<string>(customer,
+            await GenericAttributeService.SaveAttributeAsync<string>(customer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, null, store.Id);
 
-            var confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
+            var confirmOrderModel = await CheckoutModelFactory.PrepareConfirmOrderModelAsync(cart);
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel
@@ -1283,7 +1283,7 @@ namespace Nop.Web.Controllers
         protected virtual async Task<JsonResult> OpcLoadStepAfterPaymentMethod(IPaymentMethod paymentMethod, IList<ShoppingCartItem> cart)
         {
             if (paymentMethod.SkipPaymentInfo ||
-                (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection && _paymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods))
+                (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection && PaymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods))
             {
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
@@ -1291,7 +1291,7 @@ namespace Nop.Web.Controllers
                 //session save
                 HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
 
-                var confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
+                var confirmOrderModel = await CheckoutModelFactory.PrepareConfirmOrderModelAsync(cart);
                 return Json(new
                 {
                     update_section = new UpdateSectionJsonModel
@@ -1304,7 +1304,7 @@ namespace Nop.Web.Controllers
             }
 
             //return payment info page
-            var paymenInfoModel = await _checkoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
+            var paymenInfoModel = await CheckoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel
@@ -1319,23 +1319,23 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> OnePageCheckout()
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
+            if (OrderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (!_orderSettings.OnePageCheckoutEnabled)
+            if (!OrderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("Checkout");
 
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            var model = await _checkoutModelFactory.PrepareOnePageCheckoutModelAsync(cart);
+            var model = await CheckoutModelFactory.PrepareOnePageCheckoutModelAsync(cart);
             return View(model);
         }
 
@@ -1345,20 +1345,20 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                if (_orderSettings.CheckoutDisabled)
-                    throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+                if (OrderSettings.CheckoutDisabled)
+                    throw new Exception(await LocalizationService.GetResourceAsync("Checkout.Disabled"));
 
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
+                var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
                 if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!OrderSettings.OnePageCheckoutEnabled)
                     throw new Exception("One page checkout is disabled");
 
-                if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+                if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
                 var form = model.Form;
@@ -1368,11 +1368,11 @@ namespace Nop.Web.Controllers
                 if (billingAddressId > 0)
                 {
                     //existing address
-                    var address = await _customerService.GetCustomerAddressAsync(customer.Id, billingAddressId)
-                        ?? throw new Exception(await _localizationService.GetResourceAsync("Checkout.Address.NotFound"));
+                    var address = await CustomerService.GetCustomerAddressAsync(customer.Id, billingAddressId)
+                        ?? throw new Exception(await LocalizationService.GetResourceAsync("Checkout.Address.NotFound"));
 
                     customer.BillingAddressId = address.Id;
-                    await _customerService.UpdateCustomerAsync(customer);
+                    await CustomerService.UpdateCustomerAsync(customer);
                 }
                 else
                 {
@@ -1380,8 +1380,8 @@ namespace Nop.Web.Controllers
                     var newAddress = model.BillingNewAddress;
 
                     //custom address attributes
-                    var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
-                    var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
+                    var customAttributes = await AddressAttributeParser.ParseCustomAddressAttributesAsync(form);
+                    var customAttributeWarnings = await AddressAttributeParser.GetAttributeWarningsAsync(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
                         ModelState.AddModelError("", error);
@@ -1391,7 +1391,7 @@ namespace Nop.Web.Controllers
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
-                        var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
+                        var billingAddressModel = await CheckoutModelFactory.PrepareBillingAddressModelAsync(cart,
                             selectedCountryId: newAddress.CountryId,
                             overrideAttributesXml: customAttributes);
                         billingAddressModel.NewAddressPreselected = true;
@@ -1407,7 +1407,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //try to find an address with the same values (don't duplicate records)
-                    var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
+                    var address = AddressService.FindAddress((await CustomerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
                         newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                         newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                         newAddress.Address1, newAddress.Address2, newAddress.City,
@@ -1428,37 +1428,37 @@ namespace Nop.Web.Controllers
                         if (address.StateProvinceId == 0)
                             address.StateProvinceId = null;
 
-                        await _addressService.InsertAddressAsync(address);
+                        await AddressService.InsertAddressAsync(address);
 
-                        await _customerService.InsertCustomerAddressAsync(customer, address);
+                        await CustomerService.InsertCustomerAddressAsync(customer, address);
                     }
 
                     customer.BillingAddressId = address.Id;
 
-                    await _customerService.UpdateCustomerAsync(customer);
+                    await CustomerService.UpdateCustomerAsync(customer);
                 }
 
-                if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
+                if (await ShoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                 {
                     //shipping is required
-                    var address = await _customerService.GetCustomerBillingAddressAsync(customer);
+                    var address = await CustomerService.GetCustomerBillingAddressAsync(customer);
 
                     //by default Shipping is available if the country is not specified
-                    var shippingAllowed = !_addressSettings.CountryEnabled || ((await _countryService.GetCountryByAddressAsync(address))?.AllowsShipping ?? false);
-                    if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && shippingAllowed)
+                    var shippingAllowed = !AddressSettings.CountryEnabled || ((await CountryService.GetCountryByAddressAsync(address))?.AllowsShipping ?? false);
+                    if (ShippingSettings.ShipToSameAddress && model.ShipToSameAddress && shippingAllowed)
                     {
                         //ship to the same address
                         customer.ShippingAddressId = address.Id;
-                        await _customerService.UpdateCustomerAsync(customer);
+                        await CustomerService.UpdateCustomerAsync(customer);
                         //reset selected shipping method (in case if "pick up in store" was selected)
-                        await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
-                        await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
+                        await GenericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
+                        await GenericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
                         //limitation - "Ship to the same address" doesn't properly work in "pick up in store only" case (when no shipping plugins are available) 
                         return await OpcLoadStepAfterShippingAddress(cart);
                     }
 
                     //do not ship to the same address
-                    var shippingAddressModel = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true);
+                    var shippingAddressModel = await CheckoutModelFactory.PrepareShippingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true);
 
                     return Json(new
                     {
@@ -1472,14 +1472,14 @@ namespace Nop.Web.Controllers
                 }
 
                 //shipping is not required
-                await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
+                await GenericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
 
                 //load next step
                 return await OpcLoadStepAfterShippingMethod(cart);
             }
             catch (Exception exc)
             {
-                await _logger.WarningAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
+                await Logger.WarningAsync(exc.Message, exc, await WorkContext.GetCurrentCustomerAsync());
                 return Json(new { error = 1, message = exc.Message });
             }
         }
@@ -1490,29 +1490,29 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                if (_orderSettings.CheckoutDisabled)
-                    throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+                if (OrderSettings.CheckoutDisabled)
+                    throw new Exception(await LocalizationService.GetResourceAsync("Checkout.Disabled"));
 
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
+                var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
                 if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!OrderSettings.OnePageCheckoutEnabled)
                     throw new Exception("One page checkout is disabled");
 
-                if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+                if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
+                if (!await ShoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                     throw new Exception("Shipping is not required");
 
                 var form = model.Form;
 
                 //pickup point
-                if (_shippingSettings.AllowPickupInStore && !_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+                if (ShippingSettings.AllowPickupInStore && !OrderSettings.DisplayPickupInStoreOnShippingMethodPage)
                 {
                     var pickupInStore = ParsePickupInStore(form);
                     if (pickupInStore)
@@ -1524,7 +1524,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //set value indicating that "pick up in store" option has not been chosen
-                    await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
+                    await GenericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
                 }
 
                 int.TryParse(form["shipping_address_id"], out var shippingAddressId);
@@ -1532,11 +1532,11 @@ namespace Nop.Web.Controllers
                 if (shippingAddressId > 0)
                 {
                     //existing address
-                    var address = await _customerService.GetCustomerAddressAsync(customer.Id, shippingAddressId)
-                        ?? throw new Exception(await _localizationService.GetResourceAsync("Checkout.Address.NotFound"));
+                    var address = await CustomerService.GetCustomerAddressAsync(customer.Id, shippingAddressId)
+                        ?? throw new Exception(await LocalizationService.GetResourceAsync("Checkout.Address.NotFound"));
 
                     customer.ShippingAddressId = address.Id;
-                    await _customerService.UpdateCustomerAsync(customer);
+                    await CustomerService.UpdateCustomerAsync(customer);
                 }
                 else
                 {
@@ -1544,8 +1544,8 @@ namespace Nop.Web.Controllers
                     var newAddress = model.ShippingNewAddress;
 
                     //custom address attributes
-                    var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
-                    var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
+                    var customAttributes = await AddressAttributeParser.ParseCustomAddressAttributesAsync(form);
+                    var customAttributeWarnings = await AddressAttributeParser.GetAttributeWarningsAsync(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
                         ModelState.AddModelError("", error);
@@ -1555,7 +1555,7 @@ namespace Nop.Web.Controllers
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
-                        var shippingAddressModel = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart,
+                        var shippingAddressModel = await CheckoutModelFactory.PrepareShippingAddressModelAsync(cart,
                             selectedCountryId: newAddress.CountryId,
                             overrideAttributesXml: customAttributes);
                         shippingAddressModel.NewAddressPreselected = true;
@@ -1570,7 +1570,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //try to find an address with the same values (don't duplicate records)
-                    var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
+                    var address = AddressService.FindAddress((await CustomerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
                         newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                         newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                         newAddress.Address1, newAddress.Address2, newAddress.City,
@@ -1583,21 +1583,21 @@ namespace Nop.Web.Controllers
                         address.CustomAttributes = customAttributes;
                         address.CreatedOnUtc = DateTime.UtcNow;
 
-                        await _addressService.InsertAddressAsync(address);
+                        await AddressService.InsertAddressAsync(address);
 
-                        await _customerService.InsertCustomerAddressAsync(customer, address);
+                        await CustomerService.InsertCustomerAddressAsync(customer, address);
                     }
 
                     customer.ShippingAddressId = address.Id;
 
-                    await _customerService.UpdateCustomerAsync(customer);
+                    await CustomerService.UpdateCustomerAsync(customer);
                 }
 
                 return await OpcLoadStepAfterShippingAddress(cart);
             }
             catch (Exception exc)
             {
-                await _logger.WarningAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
+                await Logger.WarningAsync(exc.Message, exc, await WorkContext.GetCurrentCustomerAsync());
                 return Json(new { error = 1, message = exc.Message });
             }
         }
@@ -1608,27 +1608,27 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                if (_orderSettings.CheckoutDisabled)
-                    throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+                if (OrderSettings.CheckoutDisabled)
+                    throw new Exception(await LocalizationService.GetResourceAsync("Checkout.Disabled"));
 
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
+                var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
                 if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!OrderSettings.OnePageCheckoutEnabled)
                     throw new Exception("One page checkout is disabled");
 
-                if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+                if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
+                if (!await ShoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                     throw new Exception("Shipping is not required");
 
                 //pickup point
-                if (_shippingSettings.AllowPickupInStore && _orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+                if (ShippingSettings.AllowPickupInStore && OrderSettings.DisplayPickupInStoreOnShippingMethodPage)
                 {
                     var pickupInStore = ParsePickupInStore(form);
                     if (pickupInStore)
@@ -1640,7 +1640,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //set value indicating that "pick up in store" option has not been chosen
-                    await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
+                    await GenericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
                 }
 
                 //parse selected method 
@@ -1654,12 +1654,12 @@ namespace Nop.Web.Controllers
 
                 //find it
                 //performance optimization. try cache first
-                var shippingOptions = await _genericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
+                var shippingOptions = await GenericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
                     NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
                 if (shippingOptions == null || !shippingOptions.Any())
                 {
                     //not found? let's load them using shipping service
-                    shippingOptions = (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
+                    shippingOptions = (await ShippingService.GetShippingOptionsAsync(cart, await CustomerService.GetCustomerShippingAddressAsync(customer),
                         customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions.ToList();
                 }
                 else
@@ -1675,14 +1675,14 @@ namespace Nop.Web.Controllers
                     throw new Exception("Selected shipping method can't be loaded");
 
                 //save
-                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOption, store.Id);
+                await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOption, store.Id);
 
                 //load next step
                 return await OpcLoadStepAfterShippingMethod(cart);
             }
             catch (Exception exc)
             {
-                await _logger.WarningAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
+                await Logger.WarningAsync(exc.Message, exc, await WorkContext.GetCurrentCustomerAsync());
                 return Json(new { error = 1, message = exc.Message });
             }
         }
@@ -1693,20 +1693,20 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                if (_orderSettings.CheckoutDisabled)
-                    throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+                if (OrderSettings.CheckoutDisabled)
+                    throw new Exception(await LocalizationService.GetResourceAsync("Checkout.Disabled"));
 
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
+                var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
                 if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!OrderSettings.OnePageCheckoutEnabled)
                     throw new Exception("One page checkout is disabled");
 
-                if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+                if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
                 //payment method 
@@ -1714,22 +1714,22 @@ namespace Nop.Web.Controllers
                     throw new Exception("Selected payment method can't be parsed");
 
                 //reward points
-                if (_rewardPointsSettings.Enabled)
+                if (RewardPointsSettings.Enabled)
                 {
-                    await _genericAttributeService.SaveAttributeAsync(customer,
+                    await GenericAttributeService.SaveAttributeAsync(customer,
                         NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, model.UseRewardPoints,
                         store.Id);
                 }
 
                 //Check whether payment workflow is required
-                var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
+                var isPaymentWorkflowRequired = await OrderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
                 if (!isPaymentWorkflowRequired)
                 {
                     //payment is not required
-                    await _genericAttributeService.SaveAttributeAsync<string>(customer,
+                    await GenericAttributeService.SaveAttributeAsync<string>(customer,
                         NopCustomerDefaults.SelectedPaymentMethodAttribute, null, store.Id);
 
-                    var confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
+                    var confirmOrderModel = await CheckoutModelFactory.PrepareConfirmOrderModelAsync(cart);
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel
@@ -1741,20 +1741,20 @@ namespace Nop.Web.Controllers
                     });
                 }
 
-                var paymentMethodInst = await _paymentPluginManager
+                var paymentMethodInst = await PaymentPluginManager
                     .LoadPluginBySystemNameAsync(paymentmethod, customer, store.Id);
-                if (!_paymentPluginManager.IsPluginActive(paymentMethodInst))
+                if (!PaymentPluginManager.IsPluginActive(paymentMethodInst))
                     throw new Exception("Selected payment method can't be parsed");
 
                 //save
-                await _genericAttributeService.SaveAttributeAsync(customer,
+                await GenericAttributeService.SaveAttributeAsync(customer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, paymentmethod, store.Id);
 
                 return await OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
             }
             catch (Exception exc)
             {
-                await _logger.WarningAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
+                await Logger.WarningAsync(exc.Message, exc, await WorkContext.GetCurrentCustomerAsync());
                 return Json(new { error = 1, message = exc.Message });
             }
         }
@@ -1765,25 +1765,25 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                if (_orderSettings.CheckoutDisabled)
-                    throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+                if (OrderSettings.CheckoutDisabled)
+                    throw new Exception(await LocalizationService.GetResourceAsync("Checkout.Disabled"));
 
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
+                var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
                 if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!OrderSettings.OnePageCheckoutEnabled)
                     throw new Exception("One page checkout is disabled");
 
-                if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+                if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                var paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
+                var paymentMethodSystemName = await GenericAttributeService.GetAttributeAsync<string>(customer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
-                var paymentMethod = await _paymentPluginManager
+                var paymentMethod = await PaymentPluginManager
                     .LoadPluginBySystemNameAsync(paymentMethodSystemName, customer, store.Id)
                     ?? throw new Exception("Payment method is not selected");
 
@@ -1795,12 +1795,12 @@ namespace Nop.Web.Controllers
                     //get payment info
                     var paymentInfo = await paymentMethod.GetPaymentInfoAsync(form);
                     //set previous order GUID (if exists)
-                    _paymentService.GenerateOrderGuid(paymentInfo);
+                    PaymentService.GenerateOrderGuid(paymentInfo);
 
                     //session save
                     HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
 
-                    var confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
+                    var confirmOrderModel = await CheckoutModelFactory.PrepareConfirmOrderModelAsync(cart);
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel
@@ -1813,7 +1813,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //If we got this far, something failed, redisplay form
-                var paymenInfoModel = await _checkoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
+                var paymenInfoModel = await CheckoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
                 return Json(new
                 {
                     update_section = new UpdateSectionJsonModel
@@ -1825,7 +1825,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception exc)
             {
-                await _logger.WarningAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
+                await Logger.WarningAsync(exc.Message, exc, await WorkContext.GetCurrentCustomerAsync());
                 return Json(new { error = 1, message = exc.Message });
             }
         }
@@ -1836,45 +1836,45 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                if (_orderSettings.CheckoutDisabled)
-                    throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+                if (OrderSettings.CheckoutDisabled)
+                    throw new Exception(await LocalizationService.GetResourceAsync("Checkout.Disabled"));
 
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
+                var cart = await ShoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
                 if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!OrderSettings.OnePageCheckoutEnabled)
                     throw new Exception("One page checkout is disabled");
 
-                if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+                if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
                 //prevent 2 orders being placed within an X seconds time frame
                 if (!await IsMinimumOrderPlacementIntervalValidAsync(customer))
-                    throw new Exception(await _localizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
+                    throw new Exception(await LocalizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
 
                 //place order
                 var processPaymentRequest = HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
-                    if (await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart))
+                    if (await OrderProcessingService.IsPaymentWorkflowRequiredAsync(cart))
                     {
                         throw new Exception("Payment information is not entered");
                     }
 
                     processPaymentRequest = new ProcessPaymentRequest();
                 }
-                _paymentService.GenerateOrderGuid(processPaymentRequest);
+                PaymentService.GenerateOrderGuid(processPaymentRequest);
                 processPaymentRequest.StoreId = store.Id;
                 processPaymentRequest.CustomerId = customer.Id;
-                processPaymentRequest.PaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
+                processPaymentRequest.PaymentMethodSystemName = await GenericAttributeService.GetAttributeAsync<string>(customer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
                 HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", processPaymentRequest);
-                var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
+                var placeOrderResult = await OrderProcessingService.PlaceOrderAsync(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
                     HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
@@ -1883,7 +1883,7 @@ namespace Nop.Web.Controllers
                         Order = placeOrderResult.PlacedOrder
                     };
 
-                    var paymentMethod = await _paymentPluginManager
+                    var paymentMethod = await PaymentPluginManager
                         .LoadPluginBySystemNameAsync(placeOrderResult.PlacedOrder.PaymentMethodSystemName, customer, store.Id);
                     if (paymentMethod == null)
                         //payment method could be null if order total is 0
@@ -1898,11 +1898,11 @@ namespace Nop.Web.Controllers
                         //redirect
                         return Json(new
                         {
-                            redirect = $"{_webHelper.GetStoreLocation()}checkout/OpcCompleteRedirectionPayment"
+                            redirect = $"{WebHelper.GetStoreLocation()}checkout/OpcCompleteRedirectionPayment"
                         });
                     }
 
-                    await _paymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
+                    await PaymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
                     //success
                     return Json(new { success = 1 });
                 }
@@ -1924,7 +1924,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception exc)
             {
-                await _logger.WarningAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
+                await Logger.WarningAsync(exc.Message, exc, await WorkContext.GetCurrentCustomerAsync());
                 return Json(new { error = 1, message = exc.Message });
             }
         }
@@ -1934,21 +1934,21 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!OrderSettings.OnePageCheckoutEnabled)
                     return RedirectToRoute("Homepage");
 
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                if (await CustomerService.IsGuestAsync(customer) && !OrderSettings.AnonymousCheckoutAllowed)
                     return Challenge();
 
                 //get the order
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var order = (await _orderService.SearchOrdersAsync(storeId: store.Id,
+                var store = await StoreContext.GetCurrentStoreAsync();
+                var order = (await OrderService.SearchOrdersAsync(storeId: store.Id,
                 customerId: customer.Id, pageSize: 1)).FirstOrDefault();
                 if (order == null)
                     return RedirectToRoute("Homepage");
 
-                var paymentMethod = await _paymentPluginManager
+                var paymentMethod = await PaymentPluginManager
                     .LoadPluginBySystemNameAsync(order.PaymentMethodSystemName, customer, store.Id);
                 if (paymentMethod == null)
                     return RedirectToRoute("Homepage");
@@ -1966,12 +1966,12 @@ namespace Nop.Web.Controllers
                     Order = order
                 };
 
-                await _paymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
+                await PaymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
 
-                if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
+                if (WebHelper.IsRequestBeingRedirected || WebHelper.IsPostBeingDone)
                 {
                     //redirection or POST has been done in PostProcessPayment
-                    return Content(await _localizationService.GetResourceAsync("Checkout.RedirectMessage"));
+                    return Content(await LocalizationService.GetResourceAsync("Checkout.RedirectMessage"));
                 }
 
                 //if no redirection has been done (to a third-party payment page)
@@ -1980,7 +1980,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception exc)
             {
-                await _logger.WarningAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
+                await Logger.WarningAsync(exc.Message, exc, await WorkContext.GetCurrentCustomerAsync());
                 return Content(exc.Message);
             }
         }

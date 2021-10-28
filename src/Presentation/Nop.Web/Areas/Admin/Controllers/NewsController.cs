@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,16 +24,16 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsModelFactory _newsModelFactory;
-        private readonly INewsService _newsService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
-        private readonly IUrlRecordService _urlRecordService;
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected INewsModelFactory NewsModelFactory { get; }
+        protected INewsService NewsService { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected IStoreService StoreService { get; }
+        protected IUrlRecordService UrlRecordService { get; }
 
         #endregion
 
@@ -50,16 +50,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IUrlRecordService urlRecordService)
         {
-            _customerActivityService = customerActivityService;
-            _eventPublisher = eventPublisher;
-            _localizationService = localizationService;
-            _newsModelFactory = newsModelFactory;
-            _newsService = newsService;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
-            _storeMappingService = storeMappingService;
-            _storeService = storeService;
-            _urlRecordService = urlRecordService;
+            CustomerActivityService = customerActivityService;
+            EventPublisher = eventPublisher;
+            LocalizationService = localizationService;
+            NewsModelFactory = newsModelFactory;
+            NewsService = newsService;
+            NotificationService = notificationService;
+            PermissionService = permissionService;
+            StoreMappingService = storeMappingService;
+            StoreService = storeService;
+            UrlRecordService = urlRecordService;
         }
 
         #endregion
@@ -69,24 +69,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task SaveStoreMappingsAsync(NewsItem newsItem, NewsItemModel model)
         {
             newsItem.LimitedToStores = model.SelectedStoreIds.Any();
-            await _newsService.UpdateNewsAsync(newsItem);
+            await NewsService.UpdateNewsAsync(newsItem);
 
-            var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(newsItem);
-            var allStores = await _storeService.GetAllStoresAsync();
+            var existingStoreMappings = await StoreMappingService.GetStoreMappingsAsync(newsItem);
+            var allStores = await StoreService.GetAllStoresAsync();
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        await _storeMappingService.InsertStoreMappingAsync(newsItem, store.Id);
+                        await StoreMappingService.InsertStoreMappingAsync(newsItem, store.Id);
                 }
                 else
                 {
                     //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
-                        await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
+                        await StoreMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
                 }
             }
         }
@@ -104,11 +104,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> NewsItems(int? filterByNewsItemId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _newsModelFactory.PrepareNewsContentModelAsync(new NewsContentModel(), filterByNewsItemId);
+            var model = await NewsModelFactory.PrepareNewsContentModelAsync(new NewsContentModel(), filterByNewsItemId);
 
             return View(model);
         }
@@ -116,22 +116,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(NewsItemSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _newsModelFactory.PrepareNewsItemListModelAsync(searchModel);
+            var model = await NewsModelFactory.PrepareNewsItemListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> NewsItemCreate()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _newsModelFactory.PrepareNewsItemModelAsync(new NewsItemModel(), null);
+            var model = await NewsModelFactory.PrepareNewsItemModelAsync(new NewsItemModel(), null);
 
             return View(model);
         }
@@ -139,27 +139,27 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> NewsItemCreate(NewsItemModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var newsItem = model.ToEntity<NewsItem>();
                 newsItem.CreatedOnUtc = DateTime.UtcNow;
-                await _newsService.InsertNewsAsync(newsItem);
+                await NewsService.InsertNewsAsync(newsItem);
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("AddNewNews",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewNews"), newsItem.Id), newsItem);
+                await CustomerActivityService.InsertActivityAsync("AddNewNews",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.AddNewNews"), newsItem.Id), newsItem);
 
                 //search engine name
-                var seName = await _urlRecordService.ValidateSeNameAsync(newsItem, model.SeName, model.Title, true);
-                await _urlRecordService.SaveSlugAsync(newsItem, seName, newsItem.LanguageId);
+                var seName = await UrlRecordService.ValidateSeNameAsync(newsItem, model.SeName, model.Title, true);
+                await UrlRecordService.SaveSlugAsync(newsItem, seName, newsItem.LanguageId);
 
                 //Stores
                 await SaveStoreMappingsAsync(newsItem, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.News.NewsItems.Added"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.ContentManagement.News.NewsItems.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("NewsItems");
@@ -168,7 +168,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _newsModelFactory.PrepareNewsItemModelAsync(model, null, true);
+            model = await NewsModelFactory.PrepareNewsItemModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -176,16 +176,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> NewsItemEdit(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             //try to get a news item with the specified id
-            var newsItem = await _newsService.GetNewsByIdAsync(id);
+            var newsItem = await NewsService.GetNewsByIdAsync(id);
             if (newsItem == null)
                 return RedirectToAction("NewsItems");
 
             //prepare model
-            var model = await _newsModelFactory.PrepareNewsItemModelAsync(null, newsItem);
+            var model = await NewsModelFactory.PrepareNewsItemModelAsync(null, newsItem);
 
             return View(model);
         }
@@ -193,31 +193,31 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> NewsItemEdit(NewsItemModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             //try to get a news item with the specified id
-            var newsItem = await _newsService.GetNewsByIdAsync(model.Id);
+            var newsItem = await NewsService.GetNewsByIdAsync(model.Id);
             if (newsItem == null)
                 return RedirectToAction("NewsItems");
 
             if (ModelState.IsValid)
             {
                 newsItem = model.ToEntity(newsItem);
-                await _newsService.UpdateNewsAsync(newsItem);
+                await NewsService.UpdateNewsAsync(newsItem);
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("EditNews",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditNews"), newsItem.Id), newsItem);
+                await CustomerActivityService.InsertActivityAsync("EditNews",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.EditNews"), newsItem.Id), newsItem);
 
                 //search engine name
-                var seName = await _urlRecordService.ValidateSeNameAsync(newsItem, model.SeName, model.Title, true);
-                await _urlRecordService.SaveSlugAsync(newsItem, seName, newsItem.LanguageId);
+                var seName = await UrlRecordService.ValidateSeNameAsync(newsItem, model.SeName, model.Title, true);
+                await UrlRecordService.SaveSlugAsync(newsItem, seName, newsItem.LanguageId);
 
                 //stores
                 await SaveStoreMappingsAsync(newsItem, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.News.NewsItems.Updated"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.ContentManagement.News.NewsItems.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("NewsItems");
@@ -226,7 +226,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _newsModelFactory.PrepareNewsItemModelAsync(model, newsItem, true);
+            model = await NewsModelFactory.PrepareNewsItemModelAsync(model, newsItem, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -235,21 +235,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             //try to get a news item with the specified id
-            var newsItem = await _newsService.GetNewsByIdAsync(id);
+            var newsItem = await NewsService.GetNewsByIdAsync(id);
             if (newsItem == null)
                 return RedirectToAction("NewsItems");
 
-            await _newsService.DeleteNewsAsync(newsItem);
+            await NewsService.DeleteNewsAsync(newsItem);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteNews",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteNews"), newsItem.Id), newsItem);
+            await CustomerActivityService.InsertActivityAsync("DeleteNews",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.DeleteNews"), newsItem.Id), newsItem);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.News.NewsItems.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.ContentManagement.News.NewsItems.Deleted"));
 
             return RedirectToAction("NewsItems");
         }
@@ -260,16 +260,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> NewsComments(int? filterByNewsItemId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             //try to get a news item with the specified id
-            var newsItem = await _newsService.GetNewsByIdAsync(filterByNewsItemId ?? 0);
+            var newsItem = await NewsService.GetNewsByIdAsync(filterByNewsItemId ?? 0);
             if (newsItem == null && filterByNewsItemId.HasValue)
                 return RedirectToAction("NewsComments");
 
             //prepare model
-            var model = await _newsModelFactory.PrepareNewsCommentSearchModelAsync(new NewsCommentSearchModel(), newsItem);
+            var model = await NewsModelFactory.PrepareNewsCommentSearchModelAsync(new NewsCommentSearchModel(), newsItem);
 
             return View(model);
         }
@@ -277,11 +277,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Comments(NewsCommentSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _newsModelFactory.PrepareNewsCommentListModelAsync(searchModel, searchModel.NewsItemId);
+            var model = await NewsModelFactory.PrepareNewsCommentListModelAsync(searchModel, searchModel.NewsItemId);
 
             return Json(model);
         }
@@ -289,11 +289,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CommentUpdate(NewsCommentModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             //try to get a news comment with the specified id
-            var comment = await _newsService.GetNewsCommentByIdAsync(model.Id)
+            var comment = await NewsService.GetNewsCommentByIdAsync(model.Id)
                 ?? throw new ArgumentException("No comment found with the specified id");
 
             var previousIsApproved = comment.IsApproved;
@@ -301,15 +301,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             //fill entity from model
             comment = model.ToEntity(comment);
 
-            await _newsService.UpdateNewsCommentAsync(comment);
+            await NewsService.UpdateNewsCommentAsync(comment);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("EditNewsComment",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment"), comment.Id), comment);
+            await CustomerActivityService.InsertActivityAsync("EditNewsComment",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.EditNewsComment"), comment.Id), comment);
 
             //raise event (only if it wasn't approved before and is approved now)
             if (!previousIsApproved && comment.IsApproved)
-                await _eventPublisher.PublishAsync(new NewsCommentApprovedEvent(comment));
+                await EventPublisher.PublishAsync(new NewsCommentApprovedEvent(comment));
 
             return new NullJsonResult();
         }
@@ -317,18 +317,18 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CommentDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             //try to get a news comment with the specified id
-            var comment = await _newsService.GetNewsCommentByIdAsync(id)
+            var comment = await NewsService.GetNewsCommentByIdAsync(id)
                 ?? throw new ArgumentException("No comment found with the specified id", nameof(id));
 
-            await _newsService.DeleteNewsCommentAsync(comment);
+            await NewsService.DeleteNewsCommentAsync(comment);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteNewsComment",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteNewsComment"), comment.Id), comment);
+            await CustomerActivityService.InsertActivityAsync("DeleteNewsComment",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.DeleteNewsComment"), comment.Id), comment);
 
             return new NullJsonResult();
         }
@@ -336,21 +336,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteSelectedComments(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             if (selectedIds == null || selectedIds.Count() == 0)
                 return NoContent();
 
-            var comments = await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray());
+            var comments = await NewsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray());
 
-            await _newsService.DeleteNewsCommentsAsync(comments);
+            await NewsService.DeleteNewsCommentsAsync(comments);
 
             //activity log
             foreach (var newsComment in comments)
             {
-                await _customerActivityService.InsertActivityAsync("DeleteNewsComment",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteNewsComment"), newsComment.Id), newsComment);
+                await CustomerActivityService.InsertActivityAsync("DeleteNewsComment",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.DeleteNewsComment"), newsComment.Id), newsComment);
             }
 
             return Json(new { Result = true });
@@ -359,27 +359,27 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ApproveSelected(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             if (selectedIds == null || selectedIds.Count() == 0)
                 return NoContent();
 
             //filter not approved comments
-            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
+            var newsComments = (await NewsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
 
             foreach (var newsComment in newsComments)
             {
                 newsComment.IsApproved = true;
 
-                await _newsService.UpdateNewsCommentAsync(newsComment);
+                await NewsService.UpdateNewsCommentAsync(newsComment);
 
                 //raise event 
-                await _eventPublisher.PublishAsync(new NewsCommentApprovedEvent(newsComment));
+                await EventPublisher.PublishAsync(new NewsCommentApprovedEvent(newsComment));
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("EditNewsComment",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
+                await CustomerActivityService.InsertActivityAsync("EditNewsComment",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
             }
 
             return Json(new { Result = true });
@@ -388,24 +388,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DisapproveSelected(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             if (selectedIds == null || selectedIds.Count() == 0)
                 return NoContent();
 
             //filter approved comments
-            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved);
+            var newsComments = (await NewsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved);
 
             foreach (var newsComment in newsComments)
             {
                 newsComment.IsApproved = false;
 
-                await _newsService.UpdateNewsCommentAsync(newsComment);
+                await NewsService.UpdateNewsCommentAsync(newsComment);
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("EditNewsComment",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
+                await CustomerActivityService.InsertActivityAsync("EditNewsComment",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
             }
 
             return Json(new { Result = true });

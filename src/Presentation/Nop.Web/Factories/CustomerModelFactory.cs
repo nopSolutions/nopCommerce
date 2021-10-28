@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -41,43 +41,43 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CommonSettings _commonSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly GdprSettings _gdprSettings;
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IGdprService _gdprService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IOrderService _orderService;
-        private readonly IPictureService _pictureService;
-        private readonly IProductService _productService;
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly OrderSettings _orderSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly SecuritySettings _securitySettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected AddressSettings AddressSettings { get; }
+        protected CaptchaSettings CaptchaSettings { get; }
+        protected CatalogSettings CatalogSettings { get; }
+        protected CommonSettings CommonSettings { get; }
+        protected CustomerSettings CustomerSettings { get; }
+        protected DateTimeSettings DateTimeSettings { get; }
+        protected ExternalAuthenticationSettings ExternalAuthenticationSettings { get; }
+        protected ForumSettings ForumSettings { get; }
+        protected GdprSettings GdprSettings { get; }
+        protected IAddressModelFactory AddressModelFactory { get; }
+        protected IAuthenticationPluginManager AuthenticationPluginManager { get; }
+        protected ICountryService CountryService { get; }
+        protected ICustomerAttributeParser CustomerAttributeParser { get; }
+        protected ICustomerAttributeService CustomerAttributeService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IExternalAuthenticationService ExternalAuthenticationService { get; }
+        protected IGdprService GdprService { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IMultiFactorAuthenticationPluginManager MultiFactorAuthenticationPluginManager { get; }
+        protected INewsLetterSubscriptionService NewsLetterSubscriptionService { get; }
+        protected IOrderService OrderService { get; }
+        protected IPictureService PictureService { get; }
+        protected IProductService ProductService { get; }
+        protected IReturnRequestService ReturnRequestService { get; }
+        protected IStateProvinceService StateProvinceService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected MediaSettings MediaSettings { get; }
+        protected OrderSettings OrderSettings { get; }
+        protected RewardPointsSettings RewardPointsSettings { get; }
+        protected SecuritySettings SecuritySettings { get; }
+        protected TaxSettings TaxSettings { get; }
+        protected VendorSettings VendorSettings { get; }
 
         #endregion
 
@@ -121,43 +121,43 @@ namespace Nop.Web.Factories
             TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
-            _addressSettings = addressSettings;
-            _captchaSettings = captchaSettings;
-            _catalogSettings = catalogSettings;
-            _commonSettings = commonSettings;
-            _customerSettings = customerSettings;
-            _dateTimeSettings = dateTimeSettings;
-            _externalAuthenticationService = externalAuthenticationService;
-            _externalAuthenticationSettings = externalAuthenticationSettings;
-            _forumSettings = forumSettings;
-            _gdprSettings = gdprSettings;
-            _addressModelFactory = addressModelFactory;
-            _authenticationPluginManager = authenticationPluginManager;
-            _countryService = countryService;
-            _customerAttributeParser = customerAttributeParser;
-            _customerAttributeService = customerAttributeService;
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _gdprService = gdprService;
-            _genericAttributeService = genericAttributeService;
-            _localizationService = localizationService;
-            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
-            _orderService = orderService;
-            _pictureService = pictureService;
-            _productService = productService;
-            _returnRequestService = returnRequestService;
-            _stateProvinceService = stateProvinceService;
-            _storeContext = storeContext;
-            _storeMappingService = storeMappingService;
-            _urlRecordService = urlRecordService;
-            _workContext = workContext;
-            _mediaSettings = mediaSettings;
-            _orderSettings = orderSettings;
-            _rewardPointsSettings = rewardPointsSettings;
-            _securitySettings = securitySettings;
-            _taxSettings = taxSettings;
-            _vendorSettings = vendorSettings;
+            AddressSettings = addressSettings;
+            CaptchaSettings = captchaSettings;
+            CatalogSettings = catalogSettings;
+            CommonSettings = commonSettings;
+            CustomerSettings = customerSettings;
+            DateTimeSettings = dateTimeSettings;
+            ExternalAuthenticationService = externalAuthenticationService;
+            ExternalAuthenticationSettings = externalAuthenticationSettings;
+            ForumSettings = forumSettings;
+            GdprSettings = gdprSettings;
+            AddressModelFactory = addressModelFactory;
+            AuthenticationPluginManager = authenticationPluginManager;
+            CountryService = countryService;
+            CustomerAttributeParser = customerAttributeParser;
+            CustomerAttributeService = customerAttributeService;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            GdprService = gdprService;
+            GenericAttributeService = genericAttributeService;
+            LocalizationService = localizationService;
+            MultiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
+            NewsLetterSubscriptionService = newsLetterSubscriptionService;
+            OrderService = orderService;
+            PictureService = pictureService;
+            ProductService = productService;
+            ReturnRequestService = returnRequestService;
+            StateProvinceService = stateProvinceService;
+            StoreContext = storeContext;
+            StoreMappingService = storeMappingService;
+            UrlRecordService = urlRecordService;
+            WorkContext = workContext;
+            MediaSettings = mediaSettings;
+            OrderSettings = orderSettings;
+            RewardPointsSettings = rewardPointsSettings;
+            SecuritySettings = securitySettings;
+            TaxSettings = taxSettings;
+            VendorSettings = vendorSettings;
         }
 
         #endregion
@@ -170,11 +170,11 @@ namespace Nop.Web.Factories
             if (consent == null)
                 throw new ArgumentNullException(nameof(consent));
 
-            var requiredMessage = await _localizationService.GetLocalizedAsync(consent, x => x.RequiredMessage);
+            var requiredMessage = await LocalizationService.GetLocalizedAsync(consent, x => x.RequiredMessage);
             return new GdprConsentModel
             {
                 Id = consent.Id,
-                Message = await _localizationService.GetLocalizedAsync(consent, x => x.Message),
+                Message = await LocalizationService.GetLocalizedAsync(consent, x => x.Message),
                 IsRequired = consent.IsRequired,
                 RequiredMessage = !string.IsNullOrEmpty(requiredMessage) ? requiredMessage : $"'{consent.Message}' is required",
                 Accepted = accepted
@@ -205,18 +205,18 @@ namespace Nop.Web.Factories
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
-            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == (await _dateTimeHelper.GetCurrentTimeZoneAsync()).Id) });
+            model.AllowCustomersToSetTimeZone = DateTimeSettings.AllowCustomersToSetTimeZone;
+            foreach (var tzi in DateTimeHelper.GetSystemTimeZones())
+                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == (await DateTimeHelper.GetCurrentTimeZoneAsync()).Id) });
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             if (!excludeProperties)
             {
-                model.VatNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
-                model.FirstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-                model.LastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
-                model.Gender = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute);
-                var dateOfBirth = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
+                model.VatNumber = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
+                model.FirstName = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                model.LastName = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
+                model.Gender = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute);
+                var dateOfBirth = await GenericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
                 if (dateOfBirth.HasValue)
                 {
                     var currentCalendar = CultureInfo.CurrentCulture.Calendar;
@@ -225,61 +225,61 @@ namespace Nop.Web.Factories
                     model.DateOfBirthMonth = currentCalendar.GetMonth(dateOfBirth.Value);
                     model.DateOfBirthYear = currentCalendar.GetYear(dateOfBirth.Value);
                 }
-                model.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                model.StreetAddress = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
-                model.StreetAddress2 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
-                model.ZipPostalCode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
-                model.City = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
-                model.County = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute);
-                model.CountryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
-                model.StateProvinceId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
-                model.Phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                model.Fax = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
+                model.Company = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
+                model.StreetAddress = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
+                model.StreetAddress2 = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
+                model.ZipPostalCode = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                model.City = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
+                model.County = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute);
+                model.CountryId = await GenericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                model.StateProvinceId = await GenericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
+                model.Phone = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
+                model.Fax = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
 
                 //newsletter
-                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
+                var newsletter = await NewsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
                 model.Newsletter = newsletter != null && newsletter.Active;
 
-                model.Signature = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute);
+                model.Signature = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute);
 
                 model.Email = customer.Email;
                 model.Username = customer.Username;
             }
             else
             {
-                if (_customerSettings.UsernamesEnabled && !_customerSettings.AllowUsersToChangeUsernames)
+                if (CustomerSettings.UsernamesEnabled && !CustomerSettings.AllowUsersToChangeUsernames)
                     model.Username = customer.Username;
             }
 
-            if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
+            if (CustomerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
                 model.EmailToRevalidate = customer.EmailToRevalidate;
 
-            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+            var currentLanguage = await WorkContext.GetWorkingLanguageAsync();
             //countries and states
-            if (_customerSettings.CountryEnabled)
+            if (CustomerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
-                foreach (var c in await _countryService.GetAllCountriesAsync(currentLanguage.Id))
+                model.AvailableCountries.Add(new SelectListItem { Text = await LocalizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
+                foreach (var c in await CountryService.GetAllCountriesAsync(currentLanguage.Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = await _localizationService.GetLocalizedAsync(c, x => x.Name),
+                        Text = await LocalizationService.GetLocalizedAsync(c, x => x.Name),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
                 }
 
-                if (_customerSettings.StateProvinceEnabled)
+                if (CustomerSettings.StateProvinceEnabled)
                 {
                     //states
-                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
+                    var states = (await StateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
                     if (states.Any())
                     {
-                        model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = await LocalizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                            model.AvailableStates.Add(new SelectListItem { Text = await LocalizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
                         }
                     }
                     else
@@ -288,7 +288,7 @@ namespace Nop.Web.Factories
 
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = await _localizationService.GetResourceAsync(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
+                            Text = await LocalizationService.GetResourceAsync(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
                             Value = "0"
                         });
                     }
@@ -296,53 +296,53 @@ namespace Nop.Web.Factories
                 }
             }
 
-            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync((VatNumberStatus)await _genericAttributeService
+            model.DisplayVatNumber = TaxSettings.EuVatEnabled;
+            model.VatNumberStatusNote = await LocalizationService.GetLocalizedEnumAsync((VatNumberStatus)await GenericAttributeService
                 .GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
-            model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
-            model.LastNameEnabled = _customerSettings.LastNameEnabled;
-            model.FirstNameRequired = _customerSettings.FirstNameRequired;
-            model.LastNameRequired = _customerSettings.LastNameRequired;
-            model.GenderEnabled = _customerSettings.GenderEnabled;
-            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
-            model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;
-            model.CompanyEnabled = _customerSettings.CompanyEnabled;
-            model.CompanyRequired = _customerSettings.CompanyRequired;
-            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
-            model.StreetAddressRequired = _customerSettings.StreetAddressRequired;
-            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
-            model.StreetAddress2Required = _customerSettings.StreetAddress2Required;
-            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
-            model.ZipPostalCodeRequired = _customerSettings.ZipPostalCodeRequired;
-            model.CityEnabled = _customerSettings.CityEnabled;
-            model.CityRequired = _customerSettings.CityRequired;
-            model.CountyEnabled = _customerSettings.CountyEnabled;
-            model.CountyRequired = _customerSettings.CountyRequired;
-            model.CountryEnabled = _customerSettings.CountryEnabled;
-            model.CountryRequired = _customerSettings.CountryRequired;
-            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
-            model.StateProvinceRequired = _customerSettings.StateProvinceRequired;
-            model.PhoneEnabled = _customerSettings.PhoneEnabled;
-            model.PhoneRequired = _customerSettings.PhoneRequired;
-            model.FaxEnabled = _customerSettings.FaxEnabled;
-            model.FaxRequired = _customerSettings.FaxRequired;
-            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
-            model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
-            model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
+            model.FirstNameEnabled = CustomerSettings.FirstNameEnabled;
+            model.LastNameEnabled = CustomerSettings.LastNameEnabled;
+            model.FirstNameRequired = CustomerSettings.FirstNameRequired;
+            model.LastNameRequired = CustomerSettings.LastNameRequired;
+            model.GenderEnabled = CustomerSettings.GenderEnabled;
+            model.DateOfBirthEnabled = CustomerSettings.DateOfBirthEnabled;
+            model.DateOfBirthRequired = CustomerSettings.DateOfBirthRequired;
+            model.CompanyEnabled = CustomerSettings.CompanyEnabled;
+            model.CompanyRequired = CustomerSettings.CompanyRequired;
+            model.StreetAddressEnabled = CustomerSettings.StreetAddressEnabled;
+            model.StreetAddressRequired = CustomerSettings.StreetAddressRequired;
+            model.StreetAddress2Enabled = CustomerSettings.StreetAddress2Enabled;
+            model.StreetAddress2Required = CustomerSettings.StreetAddress2Required;
+            model.ZipPostalCodeEnabled = CustomerSettings.ZipPostalCodeEnabled;
+            model.ZipPostalCodeRequired = CustomerSettings.ZipPostalCodeRequired;
+            model.CityEnabled = CustomerSettings.CityEnabled;
+            model.CityRequired = CustomerSettings.CityRequired;
+            model.CountyEnabled = CustomerSettings.CountyEnabled;
+            model.CountyRequired = CustomerSettings.CountyRequired;
+            model.CountryEnabled = CustomerSettings.CountryEnabled;
+            model.CountryRequired = CustomerSettings.CountryRequired;
+            model.StateProvinceEnabled = CustomerSettings.StateProvinceEnabled;
+            model.StateProvinceRequired = CustomerSettings.StateProvinceRequired;
+            model.PhoneEnabled = CustomerSettings.PhoneEnabled;
+            model.PhoneRequired = CustomerSettings.PhoneRequired;
+            model.FaxEnabled = CustomerSettings.FaxEnabled;
+            model.FaxRequired = CustomerSettings.FaxRequired;
+            model.NewsletterEnabled = CustomerSettings.NewsletterEnabled;
+            model.UsernamesEnabled = CustomerSettings.UsernamesEnabled;
+            model.AllowUsersToChangeUsernames = CustomerSettings.AllowUsersToChangeUsernames;
+            model.CheckUsernameAvailabilityEnabled = CustomerSettings.CheckUsernameAvailabilityEnabled;
+            model.SignatureEnabled = ForumSettings.ForumsEnabled && ForumSettings.SignaturesEnabled;
 
             //external authentication
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-            model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
-            model.NumberOfExternalAuthenticationProviders = (await _authenticationPluginManager
+            var currentCustomer = await WorkContext.GetCurrentCustomerAsync();
+            model.AllowCustomersToRemoveAssociations = ExternalAuthenticationSettings.AllowCustomersToRemoveAssociations;
+            model.NumberOfExternalAuthenticationProviders = (await AuthenticationPluginManager
                 .LoadActivePluginsAsync(currentCustomer, store.Id))
                 .Count;
-            foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
+            foreach (var record in await ExternalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             {
-                var authMethod = await _authenticationPluginManager
+                var authMethod = await AuthenticationPluginManager
                     .LoadPluginBySystemNameAsync(record.ProviderSystemName, currentCustomer, store.Id);
-                if (!_authenticationPluginManager.IsPluginActive(authMethod))
+                if (!AuthenticationPluginManager.IsPluginActive(authMethod))
                     continue;
 
                 model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel
@@ -351,7 +351,7 @@ namespace Nop.Web.Factories
                     Email = record.Email,
                     ExternalIdentifier = !string.IsNullOrEmpty(record.ExternalDisplayIdentifier)
                         ? record.ExternalDisplayIdentifier : record.ExternalIdentifier,
-                    AuthMethodName = await _localizationService.GetLocalizedFriendlyNameAsync(authMethod, currentLanguage.Id)
+                    AuthMethodName = await LocalizationService.GetLocalizedFriendlyNameAsync(authMethod, currentLanguage.Id)
                 });
             }
 
@@ -361,12 +361,12 @@ namespace Nop.Web.Factories
                 model.CustomerAttributes.Add(attribute);
 
             //GDPR
-            if (_gdprSettings.GdprEnabled)
+            if (GdprSettings.GdprEnabled)
             {
-                var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
+                var consents = (await GdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
                 foreach (var consent in consents)
                 {
-                    var accepted = await _gdprService.IsConsentAcceptedAsync(consent.Id, currentCustomer.Id);
+                    var accepted = await GdprService.IsConsentAcceptedAsync(consent.Id, currentCustomer.Id);
                     model.GdprConsents.Add(await PrepareGdprConsentModelAsync(consent, accepted.HasValue && accepted.Value));
                 }
             }
@@ -391,79 +391,79 @@ namespace Nop.Web.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
-            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == (await _dateTimeHelper.GetCurrentTimeZoneAsync()).Id) });
+            model.AllowCustomersToSetTimeZone = DateTimeSettings.AllowCustomersToSetTimeZone;
+            foreach (var tzi in DateTimeHelper.GetSystemTimeZones())
+                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == (await DateTimeHelper.GetCurrentTimeZoneAsync()).Id) });
 
-            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+            model.DisplayVatNumber = TaxSettings.EuVatEnabled;
             //form fields
-            model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
-            model.LastNameEnabled = _customerSettings.LastNameEnabled;
-            model.FirstNameRequired = _customerSettings.FirstNameRequired;
-            model.LastNameRequired = _customerSettings.LastNameRequired;
-            model.GenderEnabled = _customerSettings.GenderEnabled;
-            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
-            model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;
-            model.CompanyEnabled = _customerSettings.CompanyEnabled;
-            model.CompanyRequired = _customerSettings.CompanyRequired;
-            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
-            model.StreetAddressRequired = _customerSettings.StreetAddressRequired;
-            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
-            model.StreetAddress2Required = _customerSettings.StreetAddress2Required;
-            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
-            model.ZipPostalCodeRequired = _customerSettings.ZipPostalCodeRequired;
-            model.CityEnabled = _customerSettings.CityEnabled;
-            model.CityRequired = _customerSettings.CityRequired;
-            model.CountyEnabled = _customerSettings.CountyEnabled;
-            model.CountyRequired = _customerSettings.CountyRequired;
-            model.CountryEnabled = _customerSettings.CountryEnabled;
-            model.CountryRequired = _customerSettings.CountryRequired;
-            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
-            model.StateProvinceRequired = _customerSettings.StateProvinceRequired;
-            model.PhoneEnabled = _customerSettings.PhoneEnabled;
-            model.PhoneRequired = _customerSettings.PhoneRequired;
-            model.FaxEnabled = _customerSettings.FaxEnabled;
-            model.FaxRequired = _customerSettings.FaxRequired;
-            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
-            model.AcceptPrivacyPolicyEnabled = _customerSettings.AcceptPrivacyPolicyEnabled;
-            model.AcceptPrivacyPolicyPopup = _commonSettings.PopupForTermsOfServiceLinks;
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
-            model.HoneypotEnabled = _securitySettings.HoneypotEnabled;
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage;
-            model.EnteringEmailTwice = _customerSettings.EnteringEmailTwice;
+            model.FirstNameEnabled = CustomerSettings.FirstNameEnabled;
+            model.LastNameEnabled = CustomerSettings.LastNameEnabled;
+            model.FirstNameRequired = CustomerSettings.FirstNameRequired;
+            model.LastNameRequired = CustomerSettings.LastNameRequired;
+            model.GenderEnabled = CustomerSettings.GenderEnabled;
+            model.DateOfBirthEnabled = CustomerSettings.DateOfBirthEnabled;
+            model.DateOfBirthRequired = CustomerSettings.DateOfBirthRequired;
+            model.CompanyEnabled = CustomerSettings.CompanyEnabled;
+            model.CompanyRequired = CustomerSettings.CompanyRequired;
+            model.StreetAddressEnabled = CustomerSettings.StreetAddressEnabled;
+            model.StreetAddressRequired = CustomerSettings.StreetAddressRequired;
+            model.StreetAddress2Enabled = CustomerSettings.StreetAddress2Enabled;
+            model.StreetAddress2Required = CustomerSettings.StreetAddress2Required;
+            model.ZipPostalCodeEnabled = CustomerSettings.ZipPostalCodeEnabled;
+            model.ZipPostalCodeRequired = CustomerSettings.ZipPostalCodeRequired;
+            model.CityEnabled = CustomerSettings.CityEnabled;
+            model.CityRequired = CustomerSettings.CityRequired;
+            model.CountyEnabled = CustomerSettings.CountyEnabled;
+            model.CountyRequired = CustomerSettings.CountyRequired;
+            model.CountryEnabled = CustomerSettings.CountryEnabled;
+            model.CountryRequired = CustomerSettings.CountryRequired;
+            model.StateProvinceEnabled = CustomerSettings.StateProvinceEnabled;
+            model.StateProvinceRequired = CustomerSettings.StateProvinceRequired;
+            model.PhoneEnabled = CustomerSettings.PhoneEnabled;
+            model.PhoneRequired = CustomerSettings.PhoneRequired;
+            model.FaxEnabled = CustomerSettings.FaxEnabled;
+            model.FaxRequired = CustomerSettings.FaxRequired;
+            model.NewsletterEnabled = CustomerSettings.NewsletterEnabled;
+            model.AcceptPrivacyPolicyEnabled = CustomerSettings.AcceptPrivacyPolicyEnabled;
+            model.AcceptPrivacyPolicyPopup = CommonSettings.PopupForTermsOfServiceLinks;
+            model.UsernamesEnabled = CustomerSettings.UsernamesEnabled;
+            model.CheckUsernameAvailabilityEnabled = CustomerSettings.CheckUsernameAvailabilityEnabled;
+            model.HoneypotEnabled = SecuritySettings.HoneypotEnabled;
+            model.DisplayCaptcha = CaptchaSettings.Enabled && CaptchaSettings.ShowOnRegistrationPage;
+            model.EnteringEmailTwice = CustomerSettings.EnteringEmailTwice;
             if (setDefaultValues)
             {
                 //enable newsletter by default
-                model.Newsletter = _customerSettings.NewsletterTickedByDefault;
+                model.Newsletter = CustomerSettings.NewsletterTickedByDefault;
             }
 
             //countries and states
-            if (_customerSettings.CountryEnabled)
+            if (CustomerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
-                var currentLanguage = await _workContext.GetWorkingLanguageAsync();
-                foreach (var c in await _countryService.GetAllCountriesAsync(currentLanguage.Id))
+                model.AvailableCountries.Add(new SelectListItem { Text = await LocalizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
+                var currentLanguage = await WorkContext.GetWorkingLanguageAsync();
+                foreach (var c in await CountryService.GetAllCountriesAsync(currentLanguage.Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = await _localizationService.GetLocalizedAsync(c, x => x.Name),
+                        Text = await LocalizationService.GetLocalizedAsync(c, x => x.Name),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
                 }
 
-                if (_customerSettings.StateProvinceEnabled)
+                if (CustomerSettings.StateProvinceEnabled)
                 {
                     //states
-                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
+                    var states = (await StateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
                     if (states.Any())
                     {
-                        model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = await LocalizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                            model.AvailableStates.Add(new SelectListItem { Text = await LocalizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
                         }
                     }
                     else
@@ -472,7 +472,7 @@ namespace Nop.Web.Factories
 
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = await _localizationService.GetResourceAsync(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
+                            Text = await LocalizationService.GetResourceAsync(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
                             Value = "0"
                         });
                     }
@@ -481,14 +481,14 @@ namespace Nop.Web.Factories
             }
 
             //custom customer attributes
-            var customAttributes = await PrepareCustomCustomerAttributesAsync(await _workContext.GetCurrentCustomerAsync(), overrideCustomCustomerAttributesXml);
+            var customAttributes = await PrepareCustomCustomerAttributesAsync(await WorkContext.GetCurrentCustomerAsync(), overrideCustomCustomerAttributesXml);
             foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
 
             //GDPR
-            if (_gdprSettings.GdprEnabled)
+            if (GdprSettings.GdprEnabled)
             {
-                var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayDuringRegistration).ToList();
+                var consents = (await GdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayDuringRegistration).ToList();
                 foreach (var consent in consents)
                 {
                     model.GdprConsents.Add(await PrepareGdprConsentModelAsync(consent, false));
@@ -510,10 +510,10 @@ namespace Nop.Web.Factories
         {
             var model = new LoginModel
             {
-                UsernamesEnabled = _customerSettings.UsernamesEnabled,
-                RegistrationType = _customerSettings.UserRegistrationType,
+                UsernamesEnabled = CustomerSettings.UsernamesEnabled,
+                RegistrationType = CustomerSettings.UserRegistrationType,
                 CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault(),
-                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage
+                DisplayCaptcha = CaptchaSettings.Enabled && CaptchaSettings.ShowOnLoginPage
             };
 
             return Task.FromResult(model);
@@ -532,7 +532,7 @@ namespace Nop.Web.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage;
+            model.DisplayCaptcha = CaptchaSettings.Enabled && CaptchaSettings.ShowOnForgotPasswordPage;
 
             return Task.FromResult(model);
         }
@@ -550,10 +550,10 @@ namespace Nop.Web.Factories
         {
             var resultText = (UserRegistrationType)resultId switch
             {
-                UserRegistrationType.Disabled => await _localizationService.GetResourceAsync("Account.Register.Result.Disabled"),
-                UserRegistrationType.Standard => await _localizationService.GetResourceAsync("Account.Register.Result.Standard"),
-                UserRegistrationType.AdminApproval => await _localizationService.GetResourceAsync("Account.Register.Result.AdminApproval"),
-                UserRegistrationType.EmailValidation => await _localizationService.GetResourceAsync("Account.Register.Result.EmailValidation"),
+                UserRegistrationType.Disabled => await LocalizationService.GetResourceAsync("Account.Register.Result.Disabled"),
+                UserRegistrationType.Standard => await LocalizationService.GetResourceAsync("Account.Register.Result.Standard"),
+                UserRegistrationType.AdminApproval => await LocalizationService.GetResourceAsync("Account.Register.Result.AdminApproval"),
+                UserRegistrationType.EmailValidation => await LocalizationService.GetResourceAsync("Account.Register.Result.EmailValidation"),
                 _ => null
             };
 
@@ -581,7 +581,7 @@ namespace Nop.Web.Factories
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerInfo",
-                Title = await _localizationService.GetResourceAsync("Account.CustomerInfo"),
+                Title = await LocalizationService.GetResourceAsync("Account.CustomerInfo"),
                 Tab = CustomerNavigationEnum.Info,
                 ItemClass = "customer-info"
             });
@@ -589,7 +589,7 @@ namespace Nop.Web.Factories
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerAddresses",
-                Title = await _localizationService.GetResourceAsync("Account.CustomerAddresses"),
+                Title = await LocalizationService.GetResourceAsync("Account.CustomerAddresses"),
                 Tab = CustomerNavigationEnum.Addresses,
                 ItemClass = "customer-addresses"
             });
@@ -597,55 +597,55 @@ namespace Nop.Web.Factories
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerOrders",
-                Title = await _localizationService.GetResourceAsync("Account.CustomerOrders"),
+                Title = await LocalizationService.GetResourceAsync("Account.CustomerOrders"),
                 Tab = CustomerNavigationEnum.Orders,
                 ItemClass = "customer-orders"
             });
 
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
 
-            if (_orderSettings.ReturnRequestsEnabled &&
-                (await _returnRequestService.SearchReturnRequestsAsync(store.Id,
+            if (OrderSettings.ReturnRequestsEnabled &&
+                (await ReturnRequestService.SearchReturnRequestsAsync(store.Id,
                     customer.Id, pageIndex: 0, pageSize: 1)).Any())
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerReturnRequests",
-                    Title = await _localizationService.GetResourceAsync("Account.CustomerReturnRequests"),
+                    Title = await LocalizationService.GetResourceAsync("Account.CustomerReturnRequests"),
                     Tab = CustomerNavigationEnum.ReturnRequests,
                     ItemClass = "return-requests"
                 });
             }
 
-            if (!_customerSettings.HideDownloadableProductsTab)
+            if (!CustomerSettings.HideDownloadableProductsTab)
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerDownloadableProducts",
-                    Title = await _localizationService.GetResourceAsync("Account.DownloadableProducts"),
+                    Title = await LocalizationService.GetResourceAsync("Account.DownloadableProducts"),
                     Tab = CustomerNavigationEnum.DownloadableProducts,
                     ItemClass = "downloadable-products"
                 });
             }
 
-            if (!_customerSettings.HideBackInStockSubscriptionsTab)
+            if (!CustomerSettings.HideBackInStockSubscriptionsTab)
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerBackInStockSubscriptions",
-                    Title = await _localizationService.GetResourceAsync("Account.BackInStockSubscriptions"),
+                    Title = await LocalizationService.GetResourceAsync("Account.BackInStockSubscriptions"),
                     Tab = CustomerNavigationEnum.BackInStockSubscriptions,
                     ItemClass = "back-in-stock-subscriptions"
                 });
             }
 
-            if (_rewardPointsSettings.Enabled)
+            if (RewardPointsSettings.Enabled)
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerRewardPoints",
-                    Title = await _localizationService.GetResourceAsync("Account.RewardPoints"),
+                    Title = await LocalizationService.GetResourceAsync("Account.RewardPoints"),
                     Tab = CustomerNavigationEnum.RewardPoints,
                     ItemClass = "reward-points"
                 });
@@ -654,80 +654,80 @@ namespace Nop.Web.Factories
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerChangePassword",
-                Title = await _localizationService.GetResourceAsync("Account.ChangePassword"),
+                Title = await LocalizationService.GetResourceAsync("Account.ChangePassword"),
                 Tab = CustomerNavigationEnum.ChangePassword,
                 ItemClass = "change-password"
             });
 
-            if (_customerSettings.AllowCustomersToUploadAvatars)
+            if (CustomerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerAvatar",
-                    Title = await _localizationService.GetResourceAsync("Account.Avatar"),
+                    Title = await LocalizationService.GetResourceAsync("Account.Avatar"),
                     Tab = CustomerNavigationEnum.Avatar,
                     ItemClass = "customer-avatar"
                 });
             }
 
-            if (_forumSettings.ForumsEnabled && _forumSettings.AllowCustomersToManageSubscriptions)
+            if (ForumSettings.ForumsEnabled && ForumSettings.AllowCustomersToManageSubscriptions)
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerForumSubscriptions",
-                    Title = await _localizationService.GetResourceAsync("Account.ForumSubscriptions"),
+                    Title = await LocalizationService.GetResourceAsync("Account.ForumSubscriptions"),
                     Tab = CustomerNavigationEnum.ForumSubscriptions,
                     ItemClass = "forum-subscriptions"
                 });
             }
-            if (_catalogSettings.ShowProductReviewsTabOnAccountPage)
+            if (CatalogSettings.ShowProductReviewsTabOnAccountPage)
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerProductReviews",
-                    Title = await _localizationService.GetResourceAsync("Account.CustomerProductReviews"),
+                    Title = await LocalizationService.GetResourceAsync("Account.CustomerProductReviews"),
                     Tab = CustomerNavigationEnum.ProductReviews,
                     ItemClass = "customer-reviews"
                 });
             }
-            if (_vendorSettings.AllowVendorsToEditInfo && await _workContext.GetCurrentVendorAsync() != null)
+            if (VendorSettings.AllowVendorsToEditInfo && await WorkContext.GetCurrentVendorAsync() != null)
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerVendorInfo",
-                    Title = await _localizationService.GetResourceAsync("Account.VendorInfo"),
+                    Title = await LocalizationService.GetResourceAsync("Account.VendorInfo"),
                     Tab = CustomerNavigationEnum.VendorInfo,
                     ItemClass = "customer-vendor-info"
                 });
             }
-            if (_gdprSettings.GdprEnabled)
+            if (GdprSettings.GdprEnabled)
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "GdprTools",
-                    Title = await _localizationService.GetResourceAsync("Account.Gdpr"),
+                    Title = await LocalizationService.GetResourceAsync("Account.Gdpr"),
                     Tab = CustomerNavigationEnum.GdprTools,
                     ItemClass = "customer-gdpr"
                 });
             }
 
-            if (_captchaSettings.Enabled && _customerSettings.AllowCustomersToCheckGiftCardBalance)
+            if (CaptchaSettings.Enabled && CustomerSettings.AllowCustomersToCheckGiftCardBalance)
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CheckGiftCardBalance",
-                    Title = await _localizationService.GetResourceAsync("CheckGiftCardBalance"),
+                    Title = await LocalizationService.GetResourceAsync("CheckGiftCardBalance"),
                     Tab = CustomerNavigationEnum.CheckGiftCardBalance,
                     ItemClass = "customer-check-gift-card-balance"
                 });
             }
 
-            if (await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
+            if (await MultiFactorAuthenticationPluginManager.HasActivePluginsAsync())
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "MultiFactorAuthenticationSettings",
-                    Title = await _localizationService.GetResourceAsync("PageTitle.MultiFactorAuthentication"),
+                    Title = await LocalizationService.GetResourceAsync("PageTitle.MultiFactorAuthentication"),
                     Tab = CustomerNavigationEnum.MultiFactorAuthentication,
                     ItemClass = "customer-multiFactor-authentication"
                 });
@@ -747,22 +747,22 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CustomerAddressListModel> PrepareCustomerAddressListModelAsync()
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
 
-            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
+            var addresses = await (await CustomerService.GetAddressesByCustomerIdAsync(customer.Id))
                 //enabled for the current store
-                .WhereAwait(async a => a.CountryId == null || await _storeMappingService.AuthorizeAsync(await _countryService.GetCountryByAddressAsync(a)))
+                .WhereAwait(async a => a.CountryId == null || await StoreMappingService.AuthorizeAsync(await CountryService.GetCountryByAddressAsync(a)))
                 .ToListAsync();
 
             var model = new CustomerAddressListModel();
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                await _addressModelFactory.PrepareAddressModelAsync(addressModel,
+                await AddressModelFactory.PrepareAddressModelAsync(addressModel,
                     address: address,
                     excludeProperties: false,
-                    addressSettings: _addressSettings,
-                    loadCountries: async () => await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id));
+                    addressSettings: AddressSettings,
+                    loadCountries: async () => await CountryService.GetAllCountriesAsync((await WorkContext.GetWorkingLanguageAsync()).Id));
                 model.Addresses.Add(addressModel);
             }
             return model;
@@ -778,30 +778,30 @@ namespace Nop.Web.Factories
         public virtual async Task<CustomerDownloadableProductsModel> PrepareCustomerDownloadableProductsModelAsync()
         {
             var model = new CustomerDownloadableProductsModel();
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var items = await _orderService.GetDownloadableOrderItemsAsync(customer.Id);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var items = await OrderService.GetDownloadableOrderItemsAsync(customer.Id);
             foreach (var item in items)
             {
-                var order = await _orderService.GetOrderByIdAsync(item.OrderId);
-                var product = await _productService.GetProductByIdAsync(item.ProductId);
+                var order = await OrderService.GetOrderByIdAsync(item.OrderId);
+                var product = await ProductService.GetProductByIdAsync(item.ProductId);
 
                 var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel
                 {
                     OrderItemGuid = item.OrderItemGuid,
                     OrderId = order.Id,
                     CustomOrderNumber = order.CustomOrderNumber,
-                    CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc),
-                    ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
-                    ProductSeName = await _urlRecordService.GetSeNameAsync(product),
+                    CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc),
+                    ProductName = await LocalizationService.GetLocalizedAsync(product, x => x.Name),
+                    ProductSeName = await UrlRecordService.GetSeNameAsync(product),
                     ProductAttributes = item.AttributeDescription,
                     ProductId = item.ProductId
                 };
                 model.Items.Add(itemModel);
 
-                if (await _orderService.IsDownloadAllowedAsync(item))
+                if (await OrderService.IsDownloadAllowedAsync(item))
                     itemModel.DownloadId = product.DownloadId;
 
-                if (await _orderService.IsLicenseDownloadAllowedAsync(item))
+                if (await OrderService.IsLicenseDownloadAllowedAsync(item))
                     itemModel.LicenseId = item.LicenseDownloadId ?? 0;
             }
 
@@ -861,9 +861,9 @@ namespace Nop.Web.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            model.AvatarUrl = await _pictureService.GetPictureUrlAsync(
-                await _genericAttributeService.GetAttributeAsync<int>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.AvatarPictureIdAttribute),
-                _mediaSettings.AvatarPictureSize,
+            model.AvatarUrl = await PictureService.GetPictureUrlAsync(
+                await GenericAttributeService.GetAttributeAsync<int>(await WorkContext.GetCurrentCustomerAsync(), NopCustomerDefaults.AvatarPictureIdAttribute),
+                MediaSettings.AvatarPictureSize,
                 false);
 
             return model;
@@ -907,13 +907,13 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<MultiFactorAuthenticationModel> PrepareMultiFactorAuthenticationModelAsync(MultiFactorAuthenticationModel model)
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
 
             model.IsEnabled = !string.IsNullOrEmpty(
-                await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute));
+                await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute));
             
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var multiFactorAuthenticationProviders = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, store.Id)).ToList();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var multiFactorAuthenticationProviders = (await MultiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, store.Id)).ToList();
             foreach (var multiFactorAuthenticationProvider in multiFactorAuthenticationProviders)
             {
                 var providerModel = new MultiFactorAuthenticationProviderModel();
@@ -936,19 +936,19 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<MultiFactorAuthenticationProviderModel> PrepareMultiFactorAuthenticationProviderModelAsync(MultiFactorAuthenticationProviderModel providerModel, string sysName, bool isLogin = false)
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var selectedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var selectedProvider = await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+            var store = await StoreContext.GetCurrentStoreAsync();
 
-            var multiFactorAuthenticationProvider = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, store.Id))
+            var multiFactorAuthenticationProvider = (await MultiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, store.Id))
                     .FirstOrDefault(provider => provider.PluginDescriptor.SystemName == sysName);
 
             if (multiFactorAuthenticationProvider != null)
             {
-                providerModel.Name = await _localizationService.GetLocalizedFriendlyNameAsync(multiFactorAuthenticationProvider, (await _workContext.GetWorkingLanguageAsync()).Id);
+                providerModel.Name = await LocalizationService.GetLocalizedFriendlyNameAsync(multiFactorAuthenticationProvider, (await WorkContext.GetWorkingLanguageAsync()).Id);
                 providerModel.SystemName = sysName;
                 providerModel.Description = await multiFactorAuthenticationProvider.GetDescriptionAsync();
-                providerModel.LogoUrl = await _multiFactorAuthenticationPluginManager.GetPluginLogoUrlAsync(multiFactorAuthenticationProvider);
+                providerModel.LogoUrl = await MultiFactorAuthenticationPluginManager.GetPluginLogoUrlAsync(multiFactorAuthenticationProvider);
                 providerModel.ViewComponentName = isLogin ? multiFactorAuthenticationProvider.GetVerificationViewComponentName() : multiFactorAuthenticationProvider.GetPublicViewComponentName();
                 providerModel.Selected = sysName == selectedProvider;
             }
@@ -972,13 +972,13 @@ namespace Nop.Web.Factories
 
             var result = new List<CustomerAttributeModel>();
 
-            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributesAsync();
+            var customerAttributes = await CustomerAttributeService.GetAllCustomerAttributesAsync();
             foreach (var attribute in customerAttributes)
             {
                 var attributeModel = new CustomerAttributeModel
                 {
                     Id = attribute.Id,
-                    Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name),
+                    Name = await LocalizationService.GetLocalizedAsync(attribute, x => x.Name),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                 };
@@ -986,13 +986,13 @@ namespace Nop.Web.Factories
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
+                    var attributeValues = await CustomerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var valueModel = new CustomerAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = await _localizationService.GetLocalizedAsync(attributeValue, x => x.Name),
+                            Name = await LocalizationService.GetLocalizedAsync(attributeValue, x => x.Name),
                             IsPreSelected = attributeValue.IsPreSelected
                         };
                         attributeModel.Values.Add(valueModel);
@@ -1002,7 +1002,7 @@ namespace Nop.Web.Factories
                 //set already selected attributes
                 var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
                     overrideAttributesXml :
-                    await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+                    await GenericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -1016,7 +1016,7 @@ namespace Nop.Web.Factories
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesAsync(selectedAttributesXml);
+                                var selectedValues = await CustomerAttributeParser.ParseCustomerAttributeValuesAsync(selectedAttributesXml);
                                 foreach (var attributeValue in selectedValues)
                                     foreach (var item in attributeModel.Values)
                                         if (attributeValue.Id == item.Id)
@@ -1035,7 +1035,7 @@ namespace Nop.Web.Factories
                         {
                             if (!string.IsNullOrEmpty(selectedAttributesXml))
                             {
-                                var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
+                                var enteredText = CustomerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
                                 if (enteredText.Any())
                                     attributeModel.DefaultValue = enteredText[0];
                             }

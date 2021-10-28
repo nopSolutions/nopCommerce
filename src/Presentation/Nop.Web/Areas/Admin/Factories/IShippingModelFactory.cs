@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Shipping;
 using Nop.Web.Areas.Admin.Models.Shipping;
 

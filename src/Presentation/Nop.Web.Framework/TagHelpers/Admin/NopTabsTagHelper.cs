@@ -47,7 +47,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected IHtmlHelper HtmlHelper { get; }
 
         #endregion
 
@@ -55,7 +55,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         public NopTabsTagHelper(IHtmlHelper htmlHelper)
         {
-            _htmlHelper = htmlHelper;
+            HtmlHelper = htmlHelper;
         }
 
         #endregion
@@ -77,7 +77,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 throw new ArgumentNullException(nameof(output));
 
             //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
+            var viewContextAware = HtmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             //create context item
@@ -139,7 +139,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 selectedTabInput.Attributes.Add("type", "hidden");
                 selectedTabInput.Attributes.Add("id", "selected-tab-name");
                 selectedTabInput.Attributes.Add("name", "selected-tab-name");
-                selectedTabInput.Attributes.Add("value", _htmlHelper.GetSelectedTabName());
+                selectedTabInput.Attributes.Add("value", HtmlHelper.GetSelectedTabName());
                 output.PreContent.SetHtmlContent(await selectedTabInput.RenderHtmlContentAsync());
 
                 //render tabs script
@@ -214,7 +214,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected IHtmlHelper HtmlHelper { get; }
 
         #endregion
 
@@ -222,7 +222,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         public NopTabTagHelper(IHtmlHelper htmlHelper)
         {
-            _htmlHelper = htmlHelper;
+            HtmlHelper = htmlHelper;
         }
 
         #endregion
@@ -244,7 +244,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 throw new ArgumentNullException(nameof(output));
 
             //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
+            var viewContextAware = HtmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             bool.TryParse(IsDefault, out var isDefaultTab);
@@ -255,7 +255,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 : string.Empty;
 
             if (string.IsNullOrEmpty(tabNameToSelect))
-                tabNameToSelect = _htmlHelper.GetSelectedTabName();
+                tabNameToSelect = HtmlHelper.GetSelectedTabName();
 
             if (string.IsNullOrEmpty(tabNameToSelect) && isDefaultTab)
                 tabNameToSelect = Name;

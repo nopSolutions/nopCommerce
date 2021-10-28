@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Messages;
@@ -18,10 +18,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IQueuedEmailService _queuedEmailService;
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IEmailAccountService EmailAccountService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IQueuedEmailService QueuedEmailService { get; }
 
         #endregion
 
@@ -32,10 +32,10 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IQueuedEmailService queuedEmailService)
         {
-            _dateTimeHelper = dateTimeHelper;
-            _emailAccountService = emailAccountService;
-            _localizationService = localizationService;
-            _queuedEmailService = queuedEmailService;
+            DateTimeHelper = dateTimeHelper;
+            EmailAccountService = emailAccountService;
+            LocalizationService = localizationService;
+            QueuedEmailService = queuedEmailService;
         }
 
         #endregion
@@ -97,12 +97,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get parameters to filter emails
             var startDateValue = !searchModel.SearchStartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchStartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.SearchStartDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.SearchEndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchEndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.SearchEndDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
             //get queued emails
-            var queuedEmails = await _queuedEmailService.SearchEmailsAsync(fromEmail: searchModel.SearchFromEmail,
+            var queuedEmails = await QueuedEmailService.SearchEmailsAsync(fromEmail: searchModel.SearchFromEmail,
                 toEmail: searchModel.SearchToEmail,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
@@ -124,21 +124,21 @@ namespace Nop.Web.Areas.Admin.Factories
                     queuedEmailModel.Body = string.Empty;
 
                     //convert dates to the user time
-                    queuedEmailModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
+                    queuedEmailModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(queuedEmail.EmailAccountId);
+                    var emailAccount = await EmailAccountService.GetEmailAccountByIdAsync(queuedEmail.EmailAccountId);
                     queuedEmailModel.EmailAccountName = GetEmailAccountName(emailAccount);
-                    queuedEmailModel.PriorityName = await _localizationService.GetLocalizedEnumAsync(queuedEmail.Priority);
+                    queuedEmailModel.PriorityName = await LocalizationService.GetLocalizedEnumAsync(queuedEmail.Priority);
 
                     if (queuedEmail.DontSendBeforeDateUtc.HasValue)
                     {
-                        queuedEmailModel.DontSendBeforeDate = await _dateTimeHelper
+                        queuedEmailModel.DontSendBeforeDate = await DateTimeHelper
                             .ConvertToUserTimeAsync(queuedEmail.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
                     }
 
                     if (queuedEmail.SentOnUtc.HasValue)
-                        queuedEmailModel.SentOn = await _dateTimeHelper.ConvertToUserTimeAsync(queuedEmail.SentOnUtc.Value, DateTimeKind.Utc);
+                        queuedEmailModel.SentOn = await DateTimeHelper.ConvertToUserTimeAsync(queuedEmail.SentOnUtc.Value, DateTimeKind.Utc);
 
                     return queuedEmailModel;
                 });
@@ -165,14 +165,14 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             model ??= queuedEmail.ToModel<QueuedEmailModel>();
 
-            model.EmailAccountName = GetEmailAccountName(await _emailAccountService.GetEmailAccountByIdAsync(queuedEmail.EmailAccountId));
-            model.PriorityName = await _localizationService.GetLocalizedEnumAsync(queuedEmail.Priority);
-            model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
+            model.EmailAccountName = GetEmailAccountName(await EmailAccountService.GetEmailAccountByIdAsync(queuedEmail.EmailAccountId));
+            model.PriorityName = await LocalizationService.GetLocalizedEnumAsync(queuedEmail.Priority);
+            model.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
 
             if (queuedEmail.SentOnUtc.HasValue)
-                model.SentOn = await _dateTimeHelper.ConvertToUserTimeAsync(queuedEmail.SentOnUtc.Value, DateTimeKind.Utc);
+                model.SentOn = await DateTimeHelper.ConvertToUserTimeAsync(queuedEmail.SentOnUtc.Value, DateTimeKind.Utc);
             if (queuedEmail.DontSendBeforeDateUtc.HasValue)
-                model.DontSendBeforeDate = await _dateTimeHelper.ConvertToUserTimeAsync(queuedEmail.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
+                model.DontSendBeforeDate = await DateTimeHelper.ConvertToUserTimeAsync(queuedEmail.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             else
                 model.SendImmediately = true;
 

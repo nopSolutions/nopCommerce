@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -15,12 +15,12 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPollModelFactory _pollModelFactory;
-        private readonly IPollService _pollService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkContext _workContext;
+        protected ICustomerService CustomerService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IPollModelFactory PollModelFactory { get; }
+        protected IPollService PollService { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -33,12 +33,12 @@ namespace Nop.Web.Controllers
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            _customerService = customerService;
-            _localizationService = localizationService;
-            _pollModelFactory = pollModelFactory;
-            _pollService = pollService;
-            _storeMappingService = storeMappingService;
-            _workContext = workContext;
+            CustomerService = customerService;
+            LocalizationService = localizationService;
+            PollModelFactory = pollModelFactory;
+            PollService = pollService;
+            StoreMappingService = storeMappingService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -49,24 +49,24 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> Vote(int pollAnswerId)
         {
-            var pollAnswer = await _pollService.GetPollAnswerByIdAsync(pollAnswerId);
+            var pollAnswer = await PollService.GetPollAnswerByIdAsync(pollAnswerId);
             if (pollAnswer == null)
                 return Json(new { error = "No poll answer found with the specified id" });
 
-            var poll = await _pollService.GetPollByIdAsync(pollAnswer.PollId);
+            var poll = await PollService.GetPollByIdAsync(pollAnswer.PollId);
 
-            if (!poll.Published || !await _storeMappingService.AuthorizeAsync(poll))
+            if (!poll.Published || !await StoreMappingService.AuthorizeAsync(poll))
                 return Json(new { error = "Poll is not available" });
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (await _customerService.IsGuestAsync(customer) && !poll.AllowGuestsToVote)
-                return Json(new { error = await _localizationService.GetResourceAsync("Polls.OnlyRegisteredUsersVote") });
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (await CustomerService.IsGuestAsync(customer) && !poll.AllowGuestsToVote)
+                return Json(new { error = await LocalizationService.GetResourceAsync("Polls.OnlyRegisteredUsersVote") });
 
-            var alreadyVoted = await _pollService.AlreadyVotedAsync(poll.Id, customer.Id);
+            var alreadyVoted = await PollService.AlreadyVotedAsync(poll.Id, customer.Id);
             if (!alreadyVoted)
             {
                 //vote
-                await _pollService.InsertPollVotingRecordAsync(new PollVotingRecord
+                await PollService.InsertPollVotingRecordAsync(new PollVotingRecord
                 {
                     PollAnswerId = pollAnswer.Id,
                     CustomerId = customer.Id,
@@ -74,14 +74,14 @@ namespace Nop.Web.Controllers
                 });
 
                 //update totals
-                pollAnswer.NumberOfVotes = (await _pollService.GetPollVotingRecordsByPollAnswerAsync(pollAnswer.Id)).Count;
-                await _pollService.UpdatePollAnswerAsync(pollAnswer);
-                await _pollService.UpdatePollAsync(poll);
+                pollAnswer.NumberOfVotes = (await PollService.GetPollVotingRecordsByPollAnswerAsync(pollAnswer.Id)).Count;
+                await PollService.UpdatePollAnswerAsync(pollAnswer);
+                await PollService.UpdatePollAsync(poll);
             }
 
             return Json(new
             {
-                html = await RenderPartialViewToStringAsync("_Poll", await _pollModelFactory.PreparePollModelAsync(poll, true)),
+                html = await RenderPartialViewToStringAsync("_Poll", await PollModelFactory.PreparePollModelAsync(poll, true)),
             });
         }
 

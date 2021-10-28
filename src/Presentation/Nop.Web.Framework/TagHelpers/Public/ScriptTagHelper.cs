@@ -43,8 +43,8 @@ namespace Nop.Web.Framework.TagHelpers.Public
 
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        protected IHtmlHelper HtmlHelper { get; }
+        protected IHttpContextAccessor HttpContextAccessor { get; }
 
         #endregion
 
@@ -52,8 +52,8 @@ namespace Nop.Web.Framework.TagHelpers.Public
 
         public ScriptTagHelper(IHtmlHelper htmlHelper, IHttpContextAccessor httpContextAccessor)
         {
-            _htmlHelper = htmlHelper;
-            _httpContextAccessor = httpContextAccessor;
+            HtmlHelper = htmlHelper;
+            HttpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -76,11 +76,11 @@ namespace Nop.Web.Framework.TagHelpers.Public
 
             //allow developers to ignore this parameter
             //for example, when a request is made using AJAX and is rendered without head and footer
-            if (_httpContextAccessor.HttpContext.Items.TryGetValue("nop.IgnoreScriptTagLocation", out var value) && value is bool ignore && ignore)
+            if (HttpContextAccessor.HttpContext.Items.TryGetValue("nop.IgnoreScriptTagLocation", out var value) && value is bool ignore && ignore)
                 return;
 
             //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
+            var viewContextAware = HtmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             //get JavaScript
@@ -98,7 +98,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
                     scriptTag.Attributes.Add(attribute.Name, attribute.Value.ToString());
             }
 
-            _htmlHelper.AddInlineScriptParts(Location, await scriptTag.RenderHtmlContentAsync());
+            HtmlHelper.AddInlineScriptParts(Location, await scriptTag.RenderHtmlContentAsync());
 
             //generate nothing
             output.SuppressOutput();

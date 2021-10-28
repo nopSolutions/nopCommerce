@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
@@ -18,9 +18,9 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IReviewTypeService _reviewTypeService;
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IReviewTypeService ReviewTypeService { get; }
 
         #endregion
 
@@ -30,9 +30,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             IReviewTypeService reviewTypeService)
         {
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _reviewTypeService = reviewTypeService;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            ReviewTypeService = reviewTypeService;
         }
 
         #endregion
@@ -72,7 +72,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get review types
-            var reviewTypes = (await _reviewTypeService.GetAllReviewTypesAsync()).ToPagedList(searchModel);
+            var reviewTypes = (await ReviewTypeService.GetAllReviewTypesAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ReviewTypeListModel().PrepareToGrid(searchModel, reviewTypes, () =>
@@ -107,14 +107,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(reviewType, entity => entity.Name, languageId, false, false);
-                    locale.Description = await _localizationService.GetLocalizedAsync(reviewType, entity => entity.Description, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(reviewType, entity => entity.Name, languageId, false, false);
+                    locale.Description = await LocalizationService.GetLocalizedAsync(reviewType, entity => entity.Description, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Factories
     {
         #region Fields
         
-        private readonly ILanguageService _languageService;
+        protected ILanguageService LanguageService { get; }
 
         #endregion
 
@@ -22,7 +22,7 @@ namespace Nop.Web.Framework.Factories
 
         public LocalizedModelFactory(ILanguageService languageService)
         {
-            _languageService = languageService;
+            LanguageService = languageService;
         }
 
         #endregion
@@ -41,7 +41,7 @@ namespace Nop.Web.Framework.Factories
         public virtual async Task<IList<T>> PrepareLocalizedModelsAsync<T>(Action<T, int> configure = null) where T : ILocalizedLocaleModel
         {
             //get all available languages
-            var availableLanguages = await _languageService.GetAllLanguagesAsync(true);
+            var availableLanguages = await LanguageService.GetAllLanguagesAsync(true);
 
             //prepare models
             var localizedModels = availableLanguages.Select(language =>

@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Mvc.Filters;
@@ -9,7 +9,7 @@ namespace Nop.Web.Controllers
 	{
         #region Fields
 
-        private readonly ICountryModelFactory _countryModelFactory;
+        protected ICountryModelFactory CountryModelFactory { get; }
         
         #endregion
         
@@ -17,7 +17,7 @@ namespace Nop.Web.Controllers
 
         public CountryController(ICountryModelFactory countryModelFactory)
 		{
-            _countryModelFactory = countryModelFactory;
+            CountryModelFactory = countryModelFactory;
 		}
         
         #endregion
@@ -30,7 +30,7 @@ namespace Nop.Web.Controllers
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
-            var model = await _countryModelFactory.GetStatesByCountryIdAsync(countryId, addSelectStateItem);
+            var model = await CountryModelFactory.GetStatesByCountryIdAsync(countryId, addSelectStateItem);
             
             return Json(model);
         }

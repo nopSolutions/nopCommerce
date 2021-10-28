@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -25,19 +25,19 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly INewsService _newsService;
-        private readonly IPictureService _pictureService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly NewsSettings _newsSettings;
+        protected CaptchaSettings CaptchaSettings { get; }
+        protected CustomerSettings CustomerSettings { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected INewsService NewsService { get; }
+        protected IPictureService PictureService { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected MediaSettings MediaSettings { get; }
+        protected NewsSettings NewsSettings { get; }
 
         #endregion
 
@@ -57,19 +57,19 @@ namespace Nop.Web.Factories
             MediaSettings mediaSettings,
             NewsSettings newsSettings)
         {
-            _captchaSettings = captchaSettings;
-            _customerSettings = customerSettings;
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _genericAttributeService = genericAttributeService;
-            _newsService = newsService;
-            _pictureService = pictureService;
-            _staticCacheManager = staticCacheManager;
-            _storeContext = storeContext;
-            _urlRecordService = urlRecordService;
-            _workContext = workContext;
-            _mediaSettings = mediaSettings;
-            _newsSettings = newsSettings;
+            CaptchaSettings = captchaSettings;
+            CustomerSettings = customerSettings;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            GenericAttributeService = genericAttributeService;
+            NewsService = newsService;
+            PictureService = pictureService;
+            StaticCacheManager = staticCacheManager;
+            StoreContext = storeContext;
+            UrlRecordService = urlRecordService;
+            WorkContext = workContext;
+            MediaSettings = mediaSettings;
+            NewsSettings = newsSettings;
         }
 
         #endregion
@@ -98,31 +98,31 @@ namespace Nop.Web.Factories
             model.MetaTitle = newsItem.MetaTitle;
             model.MetaDescription = newsItem.MetaDescription;
             model.MetaKeywords = newsItem.MetaKeywords;
-            model.SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
+            model.SeName = await UrlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = newsItem.Title;
             model.Short = newsItem.Short;
             model.Full = newsItem.Full;
             model.AllowComments = newsItem.AllowComments;
 
             model.PreventNotRegisteredUsersToLeaveComments =
-                await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) &&
-                !_newsSettings.AllowNotRegisteredUsersToLeaveComments;
+                await CustomerService.IsGuestAsync(await WorkContext.GetCurrentCustomerAsync()) &&
+                !NewsSettings.AllowNotRegisteredUsersToLeaveComments;
 
-            model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
-            model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
+            model.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
+            model.AddNewComment.DisplayCaptcha = CaptchaSettings.Enabled && CaptchaSettings.ShowOnNewsCommentPage;
 
             //number of news comments
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var storeId = _newsSettings.ShowNewsCommentsPerStore ? store.Id : 0;
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var storeId = NewsSettings.ShowNewsCommentsPerStore ? store.Id : 0;
 
-            model.NumberOfComments = await _newsService.GetNewsCommentsCountAsync(newsItem, storeId, true);
+            model.NumberOfComments = await NewsService.GetNewsCommentsCountAsync(newsItem, storeId, true);
 
             if (prepareComments)
             {
-                var newsComments = await _newsService.GetAllCommentsAsync(
+                var newsComments = await NewsService.GetAllCommentsAsync(
                     newsItemId: newsItem.Id,
                     approved: true,
-                    storeId: _newsSettings.ShowNewsCommentsPerStore ? store.Id : 0);
+                    storeId: NewsSettings.ShowNewsCommentsPerStore ? store.Id : 0);
 
                 foreach (var nc in newsComments.OrderBy(comment => comment.CreatedOnUtc))
                 {
@@ -143,12 +143,12 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<HomepageNewsItemsModel> PrepareHomepageNewsItemsModelAsync()
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var language = await _workContext.GetWorkingLanguageAsync();
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, language, store);
-            var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var language = await WorkContext.GetWorkingLanguageAsync();
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, language, store);
+            var cachedModel = await StaticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var newsItems = await _newsService.GetAllNewsAsync(language.Id, store.Id, 0, _newsSettings.MainPageNewsCount);
+                var newsItems = await NewsService.GetAllNewsAsync(language.Id, store.Id, 0, NewsSettings.MainPageNewsCount);
 
                 return new HomepageNewsItemsModel
                 {
@@ -183,13 +183,13 @@ namespace Nop.Web.Factories
         public virtual async Task<NewsItemListModel> PrepareNewsItemListModelAsync(NewsPagingFilteringModel command)
         {
             if (command.PageSize <= 0)
-                command.PageSize = _newsSettings.NewsArchivePageSize;
+                command.PageSize = NewsSettings.NewsArchivePageSize;
             if (command.PageNumber <= 0)
                 command.PageNumber = 1;
 
-            var language = await _workContext.GetWorkingLanguageAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var newsItems = await _newsService.GetAllNewsAsync(language.Id, store.Id, command.PageNumber - 1, command.PageSize);
+            var language = await WorkContext.GetWorkingLanguageAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var newsItems = await NewsService.GetAllNewsAsync(language.Id, store.Id, command.PageNumber - 1, command.PageSize);
 
             var model = new NewsItemListModel
             {
@@ -219,24 +219,24 @@ namespace Nop.Web.Factories
             if (newsComment == null)
                 throw new ArgumentNullException(nameof(newsComment));
 
-            var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(newsComment.CustomerId);
 
             var model = new NewsCommentModel
             {
                 Id = newsComment.Id,
                 CustomerId = newsComment.CustomerId,
-                CustomerName = await _customerService.FormatUsernameAsync(customer),
+                CustomerName = await CustomerService.FormatUsernameAsync(customer),
                 CommentTitle = newsComment.CommentTitle,
                 CommentText = newsComment.CommentText,
-                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !await _customerService.IsGuestAsync(customer),
+                CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(newsComment.CreatedOnUtc, DateTimeKind.Utc),
+                AllowViewingProfiles = CustomerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !await CustomerService.IsGuestAsync(customer),
             };
 
-            if (_customerSettings.AllowCustomersToUploadAvatars)
+            if (CustomerSettings.AllowCustomersToUploadAvatars)
             {
-                model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
-                    await _genericAttributeService.GetAttributeAsync<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
-                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+                model.CustomerAvatarUrl = await PictureService.GetPictureUrlAsync(
+                    await GenericAttributeService.GetAttributeAsync<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    MediaSettings.AvatarPictureSize, CustomerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
             return model;

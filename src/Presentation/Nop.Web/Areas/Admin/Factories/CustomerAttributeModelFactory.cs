@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
@@ -18,9 +18,9 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
+        protected ICustomerAttributeService CustomerAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
 
         #endregion
 
@@ -30,9 +30,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory)
         {
-            _customerAttributeService = customerAttributeService;
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
+            CustomerAttributeService = customerAttributeService;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
         }
 
         #endregion
@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customer attributes
-            var customerAttributes = (await _customerAttributeService.GetAllCustomerAttributesAsync()).ToPagedList(searchModel);
+            var customerAttributes = (await CustomerAttributeService.GetAllCustomerAttributesAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = await new CustomerAttributeListModel().PrepareToGridAsync(searchModel, customerAttributes, () =>
@@ -110,7 +110,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var attributeModel = attribute.ToModel<CustomerAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
-                    attributeModel.AttributeControlTypeName = await _localizationService.GetLocalizedEnumAsync(attribute.AttributeControlType);
+                    attributeModel.AttributeControlTypeName = await LocalizationService.GetLocalizedEnumAsync(attribute.AttributeControlType);
 
                     return attributeModel;
                 });
@@ -145,13 +145,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(customerAttribute, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(customerAttribute, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -175,7 +175,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customerAttribute));
 
             //get customer attribute values
-            var customerAttributeValues = (await _customerAttributeService
+            var customerAttributeValues = (await CustomerAttributeService
                 .GetCustomerAttributeValuesAsync(customerAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
@@ -215,7 +215,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(customerAttributeValue, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(customerAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -223,7 +223,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }

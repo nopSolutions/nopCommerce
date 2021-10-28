@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -26,9 +26,9 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly IInstallationLocalizationService _locService;
-        private readonly INopFileProvider _fileProvider;
+        protected AppSettings AppSettings { get; }
+        protected IInstallationLocalizationService LocService { get; }
+        protected INopFileProvider FileProvider { get; }
 
         #endregion
 
@@ -38,9 +38,9 @@ namespace Nop.Web.Controllers
             IInstallationLocalizationService locService,
             INopFileProvider fileProvider)
         {
-            _appSettings = appSettings;
-            _locService = locService;
-            _fileProvider = fileProvider;
+            AppSettings = appSettings;
+            LocService = locService;
+            FileProvider = fileProvider;
         }
 
         #endregion
@@ -52,11 +52,11 @@ namespace Nop.Web.Controllers
             if (!model.InstallRegionalResources)
                 return model;
 
-            var browserCulture = _locService.GetBrowserCulture();
+            var browserCulture = LocService.GetBrowserCulture();
             var countries = new List<SelectListItem>
             {
                 //This item was added in case it was not possible to automatically determine the country by culture
-                new SelectListItem { Value = string.Empty, Text = _locService.GetResource("CountrySelect") }
+                new SelectListItem { Value = string.Empty, Text = LocService.GetResource("CountrySelect") }
             };
             countries.AddRange(from country in ISO3166.GetCollection()
                                from localization in ISO3166.GetLocalizationInfo(country.Alpha2)
@@ -75,13 +75,13 @@ namespace Nop.Web.Controllers
 
         private InstallModel PrepareLanguageList(InstallModel model)
         {
-            foreach (var lang in _locService.GetAvailableLanguages())
+            foreach (var lang in LocService.GetAvailableLanguages())
             {
                 model.AvailableLanguages.Add(new SelectListItem
                 {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
-                    Selected = _locService.GetCurrentLanguage().Code == lang.Code
+                    Selected = LocService.GetCurrentLanguage().Code == lang.Code
                 });
             }
 
@@ -91,7 +91,7 @@ namespace Nop.Web.Controllers
         private InstallModel PrepareAvailableDataProviders(InstallModel model)
         {
             model.AvailableDataProviders.AddRange(
-                _locService.GetAvailableProviderTypes()
+                LocService.GetAvailableProviderTypes()
                 .OrderBy(v => v.Value)
                 .Select(pt => new SelectListItem
                 {
@@ -115,8 +115,8 @@ namespace Nop.Web.Controllers
             {
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
-                InstallRegionalResources = _appSettings.Get<InstallationConfig>().InstallRegionalResources,
-                DisableSampleDataOption = _appSettings.Get<InstallationConfig>().DisableSampleData,
+                InstallRegionalResources = AppSettings.Get<InstallationConfig>().InstallRegionalResources,
+                DisableSampleDataOption = AppSettings.Get<InstallationConfig>().DisableSampleData,
                 CreateDatabaseIfNotExists = false,
                 ConnectionStringRaw = false,
                 DataProvider = DataProviderType.SqlServer
@@ -136,8 +136,8 @@ namespace Nop.Web.Controllers
             if (DataSettingsManager.IsDatabaseInstalled())
                 return RedirectToRoute("Homepage");
 
-            model.DisableSampleDataOption = _appSettings.Get<InstallationConfig>().DisableSampleData;
-            model.InstallRegionalResources = _appSettings.Get<InstallationConfig>().InstallRegionalResources;
+            model.DisableSampleDataOption = AppSettings.Get<InstallationConfig>().DisableSampleData;
+            model.InstallRegionalResources = AppSettings.Get<InstallationConfig>().InstallRegionalResources;
 
             PrepareAvailableDataProviders(model);
             PrepareLanguageList(model);
@@ -154,16 +154,16 @@ namespace Nop.Web.Controllers
             var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
             foreach (var dir in dirsToCheck)
                 if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
-                    ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("ConfigureDirectoryPermissions"), CurrentOSUser.FullName, dir));
+                    ModelState.AddModelError(string.Empty, string.Format(LocService.GetResource("ConfigureDirectoryPermissions"), CurrentOSUser.FullName, dir));
 
             var filesToCheck = FilePermissionHelper.GetFilesWrite();
             foreach (var file in filesToCheck)
             {
-                if (!_fileProvider.FileExists(file))
+                if (!FileProvider.FileExists(file))
                     continue;
 
                 if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
-                    ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("ConfigureFilePermissions"), CurrentOSUser.FullName, file));
+                    ModelState.AddModelError(string.Empty, string.Format(LocService.GetResource("ConfigureFilePermissions"), CurrentOSUser.FullName, file));
             }
 
             if (!ModelState.IsValid)
@@ -176,13 +176,13 @@ namespace Nop.Web.Controllers
                 var connectionString = model.ConnectionStringRaw ? model.ConnectionString : dataProvider.BuildConnectionString(model);
 
                 if (string.IsNullOrEmpty(connectionString))
-                    throw new Exception(_locService.GetResource("ConnectionStringWrongFormat"));
+                    throw new Exception(LocService.GetResource("ConnectionStringWrongFormat"));
 
                 DataSettingsManager.SaveSettings(new DataConfig
                 {
                     DataProvider = model.DataProvider,
                     ConnectionString = connectionString
-                }, _fileProvider);
+                }, FileProvider);
 
                 if (model.CreateDatabaseIfNotExists)
                 {
@@ -192,14 +192,14 @@ namespace Nop.Web.Controllers
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(string.Format(_locService.GetResource("DatabaseCreationError"), ex.Message));
+                        throw new Exception(string.Format(LocService.GetResource("DatabaseCreationError"), ex.Message));
                     }
                 }
                 else
                 {
                     //check whether database exists
                     if (!await dataProvider.DatabaseExistsAsync())
-                        throw new Exception(_locService.GetResource("DatabaseNotExists"));
+                        throw new Exception(LocService.GetResource("DatabaseNotExists"));
                 }
 
                 dataProvider.InitializeDatabase();
@@ -224,7 +224,7 @@ namespace Nop.Web.Controllers
                         try
                         {
                             var client = EngineContext.Current.Resolve<NopHttpClient>();
-                            var languageCode = _locService.GetCurrentLanguage().Code[0..2];
+                            var languageCode = LocService.GetCurrentLanguage().Code[0..2];
                             var resultString = await client.InstallationCompletedAsync(model.AdminEmail, languageCode, cultureInfo.Name);
                             var result = JsonConvert.DeserializeAnonymousType(resultString,
                                 new { Message = string.Empty, LanguagePack = new { Culture = string.Empty, Progress = 0, DownloadLink = string.Empty } });
@@ -255,9 +255,9 @@ namespace Nop.Web.Controllers
                 pluginService.ClearInstalledPluginsList();
 
                 var pluginsIgnoredDuringInstallation = new List<string>();
-                if (!string.IsNullOrEmpty(_appSettings.Get<InstallationConfig>().DisabledPlugins))
+                if (!string.IsNullOrEmpty(AppSettings.Get<InstallationConfig>().DisabledPlugins))
                 {
-                    pluginsIgnoredDuringInstallation = _appSettings.Get<InstallationConfig>().DisabledPlugins
+                    pluginsIgnoredDuringInstallation = AppSettings.Get<InstallationConfig>().DisabledPlugins
                         .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
                 }
 
@@ -289,9 +289,9 @@ namespace Nop.Web.Controllers
                 await staticCacheManager.ClearAsync();
 
                 //clear provider settings if something got wrong
-                DataSettingsManager.SaveSettings(new DataConfig(), _fileProvider);
+                DataSettingsManager.SaveSettings(new DataConfig(), FileProvider);
 
-                ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("SetupFailed"), exception.Message));
+                ModelState.AddModelError(string.Empty, string.Format(LocService.GetResource("SetupFailed"), exception.Message));
             }
 
             return View(model);
@@ -302,7 +302,7 @@ namespace Nop.Web.Controllers
             if (DataSettingsManager.IsDatabaseInstalled())
                 return RedirectToRoute("Homepage");
 
-            _locService.SaveCurrentLanguage(language);
+            LocService.SaveCurrentLanguage(language);
 
             //Reload the page
             return RedirectToAction("Index", "Install");

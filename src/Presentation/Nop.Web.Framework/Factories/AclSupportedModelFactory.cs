@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,8 +17,8 @@ namespace Nop.Web.Framework.Factories
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ICustomerService _customerService;
+        protected IAclService AclService { get; }
+        protected ICustomerService CustomerService { get; }
 
         #endregion
 
@@ -27,8 +27,8 @@ namespace Nop.Web.Framework.Factories
         public AclSupportedModelFactory(IAclService aclService,
             ICustomerService customerService)
         {
-            _aclService = aclService;
-            _customerService = customerService;
+            AclService = aclService;
+            CustomerService = customerService;
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace Nop.Web.Framework.Factories
                 throw new ArgumentNullException(nameof(model));
 
             //prepare available customer roles
-            var availableRoles = await _customerService.GetAllCustomerRolesAsync(showHidden: true);
+            var availableRoles = await CustomerService.GetAllCustomerRolesAsync(showHidden: true);
             model.AvailableCustomerRoles = availableRoles.Select(role => new SelectListItem
             {
                 Text = role.Name,
@@ -73,7 +73,7 @@ namespace Nop.Web.Framework.Factories
 
             //prepare customer roles with granted access
             if (!ignoreAclMappings && entity != null)
-                model.SelectedCustomerRoleIds = (await _aclService.GetCustomerRoleIdsWithAccessAsync(entity)).ToList();
+                model.SelectedCustomerRoleIds = (await AclService.GetCustomerRoleIdsWithAccessAsync(entity)).ToList();
 
             await PrepareModelCustomerRolesAsync(model);
         }

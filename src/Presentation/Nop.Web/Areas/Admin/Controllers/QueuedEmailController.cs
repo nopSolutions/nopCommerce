@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,12 +20,12 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IQueuedEmailModelFactory _queuedEmailModelFactory;
-        private readonly IQueuedEmailService _queuedEmailService;
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IQueuedEmailModelFactory QueuedEmailModelFactory { get; }
+        protected IQueuedEmailService QueuedEmailService { get; }
 
         #endregion
 
@@ -38,12 +38,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             IQueuedEmailModelFactory queuedEmailModelFactory,
             IQueuedEmailService queuedEmailService)
         {
-            _dateTimeHelper = dateTimeHelper;
-            _localizationService = localizationService;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
-            _queuedEmailModelFactory = queuedEmailModelFactory;
-            _queuedEmailService = queuedEmailService;
+            DateTimeHelper = dateTimeHelper;
+            LocalizationService = localizationService;
+            NotificationService = notificationService;
+            PermissionService = permissionService;
+            QueuedEmailModelFactory = queuedEmailModelFactory;
+            QueuedEmailService = queuedEmailService;
         }
 
         #endregion
@@ -57,11 +57,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _queuedEmailModelFactory.PrepareQueuedEmailSearchModelAsync(new QueuedEmailSearchModel());
+            var model = await QueuedEmailModelFactory.PrepareQueuedEmailSearchModelAsync(new QueuedEmailSearchModel());
 
             return View(model);
         }
@@ -69,11 +69,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> QueuedEmailList(QueuedEmailSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _queuedEmailModelFactory.PrepareQueuedEmailListModelAsync(searchModel);
+            var model = await QueuedEmailModelFactory.PrepareQueuedEmailListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -83,7 +83,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> GoToEmailByNumber(QueuedEmailSearchModel model)
         {
             //try to get a queued email with the specified id
-            var queuedEmail = await _queuedEmailService.GetQueuedEmailByIdAsync(model.GoDirectlyToNumber);
+            var queuedEmail = await QueuedEmailService.GetQueuedEmailByIdAsync(model.GoDirectlyToNumber);
             if (queuedEmail == null)
                 return await List();
 
@@ -92,16 +92,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
 
             //try to get a queued email with the specified id
-            var email = await _queuedEmailService.GetQueuedEmailByIdAsync(id);
+            var email = await QueuedEmailService.GetQueuedEmailByIdAsync(id);
             if (email == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _queuedEmailModelFactory.PrepareQueuedEmailModelAsync(null, email);
+            var model = await QueuedEmailModelFactory.PrepareQueuedEmailModelAsync(null, email);
 
             return View(model);
         }
@@ -111,11 +111,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public virtual async Task<IActionResult> Edit(QueuedEmailModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
 
             //try to get a queued email with the specified id
-            var email = await _queuedEmailService.GetQueuedEmailByIdAsync(model.Id);
+            var email = await QueuedEmailService.GetQueuedEmailByIdAsync(model.Id);
             if (email == null)
                 return RedirectToAction("List");
 
@@ -123,16 +123,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 email = model.ToEntity(email);
                 email.DontSendBeforeDateUtc = model.SendImmediately || !model.DontSendBeforeDate.HasValue ?
-                    null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value);
-                await _queuedEmailService.UpdateQueuedEmailAsync(email);
+                    null : (DateTime?)DateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value);
+                await QueuedEmailService.UpdateQueuedEmailAsync(email);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.QueuedEmails.Updated"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.System.QueuedEmails.Updated"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = email.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = await _queuedEmailModelFactory.PrepareQueuedEmailModelAsync(model, email, true);
+            model = await QueuedEmailModelFactory.PrepareQueuedEmailModelAsync(model, email, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -141,11 +141,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ActionName("Edit"), FormValueRequired("requeue")]
         public virtual async Task<IActionResult> Requeue(QueuedEmailModel queuedEmailModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
 
             //try to get a queued email with the specified id
-            var queuedEmail = await _queuedEmailService.GetQueuedEmailByIdAsync(queuedEmailModel.Id);
+            var queuedEmail = await QueuedEmailService.GetQueuedEmailByIdAsync(queuedEmailModel.Id);
             if (queuedEmail == null)
                 return RedirectToAction("List");
 
@@ -168,11 +168,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = queuedEmail.EmailAccountId,
                 DontSendBeforeDateUtc = queuedEmailModel.SendImmediately || !queuedEmailModel.DontSendBeforeDate.HasValue ?
-                    null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(queuedEmailModel.DontSendBeforeDate.Value)
+                    null : (DateTime?)DateTimeHelper.ConvertToUtcTime(queuedEmailModel.DontSendBeforeDate.Value)
             };
-            await _queuedEmailService.InsertQueuedEmailAsync(requeuedEmail);
+            await QueuedEmailService.InsertQueuedEmailAsync(requeuedEmail);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.QueuedEmails.Requeued"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.System.QueuedEmails.Requeued"));
 
             return RedirectToAction("Edit", new { id = requeuedEmail.Id });
         }
@@ -180,17 +180,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
 
             //try to get a queued email with the specified id
-            var email = await _queuedEmailService.GetQueuedEmailByIdAsync(id);
+            var email = await QueuedEmailService.GetQueuedEmailByIdAsync(id);
             if (email == null)
                 return RedirectToAction("List");
 
-            await _queuedEmailService.DeleteQueuedEmailAsync(email);
+            await QueuedEmailService.DeleteQueuedEmailAsync(email);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.QueuedEmails.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.System.QueuedEmails.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -198,13 +198,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
 
             if (selectedIds == null || selectedIds.Count() == 0)
                 return NoContent();
 
-            await _queuedEmailService.DeleteQueuedEmailsAsync(await _queuedEmailService.GetQueuedEmailsByIdsAsync(selectedIds.ToArray()));
+            await QueuedEmailService.DeleteQueuedEmailsAsync(await QueuedEmailService.GetQueuedEmailsByIdsAsync(selectedIds.ToArray()));
 
             return Json(new { Result = true });
         }
@@ -213,12 +213,12 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-all")]
         public virtual async Task<IActionResult> DeleteAll()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
 
-            await _queuedEmailService.DeleteAllEmailsAsync();
+            await QueuedEmailService.DeleteAllEmailsAsync();
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.QueuedEmails.DeletedAll"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.System.QueuedEmails.DeletedAll"));
 
             return RedirectToAction("List");
         }

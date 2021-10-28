@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core.Domain.Common;
@@ -36,7 +36,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         #region Fields
 
-        private readonly AdminAreaSettings _adminAreaSettings;
+        protected AdminAreaSettings AdminAreaSettings { get; }
 
         #endregion
 
@@ -44,7 +44,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         public NopDocReferenceTagHelper(AdminAreaSettings adminAreaSettings)
         {
-            _adminAreaSettings = adminAreaSettings;
+            AdminAreaSettings = adminAreaSettings;
         }
 
         #endregion
@@ -68,7 +68,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //clear the output
             output.SuppressOutput();
 
-            if (_adminAreaSettings.ShowDocumentationReferenceLinks)
+            if (AdminAreaSettings.ShowDocumentationReferenceLinks)
             {
                 //add wrapper
                 if (AddWrapper)

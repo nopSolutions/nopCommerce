@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,12 +21,12 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IStoreService _storeService;
+        protected CatalogSettings CatalogSettings { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected INewsLetterSubscriptionService NewsLetterSubscriptionService { get; }
+        protected IStoreService StoreService { get; }
 
         #endregion
 
@@ -39,12 +39,12 @@ namespace Nop.Web.Areas.Admin.Factories
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IStoreService storeService)
         {
-            _catalogSettings = catalogSettings;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _dateTimeHelper = dateTimeHelper;
-            _localizationService = localizationService;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
-            _storeService = storeService;
+            CatalogSettings = catalogSettings;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            DateTimeHelper = dateTimeHelper;
+            LocalizationService = localizationService;
+            NewsLetterSubscriptionService = newsLetterSubscriptionService;
+            StoreService = storeService;
         }
 
         #endregion
@@ -65,29 +65,29 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available customer roles
-            await _baseAdminModelFactory.PrepareCustomerRolesAsync(searchModel.AvailableCustomerRoles);
+            await BaseAdminModelFactory.PrepareCustomerRolesAsync(searchModel.AvailableCustomerRoles);
 
             //prepare "activated" filter (0 - all; 1 - activated only; 2 - deactivated only)
             searchModel.ActiveList.Add(new SelectListItem
             {
                 Value = "0",
-                Text = await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.All")
+                Text = await LocalizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.All")
             });
             searchModel.ActiveList.Add(new SelectListItem
             {
                 Value = "1",
-                Text = await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.ActiveOnly")
+                Text = await LocalizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.ActiveOnly")
             });
             searchModel.ActiveList.Add(new SelectListItem
             {
                 Value = "2",
-                Text = await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly")
+                Text = await LocalizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly")
             });
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+            searchModel.HideStoresList = CatalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -111,12 +111,12 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter newsletter subscriptions
             var isActivatedOnly = searchModel.ActiveId == 0 ? null : searchModel.ActiveId == 1 ? true : (bool?)false;
             var startDateValue = !searchModel.StartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
             //get newsletter subscriptions
-            var newsletterSubscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: searchModel.SearchEmail,
+            var newsletterSubscriptions = await NewsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: searchModel.SearchEmail,
                 customerRoleId: searchModel.CustomerRoleId,
                 storeId: searchModel.StoreId,
                 isActive: isActivatedOnly,
@@ -133,10 +133,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     var subscriptionModel = subscription.ToModel<NewsletterSubscriptionModel>();
 
                     //convert dates to the user time
-                    subscriptionModel.CreatedOn = (await _dateTimeHelper.ConvertToUserTimeAsync(subscription.CreatedOnUtc, DateTimeKind.Utc)).ToString();
+                    subscriptionModel.CreatedOn = (await DateTimeHelper.ConvertToUserTimeAsync(subscription.CreatedOnUtc, DateTimeKind.Utc)).ToString();
 
                     //fill in additional values (not existing in the entity)
-                    subscriptionModel.StoreName = (await _storeService.GetStoreByIdAsync(subscription.StoreId))?.Name ?? "Deleted";
+                    subscriptionModel.StoreName = (await StoreService.GetStoreByIdAsync(subscription.StoreId))?.Name ?? "Deleted";
 
                     return subscriptionModel;
                 });

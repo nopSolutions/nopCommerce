@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Security;
@@ -14,12 +14,12 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly ITopicModelFactory _topicModelFactory;
-        private readonly ITopicService _topicService;
+        protected IAclService AclService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected ITopicModelFactory TopicModelFactory { get; }
+        protected ITopicService TopicService { get; }
 
         #endregion
 
@@ -32,12 +32,12 @@ namespace Nop.Web.Controllers
             ITopicModelFactory topicModelFactory,
             ITopicService topicService)
         {
-            _aclService = aclService;
-            _localizationService = localizationService;
-            _permissionService = permissionService;
-            _storeMappingService = storeMappingService;
-            _topicModelFactory = topicModelFactory;
-            _topicService = topicService;
+            AclService = aclService;
+            LocalizationService = localizationService;
+            PermissionService = permissionService;
+            StoreMappingService = storeMappingService;
+            TopicModelFactory = topicModelFactory;
+            TopicService = topicService;
         }
 
         #endregion
@@ -47,9 +47,9 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> TopicDetails(int topicId)
         {
             //allow administrators to preview any topic
-            var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics);
+            var hasAdminAccess = await PermissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics);
 
-            var model = await _topicModelFactory.PrepareTopicModelByIdAsync(topicId, hasAdminAccess);
+            var model = await TopicModelFactory.PrepareTopicModelByIdAsync(topicId, hasAdminAccess);
             if (model == null)
                 return InvokeHttp404();
 
@@ -58,21 +58,21 @@ namespace Nop.Web.Controllers
                 DisplayEditLink(Url.Action("Edit", "Topic", new { id = model.Id, area = AreaNames.Admin }));
 
             //template
-            var templateViewPath = await _topicModelFactory.PrepareTemplateViewPathAsync(model.TopicTemplateId);
+            var templateViewPath = await TopicModelFactory.PrepareTemplateViewPathAsync(model.TopicTemplateId);
             return View(templateViewPath, model);
         }
 
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> TopicDetailsPopup(string systemName)
         {
-            var model = await _topicModelFactory.PrepareTopicModelBySystemNameAsync(systemName);
+            var model = await TopicModelFactory.PrepareTopicModelBySystemNameAsync(systemName);
             if (model == null)
                 return InvokeHttp404();
 
             ViewBag.IsPopup = true;
 
             //template
-            var templateViewPath = await _topicModelFactory.PrepareTemplateViewPathAsync(model.TopicTemplateId);
+            var templateViewPath = await TopicModelFactory.PrepareTemplateViewPathAsync(model.TopicTemplateId);
             return PartialView(templateViewPath, model);
         }
 
@@ -85,25 +85,25 @@ namespace Nop.Web.Controllers
             var body = string.Empty;
             var error = string.Empty;
 
-            var topic = await _topicService.GetTopicByIdAsync(id);
+            var topic = await TopicService.GetTopicByIdAsync(id);
             if (topic != null &&
                 topic.Published &&
                 //password protected?
                 topic.IsPasswordProtected &&
                 //store mapping
-                await _storeMappingService.AuthorizeAsync(topic) &&
+                await StoreMappingService.AuthorizeAsync(topic) &&
                 //ACL (access control list)
-                await _aclService.AuthorizeAsync(topic))
+                await AclService.AuthorizeAsync(topic))
             {
                 if (topic.Password != null && topic.Password.Equals(password))
                 {
                     authResult = true;
-                    title = await _localizationService.GetLocalizedAsync(topic, x => x.Title);
-                    body = await _localizationService.GetLocalizedAsync(topic, x => x.Body);
+                    title = await LocalizationService.GetLocalizedAsync(topic, x => x.Title);
+                    body = await LocalizationService.GetLocalizedAsync(topic, x => x.Body);
                 }
                 else
                 {
-                    error = await _localizationService.GetResourceAsync("Topic.WrongPassword");
+                    error = await LocalizationService.GetResourceAsync("Topic.WrongPassword");
                 }
             }
 

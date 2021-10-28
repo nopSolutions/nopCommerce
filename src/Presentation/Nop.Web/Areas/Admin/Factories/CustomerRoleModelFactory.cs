@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,11 +22,11 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICustomerService _customerService;
-        private readonly IProductService _productService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IProductService ProductService { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -38,11 +38,11 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _customerService = customerService;
-            _productService = productService;
-            _urlRecordService = urlRecordService;
-            _workContext = workContext;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            CustomerService = customerService;
+            ProductService = productService;
+            UrlRecordService = urlRecordService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -82,7 +82,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customer roles
-            var customerRoles = (await _customerService.GetAllCustomerRolesAsync(true)).ToPagedList(searchModel);
+            var customerRoles = (await CustomerService.GetAllCustomerRolesAsync(true)).ToPagedList(searchModel);
 
             //prepare grid model
             var model = await new CustomerRoleListModel().PrepareToGridAsync(searchModel, customerRoles, () =>
@@ -93,7 +93,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var customerRoleModel = role.ToModel<CustomerRoleModel>();
 
                     //fill in additional values (not existing in the entity)
-                    customerRoleModel.PurchasedWithProductName = (await _productService.GetProductByIdAsync(role.PurchasedWithProductId))?.Name;
+                    customerRoleModel.PurchasedWithProductName = (await ProductService.GetProductByIdAsync(role.PurchasedWithProductId))?.Name;
 
                     return customerRoleModel;
                 });
@@ -118,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 //fill in model values from the entity
                 model ??= customerRole.ToModel<CustomerRoleModel>();
-                model.PurchasedWithProductName = (await _productService.GetProductByIdAsync(customerRole.PurchasedWithProductId))?.Name;
+                model.PurchasedWithProductName = (await ProductService.GetProductByIdAsync(customerRole.PurchasedWithProductId))?.Name;
             }
 
             //set default values for the new model
@@ -126,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Active = true;
 
             //prepare available tax display types
-            await _baseAdminModelFactory.PrepareTaxDisplayTypesAsync(model.TaxDisplayTypeValues, false);
+            await BaseAdminModelFactory.PrepareTaxDisplayTypesAsync(model.TaxDisplayTypeValues, false);
 
             return model;
         }
@@ -145,22 +145,22 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            searchModel.IsLoggedInAsVendor = await WorkContext.GetCurrentVendorAsync() != null;
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
+            await BaseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
+            await BaseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+            await BaseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare available product types
-            await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
+            await BaseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
@@ -182,12 +182,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
                 searchModel.SearchVendorId = currentVendor.Id;
 
             //get products
-            var products = await _productService.SearchProductsAsync(showHidden: true,
+            var products = await ProductService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
@@ -203,7 +203,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var productModel = product.ToModel<ProductModel>();
 
-                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
+                    productModel.SeName = await UrlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,16 +23,16 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CommonSettings _commonSettings;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPictureService _pictureService;
-        private readonly IVendorAttributeParser _vendorAttributeParser;
-        private readonly IVendorAttributeService _vendorAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected CaptchaSettings CaptchaSettings { get; }
+        protected CommonSettings CommonSettings { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IPictureService PictureService { get; }
+        protected IVendorAttributeParser VendorAttributeParser { get; }
+        protected IVendorAttributeService VendorAttributeService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected MediaSettings MediaSettings { get; }
+        protected VendorSettings VendorSettings { get; }
 
         #endregion
 
@@ -49,16 +49,16 @@ namespace Nop.Web.Factories
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
-            _captchaSettings = captchaSettings;
-            _commonSettings = commonSettings;
-            _genericAttributeService = genericAttributeService;
-            _localizationService = localizationService;
-            _pictureService = pictureService;
-            _vendorAttributeParser = vendorAttributeParser;
-            _vendorAttributeService = vendorAttributeService;
-            _workContext = workContext;
-            _mediaSettings = mediaSettings;
-            _vendorSettings = vendorSettings;
+            CaptchaSettings = captchaSettings;
+            CommonSettings = commonSettings;
+            GenericAttributeService = genericAttributeService;
+            LocalizationService = localizationService;
+            PictureService = pictureService;
+            VendorAttributeParser = vendorAttributeParser;
+            VendorAttributeService = vendorAttributeService;
+            WorkContext = workContext;
+            MediaSettings = mediaSettings;
+            VendorSettings = vendorSettings;
         }
 
         #endregion
@@ -77,13 +77,13 @@ namespace Nop.Web.Factories
         {
             var result = new List<VendorAttributeModel>();
 
-            var vendorAttributes = await _vendorAttributeService.GetAllVendorAttributesAsync();
+            var vendorAttributes = await VendorAttributeService.GetAllVendorAttributesAsync();
             foreach (var attribute in vendorAttributes)
             {
                 var attributeModel = new VendorAttributeModel
                 {
                     Id = attribute.Id,
-                    Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name),
+                    Name = await LocalizationService.GetLocalizedAsync(attribute, x => x.Name),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                 };
@@ -91,13 +91,13 @@ namespace Nop.Web.Factories
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = await _vendorAttributeService.GetVendorAttributeValuesAsync(attribute.Id);
+                    var attributeValues = await VendorAttributeService.GetVendorAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var valueModel = new VendorAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = await _localizationService.GetLocalizedAsync(attributeValue, x => x.Name),
+                            Name = await LocalizationService.GetLocalizedAsync(attributeValue, x => x.Name),
                             IsPreSelected = attributeValue.IsPreSelected
                         };
                         attributeModel.Values.Add(valueModel);
@@ -117,7 +117,7 @@ namespace Nop.Web.Factories
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = await _vendorAttributeParser.ParseVendorAttributeValuesAsync(vendorAttributesXml);
+                                var selectedValues = await VendorAttributeParser.ParseVendorAttributeValuesAsync(vendorAttributesXml);
                                 foreach (var attributeValue in selectedValues)
                                     foreach (var item in attributeModel.Values)
                                         if (attributeValue.Id == item.Id)
@@ -136,7 +136,7 @@ namespace Nop.Web.Factories
                         {
                             if (!string.IsNullOrEmpty(vendorAttributesXml))
                             {
-                                var enteredText = _vendorAttributeParser.ParseValues(vendorAttributesXml, attribute.Id);
+                                var enteredText = VendorAttributeParser.ParseValues(vendorAttributesXml, attribute.Id);
                                 if (enteredText.Any())
                                     attributeModel.DefaultValue = enteredText[0];
                             }
@@ -178,17 +178,17 @@ namespace Nop.Web.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
             if (validateVendor && customer.VendorId > 0)
             {
                 //already applied for vendor account
                 model.DisableFormInput = true;
-                model.Result = await _localizationService.GetResourceAsync("Vendors.ApplyAccount.AlreadyApplied");
+                model.Result = await LocalizationService.GetResourceAsync("Vendors.ApplyAccount.AlreadyApplied");
             }
 
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
-            model.TermsOfServiceEnabled = _vendorSettings.TermsOfServiceEnabled;
-            model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
+            model.DisplayCaptcha = CaptchaSettings.Enabled && CaptchaSettings.ShowOnApplyVendorPage;
+            model.TermsOfServiceEnabled = VendorSettings.TermsOfServiceEnabled;
+            model.TermsOfServicePopup = CommonSettings.PopupForTermsOfServiceLinks;
 
             if (!excludeProperties)
             {
@@ -217,7 +217,7 @@ namespace Nop.Web.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var vendor = await _workContext.GetCurrentVendorAsync();
+            var vendor = await WorkContext.GetCurrentVendorAsync();
             if (!excludeProperties)
             {
                 model.Description = vendor.Description;
@@ -225,13 +225,13 @@ namespace Nop.Web.Factories
                 model.Name = vendor.Name;
             }
 
-            var picture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
-            var pictureSize = _mediaSettings.AvatarPictureSize;
-            (model.PictureUrl, _) = picture != null ? await _pictureService.GetPictureUrlAsync(picture, pictureSize) : (string.Empty, null);
+            var picture = await PictureService.GetPictureByIdAsync(vendor.PictureId);
+            var pictureSize = MediaSettings.AvatarPictureSize;
+            (model.PictureUrl, _) = picture != null ? await PictureService.GetPictureUrlAsync(picture, pictureSize) : (string.Empty, null);
 
             //vendor attributes
             if (string.IsNullOrEmpty(overriddenVendorAttributesXml))
-                overriddenVendorAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(vendor, NopVendorDefaults.VendorAttributes);
+                overriddenVendorAttributesXml = await GenericAttributeService.GetAttributeAsync<string>(vendor, NopVendorDefaults.VendorAttributes);
             model.VendorAttributes = await PrepareVendorAttributesAsync(overriddenVendorAttributesXml);
 
             return model;

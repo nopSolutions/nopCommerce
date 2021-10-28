@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -22,18 +22,18 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDownloadService _downloadService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderService _orderService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductService _productService;
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
-        private readonly OrderSettings _orderSettings;
+        protected ICurrencyService CurrencyService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IDownloadService DownloadService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IOrderService OrderService { get; }
+        protected IPriceFormatter PriceFormatter { get; }
+        protected IProductService ProductService { get; }
+        protected IReturnRequestService ReturnRequestService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected OrderSettings OrderSettings { get; }
 
         #endregion
 
@@ -52,18 +52,18 @@ namespace Nop.Web.Factories
             IWorkContext workContext,
             OrderSettings orderSettings)
         {
-            _currencyService = currencyService;
-            _dateTimeHelper = dateTimeHelper;
-            _downloadService = downloadService;
-            _localizationService = localizationService;
-            _orderService = orderService;
-            _priceFormatter = priceFormatter;
-            _productService = productService;
-            _returnRequestService = returnRequestService;
-            _storeContext = storeContext;
-            _urlRecordService = urlRecordService;
-            _workContext = workContext;
-            _orderSettings = orderSettings;
+            CurrencyService = currencyService;
+            DateTimeHelper = dateTimeHelper;
+            DownloadService = downloadService;
+            LocalizationService = localizationService;
+            OrderService = orderService;
+            PriceFormatter = priceFormatter;
+            ProductService = productService;
+            ReturnRequestService = returnRequestService;
+            StoreContext = storeContext;
+            UrlRecordService = urlRecordService;
+            WorkContext = workContext;
+            OrderSettings = orderSettings;
         }
 
         #endregion
@@ -89,28 +89,28 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(model));
 
             model.OrderId = order.Id;
-            model.AllowFiles = _orderSettings.ReturnRequestsAllowFiles;
+            model.AllowFiles = OrderSettings.ReturnRequestsAllowFiles;
             model.CustomOrderNumber = order.CustomOrderNumber;
 
             //return reasons
-            model.AvailableReturnReasons = await (await _returnRequestService.GetAllReturnRequestReasonsAsync())
+            model.AvailableReturnReasons = await (await ReturnRequestService.GetAllReturnRequestReasonsAsync())
                 .SelectAwait(async rrr => new SubmitReturnRequestModel.ReturnRequestReasonModel
                 {
                     Id = rrr.Id,
-                    Name = await _localizationService.GetLocalizedAsync(rrr, x => x.Name)
+                    Name = await LocalizationService.GetLocalizedAsync(rrr, x => x.Name)
                 }).ToListAsync();
 
             //return actions
-            model.AvailableReturnActions = await (await _returnRequestService.GetAllReturnRequestActionsAsync())
+            model.AvailableReturnActions = await (await ReturnRequestService.GetAllReturnRequestActionsAsync())
                 .SelectAwait(async rra => new SubmitReturnRequestModel.ReturnRequestActionModel
                 {
                     Id = rra.Id,
-                    Name = await _localizationService.GetLocalizedAsync(rra, x => x.Name)
+                    Name = await LocalizationService.GetLocalizedAsync(rra, x => x.Name)
                 })
                 .ToListAsync();
 
             //returnable products
-            var orderItems = await _orderService.GetOrderItemsAsync(order.Id, isNotReturnable: false);
+            var orderItems = await OrderService.GetOrderItemsAsync(order.Id, isNotReturnable: false);
             foreach (var orderItem in orderItems)
             {
                 var orderItemModel = await PrepareSubmitReturnRequestOrderItemModelAsync(orderItem);
@@ -130,33 +130,33 @@ namespace Nop.Web.Factories
         public virtual async Task<CustomerReturnRequestsModel> PrepareCustomerReturnRequestsModelAsync()
         {
             var model = new CustomerReturnRequestsModel();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var returnRequests = await _returnRequestService.SearchReturnRequestsAsync(store.Id, customer.Id);
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var returnRequests = await ReturnRequestService.SearchReturnRequestsAsync(store.Id, customer.Id);
             
             foreach (var returnRequest in returnRequests)
             {
-                var orderItem = await _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
+                var orderItem = await OrderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
                 if (orderItem != null)
                 {
-                    var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                    var product = await ProductService.GetProductByIdAsync(orderItem.ProductId);
 
-                    var download = await _downloadService.GetDownloadByIdAsync(returnRequest.UploadedFileId);
+                    var download = await DownloadService.GetDownloadByIdAsync(returnRequest.UploadedFileId);
 
                     var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
                     {
                         Id = returnRequest.Id,
                         CustomNumber = returnRequest.CustomNumber,
-                        ReturnRequestStatus = await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus),
+                        ReturnRequestStatus = await LocalizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus),
                         ProductId = product.Id,
-                        ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
-                        ProductSeName = await _urlRecordService.GetSeNameAsync(product),
+                        ProductName = await LocalizationService.GetLocalizedAsync(product, x => x.Name),
+                        ProductSeName = await UrlRecordService.GetSeNameAsync(product),
                         Quantity = returnRequest.Quantity,
                         ReturnAction = returnRequest.RequestedAction,
                         ReturnReason = returnRequest.ReasonForReturn,
                         Comments = returnRequest.CustomerComments,
                         UploadedFileGuid = download?.DownloadGuid ?? Guid.Empty,
-                        CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
+                        CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
                     };
                     model.Items.Add(itemModel);
                 }
@@ -178,33 +178,33 @@ namespace Nop.Web.Factories
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
 
-            var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
-            var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+            var order = await OrderService.GetOrderByIdAsync(orderItem.OrderId);
+            var product = await ProductService.GetProductByIdAsync(orderItem.ProductId);
 
             var model = new SubmitReturnRequestModel.OrderItemModel
             {
                 Id = orderItem.Id,
                 ProductId = product.Id,
-                ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
-                ProductSeName = await _urlRecordService.GetSeNameAsync(product),
+                ProductName = await LocalizationService.GetLocalizedAsync(product, x => x.Name),
+                ProductSeName = await UrlRecordService.GetSeNameAsync(product),
                 AttributeInfo = orderItem.AttributeDescription,
                 Quantity = orderItem.Quantity
             };
 
-            var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+            var languageId = (await WorkContext.GetWorkingLanguageAsync()).Id;
 
             //unit price
             if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
             {
                 //including tax
-                var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                model.UnitPrice = await _priceFormatter.FormatPriceAsync(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+                var unitPriceInclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                model.UnitPrice = await PriceFormatter.FormatPriceAsync(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
             }
             else
             {
                 //excluding tax
-                var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                model.UnitPrice = await _priceFormatter.FormatPriceAsync(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
+                var unitPriceExclTaxInCustomerCurrency = CurrencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                model.UnitPrice = await PriceFormatter.FormatPriceAsync(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
             }
 
             return model;

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +16,12 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly ILogModelFactory _logModelFactory;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILogger Logger { get; }
+        protected ILogModelFactory LogModelFactory { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPermissionService PermissionService { get; }
 
         #endregion
 
@@ -34,12 +34,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            _customerActivityService = customerActivityService;
-            _localizationService = localizationService;
-            _logger = logger;
-            _logModelFactory = logModelFactory;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
+            CustomerActivityService = customerActivityService;
+            LocalizationService = localizationService;
+            Logger = logger;
+            LogModelFactory = logModelFactory;
+            NotificationService = notificationService;
+            PermissionService = permissionService;
         }
 
         #endregion
@@ -53,11 +53,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _logModelFactory.PrepareLogSearchModelAsync(new LogSearchModel());
+            var model = await LogModelFactory.PrepareLogSearchModelAsync(new LogSearchModel());
 
             return View(model);
         }
@@ -65,11 +65,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> LogList(LogSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _logModelFactory.PrepareLogListModelAsync(searchModel);
+            var model = await LogModelFactory.PrepareLogListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -78,31 +78,31 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("clearall")]
         public virtual async Task<IActionResult> ClearAll()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
-            await _logger.ClearLogAsync();
+            await Logger.ClearLogAsync();
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteSystemLog", await _localizationService.GetResourceAsync("ActivityLog.DeleteSystemLog"));
+            await CustomerActivityService.InsertActivityAsync("DeleteSystemLog", await LocalizationService.GetResourceAsync("ActivityLog.DeleteSystemLog"));
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.Log.Cleared"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.System.Log.Cleared"));
 
             return RedirectToAction("List");
         }
 
         public virtual async Task<IActionResult> View(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
             //try to get a log with the specified id
-            var log = await _logger.GetLogByIdAsync(id);
+            var log = await Logger.GetLogByIdAsync(id);
             if (log == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _logModelFactory.PrepareLogModelAsync(null, log);
+            var model = await LogModelFactory.PrepareLogModelAsync(null, log);
 
             return View(model);
         }
@@ -110,20 +110,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
             //try to get a log with the specified id
-            var log = await _logger.GetLogByIdAsync(id);
+            var log = await Logger.GetLogByIdAsync(id);
             if (log == null)
                 return RedirectToAction("List");
 
-            await _logger.DeleteLogAsync(log);
+            await Logger.DeleteLogAsync(log);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteSystemLog", await _localizationService.GetResourceAsync("ActivityLog.DeleteSystemLog"), log);
+            await CustomerActivityService.InsertActivityAsync("DeleteSystemLog", await LocalizationService.GetResourceAsync("ActivityLog.DeleteSystemLog"), log);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.Log.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.System.Log.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -131,16 +131,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
             if (selectedIds == null || selectedIds.Count() == 0)
                 return NoContent();
 
-            await _logger.DeleteLogsAsync((await _logger.GetLogByIdsAsync(selectedIds.ToArray())).ToList());
+            await Logger.DeleteLogsAsync((await Logger.GetLogByIdsAsync(selectedIds.ToArray())).ToList());
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteSystemLog", await _localizationService.GetResourceAsync("ActivityLog.DeleteSystemLog"));
+            await CustomerActivityService.InsertActivityAsync("DeleteSystemLog", await LocalizationService.GetResourceAsync("ActivityLog.DeleteSystemLog"));
 
             return Json(new { Result = true });
         }

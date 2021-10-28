@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -19,14 +19,14 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly AdminAreaSettings _adminAreaSettings;
-        private readonly ICommonModelFactory _commonModelFactory;
-        private readonly ILogger _logger;
-        private readonly IOrderModelFactory _orderModelFactory;
-        private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IWorkContext _workContext;
-        private readonly NopHttpClient _nopHttpClient;
+        protected AdminAreaSettings AdminAreaSettings { get; }
+        protected ICommonModelFactory CommonModelFactory { get; }
+        protected ILogger Logger { get; }
+        protected IOrderModelFactory OrderModelFactory { get; }
+        protected ISettingService SettingService { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IWorkContext WorkContext { get; }
+        protected NopHttpClient NopHttpClient { get; }
 
         #endregion
 
@@ -41,14 +41,14 @@ namespace Nop.Web.Areas.Admin.Factories
             IWorkContext workContext,
             NopHttpClient nopHttpClient)
         {
-            _adminAreaSettings = adminAreaSettings;
-            _commonModelFactory = commonModelFactory;
-            _logger = logger;
-            _orderModelFactory = orderModelFactory;
-            _settingService = settingService;
-            _staticCacheManager = staticCacheManager;
-            _workContext = workContext;
-            _nopHttpClient = nopHttpClient;
+            AdminAreaSettings = adminAreaSettings;
+            CommonModelFactory = commonModelFactory;
+            Logger = logger;
+            OrderModelFactory = orderModelFactory;
+            SettingService = settingService;
+            StaticCacheManager = staticCacheManager;
+            WorkContext = workContext;
+            NopHttpClient = nopHttpClient;
         }
 
         #endregion
@@ -68,12 +68,12 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            model.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            model.IsLoggedInAsVendor = await WorkContext.GetCurrentVendorAsync() != null;
 
             //prepare nested search models
-            await _commonModelFactory.PreparePopularSearchTermSearchModelAsync(model.PopularSearchTerms);
-            await _orderModelFactory.PrepareBestsellerBriefSearchModelAsync(model.BestsellersByAmount);
-            await _orderModelFactory.PrepareBestsellerBriefSearchModelAsync(model.BestsellersByQuantity);
+            await CommonModelFactory.PreparePopularSearchTermSearchModelAsync(model.PopularSearchTerms);
+            await OrderModelFactory.PrepareBestsellerBriefSearchModelAsync(model.BestsellersByAmount);
+            await OrderModelFactory.PrepareBestsellerBriefSearchModelAsync(model.BestsellersByQuantity);
 
             return model;
         }
@@ -89,17 +89,17 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             var model = new NopCommerceNewsModel
             {
-                HideAdvertisements = _adminAreaSettings.HideAdvertisementsOnAdminArea
+                HideAdvertisements = AdminAreaSettings.HideAdvertisementsOnAdminArea
             };
 
             try
             {
                 //try to get news RSS feed
-                var rssData = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.OfficialNewsModelKey), async () =>
+                var rssData = await StaticCacheManager.GetAsync(StaticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.OfficialNewsModelKey), async () =>
                 {
                     try
                     {
-                        return await _nopHttpClient.GetNewsRssAsync();
+                        return await NopHttpClient.GetNewsRssAsync();
                     }
                     catch (AggregateException exception)
                     {
@@ -124,12 +124,12 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (i != 0)
                         continue;
 
-                    var firstRequest = string.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
-                    if (_adminAreaSettings.LastNewsTitleAdminArea == newsItem.Title)
+                    var firstRequest = string.IsNullOrEmpty(AdminAreaSettings.LastNewsTitleAdminArea);
+                    if (AdminAreaSettings.LastNewsTitleAdminArea == newsItem.Title)
                         continue;
 
-                    _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
-                    await _settingService.SaveSettingAsync(_adminAreaSettings);
+                    AdminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
+                    await SettingService.SaveSettingAsync(AdminAreaSettings);
 
                     //new item
                     if (!firstRequest)
@@ -138,7 +138,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
             catch (Exception ex)
             {
-                await _logger.ErrorAsync("No access to the news. Website www.nopcommerce.com is not available.", ex);
+                await Logger.ErrorAsync("No access to the news. Website www.nopcommerce.com is not available.", ex);
             }
 
             return model;

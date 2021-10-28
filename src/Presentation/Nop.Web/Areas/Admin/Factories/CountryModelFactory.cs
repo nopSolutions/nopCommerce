@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Directory;
@@ -18,11 +18,11 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ICountryService _countryService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IStateProvinceService _stateProvinceService;
+        protected ICountryService CountryService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
+        protected IStateProvinceService StateProvinceService { get; }
 
         #endregion
 
@@ -34,11 +34,11 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStateProvinceService stateProvinceService)
         {
-            _countryService = countryService;
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            _stateProvinceService = stateProvinceService;
+            CountryService = countryService;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            StateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get countries
-            var countries = (await _countryService.GetAllCountriesAsync(showHidden: true)).ToPagedList(searchModel);
+            var countries = (await CountryService.GetAllCountriesAsync(showHidden: true)).ToPagedList(searchModel);
 
             //prepare list model
             var model = await new CountryListModel().PrepareToGridAsync(searchModel, countries, () =>
@@ -114,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var countryModel = country.ToModel<CountryModel>();
 
-                    countryModel.NumberOfStates = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id))?.Count ?? 0;
+                    countryModel.NumberOfStates = (await StateProvinceService.GetStateProvincesByCountryIdAsync(country.Id))?.Count ?? 0;
 
                     return countryModel;
                 });
@@ -143,7 +143,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (model == null)
                 {
                     model = country.ToModel<CountryModel>();
-                    model.NumberOfStates = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id))?.Count ?? 0;
+                    model.NumberOfStates = (await StateProvinceService.GetStateProvincesByCountryIdAsync(country.Id))?.Count ?? 0;
                 }
 
                 //prepare nested search model
@@ -152,7 +152,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(country, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(country, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -166,10 +166,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare available stores
-            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, country, excludeProperties);
+            await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(model, country, excludeProperties);
 
             return model;
         }
@@ -192,7 +192,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(country));
 
             //get comments
-            var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id, showHidden: true)).ToPagedList(searchModel);
+            var states = (await StateProvinceService.GetStateProvincesByCountryIdAsync(country.Id, showHidden: true)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new StateProvinceListModel().PrepareToGrid(searchModel, states, () =>
@@ -228,7 +228,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(state, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(state, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -240,7 +240,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,29 +38,29 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ICategoryService _categoryService;
-        private readonly ICategoryTemplateService _categoryTemplateService;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly IPluginService _pluginService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IShippingService _shippingService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreService _storeService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly ITopicTemplateService _topicTemplateService;
-        private readonly IVendorService _vendorService;
+        protected ICategoryService CategoryService { get; }
+        protected ICategoryTemplateService CategoryTemplateService { get; }
+        protected ICountryService CountryService { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateRangeService DateRangeService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IEmailAccountService EmailAccountService { get; }
+        protected ILanguageService LanguageService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IManufacturerService ManufacturerService { get; }
+        protected IManufacturerTemplateService ManufacturerTemplateService { get; }
+        protected IPluginService PluginService { get; }
+        protected IProductTemplateService ProductTemplateService { get; }
+        protected ISpecificationAttributeService SpecificationAttributeService { get; }
+        protected IShippingService ShippingService { get; }
+        protected IStateProvinceService StateProvinceService { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreService StoreService { get; }
+        protected ITaxCategoryService TaxCategoryService { get; }
+        protected ITopicTemplateService TopicTemplateService { get; }
+        protected IVendorService VendorService { get; }
 
         #endregion
 
@@ -90,29 +90,29 @@ namespace Nop.Web.Areas.Admin.Factories
             ITopicTemplateService topicTemplateService,
             IVendorService vendorService)
         {
-            _categoryService = categoryService;
-            _categoryTemplateService = categoryTemplateService;
-            _countryService = countryService;
-            _currencyService = currencyService;
-            _customerActivityService = customerActivityService;
-            _customerService = customerService;
-            _dateRangeService = dateRangeService;
-            _dateTimeHelper = dateTimeHelper;
-            _emailAccountService = emailAccountService;
-            _languageService = languageService;
-            _localizationService = localizationService;
-            _manufacturerService = manufacturerService;
-            _manufacturerTemplateService = manufacturerTemplateService;
-            _pluginService = pluginService;
-            _productTemplateService = productTemplateService;
-            _specificationAttributeService = specificationAttributeService;
-            _shippingService = shippingService;
-            _stateProvinceService = stateProvinceService;
-            _staticCacheManager = staticCacheManager;
-            _storeService = storeService;
-            _taxCategoryService = taxCategoryService;
-            _topicTemplateService = topicTemplateService;
-            _vendorService = vendorService;
+            CategoryService = categoryService;
+            CategoryTemplateService = categoryTemplateService;
+            CountryService = countryService;
+            CurrencyService = currencyService;
+            CustomerActivityService = customerActivityService;
+            CustomerService = customerService;
+            DateRangeService = dateRangeService;
+            DateTimeHelper = dateTimeHelper;
+            EmailAccountService = emailAccountService;
+            LanguageService = languageService;
+            LocalizationService = localizationService;
+            ManufacturerService = manufacturerService;
+            ManufacturerTemplateService = manufacturerTemplateService;
+            PluginService = pluginService;
+            ProductTemplateService = productTemplateService;
+            SpecificationAttributeService = specificationAttributeService;
+            ShippingService = shippingService;
+            StateProvinceService = stateProvinceService;
+            StaticCacheManager = staticCacheManager;
+            StoreService = storeService;
+            TaxCategoryService = taxCategoryService;
+            TopicTemplateService = topicTemplateService;
+            VendorService = vendorService;
         }
 
         #endregion
@@ -137,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return;
 
             //prepare item text
-            defaultItemText ??= await _localizationService.GetResourceAsync("Admin.Common.All");
+            defaultItemText ??= await LocalizationService.GetResourceAsync("Admin.Common.All");
 
             //insert this default item at first
             items.Insert(0, new SelectListItem { Text = defaultItemText, Value = defaultItemValue });
@@ -153,13 +153,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         protected virtual async Task<List<SelectListItem>> GetCategoryListAsync(bool showHidden = true)
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoriesListKey, showHidden);
-            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoriesListKey, showHidden);
+            var listItems = await StaticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var categories = await _categoryService.GetAllCategoriesAsync(showHidden: showHidden);
+                var categories = await CategoryService.GetAllCategoriesAsync(showHidden: showHidden);
                 return await categories.SelectAwait(async c => new SelectListItem
                 {
-                    Text = await _categoryService.GetFormattedBreadCrumbAsync(c, categories),
+                    Text = await CategoryService.GetFormattedBreadCrumbAsync(c, categories),
                     Value = c.Id.ToString()
                 }).ToListAsync();
             });
@@ -188,10 +188,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         protected virtual async Task<List<SelectListItem>> GetManufacturerListAsync(bool showHidden = true)
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturersListKey, showHidden);
-            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturersListKey, showHidden);
+            var listItems = await StaticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var manufacturers = await _manufacturerService.GetAllManufacturersAsync(showHidden: showHidden);
+                var manufacturers = await ManufacturerService.GetAllManufacturersAsync(showHidden: showHidden);
                 return manufacturers.Select(m => new SelectListItem
                 {
                     Text = m.Name,
@@ -223,10 +223,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         protected virtual async Task<List<SelectListItem>> GetVendorListAsync(bool showHidden = true)
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorsListKey, showHidden);
-            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorsListKey, showHidden);
+            var listItems = await StaticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var vendors = await _vendorService.GetAllVendorsAsync(showHidden: showHidden);
+                var vendors = await VendorService.GetAllVendorsAsync(showHidden: showHidden);
                 return vendors.Select(v => new SelectListItem
                 {
                     Text = v.Name,
@@ -265,7 +265,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available activity log types
-            var availableActivityTypes = await _customerActivityService.GetAllActivityTypesAsync();
+            var availableActivityTypes = await CustomerActivityService.GetAllActivityTypesAsync();
             foreach (var activityType in availableActivityTypes)
             {
                 items.Add(new SelectListItem { Value = activityType.Id.ToString(), Text = activityType.Name });
@@ -357,14 +357,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available countries
-            var availableCountries = await _countryService.GetAllCountriesAsync(showHidden: true);
+            var availableCountries = await CountryService.GetAllCountriesAsync(showHidden: true);
             foreach (var country in availableCountries)
             {
                 items.Add(new SelectListItem { Value = country.Id.ToString(), Text = country.Name });
             }
 
             //insert special item for the default value
-            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText ?? await _localizationService.GetResourceAsync("Admin.Address.SelectCountry"));
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText ?? await LocalizationService.GetResourceAsync("Admin.Address.SelectCountry"));
         }
 
         /// <summary>
@@ -384,7 +384,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (countryId.HasValue)
             {
                 //prepare available states and provinces of the country
-                var availableStates = await _stateProvinceService.GetStateProvincesByCountryIdAsync(countryId.Value, showHidden: true);
+                var availableStates = await StateProvinceService.GetStateProvincesByCountryIdAsync(countryId.Value, showHidden: true);
                 foreach (var state in availableStates)
                 {
                     items.Add(new SelectListItem { Value = state.Id.ToString(), Text = state.Name });
@@ -392,12 +392,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 //insert special item for the default value
                 if (items.Count > 1)
-                    await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText ?? await _localizationService.GetResourceAsync("Admin.Address.SelectState"));
+                    await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText ?? await LocalizationService.GetResourceAsync("Admin.Address.SelectState"));
             }
 
             //insert special item for the default value
             if (!items.Any())
-                await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText ?? await _localizationService.GetResourceAsync("Admin.Address.Other"));
+                await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText ?? await LocalizationService.GetResourceAsync("Admin.Address.Other"));
         }
 
         /// <summary>
@@ -413,7 +413,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available languages
-            var availableLanguages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+            var availableLanguages = await LanguageService.GetAllLanguagesAsync(showHidden: true);
             foreach (var language in availableLanguages)
             {
                 items.Add(new SelectListItem { Value = language.Id.ToString(), Text = language.Name });
@@ -436,7 +436,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available stores
-            var availableStores = await _storeService.GetAllStoresAsync();
+            var availableStores = await StoreService.GetAllStoresAsync();
             foreach (var store in availableStores)
             {
                 items.Add(new SelectListItem { Value = store.Id.ToString(), Text = store.Name });
@@ -459,7 +459,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available customer roles
-            var availableCustomerRoles = await _customerService.GetAllCustomerRolesAsync();
+            var availableCustomerRoles = await CustomerService.GetAllCustomerRolesAsync();
             foreach (var customerRole in availableCustomerRoles)
             {
                 items.Add(new SelectListItem { Value = customerRole.Id.ToString(), Text = customerRole.Name });
@@ -482,7 +482,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available email accounts
-            var availableEmailAccounts = await _emailAccountService.GetAllEmailAccountsAsync();
+            var availableEmailAccounts = await EmailAccountService.GetAllEmailAccountsAsync();
             foreach (var emailAccount in availableEmailAccounts)
             {
                 items.Add(new SelectListItem { Value = emailAccount.Id.ToString(), Text = $"{emailAccount.DisplayName} ({emailAccount.Email})" });
@@ -505,7 +505,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available tax categories
-            var availableTaxCategories = await _taxCategoryService.GetAllTaxCategoriesAsync();
+            var availableTaxCategories = await TaxCategoryService.GetAllTaxCategoriesAsync();
             foreach (var taxCategory in availableTaxCategories)
             {
                 items.Add(new SelectListItem { Value = taxCategory.Id.ToString(), Text = taxCategory.Name });
@@ -513,7 +513,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //insert special item for the default value
             await PrepareDefaultItemAsync(items, withSpecialDefaultItem,
-                defaultItemText ?? await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Tax.TaxCategories.None"));
+                defaultItemText ?? await LocalizationService.GetResourceAsync("Admin.Configuration.Settings.Tax.TaxCategories.None"));
         }
 
         /// <summary>
@@ -621,7 +621,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available category templates
-            var availableTemplates = await _categoryTemplateService.GetAllCategoryTemplatesAsync();
+            var availableTemplates = await CategoryTemplateService.GetAllCategoryTemplatesAsync();
             foreach (var template in availableTemplates)
             {
                 items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
@@ -644,7 +644,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available time zones
-            var availableTimeZones = _dateTimeHelper.GetSystemTimeZones();
+            var availableTimeZones = DateTimeHelper.GetSystemTimeZones();
             foreach (var timeZone in availableTimeZones)
             {
                 items.Add(new SelectListItem { Value = timeZone.Id, Text = timeZone.DisplayName });
@@ -713,7 +713,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available currencies
-            var availableCurrencies = await _currencyService.GetAllCurrenciesAsync(true);
+            var availableCurrencies = await CurrencyService.GetAllCurrenciesAsync(true);
             foreach (var currency in availableCurrencies)
             {
                 items.Add(new SelectListItem { Value = currency.Id.ToString(), Text = currency.Name });
@@ -783,7 +783,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available manufacturer templates
-            var availableTemplates = await _manufacturerTemplateService.GetAllManufacturerTemplatesAsync();
+            var availableTemplates = await ManufacturerTemplateService.GetAllManufacturerTemplatesAsync();
             foreach (var template in availableTemplates)
             {
                 items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
@@ -829,7 +829,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available plugin groups
-            var availablePluginGroups = (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.All))
+            var availablePluginGroups = (await PluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.All))
                 .Select(plugin => plugin.Group).Distinct().OrderBy(groupName => groupName).ToList();
             foreach (var group in availablePluginGroups)
                 items.Add(new SelectListItem { Value = @group, Text = @group });
@@ -875,7 +875,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available product templates
-            var availableTemplates = await _productTemplateService.GetAllProductTemplatesAsync();
+            var availableTemplates = await ProductTemplateService.GetAllProductTemplatesAsync();
             foreach (var template in availableTemplates)
             {
                 items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
@@ -898,7 +898,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available topic templates
-            var availableTemplates = await _topicTemplateService.GetAllTopicTemplatesAsync();
+            var availableTemplates = await TopicTemplateService.GetAllTopicTemplatesAsync();
             foreach (var template in availableTemplates)
             {
                 items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
@@ -921,7 +921,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available warehouses
-            var availableWarehouses = await _shippingService.GetAllWarehousesAsync();
+            var availableWarehouses = await ShippingService.GetAllWarehousesAsync();
             foreach (var warehouse in availableWarehouses)
             {
                 items.Add(new SelectListItem { Value = warehouse.Id.ToString(), Text = warehouse.Name });
@@ -944,7 +944,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available delivery dates
-            var availableDeliveryDates = await _dateRangeService.GetAllDeliveryDatesAsync();
+            var availableDeliveryDates = await DateRangeService.GetAllDeliveryDatesAsync();
             foreach (var date in availableDeliveryDates)
             {
                 items.Add(new SelectListItem { Value = date.Id.ToString(), Text = date.Name });
@@ -968,7 +968,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available product availability ranges
-            var availableProductAvailabilityRanges = await _dateRangeService.GetAllProductAvailabilityRangesAsync();
+            var availableProductAvailabilityRanges = await DateRangeService.GetAllProductAvailabilityRangesAsync();
             foreach (var range in availableProductAvailabilityRanges)
             {
                 items.Add(new SelectListItem { Value = range.Id.ToString(), Text = range.Name });
@@ -1014,7 +1014,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available specification attribute groups
-            var availableSpecificationAttributeGroups = await _specificationAttributeService.GetSpecificationAttributeGroupsAsync();
+            var availableSpecificationAttributeGroups = await SpecificationAttributeService.GetSpecificationAttributeGroupsAsync();
             foreach (var group in availableSpecificationAttributeGroups)
             {
                 items.Add(new SelectListItem { Value = group.Id.ToString(), Text = group.Name });

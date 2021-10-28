@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,16 +22,16 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IMeasureService _measureService;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly MeasureSettings _measureSettings;
+        protected CurrencySettings CurrencySettings { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICheckoutAttributeParser CheckoutAttributeParser { get; }
+        protected ICheckoutAttributeService CheckoutAttributeService { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IMeasureService MeasureService { get; }
+        protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
+        protected MeasureSettings MeasureSettings { get; }
 
         #endregion
 
@@ -48,16 +48,16 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             MeasureSettings measureSettings)
         {
-            _currencySettings = currencySettings;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _checkoutAttributeParser = checkoutAttributeParser;
-            _checkoutAttributeService = checkoutAttributeService;
-            _currencyService = currencyService;
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _measureService = measureService;
-            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            _measureSettings = measureSettings;
+            CurrencySettings = currencySettings;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            CheckoutAttributeParser = checkoutAttributeParser;
+            CheckoutAttributeService = checkoutAttributeService;
+            CurrencyService = currencyService;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            MeasureService = measureService;
+            StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            MeasureSettings = measureSettings;
         }
 
         #endregion
@@ -81,15 +81,15 @@ namespace Nop.Web.Areas.Admin.Factories
             model.EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml);
 
             //get selected checkout attribute
-            var selectedAttribute = (await _checkoutAttributeParser.ParseCheckoutAttributesAsync(checkoutAttribute.ConditionAttributeXml)).FirstOrDefault();
+            var selectedAttribute = (await CheckoutAttributeParser.ParseCheckoutAttributesAsync(checkoutAttribute.ConditionAttributeXml)).FirstOrDefault();
             model.SelectedAttributeId = selectedAttribute?.Id ?? 0;
 
             //get selected checkout attribute values identifiers
-            var selectedValuesIds = await _checkoutAttributeParser
+            var selectedValuesIds = await CheckoutAttributeParser
                 .ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml).SelectMany(ta => ta.values.Select(v => v.Id)).ToListAsync();
 
             //get available condition checkout attributes (ignore this attribute and non-combinable attributes)
-            var availableConditionAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributesAsync())
+            var availableConditionAttributes = (await CheckoutAttributeService.GetAllCheckoutAttributesAsync())
                 .Where(attribute => attribute.Id != checkoutAttribute.Id && attribute.CanBeUsedAsCondition());
 
             model.ConditionAttributes = await availableConditionAttributes.SelectAwait(async attribute => new AttributeConditionModel
@@ -97,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Id = attribute.Id,
                 Name = attribute.Name,
                 AttributeControlType = attribute.AttributeControlType,
-                Values = (await _checkoutAttributeService.GetCheckoutAttributeValuesAsync(attribute.Id)).Select(value => new SelectListItem
+                Values = (await CheckoutAttributeService.GetCheckoutAttributeValuesAsync(attribute.Id)).Select(value => new SelectListItem
                 {
                     Text = value.Name,
                     Value = value.Id.ToString(),
@@ -166,7 +166,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get checkout attributes
-            var checkoutAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributesAsync()).ToPagedList(searchModel);
+            var checkoutAttributes = (await CheckoutAttributeService.GetAllCheckoutAttributesAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = await new CheckoutAttributeListModel().PrepareToGridAsync(searchModel, checkoutAttributes, () =>
@@ -177,7 +177,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var attributeModel = attribute.ToModel<CheckoutAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
-                    attributeModel.AttributeControlTypeName = await _localizationService.GetLocalizedEnumAsync(attribute.AttributeControlType);
+                    attributeModel.AttributeControlTypeName = await LocalizationService.GetLocalizedEnumAsync(attribute.AttributeControlType);
 
                     return attributeModel;
                 });
@@ -212,9 +212,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.Name, languageId, false, false);
-                    locale.TextPrompt = await _localizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.TextPrompt, languageId, false, false);
-                    locale.DefaultValue = await _localizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.DefaultValue, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.Name, languageId, false, false);
+                    locale.TextPrompt = await LocalizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.TextPrompt, languageId, false, false);
+                    locale.DefaultValue = await LocalizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.DefaultValue, languageId, false, false);
                 };
 
                 //whether to fill in some of properties
@@ -230,13 +230,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare available tax categories
-            await _baseAdminModelFactory.PrepareTaxCategoriesAsync(model.AvailableTaxCategories);
+            await BaseAdminModelFactory.PrepareTaxCategoriesAsync(model.AvailableTaxCategories);
 
             //prepare model stores
-            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, checkoutAttribute, excludeProperties);
+            await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(model, checkoutAttribute, excludeProperties);
 
             return model;
         }
@@ -260,7 +260,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(checkoutAttribute));
 
             //get checkout attribute values
-            var checkoutAttributeValues = (await _checkoutAttributeService
+            var checkoutAttributeValues = (await CheckoutAttributeService
                 .GetCheckoutAttributeValuesAsync(checkoutAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
@@ -311,18 +311,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(checkoutAttributeValue, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(checkoutAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 
             model.CheckoutAttributeId = checkoutAttribute.Id;
-            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
-            model.BaseWeightIn = (await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId)).Name;
+            model.PrimaryStoreCurrencyCode = (await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+            model.BaseWeightIn = (await MeasureService.GetMeasureWeightByIdAsync(MeasureSettings.BaseWeightId)).Name;
             model.DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares;
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }

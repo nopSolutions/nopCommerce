@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -19,13 +19,13 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly ITopicService _topicService;
-        private readonly ITopicTemplateService _topicTemplateService;
-        private readonly IUrlRecordService _urlRecordService;
+        protected IAclService AclService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected ITopicService TopicService { get; }
+        protected ITopicTemplateService TopicTemplateService { get; }
+        protected IUrlRecordService UrlRecordService { get; }
 
         #endregion
 
@@ -39,13 +39,13 @@ namespace Nop.Web.Factories
             ITopicTemplateService topicTemplateService,
             IUrlRecordService urlRecordService)
         {
-            _aclService = aclService;
-            _localizationService = localizationService;
-            _storeContext = storeContext;
-            _storeMappingService = storeMappingService;
-            _topicService = topicService;
-            _topicTemplateService = topicTemplateService;
-            _urlRecordService = urlRecordService;
+            AclService = aclService;
+            LocalizationService = localizationService;
+            StoreContext = storeContext;
+            StoreMappingService = storeMappingService;
+            TopicService = topicService;
+            TopicTemplateService = topicTemplateService;
+            UrlRecordService = urlRecordService;
         }
 
         #endregion
@@ -71,12 +71,12 @@ namespace Nop.Web.Factories
                 SystemName = topic.SystemName,
                 IncludeInSitemap = topic.IncludeInSitemap,
                 IsPasswordProtected = topic.IsPasswordProtected,
-                Title = topic.IsPasswordProtected ? string.Empty : await _localizationService.GetLocalizedAsync(topic, x => x.Title),
-                Body = topic.IsPasswordProtected ? string.Empty : await _localizationService.GetLocalizedAsync(topic, x => x.Body),
-                MetaKeywords = await _localizationService.GetLocalizedAsync(topic, x => x.MetaKeywords),
-                MetaDescription = await _localizationService.GetLocalizedAsync(topic, x => x.MetaDescription),
-                MetaTitle = await _localizationService.GetLocalizedAsync(topic, x => x.MetaTitle),
-                SeName = await _urlRecordService.GetSeNameAsync(topic),
+                Title = topic.IsPasswordProtected ? string.Empty : await LocalizationService.GetLocalizedAsync(topic, x => x.Title),
+                Body = topic.IsPasswordProtected ? string.Empty : await LocalizationService.GetLocalizedAsync(topic, x => x.Body),
+                MetaKeywords = await LocalizationService.GetLocalizedAsync(topic, x => x.MetaKeywords),
+                MetaDescription = await LocalizationService.GetLocalizedAsync(topic, x => x.MetaDescription),
+                MetaTitle = await LocalizationService.GetLocalizedAsync(topic, x => x.MetaTitle),
+                SeName = await UrlRecordService.GetSeNameAsync(topic),
                 TopicTemplateId = topic.TopicTemplateId
             };
 
@@ -98,7 +98,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<TopicModel> PrepareTopicModelByIdAsync(int topicId, bool showHidden = false)
         {
-            var topic = await _topicService.GetTopicByIdAsync(topicId);
+            var topic = await TopicService.GetTopicByIdAsync(topicId);
 
             if (topic == null)
                 return null;
@@ -108,9 +108,9 @@ namespace Nop.Web.Factories
 
             if (!topic.Published ||
                 //ACL (access control list)
-                !await _aclService.AuthorizeAsync(topic) ||
+                !await AclService.AuthorizeAsync(topic) ||
                 //store mapping
-                !await _storeMappingService.AuthorizeAsync(topic))
+                !await StoreMappingService.AuthorizeAsync(topic))
 
                 return null;
 
@@ -128,8 +128,8 @@ namespace Nop.Web.Factories
         public virtual async Task<TopicModel> PrepareTopicModelBySystemNameAsync(string systemName)
         {
             //load by store
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var topic = await _topicService.GetTopicBySystemNameAsync(systemName, store.Id);
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var topic = await TopicService.GetTopicBySystemNameAsync(systemName, store.Id);
             if (topic == null)
                 return null;
 
@@ -146,8 +146,8 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<string> PrepareTemplateViewPathAsync(int topicTemplateId)
         {
-            var template = await _topicTemplateService.GetTopicTemplateByIdAsync(topicTemplateId) ??
-                           (await _topicTemplateService.GetAllTopicTemplatesAsync()).FirstOrDefault();
+            var template = await TopicTemplateService.GetTopicTemplateByIdAsync(topicTemplateId) ??
+                           (await TopicTemplateService.GetAllTopicTemplatesAsync()).FirstOrDefault();
 
             if (template == null)
                 throw new Exception("No default template could be loaded");

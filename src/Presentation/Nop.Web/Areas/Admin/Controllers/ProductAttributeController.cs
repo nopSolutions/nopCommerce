@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,13 +21,13 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductAttributeModelFactory _productAttributeModelFactory;
-        private readonly IProductAttributeService _productAttributeService;
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedEntityService LocalizedEntityService { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IProductAttributeModelFactory ProductAttributeModelFactory { get; }
+        protected IProductAttributeService ProductAttributeService { get; }
 
         #endregion Fields
 
@@ -41,13 +41,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             IProductAttributeModelFactory productAttributeModelFactory,
             IProductAttributeService productAttributeService)
         {
-            _customerActivityService = customerActivityService;
-            _localizationService = localizationService;
-            _localizedEntityService = localizedEntityService;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
-            _productAttributeModelFactory = productAttributeModelFactory;
-            _productAttributeService = productAttributeService;
+            CustomerActivityService = customerActivityService;
+            LocalizationService = localizationService;
+            LocalizedEntityService = localizedEntityService;
+            NotificationService = notificationService;
+            PermissionService = permissionService;
+            ProductAttributeModelFactory = productAttributeModelFactory;
+            ProductAttributeService = productAttributeService;
         }
 
         #endregion
@@ -58,12 +58,12 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValueAsync(productAttribute,
+                await LocalizedEntityService.SaveLocalizedValueAsync(productAttribute,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValueAsync(productAttribute,
+                await LocalizedEntityService.SaveLocalizedValueAsync(productAttribute,
                     x => x.Description,
                     localized.Description,
                     localized.LanguageId);
@@ -74,7 +74,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValueAsync(ppav,
+                await LocalizedEntityService.SaveLocalizedValueAsync(ppav,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
@@ -94,11 +94,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _productAttributeModelFactory.PrepareProductAttributeSearchModelAsync(new ProductAttributeSearchModel());
+            var model = await ProductAttributeModelFactory.PrepareProductAttributeSearchModelAsync(new ProductAttributeSearchModel());
 
             return View(model);
         }
@@ -106,22 +106,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(ProductAttributeSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _productAttributeModelFactory.PrepareProductAttributeListModelAsync(searchModel);
+            var model = await ProductAttributeModelFactory.PrepareProductAttributeListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _productAttributeModelFactory.PrepareProductAttributeModelAsync(new ProductAttributeModel(), null);
+            var model = await ProductAttributeModelFactory.PrepareProductAttributeModelAsync(new ProductAttributeModel(), null);
 
             return View(model);
         }
@@ -129,20 +129,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Create(ProductAttributeModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var productAttribute = model.ToEntity<ProductAttribute>();
-                await _productAttributeService.InsertProductAttributeAsync(productAttribute);
+                await ProductAttributeService.InsertProductAttributeAsync(productAttribute);
                 await UpdateLocalesAsync(productAttribute, model);
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("AddNewProductAttribute",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewProductAttribute"), productAttribute.Name), productAttribute);
+                await CustomerActivityService.InsertActivityAsync("AddNewProductAttribute",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.AddNewProductAttribute"), productAttribute.Name), productAttribute);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.ProductAttributes.Added"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Attributes.ProductAttributes.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -151,7 +151,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _productAttributeModelFactory.PrepareProductAttributeModelAsync(model, null, true);
+            model = await ProductAttributeModelFactory.PrepareProductAttributeModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -159,16 +159,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             //try to get a product attribute with the specified id
-            var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(id);
+            var productAttribute = await ProductAttributeService.GetProductAttributeByIdAsync(id);
             if (productAttribute == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _productAttributeModelFactory.PrepareProductAttributeModelAsync(null, productAttribute);
+            var model = await ProductAttributeModelFactory.PrepareProductAttributeModelAsync(null, productAttribute);
 
             return View(model);
         }
@@ -176,26 +176,26 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Edit(ProductAttributeModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             //try to get a product attribute with the specified id
-            var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(model.Id);
+            var productAttribute = await ProductAttributeService.GetProductAttributeByIdAsync(model.Id);
             if (productAttribute == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 productAttribute = model.ToEntity(productAttribute);
-                await _productAttributeService.UpdateProductAttributeAsync(productAttribute);
+                await ProductAttributeService.UpdateProductAttributeAsync(productAttribute);
 
                 await UpdateLocalesAsync(productAttribute, model);
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("EditProductAttribute",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditProductAttribute"), productAttribute.Name), productAttribute);
+                await CustomerActivityService.InsertActivityAsync("EditProductAttribute",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.EditProductAttribute"), productAttribute.Name), productAttribute);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.ProductAttributes.Updated"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Attributes.ProductAttributes.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -204,7 +204,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _productAttributeModelFactory.PrepareProductAttributeModelAsync(model, productAttribute, true);
+            model = await ProductAttributeModelFactory.PrepareProductAttributeModelAsync(model, productAttribute, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -213,21 +213,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             //try to get a product attribute with the specified id
-            var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(id);
+            var productAttribute = await ProductAttributeService.GetProductAttributeByIdAsync(id);
             if (productAttribute == null)
                 return RedirectToAction("List");
 
-            await _productAttributeService.DeleteProductAttributeAsync(productAttribute);
+            await ProductAttributeService.DeleteProductAttributeAsync(productAttribute);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteProductAttribute",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteProductAttribute"), productAttribute.Name), productAttribute);
+            await CustomerActivityService.InsertActivityAsync("DeleteProductAttribute",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.DeleteProductAttribute"), productAttribute.Name), productAttribute);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.ProductAttributes.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Attributes.ProductAttributes.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -235,19 +235,19 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             if (selectedIds == null || selectedIds.Count() == 0)
                 return NoContent();
 
-            var productAttributes = await _productAttributeService.GetProductAttributeByIdsAsync(selectedIds.ToArray());
-            await _productAttributeService.DeleteProductAttributesAsync(productAttributes);
+            var productAttributes = await ProductAttributeService.GetProductAttributeByIdsAsync(selectedIds.ToArray());
+            await ProductAttributeService.DeleteProductAttributesAsync(productAttributes);
 
             foreach (var productAttribute in productAttributes)
             {
-                await _customerActivityService.InsertActivityAsync("DeleteProductAttribute",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteProductAttribute"), productAttribute.Name), productAttribute);
+                await CustomerActivityService.InsertActivityAsync("DeleteProductAttribute",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.DeleteProductAttribute"), productAttribute.Name), productAttribute);
             }
 
             return Json(new { Result = true });
@@ -260,15 +260,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> UsedByProducts(ProductAttributeProductSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a product attribute with the specified id
-            var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(searchModel.ProductAttributeId)
+            var productAttribute = await ProductAttributeService.GetProductAttributeByIdAsync(searchModel.ProductAttributeId)
                 ?? throw new ArgumentException("No product attribute found with the specified id");
 
             //prepare model
-            var model = await _productAttributeModelFactory.PrepareProductAttributeProductListModelAsync(searchModel, productAttribute);
+            var model = await ProductAttributeModelFactory.PrepareProductAttributeProductListModelAsync(searchModel, productAttribute);
 
             return Json(model);
         }
@@ -280,30 +280,30 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PredefinedProductAttributeValueList(PredefinedProductAttributeValueSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a product attribute with the specified id
-            var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(searchModel.ProductAttributeId)
+            var productAttribute = await ProductAttributeService.GetProductAttributeByIdAsync(searchModel.ProductAttributeId)
                 ?? throw new ArgumentException("No product attribute found with the specified id");
 
             //prepare model
-            var model = await _productAttributeModelFactory.PreparePredefinedProductAttributeValueListModelAsync(searchModel, productAttribute);
+            var model = await ProductAttributeModelFactory.PreparePredefinedProductAttributeValueListModelAsync(searchModel, productAttribute);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> PredefinedProductAttributeValueCreatePopup(int productAttributeId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             //try to get a product attribute with the specified id
-            var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(productAttributeId)
+            var productAttribute = await ProductAttributeService.GetProductAttributeByIdAsync(productAttributeId)
                 ?? throw new ArgumentException("No product attribute found with the specified id", nameof(productAttributeId));
 
             //prepare model
-            var model = await _productAttributeModelFactory
+            var model = await ProductAttributeModelFactory
                 .PreparePredefinedProductAttributeValueModelAsync(new PredefinedProductAttributeValueModel(), productAttribute, null);
 
             return View(model);
@@ -312,11 +312,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PredefinedProductAttributeValueCreatePopup(PredefinedProductAttributeValueModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             //try to get a product attribute with the specified id
-            var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(model.ProductAttributeId)
+            var productAttribute = await ProductAttributeService.GetProductAttributeByIdAsync(model.ProductAttributeId)
                 ?? throw new ArgumentException("No product attribute found with the specified id");
 
             if (ModelState.IsValid)
@@ -324,7 +324,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //fill entity from model
                 var ppav = model.ToEntity<PredefinedProductAttributeValue>();
 
-                await _productAttributeService.InsertPredefinedProductAttributeValueAsync(ppav);
+                await ProductAttributeService.InsertPredefinedProductAttributeValueAsync(ppav);
                 await UpdateLocalesAsync(ppav, model);
 
                 ViewBag.RefreshPage = true;
@@ -333,7 +333,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _productAttributeModelFactory.PreparePredefinedProductAttributeValueModelAsync(model, productAttribute, null, true);
+            model = await ProductAttributeModelFactory.PreparePredefinedProductAttributeValueModelAsync(model, productAttribute, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -341,19 +341,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> PredefinedProductAttributeValueEditPopup(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             //try to get a predefined product attribute value with the specified id
-            var productAttributeValue = await _productAttributeService.GetPredefinedProductAttributeValueByIdAsync(id)
+            var productAttributeValue = await ProductAttributeService.GetPredefinedProductAttributeValueByIdAsync(id)
                 ?? throw new ArgumentException("No predefined product attribute value found with the specified id");
 
             //try to get a product attribute with the specified id
-            var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(productAttributeValue.ProductAttributeId)
+            var productAttribute = await ProductAttributeService.GetProductAttributeByIdAsync(productAttributeValue.ProductAttributeId)
                 ?? throw new ArgumentException("No product attribute found with the specified id");
 
             //prepare model
-            var model = await _productAttributeModelFactory.PreparePredefinedProductAttributeValueModelAsync(null, productAttribute, productAttributeValue);
+            var model = await ProductAttributeModelFactory.PreparePredefinedProductAttributeValueModelAsync(null, productAttribute, productAttributeValue);
 
             return View(model);
         }
@@ -361,21 +361,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PredefinedProductAttributeValueEditPopup(PredefinedProductAttributeValueModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             //try to get a predefined product attribute value with the specified id
-            var productAttributeValue = await _productAttributeService.GetPredefinedProductAttributeValueByIdAsync(model.Id)
+            var productAttributeValue = await ProductAttributeService.GetPredefinedProductAttributeValueByIdAsync(model.Id)
                 ?? throw new ArgumentException("No predefined product attribute value found with the specified id");
 
             //try to get a product attribute with the specified id
-            var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(productAttributeValue.ProductAttributeId)
+            var productAttribute = await ProductAttributeService.GetProductAttributeByIdAsync(productAttributeValue.ProductAttributeId)
                 ?? throw new ArgumentException("No product attribute found with the specified id");
 
             if (ModelState.IsValid)
             {
                 productAttributeValue = model.ToEntity(productAttributeValue);
-                await _productAttributeService.UpdatePredefinedProductAttributeValueAsync(productAttributeValue);
+                await ProductAttributeService.UpdatePredefinedProductAttributeValueAsync(productAttributeValue);
 
                 await UpdateLocalesAsync(productAttributeValue, model);
 
@@ -385,7 +385,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _productAttributeModelFactory.PreparePredefinedProductAttributeValueModelAsync(model, productAttribute, productAttributeValue, true);
+            model = await ProductAttributeModelFactory.PreparePredefinedProductAttributeValueModelAsync(model, productAttribute, productAttributeValue, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -394,14 +394,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PredefinedProductAttributeValueDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             //try to get a predefined product attribute value with the specified id
-            var productAttributeValue = await _productAttributeService.GetPredefinedProductAttributeValueByIdAsync(id)
+            var productAttributeValue = await ProductAttributeService.GetPredefinedProductAttributeValueByIdAsync(id)
                 ?? throw new ArgumentException("No predefined product attribute value found with the specified id", nameof(id));
 
-            await _productAttributeService.DeletePredefinedProductAttributeValueAsync(productAttributeValue);
+            await ProductAttributeService.DeletePredefinedProductAttributeValueAsync(productAttributeValue);
 
             return new NullJsonResult();
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -27,18 +27,18 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductService _productService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreService _storeService;
-        private readonly ITaxService _taxService;
+        protected CatalogSettings CatalogSettings { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICountryService CountryService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IPriceFormatter PriceFormatter { get; }
+        protected IProductAttributeFormatter ProductAttributeFormatter { get; }
+        protected IProductService ProductService { get; }
+        protected IShoppingCartService ShoppingCartService { get; }
+        protected IStoreService StoreService { get; }
+        protected ITaxService TaxService { get; }
 
         #endregion
 
@@ -57,18 +57,18 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreService storeService,
             ITaxService taxService)
         {
-            _catalogSettings = catalogSettings;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _countryService = countryService;
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _localizationService = localizationService;
-            _priceFormatter = priceFormatter;
-            _productAttributeFormatter = productAttributeFormatter;
-            _productService = productService;
-            _shoppingCartService = shoppingCartService;
-            _storeService = storeService;
-            _taxService = taxService;
+            CatalogSettings = catalogSettings;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            CountryService = countryService;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            LocalizationService = localizationService;
+            PriceFormatter = priceFormatter;
+            ProductAttributeFormatter = productAttributeFormatter;
+            ProductService = productService;
+            ShoppingCartService = shoppingCartService;
+            StoreService = storeService;
+            TaxService = taxService;
         }
 
         #endregion
@@ -109,20 +109,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available shopping cart types
-            await _baseAdminModelFactory.PrepareShoppingCartTypesAsync(searchModel.AvailableShoppingCartTypes, false);
+            await BaseAdminModelFactory.PrepareShoppingCartTypesAsync(searchModel.AvailableShoppingCartTypes, false);
 
             //set default search values
             searchModel.ShoppingCartType = ShoppingCartType.ShoppingCart;
 
             //prepare available billing countries
-            searchModel.AvailableCountries = (await _countryService.GetAllCountriesForBillingAsync(showHidden: true))
+            searchModel.AvailableCountries = (await CountryService.GetAllCountriesForBillingAsync(showHidden: true))
                 .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
-            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.All"), Value = "0" });
+            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = await LocalizationService.GetResourceAsync("Admin.Common.All"), Value = "0" });
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+            searchModel.HideStoresList = CatalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare nested search model
             PrepareShoppingCartItemSearchModel(searchModel.ShoppingCartItemSearchModel);
@@ -147,7 +147,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customers with shopping carts
-            var customers = await _customerService.GetCustomersWithShoppingCartsAsync(searchModel.ShoppingCartType,
+            var customers = await CustomerService.GetCustomersWithShoppingCartsAsync(searchModel.ShoppingCartType,
                 storeId: searchModel.StoreId,
                 productId: searchModel.ProductId,
                 createdFromUtc: searchModel.StartDate,
@@ -167,10 +167,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    shoppingCartModel.CustomerEmail = (await _customerService.IsRegisteredAsync(customer))
+                    shoppingCartModel.CustomerEmail = (await CustomerService.IsRegisteredAsync(customer))
                         ? customer.Email
-                        : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
-                    shoppingCartModel.TotalItems = (await _shoppingCartService
+                        : await LocalizationService.GetResourceAsync("Admin.Customers.Guest");
+                    shoppingCartModel.TotalItems = (await ShoppingCartService
                         .GetShoppingCartAsync(customer, searchModel.ShoppingCartType,
                             searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate))
                         .Sum(item => item.Quantity);
@@ -200,7 +200,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get shopping cart items
-            var items = (await _shoppingCartService.GetShoppingCartAsync(customer, searchModel.ShoppingCartType,
+            var items = (await ShoppingCartService.GetShoppingCartAsync(customer, searchModel.ShoppingCartType,
                 searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate)).ToPagedList(searchModel);
 
             var isSearchProduct = searchModel.ProductId > 0;
@@ -209,7 +209,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             if (isSearchProduct)
             {
-                product = await _productService.GetProductByIdAsync(searchModel.ProductId) ?? throw new Exception("Product is not found");
+                product = await ProductService.GetProductByIdAsync(searchModel.ProductId) ?? throw new Exception("Product is not found");
             }
 
             //prepare list model
@@ -223,20 +223,20 @@ namespace Nop.Web.Areas.Admin.Factories
                     var itemModel = item.ToModel<ShoppingCartItemModel>();
 
                     if (!isSearchProduct)
-                        product = await _productService.GetProductByIdAsync(item.ProductId);
+                        product = await ProductService.GetProductByIdAsync(item.ProductId);
 
                     //convert dates to the user time
-                    itemModel.UpdatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(item.UpdatedOnUtc, DateTimeKind.Utc);
+                    itemModel.UpdatedOn = await DateTimeHelper.ConvertToUserTimeAsync(item.UpdatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    itemModel.Store = (await _storeService.GetStoreByIdAsync(item.StoreId))?.Name ?? "Deleted";
-                    itemModel.AttributeInfo = await _productAttributeFormatter.FormatAttributesAsync(product, item.AttributesXml, customer);
-                    var (unitPrice, _, _) = await _shoppingCartService.GetUnitPriceAsync(item, true);
-                    itemModel.UnitPrice = await _priceFormatter.FormatPriceAsync((await _taxService.GetProductPriceAsync(product, unitPrice)).price);
-                    itemModel.UnitPriceValue = (await _taxService.GetProductPriceAsync(product, unitPrice)).price;
-                    var (subTotal, _, _, _) = await _shoppingCartService.GetSubTotalAsync(item, true);
-                    itemModel.Total = await _priceFormatter.FormatPriceAsync((await _taxService.GetProductPriceAsync(product, subTotal)).price);
-                    itemModel.TotalValue = (await _taxService.GetProductPriceAsync(product, subTotal)).price;
+                    itemModel.Store = (await StoreService.GetStoreByIdAsync(item.StoreId))?.Name ?? "Deleted";
+                    itemModel.AttributeInfo = await ProductAttributeFormatter.FormatAttributesAsync(product, item.AttributesXml, customer);
+                    var (unitPrice, _, _) = await ShoppingCartService.GetUnitPriceAsync(item, true);
+                    itemModel.UnitPrice = await PriceFormatter.FormatPriceAsync((await TaxService.GetProductPriceAsync(product, unitPrice)).price);
+                    itemModel.UnitPriceValue = (await TaxService.GetProductPriceAsync(product, unitPrice)).price;
+                    var (subTotal, _, _, _) = await ShoppingCartService.GetSubTotalAsync(item, true);
+                    itemModel.Total = await PriceFormatter.FormatPriceAsync((await TaxService.GetProductPriceAsync(product, subTotal)).price);
+                    itemModel.TotalValue = (await TaxService.GetProductPriceAsync(product, subTotal)).price;
 
                     //set product name since it does not survive mapping
                     itemModel.ProductName = product.Name;

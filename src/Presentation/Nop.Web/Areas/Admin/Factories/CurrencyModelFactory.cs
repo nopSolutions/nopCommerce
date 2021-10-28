@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,13 +21,13 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
+        protected CurrencySettings CurrencySettings { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IExchangeRatePluginManager ExchangeRatePluginManager { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
 
         #endregion
 
@@ -41,13 +41,13 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
-            _currencySettings = currencySettings;
-            _currencyService = currencyService;
-            _dateTimeHelper = dateTimeHelper;
-            _exchangeRatePluginManager = exchangeRatePluginManager;
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            CurrencySettings = currencySettings;
+            CurrencyService = currencyService;
+            DateTimeHelper = dateTimeHelper;
+            ExchangeRatePluginManager = exchangeRatePluginManager;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         }
 
         #endregion
@@ -65,16 +65,16 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            model.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
+            model.AutoUpdateEnabled = CurrencySettings.AutoUpdateEnabled;
 
             //prepare available exchange rate providers
-            var availableExchangeRateProviders = await _exchangeRatePluginManager.LoadAllPluginsAsync();
+            var availableExchangeRateProviders = await ExchangeRatePluginManager.LoadAllPluginsAsync();
 
             model.ExchangeRateProviders = availableExchangeRateProviders.Select(provider => new SelectListItem
             {
                 Text = provider.PluginDescriptor.FriendlyName,
                 Value = provider.PluginDescriptor.SystemName,
-                Selected = _exchangeRatePluginManager.IsPluginActive(provider)
+                Selected = ExchangeRatePluginManager.IsPluginActive(provider)
             }).ToList();
 
             //prepare exchange rates
@@ -93,10 +93,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //get exchange rates
-            var exchangeRates = await _currencyService.GetCurrencyLiveRatesAsync();
+            var exchangeRates = await CurrencyService.GetCurrencyLiveRatesAsync();
 
             //filter by existing currencies
-            var currencies = await _currencyService.GetAllCurrenciesAsync(true);
+            var currencies = await CurrencyService.GetAllCurrenciesAsync(true);
             exchangeRates = exchangeRates
                 .Where(rate => currencies
                     .Any(currency => currency.CurrencyCode.Equals(rate.CurrencyCode, StringComparison.InvariantCultureIgnoreCase))).ToList();
@@ -149,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get currencies
-            var currencies = (await _currencyService.GetAllCurrenciesAsync(showHidden: true)).ToPagedList(searchModel);
+            var currencies = (await CurrencyService.GetAllCurrenciesAsync(showHidden: true)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CurrencyListModel().PrepareToGrid(searchModel, currencies, () =>
@@ -160,8 +160,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     var currencyModel = currency.ToModel<CurrencyModel>();
 
                     //fill in additional values (not existing in the entity)
-                    currencyModel.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId;
-                    currencyModel.IsPrimaryStoreCurrency = currency.Id == _currencySettings.PrimaryStoreCurrencyId;
+                    currencyModel.IsPrimaryExchangeRateCurrency = currency.Id == CurrencySettings.PrimaryExchangeRateCurrencyId;
+                    currencyModel.IsPrimaryStoreCurrency = currency.Id == CurrencySettings.PrimaryStoreCurrencyId;
 
                     return currencyModel;
                 });
@@ -190,12 +190,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= currency.ToModel<CurrencyModel>();
 
                 //convert dates to the user time
-                model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(currency.CreatedOnUtc, DateTimeKind.Utc);
+                model.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(currency.CreatedOnUtc, DateTimeKind.Utc);
 
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(currency, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(currency, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -208,10 +208,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare available stores
-            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, currency, excludeProperties);
+            await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(model, currency, excludeProperties);
 
             return model;
         }

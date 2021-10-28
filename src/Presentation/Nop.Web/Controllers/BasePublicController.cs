@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 

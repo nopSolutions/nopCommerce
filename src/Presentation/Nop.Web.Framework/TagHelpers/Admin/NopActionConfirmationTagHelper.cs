@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -56,7 +56,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected IHtmlHelper HtmlHelper { get; }
 
         #endregion
 
@@ -65,7 +65,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         public NopActionConfirmationTagHelper(IHtmlGenerator generator, IHtmlHelper htmlHelper)
         {
             Generator = generator;
-            _htmlHelper = htmlHelper;
+            HtmlHelper = htmlHelper;
         }
 
         #endregion
@@ -87,17 +87,17 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 throw new ArgumentNullException(nameof(output));
 
             //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
+            var viewContextAware = HtmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             if (string.IsNullOrEmpty(Action))
-                Action = _htmlHelper.ViewContext.RouteData.Values["action"].ToString();
+                Action = HtmlHelper.ViewContext.RouteData.Values["action"].ToString();
 
             var modalId = await new HtmlString(ButtonId + "-action-confirmation").RenderHtmlContentAsync();
 
             var actionConfirmationModel = new ActionConfirmationModel()
             {
-                ControllerName = _htmlHelper.ViewContext.RouteData.Values["controller"].ToString(),
+                ControllerName = HtmlHelper.ViewContext.RouteData.Values["controller"].ToString(),
                 ActionName = Action,
                 WindowId = modalId,
                 AdditonalConfirmText = ConfirmText
@@ -113,7 +113,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             output.Attributes.Add("role", "dialog");
             output.Attributes.Add("aria-labelledby", $"{modalId}-title");
 
-            var partialView = await _htmlHelper.PartialAsync("Confirm", actionConfirmationModel);
+            var partialView = await HtmlHelper.PartialAsync("Confirm", actionConfirmationModel);
             output.Content.SetHtmlContent(partialView);
 
             //modal script

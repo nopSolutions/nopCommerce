@@ -123,7 +123,7 @@ namespace Nop.Web.Framework.UI.Paging
 		/// </summary>
         private string _mainUlCssClass = string.Empty;
 
-        private readonly IPageableModel _model;
+        protected IPageableModel Model { get; }
 
         #endregion
 
@@ -131,7 +131,7 @@ namespace Nop.Web.Framework.UI.Paging
 
         public Pager(IPageableModel model, ViewContext context)
         {
-            _model = model;
+            Model = model;
             ViewContext = context;
         }
 
@@ -386,36 +386,36 @@ namespace Nop.Web.Framework.UI.Paging
         /// </returns>
         protected virtual async Task<string> GenerateHtmlStringAsync()
         {
-            if (_model.TotalItems == 0)
+            if (Model.TotalItems == 0)
                 return null;
 
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             var links = new StringBuilder();
-            if (_showTotalSummary && (_model.TotalPages > 0))
+            if (_showTotalSummary && (Model.TotalPages > 0))
             {
                 links.Append("<li class=\"total-summary\">");
 
                 links.Append(string.Format(await localizationService.GetResourceAsync("Pager.CurrentPage"),
-                    _model.PageIndex + 1, _model.TotalPages, _model.TotalItems));
+                    Model.PageIndex + 1, Model.TotalPages, Model.TotalItems));
 
                 links.Append("</li>");
             }
 
-            if (_showPagerItems && (_model.TotalPages > 1))
+            if (_showPagerItems && (Model.TotalPages > 1))
             {
                 if (_showFirst)
                 {
                     //first page
-                    if ((_model.PageIndex >= 3) && (_model.TotalPages > _individualPagesDisplayedCount))
+                    if ((Model.PageIndex >= 3) && (Model.TotalPages > _individualPagesDisplayedCount))
                         links.Append(await CreatePageLinkAsync(1, await localizationService.GetResourceAsync("Pager.First"), _firstPageCssClass));
                 }
 
                 if (_showPrevious)
                 {
                     //previous page
-                    if (_model.PageIndex > 0)
-                        links.Append(await CreatePageLinkAsync(_model.PageIndex, await localizationService.GetResourceAsync("Pager.Previous"), _previousPageCssClass));
+                    if (Model.PageIndex > 0)
+                        links.Append(await CreatePageLinkAsync(Model.PageIndex, await localizationService.GetResourceAsync("Pager.Previous"), _previousPageCssClass));
                 }
 
                 if (_showIndividualPages)
@@ -425,7 +425,7 @@ namespace Nop.Web.Framework.UI.Paging
                     var lastIndividualPageIndex = GetLastIndividualPageIndex();
                     for (var i = firstIndividualPageIndex; i <= lastIndividualPageIndex; i++)
                     {
-                        if (_model.PageIndex == i)
+                        if (Model.PageIndex == i)
                             links.AppendFormat("<li class=\"" + _currentPageCssClass + "\"><span>{0}</span></li>", (i + 1));
                         else
                             links.Append(await CreatePageLinkAsync(i + 1, (i + 1).ToString(), _individualPageCssClass));
@@ -435,15 +435,15 @@ namespace Nop.Web.Framework.UI.Paging
                 if (_showNext)
                 {
                     //next page
-                    if ((_model.PageIndex + 1) < _model.TotalPages)
-                        links.Append(await CreatePageLinkAsync(_model.PageIndex + 2, await localizationService.GetResourceAsync("Pager.Next"), _nextPageCssClass));
+                    if ((Model.PageIndex + 1) < Model.TotalPages)
+                        links.Append(await CreatePageLinkAsync(Model.PageIndex + 2, await localizationService.GetResourceAsync("Pager.Next"), _nextPageCssClass));
                 }
 
                 if (_showLast)
                 {
                     //last page
-                    if (((_model.PageIndex + 3) < _model.TotalPages) && (_model.TotalPages > _individualPagesDisplayedCount))
-                        links.Append(await CreatePageLinkAsync(_model.TotalPages, await localizationService.GetResourceAsync("Pager.Last"), _lastPageCssClass));
+                    if (((Model.PageIndex + 3) < Model.TotalPages) && (Model.TotalPages > _individualPagesDisplayedCount))
+                        links.Append(await CreatePageLinkAsync(Model.TotalPages, await localizationService.GetResourceAsync("Pager.Last"), _lastPageCssClass));
                 }
             }
 
@@ -460,13 +460,13 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>Page index</returns>
         protected virtual int GetFirstIndividualPageIndex()
         {
-            if ((_model.TotalPages < _individualPagesDisplayedCount) || ((_model.PageIndex - (_individualPagesDisplayedCount / 2)) < 0))
+            if ((Model.TotalPages < _individualPagesDisplayedCount) || ((Model.PageIndex - (_individualPagesDisplayedCount / 2)) < 0))
                 return 0;
 
-            if ((_model.PageIndex + (_individualPagesDisplayedCount / 2)) >= _model.TotalPages)
-                return _model.TotalPages - _individualPagesDisplayedCount;
+            if ((Model.PageIndex + (_individualPagesDisplayedCount / 2)) >= Model.TotalPages)
+                return Model.TotalPages - _individualPagesDisplayedCount;
 
-            return _model.PageIndex - (_individualPagesDisplayedCount / 2);
+            return Model.PageIndex - (_individualPagesDisplayedCount / 2);
         }
 
         /// <summary>
@@ -479,13 +479,13 @@ namespace Nop.Web.Framework.UI.Paging
             if ((_individualPagesDisplayedCount % 2) == 0)
                 num--;
 
-            if ((_model.TotalPages < _individualPagesDisplayedCount) || ((_model.PageIndex + num) >= _model.TotalPages))
-                return _model.TotalPages - 1;
+            if ((Model.TotalPages < _individualPagesDisplayedCount) || ((Model.PageIndex + num) >= Model.TotalPages))
+                return Model.TotalPages - 1;
 
-            if ((_model.PageIndex - (_individualPagesDisplayedCount / 2)) < 0)
+            if ((Model.PageIndex - (_individualPagesDisplayedCount / 2)) < 0)
                 return _individualPagesDisplayedCount - 1;
 
-            return _model.PageIndex + num;
+            return Model.PageIndex + num;
         }
 
         /// <summary>

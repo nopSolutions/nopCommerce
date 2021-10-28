@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Services.Catalog;
@@ -16,10 +16,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ICategoryTemplateService _categoryTemplateService;
-        private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly ITopicTemplateService _topicTemplateService;
+        protected ICategoryTemplateService CategoryTemplateService { get; }
+        protected IManufacturerTemplateService ManufacturerTemplateService { get; }
+        protected IProductTemplateService ProductTemplateService { get; }
+        protected ITopicTemplateService TopicTemplateService { get; }
 
         #endregion
 
@@ -30,10 +30,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductTemplateService productTemplateService,
             ITopicTemplateService topicTemplateService)
         {
-            _categoryTemplateService = categoryTemplateService;
-            _manufacturerTemplateService = manufacturerTemplateService;
-            _productTemplateService = productTemplateService;
-            _topicTemplateService = topicTemplateService;
+            CategoryTemplateService = categoryTemplateService;
+            ManufacturerTemplateService = manufacturerTemplateService;
+            ProductTemplateService = productTemplateService;
+            TopicTemplateService = topicTemplateService;
         }
 
         #endregion
@@ -76,7 +76,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get category templates
-            var categoryTemplates = (await _categoryTemplateService.GetAllCategoryTemplatesAsync()).ToPagedList(searchModel);
+            var categoryTemplates = (await CategoryTemplateService.GetAllCategoryTemplatesAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new CategoryTemplateListModel().PrepareToGrid(searchModel, categoryTemplates,
@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get manufacturer templates
-            var manufacturerTemplates = (await _manufacturerTemplateService.GetAllManufacturerTemplatesAsync()).ToPagedList(searchModel);
+            var manufacturerTemplates = (await ManufacturerTemplateService.GetAllManufacturerTemplatesAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ManufacturerTemplateListModel().PrepareToGrid(searchModel, manufacturerTemplates,
@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product templates
-            var productTemplates = (await _productTemplateService.GetAllProductTemplatesAsync()).ToPagedList(searchModel);
+            var productTemplates = (await ProductTemplateService.GetAllProductTemplatesAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ProductTemplateListModel().PrepareToGrid(searchModel, productTemplates,
@@ -145,7 +145,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get topic templates
-            var topicTemplates = (await _topicTemplateService.GetAllTopicTemplatesAsync()).ToPagedList(searchModel);
+            var topicTemplates = (await TopicTemplateService.GetAllTopicTemplatesAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new TopicTemplateListModel().PrepareToGrid(searchModel, topicTemplates,

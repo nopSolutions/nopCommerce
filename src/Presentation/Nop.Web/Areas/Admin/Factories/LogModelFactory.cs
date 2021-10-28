@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Logging;
@@ -20,11 +20,11 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILogger Logger { get; }
 
         #endregion
 
@@ -36,11 +36,11 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             ILogger logger)
         {
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _dateTimeHelper = dateTimeHelper;
-            _customerService = customerService;
-            _localizationService = localizationService;
-            _logger = logger;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            DateTimeHelper = dateTimeHelper;
+            CustomerService = customerService;
+            LocalizationService = localizationService;
+            Logger = logger;
         }
 
         #endregion
@@ -61,7 +61,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available log levels
-            await _baseAdminModelFactory.PrepareLogLevelsAsync(searchModel.AvailableLogLevels);
+            await BaseAdminModelFactory.PrepareLogLevelsAsync(searchModel.AvailableLogLevels);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -84,13 +84,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get parameters to filter log
             var createdOnFromValue = searchModel.CreatedOnFrom.HasValue
-                ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()) : null;
+                ? (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()) : null;
             var createdToFromValue = searchModel.CreatedOnTo.HasValue
-                ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1) : null;
+                ? (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1) : null;
             var logLevel = searchModel.LogLevelId > 0 ? (LogLevel?)searchModel.LogLevelId : null;
 
             //get log
-            var logItems = await _logger.GetAllLogsAsync(message: searchModel.Message,
+            var logItems = await Logger.GetAllLogsAsync(message: searchModel.Message,
                 fromUtc: createdOnFromValue,
                 toUtc: createdToFromValue,
                 logLevel: logLevel,
@@ -106,13 +106,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     var logModel = logItem.ToModel<LogModel>();
 
                     //convert dates to the user time
-                    logModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(logItem.CreatedOnUtc, DateTimeKind.Utc);
+                    logModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(logItem.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    logModel.LogLevel = await _localizationService.GetLocalizedEnumAsync(logItem.LogLevel);
+                    logModel.LogLevel = await LocalizationService.GetLocalizedEnumAsync(logItem.LogLevel);
                     logModel.ShortMessage = HtmlHelper.FormatText(logItem.ShortMessage, false, true, false, false, false, false);
                     logModel.FullMessage = string.Empty;
-                    logModel.CustomerEmail = (await _customerService.GetCustomerByIdAsync(logItem.CustomerId ?? 0))?.Email ?? string.Empty;
+                    logModel.CustomerEmail = (await CustomerService.GetCustomerByIdAsync(logItem.CustomerId ?? 0))?.Email ?? string.Empty;
 
                     return logModel;
                 });
@@ -140,11 +140,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     model = log.ToModel<LogModel>();
 
-                    model.LogLevel = await _localizationService.GetLocalizedEnumAsync(log.LogLevel);
+                    model.LogLevel = await LocalizationService.GetLocalizedEnumAsync(log.LogLevel);
                     model.ShortMessage = HtmlHelper.FormatText(log.ShortMessage, false, true, false, false, false, false);
                     model.FullMessage = HtmlHelper.FormatText(log.FullMessage, false, true, false, false, false, false);
-                    model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(log.CreatedOnUtc, DateTimeKind.Utc);
-                    model.CustomerEmail = log.CustomerId.HasValue ? (await _customerService.GetCustomerByIdAsync(log.CustomerId.Value))?.Email : string.Empty;
+                    model.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(log.CreatedOnUtc, DateTimeKind.Utc);
+                    model.CustomerEmail = log.CustomerId.HasValue ? (await CustomerService.GetCustomerByIdAsync(log.CustomerId.Value))?.Email : string.Empty;
                 }
             }
             return model;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Services.Authentication.External;
@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
+        protected IAuthenticationPluginManager AuthenticationPluginManager { get; }
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public ExternalAuthenticationMethodModelFactory(IAuthenticationPluginManager authenticationPluginManager)
         {
-            _authenticationPluginManager = authenticationPluginManager;
+            AuthenticationPluginManager = authenticationPluginManager;
         }
 
         #endregion
@@ -62,7 +62,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get external authentication methods
-            var externalAuthenticationMethods = (await _authenticationPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
+            var externalAuthenticationMethods = (await AuthenticationPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ExternalAuthenticationMethodListModel().PrepareToGrid(searchModel, externalAuthenticationMethods, () =>
@@ -74,7 +74,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var externalAuthenticationMethodModel = method.ToPluginModel<ExternalAuthenticationMethodModel>();
 
                     //fill in additional values (not existing in the entity)
-                    externalAuthenticationMethodModel.IsActive = _authenticationPluginManager.IsPluginActive(method);
+                    externalAuthenticationMethodModel.IsActive = AuthenticationPluginManager.IsPluginActive(method);
                     externalAuthenticationMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
 
                     return externalAuthenticationMethodModel;

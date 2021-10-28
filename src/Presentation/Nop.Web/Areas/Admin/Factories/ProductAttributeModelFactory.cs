@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
@@ -18,10 +18,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IProductAttributeService ProductAttributeService { get; }
+        protected IProductService ProductService { get; }
 
         #endregion
 
@@ -32,10 +32,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductAttributeService productAttributeService,
             IProductService productService)
         {
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _productAttributeService = productAttributeService;
-            _productService = productService;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            ProductAttributeService = productAttributeService;
+            ProductService = productService;
         }
 
         #endregion
@@ -125,7 +125,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product attributes
-            var productAttributes = await _productAttributeService
+            var productAttributes = await ProductAttributeService
                 .GetAllProductAttributesAsync(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
@@ -166,14 +166,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(productAttribute, entity => entity.Name, languageId, false, false);
-                    locale.Description = await _localizationService.GetLocalizedAsync(productAttribute, entity => entity.Description, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(productAttribute, entity => entity.Name, languageId, false, false);
+                    locale.Description = await LocalizationService.GetLocalizedAsync(productAttribute, entity => entity.Description, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -197,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productAttribute));
 
             //get predefined product attribute values
-            var values = (await _productAttributeService.GetPredefinedProductAttributeValuesAsync(productAttribute.Id)).ToPagedList(searchModel);
+            var values = (await ProductAttributeService.GetPredefinedProductAttributeValuesAsync(productAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new PredefinedProductAttributeValueListModel().PrepareToGrid(searchModel, values, () =>
@@ -249,7 +249,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(productAttributeValue, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(productAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -257,7 +257,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -281,7 +281,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productAttribute));
 
             //get products
-            var products = await _productService.GetProductsByProductAttributeIdAsync(productAttributeId: productAttribute.Id,
+            var products = await ProductService.GetProductsByProductAttributeIdAsync(productAttributeId: productAttribute.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model

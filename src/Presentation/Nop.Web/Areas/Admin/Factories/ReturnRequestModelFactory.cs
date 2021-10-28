@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,15 +23,15 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDownloadService _downloadService;
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
-        private readonly IReturnRequestService _returnRequestService;
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IDownloadService DownloadService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IOrderService OrderService { get; }
+        protected IProductService ProductService { get; }
+        protected IReturnRequestService ReturnRequestService { get; }
 
         #endregion
 
@@ -47,15 +47,15 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductService productService,
             IReturnRequestService returnRequestService)
         {
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _dateTimeHelper = dateTimeHelper;
-            _downloadService = downloadService;
-            _customerService = customerService;
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _orderService = orderService;
-            _productService = productService;
-            _returnRequestService = returnRequestService;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            DateTimeHelper = dateTimeHelper;
+            DownloadService = downloadService;
+            CustomerService = customerService;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            OrderService = orderService;
+            ProductService = productService;
+            ReturnRequestService = returnRequestService;
         }
 
         #endregion
@@ -76,14 +76,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available return request statuses
-            await _baseAdminModelFactory.PrepareReturnRequestStatusesAsync(searchModel.ReturnRequestStatusList, false);
+            await BaseAdminModelFactory.PrepareReturnRequestStatusesAsync(searchModel.ReturnRequestStatusList, false);
 
             //for some reason, the standard default value (0) for the "All" item is already used for the "Pending" status, so here we use -1
             searchModel.ReturnRequestStatusId = -1;
             searchModel.ReturnRequestStatusList.Insert(0, new SelectListItem
             {
                 Value = "-1",
-                Text = await _localizationService.GetResourceAsync("Admin.ReturnRequests.SearchReturnRequestStatus.All")
+                Text = await LocalizationService.GetResourceAsync("Admin.ReturnRequests.SearchReturnRequestStatus.All")
             });
 
             //prepare page parameters
@@ -107,13 +107,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get parameters to filter emails
             var startDateValue = !searchModel.StartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var returnRequestStatus = searchModel.ReturnRequestStatusId == -1 ? null : (ReturnRequestStatus?)searchModel.ReturnRequestStatusId;
 
             //get return requests
-            var returnRequests = await _returnRequestService.SearchReturnRequestsAsync(customNumber: searchModel.CustomNumber,
+            var returnRequests = await ReturnRequestService.SearchReturnRequestsAsync(customNumber: searchModel.CustomNumber,
                 rs: returnRequestStatus,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
@@ -127,22 +127,22 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var returnRequestModel = returnRequest.ToModel<ReturnRequestModel>();
 
-                    var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
+                    var customer = await CustomerService.GetCustomerByIdAsync(returnRequest.CustomerId);
 
                     //convert dates to the user time
-                    returnRequestModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
+                    returnRequestModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    returnRequestModel.CustomerInfo = (await _customerService.IsRegisteredAsync(customer))
+                    returnRequestModel.CustomerInfo = (await CustomerService.IsRegisteredAsync(customer))
                         ? customer.Email
-                        : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
-                    returnRequestModel.ReturnRequestStatusStr = await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus);
-                    var orderItem = await _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
+                        : await LocalizationService.GetResourceAsync("Admin.Customers.Guest");
+                    returnRequestModel.ReturnRequestStatusStr = await LocalizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus);
+                    var orderItem = await OrderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
                     if (orderItem == null)
                         return returnRequestModel;
 
-                    var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
-                    var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                    var order = await OrderService.GetOrderByIdAsync(orderItem.OrderId);
+                    var product = await ProductService.GetProductByIdAsync(orderItem.ProductId);
 
                     returnRequestModel.ProductId = orderItem.ProductId;
                     returnRequestModel.ProductName = product.Name;
@@ -182,18 +182,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 Quantity = returnRequest.Quantity
             };
 
-            var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(returnRequest.CustomerId);
 
-            model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
+            model.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
-            model.CustomerInfo = await _customerService.IsRegisteredAsync(customer)
-                ? customer.Email : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
-            model.UploadedFileGuid = (await _downloadService.GetDownloadByIdAsync(returnRequest.UploadedFileId))?.DownloadGuid ?? Guid.Empty;
-            var orderItem = await _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
+            model.CustomerInfo = await CustomerService.IsRegisteredAsync(customer)
+                ? customer.Email : await LocalizationService.GetResourceAsync("Admin.Customers.Guest");
+            model.UploadedFileGuid = (await DownloadService.GetDownloadByIdAsync(returnRequest.UploadedFileId))?.DownloadGuid ?? Guid.Empty;
+            var orderItem = await OrderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
             if (orderItem != null)
             {
-                var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
-                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                var order = await OrderService.GetOrderByIdAsync(orderItem.OrderId);
+                var product = await ProductService.GetProductByIdAsync(orderItem.ProductId);
 
                 model.ProductId = product.Id;
                 model.ProductName = product.Name;
@@ -247,7 +247,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get return request reasons
-            var reasons = (await _returnRequestService.GetAllReturnRequestReasonsAsync()).ToPagedList(searchModel);
+            var reasons = (await ReturnRequestService.GetAllReturnRequestReasonsAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ReturnRequestReasonListModel().PrepareToGrid(searchModel, reasons, () =>
@@ -281,13 +281,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(returnRequestReason, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(returnRequestReason, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -325,7 +325,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get return request actions
-            var actions = (await _returnRequestService.GetAllReturnRequestActionsAsync()).ToPagedList(searchModel);
+            var actions = (await ReturnRequestService.GetAllReturnRequestActionsAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ReturnRequestActionListModel().PrepareToGrid(searchModel, actions, () =>
@@ -359,13 +359,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(returnRequestAction, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(returnRequestAction, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }

@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Localization;
 using Nop.Web.Models.Newsletter;
@@ -12,8 +12,8 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly ILocalizationService _localizationService;
+        protected CustomerSettings CustomerSettings { get; }
+        protected ILocalizationService LocalizationService { get; }
 
         #endregion
 
@@ -22,8 +22,8 @@ namespace Nop.Web.Factories
         public NewsletterModelFactory(CustomerSettings customerSettings,
             ILocalizationService localizationService)
         {
-            _customerSettings = customerSettings;
-            _localizationService = localizationService;
+            CustomerSettings = customerSettings;
+            LocalizationService = localizationService;
         }
 
         #endregion
@@ -41,7 +41,7 @@ namespace Nop.Web.Factories
         {
             var model = new NewsletterBoxModel
             {
-                AllowToUnsubscribe = _customerSettings.NewsletterBlockAllowToUnsubscribe
+                AllowToUnsubscribe = CustomerSettings.NewsletterBlockAllowToUnsubscribe
             };
 
             return Task.FromResult(model);
@@ -60,8 +60,8 @@ namespace Nop.Web.Factories
             var model = new SubscriptionActivationModel
             {
                 Result = active
-                ? await _localizationService.GetResourceAsync("Newsletter.ResultActivated")
-                : await _localizationService.GetResourceAsync("Newsletter.ResultDeactivated")
+                ? await LocalizationService.GetResourceAsync("Newsletter.ResultActivated")
+                : await LocalizationService.GetResourceAsync("Newsletter.ResultDeactivated")
             };
 
             return model;

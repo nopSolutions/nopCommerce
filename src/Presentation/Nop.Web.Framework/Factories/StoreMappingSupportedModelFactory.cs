@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,8 +16,8 @@ namespace Nop.Web.Framework.Factories
     {
         #region Fields
         
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
+        protected IStoreMappingService StoreMappingService { get; }
+        protected IStoreService StoreService { get; }
 
         #endregion
 
@@ -26,8 +26,8 @@ namespace Nop.Web.Framework.Factories
         public StoreMappingSupportedModelFactory(IStoreMappingService storeMappingService,
             IStoreService storeService)
         {
-            _storeMappingService = storeMappingService;
-            _storeService = storeService;
+            StoreMappingService = storeMappingService;
+            StoreService = storeService;
         }
 
         #endregion
@@ -46,7 +46,7 @@ namespace Nop.Web.Framework.Factories
                 throw new ArgumentNullException(nameof(model));
 
             //prepare available stores
-            var availableStores = await _storeService.GetAllStoresAsync();
+            var availableStores = await StoreService.GetAllStoresAsync();
             model.AvailableStores = availableStores.Select(store => new SelectListItem
             {
                 Text = store.Name,
@@ -72,7 +72,7 @@ namespace Nop.Web.Framework.Factories
 
             //prepare stores with granted access
             if (!ignoreStoreMappings && entity != null)
-                model.SelectedStoreIds = (await _storeMappingService.GetStoresIdsWithAccessAsync(entity)).ToList();
+                model.SelectedStoreIds = (await StoreMappingService.GetStoresIdsWithAccessAsync(entity)).ToList();
 
             await PrepareModelStoresAsync(model);
         }

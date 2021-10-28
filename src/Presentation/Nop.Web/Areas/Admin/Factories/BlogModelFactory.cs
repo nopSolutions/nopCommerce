@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -29,16 +29,16 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly IBlogService _blogService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IStoreService _storeService;
-        private readonly IUrlRecordService _urlRecordService;
+        protected CatalogSettings CatalogSettings { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected IBlogService BlogService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected ILanguageService LanguageService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
+        protected IStoreService StoreService { get; }
+        protected IUrlRecordService UrlRecordService { get; }
 
         #endregion
 
@@ -55,16 +55,16 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreService storeService,
             IUrlRecordService urlRecordService)
         {
-            _catalogSettings = catalogSettings;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _blogService = blogService;
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _languageService = languageService;
-            _localizationService = localizationService;
-            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            _storeService = storeService;
-            _urlRecordService = urlRecordService;
+            CatalogSettings = catalogSettings;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            BlogService = blogService;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            LanguageService = languageService;
+            LocalizationService = localizationService;
+            StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            StoreService = storeService;
+            UrlRecordService = urlRecordService;
         }
 
         #endregion
@@ -87,7 +87,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare nested search models
             await PrepareBlogPostSearchModelAsync(blogContentModel.BlogPosts);
-            var blogPost = await _blogService.GetBlogPostByIdAsync(filterByBlogPostId ?? 0);
+            var blogPost = await BlogService.GetBlogPostByIdAsync(filterByBlogPostId ?? 0);
             await PrepareBlogCommentSearchModelAsync(blogContentModel.BlogComments, blogPost);
 
             return blogContentModel;
@@ -107,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get blog posts
-            var blogPosts = await _blogService.GetAllBlogPostsAsync(storeId: searchModel.SearchStoreId, showHidden: true,
+            var blogPosts = await BlogService.GetAllBlogPostsAsync(storeId: searchModel.SearchStoreId, showHidden: true,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize, title: searchModel.SearchTitle);
 
             //prepare list model
@@ -123,16 +123,16 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //convert dates to the user time
                     if (blogPost.StartDateUtc.HasValue)
-                        blogPostModel.StartDateUtc = await _dateTimeHelper.ConvertToUserTimeAsync(blogPost.StartDateUtc.Value, DateTimeKind.Utc);
+                        blogPostModel.StartDateUtc = await DateTimeHelper.ConvertToUserTimeAsync(blogPost.StartDateUtc.Value, DateTimeKind.Utc);
                     if (blogPost.EndDateUtc.HasValue)
-                        blogPostModel.EndDateUtc = await _dateTimeHelper.ConvertToUserTimeAsync(blogPost.EndDateUtc.Value, DateTimeKind.Utc);
-                    blogPostModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogPost.CreatedOnUtc, DateTimeKind.Utc);
+                        blogPostModel.EndDateUtc = await DateTimeHelper.ConvertToUserTimeAsync(blogPost.EndDateUtc.Value, DateTimeKind.Utc);
+                    blogPostModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(blogPost.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    blogPostModel.LanguageName = (await _languageService.GetLanguageByIdAsync(blogPost.LanguageId))?.Name;
-                    blogPostModel.ApprovedComments = await _blogService.GetBlogCommentsCountAsync(blogPost, isApproved: true);
-                    blogPostModel.NotApprovedComments = await _blogService.GetBlogCommentsCountAsync(blogPost, isApproved: false);
-                    blogPostModel.SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, true, false);
+                    blogPostModel.LanguageName = (await LanguageService.GetLanguageByIdAsync(blogPost.LanguageId))?.Name;
+                    blogPostModel.ApprovedComments = await BlogService.GetBlogCommentsCountAsync(blogPost, isApproved: true);
+                    blogPostModel.NotApprovedComments = await BlogService.GetBlogCommentsCountAsync(blogPost, isApproved: false);
+                    blogPostModel.SeName = await UrlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, true, false);
 
                     return blogPostModel;
                 });
@@ -159,7 +159,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (model == null)
                 {
                     model = blogPost.ToModel<BlogPostModel>();
-                    model.SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, true, false);
+                    model.SeName = await UrlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, true, false);
                 }
                 model.StartDateUtc = blogPost.StartDateUtc;
                 model.EndDateUtc = blogPost.EndDateUtc;
@@ -172,7 +172,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.IncludeInSitemap = true;
             }
 
-            var blogTags = await _blogService.GetAllBlogPostTagsAsync(0, 0, true);
+            var blogTags = await BlogService.GetAllBlogPostTagsAsync(0, 0, true);
             var blogTagsSb = new StringBuilder();
             blogTagsSb.Append("var initialBlogTags = [");
             for (var i = 0; i < blogTags.Count; i++)
@@ -189,10 +189,10 @@ namespace Nop.Web.Areas.Admin.Factories
             model.InitialBlogTags = blogTagsSb.ToString();
 
             //prepare available languages
-            await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
+            await BaseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
 
             //prepare available stores
-            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, blogPost, excludeProperties);
+            await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(model, blogPost, excludeProperties);
 
             return model;
         }
@@ -214,17 +214,17 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare "approved" property (0 - all; 1 - approved only; 2 - disapproved only)
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResourceAsync("Admin.ContentManagement.Blog.Comments.List.SearchApproved.All"),
+                Text = await LocalizationService.GetResourceAsync("Admin.ContentManagement.Blog.Comments.List.SearchApproved.All"),
                 Value = "0"
             });
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResourceAsync("Admin.ContentManagement.Blog.Comments.List.SearchApproved.ApprovedOnly"),
+                Text = await LocalizationService.GetResourceAsync("Admin.ContentManagement.Blog.Comments.List.SearchApproved.ApprovedOnly"),
                 Value = "1"
             });
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResourceAsync("Admin.ContentManagement.Blog.Comments.List.SearchApproved.DisapprovedOnly"),
+                Text = await LocalizationService.GetResourceAsync("Admin.ContentManagement.Blog.Comments.List.SearchApproved.DisapprovedOnly"),
                 Value = "2"
             });
 
@@ -252,20 +252,20 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get parameters to filter comments
             var createdOnFromValue = searchModel.CreatedOnFrom == null ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, await DateTimeHelper.GetCurrentTimeZoneAsync());
             var createdOnToValue = searchModel.CreatedOnTo == null ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var isApprovedOnly = searchModel.SearchApprovedId == 0 ? null : searchModel.SearchApprovedId == 1 ? true : (bool?)false;
 
             //get comments
-            var comments = (await _blogService.GetAllCommentsAsync(blogPostId: blogPostId,
+            var comments = (await BlogService.GetAllCommentsAsync(blogPostId: blogPostId,
                 approved: isApprovedOnly,
                 fromUtc: createdOnFromValue,
                 toUtc: createdOnToValue,
                 commentText: searchModel.SearchText)).ToPagedList(searchModel);
 
             //prepare store names (to avoid loading for each comment)
-            var storeNames = (await _storeService.GetAllStoresAsync())
+            var storeNames = (await StoreService.GetAllStoresAsync())
                 .ToDictionary(store => store.Id, store => store.Name);
 
             //prepare list model
@@ -277,16 +277,16 @@ namespace Nop.Web.Areas.Admin.Factories
                     var commentModel = blogComment.ToModel<BlogCommentModel>();
 
                     //set title from linked blog post
-                    commentModel.BlogPostTitle = (await _blogService.GetBlogPostByIdAsync(blogComment.BlogPostId))?.Title;
+                    commentModel.BlogPostTitle = (await BlogService.GetBlogPostByIdAsync(blogComment.BlogPostId))?.Title;
 
-                    if ((await _customerService.GetCustomerByIdAsync(blogComment.CustomerId)) is Customer customer)
+                    if ((await CustomerService.GetCustomerByIdAsync(blogComment.CustomerId)) is Customer customer)
                     {
-                        commentModel.CustomerInfo = (await _customerService.IsRegisteredAsync(customer))
+                        commentModel.CustomerInfo = (await CustomerService.IsRegisteredAsync(customer))
                             ? customer.Email
-                            : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
+                            : await LocalizationService.GetResourceAsync("Admin.Customers.Guest");
                     }
                     //fill in additional values (not existing in the entity)
-                    commentModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc);
+                    commentModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc);
                     commentModel.Comment = HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
                     commentModel.StoreName = storeNames.ContainsKey(blogComment.StoreId) ? storeNames[blogComment.StoreId] : "Deleted";
 
@@ -311,9 +311,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+            searchModel.HideStoresList = CatalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();

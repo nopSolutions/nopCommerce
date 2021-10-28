@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,10 +19,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ICountryService _countryService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IStateProvinceService _stateProvinceService;
+        protected ICountryService CountryService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IPaymentPluginManager PaymentPluginManager { get; }
+        protected IStateProvinceService StateProvinceService { get; }
 
         #endregion
 
@@ -33,10 +33,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IPaymentPluginManager paymentPluginManager,
             IStateProvinceService stateProvinceService)
         {
-            _countryService = countryService;
-            _localizationService = localizationService;
-            _paymentPluginManager = paymentPluginManager;
-            _stateProvinceService = stateProvinceService;
+            CountryService = countryService;
+            LocalizationService = localizationService;
+            PaymentPluginManager = paymentPluginManager;
+            StateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -77,7 +77,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get payment methods
-            var paymentMethods = (await _paymentPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
+            var paymentMethods = (await PaymentPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = await new PaymentMethodListModel().PrepareToGridAsync(searchModel, paymentMethods, () =>
@@ -88,11 +88,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
 
                     //fill in additional values (not existing in the entity)
-                    paymentMethodModel.IsActive = _paymentPluginManager.IsPluginActive(method);
+                    paymentMethodModel.IsActive = PaymentPluginManager.IsPluginActive(method);
                     paymentMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
 
-                    paymentMethodModel.LogoUrl = await _paymentPluginManager.GetPluginLogoUrlAsync(method);
-                    paymentMethodModel.RecurringPaymentType = await _localizationService.GetLocalizedEnumAsync(method.RecurringPaymentType);
+                    paymentMethodModel.LogoUrl = await PaymentPluginManager.GetPluginLogoUrlAsync(method);
+                    paymentMethodModel.RecurringPaymentType = await LocalizationService.GetLocalizedEnumAsync(method.RecurringPaymentType);
 
                     return paymentMethodModel;
                 });
@@ -133,23 +133,23 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
+            var countries = await CountryService.GetAllCountriesAsync(showHidden: true);
             model.AvailableCountries = await countries.SelectAwait(async country =>
             {
                 var countryModel = country.ToModel<CountryModel>();
-                countryModel.NumberOfStates = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id))?.Count ?? 0;
+                countryModel.NumberOfStates = (await StateProvinceService.GetStateProvincesByCountryIdAsync(country.Id))?.Count ?? 0;
 
                 return countryModel;
             }).ToListAsync();
 
-            foreach (var method in await _paymentPluginManager.LoadAllPluginsAsync())
+            foreach (var method in await PaymentPluginManager.LoadAllPluginsAsync())
             {
                 var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
-                paymentMethodModel.RecurringPaymentType = await _localizationService.GetLocalizedEnumAsync(method.RecurringPaymentType);
+                paymentMethodModel.RecurringPaymentType = await LocalizationService.GetLocalizedEnumAsync(method.RecurringPaymentType);
 
                 model.AvailablePaymentMethods.Add(paymentMethodModel);
 
-                var restrictedCountries = await _paymentPluginManager.GetRestrictedCountryIdsAsync(method);
+                var restrictedCountries = await PaymentPluginManager.GetRestrictedCountryIdsAsync(method);
                 foreach (var country in countries)
                 {
                     if (!model.Restricted.ContainsKey(method.PluginDescriptor.SystemName))

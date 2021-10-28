@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
@@ -10,8 +10,8 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerModelFactory _customerModelFactory;
-        private readonly IPermissionService _permissionService;
+        protected ICustomerModelFactory CustomerModelFactory { get; }
+        protected IPermissionService PermissionService { get; }
 
         #endregion
 
@@ -20,8 +20,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         public OnlineCustomerController(ICustomerModelFactory customerModelFactory,
             IPermissionService permissionService)
         {
-            _customerModelFactory = customerModelFactory;
-            _permissionService = permissionService;
+            CustomerModelFactory = customerModelFactory;
+            PermissionService = permissionService;
         }
 
         #endregion
@@ -30,11 +30,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _customerModelFactory.PrepareOnlineCustomerSearchModelAsync(new OnlineCustomerSearchModel());
+            var model = await CustomerModelFactory.PrepareOnlineCustomerSearchModelAsync(new OnlineCustomerSearchModel());
 
             return View(model);
         }
@@ -42,11 +42,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(OnlineCustomerSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _customerModelFactory.PrepareOnlineCustomerListModelAsync(searchModel);
+            var model = await CustomerModelFactory.PrepareOnlineCustomerListModelAsync(searchModel);
 
             return Json(model);
         }

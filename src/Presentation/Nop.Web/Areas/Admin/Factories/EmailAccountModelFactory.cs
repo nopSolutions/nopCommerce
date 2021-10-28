@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Messages;
@@ -16,8 +16,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly IEmailAccountService _emailAccountService;
+        protected EmailAccountSettings EmailAccountSettings { get; }
+        protected IEmailAccountService EmailAccountService { get; }
 
         #endregion
 
@@ -26,8 +26,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public EmailAccountModelFactory(EmailAccountSettings emailAccountSettings,
             IEmailAccountService emailAccountService)
         {
-            _emailAccountSettings = emailAccountSettings;
-            _emailAccountService = emailAccountService;
+            EmailAccountSettings = emailAccountSettings;
+            EmailAccountService = emailAccountService;
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get email accounts
-            var emailAccounts = (await _emailAccountService.GetAllEmailAccountsAsync()).ToPagedList(searchModel);
+            var emailAccounts = (await EmailAccountService.GetAllEmailAccountsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new EmailAccountListModel().PrepareToGrid(searchModel, emailAccounts, () =>
@@ -78,7 +78,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var emailAccountModel = emailAccount.ToModel<EmailAccountModel>();
 
                     //fill in additional values (not existing in the entity)
-                    emailAccountModel.IsDefaultEmailAccount = emailAccount.Id == _emailAccountSettings.DefaultEmailAccountId;
+                    emailAccountModel.IsDefaultEmailAccount = emailAccount.Id == EmailAccountSettings.DefaultEmailAccountId;
 
                     return emailAccountModel;
                 });

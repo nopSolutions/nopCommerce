@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Nop.Web.Models.Vendors;
 
 namespace Nop.Web.Factories

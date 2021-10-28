@@ -89,8 +89,8 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
-        private readonly ILocalizationService _localizationService;
+        protected IHtmlHelper HtmlHelper { get; }
+        protected ILocalizationService LocalizationService { get; }
 
         #endregion
 
@@ -99,8 +99,8 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         public NopDatePickerTagHelper(IHtmlGenerator generator, IHtmlHelper htmlHelper, ILocalizationService localizationService)
         {
             Generator = generator;
-            _htmlHelper = htmlHelper;
-            _localizationService = localizationService;
+            HtmlHelper = htmlHelper;
+            LocalizationService = localizationService;
         }
 
         #endregion
@@ -122,7 +122,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 throw new ArgumentNullException(nameof(output));
 
             //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
+            var viewContextAware = HtmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             //tag details
@@ -155,7 +155,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 if (!tagHelperAttributes.Contains(attribute.Name))
                     customerAttributes.Add(attribute.Name, attribute.Value);
             }
-            var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(customerAttributes);
+            var htmlAttributesDictionary = Microsoft.AspNetCore.Mvc.ViewFeatures.HtmlHelper.AnonymousObjectToHtmlAttributes(customerAttributes);
             daysList.MergeAttributes(htmlAttributesDictionary, true);
             monthsList.MergeAttributes(htmlAttributesDictionary, true);
             yearsList.MergeAttributes(htmlAttributesDictionary, true);
@@ -166,13 +166,13 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             var months = new StringBuilder();
             var years = new StringBuilder();
 
-            days.AppendFormat("<option value='{0}'>{1}</option>", "0", await _localizationService.GetResourceAsync("Common.Day"));
+            days.AppendFormat("<option value='{0}'>{1}</option>", "0", await LocalizationService.GetResourceAsync("Common.Day"));
 
             for (var i = 1; i <= 31; i++)
                 days.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                     (SelectedDate.HasValue && currentCalendar.GetDayOfMonth(SelectedDate.Value) == i) ? " selected=\"selected\"" : null);
 
-            months.AppendFormat("<option value='{0}'>{1}</option>", "0", await _localizationService.GetResourceAsync("Common.Month"));
+            months.AppendFormat("<option value='{0}'>{1}</option>", "0", await LocalizationService.GetResourceAsync("Common.Month"));
 
             for (var i = 1; i <= 12; i++)
             {
@@ -182,7 +182,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                     CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i));
             }
 
-            years.AppendFormat("<option value='{0}'>{1}</option>", "0", await _localizationService.GetResourceAsync("Common.Year"));
+            years.AppendFormat("<option value='{0}'>{1}</option>", "0", await LocalizationService.GetResourceAsync("Common.Year"));
 
             BeginYear ??= DateTime.UtcNow.AddYears(-100);
             EndYear ??= DateTime.UtcNow;

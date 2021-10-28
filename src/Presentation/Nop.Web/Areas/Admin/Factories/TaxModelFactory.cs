@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Services.Tax;
@@ -15,8 +15,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly ITaxPluginManager _taxPluginManager;
+        protected ITaxCategoryService TaxCategoryService { get; }
+        protected ITaxPluginManager TaxPluginManager { get; }
 
         #endregion
 
@@ -26,8 +26,8 @@ namespace Nop.Web.Areas.Admin.Factories
             ITaxCategoryService taxCategoryService,
             ITaxPluginManager taxPluginManager)
         {
-            _taxCategoryService = taxCategoryService;
-            _taxPluginManager = taxPluginManager;
+            TaxCategoryService = taxCategoryService;
+            TaxPluginManager = taxPluginManager;
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get tax providers
-            var taxProviders = (await _taxPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
+            var taxProviders = (await TaxPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new TaxProviderListModel().PrepareToGrid(searchModel, taxProviders, () =>
@@ -79,7 +79,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     taxProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    taxProviderModel.IsPrimaryTaxProvider = _taxPluginManager.IsPluginActive(provider);
+                    taxProviderModel.IsPrimaryTaxProvider = TaxPluginManager.IsPluginActive(provider);
 
                     return taxProviderModel;
                 });
@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get tax categories
-            var taxCategories = (await _taxCategoryService.GetAllTaxCategoriesAsync()).ToPagedList(searchModel);
+            var taxCategories = (await TaxCategoryService.GetAllTaxCategoriesAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new TaxCategoryListModel().PrepareToGrid(searchModel, taxCategories, () =>

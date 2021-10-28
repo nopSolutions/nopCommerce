@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Polls;
 using Nop.Web.Models.Polls;

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -24,20 +24,20 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
-        private readonly ITopicModelFactory _topicModelFactory;
-        private readonly ITopicService _topicService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
+        protected IAclService AclService { get; }
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedEntityService LocalizedEntityService { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected IStoreService StoreService { get; }
+        protected ITopicModelFactory TopicModelFactory { get; }
+        protected ITopicService TopicService { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IWorkContext WorkContext { get; }
 
 
         #endregion Fields
@@ -59,20 +59,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             IGenericAttributeService genericAttributeService,
             IWorkContext workContext)
         {
-            _aclService = aclService;
-            _customerActivityService = customerActivityService;
-            _customerService = customerService;
-            _localizationService = localizationService;
-            _localizedEntityService = localizedEntityService;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
-            _storeMappingService = storeMappingService;
-            _storeService = storeService;
-            _topicModelFactory = topicModelFactory;
-            _topicService = topicService;
-            _urlRecordService = urlRecordService;
-            _genericAttributeService = genericAttributeService;
-            _workContext = workContext;
+            AclService = aclService;
+            CustomerActivityService = customerActivityService;
+            CustomerService = customerService;
+            LocalizationService = localizationService;
+            LocalizedEntityService = localizedEntityService;
+            NotificationService = notificationService;
+            PermissionService = permissionService;
+            StoreMappingService = storeMappingService;
+            StoreService = storeService;
+            TopicModelFactory = topicModelFactory;
+            TopicService = topicService;
+            UrlRecordService = urlRecordService;
+            GenericAttributeService = genericAttributeService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -83,58 +83,58 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValueAsync(topic,
+                await LocalizedEntityService.SaveLocalizedValueAsync(topic,
                     x => x.Title,
                     localized.Title,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValueAsync(topic,
+                await LocalizedEntityService.SaveLocalizedValueAsync(topic,
                     x => x.Body,
                     localized.Body,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValueAsync(topic,
+                await LocalizedEntityService.SaveLocalizedValueAsync(topic,
                     x => x.MetaKeywords,
                     localized.MetaKeywords,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValueAsync(topic,
+                await LocalizedEntityService.SaveLocalizedValueAsync(topic,
                     x => x.MetaDescription,
                     localized.MetaDescription,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValueAsync(topic,
+                await LocalizedEntityService.SaveLocalizedValueAsync(topic,
                     x => x.MetaTitle,
                     localized.MetaTitle,
                     localized.LanguageId);
 
                 //search engine name
-                var seName = await _urlRecordService.ValidateSeNameAsync(topic, localized.SeName, localized.Title, false);
-                await _urlRecordService.SaveSlugAsync(topic, seName, localized.LanguageId);
+                var seName = await UrlRecordService.ValidateSeNameAsync(topic, localized.SeName, localized.Title, false);
+                await UrlRecordService.SaveSlugAsync(topic, seName, localized.LanguageId);
             }
         }
 
         protected virtual async Task SaveTopicAclAsync(Topic topic, TopicModel model)
         {
             topic.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
-            await _topicService.UpdateTopicAsync(topic);
+            await TopicService.UpdateTopicAsync(topic);
 
-            var existingAclRecords = await _aclService.GetAclRecordsAsync(topic);
-            var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
+            var existingAclRecords = await AclService.GetAclRecordsAsync(topic);
+            var allCustomerRoles = await CustomerService.GetAllCustomerRolesAsync(true);
             foreach (var customerRole in allCustomerRoles)
             {
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
                     if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
-                        await _aclService.InsertAclRecordAsync(topic, customerRole.Id);
+                        await AclService.InsertAclRecordAsync(topic, customerRole.Id);
                 }
                 else
                 {
                     //remove role
                     var aclRecordToDelete = existingAclRecords.FirstOrDefault(acl => acl.CustomerRoleId == customerRole.Id);
                     if (aclRecordToDelete != null)
-                        await _aclService.DeleteAclRecordAsync(aclRecordToDelete);
+                        await AclService.DeleteAclRecordAsync(aclRecordToDelete);
                 }
             }
         }
@@ -142,24 +142,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task SaveStoreMappingsAsync(Topic topic, TopicModel model)
         {
             topic.LimitedToStores = model.SelectedStoreIds.Any();
-            await _topicService.UpdateTopicAsync(topic);
+            await TopicService.UpdateTopicAsync(topic);
 
-            var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(topic);
-            var allStores = await _storeService.GetAllStoresAsync();
+            var existingStoreMappings = await StoreMappingService.GetStoreMappingsAsync(topic);
+            var allStores = await StoreService.GetAllStoresAsync();
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        await _storeMappingService.InsertStoreMappingAsync(topic, store.Id);
+                        await StoreMappingService.InsertStoreMappingAsync(topic, store.Id);
                 }
                 else
                 {
                     //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
-                        await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
+                        await StoreMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
                 }
             }
         }
@@ -175,18 +175,18 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List(bool showtour = false)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _topicModelFactory.PrepareTopicSearchModelAsync(new TopicSearchModel());
+            var model = await TopicModelFactory.PrepareTopicSearchModelAsync(new TopicSearchModel());
 
             //show configuration tour
             if (showtour)
             {
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                var hideCard = await GenericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
+                var closeCard = await GenericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
 
                 if (!hideCard && !closeCard)
                     ViewBag.ShowTour = true;
@@ -198,11 +198,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(TopicSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _topicModelFactory.PrepareTopicListModelAsync(searchModel);
+            var model = await TopicModelFactory.PrepareTopicListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -213,11 +213,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _topicModelFactory.PrepareTopicModelAsync(new TopicModel(), null);
+            var model = await TopicModelFactory.PrepareTopicModelAsync(new TopicModel(), null);
 
             return View(model);
         }
@@ -225,7 +225,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Create(TopicModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -234,11 +234,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.Password = null;
 
                 var topic = model.ToEntity<Topic>();
-                await _topicService.InsertTopicAsync(topic);
+                await TopicService.InsertTopicAsync(topic);
 
                 //search engine name
-                model.SeName = await _urlRecordService.ValidateSeNameAsync(topic, model.SeName, topic.Title ?? topic.SystemName, true);
-                await _urlRecordService.SaveSlugAsync(topic, model.SeName, 0);
+                model.SeName = await UrlRecordService.ValidateSeNameAsync(topic, model.SeName, topic.Title ?? topic.SystemName, true);
+                await UrlRecordService.SaveSlugAsync(topic, model.SeName, 0);
 
                 //ACL (customer roles)
                 await SaveTopicAclAsync(topic, model);
@@ -249,11 +249,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 await UpdateLocalesAsync(topic, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Topics.Added"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.ContentManagement.Topics.Added"));
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("AddNewTopic",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewTopic"), topic.Title ?? topic.SystemName), topic);
+                await CustomerActivityService.InsertActivityAsync("AddNewTopic",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.AddNewTopic"), topic.Title ?? topic.SystemName), topic);
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -262,7 +262,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _topicModelFactory.PrepareTopicModelAsync(model, null, true);
+            model = await TopicModelFactory.PrepareTopicModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -270,23 +270,23 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             //try to get a topic with the specified id
-            var topic = await _topicService.GetTopicByIdAsync(id);
+            var topic = await TopicService.GetTopicByIdAsync(id);
             if (topic == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _topicModelFactory.PrepareTopicModelAsync(null, topic);
+            var model = await TopicModelFactory.PrepareTopicModelAsync(null, topic);
 
             //show configuration tour
             if (showtour)
             {
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                var hideCard = await GenericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
+                var closeCard = await GenericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
 
                 if (!hideCard && !closeCard)
                     ViewBag.ShowTour = true;
@@ -298,11 +298,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Edit(TopicModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             //try to get a topic with the specified id
-            var topic = await _topicService.GetTopicByIdAsync(model.Id);
+            var topic = await TopicService.GetTopicByIdAsync(model.Id);
             if (topic == null)
                 return RedirectToAction("List");
 
@@ -312,11 +312,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 topic = model.ToEntity(topic);
-                await _topicService.UpdateTopicAsync(topic);
+                await TopicService.UpdateTopicAsync(topic);
 
                 //search engine name
-                model.SeName = await _urlRecordService.ValidateSeNameAsync(topic, model.SeName, topic.Title ?? topic.SystemName, true);
-                await _urlRecordService.SaveSlugAsync(topic, model.SeName, 0);
+                model.SeName = await UrlRecordService.ValidateSeNameAsync(topic, model.SeName, topic.Title ?? topic.SystemName, true);
+                await UrlRecordService.SaveSlugAsync(topic, model.SeName, 0);
 
                 //ACL (customer roles)
                 await SaveTopicAclAsync(topic, model);
@@ -327,11 +327,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 await UpdateLocalesAsync(topic, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Topics.Updated"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.ContentManagement.Topics.Updated"));
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("EditTopic",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditTopic"), topic.Title ?? topic.SystemName), topic);
+                await CustomerActivityService.InsertActivityAsync("EditTopic",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.EditTopic"), topic.Title ?? topic.SystemName), topic);
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -340,7 +340,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _topicModelFactory.PrepareTopicModelAsync(model, topic, true);
+            model = await TopicModelFactory.PrepareTopicModelAsync(model, topic, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -349,21 +349,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             //try to get a topic with the specified id
-            var topic = await _topicService.GetTopicByIdAsync(id);
+            var topic = await TopicService.GetTopicByIdAsync(id);
             if (topic == null)
                 return RedirectToAction("List");
 
-            await _topicService.DeleteTopicAsync(topic);
+            await TopicService.DeleteTopicAsync(topic);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Topics.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.ContentManagement.Topics.Deleted"));
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteTopic",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteTopic"), topic.Title ?? topic.SystemName), topic);
+            await CustomerActivityService.InsertActivityAsync("DeleteTopic",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.DeleteTopic"), topic.Title ?? topic.SystemName), topic);
 
             return RedirectToAction("List");
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Directory;
@@ -19,13 +19,13 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMeasureModelFactory _measureModelFactory;
-        private readonly IMeasureService _measureService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly MeasureSettings _measureSettings;
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IMeasureModelFactory MeasureModelFactory { get; }
+        protected IMeasureService MeasureService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected ISettingService SettingService { get; }
+        protected MeasureSettings MeasureSettings { get; }
 
         #endregion
 
@@ -39,13 +39,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISettingService settingService,
             MeasureSettings measureSettings)
         {
-            _customerActivityService = customerActivityService;
-            _localizationService = localizationService;
-            _measureModelFactory = measureModelFactory;
-            _measureService = measureService;
-            _permissionService = permissionService;
-            _settingService = settingService;
-            _measureSettings = measureSettings;
+            CustomerActivityService = customerActivityService;
+            LocalizationService = localizationService;
+            MeasureModelFactory = measureModelFactory;
+            MeasureService = measureService;
+            PermissionService = permissionService;
+            SettingService = settingService;
+            MeasureSettings = measureSettings;
         }
 
         #endregion
@@ -54,11 +54,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _measureModelFactory.PrepareMeasureSearchModelAsync(new MeasureSearchModel());
+            var model = await MeasureModelFactory.PrepareMeasureSearchModelAsync(new MeasureSearchModel());
 
             return View(model);
         }
@@ -68,11 +68,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Weights(MeasureWeightSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _measureModelFactory.PrepareMeasureWeightListModelAsync(searchModel);
+            var model = await MeasureModelFactory.PrepareMeasureWeightListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -80,19 +80,19 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> WeightUpdate(MeasureWeightModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
-            var weight = await _measureService.GetMeasureWeightByIdAsync(model.Id);
+            var weight = await MeasureService.GetMeasureWeightByIdAsync(model.Id);
             weight = model.ToEntity(weight);
-            await _measureService.UpdateMeasureWeightAsync(weight);
+            await MeasureService.UpdateMeasureWeightAsync(weight);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("EditMeasureWeight",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditMeasureWeight"), weight.Id), weight);
+            await CustomerActivityService.InsertActivityAsync("EditMeasureWeight",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.EditMeasureWeight"), weight.Id), weight);
 
             return new NullJsonResult();
         }
@@ -100,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> WeightAdd(MeasureWeightModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -108,11 +108,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var weight = new MeasureWeight();
             weight = model.ToEntity(weight);
-            await _measureService.InsertMeasureWeightAsync(weight);
+            await MeasureService.InsertMeasureWeightAsync(weight);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("AddNewMeasureWeight",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewMeasureWeight"), weight.Id), weight);
+            await CustomerActivityService.InsertActivityAsync("AddNewMeasureWeight",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.AddNewMeasureWeight"), weight.Id), weight);
 
             return Json(new { Result = true });
         }
@@ -120,23 +120,23 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> WeightDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a weight with the specified id
-            var weight = await _measureService.GetMeasureWeightByIdAsync(id)
+            var weight = await MeasureService.GetMeasureWeightByIdAsync(id)
                 ?? throw new ArgumentException("No weight found with the specified id", nameof(id));
 
-            if (weight.Id == _measureSettings.BaseWeightId)
+            if (weight.Id == MeasureSettings.BaseWeightId)
             {
-                return ErrorJson(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Measures.Weights.CantDeletePrimary"));
+                return ErrorJson(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.Measures.Weights.CantDeletePrimary"));
             }
 
-            await _measureService.DeleteMeasureWeightAsync(weight);
+            await MeasureService.DeleteMeasureWeightAsync(weight);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteMeasureWeight",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteMeasureWeight"), weight.Id), weight);
+            await CustomerActivityService.InsertActivityAsync("DeleteMeasureWeight",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.DeleteMeasureWeight"), weight.Id), weight);
 
             return new NullJsonResult();
         }
@@ -144,15 +144,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> MarkAsPrimaryWeight(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a weight with the specified id
-            var weight = await _measureService.GetMeasureWeightByIdAsync(id)
+            var weight = await MeasureService.GetMeasureWeightByIdAsync(id)
                 ?? throw new ArgumentException("No weight found with the specified id", nameof(id));
 
-            _measureSettings.BaseWeightId = weight.Id;
-            await _settingService.SaveSettingAsync(_measureSettings);
+            MeasureSettings.BaseWeightId = weight.Id;
+            await SettingService.SaveSettingAsync(MeasureSettings);
 
             return Json(new { result = true });
         }
@@ -164,11 +164,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Dimensions(MeasureDimensionSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _measureModelFactory.PrepareMeasureDimensionListModelAsync(searchModel);
+            var model = await MeasureModelFactory.PrepareMeasureDimensionListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -176,19 +176,19 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DimensionUpdate(MeasureDimensionModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
-            var dimension = await _measureService.GetMeasureDimensionByIdAsync(model.Id);
+            var dimension = await MeasureService.GetMeasureDimensionByIdAsync(model.Id);
             dimension = model.ToEntity(dimension);
-            await _measureService.UpdateMeasureDimensionAsync(dimension);
+            await MeasureService.UpdateMeasureDimensionAsync(dimension);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("EditMeasureDimension",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditMeasureDimension"), dimension.Id), dimension);
+            await CustomerActivityService.InsertActivityAsync("EditMeasureDimension",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.EditMeasureDimension"), dimension.Id), dimension);
 
             return new NullJsonResult();
         }
@@ -196,7 +196,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DimensionAdd(MeasureDimensionModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -204,11 +204,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var dimension = new MeasureDimension();
             dimension = model.ToEntity(dimension);
-            await _measureService.InsertMeasureDimensionAsync(dimension);
+            await MeasureService.InsertMeasureDimensionAsync(dimension);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("AddNewMeasureDimension",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewMeasureDimension"), dimension.Id), dimension);
+            await CustomerActivityService.InsertActivityAsync("AddNewMeasureDimension",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.AddNewMeasureDimension"), dimension.Id), dimension);
 
             return Json(new { Result = true });
         }
@@ -216,23 +216,23 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DimensionDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a dimension with the specified id
-            var dimension = await _measureService.GetMeasureDimensionByIdAsync(id)
+            var dimension = await MeasureService.GetMeasureDimensionByIdAsync(id)
                 ?? throw new ArgumentException("No dimension found with the specified id", nameof(id));
 
-            if (dimension.Id == _measureSettings.BaseDimensionId)
+            if (dimension.Id == MeasureSettings.BaseDimensionId)
             {
-                return ErrorJson(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Measures.Dimensions.CantDeletePrimary"));
+                return ErrorJson(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.Measures.Dimensions.CantDeletePrimary"));
             }
 
-            await _measureService.DeleteMeasureDimensionAsync(dimension);
+            await MeasureService.DeleteMeasureDimensionAsync(dimension);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteMeasureDimension",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteMeasureDimension"), dimension.Id), dimension);
+            await CustomerActivityService.InsertActivityAsync("DeleteMeasureDimension",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.DeleteMeasureDimension"), dimension.Id), dimension);
 
             return new NullJsonResult();
         }
@@ -240,15 +240,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> MarkAsPrimaryDimension(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a dimension with the specified id
-            var dimension = await _measureService.GetMeasureDimensionByIdAsync(id)
+            var dimension = await MeasureService.GetMeasureDimensionByIdAsync(id)
                 ?? throw new ArgumentException("No dimension found with the specified id", nameof(id));
 
-            _measureSettings.BaseDimensionId = dimension.Id;
-            await _settingService.SaveSettingAsync(_measureSettings);
+            MeasureSettings.BaseDimensionId = dimension.Id;
+            await SettingService.SaveSettingAsync(MeasureSettings);
 
             return Json(new { result = true });
         }

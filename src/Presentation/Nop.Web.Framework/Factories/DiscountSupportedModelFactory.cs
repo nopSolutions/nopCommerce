@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +17,7 @@ namespace Nop.Web.Framework.Factories
 
         #region Fields
 
-        private readonly IDiscountService _discountService;
+        protected IDiscountService DiscountService { get; }
 
         #endregion
 
@@ -25,7 +25,7 @@ namespace Nop.Web.Framework.Factories
 
         public DiscountSupportedModelFactory(IDiscountService discountService)
         {
-            _discountService = discountService;
+            DiscountService = discountService;
         }
 
         #endregion
@@ -74,7 +74,7 @@ namespace Nop.Web.Framework.Factories
 
             //prepare already applied discounts
             if (!ignoreAppliedDiscounts && entity != null)
-                model.SelectedDiscountIds = (await _discountService.GetAppliedDiscountsAsync(entity)).Select(discount => discount.Id).ToList();
+                model.SelectedDiscountIds = (await DiscountService.GetAppliedDiscountsAsync(entity)).Select(discount => discount.Id).ToList();
 
             return await PrepareModelDiscountsAsync(model, availableDiscounts);
         }

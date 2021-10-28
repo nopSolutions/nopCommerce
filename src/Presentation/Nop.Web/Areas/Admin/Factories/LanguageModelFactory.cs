@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,10 +21,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
         
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ILanguageService LanguageService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
 
         #endregion
 
@@ -35,10 +35,10 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _languageService = languageService;
-            _localizationService = localizationService;
-            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            LanguageService = languageService;
+            LocalizationService = localizationService;
+            StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         }
 
         #endregion
@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get languages
-            var languages = (await _languageService.GetAllLanguagesAsync(showHidden: true)).ToPagedList(searchModel);
+            var languages = (await LanguageService.GetAllLanguagesAsync(showHidden: true)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new LanguageListModel().PrepareToGrid(searchModel, languages, () =>
@@ -139,16 +139,16 @@ namespace Nop.Web.Areas.Admin.Factories
             //set default values for the new model
             if (language == null)
             {
-                model.DisplayOrder = (await _languageService.GetAllLanguagesAsync()).Max(l => l.DisplayOrder) + 1;
+                model.DisplayOrder = (await LanguageService.GetAllLanguagesAsync()).Max(l => l.DisplayOrder) + 1;
                 model.Published = true;
             }
 
             //prepare available currencies
-            await _baseAdminModelFactory.PrepareCurrenciesAsync(model.AvailableCurrencies, 
-                defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.EmptyItemText"));
+            await BaseAdminModelFactory.PrepareCurrenciesAsync(model.AvailableCurrencies, 
+                defaultItemText: await LocalizationService.GetResourceAsync("Admin.Common.EmptyItemText"));
 
             //prepare available stores
-            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, language, excludeProperties);
+            await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(model, language, excludeProperties);
 
             return model;
         }
@@ -171,7 +171,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(language));
 
             //get locale resources
-            var localeResources = (await _localizationService.GetAllResourceValuesAsync(language.Id, loadPublicLocales: null))
+            var localeResources = (await LocalizationService.GetAllResourceValuesAsync(language.Id, loadPublicLocales: null))
                 .OrderBy(localeResource => localeResource.Key).AsQueryable();
 
             //filter locale resources

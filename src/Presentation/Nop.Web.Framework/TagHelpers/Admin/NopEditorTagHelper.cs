@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -75,7 +75,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected IHtmlHelper HtmlHelper { get; }
 
         #endregion
 
@@ -83,7 +83,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         public NopEditorTagHelper(IHtmlHelper htmlHelper)
         {
-            _htmlHelper = htmlHelper;
+            HtmlHelper = htmlHelper;
         }
 
         #endregion
@@ -128,7 +128,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             }
 
             //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
+            var viewContextAware = HtmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             //add form-control class
@@ -138,14 +138,14 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //generate editor
             var pattern = $"{nameof(ILocalizedModel<object>.Locales)}" + @"(?=\[\w+\]\.)";
-            if (!_htmlHelper.ViewData.ContainsKey(For.Name) && Regex.IsMatch(For.Name, pattern))
+            if (!HtmlHelper.ViewData.ContainsKey(For.Name) && Regex.IsMatch(For.Name, pattern))
             {
-                var prefix = _htmlHelper.ViewData.TemplateInfo.HtmlFieldPrefix;
+                var prefix = HtmlHelper.ViewData.TemplateInfo.HtmlFieldPrefix;
                 var key = string.IsNullOrEmpty(prefix) ? For.Name : $"{prefix}.{For.Name}";
-                _htmlHelper.ViewData.Add(key, For.Model);
+                HtmlHelper.ViewData.Add(key, For.Model);
             }
 
-            var htmlOutput = _htmlHelper.Editor(For.Name, Template, new { htmlAttributes, postfix = Postfix });
+            var htmlOutput = HtmlHelper.Editor(For.Name, Template, new { htmlAttributes, postfix = Postfix });
             output.Content.SetHtmlContent(htmlOutput);
 
             return Task.CompletedTask;

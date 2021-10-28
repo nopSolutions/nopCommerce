@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
@@ -68,7 +68,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected IHtmlHelper HtmlHelper { get; }
 
         #endregion
 
@@ -76,7 +76,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         public NopSelectTagHelper(IHtmlHelper htmlHelper)
         {
-            _htmlHelper = htmlHelper;
+            HtmlHelper = htmlHelper;
         }
 
         #endregion
@@ -108,7 +108,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             }
 
             //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
+            var viewContextAware = HtmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             //get htmlAttributes object
@@ -135,7 +135,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 if (multiple)
                 {
                     var templateName = For.ModelExplorer.ModelType == typeof(List<string>) ? "MultiSelectString" : "MultiSelect";
-                    selectList = _htmlHelper.Editor(tagName, templateName, new { htmlAttributes, SelectList = Items });
+                    selectList = HtmlHelper.Editor(tagName, templateName, new { htmlAttributes, SelectList = Items });
                 }
                 else
                 {
@@ -144,7 +144,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     else
                         htmlAttributes.Add("class", "form-control");
 
-                    selectList = _htmlHelper.DropDownList(tagName, Items, htmlAttributes);
+                    selectList = HtmlHelper.DropDownList(tagName, Items, htmlAttributes);
                 }
                 output.Content.SetHtmlContent(await selectList.RenderHtmlContentAsync());
             }

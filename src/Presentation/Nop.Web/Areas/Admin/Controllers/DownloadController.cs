@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +14,10 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IDownloadService _downloadService;
-        private readonly ILogger _logger;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IWorkContext _workContext;
+        protected IDownloadService DownloadService { get; }
+        protected ILogger Logger { get; }
+        protected INopFileProvider FileProvider { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -28,10 +28,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             INopFileProvider fileProvider,
             IWorkContext workContext)
         {
-            _downloadService = downloadService;
-            _logger = logger;
-            _fileProvider = fileProvider;
-            _workContext = workContext;
+            DownloadService = downloadService;
+            Logger = logger;
+            FileProvider = fileProvider;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -40,7 +40,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> DownloadFile(Guid downloadGuid)
         {
-            var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
+            var download = await DownloadService.GetDownloadByGuidAsync(downloadGuid);
             if (download == null)
                 return Content("No download record found with the specified id");
 
@@ -86,7 +86,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 DownloadUrl = downloadUrl,
                 IsNew = true
             };
-            await _downloadService.InsertDownloadAsync(download);
+            await DownloadService.InsertDownloadAsync(download);
 
             return Json(new { success = true, downloadId = download.Id });
         }
@@ -106,18 +106,18 @@ namespace Nop.Web.Areas.Admin.Controllers
                 });
             }
 
-            var fileBinary = await _downloadService.GetDownloadBitsAsync(httpPostedFile);
+            var fileBinary = await DownloadService.GetDownloadBitsAsync(httpPostedFile);
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
             if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
                 fileName = Request.Form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
-            fileName = _fileProvider.GetFileName(fileName);
+            fileName = FileProvider.GetFileName(fileName);
 
             var contentType = httpPostedFile.ContentType;
 
-            var fileExtension = _fileProvider.GetFileExtension(fileName);
+            var fileExtension = FileProvider.GetFileExtension(fileName);
             if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
@@ -129,14 +129,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 DownloadBinary = fileBinary,
                 ContentType = contentType,
                 //we store filename without extension for downloads
-                Filename = _fileProvider.GetFileNameWithoutExtension(fileName),
+                Filename = FileProvider.GetFileNameWithoutExtension(fileName),
                 Extension = fileExtension,
                 IsNew = true
             };
 
             try
             {
-                await _downloadService.InsertDownloadAsync(download);
+                await DownloadService.InsertDownloadAsync(download);
 
                 //when returning JSON the mime-type must be set to text/plain
                 //otherwise some browsers will pop-up a "Save As" dialog.
@@ -149,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                await _logger.ErrorAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
+                await Logger.ErrorAsync(exc.Message, exc, await WorkContext.GetCurrentCustomerAsync());
 
                 return Json(new
                 {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,16 +23,16 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IOrderModelFactory _orderModelFactory;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
-        private readonly IPdfService _pdfService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly RewardPointsSettings _rewardPointsSettings;
+        protected ICustomerService CustomerService { get; }
+        protected IOrderModelFactory OrderModelFactory { get; }
+        protected IOrderProcessingService OrderProcessingService { get; }
+        protected IOrderService OrderService { get; }
+        protected IPaymentService PaymentService { get; }
+        protected IPdfService PdfService { get; }
+        protected IShipmentService ShipmentService { get; }
+        protected IWebHelper WebHelper { get; }
+        protected IWorkContext WorkContext { get; }
+        protected RewardPointsSettings RewardPointsSettings { get; }
 
         #endregion
 
@@ -49,16 +49,16 @@ namespace Nop.Web.Controllers
             IWorkContext workContext,
             RewardPointsSettings rewardPointsSettings)
         {
-            _customerService = customerService;
-            _orderModelFactory = orderModelFactory;
-            _orderProcessingService = orderProcessingService;
-            _orderService = orderService;
-            _paymentService = paymentService;
-            _pdfService = pdfService;
-            _shipmentService = shipmentService;
-            _webHelper = webHelper;
-            _workContext = workContext;
-            _rewardPointsSettings = rewardPointsSettings;
+            CustomerService = customerService;
+            OrderModelFactory = orderModelFactory;
+            OrderProcessingService = orderProcessingService;
+            OrderService = orderService;
+            PaymentService = paymentService;
+            PdfService = pdfService;
+            ShipmentService = shipmentService;
+            WebHelper = webHelper;
+            WorkContext = workContext;
+            RewardPointsSettings = rewardPointsSettings;
         }
 
         #endregion
@@ -68,10 +68,10 @@ namespace Nop.Web.Controllers
         //My account / Orders
         public virtual async Task<IActionResult> CustomerOrders()
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            if (!await CustomerService.IsRegisteredAsync(await WorkContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
-            var model = await _orderModelFactory.PrepareCustomerOrderListModelAsync();
+            var model = await OrderModelFactory.PrepareCustomerOrderListModelAsync();
             return View(model);
         }
 
@@ -81,8 +81,8 @@ namespace Nop.Web.Controllers
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
         public virtual async Task<IActionResult> CancelRecurringPayment(IFormCollection form)
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _customerService.IsRegisteredAsync(customer))
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (!await CustomerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             //get recurring payment identifier
@@ -91,17 +91,17 @@ namespace Nop.Web.Controllers
                 if (formValue.StartsWith("cancelRecurringPayment", StringComparison.InvariantCultureIgnoreCase))
                     recurringPaymentId = Convert.ToInt32(formValue["cancelRecurringPayment".Length..]);
 
-            var recurringPayment = await _orderService.GetRecurringPaymentByIdAsync(recurringPaymentId);
+            var recurringPayment = await OrderService.GetRecurringPaymentByIdAsync(recurringPaymentId);
             if (recurringPayment == null)
             {
                 return RedirectToRoute("CustomerOrders");
             }
 
-            if (await _orderProcessingService.CanCancelRecurringPaymentAsync(customer, recurringPayment))
+            if (await OrderProcessingService.CanCancelRecurringPaymentAsync(customer, recurringPayment))
             {
-                var errors = await _orderProcessingService.CancelRecurringPaymentAsync(recurringPayment);
+                var errors = await OrderProcessingService.CancelRecurringPaymentAsync(recurringPayment);
 
-                var model = await _orderModelFactory.PrepareCustomerOrderListModelAsync();
+                var model = await OrderModelFactory.PrepareCustomerOrderListModelAsync();
                 model.RecurringPaymentErrors = errors;
 
                 return View(model);
@@ -116,8 +116,8 @@ namespace Nop.Web.Controllers
         [FormValueRequired(FormValueRequirement.StartsWith, "retryLastPayment")]
         public virtual async Task<IActionResult> RetryLastRecurringPayment(IFormCollection form)
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _customerService.IsRegisteredAsync(customer))
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (!await CustomerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             //get recurring payment identifier
@@ -128,15 +128,15 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerOrders");
             }
 
-            var recurringPayment = await _orderService.GetRecurringPaymentByIdAsync(recurringPaymentId);
+            var recurringPayment = await OrderService.GetRecurringPaymentByIdAsync(recurringPaymentId);
             if (recurringPayment == null)
                 return RedirectToRoute("CustomerOrders");
 
-            if (!await _orderProcessingService.CanRetryLastRecurringPaymentAsync(customer, recurringPayment))
+            if (!await OrderProcessingService.CanRetryLastRecurringPaymentAsync(customer, recurringPayment))
                 return RedirectToRoute("CustomerOrders");
 
-            var errors = await _orderProcessingService.ProcessNextRecurringPaymentAsync(recurringPayment);
-            var model = await _orderModelFactory.PrepareCustomerOrderListModelAsync();
+            var errors = await OrderProcessingService.ProcessNextRecurringPaymentAsync(recurringPayment);
+            var model = await OrderModelFactory.PrepareCustomerOrderListModelAsync();
             model.RecurringPaymentErrors = errors.ToList();
 
             return View(model);
@@ -145,38 +145,38 @@ namespace Nop.Web.Controllers
         //My account / Reward points
         public virtual async Task<IActionResult> CustomerRewardPoints(int? pageNumber)
         {
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            if (!await CustomerService.IsRegisteredAsync(await WorkContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
-            if (!_rewardPointsSettings.Enabled)
+            if (!RewardPointsSettings.Enabled)
                 return RedirectToRoute("CustomerInfo");
 
-            var model = await _orderModelFactory.PrepareCustomerRewardPointsAsync(pageNumber);
+            var model = await OrderModelFactory.PrepareCustomerRewardPointsAsync(pageNumber);
             return View(model);
         }
 
         //My account / Order details page
         public virtual async Task<IActionResult> Details(int orderId)
         {
-            var order = await _orderService.GetOrderByIdAsync(orderId);
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var order = await OrderService.GetOrderByIdAsync(orderId);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
 
             if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = await _orderModelFactory.PrepareOrderDetailsModelAsync(order);
+            var model = await OrderModelFactory.PrepareOrderDetailsModelAsync(order);
             return View(model);
         }
 
         //My account / Order details page / Print
         public virtual async Task<IActionResult> PrintOrderDetails(int orderId)
         {
-            var order = await _orderService.GetOrderByIdAsync(orderId);
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var order = await OrderService.GetOrderByIdAsync(orderId);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
             if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = await _orderModelFactory.PrepareOrderDetailsModelAsync(order);
+            var model = await OrderModelFactory.PrepareOrderDetailsModelAsync(order);
             model.PrintMode = true;
 
             return View("Details", model);
@@ -186,8 +186,8 @@ namespace Nop.Web.Controllers
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetPdfInvoice(int orderId)
         {
-            var order = await _orderService.GetOrderByIdAsync(orderId);
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var order = await OrderService.GetOrderByIdAsync(orderId);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
             if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
@@ -196,7 +196,7 @@ namespace Nop.Web.Controllers
             byte[] bytes;
             await using (var stream = new MemoryStream())
             {
-                await _pdfService.PrintOrdersToPdfAsync(stream, orders, (await _workContext.GetWorkingLanguageAsync()).Id);
+                await PdfService.PrintOrdersToPdfAsync(stream, orders, (await WorkContext.GetWorkingLanguageAsync()).Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.Id}.pdf");
@@ -205,12 +205,12 @@ namespace Nop.Web.Controllers
         //My account / Order details page / re-order
         public virtual async Task<IActionResult> ReOrder(int orderId)
         {
-            var order = await _orderService.GetOrderByIdAsync(orderId);
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var order = await OrderService.GetOrderByIdAsync(orderId);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
             if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
-            await _orderProcessingService.ReOrderAsync(order);
+            await OrderProcessingService.ReOrderAsync(order);
             return RedirectToRoute("ShoppingCart");
         }
 
@@ -220,21 +220,21 @@ namespace Nop.Web.Controllers
         [FormValueRequired("repost-payment")]
         public virtual async Task<IActionResult> RePostPayment(int orderId)
         {
-            var order = await _orderService.GetOrderByIdAsync(orderId);
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var order = await OrderService.GetOrderByIdAsync(orderId);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
             if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
-            if (!await _paymentService.CanRePostProcessPaymentAsync(order))
+            if (!await PaymentService.CanRePostProcessPaymentAsync(order))
                 return RedirectToRoute("OrderDetails", new { orderId = orderId });
 
             var postProcessPaymentRequest = new PostProcessPaymentRequest
             {
                 Order = order
             };
-            await _paymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
+            await PaymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
 
-            if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
+            if (WebHelper.IsRequestBeingRedirected || WebHelper.IsPostBeingDone)
             {
                 //redirection or POST has been done in PostProcessPayment
                 return Content("Redirected");
@@ -248,17 +248,17 @@ namespace Nop.Web.Controllers
         //My account / Order details page / Shipment details page
         public virtual async Task<IActionResult> ShipmentDetails(int shipmentId)
         {
-            var shipment = await _shipmentService.GetShipmentByIdAsync(shipmentId);
+            var shipment = await ShipmentService.GetShipmentByIdAsync(shipmentId);
             if (shipment == null)
                 return Challenge();
 
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var order = await OrderService.GetOrderByIdAsync(shipment.OrderId);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
 
             if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = await _orderModelFactory.PrepareShipmentDetailsModelAsync(shipment);
+            var model = await OrderModelFactory.PrepareShipmentDetailsModelAsync(shipment);
             return View(model);
         }
         

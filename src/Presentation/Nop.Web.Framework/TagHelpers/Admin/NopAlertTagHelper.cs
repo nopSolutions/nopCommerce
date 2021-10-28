@@ -49,7 +49,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected IHtmlHelper HtmlHelper { get; }
 
         #endregion
 
@@ -58,7 +58,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         public NopAlertTagHelper(IHtmlGenerator generator, IHtmlHelper htmlHelper)
         {
             Generator = generator;
-            _htmlHelper = htmlHelper;
+            HtmlHelper = htmlHelper;
         }
 
         #endregion
@@ -80,7 +80,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 throw new ArgumentNullException(nameof(output));
 
             //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
+            var viewContextAware = HtmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             var modalId = await new HtmlString(AlertId + "-action-alert").RenderHtmlContentAsync();
@@ -102,7 +102,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             output.Attributes.Add("role", "dialog");
             output.Attributes.Add("aria-labelledby", $"{modalId}-title");
 
-            var partialView = await _htmlHelper.PartialAsync("Alert", actionAlertModel);
+            var partialView = await HtmlHelper.PartialAsync("Alert", actionAlertModel);
             output.Content.SetHtmlContent(partialView);
 
             //modal script

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -19,13 +19,13 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IForumService _forumService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected CustomerSettings CustomerSettings { get; }
+        protected ForumSettings ForumSettings { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IForumService ForumService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -39,13 +39,13 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            _customerSettings = customerSettings;
-            _forumSettings = forumSettings;
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _forumService = forumService;
-            _storeContext = storeContext;
-            _workContext = workContext;
+            CustomerSettings = customerSettings;
+            ForumSettings = forumSettings;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            ForumService = forumService;
+            StoreContext = storeContext;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -115,12 +115,12 @@ namespace Nop.Web.Factories
                 page -= 1;
             }
 
-            var pageSize = _forumSettings.PrivateMessagesPageSize;
+            var pageSize = ForumSettings.PrivateMessagesPageSize;
 
             var messages = new List<PrivateMessageModel>();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var list = await _forumService.GetAllPrivateMessagesAsync(store.Id,
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var list = await ForumService.GetAllPrivateMessagesAsync(store.Id,
                 0, customer.Id, null, null, false, string.Empty, page, pageSize);
             
             foreach (var pm in list)
@@ -162,12 +162,12 @@ namespace Nop.Web.Factories
                 page -= 1;
             }
 
-            var pageSize = _forumSettings.PrivateMessagesPageSize;
+            var pageSize = ForumSettings.PrivateMessagesPageSize;
 
             var messages = new List<PrivateMessageModel>();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var list = await _forumService.GetAllPrivateMessagesAsync(store.Id,
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var list = await ForumService.GetAllPrivateMessagesAsync(store.Id,
                 customer.Id, 0, null, false, null, string.Empty, page, pageSize);
             foreach (var pm in list)
                 messages.Add(await PreparePrivateMessageModelAsync(pm));
@@ -209,14 +209,14 @@ namespace Nop.Web.Factories
             var model = new SendPrivateMessageModel
             {
                 ToCustomerId = customerTo.Id,
-                CustomerToName = await _customerService.FormatUsernameAsync(customerTo),
-                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(customerTo)
+                CustomerToName = await CustomerService.FormatUsernameAsync(customerTo),
+                AllowViewingToProfile = CustomerSettings.AllowViewingProfiles && !await CustomerService.IsGuestAsync(customerTo)
             };
 
             if (replyToPM == null)
                 return model;
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
             if (replyToPM.ToCustomerId == customer.Id ||
                 replyToPM.FromCustomerId == customer.Id)
             {
@@ -240,21 +240,21 @@ namespace Nop.Web.Factories
             if (pm == null)
                 throw new ArgumentNullException(nameof(pm));
 
-            var fromCustomer = await _customerService.GetCustomerByIdAsync(pm.FromCustomerId);
-            var toCustomer = await _customerService.GetCustomerByIdAsync(pm.ToCustomerId);
+            var fromCustomer = await CustomerService.GetCustomerByIdAsync(pm.FromCustomerId);
+            var toCustomer = await CustomerService.GetCustomerByIdAsync(pm.ToCustomerId);
 
             var model = new PrivateMessageModel
             {
                 Id = pm.Id,
                 FromCustomerId = pm.FromCustomerId,
-                CustomerFromName = await _customerService.FormatUsernameAsync(fromCustomer),
-                AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(fromCustomer),
+                CustomerFromName = await CustomerService.FormatUsernameAsync(fromCustomer),
+                AllowViewingFromProfile = CustomerSettings.AllowViewingProfiles && !await CustomerService.IsGuestAsync(fromCustomer),
                 ToCustomerId = pm.ToCustomerId,
-                CustomerToName = await _customerService.FormatUsernameAsync(toCustomer),
-                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(toCustomer),
+                CustomerToName = await CustomerService.FormatUsernameAsync(toCustomer),
+                AllowViewingToProfile = CustomerSettings.AllowViewingProfiles && !await CustomerService.IsGuestAsync(toCustomer),
                 Subject = pm.Subject,
-                Message = _forumService.FormatPrivateMessageText(pm),
-                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(pm.CreatedOnUtc, DateTimeKind.Utc),
+                Message = ForumService.FormatPrivateMessageText(pm),
+                CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(pm.CreatedOnUtc, DateTimeKind.Utc),
                 IsRead = pm.IsRead,
             };
 

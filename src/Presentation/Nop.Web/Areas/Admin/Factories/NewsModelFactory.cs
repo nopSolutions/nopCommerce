@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -27,16 +27,16 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsService _newsService;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IStoreService _storeService;
-        private readonly IUrlRecordService _urlRecordService;
+        protected CatalogSettings CatalogSettings { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected ILanguageService LanguageService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected INewsService NewsService { get; }
+        protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
+        protected IStoreService StoreService { get; }
+        protected IUrlRecordService UrlRecordService { get; }
 
         #endregion
 
@@ -53,16 +53,16 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreService storeService,
             IUrlRecordService urlRecordService)
         {
-            _catalogSettings = catalogSettings;
-            _customerService = customerService;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _dateTimeHelper = dateTimeHelper;
-            _languageService = languageService;
-            _localizationService = localizationService;
-            _newsService = newsService;
-            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            _storeService = storeService;
-            _urlRecordService = urlRecordService;
+            CatalogSettings = catalogSettings;
+            CustomerService = customerService;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            DateTimeHelper = dateTimeHelper;
+            LanguageService = languageService;
+            LocalizationService = localizationService;
+            NewsService = newsService;
+            StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            StoreService = storeService;
+            UrlRecordService = urlRecordService;
         }
 
         #endregion
@@ -85,7 +85,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare nested search models
             await PrepareNewsItemSearchModelAsync(newsContentModel.NewsItems);
-            var newsItem = await _newsService.GetNewsByIdAsync(filterByNewsItemId ?? 0);
+            var newsItem = await NewsService.GetNewsByIdAsync(filterByNewsItemId ?? 0);
             await PrepareNewsCommentSearchModelAsync(newsContentModel.NewsComments, newsItem);
 
             return newsContentModel;
@@ -105,7 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get news items
-            var newsItems = await _newsService.GetAllNewsAsync(showHidden: true,
+            var newsItems = await NewsService.GetAllNewsAsync(showHidden: true,
                 storeId: searchModel.SearchStoreId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
                 title: searchModel.SearchTitle);
@@ -123,16 +123,16 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //convert dates to the user time
                     if (newsItem.StartDateUtc.HasValue)
-                        newsItemModel.StartDateUtc = await _dateTimeHelper.ConvertToUserTimeAsync(newsItem.StartDateUtc.Value, DateTimeKind.Utc);
+                        newsItemModel.StartDateUtc = await DateTimeHelper.ConvertToUserTimeAsync(newsItem.StartDateUtc.Value, DateTimeKind.Utc);
                     if (newsItem.EndDateUtc.HasValue)
-                        newsItemModel.EndDateUtc = await _dateTimeHelper.ConvertToUserTimeAsync(newsItem.EndDateUtc.Value, DateTimeKind.Utc);
-                    newsItemModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsItem.CreatedOnUtc, DateTimeKind.Utc);
+                        newsItemModel.EndDateUtc = await DateTimeHelper.ConvertToUserTimeAsync(newsItem.EndDateUtc.Value, DateTimeKind.Utc);
+                    newsItemModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(newsItem.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    newsItemModel.SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, true, false);
-                    newsItemModel.LanguageName = (await _languageService.GetLanguageByIdAsync(newsItem.LanguageId))?.Name;
-                    newsItemModel.ApprovedComments = await _newsService.GetNewsCommentsCountAsync(newsItem, isApproved: true);
-                    newsItemModel.NotApprovedComments = await _newsService.GetNewsCommentsCountAsync(newsItem, isApproved: false);
+                    newsItemModel.SeName = await UrlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, true, false);
+                    newsItemModel.LanguageName = (await LanguageService.GetLanguageByIdAsync(newsItem.LanguageId))?.Name;
+                    newsItemModel.ApprovedComments = await NewsService.GetNewsCommentsCountAsync(newsItem, isApproved: true);
+                    newsItemModel.NotApprovedComments = await NewsService.GetNewsCommentsCountAsync(newsItem, isApproved: false);
 
                     return newsItemModel;
                 });
@@ -159,7 +159,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (model == null)
                 {
                     model = newsItem.ToModel<NewsItemModel>();
-                    model.SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, true, false);
+                    model.SeName = await UrlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, true, false);
                 }
 
                 model.StartDateUtc = newsItem.StartDateUtc;
@@ -174,10 +174,10 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available languages
-            await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
+            await BaseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
 
             //prepare available stores
-            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, newsItem, excludeProperties);
+            await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(model, newsItem, excludeProperties);
 
             return model;
         }
@@ -199,17 +199,17 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare "approved" property (0 - all; 1 - approved only; 2 - disapproved only)
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResourceAsync("Admin.ContentManagement.News.Comments.List.SearchApproved.All"),
+                Text = await LocalizationService.GetResourceAsync("Admin.ContentManagement.News.Comments.List.SearchApproved.All"),
                 Value = "0"
             });
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResourceAsync("Admin.ContentManagement.News.Comments.List.SearchApproved.ApprovedOnly"),
+                Text = await LocalizationService.GetResourceAsync("Admin.ContentManagement.News.Comments.List.SearchApproved.ApprovedOnly"),
                 Value = "1"
             });
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResourceAsync("Admin.ContentManagement.News.Comments.List.SearchApproved.DisapprovedOnly"),
+                Text = await LocalizationService.GetResourceAsync("Admin.ContentManagement.News.Comments.List.SearchApproved.DisapprovedOnly"),
                 Value = "2"
             });
 
@@ -237,20 +237,20 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get parameters to filter comments
             var createdOnFromValue = searchModel.CreatedOnFrom == null ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, await DateTimeHelper.GetCurrentTimeZoneAsync());
             var createdOnToValue = searchModel.CreatedOnTo == null ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var isApprovedOnly = searchModel.SearchApprovedId == 0 ? null : searchModel.SearchApprovedId == 1 ? true : (bool?)false;
 
             //get comments
-            var comments = (await _newsService.GetAllCommentsAsync(newsItemId: newsItemId,
+            var comments = (await NewsService.GetAllCommentsAsync(newsItemId: newsItemId,
                 approved: isApprovedOnly,
                 fromUtc: createdOnFromValue,
                 toUtc: createdOnToValue,
                 commentText: searchModel.SearchText)).ToPagedList(searchModel);
 
             //prepare store names (to avoid loading for each comment)
-            var storeNames = (await _storeService.GetAllStoresAsync())
+            var storeNames = (await StoreService.GetAllStoresAsync())
                 .ToDictionary(store => store.Id, store => store.Name);
 
             //prepare list model
@@ -262,16 +262,16 @@ namespace Nop.Web.Areas.Admin.Factories
                     var commentModel = newsComment.ToModel<NewsCommentModel>();
 
                     //convert dates to the user time
-                    commentModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsComment.CreatedOnUtc, DateTimeKind.Utc);
+                    commentModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(newsComment.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    commentModel.NewsItemTitle = (await _newsService.GetNewsByIdAsync(newsComment.NewsItemId))?.Title;
+                    commentModel.NewsItemTitle = (await NewsService.GetNewsByIdAsync(newsComment.NewsItemId))?.Title;
 
-                    if ((await _customerService.GetCustomerByIdAsync(newsComment.CustomerId)) is Customer customer)
+                    if ((await CustomerService.GetCustomerByIdAsync(newsComment.CustomerId)) is Customer customer)
                     {
-                        commentModel.CustomerInfo = (await _customerService.IsRegisteredAsync(customer))
+                        commentModel.CustomerInfo = (await CustomerService.IsRegisteredAsync(customer))
                             ? customer.Email
-                            : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
+                            : await LocalizationService.GetResourceAsync("Admin.Customers.Guest");
                     }
 
                     commentModel.CommentText = HtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
@@ -298,9 +298,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+            searchModel.HideStoresList = CatalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();

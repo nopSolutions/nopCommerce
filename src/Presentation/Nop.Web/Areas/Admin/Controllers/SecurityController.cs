@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,13 +20,13 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISecurityModelFactory _securityModelFactory;
-        private readonly IWorkContext _workContext;
+        protected ICustomerService CustomerService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILogger Logger { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected ISecurityModelFactory SecurityModelFactory { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -40,13 +40,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISecurityModelFactory securityModelFactory,
             IWorkContext workContext)
         {
-            _customerService = customerService;
-            _localizationService = localizationService;
-            _logger = logger;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
-            _securityModelFactory = securityModelFactory;
-            _workContext = workContext;
+            CustomerService = customerService;
+            LocalizationService = localizationService;
+            Logger = logger;
+            NotificationService = notificationService;
+            PermissionService = permissionService;
+            SecurityModelFactory = securityModelFactory;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -55,25 +55,25 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> AccessDenied(string pageUrl)
         {
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-            if (currentCustomer == null || await _customerService.IsGuestAsync(currentCustomer))
+            var currentCustomer = await WorkContext.GetCurrentCustomerAsync();
+            if (currentCustomer == null || await CustomerService.IsGuestAsync(currentCustomer))
             {
-                await _logger.InformationAsync($"Access denied to anonymous request on {pageUrl}");
+                await Logger.InformationAsync($"Access denied to anonymous request on {pageUrl}");
                 return View();
             }
 
-            await _logger.InformationAsync($"Access denied to user #{currentCustomer.Email} '{currentCustomer.Email}' on {pageUrl}");
+            await Logger.InformationAsync($"Access denied to user #{currentCustomer.Email} '{currentCustomer.Email}' on {pageUrl}");
 
             return View();
         }
 
         public virtual async Task<IActionResult> Permissions()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _securityModelFactory.PreparePermissionMappingModelAsync(new PermissionMappingModel());
+            var model = await SecurityModelFactory.PreparePermissionMappingModelAsync(new PermissionMappingModel());
 
             return View(model);
         }
@@ -81,11 +81,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ActionName("Permissions")]
         public virtual async Task<IActionResult> PermissionsSave(PermissionMappingModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
-            var permissionRecords = await _permissionService.GetAllPermissionRecordsAsync();
-            var customerRoles = await _customerService.GetAllCustomerRolesAsync(true);
+            var permissionRecords = await PermissionService.GetAllPermissionRecordsAsync();
+            var customerRoles = await CustomerService.GetAllCustomerRolesAsync(true);
 
             var form = model.Form;
 
@@ -100,23 +100,23 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     var allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
 
-                    if (allow == await _permissionService.AuthorizeAsync(pr.SystemName, cr.Id))
+                    if (allow == await PermissionService.AuthorizeAsync(pr.SystemName, cr.Id))
                         continue;
 
                     if (allow)
                     {
-                        await _permissionService.InsertPermissionRecordCustomerRoleMappingAsync(new PermissionRecordCustomerRoleMapping { PermissionRecordId = pr.Id, CustomerRoleId = cr.Id });
+                        await PermissionService.InsertPermissionRecordCustomerRoleMappingAsync(new PermissionRecordCustomerRoleMapping { PermissionRecordId = pr.Id, CustomerRoleId = cr.Id });
                     }
                     else
                     {
-                        await _permissionService.DeletePermissionRecordCustomerRoleMappingAsync(pr.Id, cr.Id);                        
+                        await PermissionService.DeletePermissionRecordCustomerRoleMappingAsync(pr.Id, cr.Id);                        
                     }
 
-                    await _permissionService.UpdatePermissionRecordAsync(pr);
+                    await PermissionService.UpdatePermissionRecordAsync(pr);
                 }
             }
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.ACL.Updated"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.ACL.Updated"));
 
             return RedirectToAction("Permissions");
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -17,11 +17,11 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IActivityLogModelFactory _activityLogModelFactory;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly INotificationService _notificationService;
+        protected IActivityLogModelFactory ActivityLogModelFactory { get; }
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected INotificationService NotificationService { get; }
 
         #endregion
 
@@ -33,11 +33,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            _activityLogModelFactory = activityLogModelFactory;
-            _customerActivityService = customerActivityService;
-            _localizationService = localizationService;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
+            ActivityLogModelFactory = activityLogModelFactory;
+            CustomerActivityService = customerActivityService;
+            LocalizationService = localizationService;
+            NotificationService = notificationService;
+            PermissionService = permissionService;
         }
 
         #endregion
@@ -46,11 +46,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ActivityTypes()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _activityLogModelFactory.PrepareActivityLogTypeSearchModelAsync(new ActivityLogTypeSearchModel());
+            var model = await ActivityLogModelFactory.PrepareActivityLogTypeSearchModelAsync(new ActivityLogTypeSearchModel());
 
             return View(model);
         }
@@ -58,11 +58,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ActionName("SaveTypes")]
         public virtual async Task<IActionResult> SaveTypes(IFormCollection form)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("EditActivityLogTypes", await _localizationService.GetResourceAsync("ActivityLog.EditActivityLogTypes"));
+            await CustomerActivityService.InsertActivityAsync("EditActivityLogTypes", await LocalizationService.GetResourceAsync("ActivityLog.EditActivityLogTypes"));
 
             //get identifiers of selected activity types
             var selectedActivityTypesIds = form["checkbox_activity_types"]
@@ -71,25 +71,25 @@ namespace Nop.Web.Areas.Admin.Controllers
                 .Distinct().ToList();
 
             //update activity types
-            var activityTypes = await _customerActivityService.GetAllActivityTypesAsync();
+            var activityTypes = await CustomerActivityService.GetAllActivityTypesAsync();
             foreach (var activityType in activityTypes)
             {
                 activityType.Enabled = selectedActivityTypesIds.Contains(activityType.Id);
-                await _customerActivityService.UpdateActivityTypeAsync(activityType);
+                await CustomerActivityService.UpdateActivityTypeAsync(activityType);
             }
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.ActivityLogType.Updated"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Customers.ActivityLogType.Updated"));
 
             return RedirectToAction("ActivityTypes");
         }
 
         public virtual async Task<IActionResult> ActivityLogs()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _activityLogModelFactory.PrepareActivityLogSearchModelAsync(new ActivityLogSearchModel());
+            var model = await ActivityLogModelFactory.PrepareActivityLogSearchModelAsync(new ActivityLogSearchModel());
 
             return View(model);
         }
@@ -97,11 +97,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ListLogs(ActivityLogSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _activityLogModelFactory.PrepareActivityLogListModelAsync(searchModel);
+            var model = await ActivityLogModelFactory.PrepareActivityLogListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -109,18 +109,18 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ActivityLogDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
             //try to get a log item with the specified id
-            var logItem = await _customerActivityService.GetActivityByIdAsync(id)
+            var logItem = await CustomerActivityService.GetActivityByIdAsync(id)
                 ?? throw new ArgumentException("No activity log found with the specified id", nameof(id));
 
-            await _customerActivityService.DeleteActivityAsync(logItem);
+            await CustomerActivityService.DeleteActivityAsync(logItem);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteActivityLog",
-                await _localizationService.GetResourceAsync("ActivityLog.DeleteActivityLog"), logItem);
+            await CustomerActivityService.InsertActivityAsync("DeleteActivityLog",
+                await LocalizationService.GetResourceAsync("ActivityLog.DeleteActivityLog"), logItem);
 
             return new NullJsonResult();
         }
@@ -128,13 +128,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ClearAll()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
-            await _customerActivityService.ClearAllActivitiesAsync();
+            await CustomerActivityService.ClearAllActivitiesAsync();
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteActivityLog", await _localizationService.GetResourceAsync("ActivityLog.DeleteActivityLog"));
+            await CustomerActivityService.InsertActivityAsync("DeleteActivityLog", await LocalizationService.GetResourceAsync("ActivityLog.DeleteActivityLog"));
 
             return RedirectToAction("ActivityLogs");
         }

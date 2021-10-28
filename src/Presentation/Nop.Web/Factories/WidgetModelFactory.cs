@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
@@ -19,12 +19,12 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IThemeContext _themeContext;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
+        protected ICustomerService CustomerService { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IThemeContext ThemeContext { get; }
+        protected IWidgetPluginManager WidgetPluginManager { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -37,12 +37,12 @@ namespace Nop.Web.Factories
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext)
         {
-            _customerService = customerService;
-            _staticCacheManager = staticCacheManager;
-            _storeContext = storeContext;
-            _themeContext = themeContext;
-            _widgetPluginManager = widgetPluginManager;
-            _workContext = workContext;
+            CustomerService = customerService;
+            StaticCacheManager = staticCacheManager;
+            StoreContext = storeContext;
+            ThemeContext = themeContext;
+            WidgetPluginManager = widgetPluginManager;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -60,16 +60,16 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<List<RenderWidgetModel>> PrepareRenderWidgetModelAsync(string widgetZone, object additionalData = null)
         {
-            var theme = await _themeContext.GetWorkingThemeNameAsync();
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var theme = await ThemeContext.GetWorkingThemeNameAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var customerRoleIds = await CustomerService.GetCustomerRoleIdsAsync(customer);
+            var store = await StoreContext.GetCurrentStoreAsync();
 
-            var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.WidgetModelKey,
+            var cacheKey = StaticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.WidgetModelKey,
                 customerRoleIds, store, widgetZone, theme);
 
-            var cachedModels = await _staticCacheManager.GetAsync(cacheKey, async () =>
-                (await _widgetPluginManager.LoadActivePluginsAsync(customer, store.Id, widgetZone))
+            var cachedModels = await StaticCacheManager.GetAsync(cacheKey, async () =>
+                (await WidgetPluginManager.LoadActivePluginsAsync(customer, store.Id, widgetZone))
                 .Select(widget => new RenderWidgetModel
                 {
                     WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -14,9 +14,9 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected IAuthenticationPluginManager AuthenticationPluginManager { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -26,9 +26,9 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            _authenticationPluginManager = authenticationPluginManager;
-            _storeContext = storeContext;
-            _workContext = workContext;
+            AuthenticationPluginManager = authenticationPluginManager;
+            StoreContext = storeContext;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -44,10 +44,10 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<List<ExternalAuthenticationMethodModel>> PrepareExternalMethodsModelAsync()
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
 
-            return (await _authenticationPluginManager
-                .LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), store.Id))
+            return (await AuthenticationPluginManager
+                .LoadActivePluginsAsync(await WorkContext.GetCurrentCustomerAsync(), store.Id))
                 .Select(authenticationMethod => new ExternalAuthenticationMethodModel
                 {
                     ViewComponentName = authenticationMethod.GetPublicViewComponentName()

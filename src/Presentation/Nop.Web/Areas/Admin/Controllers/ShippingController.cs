@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,23 +32,23 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly ISettingService _settingService;
-        private readonly IShippingModelFactory _shippingModelFactory;
-        private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IShippingService _shippingService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly ShippingSettings _shippingSettings;
+        protected IAddressService AddressService { get; }
+        protected ICountryService CountryService { get; }
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected IDateRangeService DateRangeService { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedEntityService LocalizedEntityService { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IPickupPluginManager PickupPluginManager { get; }
+        protected ISettingService SettingService { get; }
+        protected IShippingModelFactory ShippingModelFactory { get; }
+        protected IShippingPluginManager ShippingPluginManager { get; }
+        protected IShippingService ShippingService { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected ShippingSettings ShippingSettings { get; }
 
         #endregion
 
@@ -72,23 +72,23 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             ShippingSettings shippingSettings)
         {
-            _addressService = addressService;
-            _countryService = countryService;
-            _customerActivityService = customerActivityService;
-            _dateRangeService = dateRangeService;
-            _eventPublisher = eventPublisher;
-            _localizationService = localizationService;
-            _localizedEntityService = localizedEntityService;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
-            _pickupPluginManager = pickupPluginManager;
-            _settingService = settingService;
-            _shippingModelFactory = shippingModelFactory;
-            _shippingPluginManager = shippingPluginManager;
-            _shippingService = shippingService;
-            _genericAttributeService = genericAttributeService;
-            _workContext = workContext;
-            _shippingSettings = shippingSettings;
+            AddressService = addressService;
+            CountryService = countryService;
+            CustomerActivityService = customerActivityService;
+            DateRangeService = dateRangeService;
+            EventPublisher = eventPublisher;
+            LocalizationService = localizationService;
+            LocalizedEntityService = localizedEntityService;
+            NotificationService = notificationService;
+            PermissionService = permissionService;
+            PickupPluginManager = pickupPluginManager;
+            SettingService = settingService;
+            ShippingModelFactory = shippingModelFactory;
+            ShippingPluginManager = shippingPluginManager;
+            ShippingService = shippingService;
+            GenericAttributeService = genericAttributeService;
+            WorkContext = workContext;
+            ShippingSettings = shippingSettings;
         }
 
         #endregion
@@ -99,8 +99,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValueAsync(shippingMethod, x => x.Name, localized.Name, localized.LanguageId);
-                await _localizedEntityService.SaveLocalizedValueAsync(shippingMethod, x => x.Description, localized.Description, localized.LanguageId);
+                await LocalizedEntityService.SaveLocalizedValueAsync(shippingMethod, x => x.Name, localized.Name, localized.LanguageId);
+                await LocalizedEntityService.SaveLocalizedValueAsync(shippingMethod, x => x.Description, localized.Description, localized.LanguageId);
             }
         }
 
@@ -108,7 +108,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValueAsync(deliveryDate, x => x.Name, localized.Name, localized.LanguageId);
+                await LocalizedEntityService.SaveLocalizedValueAsync(deliveryDate, x => x.Name, localized.Name, localized.LanguageId);
             }
         }
 
@@ -116,7 +116,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValueAsync(productAvailabilityRange, x => x.Name, localized.Name, localized.LanguageId);
+                await LocalizedEntityService.SaveLocalizedValueAsync(productAvailabilityRange, x => x.Name, localized.Name, localized.LanguageId);
             }
         }
 
@@ -126,18 +126,18 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Providers(bool showtour = false)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareShippingProviderSearchModelAsync(new ShippingProviderSearchModel());
+            var model = await ShippingModelFactory.PrepareShippingProviderSearchModelAsync(new ShippingProviderSearchModel());
 
             //show configuration tour
             if (showtour)
             {
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                var hideCard = await GenericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
+                var closeCard = await GenericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
 
                 if (!hideCard && !closeCard)
                     ViewBag.ShowTour = true;
@@ -149,11 +149,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Providers(ShippingProviderSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareShippingProviderListModelAsync(searchModel);
+            var model = await ShippingModelFactory.PrepareShippingProviderListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -161,17 +161,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProviderUpdate(ShippingProviderModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var srcm = await _shippingPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
-            if (_shippingPluginManager.IsPluginActive(srcm))
+            var srcm = await ShippingPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
+            if (ShippingPluginManager.IsPluginActive(srcm))
             {
                 if (!model.IsActive)
                 {
                     //mark as disabled
-                    _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Remove(srcm.PluginDescriptor.SystemName);
-                    await _settingService.SaveSettingAsync(_shippingSettings);
+                    ShippingSettings.ActiveShippingRateComputationMethodSystemNames.Remove(srcm.PluginDescriptor.SystemName);
+                    await SettingService.SaveSettingAsync(ShippingSettings);
                 }
             }
             else
@@ -179,8 +179,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.IsActive)
                 {
                     //mark as active
-                    _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(srcm.PluginDescriptor.SystemName);
-                    await _settingService.SaveSettingAsync(_shippingSettings);
+                    ShippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(srcm.PluginDescriptor.SystemName);
+                    await SettingService.SaveSettingAsync(ShippingSettings);
                 }
             }
 
@@ -193,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //raise event
-            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
+            await EventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }
@@ -204,11 +204,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> PickupPointProviders()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _shippingModelFactory.PreparePickupPointProviderSearchModelAsync(new PickupPointProviderSearchModel());
+            var model = await ShippingModelFactory.PreparePickupPointProviderSearchModelAsync(new PickupPointProviderSearchModel());
 
             return View(model);
         }
@@ -216,11 +216,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PickupPointProviders(PickupPointProviderSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _shippingModelFactory.PreparePickupPointProviderListModelAsync(searchModel);
+            var model = await ShippingModelFactory.PreparePickupPointProviderListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -228,17 +228,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PickupPointProviderUpdate(PickupPointProviderModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var pickupPointProvider = await _pickupPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
-            if (_pickupPluginManager.IsPluginActive(pickupPointProvider))
+            var pickupPointProvider = await PickupPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
+            if (PickupPluginManager.IsPluginActive(pickupPointProvider))
             {
                 if (!model.IsActive)
                 {
                     //mark as disabled
-                    _shippingSettings.ActivePickupPointProviderSystemNames.Remove(pickupPointProvider.PluginDescriptor.SystemName);
-                    await _settingService.SaveSettingAsync(_shippingSettings);
+                    ShippingSettings.ActivePickupPointProviderSystemNames.Remove(pickupPointProvider.PluginDescriptor.SystemName);
+                    await SettingService.SaveSettingAsync(ShippingSettings);
                 }
             }
             else
@@ -246,8 +246,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.IsActive)
                 {
                     //mark as active
-                    _shippingSettings.ActivePickupPointProviderSystemNames.Add(pickupPointProvider.PluginDescriptor.SystemName);
-                    await _settingService.SaveSettingAsync(_shippingSettings);
+                    ShippingSettings.ActivePickupPointProviderSystemNames.Add(pickupPointProvider.PluginDescriptor.SystemName);
+                    await SettingService.SaveSettingAsync(ShippingSettings);
                 }
             }
 
@@ -258,7 +258,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //raise event
-            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
+            await EventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }
@@ -269,11 +269,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Methods()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareShippingMethodSearchModelAsync(new ShippingMethodSearchModel());
+            var model = await ShippingModelFactory.PrepareShippingMethodSearchModelAsync(new ShippingMethodSearchModel());
 
             return View(model);
         }
@@ -281,22 +281,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Methods(ShippingMethodSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareShippingMethodListModelAsync(searchModel);
+            var model = await ShippingModelFactory.PrepareShippingMethodListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> CreateMethod()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareShippingMethodModelAsync(new ShippingMethodModel(), null);
+            var model = await ShippingModelFactory.PrepareShippingMethodModelAsync(new ShippingMethodModel(), null);
 
             return View(model);
         }
@@ -304,23 +304,23 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> CreateMethod(ShippingMethodModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var sm = model.ToEntity<ShippingMethod>();
-                await _shippingService.InsertShippingMethodAsync(sm);
+                await ShippingService.InsertShippingMethodAsync(sm);
 
                 //locales
                 await UpdateLocalesAsync(sm, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Methods.Added"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.Methods.Added"));
                 return continueEditing ? RedirectToAction("EditMethod", new { id = sm.Id }) : RedirectToAction("Methods");
             }
 
             //prepare model
-            model = await _shippingModelFactory.PrepareShippingMethodModelAsync(model, null, true);
+            model = await ShippingModelFactory.PrepareShippingMethodModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -328,16 +328,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> EditMethod(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a shipping method with the specified id
-            var shippingMethod = await _shippingService.GetShippingMethodByIdAsync(id);
+            var shippingMethod = await ShippingService.GetShippingMethodByIdAsync(id);
             if (shippingMethod == null)
                 return RedirectToAction("Methods");
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareShippingMethodModelAsync(null, shippingMethod);
+            var model = await ShippingModelFactory.PrepareShippingMethodModelAsync(null, shippingMethod);
 
             return View(model);
         }
@@ -345,29 +345,29 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> EditMethod(ShippingMethodModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a shipping method with the specified id
-            var shippingMethod = await _shippingService.GetShippingMethodByIdAsync(model.Id);
+            var shippingMethod = await ShippingService.GetShippingMethodByIdAsync(model.Id);
             if (shippingMethod == null)
                 return RedirectToAction("Methods");
 
             if (ModelState.IsValid)
             {
                 shippingMethod = model.ToEntity(shippingMethod);
-                await _shippingService.UpdateShippingMethodAsync(shippingMethod);
+                await ShippingService.UpdateShippingMethodAsync(shippingMethod);
 
                 //locales
                 await UpdateLocalesAsync(shippingMethod, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Methods.Updated"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.Methods.Updated"));
 
                 return continueEditing ? RedirectToAction("EditMethod", shippingMethod.Id) : RedirectToAction("Methods");
             }
 
             //prepare model
-            model = await _shippingModelFactory.PrepareShippingMethodModelAsync(model, shippingMethod, true);
+            model = await ShippingModelFactory.PrepareShippingMethodModelAsync(model, shippingMethod, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -376,17 +376,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteMethod(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a shipping method with the specified id
-            var shippingMethod = await _shippingService.GetShippingMethodByIdAsync(id);
+            var shippingMethod = await ShippingService.GetShippingMethodByIdAsync(id);
             if (shippingMethod == null)
                 return RedirectToAction("Methods");
 
-            await _shippingService.DeleteShippingMethodAsync(shippingMethod);
+            await ShippingService.DeleteShippingMethodAsync(shippingMethod);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Methods.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.Methods.Deleted"));
 
             return RedirectToAction("Methods");
         }
@@ -397,11 +397,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> DatesAndRanges()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareDatesRangesSearchModelAsync(new DatesRangesSearchModel());
+            var model = await ShippingModelFactory.PrepareDatesRangesSearchModelAsync(new DatesRangesSearchModel());
 
             return View(model);
         }
@@ -413,22 +413,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeliveryDates(DeliveryDateSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareDeliveryDateListModelAsync(searchModel);
+            var model = await ShippingModelFactory.PrepareDeliveryDateListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> CreateDeliveryDate()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareDeliveryDateModelAsync(new DeliveryDateModel(), null);
+            var model = await ShippingModelFactory.PrepareDeliveryDateModelAsync(new DeliveryDateModel(), null);
 
             return View(model);
         }
@@ -436,24 +436,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> CreateDeliveryDate(DeliveryDateModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var deliveryDate = model.ToEntity<DeliveryDate>();
-                await _dateRangeService.InsertDeliveryDateAsync(deliveryDate);
+                await DateRangeService.InsertDeliveryDateAsync(deliveryDate);
 
                 //locales
                 await UpdateLocalesAsync(deliveryDate, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.DeliveryDates.Added"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.DeliveryDates.Added"));
 
                 return continueEditing ? RedirectToAction("EditDeliveryDate", new { id = deliveryDate.Id }) : RedirectToAction("DatesAndRanges");
             }
 
             //prepare model
-            model = await _shippingModelFactory.PrepareDeliveryDateModelAsync(model, null, true);
+            model = await ShippingModelFactory.PrepareDeliveryDateModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -461,16 +461,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> EditDeliveryDate(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a delivery date with the specified id
-            var deliveryDate = await _dateRangeService.GetDeliveryDateByIdAsync(id);
+            var deliveryDate = await DateRangeService.GetDeliveryDateByIdAsync(id);
             if (deliveryDate == null)
                 return RedirectToAction("DatesAndRanges");
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareDeliveryDateModelAsync(null, deliveryDate);
+            var model = await ShippingModelFactory.PrepareDeliveryDateModelAsync(null, deliveryDate);
 
             return View(model);
         }
@@ -478,29 +478,29 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> EditDeliveryDate(DeliveryDateModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a delivery date with the specified id
-            var deliveryDate = await _dateRangeService.GetDeliveryDateByIdAsync(model.Id);
+            var deliveryDate = await DateRangeService.GetDeliveryDateByIdAsync(model.Id);
             if (deliveryDate == null)
                 return RedirectToAction("DatesAndRanges");
 
             if (ModelState.IsValid)
             {
                 deliveryDate = model.ToEntity(deliveryDate);
-                await _dateRangeService.UpdateDeliveryDateAsync(deliveryDate);
+                await DateRangeService.UpdateDeliveryDateAsync(deliveryDate);
 
                 //locales
                 await UpdateLocalesAsync(deliveryDate, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.DeliveryDates.Updated"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.DeliveryDates.Updated"));
 
                 return continueEditing ? RedirectToAction("EditDeliveryDate", deliveryDate.Id) : RedirectToAction("DatesAndRanges");
             }
 
             //prepare model
-            model = await _shippingModelFactory.PrepareDeliveryDateModelAsync(model, deliveryDate, true);
+            model = await ShippingModelFactory.PrepareDeliveryDateModelAsync(model, deliveryDate, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -509,17 +509,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteDeliveryDate(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a delivery date with the specified id
-            var deliveryDate = await _dateRangeService.GetDeliveryDateByIdAsync(id);
+            var deliveryDate = await DateRangeService.GetDeliveryDateByIdAsync(id);
             if (deliveryDate == null)
                 return RedirectToAction("DatesAndRanges");
 
-            await _dateRangeService.DeleteDeliveryDateAsync(deliveryDate);
+            await DateRangeService.DeleteDeliveryDateAsync(deliveryDate);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.DeliveryDates.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.DeliveryDates.Deleted"));
 
             return RedirectToAction("DatesAndRanges");
         }
@@ -531,22 +531,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAvailabilityRanges(ProductAvailabilityRangeSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareProductAvailabilityRangeListModelAsync(searchModel);
+            var model = await ShippingModelFactory.PrepareProductAvailabilityRangeListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> CreateProductAvailabilityRange()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareProductAvailabilityRangeModelAsync(new ProductAvailabilityRangeModel(), null);
+            var model = await ShippingModelFactory.PrepareProductAvailabilityRangeModelAsync(new ProductAvailabilityRangeModel(), null);
 
             return View(model);
         }
@@ -554,24 +554,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> CreateProductAvailabilityRange(ProductAvailabilityRangeModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var productAvailabilityRange = model.ToEntity<ProductAvailabilityRange>();
-                await _dateRangeService.InsertProductAvailabilityRangeAsync(productAvailabilityRange);
+                await DateRangeService.InsertProductAvailabilityRangeAsync(productAvailabilityRange);
 
                 //locales
                 await UpdateLocalesAsync(productAvailabilityRange, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.ProductAvailabilityRanges.Added"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.ProductAvailabilityRanges.Added"));
 
                 return continueEditing ? RedirectToAction("EditProductAvailabilityRange", new { id = productAvailabilityRange.Id }) : RedirectToAction("DatesAndRanges");
             }
 
             //prepare model
-            model = await _shippingModelFactory.PrepareProductAvailabilityRangeModelAsync(model, null, true);
+            model = await ShippingModelFactory.PrepareProductAvailabilityRangeModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -579,16 +579,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> EditProductAvailabilityRange(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a product availability range with the specified id
-            var productAvailabilityRange = await _dateRangeService.GetProductAvailabilityRangeByIdAsync(id);
+            var productAvailabilityRange = await DateRangeService.GetProductAvailabilityRangeByIdAsync(id);
             if (productAvailabilityRange == null)
                 return RedirectToAction("DatesAndRanges");
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareProductAvailabilityRangeModelAsync(null, productAvailabilityRange);
+            var model = await ShippingModelFactory.PrepareProductAvailabilityRangeModelAsync(null, productAvailabilityRange);
 
             return View(model);
         }
@@ -596,29 +596,29 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> EditProductAvailabilityRange(ProductAvailabilityRangeModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a product availability range with the specified id
-            var productAvailabilityRange = await _dateRangeService.GetProductAvailabilityRangeByIdAsync(model.Id);
+            var productAvailabilityRange = await DateRangeService.GetProductAvailabilityRangeByIdAsync(model.Id);
             if (productAvailabilityRange == null)
                 return RedirectToAction("DatesAndRanges");
 
             if (ModelState.IsValid)
             {
                 productAvailabilityRange = model.ToEntity(productAvailabilityRange);
-                await _dateRangeService.UpdateProductAvailabilityRangeAsync(productAvailabilityRange);
+                await DateRangeService.UpdateProductAvailabilityRangeAsync(productAvailabilityRange);
 
                 //locales
                 await UpdateLocalesAsync(productAvailabilityRange, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.ProductAvailabilityRanges.Updated"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.ProductAvailabilityRanges.Updated"));
 
                 return continueEditing ? RedirectToAction("EditProductAvailabilityRange", productAvailabilityRange.Id) : RedirectToAction("DatesAndRanges");
             }
 
             //prepare model
-            model = await _shippingModelFactory.PrepareProductAvailabilityRangeModelAsync(model, productAvailabilityRange, true);
+            model = await ShippingModelFactory.PrepareProductAvailabilityRangeModelAsync(model, productAvailabilityRange, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -627,17 +627,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteProductAvailabilityRange(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a product availability range with the specified id
-            var productAvailabilityRange = await _dateRangeService.GetProductAvailabilityRangeByIdAsync(id);
+            var productAvailabilityRange = await DateRangeService.GetProductAvailabilityRangeByIdAsync(id);
             if (productAvailabilityRange == null)
                 return RedirectToAction("DatesAndRanges");
 
-            await _dateRangeService.DeleteProductAvailabilityRangeAsync(productAvailabilityRange);
+            await DateRangeService.DeleteProductAvailabilityRangeAsync(productAvailabilityRange);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.ProductAvailabilityRanges.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.ProductAvailabilityRanges.Deleted"));
 
             return RedirectToAction("DatesAndRanges");
         }
@@ -648,11 +648,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Warehouses()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareWarehouseSearchModelAsync(new WarehouseSearchModel());
+            var model = await ShippingModelFactory.PrepareWarehouseSearchModelAsync(new WarehouseSearchModel());
 
             return View(model);
         }
@@ -660,22 +660,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Warehouses(WarehouseSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareWarehouseListModelAsync(searchModel);
+            var model = await ShippingModelFactory.PrepareWarehouseListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> CreateWarehouse()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareWarehouseModelAsync(new WarehouseModel(), null);
+            var model = await ShippingModelFactory.PrepareWarehouseModelAsync(new WarehouseModel(), null);
 
             return View(model);
         }
@@ -683,32 +683,32 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> CreateWarehouse(WarehouseModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var address = model.Address.ToEntity<Address>();
                 address.CreatedOnUtc = DateTime.UtcNow;
-                await _addressService.InsertAddressAsync(address);
+                await AddressService.InsertAddressAsync(address);
 
                 //fill entity from model
                 var warehouse = model.ToEntity<Warehouse>();
                 warehouse.AddressId = address.Id;
 
-                await _shippingService.InsertWarehouseAsync(warehouse);
+                await ShippingService.InsertWarehouseAsync(warehouse);
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("AddNewWarehouse",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewWarehouse"), warehouse.Id), warehouse);
+                await CustomerActivityService.InsertActivityAsync("AddNewWarehouse",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.AddNewWarehouse"), warehouse.Id), warehouse);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Warehouses.Added"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.Warehouses.Added"));
 
                 return continueEditing ? RedirectToAction("EditWarehouse", new { id = warehouse.Id }) : RedirectToAction("Warehouses");
             }
 
             //prepare model
-            model = await _shippingModelFactory.PrepareWarehouseModelAsync(model, null, true);
+            model = await ShippingModelFactory.PrepareWarehouseModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -716,16 +716,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> EditWarehouse(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a warehouse with the specified id
-            var warehouse = await _shippingService.GetWarehouseByIdAsync(id);
+            var warehouse = await ShippingService.GetWarehouseByIdAsync(id);
             if (warehouse == null)
                 return RedirectToAction("Warehouses");
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareWarehouseModelAsync(null, warehouse);
+            var model = await ShippingModelFactory.PrepareWarehouseModelAsync(null, warehouse);
 
             return View(model);
         }
@@ -733,45 +733,45 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> EditWarehouse(WarehouseModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a warehouse with the specified id
-            var warehouse = await _shippingService.GetWarehouseByIdAsync(model.Id);
+            var warehouse = await ShippingService.GetWarehouseByIdAsync(model.Id);
             if (warehouse == null)
                 return RedirectToAction("Warehouses");
 
             if (ModelState.IsValid)
             {
-                var address = await _addressService.GetAddressByIdAsync(warehouse.AddressId) ??
+                var address = await AddressService.GetAddressByIdAsync(warehouse.AddressId) ??
                     new Address
                     {
                         CreatedOnUtc = DateTime.UtcNow
                     };
                 address = model.Address.ToEntity(address);
                 if (address.Id > 0)
-                    await _addressService.UpdateAddressAsync(address);
+                    await AddressService.UpdateAddressAsync(address);
                 else
-                    await _addressService.InsertAddressAsync(address);
+                    await AddressService.InsertAddressAsync(address);
 
                 //fill entity from model
                 warehouse = model.ToEntity(warehouse);
 
                 warehouse.AddressId = address.Id;
 
-                await _shippingService.UpdateWarehouseAsync(warehouse);
+                await ShippingService.UpdateWarehouseAsync(warehouse);
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("EditWarehouse",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditWarehouse"), warehouse.Id), warehouse);
+                await CustomerActivityService.InsertActivityAsync("EditWarehouse",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.EditWarehouse"), warehouse.Id), warehouse);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Warehouses.Updated"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.Warehouses.Updated"));
 
                 return continueEditing ? RedirectToAction("EditWarehouse", warehouse.Id) : RedirectToAction("Warehouses");
             }
 
             //prepare model
-            model = await _shippingModelFactory.PrepareWarehouseModelAsync(model, warehouse, true);
+            model = await ShippingModelFactory.PrepareWarehouseModelAsync(model, warehouse, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -780,21 +780,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteWarehouse(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a warehouse with the specified id
-            var warehouse = await _shippingService.GetWarehouseByIdAsync(id);
+            var warehouse = await ShippingService.GetWarehouseByIdAsync(id);
             if (warehouse == null)
                 return RedirectToAction("Warehouses");
 
-            await _shippingService.DeleteWarehouseAsync(warehouse);
+            await ShippingService.DeleteWarehouseAsync(warehouse);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteWarehouse",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteWarehouse"), warehouse.Id), warehouse);
+            await CustomerActivityService.InsertActivityAsync("DeleteWarehouse",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.DeleteWarehouse"), warehouse.Id), warehouse);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.warehouses.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.warehouses.Deleted"));
 
             return RedirectToAction("Warehouses");
         }
@@ -805,11 +805,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Restrictions()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _shippingModelFactory.PrepareShippingMethodRestrictionModelAsync(new ShippingMethodRestrictionModel());
+            var model = await ShippingModelFactory.PrepareShippingMethodRestrictionModelAsync(new ShippingMethodRestrictionModel());
 
             return View(model);
         }
@@ -821,11 +821,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ActionName("Restrictions")]
         public virtual async Task<IActionResult> RestrictionSave(ShippingMethodRestrictionModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
-            var shippingMethods = await _shippingService.GetAllShippingMethodsAsync();
+            var countries = await CountryService.GetAllCountriesAsync(showHidden: true);
+            var shippingMethods = await ShippingService.GetAllShippingMethodsAsync();
 
             var form = model.Form;
 
@@ -842,28 +842,28 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     var restrict = countryIdsToRestrict.Contains(country.Id);
                     var shippingMethodCountryMappings =
-                        await _shippingService.GetShippingMethodCountryMappingAsync(shippingMethod.Id, country.Id);
+                        await ShippingService.GetShippingMethodCountryMappingAsync(shippingMethod.Id, country.Id);
 
                     if (restrict)
                     {
                         if (shippingMethodCountryMappings.Any())
                             continue;
 
-                        await _shippingService.InsertShippingMethodCountryMappingAsync(new ShippingMethodCountryMapping { CountryId = country.Id, ShippingMethodId = shippingMethod.Id});
-                        await _shippingService.UpdateShippingMethodAsync(shippingMethod);
+                        await ShippingService.InsertShippingMethodCountryMappingAsync(new ShippingMethodCountryMapping { CountryId = country.Id, ShippingMethodId = shippingMethod.Id});
+                        await ShippingService.UpdateShippingMethodAsync(shippingMethod);
                     }
                     else
                     {
                         if (!shippingMethodCountryMappings.Any())
                             continue;
 
-                        await _shippingService.DeleteShippingMethodCountryMappingAsync(shippingMethodCountryMappings.FirstOrDefault());
-                        await _shippingService.UpdateShippingMethodAsync(shippingMethod);
+                        await ShippingService.DeleteShippingMethodCountryMappingAsync(shippingMethodCountryMappings.FirstOrDefault());
+                        await ShippingService.UpdateShippingMethodAsync(shippingMethod);
                     }
                 }
             }
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Restrictions.Updated"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Shipping.Restrictions.Updated"));
 
             return RedirectToAction("Restrictions");
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -19,10 +19,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected ISpecificationAttributeService SpecificationAttributeService { get; }
 
         #endregion
 
@@ -33,10 +33,10 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             ISpecificationAttributeService specificationAttributeService)
         {
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _specificationAttributeService = specificationAttributeService;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            SpecificationAttributeService = specificationAttributeService;
         }
 
         #endregion
@@ -126,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get specification attribute groups
-            var specificationAttributeGroups = await _specificationAttributeService
+            var specificationAttributeGroups = await SpecificationAttributeService
                 .GetSpecificationAttributeGroupsAsync(searchModel.Page - 1, searchModel.PageSize);
 
             if (searchModel.Page == 1)
@@ -134,7 +134,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //dislpay default group with non-grouped specification attributes on first page
                 specificationAttributeGroups.Insert(0, new SpecificationAttributeGroup
                 {
-                    Name = await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.DefaultGroupName")
+                    Name = await LocalizationService.GetResourceAsync("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.DefaultGroupName")
                 });
             }
 
@@ -171,13 +171,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(specificationAttributeGroup, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(specificationAttributeGroup, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -197,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get specification attributes
-            var specificationAttributes = (await _specificationAttributeService.GetSpecificationAttributesByGroupIdAsync(group?.Id)).ToPagedList(searchModel);
+            var specificationAttributes = (await SpecificationAttributeService.GetSpecificationAttributesByGroupIdAsync(group?.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new SpecificationAttributeListModel().PrepareToGrid(searchModel, specificationAttributes, () =>
@@ -236,17 +236,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(specificationAttribute, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(specificationAttribute, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
             {
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
-                await _baseAdminModelFactory.PrepareSpecificationAttributeGroupsAsync(model.AvailableGroups,
-                    defaultItemText: await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SpecificationAttributeGroup.None"));
+                await BaseAdminModelFactory.PrepareSpecificationAttributeGroupsAsync(model.AvailableGroups,
+                    defaultItemText: await LocalizationService.GetResourceAsync("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SpecificationAttributeGroup.None"));
             }
 
             return model;
@@ -271,7 +271,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(specificationAttribute));
 
             //get specification attribute options
-            var options = (await _specificationAttributeService
+            var options = (await SpecificationAttributeService
                 .GetSpecificationAttributeOptionsBySpecificationAttributeAsync(specificationAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
@@ -283,7 +283,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var optionModel = option.ToModel<SpecificationAttributeOptionModel>();
 
                     //in order to save performance to do not check whether a product is deleted, etc
-                    optionModel.NumberOfAssociatedProducts = await _specificationAttributeService
+                    optionModel.NumberOfAssociatedProducts = await SpecificationAttributeService
                         .GetProductSpecificationAttributeCountAsync(specificationAttributeOptionId: option.Id);
 
                     return optionModel;
@@ -323,7 +323,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(specificationAttributeOption, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(specificationAttributeOption, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -331,7 +331,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -355,7 +355,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(specificationAttribute));
 
             //get products
-            var products = await _specificationAttributeService.GetProductsBySpecificationAttributeIdAsync(
+            var products = await SpecificationAttributeService.GetProductsBySpecificationAttributeIdAsync(
                 specificationAttributeId: specificationAttribute.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 

@@ -38,7 +38,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
 
         #region Fields
 
-        private readonly IWebHelper _webHelper;
+        protected IWebHelper WebHelper { get; }
 
         #endregion
 
@@ -46,7 +46,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
 
         public NopBBCodeEditorTagHelper(IWebHelper webHelper)
         {
-            _webHelper = webHelper;
+            WebHelper = webHelper;
         }
 
         #endregion
@@ -71,7 +71,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("class", "bb-code-editor-wrapper");
 
-            var storeLocation = _webHelper.GetStoreLocation();
+            var storeLocation = WebHelper.GetStoreLocation();
 
             var bbEditorWebRoot = $"{storeLocation}js/";
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Services.Authentication.MultiFactor;
@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+        protected IMultiFactorAuthenticationPluginManager MultiFactorAuthenticationPluginManager { get; }
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public MultiFactorAuthenticationMethodModelFactory(IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager)
         {
-            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
+            MultiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
         }
 
         #endregion
@@ -62,7 +62,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get multi-factor authentication methods
-            var multiFactorAuthenticationMethods = (await _multiFactorAuthenticationPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
+            var multiFactorAuthenticationMethods = (await MultiFactorAuthenticationPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new MultiFactorAuthenticationMethodListModel().PrepareToGrid(searchModel, multiFactorAuthenticationMethods, () =>
@@ -74,7 +74,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var multiFactorAuthenticationMethodModel = method.ToPluginModel<MultiFactorAuthenticationMethodModel>();
 
                     //fill in additional values (not existing in the entity)
-                    multiFactorAuthenticationMethodModel.IsActive = _multiFactorAuthenticationPluginManager.IsPluginActive(method);
+                    multiFactorAuthenticationMethodModel.IsActive = MultiFactorAuthenticationPluginManager.IsPluginActive(method);
                     multiFactorAuthenticationMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
 
                     return multiFactorAuthenticationMethodModel;

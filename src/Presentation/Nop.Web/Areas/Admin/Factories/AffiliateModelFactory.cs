@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,17 +25,17 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IAddressService _addressService;
-        private readonly IAffiliateService _affiliateService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderService _orderService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IStateProvinceService _stateProvinceService;
+        protected IAddressModelFactory AddressModelFactory { get; }
+        protected IAddressService AddressService { get; }
+        protected IAffiliateService AffiliateService { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICountryService CountryService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IOrderService OrderService { get; }
+        protected IPriceFormatter PriceFormatter { get; }
+        protected IStateProvinceService StateProvinceService { get; }
 
         #endregion
 
@@ -53,17 +53,17 @@ namespace Nop.Web.Areas.Admin.Factories
             IPriceFormatter priceFormatter,
             IStateProvinceService stateProvinceService)
         {
-            _addressModelFactory = addressModelFactory;
-            _addressService = addressService;
-            _affiliateService = affiliateService;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _countryService = countryService;
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _localizationService = localizationService;
-            _orderService = orderService;
-            _priceFormatter = priceFormatter;
-            _stateProvinceService = stateProvinceService;
+            AddressModelFactory = addressModelFactory;
+            AddressService = addressService;
+            AffiliateService = affiliateService;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            CountryService = countryService;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            LocalizationService = localizationService;
+            OrderService = orderService;
+            PriceFormatter = priceFormatter;
+            StateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -90,9 +90,9 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.AffliateId = affiliate.Id;
 
             //prepare available order, payment and shipping statuses
-            await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
-            await _baseAdminModelFactory.PreparePaymentStatusesAsync(searchModel.AvailablePaymentStatuses);
-            await _baseAdminModelFactory.PrepareShippingStatusesAsync(searchModel.AvailableShippingStatuses);
+            await BaseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
+            await BaseAdminModelFactory.PreparePaymentStatusesAsync(searchModel.AvailablePaymentStatuses);
+            await BaseAdminModelFactory.PrepareShippingStatusesAsync(searchModel.AvailableShippingStatuses);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -159,7 +159,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get affiliates
-            var affiliates = await _affiliateService.GetAllAffiliatesAsync(searchModel.SearchFriendlyUrlName,
+            var affiliates = await AffiliateService.GetAllAffiliatesAsync(searchModel.SearchFriendlyUrlName,
                 searchModel.SearchFirstName,
                 searchModel.SearchLastName,
                 searchModel.LoadOnlyWithOrders,
@@ -173,12 +173,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 return affiliates.SelectAwait(async affiliate =>
                 {
-                    var address = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
+                    var address = await AddressService.GetAddressByIdAsync(affiliate.AddressId);
 
                     var affiliateModel = affiliate.ToModel<AffiliateModel>();
                     affiliateModel.Address = address.ToModel<AddressModel>();
-                    affiliateModel.Address.CountryName = (await _countryService.GetCountryByAddressAsync(address))?.Name;
-                    affiliateModel.Address.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(address))?.Name;
+                    affiliateModel.Address.CountryName = (await CountryService.GetCountryByAddressAsync(address))?.Name;
+                    affiliateModel.Address.StateProvinceName = (await StateProvinceService.GetStateProvinceByAddressAsync(address))?.Name;
 
                     return affiliateModel;
                 });
@@ -203,7 +203,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (affiliate != null)
             {
                 model ??= affiliate.ToModel<AffiliateModel>();
-                model.Url = await _affiliateService.GenerateUrlAsync(affiliate);
+                model.Url = await AffiliateService.GenerateUrlAsync(affiliate);
 
                 //prepare nested search models
                 await PrepareAffiliatedOrderSearchModelAsync(model.AffiliatedOrderSearchModel, affiliate);
@@ -219,10 +219,10 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare address model
-            var address = await _addressService.GetAddressByIdAsync(affiliate?.AddressId ?? 0);
+            var address = await AddressService.GetAddressByIdAsync(affiliate?.AddressId ?? 0);
             if (!excludeProperties && address != null)
                 model.Address = address.ToModel(model.Address);
-            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
+            await AddressModelFactory.PrepareAddressModelAsync(model.Address, address);
             model.Address.FirstNameRequired = true;
             model.Address.LastNameRequired = true;
             model.Address.EmailRequired = true;
@@ -255,15 +255,15 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get parameters to filter orders
             var startDateValue = !searchModel.StartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+                : (DateTime?)DateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var orderStatusIds = searchModel.OrderStatusId > 0 ? new List<int> { searchModel.OrderStatusId } : null;
             var paymentStatusIds = searchModel.PaymentStatusId > 0 ? new List<int> { searchModel.PaymentStatusId } : null;
             var shippingStatusIds = searchModel.ShippingStatusId > 0 ? new List<int> { searchModel.ShippingStatusId } : null;
 
             //get orders
-            var orders = await _orderService.SearchOrdersAsync(createdFromUtc: startDateValue,
+            var orders = await OrderService.SearchOrdersAsync(createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
@@ -280,12 +280,12 @@ namespace Nop.Web.Areas.Admin.Factories
                     var affiliatedOrderModel = order.ToModel<AffiliatedOrderModel>();
 
                     //fill in additional values (not existing in the entity)
-                    affiliatedOrderModel.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
-                    affiliatedOrderModel.PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
-                    affiliatedOrderModel.ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus);
-                    affiliatedOrderModel.OrderTotal = await _priceFormatter.FormatPriceAsync(order.OrderTotal, true, false);
+                    affiliatedOrderModel.OrderStatus = await LocalizationService.GetLocalizedEnumAsync(order.OrderStatus);
+                    affiliatedOrderModel.PaymentStatus = await LocalizationService.GetLocalizedEnumAsync(order.PaymentStatus);
+                    affiliatedOrderModel.ShippingStatus = await LocalizationService.GetLocalizedEnumAsync(order.ShippingStatus);
+                    affiliatedOrderModel.OrderTotal = await PriceFormatter.FormatPriceAsync(order.OrderTotal, true, false);
 
-                    affiliatedOrderModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc);
+                    affiliatedOrderModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc);
 
                     return affiliatedOrderModel;
                 });
@@ -313,7 +313,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(affiliate));
 
             //get customers
-            var customers = await _customerService.GetAllCustomersAsync(affiliateId: affiliate.Id,
+            var customers = await CustomerService.GetAllCustomersAsync(affiliateId: affiliate.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model

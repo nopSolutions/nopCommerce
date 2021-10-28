@@ -16,11 +16,11 @@ namespace Nop.Web.Framework.Themes
     {
         #region Fields
 
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IStoreContext _storeContext;
-        private readonly IThemeProvider _themeProvider;
-        private readonly IWorkContext _workContext;
-        private readonly StoreInformationSettings _storeInformationSettings;
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IThemeProvider ThemeProvider { get; }
+        protected IWorkContext WorkContext { get; }
+        protected StoreInformationSettings StoreInformationSettings { get; }
 
         private string _cachedThemeName;
 
@@ -42,11 +42,11 @@ namespace Nop.Web.Framework.Themes
             IWorkContext workContext,
             StoreInformationSettings storeInformationSettings)
         {
-            _genericAttributeService = genericAttributeService;
-            _storeContext = storeContext;
-            _themeProvider = themeProvider;
-            _workContext = workContext;
-            _storeInformationSettings = storeInformationSettings;
+            GenericAttributeService = genericAttributeService;
+            StoreContext = storeContext;
+            ThemeProvider = themeProvider;
+            WorkContext = workContext;
+            StoreInformationSettings = storeInformationSettings;
         }
 
         #endregion
@@ -65,24 +65,24 @@ namespace Nop.Web.Framework.Themes
             var themeName = string.Empty;
 
             //whether customers are allowed to select a theme
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (_storeInformationSettings.AllowCustomerToSelectTheme &&
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (StoreInformationSettings.AllowCustomerToSelectTheme &&
                 customer != null)
             {
-                var store = await _storeContext.GetCurrentStoreAsync();
-                themeName = await _genericAttributeService.GetAttributeAsync<string>(customer,
+                var store = await StoreContext.GetCurrentStoreAsync();
+                themeName = await GenericAttributeService.GetAttributeAsync<string>(customer,
                     NopCustomerDefaults.WorkingThemeNameAttribute, store.Id);
             }
 
             //if not, try to get default store theme
             if (string.IsNullOrEmpty(themeName))
-                themeName = _storeInformationSettings.DefaultStoreTheme;
+                themeName = StoreInformationSettings.DefaultStoreTheme;
 
             //ensure that this theme exists
-            if (!await _themeProvider.ThemeExistsAsync(themeName))
+            if (!await ThemeProvider.ThemeExistsAsync(themeName))
             {
                 //if it does not exist, try to get the first one
-                themeName = (await _themeProvider.GetThemesAsync()).FirstOrDefault()?.SystemName
+                themeName = (await ThemeProvider.GetThemesAsync()).FirstOrDefault()?.SystemName
                             ?? throw new Exception("No theme could be loaded");
             }
 
@@ -99,14 +99,14 @@ namespace Nop.Web.Framework.Themes
         public virtual async Task SetWorkingThemeNameAsync(string workingThemeName)
         {
             //whether customers are allowed to select a theme
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (!_storeInformationSettings.AllowCustomerToSelectTheme ||
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (!StoreInformationSettings.AllowCustomerToSelectTheme ||
                 customer == null)
                 return;
 
             //save selected by customer theme system name
-            var store = await _storeContext.GetCurrentStoreAsync();
-            await _genericAttributeService.SaveAttributeAsync(customer,
+            var store = await StoreContext.GetCurrentStoreAsync();
+            await GenericAttributeService.SaveAttributeAsync(customer,
                 NopCustomerDefaults.WorkingThemeNameAttribute, workingThemeName,
                 store.Id);
 

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -19,15 +19,15 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly AdminAreaSettings _adminAreaSettings;
-        private readonly ICommonModelFactory _commonModelFactory;
-        private readonly IHomeModelFactory _homeModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
+        protected AdminAreaSettings AdminAreaSettings { get; }
+        protected ICommonModelFactory CommonModelFactory { get; }
+        protected IHomeModelFactory HomeModelFactory { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected ISettingService SettingService { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -43,15 +43,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             IGenericAttributeService genericAttributeService,
             IWorkContext workContext)
         {
-            _adminAreaSettings = adminAreaSettings;
-            _commonModelFactory = commonModelFactory;
-            _homeModelFactory = homeModelFactory;
-            _localizationService = localizationService;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
-            _settingService = settingService;
-            _workContext = workContext;
-            _genericAttributeService = genericAttributeService;
+            AdminAreaSettings = adminAreaSettings;
+            CommonModelFactory = commonModelFactory;
+            HomeModelFactory = homeModelFactory;
+            LocalizationService = localizationService;
+            NotificationService = notificationService;
+            PermissionService = permissionService;
+            SettingService = settingService;
+            WorkContext = workContext;
+            GenericAttributeService = genericAttributeService;
         }
 
         #endregion
@@ -61,35 +61,35 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> Index()
         {
             //display a warning to a store owner if there are some error
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var hideCard = await GenericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
+            var closeCard = await GenericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
 
-            if ((hideCard || closeCard) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if ((hideCard || closeCard) && await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
             {
-                var warnings = await _commonModelFactory.PrepareSystemWarningModelsAsync();
+                var warnings = await CommonModelFactory.PrepareSystemWarningModelsAsync();
                 if (warnings.Any(warning => warning.Level == SystemWarningLevel.Fail ||
                                             warning.Level == SystemWarningLevel.CopyrightRemovalKey ||
                                             warning.Level == SystemWarningLevel.Warning))
-                    _notificationService.WarningNotification(
-                        string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.Errors"),
+                    NotificationService.WarningNotification(
+                        string.Format(await LocalizationService.GetResourceAsync("Admin.System.Warnings.Errors"),
                         Url.Action("Warnings", "Common")),
                         //do not encode URLs
                         false);
             }
 
             //progress of localozation 
-            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
-            var progress = await _genericAttributeService.GetAttributeAsync<string>(currentLanguage, NopCommonDefaults.LanguagePackProgressAttribute);
+            var currentLanguage = await WorkContext.GetWorkingLanguageAsync();
+            var progress = await GenericAttributeService.GetAttributeAsync<string>(currentLanguage, NopCommonDefaults.LanguagePackProgressAttribute);
             if (!string.IsNullOrEmpty(progress))
             {
-                var locale = await _localizationService.GetResourceAsync("Admin.Configuration.LanguagePackProgressMessage");
-                _notificationService.SuccessNotification(string.Format(locale, progress, NopLinksDefaults.OfficialSite.Translations), false);
-                await _genericAttributeService.SaveAttributeAsync(currentLanguage, NopCommonDefaults.LanguagePackProgressAttribute, string.Empty);
+                var locale = await LocalizationService.GetResourceAsync("Admin.Configuration.LanguagePackProgressMessage");
+                NotificationService.SuccessNotification(string.Format(locale, progress, NopLinksDefaults.OfficialSite.Translations), false);
+                await GenericAttributeService.SaveAttributeAsync(currentLanguage, NopCommonDefaults.LanguagePackProgressAttribute, string.Empty);
             }
 
             //prepare model
-            var model = await _homeModelFactory.PrepareDashboardModelAsync(new DashboardModel());
+            var model = await HomeModelFactory.PrepareDashboardModelAsync(new DashboardModel());
 
             return View(model);
         }
@@ -97,8 +97,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> NopCommerceNewsHideAdv()
         {
-            _adminAreaSettings.HideAdvertisementsOnAdminArea = !_adminAreaSettings.HideAdvertisementsOnAdminArea;
-            await _settingService.SaveSettingAsync(_adminAreaSettings);
+            AdminAreaSettings.HideAdvertisementsOnAdminArea = !AdminAreaSettings.HideAdvertisementsOnAdminArea;
+            await SettingService.SaveSettingAsync(AdminAreaSettings);
 
             return Content("Setting changed");
         }

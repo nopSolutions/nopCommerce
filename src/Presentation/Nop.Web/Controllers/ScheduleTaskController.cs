@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.ScheduleTasks;
 
@@ -8,26 +8,26 @@ namespace Nop.Web.Controllers
     //they can create guest account(s), etc
     public partial class ScheduleTaskController : Controller
     {
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly IScheduleTaskRunner _taskRunner;
+        protected IScheduleTaskService ScheduleTaskService { get; }
+        protected IScheduleTaskRunner TaskRunner { get; }
 
         public ScheduleTaskController(IScheduleTaskService scheduleTaskService,
             IScheduleTaskRunner taskRunner)
         {
-            _scheduleTaskService = scheduleTaskService;
-            _taskRunner = taskRunner;
+            ScheduleTaskService = scheduleTaskService;
+            TaskRunner = taskRunner;
         }
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> RunTask(string taskType)
         {
-            var scheduleTask = await _scheduleTaskService.GetTaskByTypeAsync(taskType);
+            var scheduleTask = await ScheduleTaskService.GetTaskByTypeAsync(taskType);
             if (scheduleTask == null)
                 //schedule task cannot be loaded
                 return NoContent();
 
-            await _taskRunner.ExecuteAsync(scheduleTask);
+            await TaskRunner.ExecuteAsync(scheduleTask);
 
             return NoContent();
         }

@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Events;
@@ -16,12 +16,12 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IExternalAuthenticationMethodModelFactory _externalAuthenticationMethodModelFactory;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
+        protected ExternalAuthenticationSettings ExternalAuthenticationSettings { get; }
+        protected IAuthenticationPluginManager AuthenticationPluginManager { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected IExternalAuthenticationMethodModelFactory ExternalAuthenticationMethodModelFactory { get; }
+        protected IPermissionService PermissionService { get; }
+        protected ISettingService SettingService { get; }
 
         #endregion
 
@@ -34,12 +34,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             ISettingService settingService)
         {
-            _externalAuthenticationSettings = externalAuthenticationSettings;
-            _authenticationPluginManager = authenticationPluginManager;
-            _eventPublisher = eventPublisher;
-            _externalAuthenticationMethodModelFactory = externalAuthenticationMethodModelFactory;
-            _permissionService = permissionService;
-            _settingService = settingService;
+            ExternalAuthenticationSettings = externalAuthenticationSettings;
+            AuthenticationPluginManager = authenticationPluginManager;
+            EventPublisher = eventPublisher;
+            ExternalAuthenticationMethodModelFactory = externalAuthenticationMethodModelFactory;
+            PermissionService = permissionService;
+            SettingService = settingService;
         }
 
         #endregion
@@ -48,11 +48,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Methods()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _externalAuthenticationMethodModelFactory
+            var model = ExternalAuthenticationMethodModelFactory
                 .PrepareExternalAuthenticationMethodSearchModel(new ExternalAuthenticationMethodSearchModel());
 
             return View(model);
@@ -61,11 +61,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Methods(ExternalAuthenticationMethodSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _externalAuthenticationMethodModelFactory.PrepareExternalAuthenticationMethodListModelAsync(searchModel);
+            var model = await ExternalAuthenticationMethodModelFactory.PrepareExternalAuthenticationMethodListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -73,17 +73,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> MethodUpdate(ExternalAuthenticationMethodModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
-            var method = await _authenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
-            if (_authenticationPluginManager.IsPluginActive(method))
+            var method = await AuthenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
+            if (AuthenticationPluginManager.IsPluginActive(method))
             {
                 if (!model.IsActive)
                 {
                     //mark as disabled
-                    _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(method.PluginDescriptor.SystemName);
-                    await _settingService.SaveSettingAsync(_externalAuthenticationSettings);
+                    ExternalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(method.PluginDescriptor.SystemName);
+                    await SettingService.SaveSettingAsync(ExternalAuthenticationSettings);
                 }
             }
             else
@@ -91,8 +91,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.IsActive)
                 {
                     //mark as active
-                    _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(method.PluginDescriptor.SystemName);
-                    await _settingService.SaveSettingAsync(_externalAuthenticationSettings);
+                    ExternalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(method.PluginDescriptor.SystemName);
+                    await SettingService.SaveSettingAsync(ExternalAuthenticationSettings);
                 }
             }
 
@@ -103,7 +103,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //raise event
-            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
+            await EventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }

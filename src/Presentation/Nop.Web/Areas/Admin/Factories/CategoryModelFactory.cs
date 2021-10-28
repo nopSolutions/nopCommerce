@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,19 +26,19 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICategoryService _categoryService;
-        private readonly IDiscountService _discountService;
-        private readonly IDiscountSupportedModelFactory _discountSupportedModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IProductService _productService;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IUrlRecordService _urlRecordService;
+        protected CatalogSettings CatalogSettings { get; }
+        protected CurrencySettings CurrencySettings { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected IAclSupportedModelFactory AclSupportedModelFactory { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICategoryService CategoryService { get; }
+        protected IDiscountService DiscountService { get; }
+        protected IDiscountSupportedModelFactory DiscountSupportedModelFactory { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IProductService ProductService { get; }
+        protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
+        protected IUrlRecordService UrlRecordService { get; }
 
         #endregion
 
@@ -58,19 +58,19 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IUrlRecordService urlRecordService)
         {
-            _catalogSettings = catalogSettings;
-            _currencySettings = currencySettings;
-            _currencyService = currencyService;
-            _aclSupportedModelFactory = aclSupportedModelFactory;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _categoryService = categoryService;
-            _discountService = discountService;
-            _discountSupportedModelFactory = discountSupportedModelFactory;
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _productService = productService;
-            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            _urlRecordService = urlRecordService;
+            CatalogSettings = catalogSettings;
+            CurrencySettings = currencySettings;
+            CurrencyService = currencyService;
+            AclSupportedModelFactory = aclSupportedModelFactory;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            CategoryService = categoryService;
+            DiscountService = discountService;
+            DiscountSupportedModelFactory = discountSupportedModelFactory;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            ProductService = productService;
+            StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            UrlRecordService = urlRecordService;
         }
 
         #endregion
@@ -117,25 +117,25 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+            searchModel.HideStoresList = CatalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare "published" filter (0 - all; 1 - published only; 2 - unpublished only)
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "0",
-                Text = await _localizationService.GetResourceAsync("Admin.Catalog.Categories.List.SearchPublished.All")
+                Text = await LocalizationService.GetResourceAsync("Admin.Catalog.Categories.List.SearchPublished.All")
             });
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "1",
-                Text = await _localizationService.GetResourceAsync("Admin.Catalog.Categories.List.SearchPublished.PublishedOnly")
+                Text = await LocalizationService.GetResourceAsync("Admin.Catalog.Categories.List.SearchPublished.PublishedOnly")
             });
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "2",
-                Text = await _localizationService.GetResourceAsync("Admin.Catalog.Categories.List.SearchPublished.UnpublishedOnly")
+                Text = await LocalizationService.GetResourceAsync("Admin.Catalog.Categories.List.SearchPublished.UnpublishedOnly")
             });
 
             //prepare page parameters
@@ -157,7 +157,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
             //get categories
-            var categories = await _categoryService.GetAllCategoriesAsync(categoryName: searchModel.SearchCategoryName,
+            var categories = await CategoryService.GetAllCategoriesAsync(categoryName: searchModel.SearchCategoryName,
                 showHidden: true,
                 storeId: searchModel.SearchStoreId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
@@ -172,8 +172,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     var categoryModel = category.ToModel<CategoryModel>();
 
                     //fill in additional values (not existing in the entity)
-                    categoryModel.Breadcrumb = await _categoryService.GetFormattedBreadCrumbAsync(category);
-                    categoryModel.SeName = await _urlRecordService.GetSeNameAsync(category, 0, true, false);
+                    categoryModel.Breadcrumb = await CategoryService.GetFormattedBreadCrumbAsync(category);
+                    categoryModel.SeName = await UrlRecordService.GetSeNameAsync(category, 0, true, false);
 
                     return categoryModel;
                 });
@@ -202,7 +202,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (model == null)
                 {
                     model = category.ToModel<CategoryModel>();
-                    model.SeName = await _urlRecordService.GetSeNameAsync(category, 0, true, false);
+                    model.SeName = await UrlRecordService.GetSeNameAsync(category, 0, true, false);
                 }
 
                 //prepare nested search model
@@ -211,20 +211,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(category, entity => entity.Name, languageId, false, false);
-                    locale.Description = await _localizationService.GetLocalizedAsync(category, entity => entity.Description, languageId, false, false);
-                    locale.MetaKeywords = await _localizationService.GetLocalizedAsync(category, entity => entity.MetaKeywords, languageId, false, false);
-                    locale.MetaDescription = await _localizationService.GetLocalizedAsync(category, entity => entity.MetaDescription, languageId, false, false);
-                    locale.MetaTitle = await _localizationService.GetLocalizedAsync(category, entity => entity.MetaTitle, languageId, false, false);
-                    locale.SeName = await _urlRecordService.GetSeNameAsync(category, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(category, entity => entity.Name, languageId, false, false);
+                    locale.Description = await LocalizationService.GetLocalizedAsync(category, entity => entity.Description, languageId, false, false);
+                    locale.MetaKeywords = await LocalizationService.GetLocalizedAsync(category, entity => entity.MetaKeywords, languageId, false, false);
+                    locale.MetaDescription = await LocalizationService.GetLocalizedAsync(category, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaTitle = await LocalizationService.GetLocalizedAsync(category, entity => entity.MetaTitle, languageId, false, false);
+                    locale.SeName = await UrlRecordService.GetSeNameAsync(category, languageId, false, false);
                 };
             }
 
             //set default values for the new model
             if (category == null)
             {
-                model.PageSize = _catalogSettings.DefaultCategoryPageSize;
-                model.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
+                model.PageSize = CatalogSettings.DefaultCategoryPageSize;
+                model.PageSizeOptions = CatalogSettings.DefaultCategoryPageSizeOptions;
                 model.Published = true;
                 model.IncludeInTopMenu = true;
                 model.AllowCustomersToSelectPageSize = true;
@@ -234,28 +234,28 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.PriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
             }
 
-            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+            model.PrimaryStoreCurrencyCode = (await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare available category templates
-            await _baseAdminModelFactory.PrepareCategoryTemplatesAsync(model.AvailableCategoryTemplates, false);
+            await BaseAdminModelFactory.PrepareCategoryTemplatesAsync(model.AvailableCategoryTemplates, false);
 
             //prepare available parent categories
-            await _baseAdminModelFactory.PrepareCategoriesAsync(model.AvailableCategories,
-                defaultItemText: await _localizationService.GetResourceAsync("Admin.Catalog.Categories.Fields.Parent.None"));
+            await BaseAdminModelFactory.PrepareCategoriesAsync(model.AvailableCategories,
+                defaultItemText: await LocalizationService.GetResourceAsync("Admin.Catalog.Categories.Fields.Parent.None"));
 
             //prepare model discounts
-            var availableDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToCategories, showHidden: true);
-            await _discountSupportedModelFactory.PrepareModelDiscountsAsync(model, category, availableDiscounts, excludeProperties);
+            var availableDiscounts = await DiscountService.GetAllDiscountsAsync(DiscountType.AssignedToCategories, showHidden: true);
+            await DiscountSupportedModelFactory.PrepareModelDiscountsAsync(model, category, availableDiscounts, excludeProperties);
 
             //prepare model customer roles
-            await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model, category, excludeProperties);
+            await AclSupportedModelFactory.PrepareModelCustomerRolesAsync(model, category, excludeProperties);
 
             //prepare model stores
-            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, category, excludeProperties);
+            await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(model, category, excludeProperties);
 
             return model;
         }
@@ -278,7 +278,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(category));
 
             //get product categories
-            var productCategories = await _categoryService.GetProductCategoriesByCategoryIdAsync(category.Id,
+            var productCategories = await CategoryService.GetProductCategoriesByCategoryIdAsync(category.Id,
                 showHidden: true,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -291,7 +291,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var categoryProductModel = productCategory.ToModel<CategoryProductModel>();
 
                     //fill in additional values (not existing in the entity)
-                    categoryProductModel.ProductName = (await _productService.GetProductByIdAsync(productCategory.ProductId))?.Name;
+                    categoryProductModel.ProductName = (await ProductService.GetProductByIdAsync(productCategory.ProductId))?.Name;
 
                     return categoryProductModel;
                 });
@@ -314,19 +314,19 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
+            await BaseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
+            await BaseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+            await BaseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare available product types
-            await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
+            await BaseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
@@ -348,7 +348,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get products
-            var products = await _productService.SearchProductsAsync(showHidden: true,
+            var products = await ProductService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
@@ -364,7 +364,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var productModel = product.ToModel<ProductModel>();
 
-                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
+                    productModel.SeName = await UrlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });

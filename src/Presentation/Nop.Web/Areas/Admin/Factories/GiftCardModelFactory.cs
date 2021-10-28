@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,13 +22,13 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IGiftCardService _giftCardService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderService _orderService;
-        private readonly IPriceFormatter _priceFormatter;
+        protected CurrencySettings CurrencySettings { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IGiftCardService GiftCardService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IOrderService OrderService { get; }
+        protected IPriceFormatter PriceFormatter { get; }
 
         #endregion
 
@@ -42,13 +42,13 @@ namespace Nop.Web.Areas.Admin.Factories
             IOrderService orderService,
             IPriceFormatter priceFormatter)
         {
-            _currencySettings = currencySettings;
-            _currencyService = currencyService;
-            _dateTimeHelper = dateTimeHelper;
-            _giftCardService = giftCardService;
-            _localizationService = localizationService;
-            _orderService = orderService;
-            _priceFormatter = priceFormatter;
+            CurrencySettings = currencySettings;
+            CurrencyService = currencyService;
+            DateTimeHelper = dateTimeHelper;
+            GiftCardService = giftCardService;
+            LocalizationService = localizationService;
+            OrderService = orderService;
+            PriceFormatter = priceFormatter;
         }
 
         #endregion
@@ -99,17 +99,17 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.ActivatedList.Add(new SelectListItem
             {
                 Value = "0",
-                Text = await _localizationService.GetResourceAsync("Admin.GiftCards.List.Activated.All")
+                Text = await LocalizationService.GetResourceAsync("Admin.GiftCards.List.Activated.All")
             });
             searchModel.ActivatedList.Add(new SelectListItem
             {
                 Value = "1",
-                Text = await _localizationService.GetResourceAsync("Admin.GiftCards.List.Activated.ActivatedOnly")
+                Text = await LocalizationService.GetResourceAsync("Admin.GiftCards.List.Activated.ActivatedOnly")
             });
             searchModel.ActivatedList.Add(new SelectListItem
             {
                 Value = "2",
-                Text = await _localizationService.GetResourceAsync("Admin.GiftCards.List.Activated.DeactivatedOnly")
+                Text = await LocalizationService.GetResourceAsync("Admin.GiftCards.List.Activated.DeactivatedOnly")
             });
 
             //prepare page parameters
@@ -135,7 +135,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var isActivatedOnly = searchModel.ActivatedId == 0 ? null : searchModel.ActivatedId == 1 ? true : (bool?)false;
 
             //get gift cards
-            var giftCards = await _giftCardService.GetAllGiftCardsAsync(isGiftCardActivated: isActivatedOnly,
+            var giftCards = await GiftCardService.GetAllGiftCardsAsync(isGiftCardActivated: isActivatedOnly,
                 giftCardCouponCode: searchModel.CouponCode,
                 recipientName: searchModel.RecipientName,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
@@ -149,12 +149,12 @@ namespace Nop.Web.Areas.Admin.Factories
                     var giftCardModel = giftCard.ToModel<GiftCardModel>();
 
                     //convert dates to the user time
-                    giftCardModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(giftCard.CreatedOnUtc, DateTimeKind.Utc);
+                    giftCardModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(giftCard.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    var giftAmount = await _giftCardService.GetGiftCardRemainingAmountAsync(giftCard);
-                    giftCardModel.RemainingAmountStr = await _priceFormatter.FormatPriceAsync(giftAmount, true, false);
-                    giftCardModel.AmountStr = await _priceFormatter.FormatPriceAsync(giftCard.Amount, true, false);
+                    var giftAmount = await GiftCardService.GetGiftCardRemainingAmountAsync(giftCard);
+                    giftCardModel.RemainingAmountStr = await PriceFormatter.FormatPriceAsync(giftAmount, true, false);
+                    giftCardModel.AmountStr = await PriceFormatter.FormatPriceAsync(giftCard.Amount, true, false);
 
                     return giftCardModel;
                 });
@@ -180,19 +180,19 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 model ??= giftCard.ToModel<GiftCardModel>();
 
-                var order = await _orderService.GetOrderByOrderItemAsync(giftCard.PurchasedWithOrderItemId ?? 0);
+                var order = await OrderService.GetOrderByOrderItemAsync(giftCard.PurchasedWithOrderItemId ?? 0);
 
                 model.PurchasedWithOrderId = order?.Id;
-                model.RemainingAmountStr = await _priceFormatter.FormatPriceAsync(await _giftCardService.GetGiftCardRemainingAmountAsync(giftCard), true, false);
-                model.AmountStr = await _priceFormatter.FormatPriceAsync(giftCard.Amount, true, false);
-                model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(giftCard.CreatedOnUtc, DateTimeKind.Utc);
+                model.RemainingAmountStr = await PriceFormatter.FormatPriceAsync(await GiftCardService.GetGiftCardRemainingAmountAsync(giftCard), true, false);
+                model.AmountStr = await PriceFormatter.FormatPriceAsync(giftCard.Amount, true, false);
+                model.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(giftCard.CreatedOnUtc, DateTimeKind.Utc);
                 model.PurchasedWithOrderNumber = order?.CustomOrderNumber;
 
                 //prepare nested search model
                 PrepareGiftCardUsageHistorySearchModel(model.GiftCardUsageHistorySearchModel, giftCard);
             }
 
-            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+            model.PrimaryStoreCurrencyCode = (await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
 
             return model;
         }
@@ -216,7 +216,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(giftCard));
 
             //get gift card usage history
-            var usageHistory = (await _giftCardService.GetGiftCardUsageHistoryAsync(giftCard))
+            var usageHistory = (await GiftCardService.GetGiftCardUsageHistoryAsync(giftCard))
                 .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ToList()
                 .ToPagedList(searchModel);
 
@@ -229,12 +229,12 @@ namespace Nop.Web.Areas.Admin.Factories
                     var giftCardUsageHistoryModel = historyEntry.ToModel<GiftCardUsageHistoryModel>();
 
                     //convert dates to the user time
-                    giftCardUsageHistoryModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+                    giftCardUsageHistoryModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     giftCardUsageHistoryModel.OrderId = historyEntry.UsedWithOrderId;
-                    giftCardUsageHistoryModel.CustomOrderNumber = (await _orderService.GetOrderByIdAsync(historyEntry.UsedWithOrderId))?.CustomOrderNumber;
-                    giftCardUsageHistoryModel.UsedValue = await _priceFormatter.FormatPriceAsync(historyEntry.UsedValue, true, false);
+                    giftCardUsageHistoryModel.CustomOrderNumber = (await OrderService.GetOrderByIdAsync(historyEntry.UsedWithOrderId))?.CustomOrderNumber;
+                    giftCardUsageHistoryModel.UsedValue = await PriceFormatter.FormatPriceAsync(historyEntry.UsedValue, true, false);
 
                     return giftCardUsageHistoryModel;
                 });

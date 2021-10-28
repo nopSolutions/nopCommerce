@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -25,17 +25,17 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly ITopicService _topicService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
+        protected CatalogSettings CatalogSettings { get; }
+        protected IAclSupportedModelFactory AclSupportedModelFactory { get; }
+        protected IActionContextAccessor ActionContextAccessor { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
+        protected ITopicService TopicService { get; }
+        protected IUrlHelperFactory UrlHelperFactory { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWebHelper WebHelper { get; }
 
         #endregion
 
@@ -53,17 +53,17 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService,
             IWebHelper webHelper)
         {
-            _catalogSettings = catalogSettings;
-            _aclSupportedModelFactory = aclSupportedModelFactory;
-            _actionContextAccessor = actionContextAccessor;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            _topicService = topicService;
-            _urlHelperFactory = urlHelperFactory;
-            _urlRecordService = urlRecordService;
-            _webHelper = webHelper;
+            CatalogSettings = catalogSettings;
+            AclSupportedModelFactory = aclSupportedModelFactory;
+            ActionContextAccessor = actionContextAccessor;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            TopicService = topicService;
+            UrlHelperFactory = urlHelperFactory;
+            UrlRecordService = urlRecordService;
+            WebHelper = webHelper;
         }
 
         #endregion
@@ -84,9 +84,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+            searchModel.HideStoresList = CatalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -108,7 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get topics
-            var topics = await _topicService.GetAllTopicsAsync(showHidden: true,
+            var topics = await TopicService.GetAllTopicsAsync(showHidden: true,
                 keywords: searchModel.SearchKeywords,
                 storeId: searchModel.SearchStoreId,
                 ignoreAcl: true);
@@ -126,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //little performance optimization: ensure that "Body" is not returned
                     topicModel.Body = string.Empty;
 
-                    topicModel.SeName = await _urlRecordService.GetSeNameAsync(topic, 0, true, false);
+                    topicModel.SeName = await UrlRecordService.GetSeNameAsync(topic, 0, true, false);
 
                     if (!string.IsNullOrEmpty(topicModel.SystemName))
                         topicModel.TopicName = topicModel.SystemName;
@@ -160,21 +160,21 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (model == null)
                 {
                     model = topic.ToModel<TopicModel>();
-                    model.SeName = await _urlRecordService.GetSeNameAsync(topic, 0, true, false);
+                    model.SeName = await UrlRecordService.GetSeNameAsync(topic, 0, true, false);
                 }
 
-                model.Url = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext)
-                    .RouteUrl("Topic", new { SeName = await _urlRecordService.GetSeNameAsync(topic) }, _webHelper.GetCurrentRequestProtocol());
+                model.Url = UrlHelperFactory.GetUrlHelper(ActionContextAccessor.ActionContext)
+                    .RouteUrl("Topic", new { SeName = await UrlRecordService.GetSeNameAsync(topic) }, WebHelper.GetCurrentRequestProtocol());
 
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Title = await _localizationService.GetLocalizedAsync(topic, entity => entity.Title, languageId, false, false);
-                    locale.Body = await _localizationService.GetLocalizedAsync(topic, entity => entity.Body, languageId, false, false);
-                    locale.MetaKeywords = await _localizationService.GetLocalizedAsync(topic, entity => entity.MetaKeywords, languageId, false, false);
-                    locale.MetaDescription = await _localizationService.GetLocalizedAsync(topic, entity => entity.MetaDescription, languageId, false, false);
-                    locale.MetaTitle = await _localizationService.GetLocalizedAsync(topic, entity => entity.MetaTitle, languageId, false, false);
-                    locale.SeName = await _urlRecordService.GetSeNameAsync(topic, languageId, false, false);
+                    locale.Title = await LocalizationService.GetLocalizedAsync(topic, entity => entity.Title, languageId, false, false);
+                    locale.Body = await LocalizationService.GetLocalizedAsync(topic, entity => entity.Body, languageId, false, false);
+                    locale.MetaKeywords = await LocalizationService.GetLocalizedAsync(topic, entity => entity.MetaKeywords, languageId, false, false);
+                    locale.MetaDescription = await LocalizationService.GetLocalizedAsync(topic, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaTitle = await LocalizationService.GetLocalizedAsync(topic, entity => entity.MetaTitle, languageId, false, false);
+                    locale.SeName = await UrlRecordService.GetSeNameAsync(topic, languageId, false, false);
                 };
             }
 
@@ -187,16 +187,16 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare available topic templates
-            await _baseAdminModelFactory.PrepareTopicTemplatesAsync(model.AvailableTopicTemplates, false);
+            await BaseAdminModelFactory.PrepareTopicTemplatesAsync(model.AvailableTopicTemplates, false);
 
             //prepare model customer roles
-            await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model, topic, excludeProperties);
+            await AclSupportedModelFactory.PrepareModelCustomerRolesAsync(model, topic, excludeProperties);
 
             //prepare model stores
-            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, topic, excludeProperties);
+            await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(model, topic, excludeProperties);
 
             return model;
         }

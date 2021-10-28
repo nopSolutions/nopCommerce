@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -30,22 +30,22 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly BlogSettings _blogSettings;
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly IBlogModelFactory _blogModelFactory;
-        private readonly IBlogService _blogService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
+        protected BlogSettings BlogSettings { get; }
+        protected CaptchaSettings CaptchaSettings { get; }
+        protected IBlogModelFactory BlogModelFactory { get; }
+        protected IBlogService BlogService { get; }
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWebHelper WebHelper { get; }
+        protected IWorkContext WorkContext { get; }
+        protected IWorkflowMessageService WorkflowMessageService { get; }
+        protected LocalizationSettings LocalizationSettings { get; }
 
         #endregion
 
@@ -68,22 +68,22 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings)
         {
-            _blogSettings = blogSettings;
-            _captchaSettings = captchaSettings;
-            _blogModelFactory = blogModelFactory;
-            _blogService = blogService;
-            _customerActivityService = customerActivityService;
-            _customerService = customerService;
-            _eventPublisher = eventPublisher;
-            _localizationService = localizationService;
-            _permissionService = permissionService;
-            _storeContext = storeContext;
-            _storeMappingService = storeMappingService;
-            _urlRecordService = urlRecordService;
-            _webHelper = webHelper;
-            _workContext = workContext;
-            _workflowMessageService = workflowMessageService;
-            _localizationSettings = localizationSettings;
+            BlogSettings = blogSettings;
+            CaptchaSettings = captchaSettings;
+            BlogModelFactory = blogModelFactory;
+            BlogService = blogService;
+            CustomerActivityService = customerActivityService;
+            CustomerService = customerService;
+            EventPublisher = eventPublisher;
+            LocalizationService = localizationService;
+            PermissionService = permissionService;
+            StoreContext = storeContext;
+            StoreMappingService = storeMappingService;
+            UrlRecordService = urlRecordService;
+            WebHelper = webHelper;
+            WorkContext = workContext;
+            WorkflowMessageService = workflowMessageService;
+            LocalizationSettings = localizationSettings;
         }
 
         #endregion
@@ -92,73 +92,73 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> List(BlogPagingFilteringModel command)
         {
-            if (!_blogSettings.Enabled)
+            if (!BlogSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _blogModelFactory.PrepareBlogPostListModelAsync(command);
+            var model = await BlogModelFactory.PrepareBlogPostListModelAsync(command);
             return View("List", model);
         }
 
         public virtual async Task<IActionResult> BlogByTag(BlogPagingFilteringModel command)
         {
-            if (!_blogSettings.Enabled)
+            if (!BlogSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _blogModelFactory.PrepareBlogPostListModelAsync(command);
+            var model = await BlogModelFactory.PrepareBlogPostListModelAsync(command);
             return View("List", model);
         }
 
         public virtual async Task<IActionResult> BlogByMonth(BlogPagingFilteringModel command)
         {
-            if (!_blogSettings.Enabled)
+            if (!BlogSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _blogModelFactory.PrepareBlogPostListModelAsync(command);
+            var model = await BlogModelFactory.PrepareBlogPostListModelAsync(command);
             return View("List", model);
         }
 
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> ListRss(int languageId)
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             var feed = new RssFeed(
-                $"{await _localizationService.GetLocalizedAsync(store, x => x.Name)}: Blog",
+                $"{await LocalizationService.GetLocalizedAsync(store, x => x.Name)}: Blog",
                 "Blog",
-                new Uri(_webHelper.GetStoreLocation()),
+                new Uri(WebHelper.GetStoreLocation()),
                 DateTime.UtcNow);
 
-            if (!_blogSettings.Enabled)
-                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
+            if (!BlogSettings.Enabled)
+                return new RssActionResult(feed, WebHelper.GetThisPageUrl(false));
 
             var items = new List<RssItem>();
-            var blogPosts = await _blogService.GetAllBlogPostsAsync(store.Id, languageId);
+            var blogPosts = await BlogService.GetAllBlogPostsAsync(store.Id, languageId);
             foreach (var blogPost in blogPosts)
             {
-                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.GetCurrentRequestProtocol());
+                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = await UrlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, WebHelper.GetCurrentRequestProtocol());
                 items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl),
                     $"urn:store:{store.Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
             }
             feed.Items = items;
-            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
+            return new RssActionResult(feed, WebHelper.GetThisPageUrl(false));
         }
 
         public virtual async Task<IActionResult> BlogPost(int blogPostId)
         {
-            if (!_blogSettings.Enabled)
+            if (!BlogSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var blogPost = await _blogService.GetBlogPostByIdAsync(blogPostId);
+            var blogPost = await BlogService.GetBlogPostByIdAsync(blogPostId);
             if (blogPost == null)
                 return InvokeHttp404();
 
             var notAvailable =
                 //availability dates
-                !_blogService.BlogPostIsAvailable(blogPost) ||
+                !BlogService.BlogPostIsAvailable(blogPost) ||
                 //Store mapping
-                !await _storeMappingService.AuthorizeAsync(blogPost);
+                !await StoreMappingService.AuthorizeAsync(blogPost);
             //Check whether the current user has a "Manage blog" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog);
+            var hasAdminAccess = await PermissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog);
             if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
@@ -167,7 +167,7 @@ namespace Nop.Web.Controllers
                 DisplayEditLink(Url.Action("BlogPostEdit", "Blog", new { id = blogPost.Id, area = AreaNames.Admin }));
 
             var model = new BlogPostModel();
-            await _blogModelFactory.PrepareBlogPostModelAsync(model, blogPost, true);
+            await BlogModelFactory.PrepareBlogPostModelAsync(model, blogPost, true);
 
             return View(model);
         }
@@ -177,62 +177,62 @@ namespace Nop.Web.Controllers
         [ValidateCaptcha]
         public virtual async Task<IActionResult> BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
         {
-            if (!_blogSettings.Enabled)
+            if (!BlogSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var blogPost = await _blogService.GetBlogPostByIdAsync(blogPostId);
+            var blogPost = await BlogService.GetBlogPostByIdAsync(blogPostId);
             if (blogPost == null || !blogPost.AllowComments)
                 return RedirectToRoute("Homepage");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (await _customerService.IsGuestAsync(customer) && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (await CustomerService.IsGuestAsync(customer) && !BlogSettings.AllowNotRegisteredUsersToLeaveComments)
             {
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Blog.Comments.OnlyRegisteredUsersLeaveComments"));
+                ModelState.AddModelError("", await LocalizationService.GetResourceAsync("Blog.Comments.OnlyRegisteredUsersLeaveComments"));
             }
 
             //validate CAPTCHA
-            if (_captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage && !captchaValid)
+            if (CaptchaSettings.Enabled && CaptchaSettings.ShowOnBlogCommentPage && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await LocalizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
             {
-                var store = await _storeContext.GetCurrentStoreAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
                 var comment = new BlogComment
                 {
                     BlogPostId = blogPost.Id,
                     CustomerId = customer.Id,
                     CommentText = model.AddNewComment.CommentText,
-                    IsApproved = !_blogSettings.BlogCommentsMustBeApproved,
+                    IsApproved = !BlogSettings.BlogCommentsMustBeApproved,
                     StoreId = store.Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
 
-                await _blogService.InsertBlogCommentAsync(comment);
+                await BlogService.InsertBlogCommentAsync(comment);
 
                 //notify a store owner
-                if (_blogSettings.NotifyAboutNewBlogComments)
-                    await _workflowMessageService.SendBlogCommentNotificationMessageAsync(comment, _localizationSettings.DefaultAdminLanguageId);
+                if (BlogSettings.NotifyAboutNewBlogComments)
+                    await WorkflowMessageService.SendBlogCommentNotificationMessageAsync(comment, LocalizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("PublicStore.AddBlogComment",
-                    await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddBlogComment"), comment);
+                await CustomerActivityService.InsertActivityAsync("PublicStore.AddBlogComment",
+                    await LocalizationService.GetResourceAsync("ActivityLog.PublicStore.AddBlogComment"), comment);
 
                 //raise event
                 if (comment.IsApproved)
-                    await _eventPublisher.PublishAsync(new BlogCommentApprovedEvent(comment));
+                    await EventPublisher.PublishAsync(new BlogCommentApprovedEvent(comment));
 
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["nop.blog.addcomment.result"] = comment.IsApproved
-                    ? await _localizationService.GetResourceAsync("Blog.Comments.SuccessfullyAdded")
-                    : await _localizationService.GetResourceAsync("Blog.Comments.SeeAfterApproving");
-                return RedirectToRoute("BlogPost", new { SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+                    ? await LocalizationService.GetResourceAsync("Blog.Comments.SuccessfullyAdded")
+                    : await LocalizationService.GetResourceAsync("Blog.Comments.SeeAfterApproving");
+                return RedirectToRoute("BlogPost", new { SeName = await UrlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
             }
 
             //If we got this far, something failed, redisplay form
-            await _blogModelFactory.PrepareBlogPostModelAsync(model, blogPost, true);
+            await BlogModelFactory.PrepareBlogPostModelAsync(model, blogPost, true);
             
             return View(model);
         }

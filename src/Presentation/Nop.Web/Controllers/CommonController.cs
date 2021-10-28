@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -27,24 +27,24 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CommonSettings _commonSettings;
-        private readonly ICommonModelFactory _commonModelFactory;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreContext _storeContext;
-        private readonly IThemeContext _themeContext;
-        private readonly IVendorService _vendorService;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly SitemapSettings _sitemapSettings;
-        private readonly SitemapXmlSettings _sitemapXmlSettings;
-        private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected CaptchaSettings CaptchaSettings { get; }
+        protected CommonSettings CommonSettings { get; }
+        protected ICommonModelFactory CommonModelFactory { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected ILanguageService LanguageService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IThemeContext ThemeContext { get; }
+        protected IVendorService VendorService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected IWorkflowMessageService WorkflowMessageService { get; }
+        protected LocalizationSettings LocalizationSettings { get; }
+        protected SitemapSettings SitemapSettings { get; }
+        protected SitemapXmlSettings SitemapXmlSettings { get; }
+        protected StoreInformationSettings StoreInformationSettings { get; }
+        protected VendorSettings VendorSettings { get; }
 
         #endregion
 
@@ -69,24 +69,24 @@ namespace Nop.Web.Controllers
             StoreInformationSettings storeInformationSettings,
             VendorSettings vendorSettings)
         {
-            _captchaSettings = captchaSettings;
-            _commonSettings = commonSettings;
-            _commonModelFactory = commonModelFactory;
-            _currencyService = currencyService;
-            _customerActivityService = customerActivityService;
-            _genericAttributeService = genericAttributeService;
-            _languageService = languageService;
-            _localizationService = localizationService;
-            _storeContext = storeContext;
-            _themeContext = themeContext;
-            _vendorService = vendorService;
-            _workContext = workContext;
-            _workflowMessageService = workflowMessageService;
-            _localizationSettings = localizationSettings;
-            _sitemapSettings = sitemapSettings;
-            _sitemapXmlSettings = sitemapXmlSettings;
-            _storeInformationSettings = storeInformationSettings;
-            _vendorSettings = vendorSettings;
+            CaptchaSettings = captchaSettings;
+            CommonSettings = commonSettings;
+            CommonModelFactory = commonModelFactory;
+            CurrencyService = currencyService;
+            CustomerActivityService = customerActivityService;
+            GenericAttributeService = genericAttributeService;
+            LanguageService = languageService;
+            LocalizationService = localizationService;
+            StoreContext = storeContext;
+            ThemeContext = themeContext;
+            VendorService = vendorService;
+            WorkContext = workContext;
+            WorkflowMessageService = workflowMessageService;
+            LocalizationSettings = localizationSettings;
+            SitemapSettings = sitemapSettings;
+            SitemapXmlSettings = sitemapXmlSettings;
+            StoreInformationSettings = storeInformationSettings;
+            VendorSettings = vendorSettings;
         }
 
         #endregion
@@ -108,16 +108,16 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> SetLanguage(int langid, string returnUrl = "")
         {
-            var language = await _languageService.GetLanguageByIdAsync(langid);
+            var language = await LanguageService.GetLanguageByIdAsync(langid);
             if (!language?.Published ?? false)
-                language = await _workContext.GetWorkingLanguageAsync();
+                language = await WorkContext.GetWorkingLanguageAsync();
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("Homepage");
 
             //language part in URL
-            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            if (LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //remove current language code if it's already localized URL
                 if ((await returnUrl.IsLocalizedUrlAsync(Request.PathBase, true)).IsLocalized)
@@ -127,7 +127,7 @@ namespace Nop.Web.Controllers
                 returnUrl = returnUrl.AddLanguageSeoCodeToUrl(Request.PathBase, true, language);
             }
 
-            await _workContext.SetWorkingLanguageAsync(language);
+            await WorkContext.SetWorkingLanguageAsync(language);
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
@@ -140,9 +140,9 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> SetCurrency(int customerCurrency, string returnUrl = "")
         {
-            var currency = await _currencyService.GetCurrencyByIdAsync(customerCurrency);
+            var currency = await CurrencyService.GetCurrencyByIdAsync(customerCurrency);
             if (currency != null)
-                await _workContext.SetWorkingCurrencyAsync(currency);
+                await WorkContext.SetWorkingCurrencyAsync(currency);
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
@@ -160,7 +160,7 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> SetTaxType(int customerTaxType, string returnUrl = "")
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
-            await _workContext.SetTaxDisplayTypeAsync(taxDisplayType);
+            await WorkContext.SetTaxDisplayTypeAsync(taxDisplayType);
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
@@ -179,7 +179,7 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> ContactUs()
         {
             var model = new ContactUsModel();
-            model = await _commonModelFactory.PrepareContactUsModelAsync(model, false);
+            model = await CommonModelFactory.PrepareContactUsModelAsync(model, false);
             
             return View(model);
         }
@@ -191,27 +191,27 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> ContactUsSend(ContactUsModel model, bool captchaValid)
         {
             //validate CAPTCHA
-            if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
+            if (CaptchaSettings.Enabled && CaptchaSettings.ShowOnContactUsPage && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await LocalizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
-            model = await _commonModelFactory.PrepareContactUsModelAsync(model, true);
+            model = await CommonModelFactory.PrepareContactUsModelAsync(model, true);
 
             if (ModelState.IsValid)
             {
-                var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
+                var subject = CommonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
                 var body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
 
-                await _workflowMessageService.SendContactUsMessageAsync((await _workContext.GetWorkingLanguageAsync()).Id,
+                await WorkflowMessageService.SendContactUsMessageAsync((await WorkContext.GetWorkingLanguageAsync()).Id,
                     model.Email.Trim(), model.FullName, subject, body);
 
                 model.SuccessfullySent = true;
-                model.Result = await _localizationService.GetResourceAsync("ContactUs.YourEnquiryHasBeenSent");
+                model.Result = await LocalizationService.GetResourceAsync("ContactUs.YourEnquiryHasBeenSent");
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("PublicStore.ContactUs",
-                    await _localizationService.GetResourceAsync("ActivityLog.PublicStore.ContactUs"));
+                await CustomerActivityService.InsertActivityAsync("PublicStore.ContactUs",
+                    await LocalizationService.GetResourceAsync("ActivityLog.PublicStore.ContactUs"));
 
                 return View(model);
             }
@@ -222,15 +222,15 @@ namespace Nop.Web.Controllers
         //contact vendor page
         public virtual async Task<IActionResult> ContactVendor(int vendorId)
         {
-            if (!_vendorSettings.AllowCustomersToContactVendors)
+            if (!VendorSettings.AllowCustomersToContactVendors)
                 return RedirectToRoute("Homepage");
 
-            var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
+            var vendor = await VendorService.GetVendorByIdAsync(vendorId);
             if (vendor == null || !vendor.Active || vendor.Deleted)
                 return RedirectToRoute("Homepage");
 
             var model = new ContactVendorModel();
-            model = await _commonModelFactory.PrepareContactVendorModelAsync(model, vendor, false);
+            model = await CommonModelFactory.PrepareContactVendorModelAsync(model, vendor, false);
             
             return View(model);
         }
@@ -239,31 +239,31 @@ namespace Nop.Web.Controllers
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ContactVendorSend(ContactVendorModel model, bool captchaValid)
         {
-            if (!_vendorSettings.AllowCustomersToContactVendors)
+            if (!VendorSettings.AllowCustomersToContactVendors)
                 return RedirectToRoute("Homepage");
 
-            var vendor = await _vendorService.GetVendorByIdAsync(model.VendorId);
+            var vendor = await VendorService.GetVendorByIdAsync(model.VendorId);
             if (vendor == null || !vendor.Active || vendor.Deleted)
                 return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
-            if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
+            if (CaptchaSettings.Enabled && CaptchaSettings.ShowOnContactUsPage && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await LocalizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
-            model = await _commonModelFactory.PrepareContactVendorModelAsync(model, vendor, true);
+            model = await CommonModelFactory.PrepareContactVendorModelAsync(model, vendor, true);
 
             if (ModelState.IsValid)
             {
-                var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
+                var subject = CommonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
                 var body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
 
-                await _workflowMessageService.SendContactVendorMessageAsync(vendor, (await _workContext.GetWorkingLanguageAsync()).Id,
+                await WorkflowMessageService.SendContactVendorMessageAsync(vendor, (await WorkContext.GetWorkingLanguageAsync()).Id,
                     model.Email.Trim(), model.FullName, subject, body);
 
                 model.SuccessfullySent = true;
-                model.Result = await _localizationService.GetResourceAsync("ContactVendor.YourEnquiryHasBeenSent");
+                model.Result = await LocalizationService.GetResourceAsync("ContactVendor.YourEnquiryHasBeenSent");
 
                 return View(model);
             }
@@ -274,10 +274,10 @@ namespace Nop.Web.Controllers
         //sitemap page
         public virtual async Task<IActionResult> Sitemap(SitemapPageModel pageModel)
         {
-            if (!_sitemapSettings.SitemapEnabled)
+            if (!SitemapSettings.SitemapEnabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _commonModelFactory.PrepareSitemapModelAsync(pageModel);
+            var model = await CommonModelFactory.PrepareSitemapModelAsync(pageModel);
             
             return View(model);
         }
@@ -289,15 +289,15 @@ namespace Nop.Web.Controllers
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> SitemapXml(int? id)
         {
-            var siteMap = _sitemapXmlSettings.SitemapXmlEnabled
-                ? await _commonModelFactory.PrepareSitemapXmlAsync(id) : string.Empty;
+            var siteMap = SitemapXmlSettings.SitemapXmlEnabled
+                ? await CommonModelFactory.PrepareSitemapXmlAsync(id) : string.Empty;
 
             return Content(siteMap, "text/xml");
         }
 
         public virtual async Task<IActionResult> SetStoreTheme(string themeName, string returnUrl = "")
         {
-            await _themeContext.SetWorkingThemeNameAsync(themeName);
+            await ThemeContext.SetWorkingThemeNameAsync(themeName);
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
@@ -318,13 +318,13 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> EuCookieLawAccept()
         {
-            if (!_storeInformationSettings.DisplayEuCookieLawWarning)
+            if (!StoreInformationSettings.DisplayEuCookieLawWarning)
                 //disabled
                 return Json(new { stored = false });
 
             //save setting
-            var store = await _storeContext.GetCurrentStoreAsync();
-            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.EuCookieLawAcceptedAttribute, true, store.Id);
+            var store = await StoreContext.GetCurrentStoreAsync();
+            await GenericAttributeService.SaveAttributeAsync(await WorkContext.GetCurrentCustomerAsync(), NopCustomerDefaults.EuCookieLawAcceptedAttribute, true, store.Id);
             return Json(new { stored = true });
         }
 
@@ -337,7 +337,7 @@ namespace Nop.Web.Controllers
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> RobotsTextFile()
         {
-            var robotsFileContent = await _commonModelFactory.PrepareRobotsTextFileAsync();
+            var robotsFileContent = await CommonModelFactory.PrepareRobotsTextFileAsync();
             
             return Content(robotsFileContent, MimeTypes.TextPlain);
         }

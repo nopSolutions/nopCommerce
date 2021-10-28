@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,22 +32,22 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Fields
 
-        private readonly ICommonModelFactory _commonModelFactory;
-        private readonly ICustomerService _customerService;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMaintenanceService _maintenanceService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        protected ICommonModelFactory CommonModelFactory { get; }
+        protected ICustomerService CustomerService { get; }
+        protected INopDataProvider DataProvider { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected ILanguageService LanguageService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IMaintenanceService MaintenanceService { get; }
+        protected INopFileProvider FileProvider { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IQueuedEmailService QueuedEmailService { get; }
+        protected IShoppingCartService ShoppingCartService { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWebHelper WebHelper { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -70,22 +70,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            _commonModelFactory = commonModelFactory;
-            _customerService = customerService;
-            _dataProvider = dataProvider;
-            _dateTimeHelper = dateTimeHelper;
-            _languageService = languageService;
-            _localizationService = localizationService;
-            _maintenanceService = maintenanceService;
-            _fileProvider = fileProvider;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
-            _queuedEmailService = queuedEmailService;
-            _shoppingCartService = shoppingCartService;
-            _staticCacheManager = staticCacheManager;
-            _urlRecordService = urlRecordService;
-            _webHelper = webHelper;
-            _workContext = workContext;
+            CommonModelFactory = commonModelFactory;
+            CustomerService = customerService;
+            DataProvider = dataProvider;
+            DateTimeHelper = dateTimeHelper;
+            LanguageService = languageService;
+            LocalizationService = localizationService;
+            MaintenanceService = maintenanceService;
+            FileProvider = fileProvider;
+            NotificationService = notificationService;
+            PermissionService = permissionService;
+            QueuedEmailService = queuedEmailService;
+            ShoppingCartService = shoppingCartService;
+            StaticCacheManager = staticCacheManager;
+            UrlRecordService = urlRecordService;
+            WebHelper = webHelper;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -94,33 +94,33 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> SystemInfo()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _commonModelFactory.PrepareSystemInfoModelAsync(new SystemInfoModel());
+            var model = await CommonModelFactory.PrepareSystemInfoModelAsync(new SystemInfoModel());
 
             return View(model);
         }
 
         public virtual async Task<IActionResult> Warnings()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _commonModelFactory.PrepareSystemWarningModelsAsync();
+            var model = await CommonModelFactory.PrepareSystemWarningModelsAsync();
 
             return View(model);
         }
 
         public virtual async Task<IActionResult> Maintenance()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _commonModelFactory.PrepareMaintenanceModelAsync(new MaintenanceModel());
+            var model = await CommonModelFactory.PrepareMaintenanceModelAsync(new MaintenanceModel());
 
             return View(model);
         }
@@ -129,16 +129,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-guests")]
         public virtual async Task<IActionResult> MaintenanceDeleteGuests(MaintenanceModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             var startDateValue = model.DeleteGuests.StartDate == null ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+                            : (DateTime?)DateTimeHelper.ConvertToUtcTime(model.DeleteGuests.StartDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync());
 
             var endDateValue = model.DeleteGuests.EndDate == null ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+                            : (DateTime?)DateTimeHelper.ConvertToUtcTime(model.DeleteGuests.EndDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
-            model.DeleteGuests.NumberOfDeletedCustomers = await _customerService.DeleteGuestCustomersAsync(startDateValue, endDateValue, model.DeleteGuests.OnlyWithoutShoppingCart);
+            model.DeleteGuests.NumberOfDeletedCustomers = await CustomerService.DeleteGuestCustomersAsync(startDateValue, endDateValue, model.DeleteGuests.OnlyWithoutShoppingCart);
 
             return View(model);
         }
@@ -147,12 +147,12 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-abondoned-carts")]
         public virtual async Task<IActionResult> MaintenanceDeleteAbandonedCarts(MaintenanceModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var olderThanDateValue = _dateTimeHelper.ConvertToUtcTime(model.DeleteAbandonedCarts.OlderThan, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+            var olderThanDateValue = DateTimeHelper.ConvertToUtcTime(model.DeleteAbandonedCarts.OlderThan, await DateTimeHelper.GetCurrentTimeZoneAsync());
 
-            model.DeleteAbandonedCarts.NumberOfDeletedItems = await _shoppingCartService.DeleteExpiredShoppingCartItemsAsync(olderThanDateValue);
+            model.DeleteAbandonedCarts.NumberOfDeletedItems = await ShoppingCartService.DeleteExpiredShoppingCartItemsAsync(olderThanDateValue);
             return View(model);
         }
 
@@ -160,37 +160,37 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-exported-files")]
         public virtual async Task<IActionResult> MaintenanceDeleteFiles(MaintenanceModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             var startDateValue = model.DeleteExportedFiles.StartDate == null ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+                            : (DateTime?)DateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.StartDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync());
 
             var endDateValue = model.DeleteExportedFiles.EndDate == null ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+                            : (DateTime?)DateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
 
-            foreach (var fullPath in _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(EXPORT_IMPORT_PATH)))
+            foreach (var fullPath in FileProvider.GetFiles(FileProvider.GetAbsolutePath(EXPORT_IMPORT_PATH)))
             {
                 try
                 {
-                    var fileName = _fileProvider.GetFileName(fullPath);
+                    var fileName = FileProvider.GetFileName(fullPath);
                     if (fileName.Equals("index.htm", StringComparison.InvariantCultureIgnoreCase))
                         continue;
 
-                    var info = _fileProvider.GetFileInfo(fullPath);
+                    var info = FileProvider.GetFileInfo(fullPath);
                     var lastModifiedTimeUtc = info.LastModified.UtcDateTime;
                     if ((!startDateValue.HasValue || startDateValue.Value < lastModifiedTimeUtc) &&
                         (!endDateValue.HasValue || lastModifiedTimeUtc < endDateValue.Value))
                     {
-                        _fileProvider.DeleteFile(fullPath);
+                        FileProvider.DeleteFile(fullPath);
                         model.DeleteExportedFiles.NumberOfDeletedFiles++;
                     }
                 }
                 catch (Exception exc)
                 {
-                    await _notificationService.ErrorNotificationAsync(exc);
+                    await NotificationService.ErrorNotificationAsync(exc);
                 }
             }
 
@@ -200,11 +200,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> BackupFiles(BackupFileSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _commonModelFactory.PrepareBackupFileListModelAsync(searchModel);
+            var model = await CommonModelFactory.PrepareBackupFileListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -213,21 +213,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("backup-database")]
         public virtual async Task<IActionResult> BackupDatabase(MaintenanceModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             try
             {
-                await _dataProvider.BackupDatabaseAsync(_maintenanceService.CreateNewBackupFilePath());
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.Maintenance.BackupDatabase.BackupCreated"));
+                await DataProvider.BackupDatabaseAsync(MaintenanceService.CreateNewBackupFilePath());
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.System.Maintenance.BackupDatabase.BackupCreated"));
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
             }
 
             //prepare model
-            model = await _commonModelFactory.PrepareMaintenanceModelAsync(new MaintenanceModel());
+            model = await CommonModelFactory.PrepareMaintenanceModelAsync(new MaintenanceModel());
 
             return View(model);
         }
@@ -236,17 +236,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("re-index")]
         public virtual async Task<IActionResult> ReIndexTables(MaintenanceModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             try
             {
-                await _dataProvider.ReIndexTablesAsync();
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.Maintenance.ReIndexTables.Complete"));
+                await DataProvider.ReIndexTablesAsync();
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.System.Maintenance.ReIndexTables.Complete"));
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
             }
 
             return View(model);
@@ -256,13 +256,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("backupFileName", "action")]
         public virtual async Task<IActionResult> BackupAction(MaintenanceModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             var action = Request.Form["action"];
 
             var fileName = Request.Form["backupFileName"];
-            var backupPath = _maintenanceService.GetBackupPath(fileName);
+            var backupPath = MaintenanceService.GetBackupPath(fileName);
 
             try
             {
@@ -270,25 +270,25 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     case "delete-backup":
                         {
-                            _fileProvider.DeleteFile(backupPath);
-                            _notificationService.SuccessNotification(string.Format(await _localizationService.GetResourceAsync("Admin.System.Maintenance.BackupDatabase.BackupDeleted"), fileName));
+                            FileProvider.DeleteFile(backupPath);
+                            NotificationService.SuccessNotification(string.Format(await LocalizationService.GetResourceAsync("Admin.System.Maintenance.BackupDatabase.BackupDeleted"), fileName));
                         }
                         break;
                     case "restore-backup":
                         {
-                            await _dataProvider.RestoreDatabaseAsync(backupPath);
-                            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.Maintenance.BackupDatabase.DatabaseRestored"));
+                            await DataProvider.RestoreDatabaseAsync(backupPath);
+                            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.System.Maintenance.BackupDatabase.DatabaseRestored"));
                         }
                         break;
                 }
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
             }
 
             //prepare model
-            model = await _commonModelFactory.PrepareMaintenanceModelAsync(model);
+            model = await CommonModelFactory.PrepareMaintenanceModelAsync(model);
 
             return View(model);
         }
@@ -297,25 +297,25 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-already-sent-queued-emails")]
         public virtual async Task<IActionResult> MaintenanceDeleteAlreadySentQueuedEmails(MaintenanceModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             var startDateValue = model.DeleteAlreadySentQueuedEmails.StartDate == null ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteAlreadySentQueuedEmails.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+                            : (DateTime?)DateTimeHelper.ConvertToUtcTime(model.DeleteAlreadySentQueuedEmails.StartDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync());
 
             var endDateValue = model.DeleteAlreadySentQueuedEmails.EndDate == null ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteAlreadySentQueuedEmails.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+                            : (DateTime?)DateTimeHelper.ConvertToUtcTime(model.DeleteAlreadySentQueuedEmails.EndDate.Value, await DateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
-            model.DeleteAlreadySentQueuedEmails.NumberOfDeletedEmails = await _queuedEmailService.DeleteAlreadySentEmailsAsync(startDateValue, endDateValue);
+            model.DeleteAlreadySentQueuedEmails.NumberOfDeletedEmails = await QueuedEmailService.DeleteAlreadySentEmailsAsync(startDateValue, endDateValue);
 
             return View(model);
         }
 
         public virtual async Task<IActionResult> SetLanguage(int langid, string returnUrl = "")
         {
-            var language = await _languageService.GetLanguageByIdAsync(langid);
+            var language = await LanguageService.GetLanguageByIdAsync(langid);
             if (language != null)
-                await _workContext.SetWorkingLanguageAsync(language);
+                await WorkContext.SetWorkingLanguageAsync(language);
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
@@ -331,10 +331,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ClearCache(string returnUrl = "")
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            await _staticCacheManager.ClearAsync();
+            await StaticCacheManager.ClearAsync();
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
@@ -350,7 +350,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> RestartApplication(string returnUrl = "")
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //home page
@@ -366,26 +366,26 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> RestartApplication()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance) &&
-                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins) &&
-                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance) &&
+                !await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins) &&
+                !await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
             {
                 return AccessDeniedView();
             }
 
             //restart application
-            _webHelper.RestartAppDomain();
+            WebHelper.RestartAppDomain();
 
             return new EmptyResult();
         }
 
         public virtual async Task<IActionResult> SeNames()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _commonModelFactory.PrepareUrlRecordSearchModelAsync(new UrlRecordSearchModel());
+            var model = await CommonModelFactory.PrepareUrlRecordSearchModelAsync(new UrlRecordSearchModel());
 
             return View(model);
         }
@@ -393,11 +393,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> SeNames(UrlRecordSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _commonModelFactory.PrepareUrlRecordListModelAsync(searchModel);
+            var model = await CommonModelFactory.PrepareUrlRecordListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -405,13 +405,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteSelectedSeNames(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (selectedIds == null || selectedIds.Count() == 0)
                 return NoContent();
 
-            await _urlRecordService.DeleteUrlRecordsAsync(await _urlRecordService.GetUrlRecordsByIdsAsync(selectedIds.ToArray()));
+            await UrlRecordService.DeleteUrlRecordsAsync(await UrlRecordService.GetUrlRecordsByIdsAsync(selectedIds.ToArray()));
 
             return Json(new { Result = true });
         }
@@ -419,11 +419,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PopularSearchTermsReport(PopularSearchTermSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _commonModelFactory.PreparePopularSearchTermListModelAsync(searchModel);
+            var model = await CommonModelFactory.PreparePopularSearchTermListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -435,12 +435,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new { Result = string.Empty });
 
             int.TryParse(entityId, out var parsedEntityId);
-            var validatedSeName = await _urlRecordService.ValidateSeNameAsync(parsedEntityId, entityName, seName, null, false);
+            var validatedSeName = await UrlRecordService.ValidateSeNameAsync(parsedEntityId, entityName, seName, null, false);
 
             if (seName.Equals(validatedSeName, StringComparison.InvariantCultureIgnoreCase))
                 return Json(new { Result = string.Empty });
 
-            return Json(new { Result = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.URL.Reserved"), validatedSeName) });
+            return Json(new { Result = string.Format(await LocalizationService.GetResourceAsync("Admin.System.Warnings.URL.Reserved"), validatedSeName) });
         }
 
         #endregion

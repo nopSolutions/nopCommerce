@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,19 +26,19 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly BlogSettings _blogSettings;
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly IBlogService _blogService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IPictureService _pictureService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
+        protected BlogSettings BlogSettings { get; }
+        protected CaptchaSettings CaptchaSettings { get; }
+        protected CustomerSettings CustomerSettings { get; }
+        protected IBlogService BlogService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IPictureService PictureService { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected MediaSettings MediaSettings { get; }
 
         #endregion
 
@@ -58,19 +58,19 @@ namespace Nop.Web.Factories
             IWorkContext workContext,
             MediaSettings mediaSettings)
         {
-            _blogSettings = blogSettings;
-            _captchaSettings = captchaSettings;
-            _customerSettings = customerSettings;
-            _blogService = blogService;
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _genericAttributeService = genericAttributeService;
-            _pictureService = pictureService;
-            _staticCacheManager = staticCacheManager;
-            _storeContext = storeContext;
-            _urlRecordService = urlRecordService;
-            _workContext = workContext;
-            _mediaSettings = mediaSettings;
+            BlogSettings = blogSettings;
+            CaptchaSettings = captchaSettings;
+            CustomerSettings = customerSettings;
+            BlogService = blogService;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            GenericAttributeService = genericAttributeService;
+            PictureService = pictureService;
+            StaticCacheManager = staticCacheManager;
+            StoreContext = storeContext;
+            UrlRecordService = urlRecordService;
+            WorkContext = workContext;
+            MediaSettings = mediaSettings;
         }
 
         #endregion
@@ -96,29 +96,29 @@ namespace Nop.Web.Factories
             model.MetaTitle = blogPost.MetaTitle;
             model.MetaDescription = blogPost.MetaDescription;
             model.MetaKeywords = blogPost.MetaKeywords;
-            model.SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
+            model.SeName = await UrlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = blogPost.Title;
             model.Body = blogPost.Body;
             model.BodyOverview = blogPost.BodyOverview;
             model.AllowComments = blogPost.AllowComments;
 
             model.PreventNotRegisteredUsersToLeaveComments =
-                await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) &&
-                !_blogSettings.AllowNotRegisteredUsersToLeaveComments;
+                await CustomerService.IsGuestAsync(await WorkContext.GetCurrentCustomerAsync()) &&
+                !BlogSettings.AllowNotRegisteredUsersToLeaveComments;
 
-            model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
-            model.Tags = await _blogService.ParseTagsAsync(blogPost);
-            model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
+            model.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
+            model.Tags = await BlogService.ParseTagsAsync(blogPost);
+            model.AddNewComment.DisplayCaptcha = CaptchaSettings.Enabled && CaptchaSettings.ShowOnBlogCommentPage;
 
             //number of blog comments
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var storeId = _blogSettings.ShowBlogCommentsPerStore ? store.Id : 0;
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var storeId = BlogSettings.ShowBlogCommentsPerStore ? store.Id : 0;
 
-            model.NumberOfComments = await _blogService.GetBlogCommentsCountAsync(blogPost, storeId, true);
+            model.NumberOfComments = await BlogService.GetBlogCommentsCountAsync(blogPost, storeId, true);
 
             if (prepareComments)
             {
-                var blogComments = await _blogService.GetAllCommentsAsync(
+                var blogComments = await BlogService.GetAllCommentsAsync(
                     blogPostId: blogPost.Id,
                     approved: true,
                     storeId: storeId);
@@ -145,18 +145,18 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(command));
 
             if (command.PageSize <= 0)
-                command.PageSize = _blogSettings.PostsPageSize;
+                command.PageSize = BlogSettings.PostsPageSize;
             if (command.PageNumber <= 0)
                 command.PageNumber = 1;
 
             var dateFrom = command.GetFromMonth();
             var dateTo = command.GetToMonth();
 
-            var language = await _workContext.GetWorkingLanguageAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var language = await WorkContext.GetWorkingLanguageAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             var blogPosts = string.IsNullOrEmpty(command.Tag)
-                ? await _blogService.GetAllBlogPostsAsync(store.Id, language.Id, dateFrom, dateTo, command.PageNumber - 1, command.PageSize)
-                : await _blogService.GetAllBlogPostsByTagAsync(store.Id, language.Id, command.Tag, command.PageNumber - 1, command.PageSize);
+                ? await BlogService.GetAllBlogPostsAsync(store.Id, language.Id, dateFrom, dateTo, command.PageNumber - 1, command.PageSize)
+                : await BlogService.GetAllBlogPostsByTagAsync(store.Id, language.Id, command.Tag, command.PageNumber - 1, command.PageSize);
 
             var model = new BlogPostListModel
             {
@@ -184,13 +184,13 @@ namespace Nop.Web.Factories
         public virtual async Task<BlogPostTagListModel> PrepareBlogPostTagListModelAsync()
         {
             var model = new BlogPostTagListModel();
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
 
             //get tags
-            var tags = (await _blogService
-                .GetAllBlogPostTagsAsync(store.Id, (await _workContext.GetWorkingLanguageAsync()).Id))
+            var tags = (await BlogService
+                .GetAllBlogPostTagsAsync(store.Id, (await WorkContext.GetWorkingLanguageAsync()).Id))
                 .OrderByDescending(x => x.BlogPostCount)
-                .Take(_blogSettings.NumberOfTags);
+                .Take(BlogSettings.NumberOfTags);
 
             //sorting and setting into the model
             model.Tags.AddRange(tags.OrderBy(x => x.Name).Select(tag => new BlogPostTagModel
@@ -211,14 +211,14 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<List<BlogPostYearModel>> PrepareBlogPostYearModelAsync()
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.BlogMonthsModelKey, currentLanguage, store);
-            var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var currentLanguage = await WorkContext.GetWorkingLanguageAsync();
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.BlogMonthsModelKey, currentLanguage, store);
+            var cachedModel = await StaticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new List<BlogPostYearModel>();
 
-                var blogPosts = await _blogService.GetAllBlogPostsAsync(store.Id,
+                var blogPosts = await BlogService.GetAllBlogPostsAsync(store.Id,
                     currentLanguage.Id);
                 if (blogPosts.Any())
                 {
@@ -228,7 +228,7 @@ namespace Nop.Web.Factories
                     var first = blogPost.StartDateUtc ?? blogPost.CreatedOnUtc;
                     while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                     {
-                        var list = await _blogService.GetPostsByDateAsync(blogPosts, new DateTime(first.Year, first.Month, 1),
+                        var list = await BlogService.GetPostsByDateAsync(blogPosts, new DateTime(first.Year, first.Month, 1),
                             new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
                         if (list.Any())
                         {
@@ -285,23 +285,23 @@ namespace Nop.Web.Factories
             if (blogComment == null)
                 throw new ArgumentNullException(nameof(blogComment));
 
-            var customer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(blogComment.CustomerId);
 
             var model = new BlogCommentModel
             {
                 Id = blogComment.Id,
                 CustomerId = blogComment.CustomerId,
-                CustomerName = await _customerService.FormatUsernameAsync(customer),
+                CustomerName = await CustomerService.FormatUsernameAsync(customer),
                 CommentText = blogComment.CommentText,
-                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer)
+                CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc),
+                AllowViewingProfiles = CustomerSettings.AllowViewingProfiles && customer != null && !await CustomerService.IsGuestAsync(customer)
             };
 
-            if (_customerSettings.AllowCustomersToUploadAvatars)
+            if (CustomerSettings.AllowCustomersToUploadAvatars)
             {
-                model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
-                    await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
-                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+                model.CustomerAvatarUrl = await PictureService.GetPictureUrlAsync(
+                    await GenericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    MediaSettings.AvatarPictureSize, CustomerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
             return model;

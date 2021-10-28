@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -50,8 +50,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
+        protected ILocalizationService LocalizationService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -60,8 +60,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         public NopLabelTagHelper(IHtmlGenerator generator, ILocalizationService localizationService, IWorkContext workContext)
         {
             Generator = generator;
-            _localizationService = localizationService;
-            _workContext = workContext;
+            LocalizationService = localizationService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -103,8 +103,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 if (DisplayHint && For.Metadata.AdditionalValues.TryGetValue("NopResourceDisplayNameAttribute", out var value)
                     && value is NopResourceDisplayNameAttribute resourceDisplayName)
                 {
-                    var language = await _workContext.GetWorkingLanguageAsync();
-                    var hintResource = await _localizationService
+                    var language = await WorkContext.GetWorkingLanguageAsync();
+                    var hintResource = await LocalizationService
                         .GetResourceAsync($"{resourceDisplayName.ResourceKey}.Hint", language.Id, returnEmptyIfNotFound: true, logIfNotFound: false);
 
                     if (!string.IsNullOrEmpty(hintResource))

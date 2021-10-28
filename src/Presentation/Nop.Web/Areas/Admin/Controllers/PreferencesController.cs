@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -10,8 +10,8 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -20,8 +20,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         public PreferencesController(IGenericAttributeService genericAttributeService,
             IWorkContext workContext)
         {
-            _genericAttributeService = genericAttributeService;
-            _workContext = workContext;
+            GenericAttributeService = genericAttributeService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
 
-            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), name, value);
+            await GenericAttributeService.SaveAttributeAsync(await WorkContext.GetCurrentCustomerAsync(), name, value);
 
             return Json(new
             {

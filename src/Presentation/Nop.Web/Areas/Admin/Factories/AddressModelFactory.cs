@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
@@ -13,9 +13,9 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected IAddressAttributeFormatter AddressAttributeFormatter { get; }
+        protected IAddressAttributeModelFactory AddressAttributeModelFactory { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
 
         #endregion
 
@@ -25,9 +25,9 @@ namespace Nop.Web.Areas.Admin.Factories
             IAddressAttributeModelFactory addressAttributeModelFactory,
             IBaseAdminModelFactory baseAdminModelFactory)
         {
-            _addressAttributeFormatter = addressAttributeFormatter;
-            _addressAttributeModelFactory = addressAttributeModelFactory;
-            _baseAdminModelFactory = baseAdminModelFactory;
+            AddressAttributeFormatter = addressAttributeFormatter;
+            AddressAttributeModelFactory = addressAttributeModelFactory;
+            BaseAdminModelFactory = baseAdminModelFactory;
         }
 
         #endregion
@@ -46,18 +46,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             //prepare available countries
-            await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
+            await BaseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
 
             //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
+            await BaseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
 
             //prepare custom address attributes
-            await _addressAttributeModelFactory.PrepareCustomAddressAttributesAsync(model.CustomAddressAttributes, address);
+            await AddressAttributeModelFactory.PrepareCustomAddressAttributesAsync(model.CustomAddressAttributes, address);
 
             if (address == null)
                 return;
 
-            model.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributesAsync(address.CustomAttributes);
+            model.FormattedCustomAddressAttributes = await AddressAttributeFormatter.FormatAttributesAsync(address.CustomAttributes);
         }
 
         #endregion

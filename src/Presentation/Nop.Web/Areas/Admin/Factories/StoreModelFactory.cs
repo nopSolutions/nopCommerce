@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Stores;
@@ -18,10 +18,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IStoreService _storeService;
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IStoreService StoreService { get; }
 
         #endregion
 
@@ -32,10 +32,10 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             IStoreService storeService)
         {
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _storeService = storeService;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            StoreService = storeService;
         }
 
         #endregion
@@ -75,7 +75,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get stores
-            var stores = (await _storeService.GetAllStoresAsync()).ToPagedList(searchModel);
+            var stores = (await StoreService.GetAllStoresAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new StoreListModel().PrepareToGrid(searchModel, stores, () =>
@@ -109,17 +109,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(store, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(store, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare available languages
-            await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, 
-                defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.EmptyItemText"));
+            await BaseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, 
+                defaultItemText: await LocalizationService.GetResourceAsync("Admin.Common.EmptyItemText"));
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }

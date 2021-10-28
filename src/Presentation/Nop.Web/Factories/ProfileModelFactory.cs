@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -25,17 +25,17 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IForumService _forumService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPictureService _pictureService;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
+        protected CustomerSettings CustomerSettings { get; }
+        protected ForumSettings ForumSettings { get; }
+        protected ICountryService CountryService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IForumService ForumService { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IPictureService PictureService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected MediaSettings MediaSettings { get; }
 
         #endregion
 
@@ -53,17 +53,17 @@ namespace Nop.Web.Factories
             IWorkContext workContext,
             MediaSettings mediaSettings)
         {
-            _customerSettings = customerSettings;
-            _forumSettings = forumSettings;
-            _countryService = countryService;
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _forumService = forumService;
-            _genericAttributeService = genericAttributeService;
-            _localizationService = localizationService;
-            _pictureService = pictureService;
-            _workContext = workContext;
-            _mediaSettings = mediaSettings;
+            CustomerSettings = customerSettings;
+            ForumSettings = forumSettings;
+            CountryService = countryService;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            ForumService = forumService;
+            GenericAttributeService = genericAttributeService;
+            LocalizationService = localizationService;
+            PictureService = pictureService;
+            WorkContext = workContext;
+            MediaSettings = mediaSettings;
         }
 
         #endregion
@@ -93,8 +93,8 @@ namespace Nop.Web.Factories
                 pagingPosts = true;
             }
 
-            var name = await _customerService.FormatUsernameAsync(customer);
-            var title = string.Format(await _localizationService.GetResourceAsync("Profile.ProfileOf"), name);
+            var name = await CustomerService.FormatUsernameAsync(customer);
+            var title = string.Format(await LocalizationService.GetResourceAsync("Profile.ProfileOf"), name);
 
             var model = new ProfileIndexModel
             {
@@ -102,7 +102,7 @@ namespace Nop.Web.Factories
                 PostsPage = postsPage,
                 PagingPosts = pagingPosts,
                 CustomerProfileId = customer.Id,
-                ForumsEnabled = _forumSettings.ForumsEnabled
+                ForumsEnabled = ForumSettings.ForumsEnabled
             };
             return model;
         }
@@ -122,27 +122,27 @@ namespace Nop.Web.Factories
 
             //avatar
             var avatarUrl = "";
-            if (_customerSettings.AllowCustomersToUploadAvatars)
+            if (CustomerSettings.AllowCustomersToUploadAvatars)
             {
-                avatarUrl = await _pictureService.GetPictureUrlAsync(
-                 await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
-                 _mediaSettings.AvatarPictureSize,
-                 _customerSettings.DefaultAvatarEnabled,
+                avatarUrl = await PictureService.GetPictureUrlAsync(
+                 await GenericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                 MediaSettings.AvatarPictureSize,
+                 CustomerSettings.DefaultAvatarEnabled,
                  defaultPictureType: PictureType.Avatar);
             }
 
             //location
             var locationEnabled = false;
             var location = string.Empty;
-            if (_customerSettings.ShowCustomersLocation)
+            if (CustomerSettings.ShowCustomersLocation)
             {
                 locationEnabled = true;
 
-                var countryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
-                var country = await _countryService.GetCountryByIdAsync(countryId);
+                var countryId = await GenericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                var country = await CountryService.GetCountryByIdAsync(countryId);
                 if (country != null)
                 {
-                    location = await _localizationService.GetLocalizedAsync(country, x => x.Name);
+                    location = await LocalizationService.GetLocalizedAsync(country, x => x.Name);
                 }
                 else
                 {
@@ -151,33 +151,33 @@ namespace Nop.Web.Factories
             }
 
             //private message
-            var pmEnabled = _forumSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer);
+            var pmEnabled = ForumSettings.AllowPrivateMessages && !await CustomerService.IsGuestAsync(customer);
 
             //total forum posts
             var totalPostsEnabled = false;
             var totalPosts = 0;
-            if (_forumSettings.ForumsEnabled && _forumSettings.ShowCustomersPostCount)
+            if (ForumSettings.ForumsEnabled && ForumSettings.ShowCustomersPostCount)
             {
                 totalPostsEnabled = true;
-                totalPosts = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.ForumPostCountAttribute);
+                totalPosts = await GenericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.ForumPostCountAttribute);
             }
 
             //registration date
             var joinDateEnabled = false;
             var joinDate = string.Empty;
 
-            if (_customerSettings.ShowCustomersJoinDate)
+            if (CustomerSettings.ShowCustomersJoinDate)
             {
                 joinDateEnabled = true;
-                joinDate = (await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
+                joinDate = (await DateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
             }
 
             //birth date
             var dateOfBirthEnabled = false;
             var dateOfBirth = string.Empty;
-            if (_customerSettings.DateOfBirthEnabled)
+            if (CustomerSettings.DateOfBirthEnabled)
             {
-                var dob = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
+                var dob = await GenericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
                 if (dob.HasValue)
                 {
                     dateOfBirthEnabled = true;
@@ -222,34 +222,34 @@ namespace Nop.Web.Factories
                 page -= 1;
             }
 
-            var pageSize = _forumSettings.LatestCustomerPostsPageSize;
+            var pageSize = ForumSettings.LatestCustomerPostsPageSize;
 
-            var list = await _forumService.GetAllPostsAsync(0, customer.Id, string.Empty, false, page, pageSize);
+            var list = await ForumService.GetAllPostsAsync(0, customer.Id, string.Empty, false, page, pageSize);
 
             var latestPosts = new List<PostsModel>();
 
             foreach (var forumPost in list)
             {
                 var posted = string.Empty;
-                if (_forumSettings.RelativeDateTimeFormattingEnabled)
+                if (ForumSettings.RelativeDateTimeFormattingEnabled)
                 {
-                    var languageCode = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
+                    var languageCode = (await WorkContext.GetWorkingLanguageAsync()).LanguageCulture;
                     var postedAgo = forumPost.CreatedOnUtc.RelativeFormat(languageCode);
-                    posted = string.Format(await _localizationService.GetResourceAsync("Common.RelativeDateTime.Past"), postedAgo);
+                    posted = string.Format(await LocalizationService.GetResourceAsync("Common.RelativeDateTime.Past"), postedAgo);
                 }
                 else
                 {
-                    posted = (await _dateTimeHelper.ConvertToUserTimeAsync(forumPost.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
+                    posted = (await DateTimeHelper.ConvertToUserTimeAsync(forumPost.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
                 }
 
-                var topic = await _forumService.GetTopicByIdAsync(forumPost.TopicId);
+                var topic = await ForumService.GetTopicByIdAsync(forumPost.TopicId);
 
                 latestPosts.Add(new PostsModel
                 {
                     ForumTopicId = topic.Id,
                     ForumTopicTitle = topic.Subject,
-                    ForumTopicSlug = await _forumService.GetTopicSeNameAsync(topic),
-                    ForumPostText = _forumService.FormatPostText(forumPost),
+                    ForumTopicSlug = await ForumService.GetTopicSeNameAsync(topic),
+                    ForumPostText = ForumService.FormatPostText(forumPost),
                     Posted = posted
                 });
             }

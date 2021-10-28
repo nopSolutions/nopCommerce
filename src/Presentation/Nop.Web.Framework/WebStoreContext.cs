@@ -20,10 +20,10 @@ namespace Nop.Web.Framework
     {
         #region Fields
 
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IRepository<Store> _storeRepository;
-        private readonly IStoreService _storeService;
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IHttpContextAccessor HttpContextAccessor { get; }
+        protected IRepository<Store> StoreRepository { get; }
+        protected IStoreService StoreService { get; }
 
         private Store _cachedStore;
         private int? _cachedActiveStoreScopeConfiguration;
@@ -44,10 +44,10 @@ namespace Nop.Web.Framework
             IRepository<Store> storeRepository,
             IStoreService storeService)
         {
-            _genericAttributeService = genericAttributeService;
-            _httpContextAccessor = httpContextAccessor;
-            _storeRepository = storeRepository;
-            _storeService = storeService;
+            GenericAttributeService = genericAttributeService;
+            HttpContextAccessor = httpContextAccessor;
+            StoreRepository = storeRepository;
+            StoreService = storeService;
         }
 
         #endregion
@@ -64,10 +64,10 @@ namespace Nop.Web.Framework
                 return _cachedStore;
 
             //try to determine the current store by HOST header
-            string host = _httpContextAccessor.HttpContext?.Request.Headers[HeaderNames.Host];
+            string host = HttpContextAccessor.HttpContext?.Request.Headers[HeaderNames.Host];
 
-            var allStores = await _storeService.GetAllStoresAsync();
-            var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
+            var allStores = await StoreService.GetAllStoresAsync();
+            var store = allStores.FirstOrDefault(s => StoreService.ContainsHostValue(s, host));
 
             if (store == null)
                 //load the first found store
@@ -87,15 +87,15 @@ namespace Nop.Web.Framework
                 return _cachedStore;
 
             //try to determine the current store by HOST header
-            string host = _httpContextAccessor.HttpContext?.Request.Headers[HeaderNames.Host];
+            string host = HttpContextAccessor.HttpContext?.Request.Headers[HeaderNames.Host];
 
             //we cannot call async methods here. otherwise, an application can hang. so it's a workaround to avoid that
-            var allStores = _storeRepository.GetAll(query =>
+            var allStores = StoreRepository.GetAll(query =>
             {
                 return from s in query orderby s.DisplayOrder, s.Id select s;
             }, cache => default);
             
-            var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
+            var store = allStores.FirstOrDefault(s => StoreService.ContainsHostValue(s, host));
 
             if (store == null)
                 //load the first found store
@@ -116,16 +116,16 @@ namespace Nop.Web.Framework
                 return _cachedActiveStoreScopeConfiguration.Value;
 
             //ensure that we have 2 (or more) stores
-            if ((await _storeService.GetAllStoresAsync()).Count > 1)
+            if ((await StoreService.GetAllStoresAsync()).Count > 1)
             {
                 //do not inject IWorkContext via constructor because it'll cause circular references
                 var currentCustomer = await EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomerAsync();
 
                 //try to get store identifier from attributes
-                var storeId = await _genericAttributeService
+                var storeId = await GenericAttributeService
                     .GetAttributeAsync<int>(currentCustomer, NopCustomerDefaults.AdminAreaStoreScopeConfigurationAttribute);
 
-                _cachedActiveStoreScopeConfiguration = (await _storeService.GetStoreByIdAsync(storeId))?.Id ?? 0;
+                _cachedActiveStoreScopeConfiguration = (await StoreService.GetStoreByIdAsync(storeId))?.Id ?? 0;
             }
             else
                 _cachedActiveStoreScopeConfiguration = 0;

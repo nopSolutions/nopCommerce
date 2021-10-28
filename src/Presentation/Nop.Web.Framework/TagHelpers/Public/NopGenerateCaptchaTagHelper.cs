@@ -28,8 +28,8 @@ namespace Nop.Web.Framework.TagHelpers.Public
 
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly IHtmlHelper _htmlHelper;
+        protected CaptchaSettings CaptchaSettings { get; }
+        protected IHtmlHelper HtmlHelper { get; }
 
         #endregion
 
@@ -37,8 +37,8 @@ namespace Nop.Web.Framework.TagHelpers.Public
 
         public NopGenerateCaptchaTagHelper(CaptchaSettings captchaSettings, IHtmlHelper htmlHelper)
         {
-            _captchaSettings = captchaSettings;
-            _htmlHelper = htmlHelper;
+            CaptchaSettings = captchaSettings;
+            HtmlHelper = htmlHelper;
         }
 
         #endregion
@@ -60,18 +60,18 @@ namespace Nop.Web.Framework.TagHelpers.Public
                 throw new ArgumentNullException(nameof(output));
 
             //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
+            var viewContextAware = HtmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             IHtmlContent captchaHtmlContent;
-            switch (_captchaSettings.CaptchaType)
+            switch (CaptchaSettings.CaptchaType)
             {
                 case CaptchaType.CheckBoxReCaptchaV2:
                     output.Attributes.Add("class", "captcha-box");
-                    captchaHtmlContent = await _htmlHelper.GenerateCheckBoxReCaptchaV2Async(_captchaSettings);
+                    captchaHtmlContent = await HtmlHelper.GenerateCheckBoxReCaptchaV2Async(CaptchaSettings);
                     break;
                 case CaptchaType.ReCaptchaV3:
-                    captchaHtmlContent = await _htmlHelper.GenerateReCaptchaV3Async(_captchaSettings);
+                    captchaHtmlContent = await HtmlHelper.GenerateReCaptchaV3Async(CaptchaSettings);
                     break;
                 default:
                     throw new InvalidOperationException("Invalid captcha type.");

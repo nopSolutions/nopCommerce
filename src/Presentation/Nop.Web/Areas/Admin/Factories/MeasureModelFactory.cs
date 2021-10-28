@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Directory;
@@ -16,8 +16,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IMeasureService _measureService;
-        private readonly MeasureSettings _measureSettings;
+        protected IMeasureService MeasureService { get; }
+        protected MeasureSettings MeasureSettings { get; }
 
         #endregion
 
@@ -26,8 +26,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public MeasureModelFactory(IMeasureService measureService,
             MeasureSettings measureSettings)
         {
-            _measureService = measureService;
-            _measureSettings = measureSettings;
+            MeasureService = measureService;
+            MeasureSettings = measureSettings;
         }
 
         #endregion
@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get dimensions
-            var dimensions = (await _measureService.GetAllMeasureDimensionsAsync()).ToPagedList(searchModel);
+            var dimensions = (await MeasureService.GetAllMeasureDimensionsAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new MeasureDimensionListModel().PrepareToGrid(searchModel, dimensions, () =>
@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var dimensionModel = dimension.ToModel<MeasureDimensionModel>();
 
                     //fill in additional values (not existing in the entity)
-                    dimensionModel.IsPrimaryDimension = dimension.Id == _measureSettings.BaseDimensionId;
+                    dimensionModel.IsPrimaryDimension = dimension.Id == MeasureSettings.BaseDimensionId;
 
                     return dimensionModel;
                 });
@@ -138,7 +138,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get weights
-            var weights = (await _measureService.GetAllMeasureWeightsAsync()).ToPagedList(searchModel);
+            var weights = (await MeasureService.GetAllMeasureWeightsAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new MeasureWeightListModel().PrepareToGrid(searchModel, weights, () =>
@@ -149,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var weightModel = weight.ToModel<MeasureWeightModel>();
 
                     //fill in additional values (not existing in the entity)
-                    weightModel.IsPrimaryWeight = weight.Id == _measureSettings.BaseWeightId;
+                    weightModel.IsPrimaryWeight = weight.Id == MeasureSettings.BaseWeightId;
 
                     return weightModel;
                 });

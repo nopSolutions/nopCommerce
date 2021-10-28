@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,10 +16,10 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ICountryService _countryService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IWorkContext _workContext;
+        protected ICountryService CountryService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IStateProvinceService StateProvinceService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -30,10 +30,10 @@ namespace Nop.Web.Factories
             IStateProvinceService stateProvinceService,
             IWorkContext workContext)
         {
-            _countryService = countryService;
-            _localizationService = localizationService;
-            _stateProvinceService = stateProvinceService;
-            _workContext = workContext;
+            CountryService = countryService;
+            LocalizationService = localizationService;
+            StateProvinceService = stateProvinceService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -54,16 +54,16 @@ namespace Nop.Web.Factories
             if (string.IsNullOrEmpty(countryId))
                 throw new ArgumentNullException(nameof(countryId));
 
-            var country = await _countryService.GetCountryByIdAsync(Convert.ToInt32(countryId));
-            var states = (await _stateProvinceService
-                .GetStateProvincesByCountryIdAsync(country?.Id ?? 0, (await _workContext.GetWorkingLanguageAsync()).Id))
+            var country = await CountryService.GetCountryByIdAsync(Convert.ToInt32(countryId));
+            var states = (await StateProvinceService
+                .GetStateProvincesByCountryIdAsync(country?.Id ?? 0, (await WorkContext.GetWorkingLanguageAsync()).Id))
                 .ToList();
             var result = new List<StateProvinceModel>();
             foreach (var state in states)
                 result.Add(new StateProvinceModel
                 {
                     id = state.Id,
-                    name = await _localizationService.GetLocalizedAsync(state, x => x.Name)
+                    name = await LocalizationService.GetLocalizedAsync(state, x => x.Name)
                 });
 
             if (country == null)
@@ -74,7 +74,7 @@ namespace Nop.Web.Factories
                     result.Insert(0, new StateProvinceModel
                     {
                         id = 0,
-                        name = await _localizationService.GetResourceAsync("Address.SelectState")
+                        name = await LocalizationService.GetResourceAsync("Address.SelectState")
                     });
                 }
                 else
@@ -82,7 +82,7 @@ namespace Nop.Web.Factories
                     result.Insert(0, new StateProvinceModel
                     {
                         id = 0,
-                        name = await _localizationService.GetResourceAsync("Address.Other")
+                        name = await LocalizationService.GetResourceAsync("Address.Other")
                     });
                 }
             }
@@ -95,7 +95,7 @@ namespace Nop.Web.Factories
                     result.Insert(0, new StateProvinceModel
                     {
                         id = 0,
-                        name = await _localizationService.GetResourceAsync("Address.Other")
+                        name = await LocalizationService.GetResourceAsync("Address.Other")
                     });
                 }
                 else
@@ -106,7 +106,7 @@ namespace Nop.Web.Factories
                         result.Insert(0, new StateProvinceModel
                         {
                             id = 0,
-                            name = await _localizationService.GetResourceAsync("Address.SelectState")
+                            name = await LocalizationService.GetResourceAsync("Address.SelectState")
                         });
                     }
                 }

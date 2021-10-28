@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -68,7 +68,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected IHtmlHelper HtmlHelper { get; }
 
         #endregion
 
@@ -76,7 +76,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         public NopOverrideStoreCheckboxHelper(IHtmlHelper htmlHelper)
         {
-            _htmlHelper = htmlHelper;
+            HtmlHelper = htmlHelper;
         }
 
         #endregion
@@ -104,14 +104,14 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             if (StoreScope > 0)
             {
                 //contextualize IHtmlHelper
-                var viewContextAware = _htmlHelper as IViewContextAware;
+                var viewContextAware = HtmlHelper as IViewContextAware;
                 viewContextAware?.Contextualize(ViewContext);
 
                 var dataInputIds = new List<string>();
                 if (Input != null)
-                    dataInputIds.Add(_htmlHelper.Id(Input.Name));
+                    dataInputIds.Add(HtmlHelper.Id(Input.Name));
                 if (Input2 != null)
-                    dataInputIds.Add(_htmlHelper.Id(Input2.Name));
+                    dataInputIds.Add(HtmlHelper.Id(Input2.Name));
 
                 const string cssClass = "multi-store-override-option";
                 var dataInputSelector = "";
@@ -129,7 +129,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     onclick = onClick,
                     data_for_input_selector = dataInputSelector
                 };
-                var htmlOutput = await _htmlHelper.CheckBox(For.Name, null, htmlAttributes).RenderHtmlContentAsync();
+                var htmlOutput = await HtmlHelper.CheckBox(For.Name, null, htmlAttributes).RenderHtmlContentAsync();
                 output.Content.SetHtmlContent(htmlOutput);
             }
         }

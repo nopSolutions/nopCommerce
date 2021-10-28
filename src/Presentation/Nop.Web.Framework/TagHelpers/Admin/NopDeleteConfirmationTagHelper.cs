@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -56,7 +56,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected IHtmlHelper HtmlHelper { get; }
 
         #endregion
 
@@ -65,7 +65,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         public NopDeleteConfirmationTagHelper(IHtmlGenerator generator, IHtmlHelper htmlHelper)
         {
             Generator = generator;
-            _htmlHelper = htmlHelper;
+            HtmlHelper = htmlHelper;
         }
 
         #endregion
@@ -87,13 +87,13 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 throw new ArgumentNullException(nameof(output));
 
             //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
+            var viewContextAware = HtmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             if (string.IsNullOrEmpty(Action))
                 Action = "Delete";
 
-            var modelName = _htmlHelper.ViewData.ModelMetadata.ModelType.Name.ToLowerInvariant();
+            var modelName = HtmlHelper.ViewData.ModelMetadata.ModelType.Name.ToLowerInvariant();
             if (!string.IsNullOrEmpty(Action))
                 modelName += "-" + Action;
             var modalId = await new HtmlString(modelName + "-delete-confirmation").RenderHtmlContentAsync();
@@ -101,7 +101,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var deleteConfirmationModel = new DeleteConfirmationModel
             {
                 Id = ModelId,
-                ControllerName = _htmlHelper.ViewContext.RouteData.Values["controller"].ToString(),
+                ControllerName = HtmlHelper.ViewContext.RouteData.Values["controller"].ToString(),
                 ActionName = Action,
                 WindowId = modalId
             };
@@ -116,7 +116,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             output.Attributes.Add("role", "dialog");
             output.Attributes.Add("aria-labelledby", $"{modalId}-title");
 
-            var partialView = await _htmlHelper.PartialAsync("Delete", deleteConfirmationModel);
+            var partialView = await HtmlHelper.PartialAsync("Delete", deleteConfirmationModel);
             output.Content.SetHtmlContent(partialView);
 
             //modal script

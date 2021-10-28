@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,40 +42,40 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
-        private readonly ICategoryService _categoryService;
-        private readonly ICopyProductService _copyProductService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IDiscountService _discountService;
-        private readonly IDownloadService _downloadService;
-        private readonly IExportManager _exportManager;
-        private readonly IImportManager _importManager;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly INotificationService _notificationService;
-        private readonly IPdfService _pdfService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPictureService _pictureService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly ISettingService _settingService;
-        private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly VendorSettings _vendorSettings;
+        protected IAclService AclService { get; }
+        protected IBackInStockSubscriptionService BackInStockSubscriptionService { get; }
+        protected ICategoryService CategoryService { get; }
+        protected ICopyProductService CopyProductService { get; }
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDiscountService DiscountService { get; }
+        protected IDownloadService DownloadService { get; }
+        protected IExportManager ExportManager { get; }
+        protected IImportManager ImportManager { get; }
+        protected ILanguageService LanguageService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedEntityService LocalizedEntityService { get; }
+        protected IManufacturerService ManufacturerService { get; }
+        protected INopFileProvider FileProvider { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPdfService PdfService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IPictureService PictureService { get; }
+        protected IProductAttributeParser ProductAttributeParser { get; }
+        protected IProductAttributeService ProductAttributeService { get; }
+        protected IProductAttributeFormatter ProductAttributeFormatter { get; }
+        protected IProductModelFactory ProductModelFactory { get; }
+        protected IProductService ProductService { get; }
+        protected IProductTagService ProductTagService { get; }
+        protected ISettingService SettingService { get; }
+        protected IShippingService ShippingService { get; }
+        protected IShoppingCartService ShoppingCartService { get; }
+        protected ISpecificationAttributeService SpecificationAttributeService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected VendorSettings VendorSettings { get; }
 
         #endregion
 
@@ -116,40 +116,40 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             VendorSettings vendorSettings)
         {
-            _aclService = aclService;
-            _backInStockSubscriptionService = backInStockSubscriptionService;
-            _categoryService = categoryService;
-            _copyProductService = copyProductService;
-            _customerActivityService = customerActivityService;
-            _customerService = customerService;
-            _discountService = discountService;
-            _downloadService = downloadService;
-            _exportManager = exportManager;
-            _importManager = importManager;
-            _languageService = languageService;
-            _localizationService = localizationService;
-            _localizedEntityService = localizedEntityService;
-            _manufacturerService = manufacturerService;
-            _fileProvider = fileProvider;
-            _notificationService = notificationService;
-            _pdfService = pdfService;
-            _permissionService = permissionService;
-            _pictureService = pictureService;
-            _productAttributeParser = productAttributeParser;
-            _productAttributeService = productAttributeService;
-            _productAttributeFormatter = productAttributeFormatter;
-            _productModelFactory = productModelFactory;
-            _productService = productService;
-            _productTagService = productTagService;
-            _settingService = settingService;
-            _shippingService = shippingService;
-            _shoppingCartService = shoppingCartService;
-            _specificationAttributeService = specificationAttributeService;
-            _storeContext = storeContext;
-            _urlRecordService = urlRecordService;
-            _genericAttributeService = genericAttributeService;
-            _workContext = workContext;
-            _vendorSettings = vendorSettings;
+            AclService = aclService;
+            BackInStockSubscriptionService = backInStockSubscriptionService;
+            CategoryService = categoryService;
+            CopyProductService = copyProductService;
+            CustomerActivityService = customerActivityService;
+            CustomerService = customerService;
+            DiscountService = discountService;
+            DownloadService = downloadService;
+            ExportManager = exportManager;
+            ImportManager = importManager;
+            LanguageService = languageService;
+            LocalizationService = localizationService;
+            LocalizedEntityService = localizedEntityService;
+            ManufacturerService = manufacturerService;
+            FileProvider = fileProvider;
+            NotificationService = notificationService;
+            PdfService = pdfService;
+            PermissionService = permissionService;
+            PictureService = pictureService;
+            ProductAttributeParser = productAttributeParser;
+            ProductAttributeService = productAttributeService;
+            ProductAttributeFormatter = productAttributeFormatter;
+            ProductModelFactory = productModelFactory;
+            ProductService = productService;
+            ProductTagService = productTagService;
+            SettingService = settingService;
+            ShippingService = shippingService;
+            ShoppingCartService = shoppingCartService;
+            SpecificationAttributeService = specificationAttributeService;
+            StoreContext = storeContext;
+            UrlRecordService = urlRecordService;
+            GenericAttributeService = genericAttributeService;
+            WorkContext = workContext;
+            VendorSettings = vendorSettings;
         }
 
         #endregion
@@ -160,34 +160,34 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValueAsync(product,
+                await LocalizedEntityService.SaveLocalizedValueAsync(product,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
-                await _localizedEntityService.SaveLocalizedValueAsync(product,
+                await LocalizedEntityService.SaveLocalizedValueAsync(product,
                     x => x.ShortDescription,
                     localized.ShortDescription,
                     localized.LanguageId);
-                await _localizedEntityService.SaveLocalizedValueAsync(product,
+                await LocalizedEntityService.SaveLocalizedValueAsync(product,
                     x => x.FullDescription,
                     localized.FullDescription,
                     localized.LanguageId);
-                await _localizedEntityService.SaveLocalizedValueAsync(product,
+                await LocalizedEntityService.SaveLocalizedValueAsync(product,
                     x => x.MetaKeywords,
                     localized.MetaKeywords,
                     localized.LanguageId);
-                await _localizedEntityService.SaveLocalizedValueAsync(product,
+                await LocalizedEntityService.SaveLocalizedValueAsync(product,
                     x => x.MetaDescription,
                     localized.MetaDescription,
                     localized.LanguageId);
-                await _localizedEntityService.SaveLocalizedValueAsync(product,
+                await LocalizedEntityService.SaveLocalizedValueAsync(product,
                     x => x.MetaTitle,
                     localized.MetaTitle,
                     localized.LanguageId);
 
                 //search engine name
-                var seName = await _urlRecordService.ValidateSeNameAsync(product, localized.SeName, localized.Name, false);
-                await _urlRecordService.SaveSlugAsync(product, seName, localized.LanguageId);
+                var seName = await UrlRecordService.ValidateSeNameAsync(product, localized.SeName, localized.Name, false);
+                await UrlRecordService.SaveSlugAsync(product, seName, localized.LanguageId);
             }
         }
 
@@ -195,13 +195,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValueAsync(productTag,
+                await LocalizedEntityService.SaveLocalizedValueAsync(productTag,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
 
-                var seName = await _urlRecordService.ValidateSeNameAsync(productTag, string.Empty, localized.Name, false);
-                await _urlRecordService.SaveSlugAsync(productTag, seName, localized.LanguageId);
+                var seName = await UrlRecordService.ValidateSeNameAsync(productTag, string.Empty, localized.Name, false);
+                await UrlRecordService.SaveSlugAsync(productTag, seName, localized.LanguageId);
             }
         }
 
@@ -209,11 +209,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValueAsync(pam,
+                await LocalizedEntityService.SaveLocalizedValueAsync(pam,
                     x => x.TextPrompt,
                     localized.TextPrompt,
                     localized.LanguageId);
-                await _localizedEntityService.SaveLocalizedValueAsync(pam,
+                await LocalizedEntityService.SaveLocalizedValueAsync(pam,
                     x => x.DefaultValue,
                     localized.DefaultValue,
                     localized.LanguageId);
@@ -224,7 +224,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValueAsync(pav,
+                await LocalizedEntityService.SaveLocalizedValueAsync(pav,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
@@ -233,55 +233,55 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async Task UpdatePictureSeoNamesAsync(Product product)
         {
-            foreach (var pp in await _productService.GetProductPicturesByProductIdAsync(product.Id))
-                await _pictureService.SetSeoFilenameAsync(pp.PictureId, await _pictureService.GetPictureSeNameAsync(product.Name));
+            foreach (var pp in await ProductService.GetProductPicturesByProductIdAsync(product.Id))
+                await PictureService.SetSeoFilenameAsync(pp.PictureId, await PictureService.GetPictureSeNameAsync(product.Name));
         }
 
         protected virtual async Task SaveProductAclAsync(Product product, ProductModel model)
         {
             product.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
-            await _productService.UpdateProductAsync(product);
+            await ProductService.UpdateProductAsync(product);
 
-            var existingAclRecords = await _aclService.GetAclRecordsAsync(product);
-            var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
+            var existingAclRecords = await AclService.GetAclRecordsAsync(product);
+            var allCustomerRoles = await CustomerService.GetAllCustomerRolesAsync(true);
             foreach (var customerRole in allCustomerRoles)
             {
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
                     if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
-                        await _aclService.InsertAclRecordAsync(product, customerRole.Id);
+                        await AclService.InsertAclRecordAsync(product, customerRole.Id);
                 }
                 else
                 {
                     //remove role
                     var aclRecordToDelete = existingAclRecords.FirstOrDefault(acl => acl.CustomerRoleId == customerRole.Id);
                     if (aclRecordToDelete != null)
-                        await _aclService.DeleteAclRecordAsync(aclRecordToDelete);
+                        await AclService.DeleteAclRecordAsync(aclRecordToDelete);
                 }
             }
         }
 
         protected virtual async Task SaveCategoryMappingsAsync(Product product, ProductModel model)
         {
-            var existingProductCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true);
+            var existingProductCategories = await CategoryService.GetProductCategoriesByProductIdAsync(product.Id, true);
 
             //delete categories
             foreach (var existingProductCategory in existingProductCategories)
                 if (!model.SelectedCategoryIds.Contains(existingProductCategory.CategoryId))
-                    await _categoryService.DeleteProductCategoryAsync(existingProductCategory);
+                    await CategoryService.DeleteProductCategoryAsync(existingProductCategory);
 
             //add categories
             foreach (var categoryId in model.SelectedCategoryIds)
             {
-                if (_categoryService.FindProductCategory(existingProductCategories, product.Id, categoryId) == null)
+                if (CategoryService.FindProductCategory(existingProductCategories, product.Id, categoryId) == null)
                 {
                     //find next display order
                     var displayOrder = 1;
-                    var existingCategoryMapping = await _categoryService.GetProductCategoriesByCategoryIdAsync(categoryId, showHidden: true);
+                    var existingCategoryMapping = await CategoryService.GetProductCategoriesByCategoryIdAsync(categoryId, showHidden: true);
                     if (existingCategoryMapping.Any())
                         displayOrder = existingCategoryMapping.Max(x => x.DisplayOrder) + 1;
-                    await _categoryService.InsertProductCategoryAsync(new ProductCategory
+                    await CategoryService.InsertProductCategoryAsync(new ProductCategory
                     {
                         ProductId = product.Id,
                         CategoryId = categoryId,
@@ -293,24 +293,24 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async Task SaveManufacturerMappingsAsync(Product product, ProductModel model)
         {
-            var existingProductManufacturers = await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id, true);
+            var existingProductManufacturers = await ManufacturerService.GetProductManufacturersByProductIdAsync(product.Id, true);
 
             //delete manufacturers
             foreach (var existingProductManufacturer in existingProductManufacturers)
                 if (!model.SelectedManufacturerIds.Contains(existingProductManufacturer.ManufacturerId))
-                    await _manufacturerService.DeleteProductManufacturerAsync(existingProductManufacturer);
+                    await ManufacturerService.DeleteProductManufacturerAsync(existingProductManufacturer);
 
             //add manufacturers
             foreach (var manufacturerId in model.SelectedManufacturerIds)
             {
-                if (_manufacturerService.FindProductManufacturer(existingProductManufacturers, product.Id, manufacturerId) == null)
+                if (ManufacturerService.FindProductManufacturer(existingProductManufacturers, product.Id, manufacturerId) == null)
                 {
                     //find next display order
                     var displayOrder = 1;
-                    var existingManufacturerMapping = await _manufacturerService.GetProductManufacturersByManufacturerIdAsync(manufacturerId, showHidden: true);
+                    var existingManufacturerMapping = await ManufacturerService.GetProductManufacturersByManufacturerIdAsync(manufacturerId, showHidden: true);
                     if (existingManufacturerMapping.Any())
                         displayOrder = existingManufacturerMapping.Max(x => x.DisplayOrder) + 1;
-                    await _manufacturerService.InsertProductManufacturerAsync(new ProductManufacturer
+                    await ManufacturerService.InsertProductManufacturerAsync(new ProductManufacturer
                     {
                         ProductId = product.Id,
                         ManufacturerId = manufacturerId,
@@ -322,26 +322,26 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async Task SaveDiscountMappingsAsync(Product product, ProductModel model)
         {
-            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true);
+            var allDiscounts = await DiscountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true);
 
             foreach (var discount in allDiscounts)
             {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                 {
                     //new discount
-                    if (await _productService.GetDiscountAppliedToProductAsync(product.Id, discount.Id) is null)
-                        await _productService.InsertDiscountProductMappingAsync(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
+                    if (await ProductService.GetDiscountAppliedToProductAsync(product.Id, discount.Id) is null)
+                        await ProductService.InsertDiscountProductMappingAsync(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
                 }
                 else
                 {
                     //remove discount
-                    if (await _productService.GetDiscountAppliedToProductAsync(product.Id, discount.Id) is DiscountProductMapping discountProductMapping)
-                        await _productService.DeleteDiscountProductMappingAsync(discountProductMapping);
+                    if (await ProductService.GetDiscountAppliedToProductAsync(product.Id, discount.Id) is DiscountProductMapping discountProductMapping)
+                        await ProductService.DeleteDiscountProductMappingAsync(discountProductMapping);
                 }
             }
 
-            await _productService.UpdateProductAsync(product);
-            await _productService.UpdateHasDiscountsAppliedAsync(product);
+            await ProductService.UpdateProductAsync(product);
+            await ProductService.UpdateHasDiscountsAppliedAsync(product);
         }
 
         protected virtual async Task<string> GetAttributesXmlForProductAttributeCombinationAsync(IFormCollection form, List<string> warnings, int productId)
@@ -349,7 +349,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var attributesXml = string.Empty;
 
             //get product attribute mappings (exclude non-combinable attributes)
-            var attributes = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(productId))
+            var attributes = (await ProductAttributeService.GetProductAttributeMappingsByProductIdAsync(productId))
                 .Where(productAttributeMapping => !productAttributeMapping.IsNonCombinable()).ToList();
 
             foreach (var attribute in attributes)
@@ -368,7 +368,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             var selectedAttributeId = int.Parse(ctrlAttributes);
                             if (selectedAttributeId > 0)
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                attributesXml = ProductAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                         }
 
@@ -382,7 +382,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             {
                                 var selectedAttributeId = int.Parse(item);
                                 if (selectedAttributeId > 0)
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attributesXml = ProductAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -390,13 +390,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
                         //load read-only (already server-side selected) values
-                        var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(attribute.Id);
+                        var attributeValues = await ProductAttributeService.GetProductAttributeValuesAsync(attribute.Id);
                         foreach (var selectedAttributeId in attributeValues
                             .Where(v => v.IsPreSelected)
                             .Select(v => v.Id)
                             .ToList())
                         {
-                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                            attributesXml = ProductAttributeParser.AddProductAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
                         }
 
@@ -407,7 +407,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         if (!string.IsNullOrEmpty(ctrlAttributes))
                         {
                             var enteredText = ctrlAttributes.ToString().Trim();
-                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                            attributesXml = ProductAttributeParser.AddProductAttribute(attributesXml,
                                 attribute, enteredText);
                         }
 
@@ -428,7 +428,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                         if (selectedDate.HasValue)
                         {
-                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                            attributesXml = ProductAttributeParser.AddProductAttribute(attributesXml,
                                 attribute, selectedDate.Value.ToString("D"));
                         }
 
@@ -445,7 +445,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 if (httpPostedFile.Length > maxFileSizeBytes)
                                 {
                                     warnings.Add(string.Format(
-                                        await _localizationService.GetResourceAsync("ShoppingCart.MaximumUploadedFileSize"),
+                                        await LocalizationService.GetResourceAsync("ShoppingCart.MaximumUploadedFileSize"),
                                         attribute.ValidationFileMaximumSize.Value));
                                     fileSizeOk = false;
                                 }
@@ -459,16 +459,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     DownloadGuid = Guid.NewGuid(),
                                     UseDownloadUrl = false,
                                     DownloadUrl = string.Empty,
-                                    DownloadBinary = await _downloadService.GetDownloadBitsAsync(httpPostedFile),
+                                    DownloadBinary = await DownloadService.GetDownloadBitsAsync(httpPostedFile),
                                     ContentType = httpPostedFile.ContentType,
-                                    Filename = _fileProvider.GetFileNameWithoutExtension(httpPostedFile.FileName),
-                                    Extension = _fileProvider.GetFileExtension(httpPostedFile.FileName),
+                                    Filename = FileProvider.GetFileNameWithoutExtension(httpPostedFile.FileName),
+                                    Extension = FileProvider.GetFileExtension(httpPostedFile.FileName),
                                     IsNew = true
                                 };
-                                await _downloadService.InsertDownloadAsync(download);
+                                await DownloadService.InsertDownloadAsync(download);
 
                                 //save attribute
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                attributesXml = ProductAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, download.DownloadGuid.ToString());
                             }
                         }
@@ -482,10 +482,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             //validate conditional attributes (if specified)
             foreach (var attribute in attributes)
             {
-                var conditionMet = await _productAttributeParser.IsConditionMetAsync(attribute, attributesXml);
+                var conditionMet = await ProductAttributeParser.IsConditionMetAsync(attribute, attributesXml);
                 if (conditionMet.HasValue && !conditionMet.Value)
                 {
-                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
+                    attributesXml = ProductAttributeParser.RemoveProductAttribute(attributesXml, attribute);
                 }
             }
 
@@ -517,7 +517,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!model.UseMultipleWarehouses)
                 return;
 
-            var warehouses = await _shippingService.GetAllWarehousesAsync();
+            var warehouses = await ShippingService.GetAllWarehousesAsync();
 
             var formData = Request.Form.ToDictionary(x => x.Key, x => x.Value.ToString());
 
@@ -554,9 +554,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
 
                 //quantity change history message
-                var message = $"{await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.MultipleWarehouses")} {await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Edit")}";
+                var message = $"{await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.MultipleWarehouses")} {await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Edit")}";
 
-                var existingPwI = (await _productService.GetAllProductWarehouseInventoryRecordsAsync(product.Id)).FirstOrDefault(x => x.WarehouseId == warehouse.Id);
+                var existingPwI = (await ProductService.GetAllProductWarehouseInventoryRecordsAsync(product.Id)).FirstOrDefault(x => x.WarehouseId == warehouse.Id);
                 if (existingPwI != null)
                 {
                     if (used)
@@ -566,19 +566,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                         //update existing record
                         existingPwI.StockQuantity = stockQuantity;
                         existingPwI.ReservedQuantity = reservedQuantity;
-                        await _productService.UpdateProductWarehouseInventoryAsync(existingPwI);
+                        await ProductService.UpdateProductWarehouseInventoryAsync(existingPwI);
 
                         //quantity change history
-                        await _productService.AddStockQuantityHistoryEntryAsync(product, existingPwI.StockQuantity - previousStockQuantity, existingPwI.StockQuantity,
+                        await ProductService.AddStockQuantityHistoryEntryAsync(product, existingPwI.StockQuantity - previousStockQuantity, existingPwI.StockQuantity,
                             existingPwI.WarehouseId, message);
                     }
                     else
                     {
                         //delete. no need to store record for qty 0
-                        await _productService.DeleteProductWarehouseInventoryAsync(existingPwI);
+                        await ProductService.DeleteProductWarehouseInventoryAsync(existingPwI);
 
                         //quantity change history
-                        await _productService.AddStockQuantityHistoryEntryAsync(product, -existingPwI.StockQuantity, 0, existingPwI.WarehouseId, message);
+                        await ProductService.AddStockQuantityHistoryEntryAsync(product, -existingPwI.StockQuantity, 0, existingPwI.WarehouseId, message);
                     }
                 }
                 else
@@ -595,10 +595,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                         ReservedQuantity = reservedQuantity
                     };
 
-                    await _productService.InsertProductWarehouseInventoryAsync(existingPwI);
+                    await ProductService.InsertProductWarehouseInventoryAsync(existingPwI);
 
                     //quantity change history
-                    await _productService.AddStockQuantityHistoryEntryAsync(product, existingPwI.StockQuantity, existingPwI.StockQuantity,
+                    await ProductService.AddStockQuantityHistoryEntryAsync(product, existingPwI.StockQuantity, existingPwI.StockQuantity,
                         existingPwI.WarehouseId, message);
                 }
             }
@@ -610,7 +610,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             string attributesXml = null;
             if (model.EnableCondition)
             {
-                var attribute = await _productAttributeService.GetProductAttributeMappingByIdAsync(model.SelectedProductAttributeId);
+                var attribute = await ProductAttributeService.GetProductAttributeMappingByIdAsync(model.SelectedProductAttributeId);
                 if (attribute != null)
                 {
                     var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
@@ -627,7 +627,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 //for conditions we should empty values save even when nothing is selected
                                 //otherwise "attributesXml" will be empty
                                 //hence we won't be able to find a selected attribute
-                                attributesXml = _productAttributeParser.AddProductAttribute(null, attribute,
+                                attributesXml = ProductAttributeParser.AddProductAttribute(null, attribute,
                                     selectedAttributeId > 0 ? selectedAttributeId.ToString() : string.Empty);
                             }
                             else
@@ -635,7 +635,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 //for conditions we should empty values save even when nothing is selected
                                 //otherwise "attributesXml" will be empty
                                 //hence we won't be able to find a selected attribute
-                                attributesXml = _productAttributeParser.AddProductAttribute(null,
+                                attributesXml = ProductAttributeParser.AddProductAttribute(null,
                                     attribute, string.Empty);
                             }
 
@@ -652,7 +652,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     if (selectedAttributeId <= 0)
                                         continue;
 
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attributesXml = ProductAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                                     anyValueSelected = true;
                                 }
@@ -662,7 +662,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     //for conditions we should save empty values even when nothing is selected
                                     //otherwise "attributesXml" will be empty
                                     //hence we won't be able to find a selected attribute
-                                    attributesXml = _productAttributeParser.AddProductAttribute(null,
+                                    attributesXml = ProductAttributeParser.AddProductAttribute(null,
                                         attribute, string.Empty);
                                 }
                             }
@@ -671,7 +671,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 //for conditions we should save empty values even when nothing is selected
                                 //otherwise "attributesXml" will be empty
                                 //hence we won't be able to find a selected attribute
-                                attributesXml = _productAttributeParser.AddProductAttribute(null,
+                                attributesXml = ProductAttributeParser.AddProductAttribute(null,
                                     attribute, string.Empty);
                             }
 
@@ -689,15 +689,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             productAttributeMapping.ConditionAttributeXml = attributesXml;
-            await _productAttributeService.UpdateProductAttributeMappingAsync(productAttributeMapping);
+            await ProductAttributeService.UpdateProductAttributeMappingAsync(productAttributeMapping);
         }
 
         protected virtual async Task GenerateAttributeCombinationsAsync(Product product, IList<int> allowedAttributeIds = null)
         {
-            var allAttributesXml = await _productAttributeParser.GenerateAllCombinationsAsync(product, true, allowedAttributeIds);
+            var allAttributesXml = await ProductAttributeParser.GenerateAllCombinationsAsync(product, true, allowedAttributeIds);
             foreach (var attributesXml in allAttributesXml)
             {
-                var existingCombination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
+                var existingCombination = await ProductAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
 
                 //already exists?
                 if (existingCombination != null)
@@ -705,7 +705,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //new one
                 var warnings = new List<string>();
-                warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(await _workContext.GetCurrentCustomerAsync(),
+                warnings.AddRange(await ShoppingCartService.GetShoppingCartItemAttributeWarningsAsync(await WorkContext.GetCurrentCustomerAsync(),
                     ShoppingCartType.ShoppingCart, product, 1, attributesXml, true, true));
                 if (warnings.Count != 0)
                     continue;
@@ -724,7 +724,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     NotifyAdminForQuantityBelow = 1,
                     PictureId = 0
                 };
-                await _productAttributeService.InsertProductAttributeCombinationAsync(combination);
+                await ProductAttributeService.InsertProductAttributeCombinationAsync(combination);
             }
         }
 
@@ -741,11 +741,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductSearchModelAsync(new ProductSearchModel());
+            var model = await ProductModelFactory.PrepareProductSearchModelAsync(new ProductSearchModel());
 
             return View(model);
         }
@@ -753,11 +753,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductList(ProductSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductListModelAsync(searchModel);
+            var model = await ProductModelFactory.PrepareProductListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -767,8 +767,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> GoToSku(ProductSearchModel searchModel)
         {
             //try to load a product entity, if not found, then try to load a product attribute combination
-            var productId = (await _productService.GetProductBySkuAsync(searchModel.GoDirectlyToSku))?.Id
-                ?? (await _productAttributeService.GetProductAttributeCombinationBySkuAsync(searchModel.GoDirectlyToSku))?.ProductId;
+            var productId = (await ProductService.GetProductBySkuAsync(searchModel.GoDirectlyToSku))?.Id
+                ?? (await ProductAttributeService.GetProductAttributeCombinationBySkuAsync(searchModel.GoDirectlyToSku))?.ProductId;
 
             if (productId != null)
                 return RedirectToAction("Edit", "Product", new { id = productId });
@@ -779,28 +779,28 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Create(bool showtour = false)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //validate maximum number of products per vendor
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
-            if (_vendorSettings.MaximumProductNumber > 0 && currentVendor != null
-                && await _productService.GetNumberOfProductsByVendorIdAsync(currentVendor.Id) >= _vendorSettings.MaximumProductNumber)
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
+            if (VendorSettings.MaximumProductNumber > 0 && currentVendor != null
+                && await ProductService.GetNumberOfProductsByVendorIdAsync(currentVendor.Id) >= VendorSettings.MaximumProductNumber)
             {
-                _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ExceededMaximumNumber"),
-                    _vendorSettings.MaximumProductNumber));
+                NotificationService.ErrorNotification(string.Format(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ExceededMaximumNumber"),
+                    VendorSettings.MaximumProductNumber));
                 return RedirectToAction("List");
             }
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductModelAsync(new ProductModel(), null);
+            var model = await ProductModelFactory.PrepareProductModelAsync(new ProductModel(), null);
 
             //show configuration tour
             if (showtour)
             {
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                var hideCard = await GenericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
+                var closeCard = await GenericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
 
                 if (!hideCard && !closeCard)
                     ViewBag.ShowTour = true;
@@ -812,16 +812,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Create(ProductModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //validate maximum number of products per vendor
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
-            if (_vendorSettings.MaximumProductNumber > 0 && currentVendor != null
-                && await _productService.GetNumberOfProductsByVendorIdAsync(currentVendor.Id) >= _vendorSettings.MaximumProductNumber)
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
+            if (VendorSettings.MaximumProductNumber > 0 && currentVendor != null
+                && await ProductService.GetNumberOfProductsByVendorIdAsync(currentVendor.Id) >= VendorSettings.MaximumProductNumber)
             {
-                _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ExceededMaximumNumber"),
-                    _vendorSettings.MaximumProductNumber));
+                NotificationService.ErrorNotification(string.Format(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ExceededMaximumNumber"),
+                    VendorSettings.MaximumProductNumber));
                 return RedirectToAction("List");
             }
 
@@ -839,11 +839,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var product = model.ToEntity<Product>();
                 product.CreatedOnUtc = DateTime.UtcNow;
                 product.UpdatedOnUtc = DateTime.UtcNow;
-                await _productService.InsertProductAsync(product);
+                await ProductService.InsertProductAsync(product);
 
                 //search engine name
-                model.SeName = await _urlRecordService.ValidateSeNameAsync(product, model.SeName, product.Name, true);
-                await _urlRecordService.SaveSlugAsync(product, model.SeName, 0);
+                model.SeName = await UrlRecordService.ValidateSeNameAsync(product, model.SeName, product.Name, true);
+                await UrlRecordService.SaveSlugAsync(product, model.SeName, 0);
 
                 //locales
                 await UpdateLocalesAsync(product, model);
@@ -858,26 +858,26 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await SaveProductAclAsync(product, model);
 
                 //stores
-                await _productService.UpdateProductStoreMappingsAsync(product, model.SelectedStoreIds);
+                await ProductService.UpdateProductStoreMappingsAsync(product, model.SelectedStoreIds);
 
                 //discounts
                 await SaveDiscountMappingsAsync(product, model);
 
                 //tags
-                await _productTagService.UpdateProductTagsAsync(product, ParseProductTags(model.ProductTags));
+                await ProductTagService.UpdateProductTagsAsync(product, ParseProductTags(model.ProductTags));
 
                 //warehouses
                 await SaveProductWarehouseInventoryAsync(product, model);
 
                 //quantity change history
-                await _productService.AddStockQuantityHistoryEntryAsync(product, product.StockQuantity, product.StockQuantity, product.WarehouseId,
-                    await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Edit"));
+                await ProductService.AddStockQuantityHistoryEntryAsync(product, product.StockQuantity, product.StockQuantity, product.WarehouseId,
+                    await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Edit"));
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("AddNewProduct",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewProduct"), product.Name), product);
+                await CustomerActivityService.InsertActivityAsync("AddNewProduct",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.AddNewProduct"), product.Name), product);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Added"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -886,7 +886,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _productModelFactory.PrepareProductModelAsync(model, null, true);
+            model = await ProductModelFactory.PrepareProductModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -894,21 +894,21 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(id);
+            var product = await ProductService.GetProductByIdAsync(id);
             if (product == null || product.Deleted)
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductModelAsync(null, product);
+            var model = await ProductModelFactory.PrepareProductModelAsync(null, product);
 
             return View(model);
         }
@@ -916,16 +916,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Edit(ProductModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(model.Id);
+            var product = await ProductService.GetProductByIdAsync(model.Id);
             if (product == null || product.Deleted)
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List");
 
@@ -934,7 +934,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //and redirect on the editing page without data saving
             if (product.StockQuantity != model.LastStockQuantity)
             {
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.StockQuantity.ChangedWarning"));
+                NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Fields.StockQuantity.ChangedWarning"));
                 return RedirectToAction("Edit", new { id = product.Id });
             }
 
@@ -950,7 +950,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.ShowOnHomepage = product.ShowOnHomepage;
 
                 //some previously used values
-                var prevTotalStockQuantity = await _productService.GetTotalStockQuantityAsync(product);
+                var prevTotalStockQuantity = await ProductService.GetTotalStockQuantityAsync(product);
                 var prevDownloadId = product.DownloadId;
                 var prevSampleDownloadId = product.SampleDownloadId;
                 var previousStockQuantity = product.StockQuantity;
@@ -961,32 +961,32 @@ namespace Nop.Web.Areas.Admin.Controllers
                 product = model.ToEntity(product);
 
                 product.UpdatedOnUtc = DateTime.UtcNow;
-                await _productService.UpdateProductAsync(product);
+                await ProductService.UpdateProductAsync(product);
 
                 //remove associated products
                 if (previousProductType == ProductType.GroupedProduct && product.ProductType == ProductType.SimpleProduct)
                 {
-                    var store = await _storeContext.GetCurrentStoreAsync();
+                    var store = await StoreContext.GetCurrentStoreAsync();
                     var storeId = store?.Id ?? 0;
                     var vendorId = currentVendor?.Id ?? 0;
 
-                    var associatedProducts = await _productService.GetAssociatedProductsAsync(product.Id, storeId, vendorId);
+                    var associatedProducts = await ProductService.GetAssociatedProductsAsync(product.Id, storeId, vendorId);
                     foreach (var associatedProduct in associatedProducts)
                     {
                         associatedProduct.ParentGroupedProductId = 0;
-                        await _productService.UpdateProductAsync(associatedProduct);
+                        await ProductService.UpdateProductAsync(associatedProduct);
                     }
                 }
 
                 //search engine name
-                model.SeName = await _urlRecordService.ValidateSeNameAsync(product, model.SeName, product.Name, true);
-                await _urlRecordService.SaveSlugAsync(product, model.SeName, 0);
+                model.SeName = await UrlRecordService.ValidateSeNameAsync(product, model.SeName, product.Name, true);
+                await UrlRecordService.SaveSlugAsync(product, model.SeName, 0);
 
                 //locales
                 await UpdateLocalesAsync(product, model);
 
                 //tags
-                await _productTagService.UpdateProductTagsAsync(product, ParseProductTags(model.ProductTags));
+                await ProductTagService.UpdateProductTagsAsync(product, ParseProductTags(model.ProductTags));
 
                 //warehouses
                 await SaveProductWarehouseInventoryAsync(product, model);
@@ -1001,7 +1001,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await SaveProductAclAsync(product, model);
 
                 //stores
-                await _productService.UpdateProductStoreMappingsAsync(product, model.SelectedStoreIds);
+                await ProductService.UpdateProductStoreMappingsAsync(product, model.SelectedStoreIds);
 
                 //discounts
                 await SaveDiscountMappingsAsync(product, model);
@@ -1013,28 +1013,28 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                     product.BackorderMode == BackorderMode.NoBackorders &&
                     product.AllowBackInStockSubscriptions &&
-                    await _productService.GetTotalStockQuantityAsync(product) > 0 &&
+                    await ProductService.GetTotalStockQuantityAsync(product) > 0 &&
                     prevTotalStockQuantity <= 0 &&
                     product.Published &&
                     !product.Deleted)
                 {
-                    await _backInStockSubscriptionService.SendNotificationsToSubscribersAsync(product);
+                    await BackInStockSubscriptionService.SendNotificationsToSubscribersAsync(product);
                 }
 
                 //delete an old "download" file (if deleted or updated)
                 if (prevDownloadId > 0 && prevDownloadId != product.DownloadId)
                 {
-                    var prevDownload = await _downloadService.GetDownloadByIdAsync(prevDownloadId);
+                    var prevDownload = await DownloadService.GetDownloadByIdAsync(prevDownloadId);
                     if (prevDownload != null)
-                        await _downloadService.DeleteDownloadAsync(prevDownload);
+                        await DownloadService.DeleteDownloadAsync(prevDownload);
                 }
 
                 //delete an old "sample download" file (if deleted or updated)
                 if (prevSampleDownloadId > 0 && prevSampleDownloadId != product.SampleDownloadId)
                 {
-                    var prevSampleDownload = await _downloadService.GetDownloadByIdAsync(prevSampleDownloadId);
+                    var prevSampleDownload = await DownloadService.GetDownloadByIdAsync(prevSampleDownloadId);
                     if (prevSampleDownload != null)
-                        await _downloadService.DeleteDownloadAsync(prevSampleDownload);
+                        await DownloadService.DeleteDownloadAsync(prevSampleDownload);
                 }
 
                 //quantity change history
@@ -1045,36 +1045,36 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var oldWarehouseMessage = string.Empty;
                     if (previousWarehouseId > 0)
                     {
-                        var oldWarehouse = await _shippingService.GetWarehouseByIdAsync(previousWarehouseId);
+                        var oldWarehouse = await ShippingService.GetWarehouseByIdAsync(previousWarehouseId);
                         if (oldWarehouse != null)
-                            oldWarehouseMessage = string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.EditWarehouse.Old"), oldWarehouse.Name);
+                            oldWarehouseMessage = string.Format(await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.EditWarehouse.Old"), oldWarehouse.Name);
                     }
 
                     var newWarehouseMessage = string.Empty;
                     if (product.WarehouseId > 0)
                     {
-                        var newWarehouse = await _shippingService.GetWarehouseByIdAsync(product.WarehouseId);
+                        var newWarehouse = await ShippingService.GetWarehouseByIdAsync(product.WarehouseId);
                         if (newWarehouse != null)
-                            newWarehouseMessage = string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.EditWarehouse.New"), newWarehouse.Name);
+                            newWarehouseMessage = string.Format(await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.EditWarehouse.New"), newWarehouse.Name);
                     }
 
-                    var message = string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.EditWarehouse"), oldWarehouseMessage, newWarehouseMessage);
+                    var message = string.Format(await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.EditWarehouse"), oldWarehouseMessage, newWarehouseMessage);
 
                     //record history
-                    await _productService.AddStockQuantityHistoryEntryAsync(product, -previousStockQuantity, 0, previousWarehouseId, message);
-                    await _productService.AddStockQuantityHistoryEntryAsync(product, product.StockQuantity, product.StockQuantity, product.WarehouseId, message);
+                    await ProductService.AddStockQuantityHistoryEntryAsync(product, -previousStockQuantity, 0, previousWarehouseId, message);
+                    await ProductService.AddStockQuantityHistoryEntryAsync(product, product.StockQuantity, product.StockQuantity, product.WarehouseId, message);
                 }
                 else
                 {
-                    await _productService.AddStockQuantityHistoryEntryAsync(product, product.StockQuantity - previousStockQuantity, product.StockQuantity,
-                        product.WarehouseId, await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Edit"));
+                    await ProductService.AddStockQuantityHistoryEntryAsync(product, product.StockQuantity - previousStockQuantity, product.StockQuantity,
+                        product.WarehouseId, await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Edit"));
                 }
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("EditProduct",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditProduct"), product.Name), product);
+                await CustomerActivityService.InsertActivityAsync("EditProduct",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.EditProduct"), product.Name), product);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Updated"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -1083,7 +1083,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _productModelFactory.PrepareProductModelAsync(model, product, true);
+            model = await ProductModelFactory.PrepareProductModelAsync(model, product, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -1092,26 +1092,26 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(id);
+            var product = await ProductService.GetProductByIdAsync(id);
             if (product == null)
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List");
 
-            await _productService.DeleteProductAsync(product);
+            await ProductService.DeleteProductAsync(product);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteProduct",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteProduct"), product.Name), product);
+            await CustomerActivityService.InsertActivityAsync("DeleteProduct",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.DeleteProduct"), product.Name), product);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -1119,14 +1119,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             if (selectedIds == null || selectedIds.Count() == 0)
                 return NoContent();
 
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
-            await _productService.DeleteProductsAsync((await _productService.GetProductsByIdsAsync(selectedIds.ToArray()))
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
+            await ProductService.DeleteProductsAsync((await ProductService.GetProductsByIdsAsync(selectedIds.ToArray()))
                 .Where(p => currentVendor == null || p.VendorId == currentVendor.Id).ToList());
 
             return Json(new { Result = true });
@@ -1135,28 +1135,28 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CopyProduct(ProductModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             var copyModel = model.CopyProductModel;
             try
             {
-                var originalProduct = await _productService.GetProductByIdAsync(copyModel.Id);
+                var originalProduct = await ProductService.GetProductByIdAsync(copyModel.Id);
 
                 //a vendor should have access only to his products
-                var currentVendor = await _workContext.GetCurrentVendorAsync();
+                var currentVendor = await WorkContext.GetCurrentVendorAsync();
                 if (currentVendor != null && originalProduct.VendorId != currentVendor.Id)
                     return RedirectToAction("List");
 
-                var newProduct = await _copyProductService.CopyProductAsync(originalProduct, copyModel.Name, copyModel.Published, copyModel.CopyImages);
+                var newProduct = await CopyProductService.CopyProductAsync(originalProduct, copyModel.Name, copyModel.Published, copyModel.CopyImages);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Copied"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Copied"));
 
                 return RedirectToAction("Edit", new { id = newProduct.Id });
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc.Message);
+                NotificationService.ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = copyModel.Id });
             }
         }
@@ -1167,23 +1167,23 @@ namespace Nop.Web.Areas.Admin.Controllers
             string message;
 
             //check whether product with passed SKU already exists
-            var productBySku = await _productService.GetProductBySkuAsync(sku);
+            var productBySku = await ProductService.GetProductBySkuAsync(sku);
             if (productBySku != null)
             {
                 if (productBySku.Id == productId)
                     return Json(new { Result = string.Empty });
 
-                message = string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Sku.Reserved"), productBySku.Name);
+                message = string.Format(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Sku.Reserved"), productBySku.Name);
                 return Json(new { Result = message });
             }
 
             //check whether combination with passed SKU already exists
-            var combinationBySku = await _productAttributeService.GetProductAttributeCombinationBySkuAsync(sku);
+            var combinationBySku = await ProductAttributeService.GetProductAttributeCombinationBySkuAsync(sku);
             if (combinationBySku == null)
                 return Json(new { Result = string.Empty });
 
-            message = string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku.Reserved"),
-                (await _productService.GetProductByIdAsync(combinationBySku.ProductId))?.Name);
+            message = string.Format(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku.Reserved"),
+                (await ProductService.GetProductByIdAsync(combinationBySku.ProductId))?.Name);
 
             return Json(new { Result = message });
         }
@@ -1197,7 +1197,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             var result = string.Empty;
 
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return Json(new { Text = result });
 
             if (string.IsNullOrWhiteSpace(productIds))
@@ -1215,7 +1215,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     ids.Add(tmp1);
             }
 
-            var products = await _productService.GetProductsByIdsAsync(ids.ToArray());
+            var products = await ProductService.GetProductsByIdsAsync(ids.ToArray());
             for (var i = 0; i <= products.Count - 1; i++)
             {
                 result += products[i].Name;
@@ -1228,11 +1228,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> RequiredProductAddPopup()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _productModelFactory.PrepareAddRequiredProductSearchModelAsync(new AddRequiredProductSearchModel());
+            var model = await ProductModelFactory.PrepareAddRequiredProductSearchModelAsync(new AddRequiredProductSearchModel());
 
             return View(model);
         }
@@ -1240,11 +1240,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> RequiredProductAddPopupList(AddRequiredProductSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _productModelFactory.PrepareAddRequiredProductListModelAsync(searchModel);
+            var model = await ProductModelFactory.PrepareAddRequiredProductListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -1256,20 +1256,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> RelatedProductList(RelatedProductSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+            var product = await ProductService.GetProductByIdAsync(searchModel.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareRelatedProductListModelAsync(searchModel, product);
+            var model = await ProductModelFactory.PrepareRelatedProductListModelAsync(searchModel, product);
 
             return Json(model);
         }
@@ -1277,24 +1277,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> RelatedProductUpdate(RelatedProductModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a related product with the specified id
-            var relatedProduct = await _productService.GetRelatedProductByIdAsync(model.Id)
+            var relatedProduct = await ProductService.GetRelatedProductByIdAsync(model.Id)
                 ?? throw new ArgumentException("No related product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
             {
-                var product = await _productService.GetProductByIdAsync(relatedProduct.ProductId1);
+                var product = await ProductService.GetProductByIdAsync(relatedProduct.ProductId1);
                 if (product != null && product.VendorId != currentVendor.Id)
                     return Content("This is not your product");
             }
 
             relatedProduct.DisplayOrder = model.DisplayOrder;
-            await _productService.UpdateRelatedProductAsync(relatedProduct);
+            await ProductService.UpdateRelatedProductAsync(relatedProduct);
 
             return new NullJsonResult();
         }
@@ -1302,36 +1302,36 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> RelatedProductDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a related product with the specified id
-            var relatedProduct = await _productService.GetRelatedProductByIdAsync(id)
+            var relatedProduct = await ProductService.GetRelatedProductByIdAsync(id)
                 ?? throw new ArgumentException("No related product found with the specified id");
 
             var productId = relatedProduct.ProductId1;
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
             {
-                var product = await _productService.GetProductByIdAsync(productId);
+                var product = await ProductService.GetProductByIdAsync(productId);
                 if (product != null && product.VendorId != currentVendor.Id)
                     return Content("This is not your product");
             }
 
-            await _productService.DeleteRelatedProductAsync(relatedProduct);
+            await ProductService.DeleteRelatedProductAsync(relatedProduct);
 
             return new NullJsonResult();
         }
 
         public virtual async Task<IActionResult> RelatedProductAddPopup(int productId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _productModelFactory.PrepareAddRelatedProductSearchModelAsync(new AddRelatedProductSearchModel());
+            var model = await ProductModelFactory.PrepareAddRelatedProductSearchModelAsync(new AddRelatedProductSearchModel());
 
             return View(model);
         }
@@ -1339,11 +1339,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> RelatedProductAddPopupList(AddRelatedProductSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _productModelFactory.PrepareAddRelatedProductListModelAsync(searchModel);
+            var model = await ProductModelFactory.PrepareAddRelatedProductListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -1352,24 +1352,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public virtual async Task<IActionResult> RelatedProductAddPopup(AddRelatedProductModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
+            var selectedProducts = await ProductService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
             if (selectedProducts.Any())
             {
-                var existingRelatedProducts = await _productService.GetRelatedProductsByProductId1Async(model.ProductId, showHidden: true);
-                var currentVendor = await _workContext.GetCurrentVendorAsync();
+                var existingRelatedProducts = await ProductService.GetRelatedProductsByProductId1Async(model.ProductId, showHidden: true);
+                var currentVendor = await WorkContext.GetCurrentVendorAsync();
                 foreach (var product in selectedProducts)
                 {
                     //a vendor should have access only to his products
                     if (currentVendor != null && product.VendorId != currentVendor.Id)
                         continue;
 
-                    if (_productService.FindRelatedProduct(existingRelatedProducts, model.ProductId, product.Id) != null)
+                    if (ProductService.FindRelatedProduct(existingRelatedProducts, model.ProductId, product.Id) != null)
                         continue;
 
-                    await _productService.InsertRelatedProductAsync(new RelatedProduct
+                    await ProductService.InsertRelatedProductAsync(new RelatedProduct
                     {
                         ProductId1 = model.ProductId,
                         ProductId2 = product.Id,
@@ -1390,20 +1390,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CrossSellProductList(CrossSellProductSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+            var product = await ProductService.GetProductByIdAsync(searchModel.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareCrossSellProductListModelAsync(searchModel, product);
+            var model = await ProductModelFactory.PrepareCrossSellProductListModelAsync(searchModel, product);
 
             return Json(model);
         }
@@ -1411,34 +1411,34 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CrossSellProductDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a cross-sell product with the specified id
-            var crossSellProduct = await _productService.GetCrossSellProductByIdAsync(id)
+            var crossSellProduct = await ProductService.GetCrossSellProductByIdAsync(id)
                 ?? throw new ArgumentException("No cross-sell product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
             {
-                var product = await _productService.GetProductByIdAsync(crossSellProduct.ProductId1);
+                var product = await ProductService.GetProductByIdAsync(crossSellProduct.ProductId1);
                 if (product != null && product.VendorId != currentVendor.Id)
                     return Content("This is not your product");
             }
 
-            await _productService.DeleteCrossSellProductAsync(crossSellProduct);
+            await ProductService.DeleteCrossSellProductAsync(crossSellProduct);
 
             return new NullJsonResult();
         }
 
         public virtual async Task<IActionResult> CrossSellProductAddPopup(int productId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _productModelFactory.PrepareAddCrossSellProductSearchModelAsync(new AddCrossSellProductSearchModel());
+            var model = await ProductModelFactory.PrepareAddCrossSellProductSearchModelAsync(new AddCrossSellProductSearchModel());
 
             return View(model);
         }
@@ -1446,11 +1446,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CrossSellProductAddPopupList(AddCrossSellProductSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _productModelFactory.PrepareAddCrossSellProductListModelAsync(searchModel);
+            var model = await ProductModelFactory.PrepareAddCrossSellProductListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -1459,24 +1459,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public virtual async Task<IActionResult> CrossSellProductAddPopup(AddCrossSellProductModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
+            var selectedProducts = await ProductService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
             if (selectedProducts.Any())
             {
-                var existingCrossSellProducts = await _productService.GetCrossSellProductsByProductId1Async(model.ProductId, showHidden: true);
-                var currentVendor = await _workContext.GetCurrentVendorAsync();
+                var existingCrossSellProducts = await ProductService.GetCrossSellProductsByProductId1Async(model.ProductId, showHidden: true);
+                var currentVendor = await WorkContext.GetCurrentVendorAsync();
                 foreach (var product in selectedProducts)
                 {
                     //a vendor should have access only to his products
                     if (currentVendor != null && product.VendorId != currentVendor.Id)
                         continue;
 
-                    if (_productService.FindCrossSellProduct(existingCrossSellProducts, model.ProductId, product.Id) != null)
+                    if (ProductService.FindCrossSellProduct(existingCrossSellProducts, model.ProductId, product.Id) != null)
                         continue;
 
-                    await _productService.InsertCrossSellProductAsync(new CrossSellProduct
+                    await ProductService.InsertCrossSellProductAsync(new CrossSellProduct
                     {
                         ProductId1 = model.ProductId,
                         ProductId2 = product.Id
@@ -1496,20 +1496,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AssociatedProductList(AssociatedProductSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+            var product = await ProductService.GetProductByIdAsync(searchModel.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareAssociatedProductListModelAsync(searchModel, product);
+            var model = await ProductModelFactory.PrepareAssociatedProductListModelAsync(searchModel, product);
 
             return Json(model);
         }
@@ -1517,20 +1517,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AssociatedProductUpdate(AssociatedProductModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get an associated product with the specified id
-            var associatedProduct = await _productService.GetProductByIdAsync(model.Id)
+            var associatedProduct = await ProductService.GetProductByIdAsync(model.Id)
                 ?? throw new ArgumentException("No associated product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && associatedProduct.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             associatedProduct.DisplayOrder = model.DisplayOrder;
-            await _productService.UpdateProductAsync(associatedProduct);
+            await ProductService.UpdateProductAsync(associatedProduct);
 
             return new NullJsonResult();
         }
@@ -1538,31 +1538,31 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AssociatedProductDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get an associated product with the specified id
-            var product = await _productService.GetProductByIdAsync(id)
+            var product = await ProductService.GetProductByIdAsync(id)
                 ?? throw new ArgumentException("No associated product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             product.ParentGroupedProductId = 0;
-            await _productService.UpdateProductAsync(product);
+            await ProductService.UpdateProductAsync(product);
 
             return new NullJsonResult();
         }
 
         public virtual async Task<IActionResult> AssociatedProductAddPopup(int productId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _productModelFactory.PrepareAddAssociatedProductSearchModelAsync(new AddAssociatedProductSearchModel());
+            var model = await ProductModelFactory.PrepareAddAssociatedProductSearchModelAsync(new AddAssociatedProductSearchModel());
 
             return View(model);
         }
@@ -1570,11 +1570,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AssociatedProductAddPopupList(AddAssociatedProductSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _productModelFactory.PrepareAddAssociatedProductListModelAsync(searchModel);
+            var model = await ProductModelFactory.PrepareAddAssociatedProductListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -1583,10 +1583,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public virtual async Task<IActionResult> AssociatedProductAddPopup(AddAssociatedProductModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
+            var selectedProducts = await ProductService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
 
             var tryToAddSelfGroupedProduct = selectedProducts
                 .Select(p => p.Id)
@@ -1600,20 +1600,20 @@ namespace Nop.Web.Areas.Admin.Controllers
                         continue;
 
                     //a vendor should have access only to his products
-                    var currentVendor = await _workContext.GetCurrentVendorAsync();
+                    var currentVendor = await WorkContext.GetCurrentVendorAsync();
                     if (currentVendor != null && product.VendorId != currentVendor.Id)
                         continue;
 
                     product.ParentGroupedProductId = model.ProductId;
-                    await _productService.UpdateProductAsync(product);
+                    await ProductService.UpdateProductAsync(product);
                 }
             }
 
             if (tryToAddSelfGroupedProduct)
             {
-                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.AssociatedProducts.TryToAddSelfGroupedProduct"));
+                NotificationService.WarningNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.AssociatedProducts.TryToAddSelfGroupedProduct"));
 
-                var addAssociatedProductSearchModel = await _productModelFactory.PrepareAddAssociatedProductSearchModelAsync(new AddAssociatedProductSearchModel());
+                var addAssociatedProductSearchModel = await ProductModelFactory.PrepareAddAssociatedProductSearchModelAsync(new AddAssociatedProductSearchModel());
                 //set current product id
                 addAssociatedProductSearchModel.ProductId = model.ProductId;
 
@@ -1636,38 +1636,38 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductPictureAdd(int pictureId, int displayOrder,
             string overrideAltAttribute, string overrideTitleAttribute, int productId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             if (pictureId == 0)
                 throw new ArgumentException();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productId)
+            var product = await ProductService.GetProductByIdAsync(productId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List");
 
-            if ((await _productService.GetProductPicturesByProductIdAsync(productId)).Any(p => p.PictureId == pictureId))
+            if ((await ProductService.GetProductPicturesByProductIdAsync(productId)).Any(p => p.PictureId == pictureId))
                 return Json(new { Result = false });
 
             //try to get a picture with the specified id
-            var picture = await _pictureService.GetPictureByIdAsync(pictureId)
+            var picture = await PictureService.GetPictureByIdAsync(pictureId)
                 ?? throw new ArgumentException("No picture found with the specified id");
 
-            await _pictureService.UpdatePictureAsync(picture.Id,
-                await _pictureService.LoadPictureBinaryAsync(picture),
+            await PictureService.UpdatePictureAsync(picture.Id,
+                await PictureService.LoadPictureBinaryAsync(picture),
                 picture.MimeType,
                 picture.SeoFilename,
                 overrideAltAttribute,
                 overrideTitleAttribute);
 
-            await _pictureService.SetSeoFilenameAsync(pictureId, await _pictureService.GetPictureSeNameAsync(product.Name));
+            await PictureService.SetSeoFilenameAsync(pictureId, await PictureService.GetPictureSeNameAsync(product.Name));
 
-            await _productService.InsertProductPictureAsync(new ProductPicture
+            await ProductService.InsertProductPictureAsync(new ProductPicture
             {
                 PictureId = pictureId,
                 ProductId = productId,
@@ -1680,20 +1680,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductPictureList(ProductPictureSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+            var product = await ProductService.GetProductByIdAsync(searchModel.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductPictureListModelAsync(searchModel, product);
+            var model = await ProductModelFactory.PrepareProductPictureListModelAsync(searchModel, product);
 
             return Json(model);
         }
@@ -1701,35 +1701,35 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductPictureUpdate(ProductPictureModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product picture with the specified id
-            var productPicture = await _productService.GetProductPictureByIdAsync(model.Id)
+            var productPicture = await ProductService.GetProductPictureByIdAsync(model.Id)
                 ?? throw new ArgumentException("No product picture found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
             {
-                var product = await _productService.GetProductByIdAsync(productPicture.ProductId);
+                var product = await ProductService.GetProductByIdAsync(productPicture.ProductId);
                 if (product != null && product.VendorId != currentVendor.Id)
                     return Content("This is not your product");
             }
 
             //try to get a picture with the specified id
-            var picture = await _pictureService.GetPictureByIdAsync(productPicture.PictureId)
+            var picture = await PictureService.GetPictureByIdAsync(productPicture.PictureId)
                 ?? throw new ArgumentException("No picture found with the specified id");
 
-            await _pictureService.UpdatePictureAsync(picture.Id,
-                await _pictureService.LoadPictureBinaryAsync(picture),
+            await PictureService.UpdatePictureAsync(picture.Id,
+                await PictureService.LoadPictureBinaryAsync(picture),
                 picture.MimeType,
                 picture.SeoFilename,
                 model.OverrideAltAttribute,
                 model.OverrideTitleAttribute);
 
             productPicture.DisplayOrder = model.DisplayOrder;
-            await _productService.UpdateProductPictureAsync(productPicture);
+            await ProductService.UpdateProductPictureAsync(productPicture);
 
             return new NullJsonResult();
         }
@@ -1737,30 +1737,30 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductPictureDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product picture with the specified id
-            var productPicture = await _productService.GetProductPictureByIdAsync(id)
+            var productPicture = await ProductService.GetProductPictureByIdAsync(id)
                 ?? throw new ArgumentException("No product picture found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
             {
-                var product = await _productService.GetProductByIdAsync(productPicture.ProductId);
+                var product = await ProductService.GetProductByIdAsync(productPicture.ProductId);
                 if (product != null && product.VendorId != currentVendor.Id)
                     return Content("This is not your product");
             }
 
             var pictureId = productPicture.PictureId;
-            await _productService.DeleteProductPictureAsync(productPicture);
+            await ProductService.DeleteProductPictureAsync(productPicture);
 
             //try to get a picture with the specified id
-            var picture = await _pictureService.GetPictureByIdAsync(pictureId)
+            var picture = await PictureService.GetPictureByIdAsync(pictureId)
                 ?? throw new ArgumentException("No picture found with the specified id");
 
-            await _pictureService.DeletePictureAsync(picture);
+            await PictureService.DeletePictureAsync(picture);
 
             return new NullJsonResult();
         }
@@ -1772,18 +1772,18 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> ProductSpecificationAttributeAdd(AddSpecificationAttributeModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var product = await _productService.GetProductByIdAsync(model.ProductId);
+            var product = await ProductService.GetProductByIdAsync(model.ProductId);
             if (product == null)
             {
-                _notificationService.ErrorNotification("No product found with the specified id");
+                NotificationService.ErrorNotification("No product found with the specified id");
                 return RedirectToAction("List");
             }
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
             {
                 return RedirectToAction("List");
@@ -1804,14 +1804,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var psa = model.ToEntity<ProductSpecificationAttribute>();
             psa.CustomValue = model.ValueRaw;
-            await _specificationAttributeService.InsertProductSpecificationAttributeAsync(psa);
+            await SpecificationAttributeService.InsertProductSpecificationAttributeAsync(psa);
 
             switch (psa.AttributeType)
             {
                 case SpecificationAttributeType.CustomText:
                     foreach (var localized in model.Locales)
                     {
-                        await _localizedEntityService.SaveLocalizedValueAsync(psa,
+                        await LocalizedEntityService.SaveLocalizedValueAsync(psa,
                             x => x.CustomValue,
                             localized.Value,
                             localized.LanguageId);
@@ -1821,7 +1821,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 case SpecificationAttributeType.CustomHtmlText:
                     foreach (var localized in model.Locales)
                     {
-                        await _localizedEntityService.SaveLocalizedValueAsync(psa,
+                        await LocalizedEntityService.SaveLocalizedValueAsync(psa,
                             x => x.CustomValue,
                             localized.ValueRaw,
                             localized.LanguageId);
@@ -1848,20 +1848,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductSpecAttrList(ProductSpecificationAttributeSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+            var product = await ProductService.GetProductByIdAsync(searchModel.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductSpecificationAttributeListModelAsync(searchModel, product);
+            var model = await ProductModelFactory.PrepareProductSpecificationAttributeListModelAsync(searchModel, product);
 
             return Json(model);
         }
@@ -1869,26 +1869,26 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> ProductSpecAttrUpdate(AddSpecificationAttributeModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product specification attribute with the specified id
-            var psa = await _specificationAttributeService.GetProductSpecificationAttributeByIdAsync(model.SpecificationId);
+            var psa = await SpecificationAttributeService.GetProductSpecificationAttributeByIdAsync(model.SpecificationId);
             if (psa == null)
             {
                 //select an appropriate card
                 SaveSelectedCardName("product-specification-attributes");
-                _notificationService.ErrorNotification("No product specification attribute found with the specified id");
+                NotificationService.ErrorNotification("No product specification attribute found with the specified id");
 
                 return RedirectToAction("Edit", new { id = model.ProductId });
             }
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null
-                && (await _productService.GetProductByIdAsync(psa.ProductId)).VendorId != currentVendor.Id)
+                && (await ProductService.GetProductByIdAsync(psa.ProductId)).VendorId != currentVendor.Id)
             {
-                _notificationService.ErrorNotification("This is not your product");
+                NotificationService.ErrorNotification("This is not your product");
 
                 return RedirectToAction("List");
             }
@@ -1906,7 +1906,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     psa.CustomValue = model.ValueRaw;
                     foreach (var localized in model.Locales)
                     {
-                        await _localizedEntityService.SaveLocalizedValueAsync(psa,
+                        await LocalizedEntityService.SaveLocalizedValueAsync(psa,
                             x => x.CustomValue,
                             localized.ValueRaw,
                             localized.LanguageId);
@@ -1917,7 +1917,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     psa.CustomValue = model.Value;
                     foreach (var localized in model.Locales)
                     {
-                        await _localizedEntityService.SaveLocalizedValueAsync(psa,
+                        await LocalizedEntityService.SaveLocalizedValueAsync(psa,
                             x => x.CustomValue,
                             localized.Value,
                             localized.LanguageId);
@@ -1932,7 +1932,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             psa.ShowOnProductPage = model.ShowOnProductPage;
             psa.DisplayOrder = model.DisplayOrder;
-            await _specificationAttributeService.UpdateProductSpecificationAttributeAsync(psa);
+            await SpecificationAttributeService.UpdateProductSpecificationAttributeAsync(psa);
 
             if (continueEditing)
             {
@@ -1948,24 +1948,24 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ProductSpecAttributeAddOrEdit(int productId, int? specificationId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            if (await _productService.GetProductByIdAsync(productId) == null)
+            if (await ProductService.GetProductByIdAsync(productId) == null)
             {
-                _notificationService.ErrorNotification("No product found with the specified id");
+                NotificationService.ErrorNotification("No product found with the specified id");
                 return RedirectToAction("List");
             }
 
             //try to get a product specification attribute with the specified id
             try
             {
-                var model = await _productModelFactory.PrepareAddSpecificationAttributeModelAsync(productId, specificationId);
+                var model = await ProductModelFactory.PrepareAddSpecificationAttributeModelAsync(productId, specificationId);
                 return View(model);
             }
             catch (Exception ex)
             {
-                await _notificationService.ErrorNotificationAsync(ex);
+                await NotificationService.ErrorNotificationAsync(ex);
 
                 //select an appropriate card
                 SaveSelectedCardName("product-specification-attributes");
@@ -1976,28 +1976,28 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductSpecAttrDelete(AddSpecificationAttributeModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product specification attribute with the specified id
-            var psa = await _specificationAttributeService.GetProductSpecificationAttributeByIdAsync(model.SpecificationId);
+            var psa = await SpecificationAttributeService.GetProductSpecificationAttributeByIdAsync(model.SpecificationId);
             if (psa == null)
             {
                 //select an appropriate card
                 SaveSelectedCardName("product-specification-attributes");
-                _notificationService.ErrorNotification("No product specification attribute found with the specified id");
+                NotificationService.ErrorNotification("No product specification attribute found with the specified id");
                 return RedirectToAction("Edit", new { id = model.ProductId });
             }
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
-            if (currentVendor != null && (await _productService.GetProductByIdAsync(psa.ProductId)).VendorId != currentVendor.Id)
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
+            if (currentVendor != null && (await ProductService.GetProductByIdAsync(psa.ProductId)).VendorId != currentVendor.Id)
             {
-                _notificationService.ErrorNotification("This is not your product");
+                NotificationService.ErrorNotification("This is not your product");
                 return RedirectToAction("List", new { id = model.ProductId });
             }
 
-            await _specificationAttributeService.DeleteProductSpecificationAttributeAsync(psa);
+            await SpecificationAttributeService.DeleteProductSpecificationAttributeAsync(psa);
 
             //select an appropriate card
             SaveSelectedCardName("product-specification-attributes");
@@ -2011,11 +2011,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ProductTags()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductTagSearchModelAsync(new ProductTagSearchModel());
+            var model = await ProductModelFactory.PrepareProductTagSearchModelAsync(new ProductTagSearchModel());
 
             return View(model);
         }
@@ -2023,11 +2023,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductTags(ProductTagSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductTagListModelAsync(searchModel);
+            var model = await ProductModelFactory.PrepareProductTagListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -2035,16 +2035,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductTagDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
 
             //try to get a product tag with the specified id
-            var tag = await _productTagService.GetProductTagByIdAsync(id)
+            var tag = await ProductTagService.GetProductTagByIdAsync(id)
                 ?? throw new ArgumentException("No product tag found with the specified id");
 
-            await _productTagService.DeleteProductTagAsync(tag);
+            await ProductTagService.DeleteProductTagAsync(tag);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.ProductTags.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.ProductTags.Deleted"));
 
             return RedirectToAction("ProductTags");
         }
@@ -2052,30 +2052,30 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductTagsDelete(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
 
             if (selectedIds == null || selectedIds.Count() == 0)
                 return NoContent();
 
-            var tags = await _productTagService.GetProductTagsByIdsAsync(selectedIds.ToArray());
-            await _productTagService.DeleteProductTagsAsync(tags);
+            var tags = await ProductTagService.GetProductTagsByIdsAsync(selectedIds.ToArray());
+            await ProductTagService.DeleteProductTagsAsync(tags);
 
             return Json(new { Result = true });
         }
 
         public virtual async Task<IActionResult> EditProductTag(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
 
             //try to get a product tag with the specified id
-            var productTag = await _productTagService.GetProductTagByIdAsync(id);
+            var productTag = await ProductTagService.GetProductTagByIdAsync(id);
             if (productTag == null)
                 return RedirectToAction("List");
 
             //prepare tag model
-            var model = await _productModelFactory.PrepareProductTagModelAsync(null, productTag);
+            var model = await ProductModelFactory.PrepareProductTagModelAsync(null, productTag);
 
             return View(model);
         }
@@ -2083,29 +2083,29 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> EditProductTag(ProductTagModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
 
             //try to get a product tag with the specified id
-            var productTag = await _productTagService.GetProductTagByIdAsync(model.Id);
+            var productTag = await ProductTagService.GetProductTagByIdAsync(model.Id);
             if (productTag == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 productTag.Name = model.Name;
-                await _productTagService.UpdateProductTagAsync(productTag);
+                await ProductTagService.UpdateProductTagAsync(productTag);
 
                 //locales
                 await UpdateLocalesAsync(productTag, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.ProductTags.Updated"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.ProductTags.Updated"));
 
                 return continueEditing ? RedirectToAction("EditProductTag", new { id = productTag.Id }) : RedirectToAction("ProductTags");
             }
 
             //prepare model
-            model = await _productModelFactory.PrepareProductTagModelAsync(model, productTag, true);
+            model = await ProductModelFactory.PrepareProductTagModelAsync(model, productTag, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -2118,20 +2118,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PurchasedWithOrders(ProductOrderSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+            var product = await ProductService.GetProductByIdAsync(searchModel.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductOrderListModelAsync(searchModel, product);
+            var model = await ProductModelFactory.PrepareProductOrderListModelAsync(searchModel, product);
 
             return Json(model);
         }
@@ -2144,11 +2144,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("download-catalog-pdf")]
         public virtual async Task<IActionResult> DownloadCatalogAsPdf(ProductSearchModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
             {
                 model.SearchVendorId = currentVendor.Id;
@@ -2157,7 +2157,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var categoryIds = new List<int> { model.SearchCategoryId };
             //include subcategories
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
-                categoryIds.AddRange(await _categoryService.GetChildCategoryIdsAsync(parentCategoryId: model.SearchCategoryId, showHidden: true));
+                categoryIds.AddRange(await CategoryService.GetChildCategoryIdsAsync(parentCategoryId: model.SearchCategoryId, showHidden: true));
 
             //0 - all (according to "ShowHidden" parameter)
             //1 - published only
@@ -2168,7 +2168,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             else if (model.SearchPublishedId == 2)
                 overridePublished = false;
 
-            var products = await _productService.SearchProductsAsync(0,
+            var products = await ProductService.SearchProductsAsync(0,
                 categoryIds: categoryIds,
                 manufacturerIds: new List<int> { model.SearchManufacturerId },
                 storeId: model.SearchStoreId,
@@ -2184,7 +2184,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 byte[] bytes;
                 await using (var stream = new MemoryStream())
                 {
-                    await _pdfService.PrintProductsToPdfAsync(stream, products);
+                    await PdfService.PrintProductsToPdfAsync(stream, products);
                     bytes = stream.ToArray();
                 }
 
@@ -2192,7 +2192,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -2201,11 +2201,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("exportxml-all")]
         public virtual async Task<IActionResult> ExportXmlAll(ProductSearchModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
             {
                 model.SearchVendorId = currentVendor.Id;
@@ -2214,7 +2214,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var categoryIds = new List<int> { model.SearchCategoryId };
             //include subcategories
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
-                categoryIds.AddRange(await _categoryService.GetChildCategoryIdsAsync(parentCategoryId: model.SearchCategoryId, showHidden: true));
+                categoryIds.AddRange(await CategoryService.GetChildCategoryIdsAsync(parentCategoryId: model.SearchCategoryId, showHidden: true));
 
             //0 - all (according to "ShowHidden" parameter)
             //1 - published only
@@ -2225,7 +2225,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             else if (model.SearchPublishedId == 2)
                 overridePublished = false;
 
-            var products = await _productService.SearchProductsAsync(0,
+            var products = await ProductService.SearchProductsAsync(0,
                 categoryIds: categoryIds,
                 manufacturerIds: new List<int> { model.SearchManufacturerId },
                 storeId: model.SearchStoreId,
@@ -2238,13 +2238,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var xml = await _exportManager.ExportProductsToXmlAsync(products);
+                var xml = await ExportManager.ExportProductsToXmlAsync(products);
 
                 return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "products.xml");
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -2252,7 +2252,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ExportXmlSelected(string selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             var products = new List<Product>();
@@ -2262,10 +2262,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
-                products.AddRange(await _productService.GetProductsByIdsAsync(ids));
+                products.AddRange(await ProductService.GetProductsByIdsAsync(ids));
             }
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
             {
                 products = products.Where(p => p.VendorId == currentVendor.Id).ToList();
@@ -2273,12 +2273,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var xml = await _exportManager.ExportProductsToXmlAsync(products);
+                var xml = await ExportManager.ExportProductsToXmlAsync(products);
                 return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "products.xml");
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -2287,11 +2287,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("exportexcel-all")]
         public virtual async Task<IActionResult> ExportExcelAll(ProductSearchModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
             {
                 model.SearchVendorId = currentVendor.Id;
@@ -2300,7 +2300,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var categoryIds = new List<int> { model.SearchCategoryId };
             //include subcategories
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
-                categoryIds.AddRange(await _categoryService.GetChildCategoryIdsAsync(parentCategoryId: model.SearchCategoryId, showHidden: true));
+                categoryIds.AddRange(await CategoryService.GetChildCategoryIdsAsync(parentCategoryId: model.SearchCategoryId, showHidden: true));
 
             //0 - all (according to "ShowHidden" parameter)
             //1 - published only
@@ -2311,7 +2311,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             else if (model.SearchPublishedId == 2)
                 overridePublished = false;
 
-            var products = await _productService.SearchProductsAsync(0,
+            var products = await ProductService.SearchProductsAsync(0,
                 categoryIds: categoryIds,
                 manufacturerIds: new List<int> { model.SearchManufacturerId },
                 storeId: model.SearchStoreId,
@@ -2324,13 +2324,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var bytes = await _exportManager.ExportProductsToXlsxAsync(products);
+                var bytes = await ExportManager.ExportProductsToXlsxAsync(products);
 
                 return File(bytes, MimeTypes.TextXlsx, "products.xlsx");
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
 
                 return RedirectToAction("List");
             }
@@ -2339,7 +2339,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ExportExcelSelected(string selectedIds)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             var products = new List<Product>();
@@ -2349,10 +2349,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
-                products.AddRange(await _productService.GetProductsByIdsAsync(ids));
+                products.AddRange(await ProductService.GetProductsByIdsAsync(ids));
             }
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
             {
                 products = products.Where(p => p.VendorId == currentVendor.Id).ToList();
@@ -2360,13 +2360,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var bytes = await _exportManager.ExportProductsToXlsxAsync(products);
+                var bytes = await ExportManager.ExportProductsToXlsxAsync(products);
 
                 return File(bytes, MimeTypes.TextXlsx, "products.xlsx");
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -2374,10 +2374,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ImportExcel(IFormFile importexcelfile)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            if (await _workContext.GetCurrentVendorAsync() != null && !_vendorSettings.AllowVendorsToImportProducts)
+            if (await WorkContext.GetCurrentVendorAsync() != null && !VendorSettings.AllowVendorsToImportProducts)
                 //a vendor can not import products
                 return AccessDeniedView();
 
@@ -2385,22 +2385,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 if (importexcelfile != null && importexcelfile.Length > 0)
                 {
-                    await _importManager.ImportProductsFromXlsxAsync(importexcelfile.OpenReadStream());
+                    await ImportManager.ImportProductsFromXlsxAsync(importexcelfile.OpenReadStream());
                 }
                 else
                 {
-                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
+                    NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Common.UploadFile"));
                     
                     return RedirectToAction("List");
                 }
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Imported"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Imported"));
                 
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                await _notificationService.ErrorNotificationAsync(exc);
+                await NotificationService.ErrorNotificationAsync(exc);
                 
                 return RedirectToAction("List");
             }
@@ -2413,35 +2413,35 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> TierPriceList(TierPriceSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+            var product = await ProductService.GetProductByIdAsync(searchModel.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareTierPriceListModelAsync(searchModel, product);
+            var model = await ProductModelFactory.PrepareTierPriceListModelAsync(searchModel, product);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> TierPriceCreatePopup(int productId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productId)
+            var product = await ProductService.GetProductByIdAsync(productId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //prepare model
-            var model = await _productModelFactory.PrepareTierPriceModelAsync(new TierPriceModel(), product, null);
+            var model = await ProductModelFactory.PrepareTierPriceModelAsync(new TierPriceModel(), product, null);
 
             return View(model);
         }
@@ -2450,15 +2450,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public virtual async Task<IActionResult> TierPriceCreatePopup(TierPriceModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(model.ProductId)
+            var product = await ProductService.GetProductByIdAsync(model.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
@@ -2469,10 +2469,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 tierPrice.ProductId = product.Id;
                 tierPrice.CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : (int?)null;
 
-                await _productService.InsertTierPriceAsync(tierPrice);
+                await ProductService.InsertTierPriceAsync(tierPrice);
 
                 //update "HasTierPrices" property
-                await _productService.UpdateHasTierPricesPropertyAsync(product);
+                await ProductService.UpdateHasTierPricesPropertyAsync(product);
 
                 ViewBag.RefreshPage = true;
 
@@ -2480,7 +2480,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _productModelFactory.PrepareTierPriceModelAsync(model, product, null, true);
+            model = await ProductModelFactory.PrepareTierPriceModelAsync(model, product, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -2488,25 +2488,25 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> TierPriceEditPopup(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a tier price with the specified id
-            var tierPrice = await _productService.GetTierPriceByIdAsync(id);
+            var tierPrice = await ProductService.GetTierPriceByIdAsync(id);
             if (tierPrice == null)
                 return RedirectToAction("List", "Product");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(tierPrice.ProductId)
+            var product = await ProductService.GetProductByIdAsync(tierPrice.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareTierPriceModelAsync(null, product, tierPrice);
+            var model = await ProductModelFactory.PrepareTierPriceModelAsync(null, product, tierPrice);
 
             return View(model);
         }
@@ -2514,20 +2514,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> TierPriceEditPopup(TierPriceModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a tier price with the specified id
-            var tierPrice = await _productService.GetTierPriceByIdAsync(model.Id);
+            var tierPrice = await ProductService.GetTierPriceByIdAsync(model.Id);
             if (tierPrice == null)
                 return RedirectToAction("List", "Product");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(tierPrice.ProductId)
+            var product = await ProductService.GetProductByIdAsync(tierPrice.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
@@ -2536,7 +2536,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //fill entity from model
                 tierPrice = model.ToEntity(tierPrice);
                 tierPrice.CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : (int?)null;
-                await _productService.UpdateTierPriceAsync(tierPrice);
+                await ProductService.UpdateTierPriceAsync(tierPrice);
 
                 ViewBag.RefreshPage = true;
 
@@ -2544,7 +2544,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _productModelFactory.PrepareTierPriceModelAsync(model, product, tierPrice, true);
+            model = await ProductModelFactory.PrepareTierPriceModelAsync(model, product, tierPrice, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -2553,26 +2553,26 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> TierPriceDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a tier price with the specified id
-            var tierPrice = await _productService.GetTierPriceByIdAsync(id)
+            var tierPrice = await ProductService.GetTierPriceByIdAsync(id)
                 ?? throw new ArgumentException("No tier price found with the specified id");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(tierPrice.ProductId)
+            var product = await ProductService.GetProductByIdAsync(tierPrice.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
-            await _productService.DeleteTierPriceAsync(tierPrice);
+            await ProductService.DeleteTierPriceAsync(tierPrice);
 
             //update "HasTierPrices" property
-            await _productService.UpdateHasTierPricesPropertyAsync(product);
+            await ProductService.UpdateHasTierPricesPropertyAsync(product);
 
             return new NullJsonResult();
         }
@@ -2584,43 +2584,43 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAttributeMappingList(ProductAttributeMappingSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+            var product = await ProductService.GetProductByIdAsync(searchModel.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductAttributeMappingListModelAsync(searchModel, product);
+            var model = await ProductModelFactory.PrepareProductAttributeMappingListModelAsync(searchModel, product);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> ProductAttributeMappingCreate(int productId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productId)
+            var product = await ProductService.GetProductByIdAsync(productId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
             {
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("This is not your product"));
+                NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("This is not your product"));
                 return RedirectToAction("List");
             }
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductAttributeMappingModelAsync(new ProductAttributeMappingModel(), product, null);
+            var model = await ProductModelFactory.PrepareProductAttributeMappingModelAsync(new ProductAttributeMappingModel(), product, null);
 
             return View(model);
         }
@@ -2628,29 +2628,29 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> ProductAttributeMappingCreate(ProductAttributeMappingModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(model.ProductId)
+            var product = await ProductService.GetProductByIdAsync(model.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
             {
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("This is not your product"));
+                NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("This is not your product"));
                 return RedirectToAction("List");
             }
 
             //ensure this attribute is not mapped yet
-            if ((await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
+            if ((await ProductAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
                 .Any(x => x.ProductAttributeId == model.ProductAttributeId))
             {
                 //redisplay form
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists"));
+                NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists"));
 
-                model = await _productModelFactory.PrepareProductAttributeMappingModelAsync(model, product, null, true);
+                model = await ProductModelFactory.PrepareProductAttributeMappingModelAsync(model, product, null, true);
 
                 return View(model);
             }
@@ -2658,11 +2658,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             //insert mapping
             var productAttributeMapping = model.ToEntity<ProductAttributeMapping>();
 
-            await _productAttributeService.InsertProductAttributeMappingAsync(productAttributeMapping);
+            await ProductAttributeService.InsertProductAttributeMappingAsync(productAttributeMapping);
             await UpdateLocalesAsync(productAttributeMapping, model);
 
             //predefined values
-            var predefinedValues = await _productAttributeService.GetPredefinedProductAttributeValuesAsync(model.ProductAttributeId);
+            var predefinedValues = await ProductAttributeService.GetPredefinedProductAttributeValuesAsync(model.ProductAttributeId);
             foreach (var predefinedValue in predefinedValues)
             {
                 var pav = new ProductAttributeValue
@@ -2677,21 +2677,21 @@ namespace Nop.Web.Areas.Admin.Controllers
                     IsPreSelected = predefinedValue.IsPreSelected,
                     DisplayOrder = predefinedValue.DisplayOrder
                 };
-                await _productAttributeService.InsertProductAttributeValueAsync(pav);
+                await ProductAttributeService.InsertProductAttributeValueAsync(pav);
 
                 //locales
-                var languages = await _languageService.GetAllLanguagesAsync(true);
+                var languages = await LanguageService.GetAllLanguagesAsync(true);
 
                 //localization
                 foreach (var lang in languages)
                 {
-                    var name = await _localizationService.GetLocalizedAsync(predefinedValue, x => x.Name, lang.Id, false, false);
+                    var name = await LocalizationService.GetLocalizedAsync(predefinedValue, x => x.Name, lang.Id, false, false);
                     if (!string.IsNullOrEmpty(name))
-                        await _localizedEntityService.SaveLocalizedValueAsync(pav, x => x.Name, name, lang.Id);
+                        await LocalizedEntityService.SaveLocalizedValueAsync(pav, x => x.Name, name, lang.Id);
                 }
             }
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Added"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Added"));
 
             if (!continueEditing)
             {
@@ -2705,27 +2705,27 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ProductAttributeMappingEdit(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product attribute mapping with the specified id
-            var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(id)
+            var productAttributeMapping = await ProductAttributeService.GetProductAttributeMappingByIdAsync(id)
                 ?? throw new ArgumentException("No product attribute mapping found with the specified id");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId)
+            var product = await ProductService.GetProductByIdAsync(productAttributeMapping.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
             {
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("This is not your product"));
+                NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("This is not your product"));
                 return RedirectToAction("List");
             }
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductAttributeMappingModelAsync(null, product, productAttributeMapping);
+            var model = await ProductModelFactory.PrepareProductAttributeMappingModelAsync(null, product, productAttributeMapping);
 
             return View(model);
         }
@@ -2733,46 +2733,46 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> ProductAttributeMappingEdit(ProductAttributeMappingModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product attribute mapping with the specified id
-            var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(model.Id)
+            var productAttributeMapping = await ProductAttributeService.GetProductAttributeMappingByIdAsync(model.Id)
                 ?? throw new ArgumentException("No product attribute mapping found with the specified id");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId)
+            var product = await ProductService.GetProductByIdAsync(productAttributeMapping.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
             {
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("This is not your product"));
+                NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("This is not your product"));
                 return RedirectToAction("List");
             }
 
             //ensure this attribute is not mapped yet
-            if ((await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
+            if ((await ProductAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
                 .Any(x => x.ProductAttributeId == model.ProductAttributeId && x.Id != productAttributeMapping.Id))
             {
                 //redisplay form
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists"));
+                NotificationService.ErrorNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists"));
 
-                model = await _productModelFactory.PrepareProductAttributeMappingModelAsync(model, product, productAttributeMapping, true);
+                model = await ProductModelFactory.PrepareProductAttributeMappingModelAsync(model, product, productAttributeMapping, true);
 
                 return View(model);
             }
 
             //fill entity from model
             productAttributeMapping = model.ToEntity(productAttributeMapping);
-            await _productAttributeService.UpdateProductAttributeMappingAsync(productAttributeMapping);
+            await ProductAttributeService.UpdateProductAttributeMappingAsync(productAttributeMapping);
 
             await UpdateLocalesAsync(productAttributeMapping, model);
 
             await SaveConditionAttributesAsync(productAttributeMapping, model.ConditionModel, model.Form);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Updated"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Updated"));
 
             if (!continueEditing)
             {
@@ -2787,45 +2787,45 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAttributeMappingDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product attribute mapping with the specified id
-            var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(id)
+            var productAttributeMapping = await ProductAttributeService.GetProductAttributeMappingByIdAsync(id)
                 ?? throw new ArgumentException("No product attribute mapping found with the specified id");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId)
+            var product = await ProductService.GetProductByIdAsync(productAttributeMapping.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //check if existed combinations contains the specified attribute
-            var existedCombinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
+            var existedCombinations = await ProductAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
             if (existedCombinations?.Any() == true)
             {
                 foreach (var combination in existedCombinations)
                 {
-                    var mappings = await _productAttributeParser
+                    var mappings = await ProductAttributeParser
                         .ParseProductAttributeMappingsAsync(combination.AttributesXml);
                     
                     if (mappings?.Any(m => m.Id == productAttributeMapping.Id) == true)
                     {
-                        _notificationService.ErrorNotification(
-                            string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"),
-                                await _productAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), ", ")));
+                        NotificationService.ErrorNotification(
+                            string.Format(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"),
+                                await ProductAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await WorkContext.GetCurrentCustomerAsync(), ", ")));
 
                         return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
                     }
                 }
             }
 
-            await _productAttributeService.DeleteProductAttributeMappingAsync(productAttributeMapping);
+            await ProductAttributeService.DeleteProductAttributeMappingAsync(productAttributeMapping);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Deleted"));
 
             //select an appropriate card
             SaveSelectedCardName("product-product-attributes");
@@ -2835,48 +2835,48 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAttributeValueList(ProductAttributeValueSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a product attribute mapping with the specified id
-            var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(searchModel.ProductAttributeMappingId)
+            var productAttributeMapping = await ProductAttributeService.GetProductAttributeMappingByIdAsync(searchModel.ProductAttributeMappingId)
                 ?? throw new ArgumentException("No product attribute mapping found with the specified id");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId)
+            var product = await ProductService.GetProductByIdAsync(productAttributeMapping.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductAttributeValueListModelAsync(searchModel, productAttributeMapping);
+            var model = await ProductModelFactory.PrepareProductAttributeValueListModelAsync(searchModel, productAttributeMapping);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> ProductAttributeValueCreatePopup(int productAttributeMappingId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product attribute mapping with the specified id
-            var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(productAttributeMappingId)
+            var productAttributeMapping = await ProductAttributeService.GetProductAttributeMappingByIdAsync(productAttributeMappingId)
                 ?? throw new ArgumentException("No product attribute mapping found with the specified id");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId)
+            var product = await ProductService.GetProductByIdAsync(productAttributeMapping.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductAttributeValueModelAsync(new ProductAttributeValueModel(), productAttributeMapping, null);
+            var model = await ProductModelFactory.PrepareProductAttributeValueModelAsync(new ProductAttributeValueModel(), productAttributeMapping, null);
 
             return View(model);
         }
@@ -2884,20 +2884,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAttributeValueCreatePopup(ProductAttributeValueModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product attribute mapping with the specified id
-            var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(model.ProductAttributeMappingId);
+            var productAttributeMapping = await ProductAttributeService.GetProductAttributeMappingByIdAsync(model.ProductAttributeMappingId);
             if (productAttributeMapping == null)
                 return RedirectToAction("List", "Product");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId)
+            var product = await ProductService.GetProductByIdAsync(productAttributeMapping.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
@@ -2930,7 +2930,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 pav.Quantity = model.CustomerEntersQty ? 1 : model.Quantity;
 
-                await _productAttributeService.InsertProductAttributeValueAsync(pav);
+                await ProductAttributeService.InsertProductAttributeValueAsync(pav);
                 await UpdateLocalesAsync(pav, model);
 
                 ViewBag.RefreshPage = true;
@@ -2939,7 +2939,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _productModelFactory.PrepareProductAttributeValueModelAsync(model, productAttributeMapping, null, true);
+            model = await ProductModelFactory.PrepareProductAttributeValueModelAsync(model, productAttributeMapping, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -2947,30 +2947,30 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ProductAttributeValueEditPopup(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product attribute value with the specified id
-            var productAttributeValue = await _productAttributeService.GetProductAttributeValueByIdAsync(id);
+            var productAttributeValue = await ProductAttributeService.GetProductAttributeValueByIdAsync(id);
             if (productAttributeValue == null)
                 return RedirectToAction("List", "Product");
 
             //try to get a product attribute mapping with the specified id
-            var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(productAttributeValue.ProductAttributeMappingId);
+            var productAttributeMapping = await ProductAttributeService.GetProductAttributeMappingByIdAsync(productAttributeValue.ProductAttributeMappingId);
             if (productAttributeMapping == null)
                 return RedirectToAction("List", "Product");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId)
+            var product = await ProductService.GetProductByIdAsync(productAttributeMapping.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductAttributeValueModelAsync(null, productAttributeMapping, productAttributeValue);
+            var model = await ProductModelFactory.PrepareProductAttributeValueModelAsync(null, productAttributeMapping, productAttributeValue);
 
             return View(model);
         }
@@ -2978,25 +2978,25 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAttributeValueEditPopup(ProductAttributeValueModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product attribute value with the specified id
-            var productAttributeValue = await _productAttributeService.GetProductAttributeValueByIdAsync(model.Id);
+            var productAttributeValue = await ProductAttributeService.GetProductAttributeValueByIdAsync(model.Id);
             if (productAttributeValue == null)
                 return RedirectToAction("List", "Product");
 
             //try to get a product attribute mapping with the specified id
-            var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(productAttributeValue.ProductAttributeMappingId);
+            var productAttributeMapping = await ProductAttributeService.GetProductAttributeMappingByIdAsync(productAttributeValue.ProductAttributeMappingId);
             if (productAttributeMapping == null)
                 return RedirectToAction("List", "Product");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId)
+            var product = await ProductService.GetProductByIdAsync(productAttributeMapping.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
@@ -3027,7 +3027,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //fill entity from model
                 productAttributeValue = model.ToEntity(productAttributeValue);
                 productAttributeValue.Quantity = model.CustomerEntersQty ? 1 : model.Quantity;
-                await _productAttributeService.UpdateProductAttributeValueAsync(productAttributeValue);
+                await ProductAttributeService.UpdateProductAttributeValueAsync(productAttributeValue);
 
                 await UpdateLocalesAsync(productAttributeValue, model);
 
@@ -3037,7 +3037,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _productModelFactory.PrepareProductAttributeValueModelAsync(model, productAttributeMapping, productAttributeValue, true);
+            model = await ProductModelFactory.PrepareProductAttributeValueModelAsync(model, productAttributeMapping, productAttributeValue, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -3046,54 +3046,54 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAttributeValueDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product attribute value with the specified id
-            var productAttributeValue = await _productAttributeService.GetProductAttributeValueByIdAsync(id)
+            var productAttributeValue = await ProductAttributeService.GetProductAttributeValueByIdAsync(id)
                 ?? throw new ArgumentException("No product attribute value found with the specified id");
 
             //try to get a product attribute mapping with the specified id
-            var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(productAttributeValue.ProductAttributeMappingId)
+            var productAttributeMapping = await ProductAttributeService.GetProductAttributeMappingByIdAsync(productAttributeValue.ProductAttributeMappingId)
                 ?? throw new ArgumentException("No product attribute mapping found with the specified id");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId)
+            var product = await ProductService.GetProductByIdAsync(productAttributeMapping.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //check if existed combinations contains the specified attribute value
-            var existedCombinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
+            var existedCombinations = await ProductAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
             if (existedCombinations?.Any() == true)
             {
                 foreach (var combination in existedCombinations)
                 {
-                    var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(combination.AttributesXml);
+                    var attributeValues = await ProductAttributeParser.ParseProductAttributeValuesAsync(combination.AttributesXml);
                     
                     if (attributeValues.Where(attribute => attribute.Id == id).Any())
                     {
-                        return Conflict(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination"),
-                            await _productAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), ", ")));
+                        return Conflict(string.Format(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination"),
+                            await ProductAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await WorkContext.GetCurrentCustomerAsync(), ", ")));
                     }
                 }
             }
 
-            await _productAttributeService.DeleteProductAttributeValueAsync(productAttributeValue);
+            await ProductAttributeService.DeleteProductAttributeValueAsync(productAttributeValue);
 
             return new NullJsonResult();
         }
 
         public virtual async Task<IActionResult> AssociateProductToAttributeValuePopup()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _productModelFactory.PrepareAssociateProductToAttributeValueSearchModelAsync(new AssociateProductToAttributeValueSearchModel());
+            var model = await ProductModelFactory.PrepareAssociateProductToAttributeValueSearchModelAsync(new AssociateProductToAttributeValueSearchModel());
 
             return View(model);
         }
@@ -3101,11 +3101,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AssociateProductToAttributeValuePopupList(AssociateProductToAttributeValueSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _productModelFactory.PrepareAssociateProductToAttributeValueListModelAsync(searchModel);
+            var model = await ProductModelFactory.PrepareAssociateProductToAttributeValueListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -3114,16 +3114,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public virtual async Task<IActionResult> AssociateProductToAttributeValuePopup([Bind(Prefix = nameof(AssociateProductToAttributeValueModel))] AssociateProductToAttributeValueModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var associatedProduct = await _productService.GetProductByIdAsync(model.AssociatedToProductId);
+            var associatedProduct = await ProductService.GetProductByIdAsync(model.AssociatedToProductId);
             if (associatedProduct == null)
                 return Content("Cannot load a product");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && associatedProduct.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
@@ -3137,29 +3137,29 @@ namespace Nop.Web.Areas.Admin.Controllers
         //action displaying notification (warning) to a store owner when associating some product
         public virtual async Task<IActionResult> AssociatedProductGetWarnings(int productId)
         {
-            var associatedProduct = await _productService.GetProductByIdAsync(productId);
+            var associatedProduct = await ProductService.GetProductByIdAsync(productId);
             if (associatedProduct == null)
                 return Json(new { Result = string.Empty });
 
             //attributes
-            if (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(associatedProduct.Id) is IList<ProductAttributeMapping> mapping && mapping.Any())
+            if (await ProductAttributeService.GetProductAttributeMappingsByProductIdAsync(associatedProduct.Id) is IList<ProductAttributeMapping> mapping && mapping.Any())
             {
                 if (mapping.Any(attribute => attribute.IsRequired))
-                    return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasRequiredAttributes") });
+                    return Json(new { Result = await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasRequiredAttributes") });
 
-                return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasAttributes") });
+                return Json(new { Result = await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasAttributes") });
             }
 
             //gift card
             if (associatedProduct.IsGiftCard)
             {
-                return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.GiftCard") });
+                return Json(new { Result = await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.GiftCard") });
             }
 
             //downloadable product
             if (associatedProduct.IsDownload)
             {
-                return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Downloadable") });
+                return Json(new { Result = await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Downloadable") });
             }
 
             return Json(new { Result = string.Empty });
@@ -3172,20 +3172,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAttributeCombinationList(ProductAttributeCombinationSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+            var product = await ProductService.GetProductByIdAsync(searchModel.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductAttributeCombinationListModelAsync(searchModel, product);
+            var model = await ProductModelFactory.PrepareProductAttributeCombinationListModelAsync(searchModel, product);
 
             return Json(model);
         }
@@ -3193,44 +3193,44 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAttributeCombinationDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a combination with the specified id
-            var combination = await _productAttributeService.GetProductAttributeCombinationByIdAsync(id)
+            var combination = await ProductAttributeService.GetProductAttributeCombinationByIdAsync(id)
                 ?? throw new ArgumentException("No product attribute combination found with the specified id");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(combination.ProductId)
+            var product = await ProductService.GetProductByIdAsync(combination.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
-            await _productAttributeService.DeleteProductAttributeCombinationAsync(combination);
+            await ProductAttributeService.DeleteProductAttributeCombinationAsync(combination);
 
             return new NullJsonResult();
         }
 
         public virtual async Task<IActionResult> ProductAttributeCombinationCreatePopup(int productId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productId);
+            var product = await ProductService.GetProductByIdAsync(productId);
             if (product == null)
                 return RedirectToAction("List", "Product");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductAttributeCombinationModelAsync(new ProductAttributeCombinationModel(), product, null);
+            var model = await ProductModelFactory.PrepareProductAttributeCombinationModelAsync(new ProductAttributeCombinationModel(), product, null);
 
             return View(model);
         }
@@ -3238,16 +3238,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAttributeCombinationCreatePopup(int productId, ProductAttributeCombinationModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productId);
+            var product = await ProductService.GetProductByIdAsync(productId);
             if (product == null)
                 return RedirectToAction("List", "Product");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
@@ -3257,15 +3257,15 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //check whether the attribute value is specified
             if (string.IsNullOrEmpty(attributesXml))
-                warnings.Add(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedValue"));
+                warnings.Add(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedValue"));
 
-            warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(await _workContext.GetCurrentCustomerAsync(),
+            warnings.AddRange(await ShoppingCartService.GetShoppingCartItemAttributeWarningsAsync(await WorkContext.GetCurrentCustomerAsync(),
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
 
             //check whether the same attribute combination already exists
-            var existingCombination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
+            var existingCombination = await ProductAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
             if (existingCombination != null)
-                warnings.Add(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists"));
+                warnings.Add(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists"));
 
             if (!warnings.Any())
             {
@@ -3275,11 +3275,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //fill attributes
                 combination.AttributesXml = attributesXml;
 
-                await _productAttributeService.InsertProductAttributeCombinationAsync(combination);
+                await ProductAttributeService.InsertProductAttributeCombinationAsync(combination);
 
                 //quantity change history
-                await _productService.AddStockQuantityHistoryEntryAsync(product, combination.StockQuantity, combination.StockQuantity,
-                    message: await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Combination.Edit"), combinationId: combination.Id);
+                await ProductService.AddStockQuantityHistoryEntryAsync(product, combination.StockQuantity, combination.StockQuantity,
+                    message: await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Combination.Edit"), combinationId: combination.Id);
 
                 ViewBag.RefreshPage = true;
 
@@ -3287,7 +3287,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _productModelFactory.PrepareProductAttributeCombinationModelAsync(model, product, null, true);
+            model = await ProductModelFactory.PrepareProductAttributeCombinationModelAsync(model, product, null, true);
             model.Warnings = warnings;
 
             //if we got this far, something failed, redisplay form
@@ -3296,21 +3296,21 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ProductAttributeCombinationGeneratePopup(int productId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productId);
+            var product = await ProductService.GetProductByIdAsync(productId);
             if (product == null)
                 return RedirectToAction("List", "Product");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductAttributeCombinationModelAsync(new ProductAttributeCombinationModel(), product, null);
+            var model = await ProductModelFactory.PrepareProductAttributeCombinationModelAsync(new ProductAttributeCombinationModel(), product, null);
 
             return View(model);
         }
@@ -3318,31 +3318,31 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAttributeCombinationGeneratePopup(IFormCollection form, ProductAttributeCombinationModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(model.ProductId);
+            var product = await ProductService.GetProductByIdAsync(model.ProductId);
             if (product == null)
                 return RedirectToAction("List", "Product");
 
             var allowedAttributeIds = form.Keys.Where(key => key.Contains("attribute_value_"))
                 .Select(key => int.TryParse(form[key], out var id) ? id : 0).Where(id => id > 0).ToList();
 
-            var requiredAttributeNames = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
+            var requiredAttributeNames = await (await ProductAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
                 .Where(pam => pam.IsRequired)
                 .Where(pam => !pam.IsNonCombinable())
-                .WhereAwait(async pam => !(await _productAttributeService.GetProductAttributeValuesAsync(pam.Id)).Any(v => allowedAttributeIds.Any(id => id == v.Id)))
-                .SelectAwait(async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name).ToListAsync();
+                .WhereAwait(async pam => !(await ProductAttributeService.GetProductAttributeValuesAsync(pam.Id)).Any(v => allowedAttributeIds.Any(id => id == v.Id)))
+                .SelectAwait(async pam => (await ProductAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name).ToListAsync();
 
             if (requiredAttributeNames.Any())
             {
-                model = await _productModelFactory.PrepareProductAttributeCombinationModelAsync(model, product, null, true);
+                model = await ProductModelFactory.PrepareProductAttributeCombinationModelAsync(model, product, null, true);
                 model.ProductAttributes.SelectMany(pa => pa.Values)
                     .Where(v => allowedAttributeIds.Any(id => id == v.Id))
                     .ToList().ForEach(v => v.Checked = "checked");
 
-                model.Warnings.Add(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.SelectRequiredAttributes"), string.Join(", ", requiredAttributeNames)));
+                model.Warnings.Add(string.Format(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.SelectRequiredAttributes"), string.Join(", ", requiredAttributeNames)));
 
                 return View(model);
             }
@@ -3356,26 +3356,26 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ProductAttributeCombinationEditPopup(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a combination with the specified id
-            var combination = await _productAttributeService.GetProductAttributeCombinationByIdAsync(id);
+            var combination = await ProductAttributeService.GetProductAttributeCombinationByIdAsync(id);
             if (combination == null)
                 return RedirectToAction("List", "Product");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(combination.ProductId);
+            var product = await ProductService.GetProductByIdAsync(combination.ProductId);
             if (product == null)
                 return RedirectToAction("List", "Product");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareProductAttributeCombinationModelAsync(null, product, combination);
+            var model = await ProductModelFactory.PrepareProductAttributeCombinationModelAsync(null, product, combination);
 
             return View(model);
         }
@@ -3383,21 +3383,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAttributeCombinationEditPopup(ProductAttributeCombinationModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a combination with the specified id
-            var combination = await _productAttributeService.GetProductAttributeCombinationByIdAsync(model.Id);
+            var combination = await ProductAttributeService.GetProductAttributeCombinationByIdAsync(model.Id);
             if (combination == null)
                 return RedirectToAction("List", "Product");
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(combination.ProductId);
+            var product = await ProductService.GetProductByIdAsync(combination.ProductId);
             if (product == null)
                 return RedirectToAction("List", "Product");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
@@ -3407,15 +3407,15 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //check whether the attribute value is specified
             if (string.IsNullOrEmpty(attributesXml))
-                warnings.Add(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedValue"));
+                warnings.Add(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedValue"));
 
-            warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(await _workContext.GetCurrentCustomerAsync(),
+            warnings.AddRange(await ShoppingCartService.GetShoppingCartItemAttributeWarningsAsync(await WorkContext.GetCurrentCustomerAsync(),
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
 
             //check whether the same attribute combination already exists
-            var existingCombination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
+            var existingCombination = await ProductAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
             if (existingCombination != null && existingCombination.Id != model.Id && existingCombination.AttributesXml.Equals(attributesXml))
-                warnings.Add(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists"));
+                warnings.Add(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists"));
 
             if (!warnings.Any() && ModelState.IsValid)
             {
@@ -3426,11 +3426,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 combination = model.ToEntity(combination);
                 combination.AttributesXml = attributesXml;
 
-                await _productAttributeService.UpdateProductAttributeCombinationAsync(combination);
+                await ProductAttributeService.UpdateProductAttributeCombinationAsync(combination);
 
                 //quantity change history
-                await _productService.AddStockQuantityHistoryEntryAsync(product, combination.StockQuantity - previousStockQuantity, combination.StockQuantity,
-                    message: await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Combination.Edit"), combinationId: combination.Id);
+                await ProductService.AddStockQuantityHistoryEntryAsync(product, combination.StockQuantity - previousStockQuantity, combination.StockQuantity,
+                    message: await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Combination.Edit"), combinationId: combination.Id);
 
                 ViewBag.RefreshPage = true;
 
@@ -3438,7 +3438,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _productModelFactory.PrepareProductAttributeCombinationModelAsync(model, product, combination, true);
+            model = await ProductModelFactory.PrepareProductAttributeCombinationModelAsync(model, product, combination, true);
             model.Warnings = warnings;
 
             //if we got this far, something failed, redisplay form
@@ -3448,15 +3448,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> GenerateAllAttributeCombinations(int productId)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var product = await _productService.GetProductByIdAsync(productId)
+            var product = await ProductService.GetProductByIdAsync(productId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
@@ -3472,16 +3472,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> SaveProductEditorSettings(ProductModel model, string returnUrl = "")
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             //vendors cannot manage these settings
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            if (await WorkContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("List");
 
-            var productEditorSettings = await _settingService.LoadSettingAsync<ProductEditorSettings>();
+            var productEditorSettings = await SettingService.LoadSettingAsync<ProductEditorSettings>();
             productEditorSettings = model.ProductEditorSettingsModel.ToSettings(productEditorSettings);
-            await _settingService.SaveSettingAsync(productEditorSettings);
+            await SettingService.SaveSettingAsync(productEditorSettings);
 
             //product list
             if (string.IsNullOrEmpty(returnUrl))
@@ -3501,19 +3501,19 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> StockQuantityHistory(StockQuantityHistorySearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return await AccessDeniedDataTablesJson();
 
-            var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+            var product = await ProductService.GetProductByIdAsync(searchModel.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
-            var model = await _productModelFactory.PrepareStockQuantityHistoryListModelAsync(searchModel, product);
+            var model = await ProductModelFactory.PrepareStockQuantityHistoryListModelAsync(searchModel, product);
 
             return Json(model);
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,9 +18,9 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
+        protected ICustomerService CustomerService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IPermissionService PermissionService { get; }
 
         #endregion
 
@@ -30,9 +30,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IPermissionService permissionService)
         {
-            _customerService = customerService;
-            _localizationService = localizationService;
-            _permissionService = permissionService;
+            CustomerService = customerService;
+            LocalizationService = localizationService;
+            PermissionService = permissionService;
         }
 
         #endregion
@@ -52,14 +52,14 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var customerRoles = await _customerService.GetAllCustomerRolesAsync(true);
+            var customerRoles = await CustomerService.GetAllCustomerRolesAsync(true);
             model.AvailableCustomerRoles = customerRoles.Select(role => role.ToModel<CustomerRoleModel>()).ToList();
 
-            foreach (var permissionRecord in await _permissionService.GetAllPermissionRecordsAsync())
+            foreach (var permissionRecord in await PermissionService.GetAllPermissionRecordsAsync())
             {
                 model.AvailablePermissions.Add(new PermissionRecordModel
                 {
-                    Name = await _localizationService.GetLocalizedPermissionNameAsync(permissionRecord),
+                    Name = await LocalizationService.GetLocalizedPermissionNameAsync(permissionRecord),
                     SystemName = permissionRecord.SystemName
                 });
 
@@ -68,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (!model.Allowed.ContainsKey(permissionRecord.SystemName))
                         model.Allowed[permissionRecord.SystemName] = new Dictionary<int, bool>();
                     model.Allowed[permissionRecord.SystemName][role.Id] = 
-                        (await _permissionService.GetMappingByPermissionRecordIdAsync(permissionRecord.Id)).Any(mapping => mapping.CustomerRoleId == role.Id);
+                        (await PermissionService.GetMappingByPermissionRecordIdAsync(permissionRecord.Id)).Any(mapping => mapping.CustomerRoleId == role.Id);
                 }
             }
 

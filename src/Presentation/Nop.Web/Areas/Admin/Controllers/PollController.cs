@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -22,13 +22,13 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPollModelFactory _pollModelFactory;
-        private readonly IPollService _pollService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
+        protected ILocalizationService LocalizationService { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IPollModelFactory PollModelFactory { get; }
+        protected IPollService PollService { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected IStoreService StoreService { get; }
 
         #endregion
 
@@ -42,13 +42,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreMappingService storeMappingService,
             IStoreService storeService)
         {
-            _localizationService = localizationService;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
-            _pollModelFactory = pollModelFactory;
-            _pollService = pollService;
-            _storeMappingService = storeMappingService;
-            _storeService = storeService;
+            LocalizationService = localizationService;
+            NotificationService = notificationService;
+            PermissionService = permissionService;
+            PollModelFactory = pollModelFactory;
+            PollService = pollService;
+            StoreMappingService = storeMappingService;
+            StoreService = storeService;
         }
 
         #endregion
@@ -58,11 +58,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task SaveStoreMappingsAsync(Poll poll, PollModel model)
         {
             poll.LimitedToStores = model.SelectedStoreIds.Any();
-            await _pollService.UpdatePollAsync(poll);
+            await PollService.UpdatePollAsync(poll);
 
             //manage store mappings
-            var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(poll);
-            foreach (var store in await _storeService.GetAllStoresAsync())
+            var existingStoreMappings = await StoreMappingService.GetStoreMappingsAsync(poll);
+            foreach (var store in await StoreService.GetAllStoresAsync())
             {
                 var existingStoreMapping = existingStoreMappings.FirstOrDefault(storeMapping => storeMapping.StoreId == store.Id);
 
@@ -70,11 +70,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     if (existingStoreMapping == null)
-                        await _storeMappingService.InsertStoreMappingAsync(poll, store.Id);
+                        await StoreMappingService.InsertStoreMappingAsync(poll, store.Id);
                 }
                 //or remove existing one
                 else if (existingStoreMapping != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(existingStoreMapping);
+                    await StoreMappingService.DeleteStoreMappingAsync(existingStoreMapping);
             }
         }
 
@@ -89,11 +89,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _pollModelFactory.PreparePollSearchModelAsync(new PollSearchModel());
+            var model = await PollModelFactory.PreparePollSearchModelAsync(new PollSearchModel());
 
             return View(model);
         }
@@ -101,22 +101,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(PollSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _pollModelFactory.PreparePollListModelAsync(searchModel);
+            var model = await PollModelFactory.PreparePollListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _pollModelFactory.PreparePollModelAsync(new PollModel(), null);
+            var model = await PollModelFactory.PreparePollModelAsync(new PollModel(), null);
 
             return View(model);
         }
@@ -124,18 +124,18 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Create(PollModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var poll = model.ToEntity<Poll>();
-                await _pollService.InsertPollAsync(poll);
+                await PollService.InsertPollAsync(poll);
 
                 //save store mappings
                 await SaveStoreMappingsAsync(poll, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Polls.Added"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.ContentManagement.Polls.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -144,7 +144,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _pollModelFactory.PreparePollModelAsync(model, null, true);
+            model = await PollModelFactory.PreparePollModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -152,16 +152,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             //try to get a poll with the specified id
-            var poll = await _pollService.GetPollByIdAsync(id);
+            var poll = await PollService.GetPollByIdAsync(id);
             if (poll == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _pollModelFactory.PreparePollModelAsync(null, poll);
+            var model = await PollModelFactory.PreparePollModelAsync(null, poll);
 
             return View(model);
         }
@@ -169,23 +169,23 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Edit(PollModel model, bool continueEditing)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             //try to get a poll with the specified id
-            var poll = await _pollService.GetPollByIdAsync(model.Id);
+            var poll = await PollService.GetPollByIdAsync(model.Id);
             if (poll == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 poll = model.ToEntity(poll);
-                await _pollService.UpdatePollAsync(poll);
+                await PollService.UpdatePollAsync(poll);
 
                 //save store mappings
                 await SaveStoreMappingsAsync(poll, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Polls.Updated"));
+                NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.ContentManagement.Polls.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -194,7 +194,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _pollModelFactory.PreparePollModelAsync(model, poll, true);
+            model = await PollModelFactory.PreparePollModelAsync(model, poll, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -203,17 +203,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             //try to get a poll with the specified id
-            var poll = await _pollService.GetPollByIdAsync(id);
+            var poll = await PollService.GetPollByIdAsync(id);
             if (poll == null)
                 return RedirectToAction("List");
 
-            await _pollService.DeletePollAsync(poll);
+            await PollService.DeletePollAsync(poll);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Polls.Deleted"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.ContentManagement.Polls.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -225,15 +225,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PollAnswers(PollAnswerSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
                 return await AccessDeniedDataTablesJson();
 
             //try to get a poll with the specified id
-            var poll = await _pollService.GetPollByIdAsync(searchModel.PollId)
+            var poll = await PollService.GetPollByIdAsync(searchModel.PollId)
                 ?? throw new ArgumentException("No poll found with the specified id");
 
             //prepare model
-            var model = await _pollModelFactory.PreparePollAnswerListModelAsync(searchModel, poll);
+            var model = await PollModelFactory.PreparePollAnswerListModelAsync(searchModel, poll);
 
             return Json(model);
         }
@@ -242,19 +242,19 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PollAnswerUpdate([Validate] PollAnswerModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a poll answer with the specified id
-            var pollAnswer = await _pollService.GetPollAnswerByIdAsync(model.Id)
+            var pollAnswer = await PollService.GetPollAnswerByIdAsync(model.Id)
                 ?? throw new ArgumentException("No poll answer found with the specified id");
 
             pollAnswer = model.ToEntity(pollAnswer);
 
-            await _pollService.UpdatePollAnswerAsync(pollAnswer);
+            await PollService.UpdatePollAnswerAsync(pollAnswer);
 
             return new NullJsonResult();
         }
@@ -263,14 +263,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PollAnswerAdd(int pollId, [Validate] PollAnswerModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
             //fill entity from model
-            await _pollService.InsertPollAnswerAsync(model.ToEntity<PollAnswer>());
+            await PollService.InsertPollAnswerAsync(model.ToEntity<PollAnswer>());
 
             return Json(new { Result = true });
         }
@@ -278,14 +278,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PollAnswerDelete(int id)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             //try to get a poll answer with the specified id
-            var pollAnswer = await _pollService.GetPollAnswerByIdAsync(id)
+            var pollAnswer = await PollService.GetPollAnswerByIdAsync(id)
                 ?? throw new ArgumentException("No poll answer found with the specified id", nameof(id));
 
-            await _pollService.DeletePollAnswerAsync(pollAnswer);
+            await PollService.DeletePollAnswerAsync(pollAnswer);
 
             return new NullJsonResult();
         }

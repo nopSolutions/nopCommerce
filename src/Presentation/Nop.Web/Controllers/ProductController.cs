@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,32 +34,32 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAclService _aclService;
-        private readonly ICompareProductsService _compareProductsService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderService _orderService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
-        private readonly IReviewTypeService _reviewTypeService;
-        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly ShippingSettings _shippingSettings;
+        protected CaptchaSettings CaptchaSettings { get; }
+        protected CatalogSettings CatalogSettings { get; }
+        protected IAclService AclService { get; }
+        protected ICompareProductsService CompareProductsService { get; }
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IOrderService OrderService { get; }
+        protected IPermissionService PermissionService { get; }
+        protected IProductAttributeParser ProductAttributeParser { get; }
+        protected IProductModelFactory ProductModelFactory { get; }
+        protected IProductService ProductService { get; }
+        protected IRecentlyViewedProductsService RecentlyViewedProductsService { get; }
+        protected IReviewTypeService ReviewTypeService { get; }
+        protected IShoppingCartModelFactory ShoppingCartModelFactory { get; }
+        protected IShoppingCartService ShoppingCartService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWebHelper WebHelper { get; }
+        protected IWorkContext WorkContext { get; }
+        protected IWorkflowMessageService WorkflowMessageService { get; }
+        protected LocalizationSettings LocalizationSettings { get; }
+        protected ShoppingCartSettings ShoppingCartSettings { get; }
+        protected ShippingSettings ShippingSettings { get; }
 
         #endregion
 
@@ -92,32 +92,32 @@ namespace Nop.Web.Controllers
             ShoppingCartSettings shoppingCartSettings,
             ShippingSettings shippingSettings)
         {
-            _captchaSettings = captchaSettings;
-            _catalogSettings = catalogSettings;
-            _aclService = aclService;
-            _compareProductsService = compareProductsService;
-            _customerActivityService = customerActivityService;
-            _customerService = customerService;
-            _eventPublisher = eventPublisher;
-            _localizationService = localizationService;
-            _orderService = orderService;
-            _permissionService = permissionService;
-            _productAttributeParser = productAttributeParser;
-            _productModelFactory = productModelFactory;
-            _productService = productService;
-            _reviewTypeService = reviewTypeService;
-            _recentlyViewedProductsService = recentlyViewedProductsService;
-            _shoppingCartModelFactory = shoppingCartModelFactory;
-            _shoppingCartService = shoppingCartService;
-            _storeContext = storeContext;
-            _storeMappingService = storeMappingService;
-            _urlRecordService = urlRecordService;
-            _webHelper = webHelper;
-            _workContext = workContext;
-            _workflowMessageService = workflowMessageService;
-            _localizationSettings = localizationSettings;
-            _shoppingCartSettings = shoppingCartSettings;
-            _shippingSettings = shippingSettings;
+            CaptchaSettings = captchaSettings;
+            CatalogSettings = catalogSettings;
+            AclService = aclService;
+            CompareProductsService = compareProductsService;
+            CustomerActivityService = customerActivityService;
+            CustomerService = customerService;
+            EventPublisher = eventPublisher;
+            LocalizationService = localizationService;
+            OrderService = orderService;
+            PermissionService = permissionService;
+            ProductAttributeParser = productAttributeParser;
+            ProductModelFactory = productModelFactory;
+            ProductService = productService;
+            ReviewTypeService = reviewTypeService;
+            RecentlyViewedProductsService = recentlyViewedProductsService;
+            ShoppingCartModelFactory = shoppingCartModelFactory;
+            ShoppingCartService = shoppingCartService;
+            StoreContext = storeContext;
+            StoreMappingService = storeMappingService;
+            UrlRecordService = urlRecordService;
+            WebHelper = webHelper;
+            WorkContext = workContext;
+            WorkflowMessageService = workflowMessageService;
+            LocalizationSettings = localizationSettings;
+            ShoppingCartSettings = shoppingCartSettings;
+            ShippingSettings = shippingSettings;
         }
 
         #endregion
@@ -126,25 +126,25 @@ namespace Nop.Web.Controllers
 
         protected virtual async Task ValidateProductReviewAvailabilityAsync(Product product)
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
-                ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Reviews.OnlyRegisteredUsersCanWriteReviews"));
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (await CustomerService.IsGuestAsync(customer) && !CatalogSettings.AllowAnonymousUsersToReviewProduct)
+                ModelState.AddModelError(string.Empty, await LocalizationService.GetResourceAsync("Reviews.OnlyRegisteredUsersCanWriteReviews"));
 
-            if (!_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
+            if (!CatalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
                 return;
 
             var hasCompletedOrders = product.ProductType == ProductType.SimpleProduct
                 ? await HasCompletedOrdersAsync(product)
-                : await (await _productService.GetAssociatedProductsAsync(product.Id)).AnyAwaitAsync(HasCompletedOrdersAsync);
+                : await (await ProductService.GetAssociatedProductsAsync(product.Id)).AnyAwaitAsync(HasCompletedOrdersAsync);
 
             if (!hasCompletedOrders)
-                ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
+                ModelState.AddModelError(string.Empty, await LocalizationService.GetResourceAsync("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
         }
 
         protected virtual async ValueTask<bool> HasCompletedOrdersAsync(Product product)
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            return (await _orderService.SearchOrdersAsync(customerId: customer.Id,
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            return (await OrderService.SearchOrdersAsync(customerId: customer.Id,
                 productId: product.Id,
                 osIds: new List<int> { (int)OrderStatus.Complete },
                 pageSize: 1)).Any();
@@ -156,22 +156,22 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> ProductDetails(int productId, int updatecartitemid = 0)
         {
-            var product = await _productService.GetProductByIdAsync(productId);
+            var product = await ProductService.GetProductByIdAsync(productId);
             if (product == null || product.Deleted)
                 return InvokeHttp404();
 
             var notAvailable =
                 //published?
-                (!product.Published && !_catalogSettings.AllowViewUnpublishedProductPage) ||
+                (!product.Published && !CatalogSettings.AllowViewUnpublishedProductPage) ||
                 //ACL (access control list) 
-                !await _aclService.AuthorizeAsync(product) ||
+                !await AclService.AuthorizeAsync(product) ||
                 //Store mapping
-                !await _storeMappingService.AuthorizeAsync(product) ||
+                !await StoreMappingService.AuthorizeAsync(product) ||
                 //availability dates
-                !_productService.ProductIsAvailable(product);
+                !ProductService.ProductIsAvailable(product);
             //Check whether the current user has a "Manage products" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts);
+            var hasAdminAccess = await PermissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts);
             if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
@@ -179,41 +179,41 @@ namespace Nop.Web.Controllers
             if (!product.VisibleIndividually)
             {
                 //is this one an associated products?
-                var parentGroupedProduct = await _productService.GetProductByIdAsync(product.ParentGroupedProductId);
+                var parentGroupedProduct = await ProductService.GetProductByIdAsync(product.ParentGroupedProductId);
                 if (parentGroupedProduct == null)
                     return RedirectToRoute("Homepage");
 
-                return RedirectToRoutePermanent("Product", new { SeName = await _urlRecordService.GetSeNameAsync(parentGroupedProduct) });
+                return RedirectToRoutePermanent("Product", new { SeName = await UrlRecordService.GetSeNameAsync(parentGroupedProduct) });
             }
 
             //update existing shopping cart or wishlist  item?
             ShoppingCartItem updatecartitem = null;
-            if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
+            if (ShoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: store.Id);
+                var store = await StoreContext.GetCurrentStoreAsync();
+                var cart = await ShoppingCartService.GetShoppingCartAsync(await WorkContext.GetCurrentCustomerAsync(), storeId: store.Id);
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
                 //not found?
                 if (updatecartitem == null)
                 {
-                    return RedirectToRoute("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) });
+                    return RedirectToRoute("Product", new { SeName = await UrlRecordService.GetSeNameAsync(product) });
                 }
                 //is it this product?
                 if (product.Id != updatecartitem.ProductId)
                 {
-                    return RedirectToRoute("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) });
+                    return RedirectToRoute("Product", new { SeName = await UrlRecordService.GetSeNameAsync(product) });
                 }
             }
 
             //save as recently viewed
-            await _recentlyViewedProductsService.AddProductToRecentlyViewedListAsync(product.Id);
+            await RecentlyViewedProductsService.AddProductToRecentlyViewedListAsync(product.Id);
 
             //display "edit" (manage) link
-            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) &&
-                await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+            if (await PermissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) &&
+                await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
             {
                 //a vendor should have access only to his products
-                var currentVendor = await _workContext.GetCurrentVendorAsync();
+                var currentVendor = await WorkContext.GetCurrentVendorAsync();
                 if (currentVendor == null || currentVendor.Id == product.VendorId)
                 {
                     DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = AreaNames.Admin }));
@@ -221,13 +221,13 @@ namespace Nop.Web.Controllers
             }
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("PublicStore.ViewProduct",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.ViewProduct"), product.Name), product);
+            await CustomerActivityService.InsertActivityAsync("PublicStore.ViewProduct",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.PublicStore.ViewProduct"), product.Name), product);
 
             //model
-            var model = await _productModelFactory.PrepareProductDetailsModelAsync(product, updatecartitem, false);
+            var model = await ProductModelFactory.PrepareProductDetailsModelAsync(product, updatecartitem, false);
             //template
-            var productTemplateViewPath = await _productModelFactory.PrepareProductTemplateViewPathAsync(product);
+            var productTemplateViewPath = await ProductModelFactory.PrepareProductTemplateViewPathAsync(product);
 
             return View(productTemplateViewPath, model);
         }
@@ -240,14 +240,14 @@ namespace Nop.Web.Controllers
 
             var errors = new List<string>();
             
-            if (!_shippingSettings.EstimateShippingCityNameEnabled && string.IsNullOrEmpty(model.ZipPostalCode))
-                errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.ZipPostalCode.Required"));
+            if (!ShippingSettings.EstimateShippingCityNameEnabled && string.IsNullOrEmpty(model.ZipPostalCode))
+                errors.Add(await LocalizationService.GetResourceAsync("Shipping.EstimateShipping.ZipPostalCode.Required"));
 
-            if (_shippingSettings.EstimateShippingCityNameEnabled && string.IsNullOrEmpty(model.City))
-                errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.City.Required"));
+            if (ShippingSettings.EstimateShippingCityNameEnabled && string.IsNullOrEmpty(model.City))
+                errors.Add(await LocalizationService.GetResourceAsync("Shipping.EstimateShipping.City.Required"));
 
             if (model.CountryId == null || model.CountryId == 0)
-                errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.Country.Required"));
+                errors.Add(await LocalizationService.GetResourceAsync("Shipping.EstimateShipping.Country.Required"));
 
             if (errors.Count > 0)
                 return Json(new
@@ -256,10 +256,10 @@ namespace Nop.Web.Controllers
                     Errors = errors
                 });
 
-            var product = await _productService.GetProductByIdAsync(model.ProductId);
+            var product = await ProductService.GetProductByIdAsync(model.ProductId);
             if (product == null || product.Deleted)
             {
-                errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShippingPopUp.Product.IsNotFound"));
+                errors.Add(await LocalizationService.GetResourceAsync("Shipping.EstimateShippingPopUp.Product.IsNotFound"));
                 return Json(new
                 {
                     Success = false,
@@ -267,8 +267,8 @@ namespace Nop.Web.Controllers
                 });
             }
             
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var customer = await WorkContext.GetCurrentCustomerAsync();
 
             var wrappedProduct = new ShoppingCartItem()
             {
@@ -283,20 +283,20 @@ namespace Nop.Web.Controllers
 
             var addToCartWarnings = new List<string>();
             //customer entered price
-            wrappedProduct.CustomerEnteredPrice = await _productAttributeParser.ParseCustomerEnteredPriceAsync(product, form);
+            wrappedProduct.CustomerEnteredPrice = await ProductAttributeParser.ParseCustomerEnteredPriceAsync(product, form);
 
             //entered quantity
-            wrappedProduct.Quantity = _productAttributeParser.ParseEnteredQuantity(product, form);
+            wrappedProduct.Quantity = ProductAttributeParser.ParseEnteredQuantity(product, form);
 
             //product and gift card attributes
-            wrappedProduct.AttributesXml = await _productAttributeParser.ParseProductAttributesAsync(product, form, addToCartWarnings);
+            wrappedProduct.AttributesXml = await ProductAttributeParser.ParseProductAttributesAsync(product, form, addToCartWarnings);
 
             //rental attributes
-            _productAttributeParser.ParseRentalDates(product, form, out var rentalStartDate, out var rentalEndDate);
+            ProductAttributeParser.ParseRentalDates(product, form, out var rentalStartDate, out var rentalEndDate);
             wrappedProduct.RentalStartDateUtc = rentalStartDate;
             wrappedProduct.RentalEndDateUtc = rentalEndDate;
 
-            var result = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(new[] { wrappedProduct }, model, false);
+            var result = await ShoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(new[] { wrappedProduct }, model, false);
 
             return Json(result);
         }
@@ -305,11 +305,11 @@ namespace Nop.Web.Controllers
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetProductCombinations(int productId)
         {
-            var product = await _productService.GetProductByIdAsync(productId);
+            var product = await ProductService.GetProductByIdAsync(productId);
             if (product == null)
                 return NotFound();
 
-            var model = await _productModelFactory.PrepareProductCombinationModelsAsync(product);
+            var model = await ProductModelFactory.PrepareProductCombinationModelsAsync(product);
             return Ok(model);
         }
 
@@ -319,13 +319,13 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> RecentlyViewedProducts()
         {
-            if (!_catalogSettings.RecentlyViewedProductsEnabled)
+            if (!CatalogSettings.RecentlyViewedProductsEnabled)
                 return Content("");
 
-            var products = await _recentlyViewedProductsService.GetRecentlyViewedProductsAsync(_catalogSettings.RecentlyViewedProductsNumber);
+            var products = await RecentlyViewedProductsService.GetRecentlyViewedProductsAsync(CatalogSettings.RecentlyViewedProductsNumber);
 
             var model = new List<ProductOverviewModel>();
-            model.AddRange(await _productModelFactory.PrepareProductOverviewModelsAsync(products));
+            model.AddRange(await ProductModelFactory.PrepareProductOverviewModelsAsync(products));
 
             return View(model);
         }
@@ -336,13 +336,13 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> NewProducts()
         {
-            if (!_catalogSettings.NewProductsEnabled)
+            if (!CatalogSettings.NewProductsEnabled)
                 return Content("");
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             var storeId = store.Id;
-            var products = await _productService.GetProductsMarkedAsNewAsync(storeId);
-            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
+            var products = await ProductService.GetProductsMarkedAsNewAsync(storeId);
+            var model = (await ProductModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
 
             return View(model);
         }
@@ -350,26 +350,26 @@ namespace Nop.Web.Controllers
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> NewProductsRss()
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
             var feed = new RssFeed(
-                $"{await _localizationService.GetLocalizedAsync(store, x => x.Name)}: New products",
+                $"{await LocalizationService.GetLocalizedAsync(store, x => x.Name)}: New products",
                 "Information about products",
-                new Uri(_webHelper.GetStoreLocation()),
+                new Uri(WebHelper.GetStoreLocation()),
                 DateTime.UtcNow);
 
-            if (!_catalogSettings.NewProductsEnabled)
-                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
+            if (!CatalogSettings.NewProductsEnabled)
+                return new RssActionResult(feed, WebHelper.GetThisPageUrl(false));
 
             var items = new List<RssItem>();
 
             var storeId = store.Id;
-            var products = await _productService.GetProductsMarkedAsNewAsync(storeId);
+            var products = await ProductService.GetProductsMarkedAsNewAsync(storeId);
 
             foreach (var product in products)
             {
-                var productUrl = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) }, _webHelper.GetCurrentRequestProtocol());
-                var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
-                var productDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription);
+                var productUrl = Url.RouteUrl("Product", new { SeName = await UrlRecordService.GetSeNameAsync(product) }, WebHelper.GetCurrentRequestProtocol());
+                var productName = await LocalizationService.GetLocalizedAsync(product, x => x.Name);
+                var productDescription = await LocalizationService.GetLocalizedAsync(product, x => x.ShortDescription);
                 var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{store.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);
                 items.Add(item);
                 //uncomment below if you want to add RSS enclosure for pictures
@@ -382,7 +382,7 @@ namespace Nop.Web.Controllers
 
             }
             feed.Items = items;
-            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
+            return new RssActionResult(feed, WebHelper.GetThisPageUrl(false));
         }
 
         #endregion
@@ -391,23 +391,23 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> ProductReviews(int productId)
         {
-            var product = await _productService.GetProductByIdAsync(productId);
+            var product = await ProductService.GetProductByIdAsync(productId);
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
                 return RedirectToRoute("Homepage");
 
             var model = new ProductReviewsModel();
-            model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
+            model = await ProductModelFactory.PrepareProductReviewsModelAsync(model, product);
 
             await ValidateProductReviewAvailabilityAsync(product);
 
             //default value
-            model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
+            model.AddProductReview.Rating = CatalogSettings.DefaultProductRatingValue;
             
             //default value for all additional review types
             if (model.ReviewTypeList.Count > 0)
                 foreach (var additionalProductReview in model.AddAdditionalProductReviewList)
                 {
-                    additionalProductReview.Rating = additionalProductReview.IsRequired ? _catalogSettings.DefaultProductRatingValue : 0;
+                    additionalProductReview.Rating = additionalProductReview.IsRequired ? CatalogSettings.DefaultProductRatingValue : 0;
                 }
 
             return View(model);
@@ -418,17 +418,17 @@ namespace Nop.Web.Controllers
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
         {
-            var product = await _productService.GetProductByIdAsync(productId);
-            var currentStore = await _storeContext.GetCurrentStoreAsync();
+            var product = await ProductService.GetProductByIdAsync(productId);
+            var currentStore = await StoreContext.GetCurrentStoreAsync();
 
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews ||
-                !await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0))
+                !await ProductService.CanAddReviewAsync(product.Id, CatalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0))
                 return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
-            if (_captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage && !captchaValid)
+            if (CaptchaSettings.Enabled && CaptchaSettings.ShowOnProductReviewPage && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await LocalizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
             await ValidateProductReviewAvailabilityAsync(product);
@@ -438,9 +438,9 @@ namespace Nop.Web.Controllers
                 //save review
                 var rating = model.AddProductReview.Rating;
                 if (rating < 1 || rating > 5)
-                    rating = _catalogSettings.DefaultProductRatingValue;
-                var isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
-                var customer = await _workContext.GetCurrentCustomerAsync();
+                    rating = CatalogSettings.DefaultProductRatingValue;
+                var isApproved = !CatalogSettings.ProductReviewsMustBeApproved;
+                var customer = await WorkContext.GetCurrentCustomerAsync();
 
                 var productReview = new ProductReview
                 {
@@ -456,7 +456,7 @@ namespace Nop.Web.Controllers
                     StoreId = currentStore.Id,
                 };
 
-                await _productService.InsertProductReviewAsync(productReview);
+                await ProductService.InsertProductReviewAsync(productReview);
 
                 //add product review and review type mapping                
                 foreach (var additionalReview in model.AddAdditionalProductReviewList)
@@ -468,39 +468,39 @@ namespace Nop.Web.Controllers
                         Rating = additionalReview.Rating
                     };
 
-                    await _reviewTypeService.InsertProductReviewReviewTypeMappingsAsync(additionalProductReview);
+                    await ReviewTypeService.InsertProductReviewReviewTypeMappingsAsync(additionalProductReview);
                 }
 
                 //update product totals
-                await _productService.UpdateProductReviewTotalsAsync(product);
+                await ProductService.UpdateProductReviewTotalsAsync(product);
 
                 //notify store owner
-                if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
-                    await _workflowMessageService.SendProductReviewNotificationMessageAsync(productReview, _localizationSettings.DefaultAdminLanguageId);
+                if (CatalogSettings.NotifyStoreOwnerAboutNewProductReviews)
+                    await WorkflowMessageService.SendProductReviewNotificationMessageAsync(productReview, LocalizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-                await _customerActivityService.InsertActivityAsync("PublicStore.AddProductReview",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddProductReview"), product.Name), product);
+                await CustomerActivityService.InsertActivityAsync("PublicStore.AddProductReview",
+                    string.Format(await LocalizationService.GetResourceAsync("ActivityLog.PublicStore.AddProductReview"), product.Name), product);
 
                 //raise event
                 if (productReview.IsApproved)
-                    await _eventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
+                    await EventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
 
-                model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
+                model = await ProductModelFactory.PrepareProductReviewsModelAsync(model, product);
                 model.AddProductReview.Title = null;
                 model.AddProductReview.ReviewText = null;
 
                 model.AddProductReview.SuccessfullyAdded = true;
                 if (!isApproved)
-                    model.AddProductReview.Result = await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving");
+                    model.AddProductReview.Result = await LocalizationService.GetResourceAsync("Reviews.SeeAfterApproving");
                 else
-                    model.AddProductReview.Result = await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded");
+                    model.AddProductReview.Result = await LocalizationService.GetResourceAsync("Reviews.SuccessfullyAdded");
 
                 return View(model);
             }
 
             //if we got this far, something failed, redisplay form
-            model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
+            model = await ProductModelFactory.PrepareProductReviewsModelAsync(model, product);
             return View(model);
         }
 
@@ -508,16 +508,16 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> SetProductReviewHelpfulness(int productReviewId, bool washelpful)
         {
-            var productReview = await _productService.GetProductReviewByIdAsync(productReviewId);
+            var productReview = await ProductService.GetProductReviewByIdAsync(productReviewId);
             if (productReview == null)
                 throw new ArgumentException("No product review found with the specified id");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (await CustomerService.IsGuestAsync(customer) && !CatalogSettings.AllowAnonymousUsersToReviewProduct)
             {
                 return Json(new
                 {
-                    Result = await _localizationService.GetResourceAsync("Reviews.Helpfulness.OnlyRegistered"),
+                    Result = await LocalizationService.GetResourceAsync("Reviews.Helpfulness.OnlyRegistered"),
                     TotalYes = productReview.HelpfulYesTotal,
                     TotalNo = productReview.HelpfulNoTotal
                 });
@@ -528,20 +528,20 @@ namespace Nop.Web.Controllers
             {
                 return Json(new
                 {
-                    Result = await _localizationService.GetResourceAsync("Reviews.Helpfulness.YourOwnReview"),
+                    Result = await LocalizationService.GetResourceAsync("Reviews.Helpfulness.YourOwnReview"),
                     TotalYes = productReview.HelpfulYesTotal,
                     TotalNo = productReview.HelpfulNoTotal
                 });
             }
 
-            await _productService.SetProductReviewHelpfulnessAsync(productReview, washelpful);
+            await ProductService.SetProductReviewHelpfulnessAsync(productReview, washelpful);
 
             //new totals
-            await _productService.UpdateProductReviewHelpfulnessTotalsAsync(productReview);
+            await ProductService.UpdateProductReviewHelpfulnessTotalsAsync(productReview);
 
             return Json(new
             {
-                Result = await _localizationService.GetResourceAsync("Reviews.Helpfulness.SuccessfullyVoted"),
+                Result = await LocalizationService.GetResourceAsync("Reviews.Helpfulness.SuccessfullyVoted"),
                 TotalYes = productReview.HelpfulYesTotal,
                 TotalNo = productReview.HelpfulNoTotal
             });
@@ -549,15 +549,15 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> CustomerProductReviews(int? pageNumber)
         {
-            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
+            if (await CustomerService.IsGuestAsync(await WorkContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
-            if (!_catalogSettings.ShowProductReviewsTabOnAccountPage)
+            if (!CatalogSettings.ShowProductReviewsTabOnAccountPage)
             {
                 return RedirectToRoute("CustomerInfo");
             }
 
-            var model = await _productModelFactory.PrepareCustomerProductReviewsModelAsync(pageNumber);
+            var model = await ProductModelFactory.PrepareCustomerProductReviewsModelAsync(pageNumber);
 
             return View(model);
         }
@@ -568,12 +568,12 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> ProductEmailAFriend(int productId)
         {
-            var product = await _productService.GetProductByIdAsync(productId);
-            if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
+            var product = await ProductService.GetProductByIdAsync(productId);
+            if (product == null || product.Deleted || !product.Published || !CatalogSettings.EmailAFriendEnabled)
                 return RedirectToRoute("Homepage");
 
             var model = new ProductEmailAFriendModel();
-            model = await _productModelFactory.PrepareProductEmailAFriendModelAsync(model, product, false);
+            model = await ProductModelFactory.PrepareProductEmailAFriendModelAsync(model, product, false);
             return View(model);
         }
 
@@ -582,40 +582,40 @@ namespace Nop.Web.Controllers
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
         {
-            var product = await _productService.GetProductByIdAsync(model.ProductId);
-            if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
+            var product = await ProductService.GetProductByIdAsync(model.ProductId);
+            if (product == null || product.Deleted || !product.Published || !CatalogSettings.EmailAFriendEnabled)
                 return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
-            if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage && !captchaValid)
+            if (CaptchaSettings.Enabled && CaptchaSettings.ShowOnEmailProductToFriendPage && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await LocalizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
             //check whether the current customer is guest and ia allowed to email a friend
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToEmailAFriend)
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            if (await CustomerService.IsGuestAsync(customer) && !CatalogSettings.AllowAnonymousUsersToEmailAFriend)
             {
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Products.EmailAFriend.OnlyRegisteredUsers"));
+                ModelState.AddModelError("", await LocalizationService.GetResourceAsync("Products.EmailAFriend.OnlyRegisteredUsers"));
             }
 
             if (ModelState.IsValid)
             {
                 //email
-                await _workflowMessageService.SendProductEmailAFriendMessageAsync(customer,
-                        (await _workContext.GetWorkingLanguageAsync()).Id, product,
+                await WorkflowMessageService.SendProductEmailAFriendMessageAsync(customer,
+                        (await WorkContext.GetWorkingLanguageAsync()).Id, product,
                         model.YourEmailAddress, model.FriendEmail,
                         Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 
-                model = await _productModelFactory.PrepareProductEmailAFriendModelAsync(model, product, true);
+                model = await ProductModelFactory.PrepareProductEmailAFriendModelAsync(model, product, true);
                 model.SuccessfullySent = true;
-                model.Result = await _localizationService.GetResourceAsync("Products.EmailAFriend.SuccessfullySent");
+                model.Result = await LocalizationService.GetResourceAsync("Products.EmailAFriend.SuccessfullySent");
 
                 return View(model);
             }
 
             //If we got this far, something failed, redisplay form
-            model = await _productModelFactory.PrepareProductEmailAFriendModelAsync(model, product, true);
+            model = await ProductModelFactory.PrepareProductEmailAFriendModelAsync(model, product, true);
             return View(model);
         }
 
@@ -627,7 +627,7 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> AddProductToCompareList(int productId)
         {
-            var product = await _productService.GetProductByIdAsync(productId);
+            var product = await ProductService.GetProductByIdAsync(productId);
             if (product == null || product.Deleted || !product.Published)
                 return Json(new
                 {
@@ -635,23 +635,23 @@ namespace Nop.Web.Controllers
                     message = "No product found with the specified ID"
                 });
 
-            if (!_catalogSettings.CompareProductsEnabled)
+            if (!CatalogSettings.CompareProductsEnabled)
                 return Json(new
                 {
                     success = false,
                     message = "Product comparison is disabled"
                 });
 
-            await _compareProductsService.AddProductToCompareListAsync(productId);
+            await CompareProductsService.AddProductToCompareListAsync(productId);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("PublicStore.AddToCompareList",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToCompareList"), product.Name), product);
+            await CustomerActivityService.InsertActivityAsync("PublicStore.AddToCompareList",
+                string.Format(await LocalizationService.GetResourceAsync("ActivityLog.PublicStore.AddToCompareList"), product.Name), product);
 
             return Json(new
             {
                 success = true,
-                message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToCompareList.Link"), Url.RouteUrl("CompareProducts"))
+                message = string.Format(await LocalizationService.GetResourceAsync("Products.ProductHasBeenAddedToCompareList.Link"), Url.RouteUrl("CompareProducts"))
                 //use the code below (commented) if you want a customer to be automatically redirected to the compare products page
                 //redirect = Url.RouteUrl("CompareProducts"),
             });
@@ -659,37 +659,37 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> RemoveProductFromCompareList(int productId)
         {
-            var product = await _productService.GetProductByIdAsync(productId);
+            var product = await ProductService.GetProductByIdAsync(productId);
             if (product == null)
                 return RedirectToRoute("Homepage");
 
-            if (!_catalogSettings.CompareProductsEnabled)
+            if (!CatalogSettings.CompareProductsEnabled)
                 return RedirectToRoute("Homepage");
 
-            await _compareProductsService.RemoveProductFromCompareListAsync(productId);
+            await CompareProductsService.RemoveProductFromCompareListAsync(productId);
 
             return RedirectToRoute("CompareProducts");
         }
 
         public virtual async Task<IActionResult> CompareProducts()
         {
-            if (!_catalogSettings.CompareProductsEnabled)
+            if (!CatalogSettings.CompareProductsEnabled)
                 return RedirectToRoute("Homepage");
 
             var model = new CompareProductsModel
             {
-                IncludeShortDescriptionInCompareProducts = _catalogSettings.IncludeShortDescriptionInCompareProducts,
-                IncludeFullDescriptionInCompareProducts = _catalogSettings.IncludeFullDescriptionInCompareProducts,
+                IncludeShortDescriptionInCompareProducts = CatalogSettings.IncludeShortDescriptionInCompareProducts,
+                IncludeFullDescriptionInCompareProducts = CatalogSettings.IncludeFullDescriptionInCompareProducts,
             };
 
-            var products = await (await _compareProductsService.GetComparedProductsAsync())
+            var products = await (await CompareProductsService.GetComparedProductsAsync())
             //ACL and store mapping
-            .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
+            .WhereAwait(async p => await AclService.AuthorizeAsync(p) && await StoreMappingService.AuthorizeAsync(p))
             //availability dates
-            .Where(p => _productService.ProductIsAvailable(p)).ToListAsync();
+            .Where(p => ProductService.ProductIsAvailable(p)).ToListAsync();
 
             //prepare model
-            (await _productModelFactory.PrepareProductOverviewModelsAsync(products, prepareSpecificationAttributes: true))
+            (await ProductModelFactory.PrepareProductOverviewModelsAsync(products, prepareSpecificationAttributes: true))
                 .ToList()
                 .ForEach(model.Products.Add);
 
@@ -698,10 +698,10 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult ClearCompareList()
         {
-            if (!_catalogSettings.CompareProductsEnabled)
+            if (!CatalogSettings.CompareProductsEnabled)
                 return RedirectToRoute("Homepage");
 
-            _compareProductsService.ClearCompareProducts();
+            CompareProductsService.ClearCompareProducts();
 
             return RedirectToRoute("CompareProducts");
         }

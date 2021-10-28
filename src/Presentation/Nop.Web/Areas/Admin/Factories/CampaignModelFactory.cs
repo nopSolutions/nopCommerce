@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
@@ -19,12 +19,12 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICampaignService _campaignService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IMessageTokenProvider _messageTokenProvider;
+        protected CatalogSettings CatalogSettings { get; }
+        protected EmailAccountSettings EmailAccountSettings { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICampaignService CampaignService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IMessageTokenProvider MessageTokenProvider { get; }
 
         #endregion
 
@@ -37,12 +37,12 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             IMessageTokenProvider messageTokenProvider)
         {
-            _catalogSettings = catalogSettings;
-            _emailAccountSettings = emailAccountSettings;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _campaignService = campaignService;
-            _dateTimeHelper = dateTimeHelper;
-            _messageTokenProvider = messageTokenProvider;
+            CatalogSettings = catalogSettings;
+            EmailAccountSettings = emailAccountSettings;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            CampaignService = campaignService;
+            DateTimeHelper = dateTimeHelper;
+            MessageTokenProvider = messageTokenProvider;
         }
 
         #endregion
@@ -63,9 +63,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+            searchModel.HideStoresList = CatalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -87,7 +87,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get campaigns
-            var campaigns = (await _campaignService.GetAllCampaignsAsync(searchModel.StoreId)).ToPagedList(searchModel);
+            var campaigns = (await CampaignService.GetAllCampaignsAsync(searchModel.StoreId)).ToPagedList(searchModel);
 
             //prepare grid model
             var model = await new CampaignListModel().PrepareToGridAsync(searchModel, campaigns, () =>
@@ -98,10 +98,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     var campaignModel = campaign.ToModel<CampaignModel>();
 
                     //convert dates to the user time
-                    campaignModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(campaign.CreatedOnUtc, DateTimeKind.Utc);
+                    campaignModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(campaign.CreatedOnUtc, DateTimeKind.Utc);
                     if (campaign.DontSendBeforeDateUtc.HasValue)
                     {
-                        campaignModel.DontSendBeforeDate = await _dateTimeHelper
+                        campaignModel.DontSendBeforeDate = await DateTimeHelper
                             .ConvertToUserTimeAsync(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
                     }
 
@@ -129,23 +129,23 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 model ??= campaign.ToModel<CampaignModel>();
                 if (campaign.DontSendBeforeDateUtc.HasValue)
-                    model.DontSendBeforeDate = await _dateTimeHelper.ConvertToUserTimeAsync(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
+                    model.DontSendBeforeDate = await DateTimeHelper.ConvertToUserTimeAsync(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             }
 
-            model.AllowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfCampaignAllowedTokensAsync());
+            model.AllowedTokens = string.Join(", ", await MessageTokenProvider.GetListOfCampaignAllowedTokensAsync());
 
             //whether to fill in some of properties
             if (!excludeProperties)
-                model.EmailAccountId = _emailAccountSettings.DefaultEmailAccountId;
+                model.EmailAccountId = EmailAccountSettings.DefaultEmailAccountId;
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);
 
             //prepare available customer roles
-            await _baseAdminModelFactory.PrepareCustomerRolesAsync(model.AvailableCustomerRoles);
+            await BaseAdminModelFactory.PrepareCustomerRolesAsync(model.AvailableCustomerRoles);
 
             //prepare available email accounts
-            await _baseAdminModelFactory.PrepareEmailAccountsAsync(model.AvailableEmailAccounts, false);
+            await BaseAdminModelFactory.PrepareEmailAccountsAsync(model.AvailableEmailAccounts, false);
 
             return model;
         }

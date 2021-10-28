@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Media;
@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPictureService _pictureService;
+        protected IPictureService PictureService { get; }
 
         #endregion
 
@@ -17,7 +17,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public PictureController(IPictureService pictureService)
         {
-            _pictureService = pictureService;
+            PictureService = pictureService;
         }
 
         #endregion
@@ -42,7 +42,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ? Request.Form[qqFileNameParameter].ToString()
                 : string.Empty;
 
-            var picture = await _pictureService.InsertPictureAsync(httpPostedFile, qqFileName);
+            var picture = await PictureService.InsertPictureAsync(httpPostedFile, qqFileName);
 
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
@@ -54,7 +54,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 success = true,
                 pictureId = picture.Id,
-                imageUrl = (await _pictureService.GetPictureUrlAsync(picture, 100)).Url
+                imageUrl = (await PictureService.GetPictureUrlAsync(picture, 100)).Url
             });
         }
 

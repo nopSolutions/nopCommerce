@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Security;
 using Nop.Web.Framework.Models;

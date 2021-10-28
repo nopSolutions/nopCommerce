@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,29 +49,29 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
-        private readonly IAddressService _addressService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IGdprService _gdprService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPictureService _pictureService;
-        private readonly IReturnRequestModelFactory _returnRequestModelFactory;
-        private readonly IReviewTypeModelFactory _reviewTypeModelFactory;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IThemeProvider _themeProvider;
-        private readonly IVendorAttributeModelFactory _vendorAttributeModelFactory;
-        private readonly IWorkContext _workContext;
+        protected AppSettings AppSettings { get; }
+        protected CurrencySettings CurrencySettings { get; }
+        protected IAddressModelFactory AddressModelFactory { get; }
+        protected IAddressAttributeModelFactory AddressAttributeModelFactory { get; }
+        protected IAddressService AddressService { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected ICustomerAttributeModelFactory CustomerAttributeModelFactory { get; }
+        protected INopDataProvider DataProvider { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IGdprService GdprService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IPictureService PictureService { get; }
+        protected IReturnRequestModelFactory ReturnRequestModelFactory { get; }
+        protected IReviewTypeModelFactory ReviewTypeModelFactory { get; }
+        protected ISettingService SettingService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IStoreService StoreService { get; }
+        protected IThemeProvider ThemeProvider { get; }
+        protected IVendorAttributeModelFactory VendorAttributeModelFactory { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -101,29 +101,29 @@ namespace Nop.Web.Areas.Admin.Factories
             IReviewTypeModelFactory reviewTypeModelFactory,
             IWorkContext workContext)
         {
-            _appSettings = appSettings;
-            _currencySettings = currencySettings;
-            _addressModelFactory = addressModelFactory;
-            _addressAttributeModelFactory = addressAttributeModelFactory;
-            _addressService = addressService;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _currencyService = currencyService;
-            _customerAttributeModelFactory = customerAttributeModelFactory;
-            _dataProvider = dataProvider;
-            _dateTimeHelper = dateTimeHelper;
-            _gdprService = gdprService;
-            _localizedModelFactory = localizedModelFactory;
-            _genericAttributeService = genericAttributeService;
-            _localizationService = localizationService;
-            _pictureService = pictureService;
-            _returnRequestModelFactory = returnRequestModelFactory;
-            _settingService = settingService;
-            _storeContext = storeContext;
-            _storeService = storeService;
-            _themeProvider = themeProvider;
-            _vendorAttributeModelFactory = vendorAttributeModelFactory;
-            _reviewTypeModelFactory = reviewTypeModelFactory;
-            _workContext = workContext;
+            AppSettings = appSettings;
+            CurrencySettings = currencySettings;
+            AddressModelFactory = addressModelFactory;
+            AddressAttributeModelFactory = addressAttributeModelFactory;
+            AddressService = addressService;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            CurrencyService = currencyService;
+            CustomerAttributeModelFactory = customerAttributeModelFactory;
+            DataProvider = dataProvider;
+            DateTimeHelper = dateTimeHelper;
+            GdprService = gdprService;
+            LocalizedModelFactory = localizedModelFactory;
+            GenericAttributeService = genericAttributeService;
+            LocalizationService = localizationService;
+            PictureService = pictureService;
+            ReturnRequestModelFactory = returnRequestModelFactory;
+            SettingService = settingService;
+            StoreContext = storeContext;
+            StoreService = storeService;
+            ThemeProvider = themeProvider;
+            VendorAttributeModelFactory = vendorAttributeModelFactory;
+            ReviewTypeModelFactory = reviewTypeModelFactory;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -141,11 +141,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var storeInformationSettings = await _settingService.LoadSettingAsync<StoreInformationSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var storeInformationSettings = await SettingService.LoadSettingAsync<StoreInformationSettings>(storeId);
 
             //get available themes
-            var availableThemes = await _themeProvider.GetThemesAsync();
+            var availableThemes = await ThemeProvider.GetThemesAsync();
             foreach (var theme in availableThemes)
             {
                 models.Add(new StoreInformationSettingsModel.ThemeModel
@@ -208,8 +208,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<AddressSettingsModel> PrepareAddressSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var addressSettings = await _settingService.LoadSettingAsync<AddressSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var addressSettings = await SettingService.LoadSettingAsync<AddressSettings>(storeId);
 
             //fill in model values from the entity
             var model = addressSettings.ToSettingsModel<AddressSettingsModel>();
@@ -227,8 +227,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<CustomerSettingsModel> PrepareCustomerSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var customerSettings = await _settingService.LoadSettingAsync<CustomerSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var customerSettings = await SettingService.LoadSettingAsync<CustomerSettings>(storeId);
 
             //fill in model values from the entity
             var model = customerSettings.ToSettingsModel<CustomerSettingsModel>();
@@ -246,8 +246,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<MultiFactorAuthenticationSettingsModel> PrepareMultiFactorAuthenticationSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var multiFactorAuthenticationSettings = await _settingService.LoadSettingAsync<MultiFactorAuthenticationSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var multiFactorAuthenticationSettings = await SettingService.LoadSettingAsync<MultiFactorAuthenticationSettings>(storeId);
 
             //fill in model values from the entity
             var model = multiFactorAuthenticationSettings.ToSettingsModel<MultiFactorAuthenticationSettingsModel>();
@@ -266,8 +266,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<DateTimeSettingsModel> PrepareDateTimeSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var dateTimeSettings = await _settingService.LoadSettingAsync<DateTimeSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var dateTimeSettings = await SettingService.LoadSettingAsync<DateTimeSettings>(storeId);
 
             //fill in model values from the entity
             var model = new DateTimeSettingsModel
@@ -276,10 +276,10 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //fill in additional values (not existing in the entity)
-            model.DefaultStoreTimeZoneId = _dateTimeHelper.DefaultStoreTimeZone.Id;
+            model.DefaultStoreTimeZoneId = DateTimeHelper.DefaultStoreTimeZone.Id;
 
             //prepare available time zones
-            await _baseAdminModelFactory.PrepareTimeZonesAsync(model.AvailableTimeZones, false);
+            await BaseAdminModelFactory.PrepareTimeZonesAsync(model.AvailableTimeZones, false);
 
             return model;
         }
@@ -294,8 +294,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<ExternalAuthenticationSettingsModel> PrepareExternalAuthenticationSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var externalAuthenticationSettings = await _settingService.LoadSettingAsync<ExternalAuthenticationSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var externalAuthenticationSettings = await SettingService.LoadSettingAsync<ExternalAuthenticationSettings>(storeId);
 
             //fill in model values from the entity
             var model = new ExternalAuthenticationSettingsModel
@@ -316,9 +316,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<StoreInformationSettingsModel> PrepareStoreInformationSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var storeInformationSettings = await _settingService.LoadSettingAsync<StoreInformationSettings>(storeId);
-            var commonSettings = await _settingService.LoadSettingAsync<CommonSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var storeInformationSettings = await SettingService.LoadSettingAsync<StoreInformationSettings>(storeId);
+            var commonSettings = await SettingService.LoadSettingAsync<CommonSettings>(storeId);
 
             //fill in model values from the entity
             var model = new StoreInformationSettingsModel
@@ -343,17 +343,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.StoreClosed_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.StoreClosed, storeId);
-            model.DefaultStoreTheme_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.DefaultStoreTheme, storeId);
-            model.AllowCustomerToSelectTheme_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeId);
-            model.LogoPictureId_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.LogoPictureId, storeId);
-            model.DisplayEuCookieLawWarning_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeId);
-            model.FacebookLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.FacebookLink, storeId);
-            model.TwitterLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.TwitterLink, storeId);
-            model.YoutubeLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.YoutubeLink, storeId);
-            model.SubjectFieldOnContactUsForm_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.SubjectFieldOnContactUsForm, storeId);
-            model.UseSystemEmailForContactUsForm_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.UseSystemEmailForContactUsForm, storeId);
-            model.PopupForTermsOfServiceLinks_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.PopupForTermsOfServiceLinks, storeId);
+            model.StoreClosed_OverrideForStore = await SettingService.SettingExistsAsync(storeInformationSettings, x => x.StoreClosed, storeId);
+            model.DefaultStoreTheme_OverrideForStore = await SettingService.SettingExistsAsync(storeInformationSettings, x => x.DefaultStoreTheme, storeId);
+            model.AllowCustomerToSelectTheme_OverrideForStore = await SettingService.SettingExistsAsync(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeId);
+            model.LogoPictureId_OverrideForStore = await SettingService.SettingExistsAsync(storeInformationSettings, x => x.LogoPictureId, storeId);
+            model.DisplayEuCookieLawWarning_OverrideForStore = await SettingService.SettingExistsAsync(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeId);
+            model.FacebookLink_OverrideForStore = await SettingService.SettingExistsAsync(storeInformationSettings, x => x.FacebookLink, storeId);
+            model.TwitterLink_OverrideForStore = await SettingService.SettingExistsAsync(storeInformationSettings, x => x.TwitterLink, storeId);
+            model.YoutubeLink_OverrideForStore = await SettingService.SettingExistsAsync(storeInformationSettings, x => x.YoutubeLink, storeId);
+            model.SubjectFieldOnContactUsForm_OverrideForStore = await SettingService.SettingExistsAsync(commonSettings, x => x.SubjectFieldOnContactUsForm, storeId);
+            model.UseSystemEmailForContactUsForm_OverrideForStore = await SettingService.SettingExistsAsync(commonSettings, x => x.UseSystemEmailForContactUsForm, storeId);
+            model.PopupForTermsOfServiceLinks_OverrideForStore = await SettingService.SettingExistsAsync(commonSettings, x => x.PopupForTermsOfServiceLinks, storeId);
 
             return model;
         }
@@ -368,8 +368,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<SitemapSettingsModel> PrepareSitemapSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sitemapSettings = await _settingService.LoadSettingAsync<SitemapSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var sitemapSettings = await SettingService.LoadSettingAsync<SitemapSettings>(storeId);
 
             //fill in model values from the entity
             var model = new SitemapSettingsModel
@@ -389,15 +389,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.SitemapEnabled_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapEnabled, storeId);
-            model.SitemapPageSize_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapPageSize, storeId);
-            model.SitemapIncludeCategories_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeCategories, storeId);
-            model.SitemapIncludeManufacturers_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeManufacturers, storeId);
-            model.SitemapIncludeProducts_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeProducts, storeId);
-            model.SitemapIncludeProductTags_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeProductTags, storeId);
-            model.SitemapIncludeBlogPosts_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeBlogPosts, storeId);
-            model.SitemapIncludeNews_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeNews, storeId);
-            model.SitemapIncludeTopics_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeTopics, storeId);
+            model.SitemapEnabled_OverrideForStore = await SettingService.SettingExistsAsync(sitemapSettings, x => x.SitemapEnabled, storeId);
+            model.SitemapPageSize_OverrideForStore = await SettingService.SettingExistsAsync(sitemapSettings, x => x.SitemapPageSize, storeId);
+            model.SitemapIncludeCategories_OverrideForStore = await SettingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeCategories, storeId);
+            model.SitemapIncludeManufacturers_OverrideForStore = await SettingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeManufacturers, storeId);
+            model.SitemapIncludeProducts_OverrideForStore = await SettingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeProducts, storeId);
+            model.SitemapIncludeProductTags_OverrideForStore = await SettingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeProductTags, storeId);
+            model.SitemapIncludeBlogPosts_OverrideForStore = await SettingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeBlogPosts, storeId);
+            model.SitemapIncludeNews_OverrideForStore = await SettingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeNews, storeId);
+            model.SitemapIncludeTopics_OverrideForStore = await SettingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeTopics, storeId);
 
             return model;
         }
@@ -412,8 +412,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<MinificationSettingsModel> PrepareMinificationSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var minificationSettings = await _settingService.LoadSettingAsync<CommonSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var minificationSettings = await SettingService.LoadSettingAsync<CommonSettings>(storeId);
 
             //fill in model values from the entity
             var model = new MinificationSettingsModel
@@ -428,10 +428,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.EnableHtmlMinification_OverrideForStore = await _settingService.SettingExistsAsync(minificationSettings, x => x.EnableHtmlMinification, storeId);
-            model.EnableJsBundling_OverrideForStore = await _settingService.SettingExistsAsync(minificationSettings, x => x.EnableJsBundling, storeId);
-            model.EnableCssBundling_OverrideForStore = await _settingService.SettingExistsAsync(minificationSettings, x => x.EnableCssBundling, storeId);
-            model.UseResponseCompression_OverrideForStore = await _settingService.SettingExistsAsync(minificationSettings, x => x.UseResponseCompression, storeId);
+            model.EnableHtmlMinification_OverrideForStore = await SettingService.SettingExistsAsync(minificationSettings, x => x.EnableHtmlMinification, storeId);
+            model.EnableJsBundling_OverrideForStore = await SettingService.SettingExistsAsync(minificationSettings, x => x.EnableJsBundling, storeId);
+            model.EnableCssBundling_OverrideForStore = await SettingService.SettingExistsAsync(minificationSettings, x => x.EnableCssBundling, storeId);
+            model.UseResponseCompression_OverrideForStore = await SettingService.SettingExistsAsync(minificationSettings, x => x.UseResponseCompression, storeId);
 
             return model;
         }
@@ -446,8 +446,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<SeoSettingsModel> PrepareSeoSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var seoSettings = await _settingService.LoadSettingAsync<SeoSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var seoSettings = await SettingService.LoadSettingAsync<SeoSettings>(storeId);
 
             //fill in model values from the entity
             var model = new SeoSettingsModel
@@ -476,21 +476,21 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.PageTitleSeparator_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.PageTitleSeparator, storeId);
-            model.PageTitleSeoAdjustment_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.PageTitleSeoAdjustment, storeId);
-            model.DefaultTitle_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.DefaultTitle, storeId);
-            model.HomepageTitle_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.HomepageTitle, storeId);
-            model.HomepageDescription_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.HomepageDescription, storeId);
-            model.DefaultMetaKeywords_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.DefaultMetaKeywords, storeId);
-            model.DefaultMetaDescription_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.DefaultMetaDescription, storeId);
-            model.GenerateProductMetaDescription_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.GenerateProductMetaDescription, storeId);
-            model.ConvertNonWesternChars_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.ConvertNonWesternChars, storeId);
-            model.CanonicalUrlsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.CanonicalUrlsEnabled, storeId);
-            model.WwwRequirement_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.WwwRequirement, storeId);
-            model.TwitterMetaTags_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.TwitterMetaTags, storeId);
-            model.OpenGraphMetaTags_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.OpenGraphMetaTags, storeId);
-            model.CustomHeadTags_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.CustomHeadTags, storeId);
-            model.MicrodataEnabled_OverrideForStore = await _settingService.SettingExistsAsync(seoSettings, x => x.MicrodataEnabled, storeId);
+            model.PageTitleSeparator_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.PageTitleSeparator, storeId);
+            model.PageTitleSeoAdjustment_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.PageTitleSeoAdjustment, storeId);
+            model.DefaultTitle_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.DefaultTitle, storeId);
+            model.HomepageTitle_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.HomepageTitle, storeId);
+            model.HomepageDescription_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.HomepageDescription, storeId);
+            model.DefaultMetaKeywords_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.DefaultMetaKeywords, storeId);
+            model.DefaultMetaDescription_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.DefaultMetaDescription, storeId);
+            model.GenerateProductMetaDescription_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.GenerateProductMetaDescription, storeId);
+            model.ConvertNonWesternChars_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.ConvertNonWesternChars, storeId);
+            model.CanonicalUrlsEnabled_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.CanonicalUrlsEnabled, storeId);
+            model.WwwRequirement_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.WwwRequirement, storeId);
+            model.TwitterMetaTags_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.TwitterMetaTags, storeId);
+            model.OpenGraphMetaTags_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.OpenGraphMetaTags, storeId);
+            model.CustomHeadTags_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.CustomHeadTags, storeId);
+            model.MicrodataEnabled_OverrideForStore = await SettingService.SettingExistsAsync(seoSettings, x => x.MicrodataEnabled, storeId);
 
             return model;
         }
@@ -505,8 +505,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<SecuritySettingsModel> PrepareSecuritySettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var securitySettings = await _settingService.LoadSettingAsync<SecuritySettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var securitySettings = await SettingService.LoadSettingAsync<SecuritySettings>(storeId);
 
             //fill in model values from the entity
             var model = new SecuritySettingsModel
@@ -532,8 +532,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<CaptchaSettingsModel> PrepareCaptchaSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var captchaSettings = await _settingService.LoadSettingAsync<CaptchaSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var captchaSettings = await SettingService.LoadSettingAsync<CaptchaSettings>(storeId);
 
             //fill in model values from the entity
             var model = captchaSettings.ToSettingsModel<CaptchaSettingsModel>();
@@ -543,22 +543,22 @@ namespace Nop.Web.Areas.Admin.Factories
             if (storeId <= 0)
                 return model;
 
-            model.Enabled_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.Enabled, storeId);
-            model.ShowOnLoginPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnLoginPage, storeId);
-            model.ShowOnRegistrationPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnRegistrationPage, storeId);
-            model.ShowOnContactUsPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnContactUsPage, storeId);
-            model.ShowOnEmailWishlistToFriendPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnEmailWishlistToFriendPage, storeId);
-            model.ShowOnEmailProductToFriendPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnEmailProductToFriendPage, storeId);
-            model.ShowOnBlogCommentPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnBlogCommentPage, storeId);
-            model.ShowOnNewsCommentPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnNewsCommentPage, storeId);
-            model.ShowOnProductReviewPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnProductReviewPage, storeId);
-            model.ShowOnApplyVendorPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnApplyVendorPage, storeId);
-            model.ShowOnForgotPasswordPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnForgotPasswordPage, storeId);
-            model.ShowOnForum_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnForum, storeId);
-            model.ReCaptchaPublicKey_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ReCaptchaPublicKey, storeId);
-            model.ReCaptchaPrivateKey_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ReCaptchaPrivateKey, storeId);
-            model.CaptchaType_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.CaptchaType, storeId);
-            model.ReCaptchaV3ScoreThreshold_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ReCaptchaV3ScoreThreshold, storeId);
+            model.Enabled_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.Enabled, storeId);
+            model.ShowOnLoginPage_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ShowOnLoginPage, storeId);
+            model.ShowOnRegistrationPage_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ShowOnRegistrationPage, storeId);
+            model.ShowOnContactUsPage_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ShowOnContactUsPage, storeId);
+            model.ShowOnEmailWishlistToFriendPage_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ShowOnEmailWishlistToFriendPage, storeId);
+            model.ShowOnEmailProductToFriendPage_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ShowOnEmailProductToFriendPage, storeId);
+            model.ShowOnBlogCommentPage_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ShowOnBlogCommentPage, storeId);
+            model.ShowOnNewsCommentPage_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ShowOnNewsCommentPage, storeId);
+            model.ShowOnProductReviewPage_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ShowOnProductReviewPage, storeId);
+            model.ShowOnApplyVendorPage_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ShowOnApplyVendorPage, storeId);
+            model.ShowOnForgotPasswordPage_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ShowOnForgotPasswordPage, storeId);
+            model.ShowOnForum_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ShowOnForum, storeId);
+            model.ReCaptchaPublicKey_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ReCaptchaPublicKey, storeId);
+            model.ReCaptchaPrivateKey_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ReCaptchaPrivateKey, storeId);
+            model.CaptchaType_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.CaptchaType, storeId);
+            model.ReCaptchaV3ScoreThreshold_OverrideForStore = await SettingService.SettingExistsAsync(captchaSettings, x => x.ReCaptchaV3ScoreThreshold, storeId);
 
             return model;
         }
@@ -573,8 +573,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<PdfSettingsModel> PreparePdfSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var pdfSettings = await _settingService.LoadSettingAsync<PdfSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var pdfSettings = await SettingService.LoadSettingAsync<PdfSettings>(storeId);
 
             //fill in model values from the entity
             var model = new PdfSettingsModel
@@ -590,11 +590,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.LetterPageSizeEnabled_OverrideForStore = await _settingService.SettingExistsAsync(pdfSettings, x => x.LetterPageSizeEnabled, storeId);
-            model.LogoPictureId_OverrideForStore = await _settingService.SettingExistsAsync(pdfSettings, x => x.LogoPictureId, storeId);
-            model.DisablePdfInvoicesForPendingOrders_OverrideForStore = await _settingService.SettingExistsAsync(pdfSettings, x => x.DisablePdfInvoicesForPendingOrders, storeId);
-            model.InvoiceFooterTextColumn1_OverrideForStore = await _settingService.SettingExistsAsync(pdfSettings, x => x.InvoiceFooterTextColumn1, storeId);
-            model.InvoiceFooterTextColumn2_OverrideForStore = await _settingService.SettingExistsAsync(pdfSettings, x => x.InvoiceFooterTextColumn2, storeId);
+            model.LetterPageSizeEnabled_OverrideForStore = await SettingService.SettingExistsAsync(pdfSettings, x => x.LetterPageSizeEnabled, storeId);
+            model.LogoPictureId_OverrideForStore = await SettingService.SettingExistsAsync(pdfSettings, x => x.LogoPictureId, storeId);
+            model.DisablePdfInvoicesForPendingOrders_OverrideForStore = await SettingService.SettingExistsAsync(pdfSettings, x => x.DisablePdfInvoicesForPendingOrders, storeId);
+            model.InvoiceFooterTextColumn1_OverrideForStore = await SettingService.SettingExistsAsync(pdfSettings, x => x.InvoiceFooterTextColumn1, storeId);
+            model.InvoiceFooterTextColumn2_OverrideForStore = await SettingService.SettingExistsAsync(pdfSettings, x => x.InvoiceFooterTextColumn2, storeId);
 
             return model;
         }
@@ -609,8 +609,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<LocalizationSettingsModel> PrepareLocalizationSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var localizationSettings = await _settingService.LoadSettingAsync<LocalizationSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var localizationSettings = await SettingService.LoadSettingAsync<LocalizationSettings>(storeId);
 
             //fill in model values from the entity
             var model = new LocalizationSettingsModel
@@ -636,8 +636,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<AdminAreaSettingsModel> PrepareAdminAreaSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var adminAreaSettings = await _settingService.LoadSettingAsync<AdminAreaSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var adminAreaSettings = await SettingService.LoadSettingAsync<AdminAreaSettings>(storeId);
 
             //fill in model values from the entity
             var model = new AdminAreaSettingsModel
@@ -648,7 +648,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in overridden values
             if (storeId > 0)
             {
-                model.UseRichEditorInMessageTemplates_OverrideForStore = await _settingService.SettingExistsAsync(adminAreaSettings, x => x.UseRichEditorInMessageTemplates, storeId);
+                model.UseRichEditorInMessageTemplates_OverrideForStore = await SettingService.SettingExistsAsync(adminAreaSettings, x => x.UseRichEditorInMessageTemplates, storeId);
             }
 
             return model;
@@ -664,8 +664,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<DisplayDefaultMenuItemSettingsModel> PrepareDisplayDefaultMenuItemSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var displayDefaultMenuItemSettings = await _settingService.LoadSettingAsync<DisplayDefaultMenuItemSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var displayDefaultMenuItemSettings = await SettingService.LoadSettingAsync<DisplayDefaultMenuItemSettings>(storeId);
 
             //fill in model values from the entity
             var model = new DisplayDefaultMenuItemSettingsModel
@@ -683,13 +683,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.DisplayHomepageMenuItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayHomepageMenuItem, storeId);
-            model.DisplayNewProductsMenuItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayNewProductsMenuItem, storeId);
-            model.DisplayProductSearchMenuItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayProductSearchMenuItem, storeId);
-            model.DisplayCustomerInfoMenuItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayCustomerInfoMenuItem, storeId);
-            model.DisplayBlogMenuItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayBlogMenuItem, storeId);
-            model.DisplayForumsMenuItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayForumsMenuItem, storeId);
-            model.DisplayContactUsMenuItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayContactUsMenuItem, storeId);
+            model.DisplayHomepageMenuItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayHomepageMenuItem, storeId);
+            model.DisplayNewProductsMenuItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayNewProductsMenuItem, storeId);
+            model.DisplayProductSearchMenuItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayProductSearchMenuItem, storeId);
+            model.DisplayCustomerInfoMenuItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayCustomerInfoMenuItem, storeId);
+            model.DisplayBlogMenuItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayBlogMenuItem, storeId);
+            model.DisplayForumsMenuItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayForumsMenuItem, storeId);
+            model.DisplayContactUsMenuItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultMenuItemSettings, x => x.DisplayContactUsMenuItem, storeId);
 
             return model;
         }
@@ -704,8 +704,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<DisplayDefaultFooterItemSettingsModel> PrepareDisplayDefaultFooterItemSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var displayDefaultFooterItemSettings = await _settingService.LoadSettingAsync<DisplayDefaultFooterItemSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var displayDefaultFooterItemSettings = await SettingService.LoadSettingAsync<DisplayDefaultFooterItemSettings>(storeId);
 
             //fill in model values from the entity
             var model = new DisplayDefaultFooterItemSettingsModel
@@ -731,21 +731,21 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.DisplaySitemapFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplaySitemapFooterItem, storeId);
-            model.DisplayContactUsFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayContactUsFooterItem, storeId);
-            model.DisplayProductSearchFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayProductSearchFooterItem, storeId);
-            model.DisplayNewsFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayNewsFooterItem, storeId);
-            model.DisplayBlogFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayBlogFooterItem, storeId);
-            model.DisplayForumsFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayForumsFooterItem, storeId);
-            model.DisplayRecentlyViewedProductsFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayRecentlyViewedProductsFooterItem, storeId);
-            model.DisplayCompareProductsFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayCompareProductsFooterItem, storeId);
-            model.DisplayNewProductsFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayNewProductsFooterItem, storeId);
-            model.DisplayCustomerInfoFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayCustomerInfoFooterItem, storeId);
-            model.DisplayCustomerOrdersFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayCustomerOrdersFooterItem, storeId);
-            model.DisplayCustomerAddressesFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayCustomerAddressesFooterItem, storeId);
-            model.DisplayShoppingCartFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayShoppingCartFooterItem, storeId);
-            model.DisplayWishlistFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayWishlistFooterItem, storeId);
-            model.DisplayApplyVendorAccountFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayApplyVendorAccountFooterItem, storeId);
+            model.DisplaySitemapFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplaySitemapFooterItem, storeId);
+            model.DisplayContactUsFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayContactUsFooterItem, storeId);
+            model.DisplayProductSearchFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayProductSearchFooterItem, storeId);
+            model.DisplayNewsFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayNewsFooterItem, storeId);
+            model.DisplayBlogFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayBlogFooterItem, storeId);
+            model.DisplayForumsFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayForumsFooterItem, storeId);
+            model.DisplayRecentlyViewedProductsFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayRecentlyViewedProductsFooterItem, storeId);
+            model.DisplayCompareProductsFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayCompareProductsFooterItem, storeId);
+            model.DisplayNewProductsFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayNewProductsFooterItem, storeId);
+            model.DisplayCustomerInfoFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayCustomerInfoFooterItem, storeId);
+            model.DisplayCustomerOrdersFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayCustomerOrdersFooterItem, storeId);
+            model.DisplayCustomerAddressesFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayCustomerAddressesFooterItem, storeId);
+            model.DisplayShoppingCartFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayShoppingCartFooterItem, storeId);
+            model.DisplayWishlistFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayWishlistFooterItem, storeId);
+            model.DisplayApplyVendorAccountFooterItem_OverrideForStore = await SettingService.SettingExistsAsync(displayDefaultFooterItemSettings, x => x.DisplayApplyVendorAccountFooterItem, storeId);
 
             return model;
         }
@@ -761,7 +761,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);
         }
 
         #endregion
@@ -780,19 +780,19 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             model ??= new AppSettingsModel
             {
-                CacheConfigModel = _appSettings.Get<CacheConfig>().ToConfigModel<CacheConfigModel>(),
-                HostingConfigModel = _appSettings.Get<HostingConfig>().ToConfigModel<HostingConfigModel>(),
-                DistributedCacheConfigModel = _appSettings.Get<DistributedCacheConfig>().ToConfigModel<DistributedCacheConfigModel>(),
-                AzureBlobConfigModel = _appSettings.Get<AzureBlobConfig>().ToConfigModel<AzureBlobConfigModel>(),
-                InstallationConfigModel = _appSettings.Get<InstallationConfig>().ToConfigModel<InstallationConfigModel>(),
-                PluginConfigModel = _appSettings.Get<PluginConfig>().ToConfigModel<PluginConfigModel>(),
-                CommonConfigModel = _appSettings.Get<CommonConfig>().ToConfigModel<CommonConfigModel>(),
-                DataConfigModel = _appSettings.Get<DataConfig>().ToConfigModel<DataConfigModel>()
+                CacheConfigModel = AppSettings.Get<CacheConfig>().ToConfigModel<CacheConfigModel>(),
+                HostingConfigModel = AppSettings.Get<HostingConfig>().ToConfigModel<HostingConfigModel>(),
+                DistributedCacheConfigModel = AppSettings.Get<DistributedCacheConfig>().ToConfigModel<DistributedCacheConfigModel>(),
+                AzureBlobConfigModel = AppSettings.Get<AzureBlobConfig>().ToConfigModel<AzureBlobConfigModel>(),
+                InstallationConfigModel = AppSettings.Get<InstallationConfig>().ToConfigModel<InstallationConfigModel>(),
+                PluginConfigModel = AppSettings.Get<PluginConfig>().ToConfigModel<PluginConfigModel>(),
+                CommonConfigModel = AppSettings.Get<CommonConfig>().ToConfigModel<CommonConfigModel>(),
+                DataConfigModel = AppSettings.Get<DataConfig>().ToConfigModel<DataConfigModel>()
             };
 
-            model.DistributedCacheConfigModel.DistributedCacheTypeValues = await _appSettings.Get<DistributedCacheConfig>().DistributedCacheType.ToSelectListAsync();
+            model.DistributedCacheConfigModel.DistributedCacheTypeValues = await AppSettings.Get<DistributedCacheConfig>().DistributedCacheType.ToSelectListAsync();
 
-            model.DataConfigModel.DataProviderTypeValues = await _appSettings.Get<DataConfig>().DataProvider.ToSelectListAsync();
+            model.DataConfigModel.DataProviderTypeValues = await AppSettings.Get<DataConfig>().DataProvider.ToSelectListAsync();
 
             //Since we decided to use the naming of the DB connections section as in the .net core - "ConnectionStrings",
             //we are forced to adjust our internal model naming to this convention in this check.
@@ -815,8 +815,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<BlogSettingsModel> PrepareBlogSettingsModelAsync(BlogSettingsModel model = null)
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var blogSettings = await _settingService.LoadSettingAsync<BlogSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var blogSettings = await SettingService.LoadSettingAsync<BlogSettings>(storeId);
 
             //fill in model values from the entity
             model ??= blogSettings.ToSettingsModel<BlogSettingsModel>();
@@ -828,13 +828,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.Enabled_OverrideForStore = await _settingService.SettingExistsAsync(blogSettings, x => x.Enabled, storeId);
-            model.PostsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(blogSettings, x => x.PostsPageSize, storeId);
-            model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore = await _settingService.SettingExistsAsync(blogSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeId);
-            model.NotifyAboutNewBlogComments_OverrideForStore = await _settingService.SettingExistsAsync(blogSettings, x => x.NotifyAboutNewBlogComments, storeId);
-            model.NumberOfTags_OverrideForStore = await _settingService.SettingExistsAsync(blogSettings, x => x.NumberOfTags, storeId);
-            model.ShowHeaderRssUrl_OverrideForStore = await _settingService.SettingExistsAsync(blogSettings, x => x.ShowHeaderRssUrl, storeId);
-            model.BlogCommentsMustBeApproved_OverrideForStore = await _settingService.SettingExistsAsync(blogSettings, x => x.BlogCommentsMustBeApproved, storeId);
+            model.Enabled_OverrideForStore = await SettingService.SettingExistsAsync(blogSettings, x => x.Enabled, storeId);
+            model.PostsPageSize_OverrideForStore = await SettingService.SettingExistsAsync(blogSettings, x => x.PostsPageSize, storeId);
+            model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore = await SettingService.SettingExistsAsync(blogSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeId);
+            model.NotifyAboutNewBlogComments_OverrideForStore = await SettingService.SettingExistsAsync(blogSettings, x => x.NotifyAboutNewBlogComments, storeId);
+            model.NumberOfTags_OverrideForStore = await SettingService.SettingExistsAsync(blogSettings, x => x.NumberOfTags, storeId);
+            model.ShowHeaderRssUrl_OverrideForStore = await SettingService.SettingExistsAsync(blogSettings, x => x.ShowHeaderRssUrl, storeId);
+            model.BlogCommentsMustBeApproved_OverrideForStore = await SettingService.SettingExistsAsync(blogSettings, x => x.BlogCommentsMustBeApproved, storeId);
 
             return model;
         }
@@ -850,8 +850,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<VendorSettingsModel> PrepareVendorSettingsModelAsync(VendorSettingsModel model = null)
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var vendorSettings = await _settingService.LoadSettingAsync<VendorSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var vendorSettings = await SettingService.LoadSettingAsync<VendorSettings>(storeId);
 
             //fill in model values from the entity
             model ??= vendorSettings.ToSettingsModel<VendorSettingsModel>();
@@ -862,21 +862,21 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in overridden values
             if (storeId > 0)
             {
-                model.VendorsBlockItemsToDisplay_OverrideForStore = await _settingService.SettingExistsAsync(vendorSettings, x => x.VendorsBlockItemsToDisplay, storeId);
-                model.ShowVendorOnProductDetailsPage_OverrideForStore = await _settingService.SettingExistsAsync(vendorSettings, x => x.ShowVendorOnProductDetailsPage, storeId);
-                model.ShowVendorOnOrderDetailsPage_OverrideForStore = await _settingService.SettingExistsAsync(vendorSettings, x => x.ShowVendorOnOrderDetailsPage, storeId);
-                model.AllowCustomersToContactVendors_OverrideForStore = await _settingService.SettingExistsAsync(vendorSettings, x => x.AllowCustomersToContactVendors, storeId);
-                model.AllowCustomersToApplyForVendorAccount_OverrideForStore = await _settingService.SettingExistsAsync(vendorSettings, x => x.AllowCustomersToApplyForVendorAccount, storeId);
-                model.TermsOfServiceEnabled_OverrideForStore = await _settingService.SettingExistsAsync(vendorSettings, x => x.TermsOfServiceEnabled, storeId);
-                model.AllowSearchByVendor_OverrideForStore = await _settingService.SettingExistsAsync(vendorSettings, x => x.AllowSearchByVendor, storeId);
-                model.AllowVendorsToEditInfo_OverrideForStore = await _settingService.SettingExistsAsync(vendorSettings, x => x.AllowVendorsToEditInfo, storeId);
-                model.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore = await _settingService.SettingExistsAsync(vendorSettings, x => x.NotifyStoreOwnerAboutVendorInformationChange, storeId);
-                model.MaximumProductNumber_OverrideForStore = await _settingService.SettingExistsAsync(vendorSettings, x => x.MaximumProductNumber, storeId);
-                model.AllowVendorsToImportProducts_OverrideForStore = await _settingService.SettingExistsAsync(vendorSettings, x => x.AllowVendorsToImportProducts, storeId);
+                model.VendorsBlockItemsToDisplay_OverrideForStore = await SettingService.SettingExistsAsync(vendorSettings, x => x.VendorsBlockItemsToDisplay, storeId);
+                model.ShowVendorOnProductDetailsPage_OverrideForStore = await SettingService.SettingExistsAsync(vendorSettings, x => x.ShowVendorOnProductDetailsPage, storeId);
+                model.ShowVendorOnOrderDetailsPage_OverrideForStore = await SettingService.SettingExistsAsync(vendorSettings, x => x.ShowVendorOnOrderDetailsPage, storeId);
+                model.AllowCustomersToContactVendors_OverrideForStore = await SettingService.SettingExistsAsync(vendorSettings, x => x.AllowCustomersToContactVendors, storeId);
+                model.AllowCustomersToApplyForVendorAccount_OverrideForStore = await SettingService.SettingExistsAsync(vendorSettings, x => x.AllowCustomersToApplyForVendorAccount, storeId);
+                model.TermsOfServiceEnabled_OverrideForStore = await SettingService.SettingExistsAsync(vendorSettings, x => x.TermsOfServiceEnabled, storeId);
+                model.AllowSearchByVendor_OverrideForStore = await SettingService.SettingExistsAsync(vendorSettings, x => x.AllowSearchByVendor, storeId);
+                model.AllowVendorsToEditInfo_OverrideForStore = await SettingService.SettingExistsAsync(vendorSettings, x => x.AllowVendorsToEditInfo, storeId);
+                model.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore = await SettingService.SettingExistsAsync(vendorSettings, x => x.NotifyStoreOwnerAboutVendorInformationChange, storeId);
+                model.MaximumProductNumber_OverrideForStore = await SettingService.SettingExistsAsync(vendorSettings, x => x.MaximumProductNumber, storeId);
+                model.AllowVendorsToImportProducts_OverrideForStore = await SettingService.SettingExistsAsync(vendorSettings, x => x.AllowVendorsToImportProducts, storeId);
             }
 
             //prepare nested search model
-            await _vendorAttributeModelFactory.PrepareVendorAttributeSearchModelAsync(model.VendorAttributeSearchModel);
+            await VendorAttributeModelFactory.PrepareVendorAttributeSearchModelAsync(model.VendorAttributeSearchModel);
 
             return model;
         }
@@ -892,8 +892,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ForumSettingsModel> PrepareForumSettingsModelAsync(ForumSettingsModel model = null)
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var forumSettings = await _settingService.LoadSettingAsync<ForumSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var forumSettings = await SettingService.LoadSettingAsync<ForumSettings>(storeId);
 
             //fill in model values from the entity
             model ??= forumSettings.ToSettingsModel<ForumSettingsModel>();
@@ -906,29 +906,29 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.ForumsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ForumsEnabled, storeId);
-            model.RelativeDateTimeFormattingEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.RelativeDateTimeFormattingEnabled, storeId);
-            model.ShowCustomersPostCount_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ShowCustomersPostCount, storeId);
-            model.AllowGuestsToCreatePosts_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowGuestsToCreatePosts, storeId);
-            model.AllowGuestsToCreateTopics_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowGuestsToCreateTopics, storeId);
-            model.AllowCustomersToEditPosts_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowCustomersToEditPosts, storeId);
-            model.AllowCustomersToDeletePosts_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowCustomersToDeletePosts, storeId);
-            model.AllowPostVoting_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowPostVoting, storeId);
-            model.MaxVotesPerDay_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.MaxVotesPerDay, storeId);
-            model.AllowCustomersToManageSubscriptions_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowCustomersToManageSubscriptions, storeId);
-            model.TopicsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.TopicsPageSize, storeId);
-            model.PostsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.PostsPageSize, storeId);
-            model.ForumEditor_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ForumEditor, storeId);
-            model.SignaturesEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.SignaturesEnabled, storeId);
-            model.AllowPrivateMessages_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowPrivateMessages, storeId);
-            model.ShowAlertForPM_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ShowAlertForPM, storeId);
-            model.NotifyAboutPrivateMessages_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.NotifyAboutPrivateMessages, storeId);
-            model.ActiveDiscussionsFeedEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsFeedEnabled, storeId);
-            model.ActiveDiscussionsFeedCount_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsFeedCount, storeId);
-            model.ForumFeedsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ForumFeedsEnabled, storeId);
-            model.ForumFeedCount_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ForumFeedCount, storeId);
-            model.SearchResultsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.SearchResultsPageSize, storeId);
-            model.ActiveDiscussionsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsPageSize, storeId);
+            model.ForumsEnabled_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.ForumsEnabled, storeId);
+            model.RelativeDateTimeFormattingEnabled_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.RelativeDateTimeFormattingEnabled, storeId);
+            model.ShowCustomersPostCount_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.ShowCustomersPostCount, storeId);
+            model.AllowGuestsToCreatePosts_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.AllowGuestsToCreatePosts, storeId);
+            model.AllowGuestsToCreateTopics_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.AllowGuestsToCreateTopics, storeId);
+            model.AllowCustomersToEditPosts_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.AllowCustomersToEditPosts, storeId);
+            model.AllowCustomersToDeletePosts_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.AllowCustomersToDeletePosts, storeId);
+            model.AllowPostVoting_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.AllowPostVoting, storeId);
+            model.MaxVotesPerDay_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.MaxVotesPerDay, storeId);
+            model.AllowCustomersToManageSubscriptions_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.AllowCustomersToManageSubscriptions, storeId);
+            model.TopicsPageSize_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.TopicsPageSize, storeId);
+            model.PostsPageSize_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.PostsPageSize, storeId);
+            model.ForumEditor_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.ForumEditor, storeId);
+            model.SignaturesEnabled_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.SignaturesEnabled, storeId);
+            model.AllowPrivateMessages_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.AllowPrivateMessages, storeId);
+            model.ShowAlertForPM_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.ShowAlertForPM, storeId);
+            model.NotifyAboutPrivateMessages_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.NotifyAboutPrivateMessages, storeId);
+            model.ActiveDiscussionsFeedEnabled_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsFeedEnabled, storeId);
+            model.ActiveDiscussionsFeedCount_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsFeedCount, storeId);
+            model.ForumFeedsEnabled_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.ForumFeedsEnabled, storeId);
+            model.ForumFeedCount_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.ForumFeedCount, storeId);
+            model.SearchResultsPageSize_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.SearchResultsPageSize, storeId);
+            model.ActiveDiscussionsPageSize_OverrideForStore = await SettingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsPageSize, storeId);
 
             return model;
         }
@@ -944,8 +944,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<NewsSettingsModel> PrepareNewsSettingsModelAsync(NewsSettingsModel model = null)
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var newsSettings = await _settingService.LoadSettingAsync<NewsSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var newsSettings = await SettingService.LoadSettingAsync<NewsSettings>(storeId);
 
             //fill in model values from the entity
             model ??= newsSettings.ToSettingsModel<NewsSettingsModel>();
@@ -957,14 +957,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.Enabled_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.Enabled, storeId);
-            model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeId);
-            model.NotifyAboutNewNewsComments_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NotifyAboutNewNewsComments, storeId);
-            model.ShowNewsOnMainPage_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.ShowNewsOnMainPage, storeId);
-            model.MainPageNewsCount_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.MainPageNewsCount, storeId);
-            model.NewsArchivePageSize_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NewsArchivePageSize, storeId);
-            model.ShowHeaderRssUrl_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.ShowHeaderRssUrl, storeId);
-            model.NewsCommentsMustBeApproved_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NewsCommentsMustBeApproved, storeId);
+            model.Enabled_OverrideForStore = await SettingService.SettingExistsAsync(newsSettings, x => x.Enabled, storeId);
+            model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore = await SettingService.SettingExistsAsync(newsSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeId);
+            model.NotifyAboutNewNewsComments_OverrideForStore = await SettingService.SettingExistsAsync(newsSettings, x => x.NotifyAboutNewNewsComments, storeId);
+            model.ShowNewsOnMainPage_OverrideForStore = await SettingService.SettingExistsAsync(newsSettings, x => x.ShowNewsOnMainPage, storeId);
+            model.MainPageNewsCount_OverrideForStore = await SettingService.SettingExistsAsync(newsSettings, x => x.MainPageNewsCount, storeId);
+            model.NewsArchivePageSize_OverrideForStore = await SettingService.SettingExistsAsync(newsSettings, x => x.NewsArchivePageSize, storeId);
+            model.ShowHeaderRssUrl_OverrideForStore = await SettingService.SettingExistsAsync(newsSettings, x => x.ShowHeaderRssUrl, storeId);
+            model.NewsCommentsMustBeApproved_OverrideForStore = await SettingService.SettingExistsAsync(newsSettings, x => x.NewsCommentsMustBeApproved, storeId);
 
             return model;
         }
@@ -980,45 +980,45 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ShippingSettingsModel> PrepareShippingSettingsModelAsync(ShippingSettingsModel model = null)
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var shippingSettings = await _settingService.LoadSettingAsync<ShippingSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var shippingSettings = await SettingService.LoadSettingAsync<ShippingSettings>(storeId);
 
             //fill in model values from the entity
             model ??= shippingSettings.ToSettingsModel<ShippingSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+            model.PrimaryStoreCurrencyCode = (await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
 
             //fill in overridden values
             if (storeId > 0)
             {
-                model.ShipToSameAddress_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.ShipToSameAddress, storeId);
-                model.AllowPickupInStore_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.AllowPickupInStore, storeId);
-                model.DisplayPickupPointsOnMap_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.DisplayPickupPointsOnMap, storeId);
-                model.IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.IgnoreAdditionalShippingChargeForPickupInStore, storeId);
-                model.GoogleMapsApiKey_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.GoogleMapsApiKey, storeId);
-                model.UseWarehouseLocation_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.UseWarehouseLocation, storeId);
-                model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.NotifyCustomerAboutShippingFromMultipleLocations, storeId);
-                model.FreeShippingOverXEnabled_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.FreeShippingOverXEnabled, storeId);
-                model.FreeShippingOverXValue_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.FreeShippingOverXValue, storeId);
-                model.FreeShippingOverXIncludingTax_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.FreeShippingOverXIncludingTax, storeId);
-                model.EstimateShippingCartPageEnabled_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.EstimateShippingCartPageEnabled, storeId);
-                model.EstimateShippingProductPageEnabled_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.EstimateShippingProductPageEnabled, storeId);
-                model.EstimateShippingCityNameEnabled_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.EstimateShippingCityNameEnabled, storeId);
-                model.DisplayShipmentEventsToCustomers_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.DisplayShipmentEventsToCustomers, storeId);
-                model.DisplayShipmentEventsToStoreOwner_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.DisplayShipmentEventsToStoreOwner, storeId);
-                model.HideShippingTotal_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.HideShippingTotal, storeId);
-                model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.BypassShippingMethodSelectionIfOnlyOne, storeId);
-                model.ConsiderAssociatedProductsDimensions_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.ConsiderAssociatedProductsDimensions, storeId);
-                model.ShippingOriginAddress_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.ShippingOriginAddressId, storeId);
+                model.ShipToSameAddress_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.ShipToSameAddress, storeId);
+                model.AllowPickupInStore_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.AllowPickupInStore, storeId);
+                model.DisplayPickupPointsOnMap_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.DisplayPickupPointsOnMap, storeId);
+                model.IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.IgnoreAdditionalShippingChargeForPickupInStore, storeId);
+                model.GoogleMapsApiKey_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.GoogleMapsApiKey, storeId);
+                model.UseWarehouseLocation_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.UseWarehouseLocation, storeId);
+                model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.NotifyCustomerAboutShippingFromMultipleLocations, storeId);
+                model.FreeShippingOverXEnabled_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.FreeShippingOverXEnabled, storeId);
+                model.FreeShippingOverXValue_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.FreeShippingOverXValue, storeId);
+                model.FreeShippingOverXIncludingTax_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.FreeShippingOverXIncludingTax, storeId);
+                model.EstimateShippingCartPageEnabled_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.EstimateShippingCartPageEnabled, storeId);
+                model.EstimateShippingProductPageEnabled_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.EstimateShippingProductPageEnabled, storeId);
+                model.EstimateShippingCityNameEnabled_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.EstimateShippingCityNameEnabled, storeId);
+                model.DisplayShipmentEventsToCustomers_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.DisplayShipmentEventsToCustomers, storeId);
+                model.DisplayShipmentEventsToStoreOwner_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.DisplayShipmentEventsToStoreOwner, storeId);
+                model.HideShippingTotal_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.HideShippingTotal, storeId);
+                model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.BypassShippingMethodSelectionIfOnlyOne, storeId);
+                model.ConsiderAssociatedProductsDimensions_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.ConsiderAssociatedProductsDimensions, storeId);
+                model.ShippingOriginAddress_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.ShippingOriginAddressId, storeId);
             }
 
             //prepare shipping origin address
-            var originAddress = await _addressService.GetAddressByIdAsync(shippingSettings.ShippingOriginAddressId);
+            var originAddress = await AddressService.GetAddressByIdAsync(shippingSettings.ShippingOriginAddressId);
             if (originAddress != null)
                 model.ShippingOriginAddress = originAddress.ToModel(model.ShippingOriginAddress);
-            await _addressModelFactory.PrepareAddressModelAsync(model.ShippingOriginAddress, originAddress);
+            await AddressModelFactory.PrepareAddressModelAsync(model.ShippingOriginAddress, originAddress);
             model.ShippingOriginAddress.ZipPostalCodeRequired = true;
 
             return model;
@@ -1035,8 +1035,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<TaxSettingsModel> PrepareTaxSettingsModelAsync(TaxSettingsModel model = null)
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var taxSettings = await _settingService.LoadSettingAsync<TaxSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var taxSettings = await SettingService.LoadSettingAsync<TaxSettings>(storeId);
 
             //fill in model values from the entity
             model ??= taxSettings.ToSettingsModel<TaxSettingsModel>();
@@ -1049,43 +1049,43 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in overridden values
             if (storeId > 0)
             {
-                model.PricesIncludeTax_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.PricesIncludeTax, storeId);
-                model.AllowCustomersToSelectTaxDisplayType_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.AllowCustomersToSelectTaxDisplayType, storeId);
-                model.TaxDisplayType_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.TaxDisplayType, storeId);
-                model.DisplayTaxSuffix_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.DisplayTaxSuffix, storeId);
-                model.DisplayTaxRates_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.DisplayTaxRates, storeId);
-                model.HideZeroTax_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.HideZeroTax, storeId);
-                model.HideTaxInOrderSummary_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.HideTaxInOrderSummary, storeId);
-                model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.ForceTaxExclusionFromOrderSubtotal, storeId);
-                model.DefaultTaxCategoryId_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.DefaultTaxCategoryId, storeId);
-                model.TaxBasedOn_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.TaxBasedOn, storeId);
-                model.TaxBasedOnPickupPointAddress_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.TaxBasedOnPickupPointAddress, storeId);
-                model.DefaultTaxAddress_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.DefaultTaxAddressId, storeId);
-                model.ShippingIsTaxable_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.ShippingIsTaxable, storeId);
-                model.ShippingPriceIncludesTax_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.ShippingPriceIncludesTax, storeId);
-                model.ShippingTaxClassId_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.ShippingTaxClassId, storeId);
-                model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.PaymentMethodAdditionalFeeIsTaxable, storeId);
-                model.PaymentMethodAdditionalFeeIncludesTax_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.PaymentMethodAdditionalFeeIncludesTax, storeId);
-                model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.PaymentMethodAdditionalFeeTaxClassId, storeId);
-                model.EuVatEnabled_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatEnabled, storeId);
-                model.EuVatShopCountryId_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatShopCountryId, storeId);
-                model.EuVatAllowVatExemption_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatAllowVatExemption, storeId);
-                model.EuVatUseWebService_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatUseWebService, storeId);
-                model.EuVatAssumeValid_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatAssumeValid, storeId);
-                model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatEmailAdminWhenNewVatSubmitted, storeId);
+                model.PricesIncludeTax_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.PricesIncludeTax, storeId);
+                model.AllowCustomersToSelectTaxDisplayType_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.AllowCustomersToSelectTaxDisplayType, storeId);
+                model.TaxDisplayType_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.TaxDisplayType, storeId);
+                model.DisplayTaxSuffix_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.DisplayTaxSuffix, storeId);
+                model.DisplayTaxRates_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.DisplayTaxRates, storeId);
+                model.HideZeroTax_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.HideZeroTax, storeId);
+                model.HideTaxInOrderSummary_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.HideTaxInOrderSummary, storeId);
+                model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.ForceTaxExclusionFromOrderSubtotal, storeId);
+                model.DefaultTaxCategoryId_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.DefaultTaxCategoryId, storeId);
+                model.TaxBasedOn_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.TaxBasedOn, storeId);
+                model.TaxBasedOnPickupPointAddress_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.TaxBasedOnPickupPointAddress, storeId);
+                model.DefaultTaxAddress_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.DefaultTaxAddressId, storeId);
+                model.ShippingIsTaxable_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.ShippingIsTaxable, storeId);
+                model.ShippingPriceIncludesTax_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.ShippingPriceIncludesTax, storeId);
+                model.ShippingTaxClassId_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.ShippingTaxClassId, storeId);
+                model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.PaymentMethodAdditionalFeeIsTaxable, storeId);
+                model.PaymentMethodAdditionalFeeIncludesTax_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.PaymentMethodAdditionalFeeIncludesTax, storeId);
+                model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.PaymentMethodAdditionalFeeTaxClassId, storeId);
+                model.EuVatEnabled_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.EuVatEnabled, storeId);
+                model.EuVatShopCountryId_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.EuVatShopCountryId, storeId);
+                model.EuVatAllowVatExemption_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.EuVatAllowVatExemption, storeId);
+                model.EuVatUseWebService_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.EuVatUseWebService, storeId);
+                model.EuVatAssumeValid_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.EuVatAssumeValid, storeId);
+                model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore = await SettingService.SettingExistsAsync(taxSettings, x => x.EuVatEmailAdminWhenNewVatSubmitted, storeId);
             }
 
             //prepare available tax categories
-            await _baseAdminModelFactory.PrepareTaxCategoriesAsync(model.TaxCategories);
+            await BaseAdminModelFactory.PrepareTaxCategoriesAsync(model.TaxCategories);
 
             //prepare available EU VAT countries
-            await _baseAdminModelFactory.PrepareCountriesAsync(model.EuVatShopCountries);
+            await BaseAdminModelFactory.PrepareCountriesAsync(model.EuVatShopCountries);
 
             //prepare default tax address
-            var defaultAddress = await _addressService.GetAddressByIdAsync(taxSettings.DefaultTaxAddressId);
+            var defaultAddress = await AddressService.GetAddressByIdAsync(taxSettings.DefaultTaxAddressId);
             if (defaultAddress != null)
                 model.DefaultTaxAddress = defaultAddress.ToModel(model.DefaultTaxAddress);
-            await _addressModelFactory.PrepareAddressModelAsync(model.DefaultTaxAddress, defaultAddress);
+            await AddressModelFactory.PrepareAddressModelAsync(model.DefaultTaxAddress, defaultAddress);
             model.DefaultTaxAddress.ZipPostalCodeRequired = true;
 
             return model;
@@ -1102,115 +1102,115 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<CatalogSettingsModel> PrepareCatalogSettingsModelAsync(CatalogSettingsModel model = null)
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var catalogSettings = await _settingService.LoadSettingAsync<CatalogSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var catalogSettings = await SettingService.LoadSettingAsync<CatalogSettings>(storeId);
 
             //fill in model values from the entity
             model ??= catalogSettings.ToSettingsModel<CatalogSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+            model.PrimaryStoreCurrencyCode = (await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
             model.AttributeValueOutOfStockDisplayTypes = await catalogSettings.AttributeValueOutOfStockDisplayType.ToSelectListAsync();
             model.AvailableViewModes.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResourceAsync("Admin.Catalog.ViewMode.Grid"),
+                Text = await LocalizationService.GetResourceAsync("Admin.Catalog.ViewMode.Grid"),
                 Value = "grid"
             });
             model.AvailableViewModes.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResourceAsync("Admin.Catalog.ViewMode.List"),
+                Text = await LocalizationService.GetResourceAsync("Admin.Catalog.ViewMode.List"),
                 Value = "list"
             });
 
             //fill in overridden values
             if (storeId > 0)
             {
-                model.AllowViewUnpublishedProductPage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowViewUnpublishedProductPage, storeId);
-                model.DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayDiscontinuedMessageForUnpublishedProducts, storeId);
-                model.ShowSkuOnProductDetailsPage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowSkuOnProductDetailsPage, storeId);
-                model.ShowSkuOnCatalogPages_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowSkuOnCatalogPages, storeId);
-                model.ShowManufacturerPartNumber_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowManufacturerPartNumber, storeId);
-                model.ShowGtin_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowGtin, storeId);
-                model.ShowFreeShippingNotification_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowFreeShippingNotification, storeId);
-                model.AllowProductSorting_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowProductSorting, storeId);
-                model.AllowProductViewModeChanging_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowProductViewModeChanging, storeId);
-                model.DefaultViewMode_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DefaultViewMode, storeId);
-                model.ShowProductsFromSubcategories_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowProductsFromSubcategories, storeId);
-                model.ShowCategoryProductNumber_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowCategoryProductNumber, storeId);
-                model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowCategoryProductNumberIncludingSubcategories, storeId);
-                model.CategoryBreadcrumbEnabled_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.CategoryBreadcrumbEnabled, storeId);
-                model.ShowShareButton_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowShareButton, storeId);
-                model.PageShareCode_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.PageShareCode, storeId);
-                model.ProductReviewsMustBeApproved_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductReviewsMustBeApproved, storeId);
-                model.OneReviewPerProductFromCustomer_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.OneReviewPerProductFromCustomer, storeId);
-                model.AllowAnonymousUsersToReviewProduct_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowAnonymousUsersToReviewProduct, storeId);
-                model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductReviewPossibleOnlyAfterPurchasing, storeId);
-                model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NotifyStoreOwnerAboutNewProductReviews, storeId);
-                model.NotifyCustomerAboutProductReviewReply_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NotifyCustomerAboutProductReviewReply, storeId);
-                model.EmailAFriendEnabled_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.EmailAFriendEnabled, storeId);
-                model.AllowAnonymousUsersToEmailAFriend_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowAnonymousUsersToEmailAFriend, storeId);
-                model.RecentlyViewedProductsNumber_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.RecentlyViewedProductsNumber, storeId);
-                model.RecentlyViewedProductsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.RecentlyViewedProductsEnabled, storeId);
-                model.NewProductsNumber_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NewProductsNumber, storeId);
-                model.NewProductsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NewProductsEnabled, storeId);
-                model.CompareProductsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.CompareProductsEnabled, storeId);
-                model.ShowBestsellersOnHomepage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowBestsellersOnHomepage, storeId);
-                model.NumberOfBestsellersOnHomepage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NumberOfBestsellersOnHomepage, storeId);
-                model.SearchPageProductsPerPage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPageProductsPerPage, storeId);
-                model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPageAllowCustomersToSelectPageSize, storeId);
-                model.SearchPagePriceRangeFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceRangeFiltering, storeId);
-                model.SearchPagePriceFrom_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceFrom, storeId);
-                model.SearchPagePriceTo_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceTo, storeId);
-                model.SearchPageManuallyPriceRange_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPageManuallyPriceRange, storeId);
-                model.SearchPagePageSizeOptions_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePageSizeOptions, storeId);
-                model.ProductSearchAutoCompleteEnabled_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductSearchAutoCompleteEnabled, storeId);
-                model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductSearchAutoCompleteNumberOfProducts, storeId);
-                model.ShowProductImagesInSearchAutoComplete_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowProductImagesInSearchAutoComplete, storeId);
-                model.ShowLinkToAllResultInSearchAutoComplete_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowLinkToAllResultInSearchAutoComplete, storeId);
-                model.ProductSearchTermMinimumLength_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductSearchTermMinimumLength, storeId);
-                model.ProductsAlsoPurchasedEnabled_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsAlsoPurchasedEnabled, storeId);
-                model.ProductsAlsoPurchasedNumber_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsAlsoPurchasedNumber, storeId);
-                model.NumberOfProductTags_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NumberOfProductTags, storeId);
-                model.ProductsByTagPageSize_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPageSize, storeId);
-                model.ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagAllowCustomersToSelectPageSize, storeId);
-                model.ProductsByTagPageSizeOptions_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPageSizeOptions, storeId);
-                model.ProductsByTagPriceRangeFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPriceRangeFiltering, storeId);
-                model.ProductsByTagPriceFrom_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPriceFrom, storeId);
-                model.ProductsByTagPriceTo_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPriceTo, storeId);
-                model.ProductsByTagManuallyPriceRange_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagManuallyPriceRange, storeId);
-                model.IncludeShortDescriptionInCompareProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.IncludeShortDescriptionInCompareProducts, storeId);
-                model.IncludeFullDescriptionInCompareProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.IncludeFullDescriptionInCompareProducts, storeId);
-                model.ManufacturersBlockItemsToDisplay_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeId);
-                model.DisplayTaxShippingInfoFooter_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayTaxShippingInfoFooter, storeId);
-                model.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayTaxShippingInfoProductDetailsPage, storeId);
-                model.DisplayTaxShippingInfoProductBoxes_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayTaxShippingInfoProductBoxes, storeId);
-                model.DisplayTaxShippingInfoShoppingCart_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayTaxShippingInfoShoppingCart, storeId);
-                model.DisplayTaxShippingInfoWishlist_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayTaxShippingInfoWishlist, storeId);
-                model.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayTaxShippingInfoOrderDetailsPage, storeId);
-                model.ShowProductReviewsPerStore_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowProductReviewsPerStore, storeId);
-                model.ShowProductReviewsOnAccountPage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowProductReviewsTabOnAccountPage, storeId);
-                model.ProductReviewsPageSizeOnAccountPage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductReviewsPageSizeOnAccountPage, storeId);
-                model.ProductReviewsSortByCreatedDateAscending_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductReviewsSortByCreatedDateAscending, storeId);
-                model.ExportImportProductAttributes_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductAttributes, storeId);
-                model.ExportImportProductSpecificationAttributes_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductSpecificationAttributes, storeId);
-                model.ExportImportProductCategoryBreadcrumb_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductCategoryBreadcrumb, storeId);
-                model.ExportImportCategoriesUsingCategoryName_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportCategoriesUsingCategoryName, storeId);
-                model.ExportImportAllowDownloadImages_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportAllowDownloadImages, storeId);
-                model.ExportImportSplitProductsFile_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportSplitProductsFile, storeId);
-                model.RemoveRequiredProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.RemoveRequiredProducts, storeId);
-                model.ExportImportRelatedEntitiesByName_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportRelatedEntitiesByName, storeId);
-                model.ExportImportProductUseLimitedToStores_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductUseLimitedToStores, storeId);
-                model.DisplayDatePreOrderAvailability_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayDatePreOrderAvailability, storeId);
-                model.UseAjaxCatalogProductsLoading_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.UseAjaxCatalogProductsLoading, storeId);
-                model.EnableManufacturerFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.EnableManufacturerFiltering, storeId);
-                model.EnablePriceRangeFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.EnablePriceRangeFiltering, storeId);
-                model.AttributeValueOutOfStockDisplayType_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AttributeValueOutOfStockDisplayType, storeId);
+                model.AllowViewUnpublishedProductPage_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.AllowViewUnpublishedProductPage, storeId);
+                model.DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.DisplayDiscontinuedMessageForUnpublishedProducts, storeId);
+                model.ShowSkuOnProductDetailsPage_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowSkuOnProductDetailsPage, storeId);
+                model.ShowSkuOnCatalogPages_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowSkuOnCatalogPages, storeId);
+                model.ShowManufacturerPartNumber_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowManufacturerPartNumber, storeId);
+                model.ShowGtin_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowGtin, storeId);
+                model.ShowFreeShippingNotification_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowFreeShippingNotification, storeId);
+                model.AllowProductSorting_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.AllowProductSorting, storeId);
+                model.AllowProductViewModeChanging_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.AllowProductViewModeChanging, storeId);
+                model.DefaultViewMode_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.DefaultViewMode, storeId);
+                model.ShowProductsFromSubcategories_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowProductsFromSubcategories, storeId);
+                model.ShowCategoryProductNumber_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowCategoryProductNumber, storeId);
+                model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowCategoryProductNumberIncludingSubcategories, storeId);
+                model.CategoryBreadcrumbEnabled_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.CategoryBreadcrumbEnabled, storeId);
+                model.ShowShareButton_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowShareButton, storeId);
+                model.PageShareCode_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.PageShareCode, storeId);
+                model.ProductReviewsMustBeApproved_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductReviewsMustBeApproved, storeId);
+                model.OneReviewPerProductFromCustomer_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.OneReviewPerProductFromCustomer, storeId);
+                model.AllowAnonymousUsersToReviewProduct_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.AllowAnonymousUsersToReviewProduct, storeId);
+                model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductReviewPossibleOnlyAfterPurchasing, storeId);
+                model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.NotifyStoreOwnerAboutNewProductReviews, storeId);
+                model.NotifyCustomerAboutProductReviewReply_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.NotifyCustomerAboutProductReviewReply, storeId);
+                model.EmailAFriendEnabled_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.EmailAFriendEnabled, storeId);
+                model.AllowAnonymousUsersToEmailAFriend_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.AllowAnonymousUsersToEmailAFriend, storeId);
+                model.RecentlyViewedProductsNumber_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.RecentlyViewedProductsNumber, storeId);
+                model.RecentlyViewedProductsEnabled_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.RecentlyViewedProductsEnabled, storeId);
+                model.NewProductsNumber_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.NewProductsNumber, storeId);
+                model.NewProductsEnabled_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.NewProductsEnabled, storeId);
+                model.CompareProductsEnabled_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.CompareProductsEnabled, storeId);
+                model.ShowBestsellersOnHomepage_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowBestsellersOnHomepage, storeId);
+                model.NumberOfBestsellersOnHomepage_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.NumberOfBestsellersOnHomepage, storeId);
+                model.SearchPageProductsPerPage_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.SearchPageProductsPerPage, storeId);
+                model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.SearchPageAllowCustomersToSelectPageSize, storeId);
+                model.SearchPagePriceRangeFiltering_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceRangeFiltering, storeId);
+                model.SearchPagePriceFrom_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceFrom, storeId);
+                model.SearchPagePriceTo_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceTo, storeId);
+                model.SearchPageManuallyPriceRange_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.SearchPageManuallyPriceRange, storeId);
+                model.SearchPagePageSizeOptions_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePageSizeOptions, storeId);
+                model.ProductSearchAutoCompleteEnabled_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductSearchAutoCompleteEnabled, storeId);
+                model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductSearchAutoCompleteNumberOfProducts, storeId);
+                model.ShowProductImagesInSearchAutoComplete_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowProductImagesInSearchAutoComplete, storeId);
+                model.ShowLinkToAllResultInSearchAutoComplete_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowLinkToAllResultInSearchAutoComplete, storeId);
+                model.ProductSearchTermMinimumLength_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductSearchTermMinimumLength, storeId);
+                model.ProductsAlsoPurchasedEnabled_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductsAlsoPurchasedEnabled, storeId);
+                model.ProductsAlsoPurchasedNumber_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductsAlsoPurchasedNumber, storeId);
+                model.NumberOfProductTags_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.NumberOfProductTags, storeId);
+                model.ProductsByTagPageSize_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPageSize, storeId);
+                model.ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagAllowCustomersToSelectPageSize, storeId);
+                model.ProductsByTagPageSizeOptions_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPageSizeOptions, storeId);
+                model.ProductsByTagPriceRangeFiltering_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPriceRangeFiltering, storeId);
+                model.ProductsByTagPriceFrom_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPriceFrom, storeId);
+                model.ProductsByTagPriceTo_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPriceTo, storeId);
+                model.ProductsByTagManuallyPriceRange_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagManuallyPriceRange, storeId);
+                model.IncludeShortDescriptionInCompareProducts_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.IncludeShortDescriptionInCompareProducts, storeId);
+                model.IncludeFullDescriptionInCompareProducts_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.IncludeFullDescriptionInCompareProducts, storeId);
+                model.ManufacturersBlockItemsToDisplay_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeId);
+                model.DisplayTaxShippingInfoFooter_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.DisplayTaxShippingInfoFooter, storeId);
+                model.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.DisplayTaxShippingInfoProductDetailsPage, storeId);
+                model.DisplayTaxShippingInfoProductBoxes_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.DisplayTaxShippingInfoProductBoxes, storeId);
+                model.DisplayTaxShippingInfoShoppingCart_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.DisplayTaxShippingInfoShoppingCart, storeId);
+                model.DisplayTaxShippingInfoWishlist_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.DisplayTaxShippingInfoWishlist, storeId);
+                model.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.DisplayTaxShippingInfoOrderDetailsPage, storeId);
+                model.ShowProductReviewsPerStore_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowProductReviewsPerStore, storeId);
+                model.ShowProductReviewsOnAccountPage_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ShowProductReviewsTabOnAccountPage, storeId);
+                model.ProductReviewsPageSizeOnAccountPage_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductReviewsPageSizeOnAccountPage, storeId);
+                model.ProductReviewsSortByCreatedDateAscending_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ProductReviewsSortByCreatedDateAscending, storeId);
+                model.ExportImportProductAttributes_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductAttributes, storeId);
+                model.ExportImportProductSpecificationAttributes_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductSpecificationAttributes, storeId);
+                model.ExportImportProductCategoryBreadcrumb_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductCategoryBreadcrumb, storeId);
+                model.ExportImportCategoriesUsingCategoryName_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ExportImportCategoriesUsingCategoryName, storeId);
+                model.ExportImportAllowDownloadImages_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ExportImportAllowDownloadImages, storeId);
+                model.ExportImportSplitProductsFile_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ExportImportSplitProductsFile, storeId);
+                model.RemoveRequiredProducts_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.RemoveRequiredProducts, storeId);
+                model.ExportImportRelatedEntitiesByName_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ExportImportRelatedEntitiesByName, storeId);
+                model.ExportImportProductUseLimitedToStores_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductUseLimitedToStores, storeId);
+                model.DisplayDatePreOrderAvailability_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.DisplayDatePreOrderAvailability, storeId);
+                model.UseAjaxCatalogProductsLoading_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.UseAjaxCatalogProductsLoading, storeId);
+                model.EnableManufacturerFiltering_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.EnableManufacturerFiltering, storeId);
+                model.EnablePriceRangeFiltering_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.EnablePriceRangeFiltering, storeId);
+                model.AttributeValueOutOfStockDisplayType_OverrideForStore = await SettingService.SettingExistsAsync(catalogSettings, x => x.AttributeValueOutOfStockDisplayType, storeId);
             }
 
             //prepare nested search model
             await PrepareSortOptionSearchModelAsync(model.SortOptionSearchModel);
-            await _reviewTypeModelFactory.PrepareReviewTypeSearchModelAsync(model.ReviewTypeSearchModel);
+            await ReviewTypeModelFactory.PrepareReviewTypeSearchModelAsync(model.ReviewTypeSearchModel);
 
             return model;
         }
@@ -1228,8 +1228,8 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var catalogSettings = await _settingService.LoadSettingAsync<CatalogSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var catalogSettings = await SettingService.LoadSettingAsync<CatalogSettings>(storeId);
 
             //get sort options
             var sortOptions = Enum.GetValues(typeof(ProductSortingEnum)).OfType<ProductSortingEnum>().ToList().ToPagedList(searchModel);
@@ -1243,7 +1243,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var sortOptionModel = new SortOptionModel { Id = (int)option };
 
                     //fill in additional values (not existing in the entity)
-                    sortOptionModel.Name = await _localizationService.GetLocalizedEnumAsync(option);
+                    sortOptionModel.Name = await LocalizationService.GetLocalizedEnumAsync(option);
                     sortOptionModel.IsActive = !catalogSettings.ProductSortingEnumDisabled.Contains((int)option);
                     sortOptionModel.DisplayOrder = catalogSettings
                         .ProductSortingEnumDisplayOrder.TryGetValue((int)option, out var value) ? value : (int)option;
@@ -1266,34 +1266,34 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<RewardPointsSettingsModel> PrepareRewardPointsSettingsModelAsync(RewardPointsSettingsModel model = null)
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var rewardPointsSettings = await _settingService.LoadSettingAsync<RewardPointsSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var rewardPointsSettings = await SettingService.LoadSettingAsync<RewardPointsSettings>(storeId);
 
             //fill in model values from the entity
             model ??= rewardPointsSettings.ToSettingsModel<RewardPointsSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+            model.PrimaryStoreCurrencyCode = (await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
             model.ActivatePointsImmediately = model.ActivationDelay <= 0;
 
             if (storeId <= 0)
                 return model;
 
             //fill in overridden values
-            model.Enabled_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.Enabled, storeId);
-            model.ExchangeRate_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.ExchangeRate, storeId);
-            model.MinimumRewardPointsToUse_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.MinimumRewardPointsToUse, storeId);
-            model.MaximumRewardPointsToUsePerOrder_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.MaximumRewardPointsToUsePerOrder, storeId);
-            model.PointsForRegistration_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.PointsForRegistration, storeId);
-            model.RegistrationPointsValidity_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.RegistrationPointsValidity, storeId);
-            model.PointsForPurchases_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.PointsForPurchases_Amount, storeId) || await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.PointsForPurchases_Points, storeId);
-            model.MinOrderTotalToAwardPoints_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.MinOrderTotalToAwardPoints, storeId);
-            model.PurchasesPointsValidity_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.PurchasesPointsValidity, storeId);
-            model.ActivationDelay_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.ActivationDelay, storeId);
-            model.DisplayHowMuchWillBeEarned_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeId);
-            model.PointsForRegistration_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.PointsForRegistration, storeId);
-            model.PageSize_OverrideForStore = await _settingService.SettingExistsAsync(rewardPointsSettings, x => x.PageSize, storeId);
+            model.Enabled_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.Enabled, storeId);
+            model.ExchangeRate_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.ExchangeRate, storeId);
+            model.MinimumRewardPointsToUse_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.MinimumRewardPointsToUse, storeId);
+            model.MaximumRewardPointsToUsePerOrder_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.MaximumRewardPointsToUsePerOrder, storeId);
+            model.PointsForRegistration_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.PointsForRegistration, storeId);
+            model.RegistrationPointsValidity_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.RegistrationPointsValidity, storeId);
+            model.PointsForPurchases_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.PointsForPurchases_Amount, storeId) || await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.PointsForPurchases_Points, storeId);
+            model.MinOrderTotalToAwardPoints_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.MinOrderTotalToAwardPoints, storeId);
+            model.PurchasesPointsValidity_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.PurchasesPointsValidity, storeId);
+            model.ActivationDelay_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.ActivationDelay, storeId);
+            model.DisplayHowMuchWillBeEarned_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeId);
+            model.PointsForRegistration_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.PointsForRegistration, storeId);
+            model.PageSize_OverrideForStore = await SettingService.SettingExistsAsync(rewardPointsSettings, x => x.PageSize, storeId);
 
             return model;
         }
@@ -1309,50 +1309,50 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<OrderSettingsModel> PrepareOrderSettingsModelAsync(OrderSettingsModel model = null)
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var orderSettings = await _settingService.LoadSettingAsync<OrderSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var orderSettings = await SettingService.LoadSettingAsync<OrderSettings>(storeId);
 
             //fill in model values from the entity
             model ??= orderSettings.ToSettingsModel<OrderSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
-            model.OrderIdent = await _dataProvider.GetTableIdentAsync<Order>();
+            model.PrimaryStoreCurrencyCode = (await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+            model.OrderIdent = await DataProvider.GetTableIdentAsync<Order>();
 
             //fill in overridden values
             if (storeId > 0)
             {
-                model.IsReOrderAllowed_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.IsReOrderAllowed, storeId);
-                model.MinOrderSubtotalAmount_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.MinOrderSubtotalAmount, storeId);
-                model.MinOrderSubtotalAmountIncludingTax_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.MinOrderSubtotalAmountIncludingTax, storeId);
-                model.MinOrderTotalAmount_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.MinOrderTotalAmount, storeId);
-                model.AutoUpdateOrderTotalsOnEditingOrder_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.AutoUpdateOrderTotalsOnEditingOrder, storeId);
-                model.AnonymousCheckoutAllowed_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.AnonymousCheckoutAllowed, storeId);
-                model.CheckoutDisabled_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.CheckoutDisabled, storeId);
-                model.TermsOfServiceOnShoppingCartPage_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.TermsOfServiceOnShoppingCartPage, storeId);
-                model.TermsOfServiceOnOrderConfirmPage_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.TermsOfServiceOnOrderConfirmPage, storeId);
-                model.OnePageCheckoutEnabled_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.OnePageCheckoutEnabled, storeId);
-                model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, storeId);
-                model.DisableBillingAddressCheckoutStep_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.DisableBillingAddressCheckoutStep, storeId);
-                model.DisableOrderCompletedPage_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.DisableOrderCompletedPage, storeId);
-                model.DisplayPickupInStoreOnShippingMethodPage_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.DisplayPickupInStoreOnShippingMethodPage, storeId);
-                model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.AttachPdfInvoiceToOrderPlacedEmail, storeId);
-                model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.AttachPdfInvoiceToOrderPaidEmail, storeId);
-                model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.AttachPdfInvoiceToOrderCompletedEmail, storeId);
-                model.ReturnRequestsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.ReturnRequestsEnabled, storeId);
-                model.ReturnRequestsAllowFiles_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.ReturnRequestsAllowFiles, storeId);
-                model.ReturnRequestNumberMask_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.ReturnRequestNumberMask, storeId);
-                model.NumberOfDaysReturnRequestAvailable_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, storeId);
-                model.CustomOrderNumberMask_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.CustomOrderNumberMask, storeId);
-                model.ExportWithProducts_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.ExportWithProducts, storeId);
-                model.AllowAdminsToBuyCallForPriceProducts_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.AllowAdminsToBuyCallForPriceProducts, storeId);
-                model.DeleteGiftCardUsageHistory_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.DeleteGiftCardUsageHistory, storeId);
+                model.IsReOrderAllowed_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.IsReOrderAllowed, storeId);
+                model.MinOrderSubtotalAmount_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.MinOrderSubtotalAmount, storeId);
+                model.MinOrderSubtotalAmountIncludingTax_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.MinOrderSubtotalAmountIncludingTax, storeId);
+                model.MinOrderTotalAmount_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.MinOrderTotalAmount, storeId);
+                model.AutoUpdateOrderTotalsOnEditingOrder_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.AutoUpdateOrderTotalsOnEditingOrder, storeId);
+                model.AnonymousCheckoutAllowed_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.AnonymousCheckoutAllowed, storeId);
+                model.CheckoutDisabled_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.CheckoutDisabled, storeId);
+                model.TermsOfServiceOnShoppingCartPage_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.TermsOfServiceOnShoppingCartPage, storeId);
+                model.TermsOfServiceOnOrderConfirmPage_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.TermsOfServiceOnOrderConfirmPage, storeId);
+                model.OnePageCheckoutEnabled_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.OnePageCheckoutEnabled, storeId);
+                model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, storeId);
+                model.DisableBillingAddressCheckoutStep_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.DisableBillingAddressCheckoutStep, storeId);
+                model.DisableOrderCompletedPage_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.DisableOrderCompletedPage, storeId);
+                model.DisplayPickupInStoreOnShippingMethodPage_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.DisplayPickupInStoreOnShippingMethodPage, storeId);
+                model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.AttachPdfInvoiceToOrderPlacedEmail, storeId);
+                model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.AttachPdfInvoiceToOrderPaidEmail, storeId);
+                model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.AttachPdfInvoiceToOrderCompletedEmail, storeId);
+                model.ReturnRequestsEnabled_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.ReturnRequestsEnabled, storeId);
+                model.ReturnRequestsAllowFiles_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.ReturnRequestsAllowFiles, storeId);
+                model.ReturnRequestNumberMask_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.ReturnRequestNumberMask, storeId);
+                model.NumberOfDaysReturnRequestAvailable_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, storeId);
+                model.CustomOrderNumberMask_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.CustomOrderNumberMask, storeId);
+                model.ExportWithProducts_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.ExportWithProducts, storeId);
+                model.AllowAdminsToBuyCallForPriceProducts_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.AllowAdminsToBuyCallForPriceProducts, storeId);
+                model.DeleteGiftCardUsageHistory_OverrideForStore = await SettingService.SettingExistsAsync(orderSettings, x => x.DeleteGiftCardUsageHistory, storeId);
             }
 
             //prepare nested search models
-            await _returnRequestModelFactory.PrepareReturnRequestReasonSearchModelAsync(model.ReturnRequestReasonSearchModel);
-            await _returnRequestModelFactory.PrepareReturnRequestActionSearchModelAsync(model.ReturnRequestActionSearchModel);
+            await ReturnRequestModelFactory.PrepareReturnRequestReasonSearchModelAsync(model.ReturnRequestReasonSearchModel);
+            await ReturnRequestModelFactory.PrepareReturnRequestActionSearchModelAsync(model.ReturnRequestActionSearchModel);
 
             return model;
         }
@@ -1368,8 +1368,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ShoppingCartSettingsModel> PrepareShoppingCartSettingsModelAsync(ShoppingCartSettingsModel model = null)
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var shoppingCartSettings = await _settingService.LoadSettingAsync<ShoppingCartSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var shoppingCartSettings = await SettingService.LoadSettingAsync<ShoppingCartSettings>(storeId);
 
             //fill in model values from the entity
             model ??= shoppingCartSettings.ToSettingsModel<ShoppingCartSettingsModel>();
@@ -1381,25 +1381,25 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.DisplayCartAfterAddingProduct_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.DisplayCartAfterAddingProduct, storeId);
-            model.DisplayWishlistAfterAddingProduct_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.DisplayWishlistAfterAddingProduct, storeId);
-            model.MaximumShoppingCartItems_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.MaximumShoppingCartItems, storeId);
-            model.MaximumWishlistItems_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.MaximumWishlistItems, storeId);
-            model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.AllowOutOfStockItemsToBeAddedToWishlist, storeId);
-            model.MoveItemsFromWishlistToCart_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.MoveItemsFromWishlistToCart, storeId);
-            model.CartsSharedBetweenStores_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.CartsSharedBetweenStores, storeId);
-            model.ShowProductImagesOnShoppingCart_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.ShowProductImagesOnShoppingCart, storeId);
-            model.ShowProductImagesOnWishList_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.ShowProductImagesOnWishList, storeId);
-            model.ShowDiscountBox_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.ShowDiscountBox, storeId);
-            model.ShowGiftCardBox_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.ShowGiftCardBox, storeId);
-            model.CrossSellsNumber_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.CrossSellsNumber, storeId);
-            model.EmailWishlistEnabled_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.EmailWishlistEnabled, storeId);
-            model.AllowAnonymousUsersToEmailWishlist_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.AllowAnonymousUsersToEmailWishlist, storeId);
-            model.MiniShoppingCartEnabled_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.MiniShoppingCartEnabled, storeId);
-            model.ShowProductImagesInMiniShoppingCart_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.ShowProductImagesInMiniShoppingCart, storeId);
-            model.MiniShoppingCartProductNumber_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.MiniShoppingCartProductNumber, storeId);
-            model.AllowCartItemEditing_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.AllowCartItemEditing, storeId);
-            model.GroupTierPricesForDistinctShoppingCartItems_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.GroupTierPricesForDistinctShoppingCartItems, storeId);
+            model.DisplayCartAfterAddingProduct_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.DisplayCartAfterAddingProduct, storeId);
+            model.DisplayWishlistAfterAddingProduct_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.DisplayWishlistAfterAddingProduct, storeId);
+            model.MaximumShoppingCartItems_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.MaximumShoppingCartItems, storeId);
+            model.MaximumWishlistItems_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.MaximumWishlistItems, storeId);
+            model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.AllowOutOfStockItemsToBeAddedToWishlist, storeId);
+            model.MoveItemsFromWishlistToCart_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.MoveItemsFromWishlistToCart, storeId);
+            model.CartsSharedBetweenStores_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.CartsSharedBetweenStores, storeId);
+            model.ShowProductImagesOnShoppingCart_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.ShowProductImagesOnShoppingCart, storeId);
+            model.ShowProductImagesOnWishList_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.ShowProductImagesOnWishList, storeId);
+            model.ShowDiscountBox_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.ShowDiscountBox, storeId);
+            model.ShowGiftCardBox_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.ShowGiftCardBox, storeId);
+            model.CrossSellsNumber_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.CrossSellsNumber, storeId);
+            model.EmailWishlistEnabled_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.EmailWishlistEnabled, storeId);
+            model.AllowAnonymousUsersToEmailWishlist_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.AllowAnonymousUsersToEmailWishlist, storeId);
+            model.MiniShoppingCartEnabled_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.MiniShoppingCartEnabled, storeId);
+            model.ShowProductImagesInMiniShoppingCart_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.ShowProductImagesInMiniShoppingCart, storeId);
+            model.MiniShoppingCartProductNumber_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.MiniShoppingCartProductNumber, storeId);
+            model.AllowCartItemEditing_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.AllowCartItemEditing, storeId);
+            model.GroupTierPricesForDistinctShoppingCartItems_OverrideForStore = await SettingService.SettingExistsAsync(shoppingCartSettings, x => x.GroupTierPricesForDistinctShoppingCartItems, storeId);
 
             return model;
         }
@@ -1415,35 +1415,35 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<MediaSettingsModel> PrepareMediaSettingsModelAsync(MediaSettingsModel model = null)
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var mediaSettings = await _settingService.LoadSettingAsync<MediaSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var mediaSettings = await SettingService.LoadSettingAsync<MediaSettings>(storeId);
 
             //fill in model values from the entity
             model ??= mediaSettings.ToSettingsModel<MediaSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            model.PicturesStoredIntoDatabase = await _pictureService.IsStoreInDbAsync();
+            model.PicturesStoredIntoDatabase = await PictureService.IsStoreInDbAsync();
 
             if (storeId <= 0)
                 return model;
 
             //fill in overridden values
-            model.AvatarPictureSize_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.AvatarPictureSize, storeId);
-            model.ProductThumbPictureSize_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.ProductThumbPictureSize, storeId);
-            model.ProductDetailsPictureSize_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.ProductDetailsPictureSize, storeId);
-            model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage, storeId);
-            model.AssociatedProductPictureSize_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.AssociatedProductPictureSize, storeId);
-            model.CategoryThumbPictureSize_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.CategoryThumbPictureSize, storeId);
-            model.ManufacturerThumbPictureSize_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.ManufacturerThumbPictureSize, storeId);
-            model.VendorThumbPictureSize_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.VendorThumbPictureSize, storeId);
-            model.CartThumbPictureSize_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.CartThumbPictureSize, storeId);
-            model.MiniCartThumbPictureSize_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.MiniCartThumbPictureSize, storeId);
-            model.MaximumImageSize_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.MaximumImageSize, storeId);
-            model.MultipleThumbDirectories_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.MultipleThumbDirectories, storeId);
-            model.DefaultImageQuality_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.DefaultImageQuality, storeId);
-            model.ImportProductImagesUsingHash_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.ImportProductImagesUsingHash, storeId);
-            model.DefaultPictureZoomEnabled_OverrideForStore = await _settingService.SettingExistsAsync(mediaSettings, x => x.DefaultPictureZoomEnabled, storeId);
+            model.AvatarPictureSize_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.AvatarPictureSize, storeId);
+            model.ProductThumbPictureSize_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.ProductThumbPictureSize, storeId);
+            model.ProductDetailsPictureSize_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.ProductDetailsPictureSize, storeId);
+            model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage, storeId);
+            model.AssociatedProductPictureSize_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.AssociatedProductPictureSize, storeId);
+            model.CategoryThumbPictureSize_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.CategoryThumbPictureSize, storeId);
+            model.ManufacturerThumbPictureSize_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.ManufacturerThumbPictureSize, storeId);
+            model.VendorThumbPictureSize_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.VendorThumbPictureSize, storeId);
+            model.CartThumbPictureSize_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.CartThumbPictureSize, storeId);
+            model.MiniCartThumbPictureSize_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.MiniCartThumbPictureSize, storeId);
+            model.MaximumImageSize_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.MaximumImageSize, storeId);
+            model.MultipleThumbDirectories_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.MultipleThumbDirectories, storeId);
+            model.DefaultImageQuality_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.DefaultImageQuality, storeId);
+            model.ImportProductImagesUsingHash_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.ImportProductImagesUsingHash, storeId);
+            model.DefaultPictureZoomEnabled_OverrideForStore = await SettingService.SettingExistsAsync(mediaSettings, x => x.DefaultPictureZoomEnabled, storeId);
 
             return model;
         }
@@ -1460,7 +1460,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             model ??= new CustomerUserSettingsModel
             {
-                ActiveStoreScopeConfiguration = await _storeContext.GetActiveStoreScopeConfigurationAsync()
+                ActiveStoreScopeConfiguration = await StoreContext.GetActiveStoreScopeConfigurationAsync()
             };
 
             //prepare customer settings model
@@ -1479,8 +1479,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.ExternalAuthenticationSettings = await PrepareExternalAuthenticationSettingsModelAsync();
 
             //prepare nested search models
-            await _customerAttributeModelFactory.PrepareCustomerAttributeSearchModelAsync(model.CustomerAttributeSearchModel);
-            await _addressAttributeModelFactory.PrepareAddressAttributeSearchModelAsync(model.AddressAttributeSearchModel);
+            await CustomerAttributeModelFactory.PrepareCustomerAttributeSearchModelAsync(model.CustomerAttributeSearchModel);
+            await AddressAttributeModelFactory.PrepareAddressAttributeSearchModelAsync(model.AddressAttributeSearchModel);
 
             return model;
         }
@@ -1496,8 +1496,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<GdprSettingsModel> PrepareGdprSettingsModelAsync(GdprSettingsModel model = null)
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var gdprSettings = await _settingService.LoadSettingAsync<GdprSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var gdprSettings = await SettingService.LoadSettingAsync<GdprSettings>(storeId);
 
             //fill in model values from the entity
             model ??= gdprSettings.ToSettingsModel<GdprSettingsModel>();
@@ -1512,10 +1512,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in overridden values
-            model.GdprEnabled_OverrideForStore = await _settingService.SettingExistsAsync(gdprSettings, x => x.GdprEnabled, storeId);
-            model.LogPrivacyPolicyConsent_OverrideForStore = await _settingService.SettingExistsAsync(gdprSettings, x => x.LogPrivacyPolicyConsent, storeId);
-            model.LogNewsletterConsent_OverrideForStore = await _settingService.SettingExistsAsync(gdprSettings, x => x.LogNewsletterConsent, storeId);
-            model.LogUserProfileChanges_OverrideForStore = await _settingService.SettingExistsAsync(gdprSettings, x => x.LogUserProfileChanges, storeId);
+            model.GdprEnabled_OverrideForStore = await SettingService.SettingExistsAsync(gdprSettings, x => x.GdprEnabled, storeId);
+            model.LogPrivacyPolicyConsent_OverrideForStore = await SettingService.SettingExistsAsync(gdprSettings, x => x.LogPrivacyPolicyConsent, storeId);
+            model.LogNewsletterConsent_OverrideForStore = await SettingService.SettingExistsAsync(gdprSettings, x => x.LogNewsletterConsent, storeId);
+            model.LogUserProfileChanges_OverrideForStore = await SettingService.SettingExistsAsync(gdprSettings, x => x.LogUserProfileChanges, storeId);
 
             return model;
         }
@@ -1534,7 +1534,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get sort options
-            var consentList = (await _gdprService.GetAllConsentsAsync()).ToPagedList(searchModel);
+            var consentList = (await GdprService.GetAllConsentsAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = await new GdprConsentListModel().PrepareToGridAsync(searchModel, consentList, () =>
@@ -1543,9 +1543,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var gdprConsentModel = consent.ToModel<GdprConsentModel>();
 
-                    var gdprConsent = await _gdprService.GetConsentByIdAsync(gdprConsentModel.Id);
-                    gdprConsentModel.Message = await _localizationService.GetLocalizedAsync(gdprConsent, entity => entity.Message);
-                    gdprConsentModel.RequiredMessage = await _localizationService.GetLocalizedAsync(gdprConsent, entity => entity.RequiredMessage);
+                    var gdprConsent = await GdprService.GetConsentByIdAsync(gdprConsentModel.Id);
+                    gdprConsentModel.Message = await LocalizationService.GetLocalizedAsync(gdprConsent, entity => entity.Message);
+                    gdprConsentModel.RequiredMessage = await LocalizationService.GetLocalizedAsync(gdprConsent, entity => entity.RequiredMessage);
 
                     return gdprConsentModel;
                 });
@@ -1576,8 +1576,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Message = await _localizationService.GetLocalizedAsync(gdprConsent, entity => entity.Message, languageId, false, false);
-                    locale.RequiredMessage = await _localizationService.GetLocalizedAsync(gdprConsent, entity => entity.RequiredMessage, languageId, false, false);
+                    locale.Message = await LocalizationService.GetLocalizedAsync(gdprConsent, entity => entity.Message, languageId, false, false);
+                    locale.RequiredMessage = await LocalizationService.GetLocalizedAsync(gdprConsent, entity => entity.RequiredMessage, languageId, false, false);
                 };
             }
 
@@ -1587,7 +1587,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -1604,7 +1604,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             model ??= new GeneralCommonSettingsModel
             {
-                ActiveStoreScopeConfiguration = await _storeContext.GetActiveStoreScopeConfigurationAsync()
+                ActiveStoreScopeConfiguration = await StoreContext.GetActiveStoreScopeConfigurationAsync()
             };
 
             //prepare store information settings model
@@ -1653,8 +1653,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ProductEditorSettingsModel> PrepareProductEditorSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var productEditorSettings = await _settingService.LoadSettingAsync<ProductEditorSettings>(storeId);
+            var storeId = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var productEditorSettings = await SettingService.LoadSettingAsync<ProductEditorSettings>(storeId);
 
             //fill in model values from the entity
             var model = productEditorSettings.ToSettingsModel<ProductEditorSettingsModel>();
@@ -1698,7 +1698,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get settings
-            var settings = (await _settingService.GetAllSettingsAsync()).AsQueryable();
+            var settings = (await SettingService.GetAllSettingsAsync()).AsQueryable();
 
             //filter settings
             if (!string.IsNullOrEmpty(searchModel.SearchSettingName))
@@ -1718,8 +1718,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     settingModel.Store = setting.StoreId > 0
-                        ? (await _storeService.GetStoreByIdAsync(setting.StoreId))?.Name ?? "Deleted"
-                        : await _localizationService.GetResourceAsync("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores");
+                        ? (await StoreService.GetStoreByIdAsync(setting.StoreId))?.Name ?? "Deleted"
+                        : await LocalizationService.GetResourceAsync("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores");
 
                     return settingModel;
                 });
@@ -1741,7 +1741,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new SettingModeModel
             {
                 ModeName = modeName,
-                Enabled = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), modeName)
+                Enabled = await GenericAttributeService.GetAttributeAsync<bool>(await WorkContext.GetCurrentCustomerAsync(), modeName)
             };
 
             return model;
@@ -1758,8 +1758,8 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             var model = new StoreScopeConfigurationModel
             {
-                Stores = (await _storeService.GetAllStoresAsync()).Select(store => store.ToModel<StoreModel>()).ToList(),
-                StoreId = await _storeContext.GetActiveStoreScopeConfigurationAsync()
+                Stores = (await StoreService.GetAllStoresAsync()).Select(store => store.ToModel<StoreModel>()).ToList(),
+                StoreId = await StoreContext.GetActiveStoreScopeConfigurationAsync()
             };
 
             return model;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,17 +26,17 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICountryService _countryService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPaymentModelFactory _paymentModelFactory;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly PaymentSettings _paymentSettings;
+        protected ICountryService CountryService { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected INotificationService NotificationService { get; }
+        protected IPaymentModelFactory PaymentModelFactory { get; }
+        protected IPaymentPluginManager PaymentPluginManager { get; }
+        protected IPermissionService PermissionService { get; }
+        protected ISettingService SettingService { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected PaymentSettings PaymentSettings { get; }
 
         #endregion
 
@@ -54,17 +54,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             PaymentSettings paymentSettings)
         {
-            _countryService = countryService;
-            _eventPublisher = eventPublisher;
-            _localizationService = localizationService;
-            _notificationService = notificationService;
-            _paymentModelFactory = paymentModelFactory;
-            _paymentPluginManager = paymentPluginManager;
-            _permissionService = permissionService;
-            _settingService = settingService;
-            _genericAttributeService = genericAttributeService;
-            _workContext = workContext;
-            _paymentSettings = paymentSettings;
+            CountryService = countryService;
+            EventPublisher = eventPublisher;
+            LocalizationService = localizationService;
+            NotificationService = notificationService;
+            PaymentModelFactory = paymentModelFactory;
+            PaymentPluginManager = paymentPluginManager;
+            PermissionService = permissionService;
+            SettingService = settingService;
+            GenericAttributeService = genericAttributeService;
+            WorkContext = workContext;
+            PaymentSettings = paymentSettings;
         }
 
         #endregion
@@ -78,18 +78,18 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Methods(bool showtour = false)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _paymentModelFactory.PreparePaymentMethodsModelAsync(new PaymentMethodsModel());
+            var model = await PaymentModelFactory.PreparePaymentMethodsModelAsync(new PaymentMethodsModel());
 
             //show configuration tour
             if (showtour)
             {
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
+                var customer = await WorkContext.GetCurrentCustomerAsync();
+                var hideCard = await GenericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
+                var closeCard = await GenericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
 
                 if (!hideCard && !closeCard)
                     ViewBag.ShowTour = true;
@@ -101,11 +101,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Methods(PaymentMethodSearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _paymentModelFactory.PreparePaymentMethodListModelAsync(searchModel);
+            var model = await PaymentModelFactory.PreparePaymentMethodListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -113,17 +113,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> MethodUpdate(PaymentMethodModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
-            var pm = await _paymentPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
-            if (_paymentPluginManager.IsPluginActive(pm))
+            var pm = await PaymentPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
+            if (PaymentPluginManager.IsPluginActive(pm))
             {
                 if (!model.IsActive)
                 {
                     //mark as disabled
-                    _paymentSettings.ActivePaymentMethodSystemNames.Remove(pm.PluginDescriptor.SystemName);
-                    await _settingService.SaveSettingAsync(_paymentSettings);
+                    PaymentSettings.ActivePaymentMethodSystemNames.Remove(pm.PluginDescriptor.SystemName);
+                    await SettingService.SaveSettingAsync(PaymentSettings);
                 }
             }
             else
@@ -131,8 +131,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.IsActive)
                 {
                     //mark as active
-                    _paymentSettings.ActivePaymentMethodSystemNames.Add(pm.PluginDescriptor.SystemName);
-                    await _settingService.SaveSettingAsync(_paymentSettings);
+                    PaymentSettings.ActivePaymentMethodSystemNames.Add(pm.PluginDescriptor.SystemName);
+                    await SettingService.SaveSettingAsync(PaymentSettings);
                 }
             }
 
@@ -144,18 +144,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //raise event
-            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
+            await EventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }
 
         public virtual async Task<IActionResult> MethodRestrictions()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _paymentModelFactory.PreparePaymentMethodsModelAsync(new PaymentMethodsModel());
+            var model = await PaymentModelFactory.PreparePaymentMethodsModelAsync(new PaymentMethodsModel());
 
             return View(model);
         }
@@ -167,11 +167,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ActionName("MethodRestrictions")]
         public virtual async Task<IActionResult> MethodRestrictionsSave(PaymentMethodsModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
-            var paymentMethods = await _paymentPluginManager.LoadAllPluginsAsync();
-            var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
+            var paymentMethods = await PaymentPluginManager.LoadAllPluginsAsync();
+            var countries = await CountryService.GetAllCountriesAsync(showHidden: true);
 
             var form = model.Form;
 
@@ -192,10 +192,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
                 }
 
-                await _paymentPluginManager.SaveRestrictedCountriesAsync(pm, newCountryIds);
+                await PaymentPluginManager.SaveRestrictedCountriesAsync(pm, newCountryIds);
             }
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Payment.MethodRestrictions.Updated"));
+            NotificationService.SuccessNotification(await LocalizationService.GetResourceAsync("Admin.Configuration.Payment.MethodRestrictions.Updated"));
             
             return RedirectToAction("MethodRestrictions");
         }

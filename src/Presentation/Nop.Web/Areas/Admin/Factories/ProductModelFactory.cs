@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -42,41 +42,41 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
-        private readonly IAddressService _addressService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICategoryService _categoryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDiscountService _discountService;
-        private readonly IDiscountSupportedModelFactory _discountSupportedModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IMeasureService _measureService;
-        private readonly IOrderService _orderService;
-        private readonly IPictureService _pictureService;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly ISettingModelFactory _settingModelFactory;
-        private readonly IShipmentService _shipmentService;
-        private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IStoreService _storeService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
-        private readonly MeasureSettings _measureSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected CatalogSettings CatalogSettings { get; }
+        protected CurrencySettings CurrencySettings { get; }
+        protected IAclSupportedModelFactory AclSupportedModelFactory { get; }
+        protected IAddressService AddressService { get; }
+        protected IBaseAdminModelFactory BaseAdminModelFactory { get; }
+        protected ICategoryService CategoryService { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IDiscountService DiscountService { get; }
+        protected IDiscountSupportedModelFactory DiscountSupportedModelFactory { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocalizedModelFactory LocalizedModelFactory { get; }
+        protected IManufacturerService ManufacturerService { get; }
+        protected IMeasureService MeasureService { get; }
+        protected IOrderService OrderService { get; }
+        protected IPictureService PictureService { get; }
+        protected IProductAttributeFormatter ProductAttributeFormatter { get; }
+        protected IProductAttributeParser ProductAttributeParser { get; }
+        protected IProductAttributeService ProductAttributeService { get; }
+        protected IProductService ProductService { get; }
+        protected IProductTagService ProductTagService { get; }
+        protected IProductTemplateService ProductTemplateService { get; }
+        protected ISettingModelFactory SettingModelFactory { get; }
+        protected IShipmentService ShipmentService { get; }
+        protected IShippingService ShippingService { get; }
+        protected IShoppingCartService ShoppingCartService { get; }
+        protected ISpecificationAttributeService SpecificationAttributeService { get; }
+        protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
+        protected IStoreService StoreService { get; }
+        protected IUrlRecordService UrlRecordService { get; }
+        protected IWorkContext WorkContext { get; }
+        protected MeasureSettings MeasureSettings { get; }
+        protected TaxSettings TaxSettings { get; }
+        protected VendorSettings VendorSettings { get; }
 
         #endregion
 
@@ -118,41 +118,41 @@ namespace Nop.Web.Areas.Admin.Factories
             TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
-            _catalogSettings = catalogSettings;
-            _currencySettings = currencySettings;
-            _aclSupportedModelFactory = aclSupportedModelFactory;
-            _addressService = addressService;
-            _baseAdminModelFactory = baseAdminModelFactory;
-            _categoryService = categoryService;
-            _currencyService = currencyService;
-            _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _discountService = discountService;
-            _discountSupportedModelFactory = discountSupportedModelFactory;
-            _localizationService = localizationService;
-            _localizedModelFactory = localizedModelFactory;
-            _manufacturerService = manufacturerService;
-            _measureService = measureService;
-            _measureSettings = measureSettings;
-            _orderService = orderService;
-            _pictureService = pictureService;
-            _productAttributeFormatter = productAttributeFormatter;
-            _productAttributeParser = productAttributeParser;
-            _productAttributeService = productAttributeService;
-            _productService = productService;
-            _productTagService = productTagService;
-            _productTemplateService = productTemplateService;
-            _settingModelFactory = settingModelFactory;
-            _shipmentService = shipmentService;
-            _shippingService = shippingService;
-            _shoppingCartService = shoppingCartService;
-            _specificationAttributeService = specificationAttributeService;
-            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            _storeService = storeService;
-            _urlRecordService = urlRecordService;
-            _workContext = workContext;
-            _taxSettings = taxSettings;
-            _vendorSettings = vendorSettings;
+            CatalogSettings = catalogSettings;
+            CurrencySettings = currencySettings;
+            AclSupportedModelFactory = aclSupportedModelFactory;
+            AddressService = addressService;
+            BaseAdminModelFactory = baseAdminModelFactory;
+            CategoryService = categoryService;
+            CurrencyService = currencyService;
+            CustomerService = customerService;
+            DateTimeHelper = dateTimeHelper;
+            DiscountService = discountService;
+            DiscountSupportedModelFactory = discountSupportedModelFactory;
+            LocalizationService = localizationService;
+            LocalizedModelFactory = localizedModelFactory;
+            ManufacturerService = manufacturerService;
+            MeasureService = measureService;
+            MeasureSettings = measureSettings;
+            OrderService = orderService;
+            PictureService = pictureService;
+            ProductAttributeFormatter = productAttributeFormatter;
+            ProductAttributeParser = productAttributeParser;
+            ProductAttributeService = productAttributeService;
+            ProductService = productService;
+            ProductTagService = productTagService;
+            ProductTemplateService = productTemplateService;
+            SettingModelFactory = settingModelFactory;
+            ShipmentService = shipmentService;
+            ShippingService = shippingService;
+            ShoppingCartService = shoppingCartService;
+            SpecificationAttributeService = specificationAttributeService;
+            StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            StoreService = storeService;
+            UrlRecordService = urlRecordService;
+            WorkContext = workContext;
+            TaxSettings = taxSettings;
+            VendorSettings = vendorSettings;
         }
 
         #endregion
@@ -166,9 +166,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             if (specificationAttribute.SpecificationAttributeGroupId.HasValue)
             {
-                var group = await _specificationAttributeService.GetSpecificationAttributeGroupByIdAsync(specificationAttribute.SpecificationAttributeGroupId.Value);
+                var group = await SpecificationAttributeService.GetSpecificationAttributeGroupByIdAsync(specificationAttribute.SpecificationAttributeGroupId.Value);
                 if (group != null)
-                    name = string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.SpecificationAttributes.NameFormat"), group.Name, name);
+                    name = string.Format(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.SpecificationAttributes.NameFormat"), group.Name, name);
             }
 
             return name;
@@ -189,7 +189,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             model.Id = product.Id;
-            model.Name = string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Copy.Name.New"), product.Name);
+            model.Name = string.Format(await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Copy.Name.New"), product.Name);
             model.Published = true;
             model.CopyImages = true;
 
@@ -207,7 +207,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
-            foreach (var warehouse in await _shippingService.GetAllWarehousesAsync())
+            foreach (var warehouse in await ShippingService.GetAllWarehousesAsync())
             {
                 var model = new ProductWarehouseInventoryModel
                 {
@@ -217,13 +217,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 if (product != null)
                 {
-                    var productWarehouseInventory = (await _productService.GetAllProductWarehouseInventoryRecordsAsync(product.Id))?.FirstOrDefault(inventory => inventory.WarehouseId == warehouse.Id);
+                    var productWarehouseInventory = (await ProductService.GetAllProductWarehouseInventoryRecordsAsync(product.Id))?.FirstOrDefault(inventory => inventory.WarehouseId == warehouse.Id);
                     if (productWarehouseInventory != null)
                     {
                         model.WarehouseUsed = true;
                         model.StockQuantity = productWarehouseInventory.StockQuantity;
                         model.ReservedQuantity = productWarehouseInventory.ReservedQuantity;
-                        model.PlannedQuantity = await _shipmentService.GetQuantityInShipmentsAsync(product, productWarehouseInventory.WarehouseId, true, true);
+                        model.PlannedQuantity = await ShipmentService.GetQuantityInShipmentsAsync(product, productWarehouseInventory.WarehouseId, true, true);
                     }
                 }
 
@@ -248,35 +248,35 @@ namespace Nop.Web.Areas.Admin.Factories
             if (attributeMapping.ValidationMinLength.HasValue)
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
-                    await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength"),
+                    await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength"),
                     attributeMapping.ValidationMinLength);
             }
 
             if (attributeMapping.ValidationMaxLength.HasValue)
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
-                    await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength"),
+                    await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength"),
                     attributeMapping.ValidationMaxLength);
             }
 
             if (!string.IsNullOrEmpty(attributeMapping.ValidationFileAllowedExtensions))
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
-                    await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions"),
+                    await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions"),
                     WebUtility.HtmlEncode(attributeMapping.ValidationFileAllowedExtensions));
             }
 
             if (attributeMapping.ValidationFileMaximumSize.HasValue)
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
-                    await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize"),
+                    await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize"),
                     attributeMapping.ValidationFileMaximumSize);
             }
 
             if (!string.IsNullOrEmpty(attributeMapping.DefaultValue))
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
-                    await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue"),
+                    await LocalizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue"),
                     WebUtility.HtmlEncode(attributeMapping.DefaultValue));
             }
 
@@ -302,11 +302,11 @@ namespace Nop.Web.Areas.Admin.Factories
             model.EnableCondition = !string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml);
 
             //pre-select attribute and values
-            var selectedPva = (await _productAttributeParser
+            var selectedPva = (await ProductAttributeParser
                 .ParseProductAttributeMappingsAsync(productAttributeMapping.ConditionAttributeXml))
                 .FirstOrDefault();
 
-            var attributes = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(productAttributeMapping.ProductId))
+            var attributes = (await ProductAttributeService.GetProductAttributeMappingsByProductIdAsync(productAttributeMapping.ProductId))
                 //ignore non-combinable attributes (should have selectable values)
                 .Where(x => x.CanBeUsedAsCondition())
                 //ignore this attribute (it cannot depend on itself)
@@ -318,7 +318,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
-                    Name = (await _productAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId)).Name,
+                    Name = (await ProductAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId)).Name,
                     TextPrompt = attribute.TextPrompt,
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType
@@ -327,7 +327,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(attribute.Id);
+                    var attributeValues = await ProductAttributeService.GetProductAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new ProductAttributeConditionModel.ProductAttributeValueModel
@@ -361,7 +361,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                                     //select new values
                                     var selectedValues =
-                                        await _productAttributeParser.ParseProductAttributeValuesAsync(productAttributeMapping
+                                        await ProductAttributeParser.ParseProductAttributeValuesAsync(productAttributeMapping
                                             .ConditionAttributeXml);
                                     foreach (var attributeValue in selectedValues)
                                         foreach (var item in attributeModel.Values)
@@ -538,7 +538,7 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.ProductId = product.Id;
 
             //prepare available warehouses
-            await _baseAdminModelFactory.PrepareWarehousesAsync(searchModel.AvailableWarehouses);
+            await BaseAdminModelFactory.PrepareWarehousesAsync(searchModel.AvailableWarehouses);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -656,44 +656,44 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
-            searchModel.AllowVendorsToImportProducts = _vendorSettings.AllowVendorsToImportProducts;
+            searchModel.IsLoggedInAsVendor = await WorkContext.GetCurrentVendorAsync() != null;
+            searchModel.AllowVendorsToImportProducts = VendorSettings.AllowVendorsToImportProducts;
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
+            await BaseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
+            await BaseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+            await BaseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare available product types
-            await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
+            await BaseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
 
             //prepare available warehouses
-            await _baseAdminModelFactory.PrepareWarehousesAsync(searchModel.AvailableWarehouses);
+            await BaseAdminModelFactory.PrepareWarehousesAsync(searchModel.AvailableWarehouses);
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+            searchModel.HideStoresList = CatalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare "published" filter (0 - all; 1 - published only; 2 - unpublished only)
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "0",
-                Text = await _localizationService.GetResourceAsync("Admin.Catalog.Products.List.SearchPublished.All")
+                Text = await LocalizationService.GetResourceAsync("Admin.Catalog.Products.List.SearchPublished.All")
             });
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "1",
-                Text = await _localizationService.GetResourceAsync("Admin.Catalog.Products.List.SearchPublished.PublishedOnly")
+                Text = await LocalizationService.GetResourceAsync("Admin.Catalog.Products.List.SearchPublished.PublishedOnly")
             });
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "2",
-                Text = await _localizationService.GetResourceAsync("Admin.Catalog.Products.List.SearchPublished.UnpublishedOnly")
+                Text = await LocalizationService.GetResourceAsync("Admin.Catalog.Products.List.SearchPublished.UnpublishedOnly")
             });
 
             //prepare grid
@@ -717,18 +717,18 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get parameters to filter comments
             var overridePublished = searchModel.SearchPublishedId == 0 ? null : (bool?)(searchModel.SearchPublishedId == 1);
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
                 searchModel.SearchVendorId = currentVendor.Id;
             var categoryIds = new List<int> { searchModel.SearchCategoryId };
             if (searchModel.SearchIncludeSubCategories && searchModel.SearchCategoryId > 0)
             {
-                var childCategoryIds = await _categoryService.GetChildCategoryIdsAsync(parentCategoryId: searchModel.SearchCategoryId, showHidden: true);
+                var childCategoryIds = await CategoryService.GetChildCategoryIdsAsync(parentCategoryId: searchModel.SearchCategoryId, showHidden: true);
                 categoryIds.AddRange(childCategoryIds);
             }
 
             //get products
-            var products = await _productService.SearchProductsAsync(showHidden: true,
+            var products = await ProductService.SearchProductsAsync(showHidden: true,
                 categoryIds: categoryIds,
                 manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
@@ -751,12 +751,12 @@ namespace Nop.Web.Areas.Admin.Factories
                     productModel.FullDescription = string.Empty;
 
                     //fill in additional values (not existing in the entity)
-                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
-                    var defaultProductPicture = (await _pictureService.GetPicturesByProductIdAsync(product.Id, 1)).FirstOrDefault();
-                    (productModel.PictureThumbnailUrl, _) = await _pictureService.GetPictureUrlAsync(defaultProductPicture, 75);
-                    productModel.ProductTypeName = await _localizationService.GetLocalizedEnumAsync(product.ProductType);
+                    productModel.SeName = await UrlRecordService.GetSeNameAsync(product, 0, true, false);
+                    var defaultProductPicture = (await PictureService.GetPicturesByProductIdAsync(product.Id, 1)).FirstOrDefault();
+                    (productModel.PictureThumbnailUrl, _) = await PictureService.GetPictureUrlAsync(defaultProductPicture, 75);
+                    productModel.ProductTypeName = await LocalizationService.GetLocalizedEnumAsync(product.ProductType);
                     if (product.ProductType == ProductType.SimpleProduct && product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                        productModel.StockQuantityStr = (await _productService.GetTotalStockQuantityAsync(product)).ToString();
+                        productModel.StockQuantityStr = (await ProductService.GetTotalStockQuantityAsync(product)).ToString();
 
                     return productModel;
                 });
@@ -785,10 +785,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (model == null)
                 {
                     model = product.ToModel<ProductModel>();
-                    model.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
+                    model.SeName = await UrlRecordService.GetSeNameAsync(product, 0, true, false);
                 }
 
-                var parentGroupedProduct = await _productService.GetProductByIdAsync(product.ParentGroupedProductId);
+                var parentGroupedProduct = await ProductService.GetProductByIdAsync(product.ParentGroupedProductId);
                 if (parentGroupedProduct != null)
                 {
                     model.AssociatedToProductId = product.ParentGroupedProductId;
@@ -796,17 +796,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
 
                 model.LastStockQuantity = product.StockQuantity;
-                model.ProductTags = string.Join(", ", (await _productTagService.GetAllProductTagsByProductIdAsync(product.Id)).Select(tag => tag.Name));
-                model.ProductAttributesExist = (await _productAttributeService.GetAllProductAttributesAsync()).Any();
+                model.ProductTags = string.Join(", ", (await ProductTagService.GetAllProductTagsByProductIdAsync(product.Id)).Select(tag => tag.Name));
+                model.ProductAttributesExist = (await ProductAttributeService.GetAllProductAttributesAsync()).Any();
 
-                model.CanCreateCombinations = await (await _productAttributeService
-                    .GetProductAttributeMappingsByProductIdAsync(product.Id)).AnyAwaitAsync(async pam => (await _productAttributeService.GetProductAttributeValuesAsync(pam.Id)).Any());
+                model.CanCreateCombinations = await (await ProductAttributeService
+                    .GetProductAttributeMappingsByProductIdAsync(product.Id)).AnyAwaitAsync(async pam => (await ProductAttributeService.GetProductAttributeValuesAsync(pam.Id)).Any());
 
                 if (!excludeProperties)
                 {
-                    model.SelectedCategoryIds = (await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true))
+                    model.SelectedCategoryIds = (await CategoryService.GetProductCategoriesByProductIdAsync(product.Id, true))
                         .Select(productCategory => productCategory.CategoryId).ToList();
-                    model.SelectedManufacturerIds = (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id, true))
+                    model.SelectedManufacturerIds = (await ManufacturerService.GetProductManufacturersByProductIdAsync(product.Id, true))
                         .Select(productManufacturer => productManufacturer.ManufacturerId).ToList();
                 }
 
@@ -828,13 +828,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(product, entity => entity.Name, languageId, false, false);
-                    locale.FullDescription = await _localizationService.GetLocalizedAsync(product, entity => entity.FullDescription, languageId, false, false);
-                    locale.ShortDescription = await _localizationService.GetLocalizedAsync(product, entity => entity.ShortDescription, languageId, false, false);
-                    locale.MetaKeywords = await _localizationService.GetLocalizedAsync(product, entity => entity.MetaKeywords, languageId, false, false);
-                    locale.MetaDescription = await _localizationService.GetLocalizedAsync(product, entity => entity.MetaDescription, languageId, false, false);
-                    locale.MetaTitle = await _localizationService.GetLocalizedAsync(product, entity => entity.MetaTitle, languageId, false, false);
-                    locale.SeName = await _urlRecordService.GetSeNameAsync(product, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(product, entity => entity.Name, languageId, false, false);
+                    locale.FullDescription = await LocalizationService.GetLocalizedAsync(product, entity => entity.FullDescription, languageId, false, false);
+                    locale.ShortDescription = await LocalizationService.GetLocalizedAsync(product, entity => entity.ShortDescription, languageId, false, false);
+                    locale.MetaKeywords = await LocalizationService.GetLocalizedAsync(product, entity => entity.MetaKeywords, languageId, false, false);
+                    locale.MetaDescription = await LocalizationService.GetLocalizedAsync(product, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaTitle = await LocalizationService.GetLocalizedAsync(product, entity => entity.MetaTitle, languageId, false, false);
+                    locale.SeName = await UrlRecordService.GetSeNameAsync(product, languageId, false, false);
                 };
             }
 
@@ -850,7 +850,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.NotifyAdminForQuantityBelow = 1;
                 model.OrderMinimumQuantity = 1;
                 model.OrderMaximumQuantity = 10000;
-                model.TaxCategoryId = _taxSettings.DefaultTaxCategoryId;
+                model.TaxCategoryId = TaxSettings.DefaultTaxCategoryId;
                 model.UnlimitedDownloads = true;
                 model.IsShipEnabled = true;
                 model.AllowCustomerReviews = true;
@@ -858,25 +858,25 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.VisibleIndividually = true;
             }
 
-            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
-            model.BaseWeightIn = (await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId)).Name;
-            model.BaseDimensionIn = (await _measureService.GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId)).Name;
-            model.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            model.PrimaryStoreCurrencyCode = (await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+            model.BaseWeightIn = (await MeasureService.GetMeasureWeightByIdAsync(MeasureSettings.BaseWeightId)).Name;
+            model.BaseDimensionIn = (await MeasureService.GetMeasureDimensionByIdAsync(MeasureSettings.BaseDimensionId)).Name;
+            model.IsLoggedInAsVendor = await WorkContext.GetCurrentVendorAsync() != null;
             model.HasAvailableSpecificationAttributes =
-                (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync()).Any();
+                (await SpecificationAttributeService.GetSpecificationAttributesWithOptionsAsync()).Any();
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare editor settings
-            model.ProductEditorSettingsModel = await _settingModelFactory.PrepareProductEditorSettingsModelAsync();
+            model.ProductEditorSettingsModel = await SettingModelFactory.PrepareProductEditorSettingsModelAsync();
 
             //prepare available product templates
-            await _baseAdminModelFactory.PrepareProductTemplatesAsync(model.AvailableProductTemplates, false);
+            await BaseAdminModelFactory.PrepareProductTemplatesAsync(model.AvailableProductTemplates, false);
 
             //prepare available product types
-            var productTemplates = await _productTemplateService.GetAllProductTemplatesAsync();
+            var productTemplates = await ProductTemplateService.GetAllProductTemplatesAsync();
             foreach (var productType in Enum.GetValues(typeof(ProductType)).OfType<ProductType>())
             {
                 model.ProductsTypesSupportedByProductTemplates.Add((int)productType, new List<SelectListItem>());
@@ -895,33 +895,33 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available delivery dates
-            await _baseAdminModelFactory.PrepareDeliveryDatesAsync(model.AvailableDeliveryDates,
-                defaultItemText: await _localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.DeliveryDate.None"));
+            await BaseAdminModelFactory.PrepareDeliveryDatesAsync(model.AvailableDeliveryDates,
+                defaultItemText: await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Fields.DeliveryDate.None"));
 
             //prepare available product availability ranges
-            await _baseAdminModelFactory.PrepareProductAvailabilityRangesAsync(model.AvailableProductAvailabilityRanges,
-                defaultItemText: await _localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.ProductAvailabilityRange.None"));
+            await BaseAdminModelFactory.PrepareProductAvailabilityRangesAsync(model.AvailableProductAvailabilityRanges,
+                defaultItemText: await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Fields.ProductAvailabilityRange.None"));
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendorsAsync(model.AvailableVendors,
-                defaultItemText: await _localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Vendor.None"));
+            await BaseAdminModelFactory.PrepareVendorsAsync(model.AvailableVendors,
+                defaultItemText: await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Vendor.None"));
 
             //prepare available tax categories
-            await _baseAdminModelFactory.PrepareTaxCategoriesAsync(model.AvailableTaxCategories);
+            await BaseAdminModelFactory.PrepareTaxCategoriesAsync(model.AvailableTaxCategories);
 
             //prepare available warehouses
-            await _baseAdminModelFactory.PrepareWarehousesAsync(model.AvailableWarehouses,
-                defaultItemText: await _localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Warehouse.None"));
+            await BaseAdminModelFactory.PrepareWarehousesAsync(model.AvailableWarehouses,
+                defaultItemText: await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Warehouse.None"));
             await PrepareProductWarehouseInventoryModelsAsync(model.ProductWarehouseInventoryModels, product);
 
             //prepare available base price units
-            var availableMeasureWeights = (await _measureService.GetAllMeasureWeightsAsync())
+            var availableMeasureWeights = (await MeasureService.GetAllMeasureWeightsAsync())
                 .Select(weight => new SelectListItem { Text = weight.Name, Value = weight.Id.ToString() }).ToList();
             model.AvailableBasepriceUnits = availableMeasureWeights;
             model.AvailableBasepriceBaseUnits = availableMeasureWeights;
 
             //prepare model categories
-            await _baseAdminModelFactory.PrepareCategoriesAsync(model.AvailableCategories, false);
+            await BaseAdminModelFactory.PrepareCategoriesAsync(model.AvailableCategories, false);
             foreach (var categoryItem in model.AvailableCategories)
             {
                 categoryItem.Selected = int.TryParse(categoryItem.Value, out var categoryId)
@@ -929,7 +929,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare model manufacturers
-            await _baseAdminModelFactory.PrepareManufacturersAsync(model.AvailableManufacturers, false);
+            await BaseAdminModelFactory.PrepareManufacturersAsync(model.AvailableManufacturers, false);
             foreach (var manufacturerItem in model.AvailableManufacturers)
             {
                 manufacturerItem.Selected = int.TryParse(manufacturerItem.Value, out var manufacturerId)
@@ -937,16 +937,16 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare model discounts
-            var availableDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true);
-            await _discountSupportedModelFactory.PrepareModelDiscountsAsync(model, product, availableDiscounts, excludeProperties);
+            var availableDiscounts = await DiscountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true);
+            await DiscountSupportedModelFactory.PrepareModelDiscountsAsync(model, product, availableDiscounts, excludeProperties);
 
             //prepare model customer roles
-            await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model, product, excludeProperties);
+            await AclSupportedModelFactory.PrepareModelCustomerRolesAsync(model, product, excludeProperties);
 
             //prepare model stores
-            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, product, excludeProperties);
+            await StoreMappingSupportedModelFactory.PrepareModelStoresAsync(model, product, excludeProperties);
 
-            var productTags = await _productTagService.GetAllProductTagsAsync();
+            var productTags = await ProductTagService.GetAllProductTagsAsync();
             var productTagsSb = new StringBuilder();
             productTagsSb.Append("var initialProductTags = [");
             for (var i = 0; i < productTags.Count; i++)
@@ -978,22 +978,22 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            searchModel.IsLoggedInAsVendor = await WorkContext.GetCurrentVendorAsync() != null;
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
+            await BaseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
+            await BaseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+            await BaseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare available product types
-            await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
+            await BaseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
@@ -1015,12 +1015,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
                 searchModel.SearchVendorId = currentVendor.Id;
 
             //get products
-            var products = await _productService.SearchProductsAsync(showHidden: true,
+            var products = await ProductService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
@@ -1036,7 +1036,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var productModel = product.ToModel<ProductModel>();
 
-                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
+                    productModel.SeName = await UrlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });
@@ -1063,7 +1063,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get related products
-            var relatedProducts = (await _productService
+            var relatedProducts = (await ProductService
                 .GetRelatedProductsByProductId1Async(productId1: product.Id, showHidden: true)).ToPagedList(searchModel);
 
             //prepare grid model
@@ -1075,7 +1075,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var relatedProductModel = relatedProduct.ToModel<RelatedProductModel>();
 
                     //fill in additional values (not existing in the entity)
-                    relatedProductModel.Product2Name = (await _productService.GetProductByIdAsync(relatedProduct.ProductId2))?.Name;
+                    relatedProductModel.Product2Name = (await ProductService.GetProductByIdAsync(relatedProduct.ProductId2))?.Name;
 
                     return relatedProductModel;
                 });
@@ -1096,22 +1096,22 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            searchModel.IsLoggedInAsVendor = await WorkContext.GetCurrentVendorAsync() != null;
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
+            await BaseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
+            await BaseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+            await BaseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare available product types
-            await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
+            await BaseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
@@ -1133,12 +1133,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
                 searchModel.SearchVendorId = currentVendor.Id;
 
             //get products
-            var products = await _productService.SearchProductsAsync(showHidden: true,
+            var products = await ProductService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
@@ -1154,7 +1154,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var productModel = product.ToModel<ProductModel>();
 
-                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
+                    productModel.SeName = await UrlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });
@@ -1181,7 +1181,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get cross-sell products
-            var crossSellProducts = (await _productService
+            var crossSellProducts = (await ProductService
                 .GetCrossSellProductsByProductId1Async(productId1: product.Id, showHidden: true)).ToPagedList(searchModel);
 
             //prepare grid model
@@ -1197,7 +1197,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    crossSellProductModel.Product2Name = (await _productService.GetProductByIdAsync(crossSellProduct.ProductId2))?.Name;
+                    crossSellProductModel.Product2Name = (await ProductService.GetProductByIdAsync(crossSellProduct.ProductId2))?.Name;
 
                     return crossSellProductModel;
                 });
@@ -1219,22 +1219,22 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            searchModel.IsLoggedInAsVendor = await WorkContext.GetCurrentVendorAsync() != null;
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
+            await BaseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
+            await BaseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+            await BaseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare available product types
-            await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
+            await BaseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
@@ -1256,12 +1256,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
                 searchModel.SearchVendorId = currentVendor.Id;
 
             //get products
-            var products = await _productService.SearchProductsAsync(showHidden: true,
+            var products = await ProductService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
@@ -1277,7 +1277,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var productModel = product.ToModel<ProductModel>();
 
-                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
+                    productModel.SeName = await UrlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });
@@ -1303,9 +1303,9 @@ namespace Nop.Web.Areas.Admin.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var vendor = await _workContext.GetCurrentVendorAsync();
+            var vendor = await WorkContext.GetCurrentVendorAsync();
             //get associated products
-            var associatedProducts = (await _productService.GetAssociatedProductsAsync(showHidden: true,
+            var associatedProducts = (await ProductService.GetAssociatedProductsAsync(showHidden: true,
                 parentGroupedProductId: product.Id,
                 vendorId: vendor?.Id ?? 0)).ToPagedList(searchModel);
 
@@ -1337,22 +1337,22 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            searchModel.IsLoggedInAsVendor = await WorkContext.GetCurrentVendorAsync() != null;
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
+            await BaseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
+            await BaseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+            await BaseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare available product types
-            await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
+            await BaseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
@@ -1374,12 +1374,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
                 searchModel.SearchVendorId = currentVendor.Id;
 
             //get products
-            var products = await _productService.SearchProductsAsync(showHidden: true,
+            var products = await ProductService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
@@ -1397,8 +1397,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     var productModel = product.ToModel<ProductModel>();
 
                     //fill in additional values (not existing in the entity)
-                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
-                    var parentGroupedProduct = await _productService.GetProductByIdAsync(product.ParentGroupedProductId);
+                    productModel.SeName = await UrlRecordService.GetSeNameAsync(product, 0, true, false);
+                    var parentGroupedProduct = await ProductService.GetProductByIdAsync(product.ParentGroupedProductId);
 
                     if (parentGroupedProduct == null)
                         return productModel;
@@ -1431,7 +1431,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get product pictures
-            var productPictures = (await _productService.GetProductPicturesByProductIdAsync(product.Id)).ToPagedList(searchModel);
+            var productPictures = (await ProductService.GetProductPicturesByProductIdAsync(product.Id)).ToPagedList(searchModel);
 
             //prepare grid model
             var model = await new ProductPictureListModel().PrepareToGridAsync(searchModel, productPictures, () =>
@@ -1442,10 +1442,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     var productPictureModel = productPicture.ToModel<ProductPictureModel>();
 
                     //fill in additional values (not existing in the entity)
-                    var picture = (await _pictureService.GetPictureByIdAsync(productPicture.PictureId))
+                    var picture = (await PictureService.GetPictureByIdAsync(productPicture.PictureId))
                         ?? throw new Exception("Picture cannot be loaded");
 
-                    productPictureModel.PictureUrl = (await _pictureService.GetPictureUrlAsync(picture)).Url;
+                    productPictureModel.PictureUrl = (await PictureService.GetPictureUrlAsync(picture)).Url;
 
                     productPictureModel.OverrideAltAttribute = picture.AltAttribute;
                     productPictureModel.OverrideTitleAttribute = picture.TitleAttribute;
@@ -1476,7 +1476,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get product specification attributes
-            var productSpecificationAttributes = (await _specificationAttributeService
+            var productSpecificationAttributes = (await SpecificationAttributeService
                 .GetProductSpecificationAttributesAsync(product.Id)).ToPagedList(searchModel);
 
             //prepare grid model
@@ -1487,17 +1487,17 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var productSpecificationAttributeModel = attribute.ToModel<ProductSpecificationAttributeModel>();
 
-                    var specAttributeOption = await _specificationAttributeService
+                    var specAttributeOption = await SpecificationAttributeService
                         .GetSpecificationAttributeOptionByIdAsync(attribute.SpecificationAttributeOptionId);
-                    var specAttribute = await _specificationAttributeService
+                    var specAttribute = await SpecificationAttributeService
                         .GetSpecificationAttributeByIdAsync(specAttributeOption.SpecificationAttributeId);
 
                     //fill in additional values (not existing in the entity)
-                    productSpecificationAttributeModel.AttributeTypeName = await _localizationService.GetLocalizedEnumAsync(attribute.AttributeType);
+                    productSpecificationAttributeModel.AttributeTypeName = await LocalizationService.GetLocalizedEnumAsync(attribute.AttributeType);
 
                     productSpecificationAttributeModel.AttributeId = specAttribute.Id;
                     productSpecificationAttributeModel.AttributeName = await GetSpecificationAttributeNameAsync(specAttribute);
-                    var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+                    var currentLanguage = await WorkContext.GetWorkingLanguageAsync();
 
                     switch (attribute.AttributeType)
                     {
@@ -1506,10 +1506,10 @@ namespace Nop.Web.Areas.Admin.Factories
                             productSpecificationAttributeModel.SpecificationAttributeOptionId = specAttributeOption.Id;
                             break;
                         case SpecificationAttributeType.CustomText:
-                            productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(attribute, x => x.CustomValue, currentLanguage?.Id));
+                            productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(await LocalizationService.GetLocalizedAsync(attribute, x => x.CustomValue, currentLanguage?.Id));
                             break;
                         case SpecificationAttributeType.CustomHtmlText:
-                            productSpecificationAttributeModel.ValueRaw = await _localizationService
+                            productSpecificationAttributeModel.ValueRaw = await LocalizationService
                                 .GetLocalizedAsync(attribute, x => x.CustomValue, currentLanguage?.Id);
                             break;
                         case SpecificationAttributeType.Hyperlink:
@@ -1539,7 +1539,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 return new AddSpecificationAttributeModel
                 {
-                    AvailableAttributes = await (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync())
+                    AvailableAttributes = await (await SpecificationAttributeService.GetSpecificationAttributesWithOptionsAsync())
                         .SelectAwait(async attributeWithOption =>
                         {
                             var attributeName = await GetSpecificationAttributeNameAsync(attributeWithOption);
@@ -1547,11 +1547,11 @@ namespace Nop.Web.Areas.Admin.Factories
                             return new SelectListItem(attributeName, attributeWithOption.Id.ToString());
                         }).ToListAsync(),
                     ProductId = productId,
-                    Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync<AddSpecificationAttributeLocalizedModel>()
+                    Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync<AddSpecificationAttributeLocalizedModel>()
                 };
             }
 
-            var attribute = await _specificationAttributeService.GetProductSpecificationAttributeByIdAsync(specificationId.Value);
+            var attribute = await SpecificationAttributeService.GetProductSpecificationAttributeByIdAsync(specificationId.Value);
 
             if (attribute == null)
             {
@@ -1559,20 +1559,20 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
-            if (currentVendor != null && (await _productService.GetProductByIdAsync(attribute.ProductId)).VendorId != currentVendor.Id)
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
+            if (currentVendor != null && (await ProductService.GetProductByIdAsync(attribute.ProductId)).VendorId != currentVendor.Id)
                 throw new UnauthorizedAccessException("This is not your product");
 
-            var specAttributeOption = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(attribute.SpecificationAttributeOptionId);
-            var specAttribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(specAttributeOption.SpecificationAttributeId);
+            var specAttributeOption = await SpecificationAttributeService.GetSpecificationAttributeOptionByIdAsync(attribute.SpecificationAttributeOptionId);
+            var specAttribute = await SpecificationAttributeService.GetSpecificationAttributeByIdAsync(specAttributeOption.SpecificationAttributeId);
 
             var model = attribute.ToModel<AddSpecificationAttributeModel>();
             model.SpecificationId = attribute.Id;
             model.AttributeId = specAttribute.Id;
-            model.AttributeTypeName = await _localizationService.GetLocalizedEnumAsync(attribute.AttributeType);
+            model.AttributeTypeName = await LocalizationService.GetLocalizedEnumAsync(attribute.AttributeType);
             model.AttributeName = specAttribute.Name;
 
-            model.AvailableAttributes = await (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync())
+            model.AvailableAttributes = await (await SpecificationAttributeService.GetSpecificationAttributesWithOptionsAsync())
                 .SelectAwait(async attributeWithOption =>
                 {
                     var attributeName = await GetSpecificationAttributeNameAsync(attributeWithOption);
@@ -1581,7 +1581,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 })
                 .ToListAsync();
 
-            model.AvailableOptions = (await _specificationAttributeService
+            model.AvailableOptions = (await SpecificationAttributeService
                 .GetSpecificationAttributeOptionsBySpecificationAttributeAsync(model.AttributeId))
                 .Select(option => new SelectListItem { Text = option.Name, Value = option.Id.ToString() })
                 .ToList();
@@ -1605,16 +1605,16 @@ namespace Nop.Web.Areas.Admin.Factories
                     throw new ArgumentOutOfRangeException(nameof(attribute.AttributeType));
             }
             
-            model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(
+            model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(
                 async (AddSpecificationAttributeLocalizedModel locale, int languageId) =>
                 {
                     switch (attribute.AttributeType)
                     {
                         case SpecificationAttributeType.CustomHtmlText:
-                            locale.ValueRaw = await _localizationService.GetLocalizedAsync(attribute, entity => entity.CustomValue, languageId, false, false);
+                            locale.ValueRaw = await LocalizationService.GetLocalizedAsync(attribute, entity => entity.CustomValue, languageId, false, false);
                             break;
                         case SpecificationAttributeType.CustomText:
-                            locale.Value = await _localizationService.GetLocalizedAsync(attribute, entity => entity.CustomValue, languageId, false, false);
+                            locale.Value = await LocalizationService.GetLocalizedAsync(attribute, entity => entity.CustomValue, languageId, false, false);
                             break;
                         case SpecificationAttributeType.Option:
                             break;
@@ -1661,8 +1661,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product tags
-            var productTags = (await (await _productTagService.GetAllProductTagsAsync(tagName: searchModel.SearchTagName))
-                .OrderByDescendingAwait(async tag => await _productTagService.GetProductCountByProductTagIdAsync(tag.Id, storeId: 0, showHidden: true)).ToListAsync())
+            var productTags = (await (await ProductTagService.GetAllProductTagsAsync(tagName: searchModel.SearchTagName))
+                .OrderByDescendingAwait(async tag => await ProductTagService.GetProductCountByProductTagIdAsync(tag.Id, storeId: 0, showHidden: true)).ToListAsync())
                 .ToPagedList(searchModel);
 
             //prepare list model
@@ -1674,7 +1674,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var productTagModel = tag.ToModel<ProductTagModel>();
 
                     //fill in additional values (not existing in the entity)
-                    productTagModel.ProductCount = await _productTagService.GetProductCountByProductTagIdAsync(tag.Id, storeId: 0, showHidden: true);
+                    productTagModel.ProductCount = await ProductTagService.GetProductCountByProductTagIdAsync(tag.Id, storeId: 0, showHidden: true);
 
                     return productTagModel;
                 });
@@ -1705,18 +1705,18 @@ namespace Nop.Web.Areas.Admin.Factories
                     model = productTag.ToModel<ProductTagModel>();
                 }
 
-                model.ProductCount = await _productTagService.GetProductCountByProductTagIdAsync(productTag.Id, storeId: 0, showHidden: true);
+                model.ProductCount = await ProductTagService.GetProductCountByProductTagIdAsync(productTag.Id, storeId: 0, showHidden: true);
 
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(productTag, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(productTag, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -1739,7 +1739,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get orders
-            var orders = await _orderService.SearchOrdersAsync(productId: searchModel.ProductId,
+            var orders = await OrderService.SearchOrdersAsync(productId: searchModel.ProductId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
@@ -1747,7 +1747,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 return orders.SelectAwait(async order =>
                 {
-                    var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                    var billingAddress = await AddressService.GetAddressByIdAsync(order.BillingAddressId);
 
                     //fill in model values from the entity
                     var orderModel = new OrderModel
@@ -1758,13 +1758,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //convert dates to the user time
-                    orderModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc);
+                    orderModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    orderModel.StoreName = (await _storeService.GetStoreByIdAsync(order.StoreId))?.Name ?? "Deleted";
-                    orderModel.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
-                    orderModel.PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
-                    orderModel.ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus);
+                    orderModel.StoreName = (await StoreService.GetStoreByIdAsync(order.StoreId))?.Name ?? "Deleted";
+                    orderModel.OrderStatus = await LocalizationService.GetLocalizedEnumAsync(order.OrderStatus);
+                    orderModel.PaymentStatus = await LocalizationService.GetLocalizedEnumAsync(order.PaymentStatus);
+                    orderModel.ShippingStatus = await LocalizationService.GetLocalizedEnumAsync(order.ShippingStatus);
 
                     return orderModel;
                 });
@@ -1791,7 +1791,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get tier prices
-            var tierPrices = (await _productService.GetTierPricesByProductAsync(product.Id))
+            var tierPrices = (await ProductService.GetTierPricesByProductAsync(product.Id))
                 .OrderBy(price => price.StoreId).ThenBy(price => price.Quantity).ThenBy(price => price.CustomerRoleId)
                 .ToList().ToPagedList(searchModel);
 
@@ -1805,12 +1805,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)   
                     tierPriceModel.Store = price.StoreId > 0
-                        ? ((await _storeService.GetStoreByIdAsync(price.StoreId))?.Name ?? "Deleted")
-                        : await _localizationService.GetResourceAsync("Admin.Catalog.Products.TierPrices.Fields.Store.All");
+                        ? ((await StoreService.GetStoreByIdAsync(price.StoreId))?.Name ?? "Deleted")
+                        : await LocalizationService.GetResourceAsync("Admin.Catalog.Products.TierPrices.Fields.Store.All");
                     tierPriceModel.CustomerRoleId = price.CustomerRoleId ?? 0;
                     tierPriceModel.CustomerRole = price.CustomerRoleId.HasValue
-                        ? (await _customerService.GetCustomerRoleByIdAsync(price.CustomerRoleId.Value))?.Name
-                        : await _localizationService.GetResourceAsync("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All");
+                        ? (await CustomerService.GetCustomerRoleByIdAsync(price.CustomerRoleId.Value))?.Name
+                        : await LocalizationService.GetResourceAsync("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All");
 
                     return tierPriceModel;
                 });
@@ -1844,10 +1844,10 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);
 
             //prepare available customer roles
-            await _baseAdminModelFactory.PrepareCustomerRolesAsync(model.AvailableCustomerRoles);
+            await BaseAdminModelFactory.PrepareCustomerRolesAsync(model.AvailableCustomerRoles);
 
             return model;
         }
@@ -1870,7 +1870,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get stock quantity history
-            var stockQuantityHistory = await _productService.GetStockQuantityHistoryAsync(product: product,
+            var stockQuantityHistory = await ProductService.GetStockQuantityHistoryAsync(product: product,
                 warehouseId: searchModel.WarehouseId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -1884,19 +1884,19 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //convert dates to the user time
                     stockQuantityHistoryModel.CreatedOn =
-                        await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+                        await DateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    var combination = await _productAttributeService.GetProductAttributeCombinationByIdAsync(historyEntry.CombinationId ?? 0);
+                    var combination = await ProductAttributeService.GetProductAttributeCombinationByIdAsync(historyEntry.CombinationId ?? 0);
                     if (combination != null)
                     {
-                        stockQuantityHistoryModel.AttributeCombination = await _productAttributeFormatter
-                            .FormatAttributesAsync(product, combination.AttributesXml, (await _workContext.GetCurrentCustomerAsync()), renderGiftCardAttributes: false);
+                        stockQuantityHistoryModel.AttributeCombination = await ProductAttributeFormatter
+                            .FormatAttributesAsync(product, combination.AttributesXml, (await WorkContext.GetCurrentCustomerAsync()), renderGiftCardAttributes: false);
                     }
 
                     stockQuantityHistoryModel.WarehouseName = historyEntry.WarehouseId.HasValue
-                        ? (await _shippingService.GetWarehouseByIdAsync(historyEntry.WarehouseId.Value))?.Name ?? "Deleted"
-                        : await _localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Warehouse.None");
+                        ? (await ShippingService.GetWarehouseByIdAsync(historyEntry.WarehouseId.Value))?.Name ?? "Deleted"
+                        : await LocalizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Warehouse.None");
 
                     return stockQuantityHistoryModel;
                 });
@@ -1924,7 +1924,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get product attribute mappings
-            var productAttributeMappings = (await _productAttributeService
+            var productAttributeMappings = (await ProductAttributeService
                 .GetProductAttributeMappingsByProductIdAsync(product.Id)).ToPagedList(searchModel);
 
             //prepare grid model
@@ -1939,21 +1939,21 @@ namespace Nop.Web.Areas.Admin.Factories
                     productAttributeMappingModel.ConditionString = string.Empty;
 
                     productAttributeMappingModel.ValidationRulesString = await PrepareProductAttributeMappingValidationRulesStringAsync(attributeMapping);
-                    productAttributeMappingModel.ProductAttribute = (await _productAttributeService.GetProductAttributeByIdAsync(attributeMapping.ProductAttributeId))?.Name;
-                    productAttributeMappingModel.AttributeControlType = await _localizationService.GetLocalizedEnumAsync(attributeMapping.AttributeControlType);
-                    var conditionAttribute = (await _productAttributeParser
+                    productAttributeMappingModel.ProductAttribute = (await ProductAttributeService.GetProductAttributeByIdAsync(attributeMapping.ProductAttributeId))?.Name;
+                    productAttributeMappingModel.AttributeControlType = await LocalizationService.GetLocalizedEnumAsync(attributeMapping.AttributeControlType);
+                    var conditionAttribute = (await ProductAttributeParser
                         .ParseProductAttributeMappingsAsync(attributeMapping.ConditionAttributeXml))
                         .FirstOrDefault();
                     if (conditionAttribute == null)
                         return productAttributeMappingModel;
 
-                    var conditionValue = (await _productAttributeParser
+                    var conditionValue = (await ProductAttributeParser
                         .ParseProductAttributeValuesAsync(attributeMapping.ConditionAttributeXml))
                         .FirstOrDefault();
                     if (conditionValue != null)
                     {
                         productAttributeMappingModel.ConditionString =
-                            $"{WebUtility.HtmlEncode((await _productAttributeService.GetProductAttributeByIdAsync(conditionAttribute.ProductAttributeId)).Name)}: {WebUtility.HtmlEncode(conditionValue.Name)}";
+                            $"{WebUtility.HtmlEncode((await ProductAttributeService.GetProductAttributeByIdAsync(conditionAttribute.ProductAttributeId)).Name)}: {WebUtility.HtmlEncode(conditionValue.Name)}";
                     }
 
                     return productAttributeMappingModel;
@@ -1990,8 +1990,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     Id = productAttributeMapping.Id
                 };
 
-                model.ProductAttribute = (await _productAttributeService.GetProductAttributeByIdAsync(productAttributeMapping.ProductAttributeId)).Name;
-                model.AttributeControlType = await _localizationService.GetLocalizedEnumAsync(productAttributeMapping.AttributeControlType);
+                model.ProductAttribute = (await ProductAttributeService.GetProductAttributeByIdAsync(productAttributeMapping.ProductAttributeId)).Name;
+                model.AttributeControlType = await LocalizationService.GetLocalizedEnumAsync(productAttributeMapping.AttributeControlType);
 
                 if (!excludeProperties)
                 {
@@ -2014,8 +2014,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.TextPrompt = await _localizationService.GetLocalizedAsync(productAttributeMapping, entity => entity.TextPrompt, languageId, false, false);
-                    locale.DefaultValue = await _localizationService.GetLocalizedAsync(productAttributeMapping, entity => entity.DefaultValue, languageId, false, false);
+                    locale.TextPrompt = await LocalizationService.GetLocalizedAsync(productAttributeMapping, entity => entity.TextPrompt, languageId, false, false);
+                    locale.DefaultValue = await LocalizationService.GetLocalizedAsync(productAttributeMapping, entity => entity.DefaultValue, languageId, false, false);
                 };
 
                 //prepare nested search model
@@ -2026,10 +2026,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare available product attributes
-            model.AvailableProductAttributes = (await _productAttributeService.GetAllProductAttributesAsync()).Select(productAttribute => new SelectListItem
+            model.AvailableProductAttributes = (await ProductAttributeService.GetAllProductAttributesAsync()).Select(productAttribute => new SelectListItem
             {
                 Text = productAttribute.Name,
                 Value = productAttribute.Id.ToString()
@@ -2057,7 +2057,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productAttributeMapping));
 
             //get product attribute values
-            var productAttributeValues = (await _productAttributeService
+            var productAttributeValues = (await ProductAttributeService
                 .GetProductAttributeValuesAsync(productAttributeMapping.Id)).ToPagedList(searchModel);
 
             //prepare list model
@@ -2069,7 +2069,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var productAttributeValueModel = value.ToModel<ProductAttributeValueModel>();
 
                     //fill in additional values (not existing in the entity)
-                    productAttributeValueModel.AttributeValueTypeName = await _localizationService.GetLocalizedEnumAsync(value.AttributeValueType);
+                    productAttributeValueModel.AttributeValueTypeName = await LocalizationService.GetLocalizedEnumAsync(value.AttributeValueType);
 
                     productAttributeValueModel.Name = productAttributeMapping.AttributeControlType != AttributeControlType.ColorSquares
                         ? value.Name : $"{value.Name} - {value.ColorSquaresRgb}";
@@ -2083,13 +2083,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     if (value.AttributeValueType == AttributeValueType.AssociatedToProduct)
                     {
-                        productAttributeValueModel.AssociatedProductName = (await _productService.GetProductByIdAsync(value.AssociatedProductId))?.Name ?? string.Empty;
+                        productAttributeValueModel.AssociatedProductName = (await ProductService.GetProductByIdAsync(value.AssociatedProductId))?.Name ?? string.Empty;
                     }
 
-                    var pictureThumbnailUrl = await _pictureService.GetPictureUrlAsync(value.PictureId, 75, false);
+                    var pictureThumbnailUrl = await PictureService.GetPictureUrlAsync(value.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <img> without "src" attribute
                     if (string.IsNullOrEmpty(pictureThumbnailUrl))
-                        pictureThumbnailUrl = await _pictureService.GetDefaultPictureUrlAsync(targetSize: 1);
+                        pictureThumbnailUrl = await PictureService.GetDefaultPictureUrlAsync(targetSize: 1);
 
                     productAttributeValueModel.PictureThumbnailUrl = pictureThumbnailUrl;
 
@@ -2126,7 +2126,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     ProductAttributeMappingId = productAttributeValue.ProductAttributeMappingId,
                     AttributeValueTypeId = productAttributeValue.AttributeValueTypeId,
-                    AttributeValueTypeName = await _localizationService.GetLocalizedEnumAsync(productAttributeValue.AttributeValueType),
+                    AttributeValueTypeName = await LocalizationService.GetLocalizedEnumAsync(productAttributeValue.AttributeValueType),
                     AssociatedProductId = productAttributeValue.AssociatedProductId,
                     Name = productAttributeValue.Name,
                     ColorSquaresRgb = productAttributeValue.ColorSquaresRgb,
@@ -2144,12 +2144,12 @@ namespace Nop.Web.Areas.Admin.Factories
                     PictureId = productAttributeValue.PictureId
                 };
 
-                model.AssociatedProductName = (await _productService.GetProductByIdAsync(productAttributeValue.AssociatedProductId))?.Name;
+                model.AssociatedProductName = (await ProductService.GetProductByIdAsync(productAttributeValue.AssociatedProductId))?.Name;
 
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalizedAsync(productAttributeValue, entity => entity.Name, languageId, false, false);
+                    locale.Name = await LocalizationService.GetLocalizedAsync(productAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -2163,16 +2163,16 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+                model.Locales = await LocalizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare picture models
-            var productPictures = await _productService.GetProductPicturesByProductIdAsync(productAttributeMapping.ProductId);
+            var productPictures = await ProductService.GetProductPicturesByProductIdAsync(productAttributeMapping.ProductId);
             model.ProductPictureModels = await productPictures.SelectAwait(async productPicture => new ProductPictureModel
             {
                 Id = productPicture.Id,
                 ProductId = productPicture.ProductId,
                 PictureId = productPicture.PictureId,
-                PictureUrl = await _pictureService.GetPictureUrlAsync(productPicture.PictureId),
+                PictureUrl = await PictureService.GetPictureUrlAsync(productPicture.PictureId),
                 DisplayOrder = productPicture.DisplayOrder
             }).ToListAsync();
 
@@ -2193,22 +2193,22 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            searchModel.IsLoggedInAsVendor = await WorkContext.GetCurrentVendorAsync() != null;
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
+            await BaseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
+            await BaseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+            await BaseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+            await BaseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare available product types
-            await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
+            await BaseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
@@ -2231,12 +2231,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var currentVendor = await WorkContext.GetCurrentVendorAsync();
             if (currentVendor != null)
                 searchModel.SearchVendorId = currentVendor.Id;
 
             //get products
-            var products = await _productService.SearchProductsAsync(showHidden: true,
+            var products = await ProductService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
@@ -2253,7 +2253,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var productModel = product.ToModel<ProductModel>();
 
-                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
+                    productModel.SeName = await UrlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });
@@ -2281,10 +2281,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get product attribute combinations
-            var productAttributeCombinations = (await _productAttributeService
+            var productAttributeCombinations = (await ProductAttributeService
                 .GetAllProductAttributeCombinationsAsync(product.Id)).ToPagedList(searchModel);
 
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var currentCustomer = await WorkContext.GetCurrentCustomerAsync();
             //prepare grid model
             var model = await new ProductAttributeCombinationListModel().PrepareToGridAsync(searchModel, productAttributeCombinations, () =>
             {
@@ -2294,15 +2294,15 @@ namespace Nop.Web.Areas.Admin.Factories
                     var productAttributeCombinationModel = combination.ToModel<ProductAttributeCombinationModel>();
 
                     //fill in additional values (not existing in the entity)
-                    productAttributeCombinationModel.AttributesXml = await _productAttributeFormatter
+                    productAttributeCombinationModel.AttributesXml = await ProductAttributeFormatter
                         .FormatAttributesAsync(product, combination.AttributesXml, currentCustomer, "<br />", true, true, true, false);
-                    var pictureThumbnailUrl = await _pictureService.GetPictureUrlAsync(combination.PictureId, 75, false);
+                    var pictureThumbnailUrl = await PictureService.GetPictureUrlAsync(combination.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <img> without "src" attribute
                     if (string.IsNullOrEmpty(pictureThumbnailUrl))
-                        pictureThumbnailUrl = await _pictureService.GetDefaultPictureUrlAsync(targetSize: 1);
+                        pictureThumbnailUrl = await PictureService.GetDefaultPictureUrlAsync(targetSize: 1);
 
                     productAttributeCombinationModel.PictureThumbnailUrl = pictureThumbnailUrl;
-                    var warnings = (await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(currentCustomer,
+                    var warnings = (await ShoppingCartService.GetShoppingCartItemAttributeWarningsAsync(currentCustomer,
                         ShoppingCartType.ShoppingCart, product,
                         attributesXml: combination.AttributesXml,
                         ignoreNonCombinableAttributes: true)
@@ -2364,18 +2364,18 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare picture models
-            var productPictures = await _productService.GetProductPicturesByProductIdAsync(product.Id);
+            var productPictures = await ProductService.GetProductPicturesByProductIdAsync(product.Id);
             model.ProductPictureModels = await productPictures.SelectAwait(async productPicture => new ProductPictureModel
             {
                 Id = productPicture.Id,
                 ProductId = productPicture.ProductId,
                 PictureId = productPicture.PictureId,
-                PictureUrl = await _pictureService.GetPictureUrlAsync(productPicture.PictureId),
+                PictureUrl = await PictureService.GetPictureUrlAsync(productPicture.PictureId),
                 DisplayOrder = productPicture.DisplayOrder
             }).ToListAsync();
 
             //prepare product attribute mappings (exclude non-combinable attributes)
-            var attributes = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
+            var attributes = (await ProductAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
                 .Where(productAttributeMapping => !productAttributeMapping.IsNonCombinable()).ToList();
 
             foreach (var attribute in attributes)
@@ -2384,7 +2384,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
-                    Name = (await _productAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId)).Name,
+                    Name = (await ProductAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId)).Name,
                     TextPrompt = attribute.TextPrompt,
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType
@@ -2393,8 +2393,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(attribute.Id);
-                    var preSelectedValue = _productAttributeParser.ParseValues(model.AttributesXml, attribute.Id);
+                    var attributeValues = await ProductAttributeService.GetProductAttributeValuesAsync(attribute.Id);
+                    var preSelectedValue = ProductAttributeParser.ParseValues(model.AttributesXml, attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new ProductAttributeCombinationModel.ProductAttributeValueModel
