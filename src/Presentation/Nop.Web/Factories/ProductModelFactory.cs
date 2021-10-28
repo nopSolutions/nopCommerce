@@ -1237,7 +1237,6 @@ namespace Nop.Web.Factories
                 }
 
                 //specs
-                //if (prepareSpecificationAttributes)
                 if (prepareSpecificationAttributes && _catalogSettings.EnableSpecificationAttributeFiltering)
                 {
                     model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
