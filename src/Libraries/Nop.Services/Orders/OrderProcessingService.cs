@@ -967,6 +967,7 @@ namespace Nop.Services.Orders
                     //just delete the upcoming entry (points were not granted yet)
                     await _rewardPointService.DeleteRewardPointsHistoryEntryAsync(rewardPointsHistoryEntry);
                 }
+                else
                 {
                     var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
                     
