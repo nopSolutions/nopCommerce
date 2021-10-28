@@ -147,7 +147,7 @@ namespace Nop.Services.Seo
             };
 
             //news
-            if (Core.Domain.News.NewsSettings.Enabled)
+            if (NewsSettings.Enabled)
                 sitemapUrls.Add(await GetLocalizedSitemapUrlAsync("NewsArchive"));
 
             //blog
@@ -175,7 +175,7 @@ namespace Nop.Services.Seo
                 sitemapUrls.AddRange(await GetProductTagUrlsAsync());
 
             //news
-            if (SitemapXmlSettings.SitemapXmlIncludeNews && Core.Domain.News.NewsSettings.Enabled)
+            if (SitemapXmlSettings.SitemapXmlIncludeNews && NewsSettings.Enabled)
                 sitemapUrls.AddRange(await GetNewsItemUrlsAsync());
 
             //blog posts
