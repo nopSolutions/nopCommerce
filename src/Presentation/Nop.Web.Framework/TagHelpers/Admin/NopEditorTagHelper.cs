@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -111,7 +111,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var htmlAttributes = new Dictionary<string, object>();
 
             //set custom html attributes
-            var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(CustomHtmlAttributes);
+            var htmlAttributesDictionary = Microsoft.AspNetCore.Mvc.ViewFeatures.HtmlHelper.AnonymousObjectToHtmlAttributes(CustomHtmlAttributes);
             if (htmlAttributesDictionary?.Count > 0)
             {
                 foreach (var (key, value) in htmlAttributesDictionary)

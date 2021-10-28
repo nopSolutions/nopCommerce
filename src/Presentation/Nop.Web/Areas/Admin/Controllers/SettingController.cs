@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -186,7 +186,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-        public virtual async Task<IActionResult> AppSettings()
+        public virtual async Task<IActionResult> AppSettingsAsync()
         {
             if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -198,7 +198,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> AppSettings(AppSettingsModel model)
+        public virtual async Task<IActionResult> AppSettingsAsync(AppSettingsModel model)
         {
             if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
