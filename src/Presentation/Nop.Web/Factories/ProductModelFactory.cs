@@ -1237,7 +1237,8 @@ namespace Nop.Web.Factories
                 }
 
                 //specs
-                if (prepareSpecificationAttributes)
+                //if (prepareSpecificationAttributes)
+                if (prepareSpecificationAttributes && _catalogSettings.EnableSpecificationAttributeFiltering)
                 {
                     model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
                 }
@@ -1480,7 +1481,7 @@ namespace Nop.Web.Factories
 
             //product specifications
             //do not prepare this model for the associated products. anyway it's not used
-            if (!isAssociatedProduct)
+            if (!isAssociatedProduct && _catalogSettings.EnableSpecificationAttributeFiltering)
             {
                 model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
             }
