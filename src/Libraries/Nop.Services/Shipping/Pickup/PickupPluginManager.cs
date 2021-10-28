@@ -16,7 +16,7 @@ namespace Nop.Services.Shipping.Pickup
     {
         #region Fields
 
-        private readonly ShippingSettings _shippingSettings;
+        protected ShippingSettings ShippingSettings { get; }
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace Nop.Services.Shipping.Pickup
             IPluginService pluginService,
             ShippingSettings shippingSettings) : base(customerService, pluginService)
         {
-            _shippingSettings = shippingSettings;
+            ShippingSettings = shippingSettings;
         }
 
         #endregion
@@ -45,7 +45,7 @@ namespace Nop.Services.Shipping.Pickup
         /// </returns>
         public virtual async Task<IList<IPickupPointProvider>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0, string systemName = null)
         {
-            var pickupPointProviders = await LoadActivePluginsAsync(_shippingSettings.ActivePickupPointProviderSystemNames, customer, storeId);
+            var pickupPointProviders = await LoadActivePluginsAsync(ShippingSettings.ActivePickupPointProviderSystemNames, customer, storeId);
 
             //filter by passed system name
             if (!string.IsNullOrEmpty(systemName))
@@ -65,7 +65,7 @@ namespace Nop.Services.Shipping.Pickup
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IPickupPointProvider pickupPointProvider)
         {
-            return IsPluginActive(pickupPointProvider, _shippingSettings.ActivePickupPointProviderSystemNames);
+            return IsPluginActive(pickupPointProvider, ShippingSettings.ActivePickupPointProviderSystemNames);
         }
 
         /// <summary>

@@ -14,7 +14,7 @@ namespace Nop.Services.ScheduleTasks
     {
         #region Fields
 
-        private readonly IRepository<ScheduleTask> _taskRepository;
+        protected IRepository<ScheduleTask> TaskRepository { get; }
 
         #endregion
 
@@ -22,7 +22,7 @@ namespace Nop.Services.ScheduleTasks
 
         public ScheduleTaskService(IRepository<ScheduleTask> taskRepository)
         {
-            _taskRepository = taskRepository;
+            TaskRepository = taskRepository;
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace Nop.Services.ScheduleTasks
         /// <param name="task">Task</param>
         public virtual async Task DeleteTaskAsync(ScheduleTask task)
         {
-            await _taskRepository.DeleteAsync(task, false);
+            await TaskRepository.DeleteAsync(task, false);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Nop.Services.ScheduleTasks
         /// </returns>
         public virtual async Task<ScheduleTask> GetTaskByIdAsync(int taskId)
         {
-            return await _taskRepository.GetByIdAsync(taskId, _ => default);
+            return await TaskRepository.GetByIdAsync(taskId, _ => default);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Nop.Services.ScheduleTasks
             if (string.IsNullOrWhiteSpace(type))
                 return null;
 
-            var query = _taskRepository.Table;
+            var query = TaskRepository.Table;
             query = query.Where(st => st.Type == type);
             query = query.OrderByDescending(t => t.Id);
 
@@ -83,7 +83,7 @@ namespace Nop.Services.ScheduleTasks
         /// </returns>
         public virtual async Task<IList<ScheduleTask>> GetAllTasksAsync(bool showHidden = false)
         {
-            var tasks = await _taskRepository.GetAllAsync(query =>
+            var tasks = await TaskRepository.GetAllAsync(query =>
             {
                 if (!showHidden)
                     query = query.Where(t => t.Enabled);
@@ -108,7 +108,7 @@ namespace Nop.Services.ScheduleTasks
             if (task.Enabled && !task.LastEnabledUtc.HasValue)
                 task.LastEnabledUtc = DateTime.UtcNow;
 
-            await _taskRepository.InsertAsync(task, false);
+            await TaskRepository.InsertAsync(task, false);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Nop.Services.ScheduleTasks
         /// <param name="task">Task</param>
         public virtual async Task UpdateTaskAsync(ScheduleTask task)
         {
-            await _taskRepository.UpdateAsync(task, false);
+            await TaskRepository.UpdateAsync(task, false);
         }
 
         #endregion

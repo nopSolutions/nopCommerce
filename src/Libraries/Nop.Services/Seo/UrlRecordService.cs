@@ -22,12 +22,12 @@ namespace Nop.Services.Seo
         private static readonly object _lock = new object();
         private static Dictionary<string, string> _seoCharacterTable;
 
-        private readonly ILanguageService _languageService;
-        private readonly IRepository<UrlRecord> _urlRecordRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IWorkContext _workContext;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly SeoSettings _seoSettings;
+        protected ILanguageService LanguageService { get; }
+        protected IRepository<UrlRecord> UrlRecordRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IWorkContext WorkContext { get; }
+        protected LocalizationSettings LocalizationSettings { get; }
+        protected SeoSettings SeoSettings { get; }
 
         #endregion
 
@@ -40,12 +40,12 @@ namespace Nop.Services.Seo
             LocalizationSettings localizationSettings,
             SeoSettings seoSettings)
         {
-            _languageService = languageService;
-            _urlRecordRepository = urlRecordRepository;
-            _staticCacheManager = staticCacheManager;
-            _workContext = workContext;
-            _localizationSettings = localizationSettings;
-            _seoSettings = seoSettings;
+            LanguageService = languageService;
+            UrlRecordRepository = urlRecordRepository;
+            StaticCacheManager = staticCacheManager;
+            WorkContext = workContext;
+            LocalizationSettings = localizationSettings;
+            SeoSettings = seoSettings;
         }
 
         #endregion
@@ -1128,7 +1128,7 @@ namespace Nop.Services.Seo
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteUrlRecordsAsync(IList<UrlRecord> urlRecords)
         {
-            await _urlRecordRepository.DeleteAsync(urlRecords);
+            await UrlRecordRepository.DeleteAsync(urlRecords);
         }
 
         /// <summary>
@@ -1141,7 +1141,7 @@ namespace Nop.Services.Seo
         /// </returns>
         public virtual async Task<IList<UrlRecord>> GetUrlRecordsByIdsAsync(int[] urlRecordIds)
         {
-            return await _urlRecordRepository.GetByIdsAsync(urlRecordIds, cache => default);
+            return await UrlRecordRepository.GetByIdsAsync(urlRecordIds, cache => default);
         }
 
         /// <summary>
@@ -1151,7 +1151,7 @@ namespace Nop.Services.Seo
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertUrlRecordAsync(UrlRecord urlRecord)
         {
-            await _urlRecordRepository.InsertAsync(urlRecord);
+            await UrlRecordRepository.InsertAsync(urlRecord);
         }
 
         /// <summary>
@@ -1161,7 +1161,7 @@ namespace Nop.Services.Seo
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateUrlRecordAsync(UrlRecord urlRecord)
         {
-            await _urlRecordRepository.UpdateAsync(urlRecord);
+            await UrlRecordRepository.UpdateAsync(urlRecord);
         }
 
         /// <summary>
@@ -1177,11 +1177,11 @@ namespace Nop.Services.Seo
             if (string.IsNullOrEmpty(slug))
                 return null;
             
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordBySlugCacheKey, slug);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordBySlugCacheKey, slug);
 
-            if (_localizationSettings.LoadAllUrlRecordsOnStartup)
+            if (LocalizationSettings.LoadAllUrlRecordsOnStartup)
             {
-                return await _staticCacheManager.GetAsync(key, async () =>
+                return await StaticCacheManager.GetAsync(key, async () =>
                 {
                     //load all records (we know they are cached)
                     var source = await GetAllUrlRecordsAsync();
@@ -1197,13 +1197,13 @@ namespace Nop.Services.Seo
             }
 
             //gradual loading
-            var query = from ur in _urlRecordRepository.Table
+            var query = from ur in UrlRecordRepository.Table
                 where ur.Slug == slug
                 //first, try to find an active record
                 orderby ur.IsActive descending, ur.Id
                 select ur;
 
-            var urlRecord = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
+            var urlRecord = await StaticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
 
             return urlRecord;
         }
@@ -1223,7 +1223,7 @@ namespace Nop.Services.Seo
         public virtual async Task<IPagedList<UrlRecord>> GetAllUrlRecordsAsync(
             string slug = "", int? languageId = null, bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var urlRecords = (await _urlRecordRepository.GetAllAsync(query =>
+            var urlRecords = (await UrlRecordRepository.GetAllAsync(query =>
             {
                 query = query.OrderBy(ur => ur.Slug);
 
@@ -1258,11 +1258,11 @@ namespace Nop.Services.Seo
         public virtual async Task<string> GetActiveSlugAsync(int entityId, string entityName, int languageId)
         {
             //gradual loading
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordCacheKey, entityId, entityName, languageId);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordCacheKey, entityId, entityName, languageId);
 
-            if (_localizationSettings.LoadAllUrlRecordsOnStartup)
+            if (LocalizationSettings.LoadAllUrlRecordsOnStartup)
             {
-                return await _staticCacheManager.GetAsync(key, async () =>
+                return await StaticCacheManager.GetAsync(key, async () =>
                 {
                     //load all records (we know they are cached)
                     var source = await GetAllUrlRecordsAsync();
@@ -1281,7 +1281,7 @@ namespace Nop.Services.Seo
                 });
             }
 
-            var query = from ur in _urlRecordRepository.Table
+            var query = from ur in UrlRecordRepository.Table
                 where ur.EntityId == entityId &&
                       ur.EntityName == entityName &&
                       ur.LanguageId == languageId &&
@@ -1289,7 +1289,7 @@ namespace Nop.Services.Seo
                 orderby ur.Id descending
                 select ur.Slug;
 
-            var rezSlug = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync()) ?? string.Empty;
+            var rezSlug = await StaticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync()) ?? string.Empty;
 
             return rezSlug;
         }
@@ -1310,7 +1310,7 @@ namespace Nop.Services.Seo
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var query = from ur in _urlRecordRepository.Table
+            var query = from ur in UrlRecordRepository.Table
                         where ur.EntityId == entityId &&
                               ur.EntityName == entityName &&
                               ur.LanguageId == languageId
@@ -1415,7 +1415,7 @@ namespace Nop.Services.Seo
 
             var entityName = entity.GetType().Name;
 
-            return await GetSeNameAsync(entity.Id, entityName, languageId ?? (await _workContext.GetWorkingLanguageAsync()).Id, returnDefaultValue, ensureTwoPublishedLanguages);
+            return await GetSeNameAsync(entity.Id, entityName, languageId ?? (await WorkContext.GetWorkingLanguageAsync()).Id, returnDefaultValue, ensureTwoPublishedLanguages);
         }
 
         /// <summary>
@@ -1433,7 +1433,7 @@ namespace Nop.Services.Seo
         public virtual async Task<string> GetSeNameAsync(int entityId, string entityName, int? languageId = null,
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
         {
-            languageId ??= (await _workContext.GetWorkingLanguageAsync()).Id;
+            languageId ??= (await WorkContext.GetWorkingLanguageAsync()).Id;
             var result = string.Empty;
             
             if (languageId > 0)
@@ -1442,7 +1442,7 @@ namespace Nop.Services.Seo
                 var loadLocalizedValue = true;
                 if (ensureTwoPublishedLanguages)
                 {
-                    var totalPublishedLanguages = (await _languageService.GetAllLanguagesAsync()).Count;
+                    var totalPublishedLanguages = (await LanguageService.GetAllLanguagesAsync()).Count;
                     loadLocalizedValue = totalPublishedLanguages >= 2;
                 }
 
@@ -1550,7 +1550,7 @@ namespace Nop.Services.Seo
                 seName = name;
 
             //validation
-            seName = await GetSeNameAsync(seName, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            seName = await GetSeNameAsync(seName, SeoSettings.ConvertNonWesternChars, SeoSettings.AllowUnicodeCharsInUrls);
 
             //max length
             seName = CommonHelper.EnsureMaximumLength(seName, NopSeoDefaults.SearchEngineNameLength);
@@ -1578,9 +1578,9 @@ namespace Nop.Services.Seo
                 var urlRecord = await GetBySlugAsync(tempSeName);
                 var reserved1 = urlRecord != null && !(urlRecord.EntityId == entityId && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
                 //and it's not in the list of reserved slugs
-                var reserved2 = _seoSettings.ReservedUrlRecordSlugs.Contains(tempSeName, StringComparer.InvariantCultureIgnoreCase);
+                var reserved2 = SeoSettings.ReservedUrlRecordSlugs.Contains(tempSeName, StringComparer.InvariantCultureIgnoreCase);
                 //and it's not equal to a language code
-                var reserved3 = (await _languageService.GetAllLanguagesAsync(true)).Any(language => language.UniqueSeoCode.Equals(tempSeName, StringComparison.InvariantCultureIgnoreCase));
+                var reserved3 = (await LanguageService.GetAllLanguagesAsync(true)).Any(language => language.UniqueSeoCode.Equals(tempSeName, StringComparison.InvariantCultureIgnoreCase));
                 if (!reserved1 && !reserved2 && !reserved3)
                     break;
 

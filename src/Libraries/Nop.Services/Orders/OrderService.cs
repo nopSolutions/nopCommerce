@@ -25,17 +25,17 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly IProductService _productService;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
-        private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
-        private readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
-        private readonly IShipmentService _shipmentService;
+        protected IProductService ProductService { get; }
+        protected IRepository<Address> AddressRepository { get; }
+        protected IRepository<Customer> CustomerRepository { get; }
+        protected IRepository<Order> OrderRepository { get; }
+        protected IRepository<OrderItem> OrderItemRepository { get; }
+        protected IRepository<OrderNote> OrderNoteRepository { get; }
+        protected IRepository<Product> ProductRepository { get; }
+        protected IRepository<ProductWarehouseInventory> ProductWarehouseInventoryRepository { get; }
+        protected IRepository<RecurringPayment> RecurringPaymentRepository { get; }
+        protected IRepository<RecurringPaymentHistory> RecurringPaymentHistoryRepository { get; }
+        protected IShipmentService ShipmentService { get; }
 
         #endregion
 
@@ -53,17 +53,17 @@ namespace Nop.Services.Orders
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
             IShipmentService shipmentService)
         {
-            _productService = productService;
-            _addressRepository = addressRepository;
-            _customerRepository = customerRepository;
-            _orderRepository = orderRepository;
-            _orderItemRepository = orderItemRepository;
-            _orderNoteRepository = orderNoteRepository;
-            _productRepository = productRepository;
-            _productWarehouseInventoryRepository = productWarehouseInventoryRepository;
-            _recurringPaymentRepository = recurringPaymentRepository;
-            _recurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
-            _shipmentService = shipmentService;
+            ProductService = productService;
+            AddressRepository = addressRepository;
+            CustomerRepository = customerRepository;
+            OrderRepository = orderRepository;
+            OrderItemRepository = orderItemRepository;
+            OrderNoteRepository = orderNoteRepository;
+            ProductRepository = productRepository;
+            ProductWarehouseInventoryRepository = productWarehouseInventoryRepository;
+            RecurringPaymentRepository = recurringPaymentRepository;
+            RecurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
+            ShipmentService = shipmentService;
         }
 
         #endregion
@@ -84,7 +84,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(orderItem));
 
             var result = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
+            var shipments = await ShipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
             for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
@@ -92,7 +92,7 @@ namespace Nop.Services.Orders
                     //already shipped
                     continue;
 
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+                var si = (await ShipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -117,7 +117,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(orderItem));
 
             var result = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
+            var shipments = await ShipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
             for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
@@ -125,7 +125,7 @@ namespace Nop.Services.Orders
                     //not shipped yet
                     continue;
 
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+                var si = (await ShipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -150,7 +150,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(orderItem));
 
             var result = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
+            var shipments = await ShipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
 
             for (var i = 0; i < shipments.Count; i++)
             {
@@ -159,7 +159,7 @@ namespace Nop.Services.Orders
                     //not delivered yet
                     continue;
 
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+                var si = (await ShipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -186,7 +186,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<Order> GetOrderByIdAsync(int orderId)
         {
-            return await _orderRepository.GetByIdAsync(orderId,
+            return await OrderRepository.GetByIdAsync(orderId,
                 cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<Order>.ByIdCacheKey, orderId));
         }
 
@@ -203,7 +203,7 @@ namespace Nop.Services.Orders
             if (string.IsNullOrEmpty(customOrderNumber))
                 return null;
 
-            return await _orderRepository.Table
+            return await OrderRepository.Table
                 .FirstOrDefaultAsync(o => o.CustomOrderNumber == customOrderNumber);
         }
 
@@ -220,8 +220,8 @@ namespace Nop.Services.Orders
             if (orderItemId == 0)
                 return null;
 
-            return await (from o in _orderRepository.Table
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+            return await (from o in OrderRepository.Table
+                    join oi in OrderItemRepository.Table on o.Id equals oi.OrderId
                     where oi.Id == orderItemId
                     select o).FirstOrDefaultAsync();
         }
@@ -236,7 +236,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<Order>> GetOrdersByIdsAsync(int[] orderIds) 
         {
-            return await _orderRepository.GetByIdsAsync(orderIds, includeDeleted: false);
+            return await OrderRepository.GetByIdsAsync(orderIds, includeDeleted: false);
         }
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace Nop.Services.Orders
             if (orderGuid == Guid.Empty)
                 return null;
 
-            var query = from o in _orderRepository.Table
+            var query = from o in OrderRepository.Table
                         where o.OrderGuid == orderGuid
                         select o;
             var order = await query.FirstOrDefaultAsync();
@@ -267,7 +267,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteOrderAsync(Order order)
         {
-            await _orderRepository.DeleteAsync(order);
+            await OrderRepository.DeleteAsync(order);
         }
 
         /// <summary>
@@ -306,7 +306,7 @@ namespace Nop.Services.Orders
             string billingPhone = null, string billingEmail = null, string billingLastName = "",
             string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
-            var query = _orderRepository.Table;
+            var query = OrderRepository.Table;
 
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
@@ -314,8 +314,8 @@ namespace Nop.Services.Orders
             if (vendorId > 0)
             {
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    join oi in OrderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in ProductRepository.Table on oi.ProductId equals p.Id
                     where p.VendorId == vendorId
                     select o;
 
@@ -328,7 +328,7 @@ namespace Nop.Services.Orders
             if (productId > 0)
             {
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    join oi in OrderItemRepository.Table on o.Id equals oi.OrderId
                     where oi.ProductId == productId
                     select o;
 
@@ -340,9 +340,9 @@ namespace Nop.Services.Orders
                 var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
 
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
-                    join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId into ps
+                    join oi in OrderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in ProductRepository.Table on oi.ProductId equals p.Id
+                    join pwi in ProductWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId into ps
                     from pwi in ps.DefaultIfEmpty()
                         where
                         //"Use multiple warehouses" enabled
@@ -378,10 +378,10 @@ namespace Nop.Services.Orders
                 query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
 
             if (!string.IsNullOrEmpty(orderNotes))
-                query = query.Where(o => _orderNoteRepository.Table.Any(oNote => oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)));
+                query = query.Where(o => OrderNoteRepository.Table.Any(oNote => oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)));
 
             query = from o in query
-                join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                join oba in AddressRepository.Table on o.BillingAddressId equals oba.Id
                 where
                     (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
                     (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
@@ -403,7 +403,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertOrderAsync(Order order)
         {
-            await _orderRepository.InsertAsync(order);
+            await OrderRepository.InsertAsync(order);
         }
 
         /// <summary>
@@ -413,7 +413,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateOrderAsync(Order order)
         {
-            await _orderRepository.UpdateAsync(order);
+            await OrderRepository.UpdateAsync(order);
         }
 
         /// <summary>
@@ -551,7 +551,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<OrderItem> GetOrderItemByIdAsync(int orderItemId)
         {
-            return await _orderItemRepository.GetByIdAsync(orderItemId,
+            return await OrderItemRepository.GetByIdAsync(orderItemId,
                 cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<OrderItem>.ByIdCacheKey, orderItemId));
         }
 
@@ -568,8 +568,8 @@ namespace Nop.Services.Orders
             if (orderItemId == 0)
                 return null;
 
-            return await (from p in _productRepository.Table
-                    join oi in _orderItemRepository.Table on p.Id equals oi.ProductId
+            return await (from p in ProductRepository.Table
+                    join oi in OrderItemRepository.Table on p.Id equals oi.ProductId
                     where oi.Id == orderItemId
                     select p).SingleOrDefaultAsync();
         }
@@ -590,8 +590,8 @@ namespace Nop.Services.Orders
             if (orderId == 0)
                 return new List<OrderItem>();
 
-            return await (from oi in _orderItemRepository.Table
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
+            return await (from oi in OrderItemRepository.Table
+                    join p in ProductRepository.Table on oi.ProductId equals p.Id
                     where
                     oi.OrderId == orderId &&
                     (!isShipEnabled.HasValue || (p.IsShipEnabled == isShipEnabled.Value)) &&
@@ -613,7 +613,7 @@ namespace Nop.Services.Orders
             if (orderItemGuid == Guid.Empty)
                 return null;
 
-            var query = from orderItem in _orderItemRepository.Table
+            var query = from orderItem in OrderItemRepository.Table
                         where orderItem.OrderItemGuid == orderItemGuid
                         select orderItem;
             var item = await query.FirstOrDefaultAsync();
@@ -633,9 +633,9 @@ namespace Nop.Services.Orders
             if (customerId == 0)
                 throw new ArgumentOutOfRangeException(nameof(customerId));
 
-            var query = from orderItem in _orderItemRepository.Table
-                        join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                        join p in _productRepository.Table on orderItem.ProductId equals p.Id
+            var query = from orderItem in OrderItemRepository.Table
+                        join o in OrderRepository.Table on orderItem.OrderId equals o.Id
+                        join p in ProductRepository.Table on orderItem.ProductId equals p.Id
                         where customerId == o.CustomerId &&
                         p.IsDownload &&
                         !o.Deleted
@@ -653,7 +653,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteOrderItemAsync(OrderItem orderItem)
         {
-            await _orderItemRepository.DeleteAsync(orderItem);
+            await OrderItemRepository.DeleteAsync(orderItem);
         }
 
         /// <summary>
@@ -670,12 +670,12 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(orderItem));
 
             var totalInShipments = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
+            var shipments = await ShipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
 
             for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+                var si = (await ShipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -730,7 +730,7 @@ namespace Nop.Services.Orders
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+            var product = await ProductService.GetProductByIdAsync(orderItem.ProductId);
 
             if (product == null || !product.IsDownload)
                 return false;
@@ -806,7 +806,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertOrderItemAsync(OrderItem orderItem)
         {
-            await _orderItemRepository.InsertAsync(orderItem);
+            await OrderItemRepository.InsertAsync(orderItem);
         }
 
         /// <summary>
@@ -816,7 +816,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateOrderItemAsync(OrderItem orderItem)
         {
-            await _orderItemRepository.UpdateAsync(orderItem);
+            await OrderItemRepository.UpdateAsync(orderItem);
         }
 
         #endregion
@@ -833,7 +833,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<OrderNote> GetOrderNoteByIdAsync(int orderNoteId)
         {
-            return await _orderNoteRepository.GetByIdAsync(orderNoteId);
+            return await OrderNoteRepository.GetByIdAsync(orderNoteId);
         }
 
         /// <summary>
@@ -850,7 +850,7 @@ namespace Nop.Services.Orders
             if (orderId == 0)
                 return new List<OrderNote>();
 
-            var query = _orderNoteRepository.Table.Where(on => on.OrderId == orderId);
+            var query = OrderNoteRepository.Table.Where(on => on.OrderId == orderId);
 
             if (displayToCustomer.HasValue)
             {
@@ -867,7 +867,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteOrderNoteAsync(OrderNote orderNote)
         {
-            await _orderNoteRepository.DeleteAsync(orderNote);
+            await OrderNoteRepository.DeleteAsync(orderNote);
         }
 
         /// <summary>
@@ -897,7 +897,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertOrderNoteAsync(OrderNote orderNote)
         {
-            await _orderNoteRepository.InsertAsync(orderNote);
+            await OrderNoteRepository.InsertAsync(orderNote);
         }
 
         #endregion
@@ -911,7 +911,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
-            await _recurringPaymentRepository.DeleteAsync(recurringPayment);
+            await RecurringPaymentRepository.DeleteAsync(recurringPayment);
         }
 
         /// <summary>
@@ -924,7 +924,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<RecurringPayment> GetRecurringPaymentByIdAsync(int recurringPaymentId)
         {
-            return await _recurringPaymentRepository.GetByIdAsync(recurringPaymentId, cache => default);
+            return await RecurringPaymentRepository.GetByIdAsync(recurringPaymentId, cache => default);
         }
 
         /// <summary>
@@ -934,7 +934,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
-            await _recurringPaymentRepository.InsertAsync(recurringPayment);
+            await RecurringPaymentRepository.InsertAsync(recurringPayment);
         }
 
         /// <summary>
@@ -944,7 +944,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
-            await _recurringPaymentRepository.UpdateAsync(recurringPayment);
+            await RecurringPaymentRepository.UpdateAsync(recurringPayment);
         }
 
         /// <summary>
@@ -969,9 +969,9 @@ namespace Nop.Services.Orders
             if (initialOrderStatus.HasValue)
                 initialOrderStatusId = (int)initialOrderStatus.Value;
 
-            var query1 = from rp in _recurringPaymentRepository.Table
-                         join o in _orderRepository.Table on rp.InitialOrderId equals o.Id
-                         join c in _customerRepository.Table on o.CustomerId equals c.Id
+            var query1 = from rp in RecurringPaymentRepository.Table
+                         join o in OrderRepository.Table on rp.InitialOrderId equals o.Id
+                         join c in CustomerRepository.Table on o.CustomerId equals c.Id
                          where
                          !rp.Deleted &&
                          (showHidden || !o.Deleted) &&
@@ -984,7 +984,7 @@ namespace Nop.Services.Orders
                           o.OrderStatusId == initialOrderStatusId.Value)
                          select rp.Id;
 
-            var query2 = from rp in _recurringPaymentRepository.Table
+            var query2 = from rp in RecurringPaymentRepository.Table
                          where query1.Contains(rp.Id)
                          orderby rp.StartDateUtc, rp.Id
                          select rp;
@@ -1011,7 +1011,7 @@ namespace Nop.Services.Orders
             if (recurringPayment is null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            return await _recurringPaymentHistoryRepository.Table
+            return await RecurringPaymentHistoryRepository.Table
                 .Where(rph => rph.RecurringPaymentId == recurringPayment.Id)
                 .ToListAsync();
         }
@@ -1023,7 +1023,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertRecurringPaymentHistoryAsync(RecurringPaymentHistory recurringPaymentHistory)
         {
-            await _recurringPaymentHistoryRepository.InsertAsync(recurringPaymentHistory);
+            await RecurringPaymentHistoryRepository.InsertAsync(recurringPaymentHistory);
         }
 
         #endregion

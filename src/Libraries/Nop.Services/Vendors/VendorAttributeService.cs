@@ -14,9 +14,9 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
-        private readonly IRepository<VendorAttribute> _vendorAttributeRepository;
-        private readonly IRepository<VendorAttributeValue> _vendorAttributeValueRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected IRepository<VendorAttribute> VendorAttributeRepository { get; }
+        protected IRepository<VendorAttributeValue> VendorAttributeValueRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
 
         #endregion
 
@@ -26,9 +26,9 @@ namespace Nop.Services.Vendors
             IRepository<VendorAttributeValue> vendorAttributeValueRepository,
             IStaticCacheManager staticCacheManager)
         {
-            _vendorAttributeRepository = vendorAttributeRepository;
-            _vendorAttributeValueRepository = vendorAttributeValueRepository;
-            _staticCacheManager = staticCacheManager;
+            VendorAttributeRepository = vendorAttributeRepository;
+            VendorAttributeValueRepository = vendorAttributeValueRepository;
+            StaticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -46,7 +46,7 @@ namespace Nop.Services.Vendors
         /// </returns>
         public virtual async Task<IList<VendorAttribute>> GetAllVendorAttributesAsync()
         {
-            return await _vendorAttributeRepository.GetAllAsync(
+            return await VendorAttributeRepository.GetAllAsync(
                 query => query.OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id),
                 cache => default);
         }
@@ -61,7 +61,7 @@ namespace Nop.Services.Vendors
         /// </returns>
         public virtual async Task<VendorAttribute> GetVendorAttributeByIdAsync(int vendorAttributeId)
         {
-            return await _vendorAttributeRepository.GetByIdAsync(vendorAttributeId, cache => default);
+            return await VendorAttributeRepository.GetByIdAsync(vendorAttributeId, cache => default);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Nop.Services.Vendors
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertVendorAttributeAsync(VendorAttribute vendorAttribute)
         {
-            await _vendorAttributeRepository.InsertAsync(vendorAttribute);
+            await VendorAttributeRepository.InsertAsync(vendorAttribute);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nop.Services.Vendors
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateVendorAttributeAsync(VendorAttribute vendorAttribute)
         {
-            await _vendorAttributeRepository.UpdateAsync(vendorAttribute);
+            await VendorAttributeRepository.UpdateAsync(vendorAttribute);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Nop.Services.Vendors
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteVendorAttributeAsync(VendorAttribute vendorAttribute)
         {
-            await _vendorAttributeRepository.DeleteAsync(vendorAttribute);
+            await VendorAttributeRepository.DeleteAsync(vendorAttribute);
         }
 
         #endregion
@@ -108,14 +108,14 @@ namespace Nop.Services.Vendors
         /// </returns>
         public virtual async Task<IList<VendorAttributeValue>> GetVendorAttributeValuesAsync(int vendorAttributeId)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributeValuesByAttributeCacheKey, vendorAttributeId);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributeValuesByAttributeCacheKey, vendorAttributeId);
 
-            var query = _vendorAttributeValueRepository.Table
+            var query = VendorAttributeValueRepository.Table
                 .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)
                 .OrderBy(vendorAttributeValue => vendorAttributeValue.DisplayOrder)
                 .ThenBy(vendorAttributeValue => vendorAttributeValue.Id);
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
+            return await StaticCacheManager.GetAsync(key, async () => await query.ToListAsync());
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Nop.Services.Vendors
         /// </returns>
         public virtual async Task<VendorAttributeValue> GetVendorAttributeValueByIdAsync(int vendorAttributeValueId)
         {
-            return await _vendorAttributeValueRepository.GetByIdAsync(vendorAttributeValueId, cache => default);
+            return await VendorAttributeValueRepository.GetByIdAsync(vendorAttributeValueId, cache => default);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Nop.Services.Vendors
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue)
         {
-            await _vendorAttributeValueRepository.InsertAsync(vendorAttributeValue);
+            await VendorAttributeValueRepository.InsertAsync(vendorAttributeValue);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Nop.Services.Vendors
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue)
         {
-            await _vendorAttributeValueRepository.UpdateAsync(vendorAttributeValue);
+            await VendorAttributeValueRepository.UpdateAsync(vendorAttributeValue);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Nop.Services.Vendors
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue)
         {
-            await _vendorAttributeValueRepository.DeleteAsync(vendorAttributeValue);
+            await VendorAttributeValueRepository.DeleteAsync(vendorAttributeValue);
         }
 
         #endregion

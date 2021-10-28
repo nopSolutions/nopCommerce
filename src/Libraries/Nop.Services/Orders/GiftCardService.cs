@@ -18,11 +18,12 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IRepository<GiftCard> _giftCardRepository;
-        private readonly IRepository<GiftCardUsageHistory> _giftCardUsageHistoryRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
+        protected ICustomerService CustomerService { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected IRepository<GiftCard> GiftCardRepository { get; }
+        protected IRepository<GiftCardUsageHistory> GiftCardUsageHistoryRepository { get; }
+        protected IRepository<OrderItem> OrderItemRepository { get; }
+
         #endregion
 
         #region Ctor
@@ -33,11 +34,11 @@ namespace Nop.Services.Orders
             IRepository<GiftCardUsageHistory> giftCardUsageHistoryRepository,
             IRepository<OrderItem> orderItemRepository)
         {
-            _customerService = customerService;
-            _eventPublisher = eventPublisher;
-            _giftCardRepository = giftCardRepository;
-            _giftCardUsageHistoryRepository = giftCardUsageHistoryRepository;
-            _orderItemRepository = orderItemRepository;
+            CustomerService = customerService;
+            EventPublisher = eventPublisher;
+            GiftCardRepository = giftCardRepository;
+            GiftCardUsageHistoryRepository = giftCardUsageHistoryRepository;
+            OrderItemRepository = orderItemRepository;
         }
 
         #endregion
@@ -51,7 +52,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteGiftCardAsync(GiftCard giftCard)
         {
-            await _giftCardRepository.DeleteAsync(giftCard);
+            await GiftCardRepository.DeleteAsync(giftCard);
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<GiftCard> GetGiftCardByIdAsync(int giftCardId)
         {
-            return await _giftCardRepository.GetByIdAsync(giftCardId, cache => default);
+            return await GiftCardRepository.GetByIdAsync(giftCardId, cache => default);
         }
 
         /// <summary>
@@ -89,19 +90,19 @@ namespace Nop.Services.Orders
             string recipientName = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var giftCards = await _giftCardRepository.GetAllPagedAsync(query =>
+            var giftCards = await GiftCardRepository.GetAllPagedAsync(query =>
             {
                 if (purchasedWithOrderId.HasValue)
                 {
                     query = from gc in query
-                        join oi in _orderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
+                        join oi in OrderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
                         where oi.OrderId == purchasedWithOrderId.Value
                         select gc;
                 }
 
                 if (usedWithOrderId.HasValue)
                     query = from gc in query
-                        join gcuh in _giftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
+                        join gcuh in GiftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
                         where gcuh.UsedWithOrderId == usedWithOrderId
                         select gc;
 
@@ -130,7 +131,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertGiftCardAsync(GiftCard giftCard)
         {
-            await _giftCardRepository.InsertAsync(giftCard);
+            await GiftCardRepository.InsertAsync(giftCard);
         }
 
         /// <summary>
@@ -140,7 +141,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateGiftCardAsync(GiftCard giftCard)
         {
-            await _giftCardRepository.UpdateAsync(giftCard);
+            await GiftCardRepository.UpdateAsync(giftCard);
         }
 
         /// <summary>
@@ -156,7 +157,7 @@ namespace Nop.Services.Orders
             if (purchasedWithOrderItemId == 0)
                 return new List<GiftCard>();
 
-            var query = _giftCardRepository.Table;
+            var query = GiftCardRepository.Table;
             query = query.Where(gc => gc.PurchasedWithOrderItemId.HasValue && gc.PurchasedWithOrderItemId.Value == purchasedWithOrderItemId);
             query = query.OrderBy(gc => gc.Id);
 
@@ -179,7 +180,7 @@ namespace Nop.Services.Orders
             if (customer == null)
                 return result;
 
-            var couponCodes = await _customerService.ParseAppliedGiftCardCouponCodesAsync(customer);
+            var couponCodes = await CustomerService.ParseAppliedGiftCardCouponCodesAsync(customer);
             foreach (var couponCode in couponCodes)
             {
                 var giftCards = await GetAllGiftCardsAsync(isGiftCardActivated: true, giftCardCouponCode: couponCode);
@@ -213,16 +214,16 @@ namespace Nop.Services.Orders
         {
             var giftCardUsageHistory = await GetGiftCardUsageHistoryAsync(order);
 
-            await _giftCardUsageHistoryRepository.DeleteAsync(giftCardUsageHistory);
+            await GiftCardUsageHistoryRepository.DeleteAsync(giftCardUsageHistory);
 
-            var query = _giftCardRepository.Table;
+            var query = GiftCardRepository.Table;
 
             var giftCardIds = giftCardUsageHistory.Select(gcuh => gcuh.GiftCardId).ToArray();
             var giftCards = await query.Where(bp => giftCardIds.Contains(bp.Id)).ToListAsync();
 
             //event notification
             foreach (var giftCard in giftCards) 
-                await _eventPublisher.EntityUpdatedAsync(giftCard);
+                await EventPublisher.EntityUpdatedAsync(giftCard);
         }
 
         /// <summary>
@@ -261,7 +262,7 @@ namespace Nop.Services.Orders
             if (giftCard is null)
                 throw new ArgumentNullException(nameof(giftCard));
 
-            return await _giftCardUsageHistoryRepository.Table
+            return await GiftCardUsageHistoryRepository.Table
                 .Where(gcuh => gcuh.GiftCardId == giftCard.Id)
                 .ToListAsync();
         }
@@ -279,7 +280,7 @@ namespace Nop.Services.Orders
             if (order is null)
                 throw new ArgumentNullException(nameof(order));
 
-            return await _giftCardUsageHistoryRepository.Table
+            return await GiftCardUsageHistoryRepository.Table
                 .Where(gcuh => gcuh.UsedWithOrderId == order.Id)
                 .ToListAsync();
         }
@@ -291,7 +292,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertGiftCardUsageHistoryAsync(GiftCardUsageHistory giftCardUsageHistory)
         {
-            await _giftCardUsageHistoryRepository.InsertAsync(giftCardUsageHistory);
+            await GiftCardUsageHistoryRepository.InsertAsync(giftCardUsageHistory);
         }
 
         /// <summary>

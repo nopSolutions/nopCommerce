@@ -19,11 +19,11 @@ namespace Nop.Services.Security
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IRepository<AclRecord> _aclRecordRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IWorkContext _workContext;
+        protected CatalogSettings CatalogSettings { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IRepository<AclRecord> AclRecordRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -35,11 +35,11 @@ namespace Nop.Services.Security
             IStaticCacheManager staticCacheManager,
             IWorkContext workContext)
         {
-            _catalogSettings = catalogSettings;
-            _customerService = customerService;
-            _aclRecordRepository = aclRecordRepository;
-            _staticCacheManager = staticCacheManager;
-            _workContext = workContext;
+            CatalogSettings = catalogSettings;
+            CustomerService = customerService;
+            AclRecordRepository = aclRecordRepository;
+            StaticCacheManager = staticCacheManager;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -53,7 +53,7 @@ namespace Nop.Services.Security
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InsertAclRecordAsync(AclRecord aclRecord)
         {
-            await _aclRecordRepository.InsertAsync(aclRecord);
+            await AclRecordRepository.InsertAsync(aclRecord);
         }
 
         /// <summary>
@@ -67,13 +67,13 @@ namespace Nop.Services.Security
         protected virtual async Task<bool> IsEntityAclMappingExistAsync<TEntity>() where TEntity : BaseEntity, IAclSupported
         {
             var entityName = typeof(TEntity).Name;
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.EntityAclRecordExistsCacheKey, entityName);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.EntityAclRecordExistsCacheKey, entityName);
 
-            var query = from acl in _aclRecordRepository.Table
+            var query = from acl in AclRecordRepository.Table
                         where acl.EntityName == entityName
                         select acl;
 
-            return await _staticCacheManager.GetAsync(key, query.Any);
+            return await StaticCacheManager.GetAsync(key, query.Any);
         }
 
         #endregion
@@ -99,7 +99,7 @@ namespace Nop.Services.Security
             if (customer is null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await CustomerService.GetCustomerRoleIdsAsync(customer);
             return await ApplyAcl(query, customerRoleIds);
         }
 
@@ -122,11 +122,11 @@ namespace Nop.Services.Security
             if (customerRoleIds is null)
                 throw new ArgumentNullException(nameof(customerRoleIds));
 
-            if (!customerRoleIds.Any() || _catalogSettings.IgnoreAcl || !await IsEntityAclMappingExistAsync<TEntity>())
+            if (!customerRoleIds.Any() || CatalogSettings.IgnoreAcl || !await IsEntityAclMappingExistAsync<TEntity>())
                 return query;
 
             return from entity in query
-                   where !entity.SubjectToAcl || _aclRecordRepository.Table.Any(acl =>
+                   where !entity.SubjectToAcl || AclRecordRepository.Table.Any(acl =>
                         acl.EntityName == typeof(TEntity).Name && acl.EntityId == entity.Id && customerRoleIds.Contains(acl.CustomerRoleId))
                    select entity;
         }
@@ -138,7 +138,7 @@ namespace Nop.Services.Security
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAclRecordAsync(AclRecord aclRecord)
         {
-            await _aclRecordRepository.DeleteAsync(aclRecord);
+            await AclRecordRepository.DeleteAsync(aclRecord);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Nop.Services.Security
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var query = from ur in _aclRecordRepository.Table
+            var query = from ur in AclRecordRepository.Table
                         where ur.EntityId == entityId &&
                         ur.EntityName == entityName
                         select ur;
@@ -212,14 +212,14 @@ namespace Nop.Services.Security
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.AclRecordCacheKey, entityId, entityName);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.AclRecordCacheKey, entityId, entityName);
 
-            var query = from ur in _aclRecordRepository.Table
+            var query = from ur in AclRecordRepository.Table
                         where ur.EntityId == entityId &&
                               ur.EntityName == entityName
                         select ur.CustomerRoleId;
 
-            return await _staticCacheManager.GetAsync(key, () => query.ToArray());
+            return await StaticCacheManager.GetAsync(key, () => query.ToArray());
         }
 
         /// <summary>
@@ -233,7 +233,7 @@ namespace Nop.Services.Security
         /// </returns>
         public virtual async Task<bool> AuthorizeAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IAclSupported
         {
-            return await AuthorizeAsync(entity, await _workContext.GetCurrentCustomerAsync());
+            return await AuthorizeAsync(entity, await WorkContext.GetCurrentCustomerAsync());
         }
 
         /// <summary>
@@ -254,13 +254,13 @@ namespace Nop.Services.Security
             if (customer == null)
                 return false;
 
-            if (_catalogSettings.IgnoreAcl)
+            if (CatalogSettings.IgnoreAcl)
                 return true;
 
             if (!entity.SubjectToAcl)
                 return true;
 
-            foreach (var role1 in await _customerService.GetCustomerRolesAsync(customer))
+            foreach (var role1 in await CustomerService.GetCustomerRolesAsync(customer))
                 foreach (var role2Id in await GetCustomerRoleIdsWithAccessAsync(entity))
                     if (role1.Id == role2Id)
                         //yes, we have such permission

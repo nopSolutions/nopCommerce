@@ -14,7 +14,7 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly IRepository<Store> _storeRepository;
+        protected IRepository<Store> StoreRepository { get; }
 
         #endregion
 
@@ -22,7 +22,7 @@ namespace Nop.Services.Stores
 
         public StoreService(IRepository<Store> storeRepository)
         {
-            _storeRepository = storeRepository;
+            StoreRepository = storeRepository;
         }
 
         #endregion
@@ -72,7 +72,7 @@ namespace Nop.Services.Stores
             if (allStores.Count == 1)
                 throw new Exception("You cannot delete the only configured store");
 
-            await _storeRepository.DeleteAsync(store);
+            await StoreRepository.DeleteAsync(store);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual async Task<IList<Store>> GetAllStoresAsync()
         {
-            var result = await _storeRepository.GetAllAsync(query =>
+            var result = await StoreRepository.GetAllAsync(query =>
             {
                 return from s in query orderby s.DisplayOrder, s.Id select s;
             }, cache => default);
@@ -102,7 +102,7 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual async Task<Store> GetStoreByIdAsync(int storeId)
         {
-            return await _storeRepository.GetByIdAsync(storeId, cache => default);
+            return await StoreRepository.GetByIdAsync(storeId, cache => default);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Nop.Services.Stores
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertStoreAsync(Store store)
         {
-            await _storeRepository.InsertAsync(store);
+            await StoreRepository.InsertAsync(store);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Nop.Services.Stores
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateStoreAsync(Store store)
         {
-            await _storeRepository.UpdateAsync(store);
+            await StoreRepository.UpdateAsync(store);
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Nop.Services.Stores
             if (storeIdsNames == null)
                 throw new ArgumentNullException(nameof(storeIdsNames));
 
-            var query = _storeRepository.Table;
+            var query = StoreRepository.Table;
             var queryFilter = storeIdsNames.Distinct().ToArray();
             //filtering by name
             var filter = await query.Select(store => store.Name)

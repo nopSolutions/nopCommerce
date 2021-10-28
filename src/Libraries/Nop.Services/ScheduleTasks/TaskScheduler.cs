@@ -24,9 +24,10 @@ namespace Nop.Services.ScheduleTasks
         #region Fields
 
         protected static readonly List<TaskThread> _taskThreads = new();
-        protected readonly AppSettings _appSettings;
-        protected readonly IScheduleTaskService _scheduleTaskService;
-        protected readonly IStoreContext _storeContext;
+
+        protected AppSettings AppSettings { get; }
+        protected IScheduleTaskService ScheduleTaskService { get; }
+        protected IStoreContext StoreContext { get; }
 
         #endregion
 
@@ -38,11 +39,11 @@ namespace Nop.Services.ScheduleTasks
             IServiceScopeFactory serviceScopeFactory,
             IStoreContext storeContext)
         {
-            _appSettings = appSettings;
+            AppSettings = appSettings;
             TaskThread.HttpClientFactory = httpClientFactory;
-            _scheduleTaskService = scheduleTaskService;
+            ScheduleTaskService = scheduleTaskService;
             TaskThread.ServiceScopeFactory = serviceScopeFactory;
-            _storeContext = storeContext;
+            StoreContext = storeContext;
         }
 
         #endregion
@@ -61,14 +62,14 @@ namespace Nop.Services.ScheduleTasks
                 return;
 
             //initialize and start schedule tasks
-            var scheduleTasks = (await _scheduleTaskService.GetAllTasksAsync())
+            var scheduleTasks = (await ScheduleTaskService.GetAllTasksAsync())
                 .OrderBy(x => x.Seconds)
                 .ToList();
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
 
             var scheduleTaskUrl = $"{store.Url.TrimEnd('/')}/{NopTaskDefaults.ScheduleTaskPath}";
-            var timeout = _appSettings.Get<CommonConfig>().ScheduleTaskRunTimeout;
+            var timeout = AppSettings.Get<CommonConfig>().ScheduleTaskRunTimeout;
 
             foreach (var scheduleTask in scheduleTasks)
             {

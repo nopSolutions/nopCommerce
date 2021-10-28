@@ -15,8 +15,8 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly IVendorAttributeService _vendorAttributeService;
+        protected ILocalizationService LocalizationService { get; }
+        protected IVendorAttributeService VendorAttributeService { get; }
 
         #endregion
 
@@ -25,8 +25,8 @@ namespace Nop.Services.Vendors
         public VendorAttributeParser(ILocalizationService localizationService,
             IVendorAttributeService vendorAttributeService)
         {
-            _localizationService = localizationService;
-            _vendorAttributeService = vendorAttributeService;
+            LocalizationService = localizationService;
+            VendorAttributeService = vendorAttributeService;
         }
 
         #endregion
@@ -90,7 +90,7 @@ namespace Nop.Services.Vendors
             var ids = ParseVendorAttributeIds(attributesXml);
             foreach (var id in ids)
             {
-                var attribute = await _vendorAttributeService.GetVendorAttributeByIdAsync(id);
+                var attribute = await VendorAttributeService.GetVendorAttributeByIdAsync(id);
                 if (attribute != null)
                 {
                     result.Add(attribute);
@@ -129,7 +129,7 @@ namespace Nop.Services.Vendors
                     if (!int.TryParse(valueStr, out var id)) 
                         continue;
 
-                    var value = await _vendorAttributeService.GetVendorAttributeValueByIdAsync(id);
+                    var value = await VendorAttributeService.GetVendorAttributeValueByIdAsync(id);
                     if (value != null)
                         values.Add(value);
                 }
@@ -269,7 +269,7 @@ namespace Nop.Services.Vendors
             var attributes1 = await ParseVendorAttributesAsync(attributesXml);
 
             //validate required vendor attributes (whether they're chosen/selected/entered)
-            var attributes2 = await _vendorAttributeService.GetAllVendorAttributesAsync();
+            var attributes2 = await VendorAttributeService.GetAllVendorAttributesAsync();
             foreach (var a2 in attributes2)
             {
                 if (!a2.IsRequired) 
@@ -297,7 +297,7 @@ namespace Nop.Services.Vendors
                     continue;
 
                 //if not found
-                var notFoundWarning = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.SelectAttribute"), await _localizationService.GetLocalizedAsync(a2, a => a.Name));
+                var notFoundWarning = string.Format(await LocalizationService.GetResourceAsync("ShoppingCart.SelectAttribute"), await LocalizationService.GetLocalizedAsync(a2, a => a.Name));
 
                 warnings.Add(notFoundWarning);
             }

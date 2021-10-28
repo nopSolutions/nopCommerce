@@ -15,8 +15,8 @@ namespace Nop.Services.Plugins
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IPluginService _pluginService;
+        protected ICustomerService CustomerService { get; }
+        protected IPluginService PluginService { get; }
 
         private readonly Dictionary<string, IList<TPlugin>> _plugins = new Dictionary<string, IList<TPlugin>>();
 
@@ -27,8 +27,8 @@ namespace Nop.Services.Plugins
         public PluginManager(ICustomerService customerService,
             IPluginService pluginService)
         {
-            _customerService = customerService;
-            _pluginService = pluginService;
+            CustomerService = customerService;
+            PluginService = pluginService;
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace Nop.Services.Plugins
         /// </returns>
         protected virtual async Task<string> GetKeyAsync(Customer customer, int storeId, string systemName = null)
         {
-            return $"{storeId}-{(customer != null ? string.Join(',', await _customerService.GetCustomerRoleIdsAsync(customer)) : null)}-{systemName}";
+            return $"{storeId}-{(customer != null ? string.Join(',', await CustomerService.GetCustomerRoleIdsAsync(customer)) : null)}-{systemName}";
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Nop.Services.Plugins
             //get plugins and put them into the dictionary to avoid further loading
             var key = await GetKeyAsync(customer, storeId);
             if (!_plugins.ContainsKey(key))
-                _plugins.Add(key, await _pluginService.GetPluginsAsync<TPlugin>(customer: customer, storeId: storeId));
+                _plugins.Add(key, await PluginService.GetPluginsAsync<TPlugin>(customer: customer, storeId: storeId));
 
             return _plugins[key];
         }
@@ -117,7 +117,7 @@ namespace Nop.Services.Plugins
                 && plugins.FirstOrDefault(plugin =>
                     plugin.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase)) is TPlugin loadedPlugin
                 ? loadedPlugin
-                : (await _pluginService.GetPluginDescriptorBySystemNameAsync<TPlugin>(systemName, customer: customer, storeId: storeId))?.Instance<TPlugin>();
+                : (await PluginService.GetPluginDescriptorBySystemNameAsync<TPlugin>(systemName, customer: customer, storeId: storeId))?.Instance<TPlugin>();
 
             _plugins.Add(key, new List<TPlugin> { pluginBySystemName });
 
@@ -171,7 +171,7 @@ namespace Nop.Services.Plugins
         /// </returns>
         public virtual async Task<string> GetPluginLogoUrlAsync(TPlugin plugin)
         {
-            return await _pluginService.GetPluginLogoUrlAsync(plugin.PluginDescriptor);
+            return await PluginService.GetPluginLogoUrlAsync(plugin.PluginDescriptor);
         }
 
         #endregion

@@ -27,25 +27,25 @@ namespace Nop.Services.Shipping
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
-        private readonly IRepository<ShippingMethod> _shippingMethodRepository;
-        private readonly IRepository<ShippingMethodCountryMapping> _shippingMethodCountryMappingRepository;
-        private readonly IRepository<Warehouse> _warehouseRepository;
-        private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        protected IAddressService AddressService { get; }
+        protected ICheckoutAttributeParser CheckoutAttributeParser { get; }
+        protected ICountryService CountryService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILogger Logger { get; }
+        protected IPickupPluginManager PickupPluginManager { get; }
+        protected IPriceCalculationService PriceCalculationService { get; }
+        protected IProductAttributeParser ProductAttributeParser { get; }
+        protected IProductService ProductService { get; }
+        protected IRepository<ShippingMethod> ShippingMethodRepository { get; }
+        protected IRepository<ShippingMethodCountryMapping> ShippingMethodCountryMappingRepository { get; }
+        protected IRepository<Warehouse> WarehouseRepository { get; }
+        protected IShippingPluginManager ShippingPluginManager { get; }
+        protected IStateProvinceService StateProvinceService { get; }
+        protected IStoreContext StoreContext { get; }
+        protected ShippingSettings ShippingSettings { get; }
+        protected ShoppingCartSettings ShoppingCartSettings { get; }
 
         #endregion
 
@@ -71,25 +71,25 @@ namespace Nop.Services.Shipping
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
-            _addressService = addressService;
-            _checkoutAttributeParser = checkoutAttributeParser;
-            _countryService = countryService;
-            _customerService = customerService;
-            _genericAttributeService = genericAttributeService;
-            _localizationService = localizationService;
-            _logger = logger;
-            _pickupPluginManager = pickupPluginManager;
-            _priceCalculationService = priceCalculationService;
-            _productAttributeParser = productAttributeParser;
-            _productService = productService;
-            _shippingMethodRepository = shippingMethodRepository;
-            _shippingMethodCountryMappingRepository = shippingMethodCountryMappingRepository;
-            _warehouseRepository = warehouseRepository;
-            _shippingPluginManager = shippingPluginManager;
-            _stateProvinceService = stateProvinceService;
-            _storeContext = storeContext;
-            _shippingSettings = shippingSettings;
-            _shoppingCartSettings = shoppingCartSettings;
+            AddressService = addressService;
+            CheckoutAttributeParser = checkoutAttributeParser;
+            CountryService = countryService;
+            CustomerService = customerService;
+            GenericAttributeService = genericAttributeService;
+            LocalizationService = localizationService;
+            Logger = logger;
+            PickupPluginManager = pickupPluginManager;
+            PriceCalculationService = priceCalculationService;
+            ProductAttributeParser = productAttributeParser;
+            ProductService = productService;
+            ShippingMethodRepository = shippingMethodRepository;
+            ShippingMethodCountryMappingRepository = shippingMethodCountryMappingRepository;
+            WarehouseRepository = warehouseRepository;
+            ShippingPluginManager = shippingPluginManager;
+            StateProvinceService = stateProvinceService;
+            StoreContext = storeContext;
+            ShippingSettings = shippingSettings;
+            ShoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -126,12 +126,12 @@ namespace Nop.Services.Shipping
                 return false;
 
             //find associated products of item
-            var associatedAttributeValues = (await _productAttributeParser.ParseProductAttributeValuesAsync(singleItem.ShoppingCartItem.AttributesXml))
+            var associatedAttributeValues = (await ProductAttributeParser.ParseProductAttributeValuesAsync(singleItem.ShoppingCartItem.AttributesXml))
                 .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct);
 
             //whether to ship associated products
             return await associatedAttributeValues.AnyAwaitAsync(async attributeValue =>
-                (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.IsShipEnabled ?? false);
+                (await ProductService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.IsShipEnabled ?? false);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Nop.Services.Shipping
             width = length = height = decimal.Zero;
 
             //don't consider associated products dimensions
-            if (!_shippingSettings.ConsiderAssociatedProductsDimensions)
+            if (!ShippingSettings.ConsiderAssociatedProductsDimensions)
                 return (width, length, height);
 
             //attributes
@@ -164,11 +164,11 @@ namespace Nop.Services.Shipping
                 return (width, length, height);
 
             //bundled products (associated attributes)
-            var attributeValues = (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
+            var attributeValues = (await ProductAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
                 .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct).ToList();
             foreach (var attributeValue in attributeValues)
             {
-                var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
+                var associatedProduct = await ProductService.GetProductByIdAsync(attributeValue.AssociatedProductId);
                 if (associatedProduct == null || !associatedProduct.IsShipEnabled || (associatedProduct.IsFreeShipping && ignoreFreeShippedItems))
                     continue;
 
@@ -193,7 +193,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteShippingMethodAsync(ShippingMethod shippingMethod)
         {
-            await _shippingMethodRepository.DeleteAsync(shippingMethod);
+            await ShippingMethodRepository.DeleteAsync(shippingMethod);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Nop.Services.Shipping
         /// </returns>
         public virtual async Task<ShippingMethod> GetShippingMethodByIdAsync(int shippingMethodId)
         {
-            return await _shippingMethodRepository.GetByIdAsync(shippingMethodId, cache => default);
+            return await ShippingMethodRepository.GetByIdAsync(shippingMethodId, cache => default);
         }
 
         /// <summary>
@@ -221,10 +221,10 @@ namespace Nop.Services.Shipping
         {
             if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
             { 
-                return await _shippingMethodRepository.GetAllAsync(query =>
+                return await ShippingMethodRepository.GetAllAsync(query =>
                 {
                     var query1 = from sm in query
-                        join smcm in _shippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
+                        join smcm in ShippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
                         where smcm.CountryId == filterByCountryId.Value
                         select sm.Id;
 
@@ -239,7 +239,7 @@ namespace Nop.Services.Shipping
                 }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId));
             }
 
-            return await _shippingMethodRepository.GetAllAsync(query=>
+            return await ShippingMethodRepository.GetAllAsync(query=>
             {
                 return from sm in query
                     orderby sm.DisplayOrder, sm.Id
@@ -254,7 +254,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertShippingMethodAsync(ShippingMethod shippingMethod)
         {
-            await _shippingMethodRepository.InsertAsync(shippingMethod);
+            await ShippingMethodRepository.InsertAsync(shippingMethod);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateShippingMethodAsync(ShippingMethod shippingMethod)
         {
-            await _shippingMethodRepository.UpdateAsync(shippingMethod);
+            await ShippingMethodRepository.UpdateAsync(shippingMethod);
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace Nop.Services.Shipping
             if (shippingMethod == null)
                 throw new ArgumentNullException(nameof(shippingMethod));
 
-            var result = await _shippingMethodCountryMappingRepository.Table
+            var result = await ShippingMethodCountryMappingRepository.Table
                 .AnyAsync(smcm => smcm.ShippingMethodId == shippingMethod.Id && smcm.CountryId == countryId);
             
             return result;
@@ -299,7 +299,7 @@ namespace Nop.Services.Shipping
         public virtual async Task<IList<ShippingMethodCountryMapping>> GetShippingMethodCountryMappingAsync(int shippingMethodId,
             int countryId)
         {
-            var query = _shippingMethodCountryMappingRepository.Table.Where(smcm =>
+            var query = ShippingMethodCountryMappingRepository.Table.Where(smcm =>
                 smcm.ShippingMethodId == shippingMethodId && smcm.CountryId == countryId);
 
             return await query.ToListAsync();
@@ -312,7 +312,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertShippingMethodCountryMappingAsync(ShippingMethodCountryMapping shippingMethodCountryMapping)
         {
-            await _shippingMethodCountryMappingRepository.InsertAsync(shippingMethodCountryMapping);
+            await ShippingMethodCountryMappingRepository.InsertAsync(shippingMethodCountryMapping);
         }
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteShippingMethodCountryMappingAsync(ShippingMethodCountryMapping shippingMethodCountryMapping)
         {
-            await _shippingMethodCountryMappingRepository.DeleteAsync(shippingMethodCountryMapping);
+            await ShippingMethodCountryMappingRepository.DeleteAsync(shippingMethodCountryMapping);
         }
 
         #endregion
@@ -336,7 +336,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteWarehouseAsync(Warehouse warehouse)
         {
-            await _warehouseRepository.DeleteAsync(warehouse);
+            await WarehouseRepository.DeleteAsync(warehouse);
         }
 
         /// <summary>
@@ -349,7 +349,7 @@ namespace Nop.Services.Shipping
         /// </returns>
         public virtual async Task<Warehouse> GetWarehouseByIdAsync(int warehouseId)
         {
-            return await _warehouseRepository.GetByIdAsync(warehouseId, cache => default);
+            return await WarehouseRepository.GetByIdAsync(warehouseId, cache => default);
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace Nop.Services.Shipping
         /// </returns>
         public virtual async Task<IList<Warehouse>> GetAllWarehousesAsync(string name = null)
         {
-            var warehouses = await _warehouseRepository.GetAllAsync(query=>
+            var warehouses = await WarehouseRepository.GetAllAsync(query=>
             {
                 return from wh in query
                     orderby wh.Name
@@ -382,7 +382,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertWarehouseAsync(Warehouse warehouse)
         {
-            await _warehouseRepository.InsertAsync(warehouse);
+            await WarehouseRepository.InsertAsync(warehouse);
         }
 
         /// <summary>
@@ -392,7 +392,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateWarehouseAsync(Warehouse warehouse)
         {
-            await _warehouseRepository.UpdateAsync(warehouse);
+            await WarehouseRepository.UpdateAsync(warehouse);
         }
 
         /// <summary>
@@ -420,7 +420,7 @@ namespace Nop.Services.Shipping
             var matchedByCountry = new List<Warehouse>();
             foreach (var warehouse in warehouses)
             {
-                var warehouseAddress = await _addressService.GetAddressByIdAsync(warehouse.AddressId);
+                var warehouseAddress = await AddressService.GetAddressByIdAsync(warehouse.AddressId);
                 if (warehouseAddress == null)
                     continue;
 
@@ -435,7 +435,7 @@ namespace Nop.Services.Shipping
             var matchedByState = new List<Warehouse>();
             foreach (var warehouse in matchedByCountry)
             {
-                var warehouseAddress = await _addressService.GetAddressByIdAsync(warehouse.AddressId);
+                var warehouseAddress = await AddressService.GetAddressByIdAsync(warehouse.AddressId);
                 if (warehouseAddress == null)
                     continue;
 
@@ -468,7 +468,7 @@ namespace Nop.Services.Shipping
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
 
-            var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
+            var product = await ProductService.GetProductByIdAsync(shoppingCartItem.ProductId);
 
             return await GetShoppingCartItemWeightAsync(product, shoppingCartItem.AttributesXml, ignoreFreeShippedItems);
         }
@@ -494,10 +494,10 @@ namespace Nop.Services.Shipping
             //attribute weight
             var attributesTotalWeight = decimal.Zero;
 
-            if (!_shippingSettings.ConsiderAssociatedProductsDimensions || string.IsNullOrEmpty(attributesXml))
+            if (!ShippingSettings.ConsiderAssociatedProductsDimensions || string.IsNullOrEmpty(attributesXml))
                 return productWeight + attributesTotalWeight;
 
-            var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
+            var attributeValues = await ProductAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
             foreach (var attributeValue in attributeValues)
             {
                 switch (attributeValue.AttributeValueType)
@@ -508,7 +508,7 @@ namespace Nop.Services.Shipping
                         break;
                     case AttributeValueType.AssociatedToProduct:
                         //bundled product
-                        var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
+                        var associatedProduct = await ProductService.GetProductByIdAsync(attributeValue.AssociatedProductId);
                         if (associatedProduct != null && associatedProduct.IsShipEnabled && (!associatedProduct.IsFreeShipping || !ignoreFreeShippedItems))
                             attributesTotalWeight += associatedProduct.Weight * attributeValue.Quantity;
                         break;
@@ -543,11 +543,11 @@ namespace Nop.Services.Shipping
             //checkout attributes
             if (request.Customer is null || !includeCheckoutAttributes)
                 return totalWeight;
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(request.Customer, NopCustomerDefaults.CheckoutAttributes, store.Id);
+            var store = await StoreContext.GetCurrentStoreAsync();
+            var checkoutAttributesXml = await GenericAttributeService.GetAttributeAsync<string>(request.Customer, NopCustomerDefaults.CheckoutAttributes, store.Id);
             if (string.IsNullOrEmpty(checkoutAttributesXml))
                 return totalWeight;
-            var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
+            var attributeValues = CheckoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
             foreach (var attributeValue in await attributeValues.SelectMany(x => x.values).ToListAsync())
                 totalWeight += attributeValue.WeightAdjustment;
 
@@ -573,7 +573,7 @@ namespace Nop.Services.Shipping
             decimal width;
 
             //calculate cube root of volume, in case if the number of items more than 1
-            if (_shippingSettings.UseCubeRootMethod && await AreMultipleItemsAsync(packageItems))
+            if (ShippingSettings.UseCubeRootMethod && await AreMultipleItemsAsync(packageItems))
             {
                 //find max dimensions of the shipped items
                 var maxWidth = packageItems.Max(item => !item.Product.IsFreeShipping || !ignoreFreeShippedItems
@@ -591,12 +591,12 @@ namespace Nop.Services.Shipping
                         packageItem.Product.Width * packageItem.Product.Length * packageItem.Product.Height : decimal.Zero;
 
                     //associated products volume
-                    if (_shippingSettings.ConsiderAssociatedProductsDimensions && !string.IsNullOrEmpty(packageItem.ShoppingCartItem.AttributesXml))
+                    if (ShippingSettings.ConsiderAssociatedProductsDimensions && !string.IsNullOrEmpty(packageItem.ShoppingCartItem.AttributesXml))
                     {
-                        productVolume += await (await _productAttributeParser.ParseProductAttributeValuesAsync(packageItem.ShoppingCartItem.AttributesXml))
+                        productVolume += await (await ProductAttributeParser.ParseProductAttributeValuesAsync(packageItem.ShoppingCartItem.AttributesXml))
                             .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct).SumAwaitAsync(async attributeValue =>
                             {
-                                var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
+                                var associatedProduct = await ProductService.GetProductByIdAsync(attributeValue.AssociatedProductId);
                                 if (associatedProduct == null || !associatedProduct.IsShipEnabled || (associatedProduct.IsFreeShipping && ignoreFreeShippedItems))
                                     return 0;
 
@@ -681,13 +681,13 @@ namespace Nop.Services.Shipping
                 if (!await IsShipEnabledAsync(sci))
                     continue;
 
-                var product = await _productService.GetProductByIdAsync(sci.ProductId);
+                var product = await ProductService.GetProductByIdAsync(sci.ProductId);
 
                 if (product == null || !product.IsShipEnabled)
                 {
-                    var associatedProducts = await (await _productAttributeParser.ParseProductAttributeValuesAsync(sci.AttributesXml))
+                    var associatedProducts = await (await ProductAttributeParser.ParseProductAttributeValuesAsync(sci.AttributesXml))
                         .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                        .SelectAwait(async attributeValue => await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId)).ToListAsync();
+                        .SelectAwait(async attributeValue => await ProductService.GetProductByIdAsync(attributeValue.AssociatedProductId)).ToListAsync();
                     product = associatedProducts.FirstOrDefault(associatedProduct => associatedProduct != null && associatedProduct.IsShipEnabled);
                 }
 
@@ -696,14 +696,14 @@ namespace Nop.Services.Shipping
 
                 //warehouses
                 Warehouse warehouse = null;
-                if (_shippingSettings.UseWarehouseLocation)
+                if (ShippingSettings.UseWarehouseLocation)
                 {
                     if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                         product.UseMultipleWarehouses)
                     {
                         var allWarehouses = new List<Warehouse>();
                         //multiple warehouses supported
-                        foreach (var pwi in await _productService.GetAllProductWarehouseInventoryRecordsAsync(product.Id))
+                        foreach (var pwi in await ProductService.GetAllProductWarehouseInventoryRecordsAsync(product.Id))
                         {
                             var tmpWarehouse = await GetWarehouseByIdAsync(pwi.WarehouseId);
                             if (tmpWarehouse != null)
@@ -735,7 +735,7 @@ namespace Nop.Services.Shipping
                         StoreId = storeId
                     };
                     //customer
-                    request.Customer = await _customerService.GetShoppingCartCustomerAsync(cart);
+                    request.Customer = await CustomerService.GetShoppingCartCustomerAsync(cart);
 
                     //ship to
                     request.ShippingAddress = shippingAddress;
@@ -744,20 +744,20 @@ namespace Nop.Services.Shipping
                     if (warehouse != null)
                     {
                         //warehouse address
-                        originAddress = await _addressService.GetAddressByIdAsync(warehouse.AddressId);
+                        originAddress = await AddressService.GetAddressByIdAsync(warehouse.AddressId);
                         request.WarehouseFrom = warehouse;
                     }
 
                     if (originAddress == null)
                     {
                         //no warehouse address. in this case use the default shipping origin
-                        originAddress = await _addressService.GetAddressByIdAsync(_shippingSettings.ShippingOriginAddressId);
+                        originAddress = await AddressService.GetAddressByIdAsync(ShippingSettings.ShippingOriginAddressId);
                     }
 
                     if (originAddress != null)
                     {
-                        request.CountryFrom = await _countryService.GetCountryByAddressAsync(originAddress);
-                        request.StateProvinceFrom = await _stateProvinceService.GetStateProvinceByAddressAsync(originAddress);
+                        request.CountryFrom = await CountryService.GetCountryByAddressAsync(originAddress);
+                        request.StateProvinceFrom = await StateProvinceService.GetStateProvinceByAddressAsync(originAddress);
                         request.ZipPostalCodeFrom = originAddress.ZipPostalCode;
                         request.CountyFrom = originAddress.County;
                         request.CityFrom = originAddress.City;
@@ -768,7 +768,7 @@ namespace Nop.Services.Shipping
                     if (product.ShipSeparately)
                     {
                         //whether product items should be shipped separately
-                        if (_shippingSettings.ShipSeparatelyOneItemEach)
+                        if (ShippingSettings.ShipSeparatelyOneItemEach)
                         {
                             //add item with overridden quantity 1
                             request.Items.Add(new GetShippingOptionRequest.PackageItem(sci, product, 1));
@@ -831,7 +831,7 @@ namespace Nop.Services.Shipping
             var (shippingOptionRequests, shippingFromMultipleLocations) = await CreateShippingOptionRequestsAsync(cart, shippingAddress, storeId);
             result.ShippingFromMultipleLocations = shippingFromMultipleLocations;
 
-            var shippingRateComputationMethods = await _shippingPluginManager
+            var shippingRateComputationMethods = await ShippingPluginManager
                 .LoadActivePluginsAsync(customer, storeId, allowedShippingRateComputationMethodSystemName);
             if (!shippingRateComputationMethods.Any())
                 return result;
@@ -876,7 +876,7 @@ namespace Nop.Services.Shipping
                         foreach (var error in getShippingOptionResponse.Errors)
                         {
                             result.AddError(error);
-                            await _logger.WarningAsync($"Shipping ({srcm.PluginDescriptor.FriendlyName}). {error}");
+                            await Logger.WarningAsync($"Shipping ({srcm.PluginDescriptor.FriendlyName}). {error}");
                         }
                         //clear the shipping options in this case
                         srcmShippingOptions = new List<ShippingOption>();
@@ -893,13 +893,13 @@ namespace Nop.Services.Shipping
                     //set system name if not set yet
                     if (string.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName))
                         so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
-                    if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                        so.Rate = await _priceCalculationService.RoundPriceAsync(so.Rate);
+                    if (ShoppingCartSettings.RoundPricesDuringCalculation)
+                        so.Rate = await PriceCalculationService.RoundPriceAsync(so.Rate);
                     result.ShippingOptions.Add(so);
                 }
             }
 
-            if (_shippingSettings.ReturnValidOptionsIfThereAreAny)
+            if (ShippingSettings.ReturnValidOptionsIfThereAreAny)
             {
                 //return valid options if there are any (no matter of the errors returned by other shipping rate computation methods).
                 if (result.ShippingOptions.Any() && result.Errors.Any())
@@ -908,7 +908,7 @@ namespace Nop.Services.Shipping
 
             //no shipping options loaded
             if (!result.ShippingOptions.Any() && !result.Errors.Any())
-                result.Errors.Add(await _localizationService.GetResourceAsync("Checkout.ShippingOptionCouldNotBeLoaded"));
+                result.Errors.Add(await LocalizationService.GetResourceAsync("Checkout.ShippingOptionCouldNotBeLoaded"));
 
             return result;
         }
@@ -929,14 +929,14 @@ namespace Nop.Services.Shipping
         {
             var result = new GetPickupPointsResponse();
 
-            var pickupPointsProviders = await _pickupPluginManager.LoadActivePluginsAsync(customer, storeId, providerSystemName);
+            var pickupPointsProviders = await PickupPluginManager.LoadActivePluginsAsync(customer, storeId, providerSystemName);
             if (!pickupPointsProviders.Any())
                 return result;
 
             var allPickupPoints = new List<PickupPoint>();
             foreach (var provider in pickupPointsProviders)
             {
-                var pickPointsResponse = await provider.GetPickupPointsAsync(await _addressService.GetAddressByIdAsync(addressId));
+                var pickPointsResponse = await provider.GetPickupPointsAsync(await AddressService.GetAddressByIdAsync(addressId));
                 if (pickPointsResponse.Success)
                     allPickupPoints.AddRange(pickPointsResponse.PickupPoints);
                 else
@@ -944,7 +944,7 @@ namespace Nop.Services.Shipping
                     foreach (var error in pickPointsResponse.Errors)
                     {
                         result.AddError(error);
-                        await _logger.WarningAsync($"PickupPoints ({provider.PluginDescriptor.FriendlyName}). {error}");
+                        await Logger.WarningAsync($"PickupPoints ({provider.PluginDescriptor.FriendlyName}). {error}");
                     }
                 }
             }
@@ -970,16 +970,16 @@ namespace Nop.Services.Shipping
         public virtual async Task<bool> IsShipEnabledAsync(ShoppingCartItem shoppingCartItem)
         {
             //whether the product requires shipping
-            if (shoppingCartItem.ProductId != 0 && (await _productService.GetProductByIdAsync(shoppingCartItem.ProductId))?.IsShipEnabled == true)
+            if (shoppingCartItem.ProductId != 0 && (await ProductService.GetProductByIdAsync(shoppingCartItem.ProductId))?.IsShipEnabled == true)
                 return true;
 
             if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                 return false;
 
             //or whether associated products of the shopping cart item require shipping
-            return await (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
+            return await (await ProductAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
                 .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                .AnyAwaitAsync(async attributeValue => (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.IsShipEnabled ?? false);
+                .AnyAwaitAsync(async attributeValue => (await ProductService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.IsShipEnabled ?? false);
         }
 
         /// <summary>
@@ -997,16 +997,16 @@ namespace Nop.Services.Shipping
                 return true;
 
             //then whether the product is free shipping
-            if (shoppingCartItem.ProductId != 0 && !(await _productService.GetProductByIdAsync(shoppingCartItem.ProductId)).IsFreeShipping)
+            if (shoppingCartItem.ProductId != 0 && !(await ProductService.GetProductByIdAsync(shoppingCartItem.ProductId)).IsFreeShipping)
                 return false;
 
             if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                 return true;
 
             //and whether associated products of the shopping cart item is free shipping
-            return await (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
+            return await (await ProductAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
                 .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                .AllAwaitAsync(async attributeValue => (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.IsFreeShipping ?? true);
+                .AllAwaitAsync(async attributeValue => (await ProductService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.IsFreeShipping ?? true);
         }
 
         /// <summary>
@@ -1024,15 +1024,15 @@ namespace Nop.Services.Shipping
                 return decimal.Zero;
 
             //get additional shipping charge of the product
-            var additionalShippingCharge = ((await _productService.GetProductByIdAsync(shoppingCartItem.ProductId))?.AdditionalShippingCharge ?? decimal.Zero) * shoppingCartItem.Quantity;
+            var additionalShippingCharge = ((await ProductService.GetProductByIdAsync(shoppingCartItem.ProductId))?.AdditionalShippingCharge ?? decimal.Zero) * shoppingCartItem.Quantity;
 
             if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                 return additionalShippingCharge;
 
             //and sum with associated products additional shipping charges
-            additionalShippingCharge += await (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
+            additionalShippingCharge += await (await ProductAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
                 .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                .SumAwaitAsync(async attributeValue => (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.AdditionalShippingCharge ?? decimal.Zero);
+                .SumAwaitAsync(async attributeValue => (await ProductService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.AdditionalShippingCharge ?? decimal.Zero);
 
             return additionalShippingCharge;
         }

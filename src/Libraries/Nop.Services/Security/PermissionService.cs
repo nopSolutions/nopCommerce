@@ -19,12 +19,12 @@ namespace Nop.Services.Security
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IRepository<PermissionRecord> _permissionRecordRepository;
-        private readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappingRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IWorkContext _workContext;
+        protected ICustomerService CustomerService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IRepository<PermissionRecord> PermissionRecordRepository { get; }
+        protected IRepository<PermissionRecordCustomerRoleMapping> PermissionRecordCustomerRoleMappingRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -37,12 +37,12 @@ namespace Nop.Services.Security
             IStaticCacheManager staticCacheManager,
             IWorkContext workContext)
         {
-            _customerService = customerService;
-            _localizationService = localizationService;
-            _permissionRecordRepository = permissionRecordRepository;
-            _permissionRecordCustomerRoleMappingRepository = permissionRecordCustomerRoleMappingRepository;
-            _staticCacheManager = staticCacheManager;
-            _workContext = workContext;
+            CustomerService = customerService;
+            LocalizationService = localizationService;
+            PermissionRecordRepository = permissionRecordRepository;
+            PermissionRecordCustomerRoleMappingRepository = permissionRecordCustomerRoleMappingRepository;
+            StaticCacheManager = staticCacheManager;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -59,16 +59,16 @@ namespace Nop.Services.Security
         /// </returns>
         protected virtual async Task<IList<PermissionRecord>> GetPermissionRecordsByCustomerRoleIdAsync(int customerRoleId)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionRecordsAllCacheKey, customerRoleId);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionRecordsAllCacheKey, customerRoleId);
 
-            var query = from pr in _permissionRecordRepository.Table
-                join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm
+            var query = from pr in PermissionRecordRepository.Table
+                join prcrm in PermissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm
                     .PermissionRecordId
                 where prcrm.CustomerRoleId == customerRoleId
                 orderby pr.Id
                 select pr;
 
-            return await _staticCacheManager.GetAsync(key, async ()=> await query.ToListAsync());
+            return await StaticCacheManager.GetAsync(key, async ()=> await query.ToListAsync());
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Nop.Services.Security
             if (string.IsNullOrWhiteSpace(systemName))
                 return null;
 
-            var query = from pr in _permissionRecordRepository.Table
+            var query = from pr in PermissionRecordRepository.Table
                 where pr.SystemName == systemName
                 orderby pr.Id
                 select pr;
@@ -106,7 +106,7 @@ namespace Nop.Services.Security
         /// </returns>
         public virtual async Task<IList<PermissionRecord>> GetAllPermissionRecordsAsync()
         {
-            var permissions = await _permissionRecordRepository.GetAllAsync(query =>
+            var permissions = await PermissionRecordRepository.GetAllAsync(query =>
             {
                 return from pr in query
                     orderby pr.Name
@@ -123,7 +123,7 @@ namespace Nop.Services.Security
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertPermissionRecordAsync(PermissionRecord permission)
         {
-            await _permissionRecordRepository.InsertAsync(permission);
+            await PermissionRecordRepository.InsertAsync(permission);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Nop.Services.Security
         /// </returns>
         public virtual async Task<PermissionRecord> GetPermissionRecordByIdAsync(int permissionId)
         {
-            return await _permissionRecordRepository.GetByIdAsync(permissionId);
+            return await PermissionRecordRepository.GetByIdAsync(permissionId);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Nop.Services.Security
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdatePermissionRecordAsync(PermissionRecord permission)
         {
-            await _permissionRecordRepository.UpdateAsync(permission);
+            await PermissionRecordRepository.UpdateAsync(permission);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Nop.Services.Security
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeletePermissionRecordAsync(PermissionRecord permission)
         {
-            await _permissionRecordRepository.DeleteAsync(permission);
+            await PermissionRecordRepository.DeleteAsync(permission);
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace Nop.Services.Security
 
                 foreach (var defaultPermission in defaultPermissions)
                 {
-                    var customerRole = await _customerService.GetCustomerRoleBySystemNameAsync(defaultPermission.systemRoleName);
+                    var customerRole = await CustomerService.GetCustomerRoleBySystemNameAsync(defaultPermission.systemRoleName);
                     if (customerRole == null)
                     {
                         //new role (save it)
@@ -200,7 +200,7 @@ namespace Nop.Services.Security
                             Active = true,
                             SystemName = defaultPermission.systemRoleName
                         };
-                        await _customerService.InsertCustomerRoleAsync(customerRole);
+                        await CustomerService.InsertCustomerRoleAsync(customerRole);
                     }
 
                     var defaultMappingProvided = defaultPermission.permissions.Any(p => p.SystemName == permission1.SystemName);
@@ -212,7 +212,7 @@ namespace Nop.Services.Security
                 }
 
                 //save localization
-                await _localizationService.SaveLocalizedPermissionNameAsync(permission1);
+                await LocalizationService.SaveLocalizedPermissionNameAsync(permission1);
             }
         }
 
@@ -236,7 +236,7 @@ namespace Nop.Services.Security
                 //clear permission record customer role mapping
                 foreach (var defaultPermission in defaultPermissions)
                 {
-                    var customerRole = await _customerService.GetCustomerRoleBySystemNameAsync(defaultPermission.systemRoleName);
+                    var customerRole = await CustomerService.GetCustomerRoleBySystemNameAsync(defaultPermission.systemRoleName);
                     
                     await DeletePermissionRecordCustomerRoleMappingAsync(permission1.Id, customerRole.Id);
                 }
@@ -245,7 +245,7 @@ namespace Nop.Services.Security
                 await DeletePermissionRecordAsync(permission1);
 
                 //save localization
-                await _localizationService.DeleteLocalizedPermissionNameAsync(permission1);
+                await LocalizationService.DeleteLocalizedPermissionNameAsync(permission1);
             }
         }
 
@@ -259,7 +259,7 @@ namespace Nop.Services.Security
         /// </returns>
         public virtual async Task<bool> AuthorizeAsync(PermissionRecord permission)
         {
-            return await AuthorizeAsync(permission, await _workContext.GetCurrentCustomerAsync());
+            return await AuthorizeAsync(permission, await WorkContext.GetCurrentCustomerAsync());
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace Nop.Services.Security
         /// </returns>
         public virtual async Task<bool> AuthorizeAsync(string permissionRecordSystemName)
         {
-            return await AuthorizeAsync(permissionRecordSystemName, await _workContext.GetCurrentCustomerAsync());
+            return await AuthorizeAsync(permissionRecordSystemName, await WorkContext.GetCurrentCustomerAsync());
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace Nop.Services.Security
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
-            var customerRoles = await _customerService.GetCustomerRolesAsync(customer);
+            var customerRoles = await CustomerService.GetCustomerRolesAsync(customer);
             foreach (var role in customerRoles)
                 if (await AuthorizeAsync(permissionRecordSystemName, role.Id))
                     //yes, we have such permission
@@ -333,9 +333,9 @@ namespace Nop.Services.Security
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionAllowedCacheKey, permissionRecordSystemName, customerRoleId);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionAllowedCacheKey, permissionRecordSystemName, customerRoleId);
 
-            return await _staticCacheManager.GetAsync(key, async () =>
+            return await StaticCacheManager.GetAsync(key, async () =>
             {
                 var permissions = await GetPermissionRecordsByCustomerRoleIdAsync(customerRoleId);
                 foreach (var permission in permissions)
@@ -353,7 +353,7 @@ namespace Nop.Services.Security
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IList<PermissionRecordCustomerRoleMapping>> GetMappingByPermissionRecordIdAsync(int permissionId)
         {
-            var query = _permissionRecordCustomerRoleMappingRepository.Table;
+            var query = PermissionRecordCustomerRoleMappingRepository.Table;
 
             query = query.Where(x => x.PermissionRecordId == permissionId);
 
@@ -368,12 +368,12 @@ namespace Nop.Services.Security
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeletePermissionRecordCustomerRoleMappingAsync(int permissionId, int customerRoleId)
         {
-            var mapping = _permissionRecordCustomerRoleMappingRepository.Table
+            var mapping = PermissionRecordCustomerRoleMappingRepository.Table
                 .FirstOrDefault(prcm => prcm.CustomerRoleId == customerRoleId && prcm.PermissionRecordId == permissionId);
             if (mapping is null)
                 return;
 
-            await _permissionRecordCustomerRoleMappingRepository.DeleteAsync(mapping);
+            await PermissionRecordCustomerRoleMappingRepository.DeleteAsync(mapping);
         }
 
         /// <summary>
@@ -383,7 +383,7 @@ namespace Nop.Services.Security
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertPermissionRecordCustomerRoleMappingAsync(PermissionRecordCustomerRoleMapping permissionRecordCustomerRoleMapping)
         {
-            await _permissionRecordCustomerRoleMappingRepository.InsertAsync(permissionRecordCustomerRoleMapping);
+            await PermissionRecordCustomerRoleMappingRepository.InsertAsync(permissionRecordCustomerRoleMapping);
         }
 
         #endregion

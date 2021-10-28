@@ -13,7 +13,7 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly IRepository<TaxCategory> _taxCategoryRepository;
+        protected IRepository<TaxCategory> TaxCategoryRepository { get; }
 
         #endregion
 
@@ -21,7 +21,7 @@ namespace Nop.Services.Tax
 
         public TaxCategoryService(IRepository<TaxCategory> taxCategoryRepository)
         {
-            _taxCategoryRepository = taxCategoryRepository;
+            TaxCategoryRepository = taxCategoryRepository;
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace Nop.Services.Tax
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteTaxCategoryAsync(TaxCategory taxCategory)
         {
-            await _taxCategoryRepository.DeleteAsync(taxCategory);
+            await TaxCategoryRepository.DeleteAsync(taxCategory);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Nop.Services.Tax
         /// </returns>
         public virtual async Task<IList<TaxCategory>> GetAllTaxCategoriesAsync()
         {
-            var taxCategories = await _taxCategoryRepository.GetAllAsync(query=>
+            var taxCategories = await TaxCategoryRepository.GetAllAsync(query=>
             {
                 return from tc in query
                     orderby tc.DisplayOrder, tc.Id
@@ -67,7 +67,7 @@ namespace Nop.Services.Tax
         /// </returns>
         public virtual async Task<TaxCategory> GetTaxCategoryByIdAsync(int taxCategoryId)
         {
-            return await _taxCategoryRepository.GetByIdAsync(taxCategoryId, cache => default);
+            return await TaxCategoryRepository.GetByIdAsync(taxCategoryId, cache => default);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Nop.Services.Tax
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertTaxCategoryAsync(TaxCategory taxCategory)
         {
-            await _taxCategoryRepository.InsertAsync(taxCategory);
+            await TaxCategoryRepository.InsertAsync(taxCategory);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Nop.Services.Tax
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateTaxCategoryAsync(TaxCategory taxCategory)
         {
-            await _taxCategoryRepository.UpdateAsync(taxCategory);
+            await TaxCategoryRepository.UpdateAsync(taxCategory);
         }
 
         #endregion

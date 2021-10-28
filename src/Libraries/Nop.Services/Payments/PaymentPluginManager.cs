@@ -17,8 +17,8 @@ namespace Nop.Services.Payments
     {
         #region Fields
 
-        private readonly ISettingService _settingService;
-        private readonly PaymentSettings _paymentSettings;
+        protected ISettingService SettingService { get; }
+        protected PaymentSettings PaymentSettings { get; }
 
         #endregion
 
@@ -29,8 +29,8 @@ namespace Nop.Services.Payments
             ISettingService settingService,
             PaymentSettings paymentSettings) : base(customerService, pluginService)
         {
-            _settingService = settingService;
-            _paymentSettings = paymentSettings;
+            SettingService = settingService;
+            PaymentSettings = paymentSettings;
         }
 
         #endregion
@@ -50,7 +50,7 @@ namespace Nop.Services.Payments
         public virtual async Task<IList<IPaymentMethod>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0,
             int countryId = 0)
         {
-            var paymentMethods = await LoadActivePluginsAsync(_paymentSettings.ActivePaymentMethodSystemNames, customer, storeId);
+            var paymentMethods = await LoadActivePluginsAsync(PaymentSettings.ActivePaymentMethodSystemNames, customer, storeId);
 
             //filter by country
             if (countryId > 0)
@@ -66,7 +66,7 @@ namespace Nop.Services.Payments
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IPaymentMethod paymentMethod)
         {
-            return IsPluginActive(paymentMethod, _paymentSettings.ActivePaymentMethodSystemNames);
+            return IsPluginActive(paymentMethod, PaymentSettings.ActivePaymentMethodSystemNames);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Nop.Services.Payments
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
 
-            return await _settingService.GetSettingByKeyAsync<List<int>>(settingKey) ?? new List<int>();
+            return await SettingService.GetSettingByKeyAsync<List<int>>(settingKey) ?? new List<int>();
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Nop.Services.Payments
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
 
-            await _settingService.SetSettingAsync(settingKey, countryIds.ToList());
+            await SettingService.SetSettingAsync(settingKey, countryIds.ToList());
         }
 
         #endregion

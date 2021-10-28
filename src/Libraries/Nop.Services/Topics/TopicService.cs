@@ -19,12 +19,12 @@ namespace Nop.Services.Topics
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ICustomerService _customerService;
-        private readonly IRepository<Topic> _topicRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkContext _workContext;
+        protected IAclService AclService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected IRepository<Topic> TopicRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -38,12 +38,12 @@ namespace Nop.Services.Topics
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            _aclService = aclService;
-            _customerService = customerService;
-            _topicRepository = topicRepository;
-            _staticCacheManager = staticCacheManager;
-            _storeMappingService = storeMappingService;
-            _workContext = workContext;
+            AclService = aclService;
+            CustomerService = customerService;
+            TopicRepository = topicRepository;
+            StaticCacheManager = staticCacheManager;
+            StoreMappingService = storeMappingService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -57,7 +57,7 @@ namespace Nop.Services.Topics
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteTopicAsync(Topic topic)
         {
-            await _topicRepository.DeleteAsync(topic);
+            await TopicRepository.DeleteAsync(topic);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Nop.Services.Topics
         /// </returns>
         public virtual async Task<Topic> GetTopicByIdAsync(int topicId)
         {
-            return await _topicRepository.GetByIdAsync(topicId, cache => default);
+            return await TopicRepository.GetByIdAsync(topicId, cache => default);
         }
 
         /// <summary>
@@ -88,24 +88,24 @@ namespace Nop.Services.Topics
             if (string.IsNullOrEmpty(systemName))
                 return null;
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var customerRoleIds = await CustomerService.GetCustomerRoleIdsAsync(customer);
 
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopTopicDefaults.TopicBySystemNameCacheKey, systemName, storeId, customerRoleIds);
+            var cacheKey = StaticCacheManager.PrepareKeyForDefaultCache(NopTopicDefaults.TopicBySystemNameCacheKey, systemName, storeId, customerRoleIds);
 
-            var topic = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var topic = await StaticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var query = _topicRepository.Table;
+                var query = TopicRepository.Table;
 
                 if (!showHidden)
                     query = query.Where(t => t.Published);
 
                 //apply store mapping constraints
-                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                query = await StoreMappingService.ApplyStoreMapping(query, storeId);
 
                 //apply ACL constraints
                 if (!showHidden)
-                    query = await _aclService.ApplyAcl(query, customerRoleIds);
+                    query = await AclService.ApplyAcl(query, customerRoleIds);
 
                 return query.Where(t => t.SystemName == systemName)
                     .OrderBy(t => t.Id)
@@ -129,20 +129,20 @@ namespace Nop.Services.Topics
         public virtual async Task<IList<Topic>> GetAllTopicsAsync(int storeId,
             bool ignoreAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customer = await WorkContext.GetCurrentCustomerAsync();
+            var customerRoleIds = await CustomerService.GetCustomerRoleIdsAsync(customer);
 
-            return await _topicRepository.GetAllAsync(async query =>
+            return await TopicRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
                     query = query.Where(t => t.Published);
 
                 //apply store mapping constraints
-                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                query = await StoreMappingService.ApplyStoreMapping(query, storeId);
 
                 //apply ACL constraints
                 if (!showHidden && !ignoreAcl)
-                    query = await _aclService.ApplyAcl(query, customerRoleIds);
+                    query = await AclService.ApplyAcl(query, customerRoleIds);
 
                 if (onlyIncludedInTopMenu)
                     query = query.Where(t => t.IncludeInTopMenu);
@@ -194,7 +194,7 @@ namespace Nop.Services.Topics
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertTopicAsync(Topic topic)
         {
-            await _topicRepository.InsertAsync(topic);
+            await TopicRepository.InsertAsync(topic);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace Nop.Services.Topics
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateTopicAsync(Topic topic)
         {
-            await _topicRepository.UpdateAsync(topic);
+            await TopicRepository.UpdateAsync(topic);
         }
 
         #endregion

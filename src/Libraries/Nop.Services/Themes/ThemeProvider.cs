@@ -18,7 +18,7 @@ namespace Nop.Services.Themes
 
         private static readonly object _locker = new object();
 
-        private readonly INopFileProvider _fileProvider;
+        protected INopFileProvider FileProvider { get; }
 
         protected Dictionary<string, ThemeDescriptor> _themeDescriptors;
 
@@ -28,7 +28,7 @@ namespace Nop.Services.Themes
 
         public ThemeProvider(INopFileProvider fileProvider)
         {
-            _fileProvider = fileProvider;
+            FileProvider = fileProvider;
             Initialize();
         }
 
@@ -55,11 +55,11 @@ namespace Nop.Services.Themes
                 _themeDescriptors =
                     new Dictionary<string, ThemeDescriptor>(StringComparer.InvariantCultureIgnoreCase);
 
-                var themeDirectoryPath = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
-                foreach (var descriptionFile in _fileProvider.GetFiles(themeDirectoryPath,
+                var themeDirectoryPath = FileProvider.MapPath(NopPluginDefaults.ThemesPath);
+                foreach (var descriptionFile in FileProvider.GetFiles(themeDirectoryPath,
                     NopPluginDefaults.ThemeDescriptionFileName, false))
                 {
-                    var text = _fileProvider.ReadAllText(descriptionFile, Encoding.UTF8);
+                    var text = FileProvider.ReadAllText(descriptionFile, Encoding.UTF8);
                     if (string.IsNullOrEmpty(text))
                         continue;
 

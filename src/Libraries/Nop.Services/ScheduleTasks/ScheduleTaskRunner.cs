@@ -17,11 +17,11 @@ namespace Nop.Services.ScheduleTasks
     {
         #region Fields
 
-        protected readonly ILocalizationService _localizationService;
-        protected readonly ILocker _locker;
-        protected readonly ILogger _logger;
-        protected readonly IScheduleTaskService _scheduleTaskService;
-        protected readonly IStoreContext _storeContext;
+        protected ILocalizationService LocalizationService { get; }
+        protected ILocker Locker { get; }
+        protected ILogger Logger { get; }
+        protected IScheduleTaskService ScheduleTaskService { get; }
+        protected IStoreContext StoreContext { get; }
 
         #endregion
 
@@ -33,11 +33,11 @@ namespace Nop.Services.ScheduleTasks
             IScheduleTaskService scheduleTaskService,
             IStoreContext storeContext)
         {
-            _localizationService = localizationService;
-            _locker = locker;
-            _logger = logger;
-            _scheduleTaskService = scheduleTaskService;
-            _storeContext = storeContext;
+            LocalizationService = localizationService;
+            Locker = locker;
+            Logger = logger;
+            ScheduleTaskService = scheduleTaskService;
+            StoreContext = storeContext;
         }
 
         #endregion
@@ -75,11 +75,11 @@ namespace Nop.Services.ScheduleTasks
 
             scheduleTask.LastStartUtc = DateTime.UtcNow;
             //update appropriate datetime properties
-            _scheduleTaskService.UpdateTaskAsync(scheduleTask).Wait();
+            ScheduleTaskService.UpdateTaskAsync(scheduleTask).Wait();
             task.ExecuteAsync().Wait();
             scheduleTask.LastEndUtc = scheduleTask.LastSuccessUtc = DateTime.UtcNow;
             //update appropriate datetime properties
-            _scheduleTaskService.UpdateTaskAsync(scheduleTask).Wait();
+            ScheduleTaskService.UpdateTaskAsync(scheduleTask).Wait();
         }
 
         /// <summary>
@@ -143,23 +143,23 @@ namespace Nop.Services.ScheduleTasks
                 var expiration = TimeSpan.FromSeconds(expirationInSeconds);
 
                 //execute task with lock
-                _locker.PerformActionWithLock(scheduleTask.Type, expiration, () => ExecuteTask(scheduleTask));
+                Locker.PerformActionWithLock(scheduleTask.Type, expiration, () => ExecuteTask(scheduleTask));
             }
             catch (Exception exc)
             {
-                var store = await _storeContext.GetCurrentStoreAsync();
+                var store = await StoreContext.GetCurrentStoreAsync();
 
                 var scheduleTaskUrl = $"{store.Url}{NopTaskDefaults.ScheduleTaskPath}";
 
                 scheduleTask.Enabled = !scheduleTask.StopOnError;
                 scheduleTask.LastEndUtc = DateTime.UtcNow;
-                await _scheduleTaskService.UpdateTaskAsync(scheduleTask);
+                await ScheduleTaskService.UpdateTaskAsync(scheduleTask);
 
-                var message = string.Format(await _localizationService.GetResourceAsync("ScheduleTasks.Error"), scheduleTask.Name,
+                var message = string.Format(await LocalizationService.GetResourceAsync("ScheduleTasks.Error"), scheduleTask.Name,
                     exc.Message, scheduleTask.Type, store.Name, scheduleTaskUrl);
 
                 //log error
-                await _logger.ErrorAsync(message, exc);
+                await Logger.ErrorAsync(message, exc);
                 if (throwException)
                     throw;
             }

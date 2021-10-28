@@ -16,7 +16,7 @@ namespace Nop.Services.Shipping
     {
         #region Fields
 
-        private readonly ShippingSettings _shippingSettings;
+        protected ShippingSettings ShippingSettings { get; }
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace Nop.Services.Shipping
             IPluginService pluginService,
             ShippingSettings shippingSettings) : base(customerService, pluginService)
         {
-            _shippingSettings = shippingSettings;
+            ShippingSettings = shippingSettings;
         }
 
         #endregion
@@ -46,7 +46,7 @@ namespace Nop.Services.Shipping
         public virtual async Task<IList<IShippingRateComputationMethod>> LoadActivePluginsAsync(Customer customer = null,
             int storeId = 0, string systemName = null)
         {
-            var shippingProviders = await LoadActivePluginsAsync(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, customer, storeId);
+            var shippingProviders = await LoadActivePluginsAsync(ShippingSettings.ActiveShippingRateComputationMethodSystemNames, customer, storeId);
 
             //filter by passed system name
             if (!string.IsNullOrEmpty(systemName))
@@ -66,7 +66,7 @@ namespace Nop.Services.Shipping
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IShippingRateComputationMethod shippingProvider)
         {
-            return IsPluginActive(shippingProvider, _shippingSettings.ActiveShippingRateComputationMethodSystemNames);
+            return IsPluginActive(shippingProvider, ShippingSettings.ActiveShippingRateComputationMethodSystemNames);
         }
 
         /// <summary>

@@ -16,8 +16,8 @@ namespace Nop.Services.Plugins.Marketplace
     {
         #region Fields
 
-        private readonly ILogger _logger;
-        private readonly NopHttpClient _nopHttpClient;
+        protected ILogger Logger { get; }
+        protected NopHttpClient NopHttpClient { get; }
 
         #endregion
 
@@ -26,8 +26,8 @@ namespace Nop.Services.Plugins.Marketplace
         public OfficialFeedManager(ILogger logger,
             NopHttpClient nopHttpClient)
         {
-            _logger = logger;
-            _nopHttpClient = nopHttpClient;
+            Logger = logger;
+            NopHttpClient = nopHttpClient;
         }
 
         #endregion
@@ -62,11 +62,11 @@ namespace Nop.Services.Plugins.Marketplace
             var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(await _nopHttpClient.GetExtensionsCategoriesAsync());
+                xml.LoadXml(await NopHttpClient.GetExtensionsCategoriesAsync());
             }
             catch (Exception ex)
             {
-                await _logger.ErrorAsync("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+                await Logger.ErrorAsync("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
             }
 
             //get list of categories from the XML
@@ -91,11 +91,11 @@ namespace Nop.Services.Plugins.Marketplace
             var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(await _nopHttpClient.GetExtensionsVersionsAsync());
+                xml.LoadXml(await NopHttpClient.GetExtensionsVersionsAsync());
             }
             catch (Exception ex)
             {
-                await _logger.ErrorAsync("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+                await Logger.ErrorAsync("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
             }
 
             //get list of versions from the XML
@@ -127,11 +127,11 @@ namespace Nop.Services.Plugins.Marketplace
             var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(await _nopHttpClient.GetExtensionsAsync(categoryId, versionId, price, searchTerm, pageIndex, pageSize));
+                xml.LoadXml(await NopHttpClient.GetExtensionsAsync(categoryId, versionId, price, searchTerm, pageIndex, pageSize));
             }
             catch (Exception ex)
             {
-                await _logger.ErrorAsync("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+                await Logger.ErrorAsync("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
             }
 
             //get list of extensions from the XML

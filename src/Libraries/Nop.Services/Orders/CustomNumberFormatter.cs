@@ -9,7 +9,7 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly OrderSettings _orderSettings;
+        protected OrderSettings OrderSettings { get; }
 
         #endregion
 
@@ -17,7 +17,7 @@ namespace Nop.Services.Orders
 
         public CustomNumberFormatter(OrderSettings orderSettings)
         {
-            _orderSettings = orderSettings;
+            OrderSettings = orderSettings;
         }
 
         #endregion
@@ -33,13 +33,13 @@ namespace Nop.Services.Orders
         {
             string customNumber;
 
-            if (string.IsNullOrEmpty(_orderSettings.ReturnRequestNumberMask))
+            if (string.IsNullOrEmpty(OrderSettings.ReturnRequestNumberMask))
             {
                 customNumber = returnRequest.Id.ToString();
             }
             else
             {
-                customNumber = _orderSettings.ReturnRequestNumberMask
+                customNumber = OrderSettings.ReturnRequestNumberMask
                     .Replace("{ID}", returnRequest.Id.ToString())
                     .Replace("{YYYY}", returnRequest.CreatedOnUtc.ToString("yyyy"))
                     .Replace("{YY}", returnRequest.CreatedOnUtc.ToString("yy"))
@@ -72,10 +72,10 @@ namespace Nop.Services.Orders
         /// <returns>Custom number</returns>
         public virtual string GenerateOrderCustomNumber(Order order)
         {
-            if (string.IsNullOrEmpty(_orderSettings.CustomOrderNumberMask))
+            if (string.IsNullOrEmpty(OrderSettings.CustomOrderNumberMask))
                 return order.Id.ToString();
 
-            var customNumber = _orderSettings.CustomOrderNumberMask
+            var customNumber = OrderSettings.CustomOrderNumberMask
                 .Replace("{ID}", order.Id.ToString())
                 .Replace("{YYYY}", order.CreatedOnUtc.ToString("yyyy"))
                 .Replace("{YY}", order.CreatedOnUtc.ToString("yy"))

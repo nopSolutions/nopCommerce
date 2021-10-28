@@ -14,7 +14,7 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly TaxSettings _taxSettings;
+        protected TaxSettings TaxSettings { get; }
 
         #endregion
 
@@ -24,7 +24,7 @@ namespace Nop.Services.Tax
             IPluginService pluginService,
             TaxSettings taxSettings) : base(customerService, pluginService)
         {
-            _taxSettings = taxSettings;
+            TaxSettings = taxSettings;
         }
 
         #endregion
@@ -42,7 +42,7 @@ namespace Nop.Services.Tax
         /// </returns>
         public virtual async Task<ITaxProvider> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0)
         {
-            return await LoadPrimaryPluginAsync(_taxSettings.ActiveTaxProviderSystemName, customer, storeId);
+            return await LoadPrimaryPluginAsync(TaxSettings.ActiveTaxProviderSystemName, customer, storeId);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Nop.Services.Tax
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(ITaxProvider taxProvider)
         {
-            return IsPluginActive(taxProvider, new List<string> { _taxSettings.ActiveTaxProviderSystemName });
+            return IsPluginActive(taxProvider, new List<string> { TaxSettings.ActiveTaxProviderSystemName });
         }
 
         /// <summary>

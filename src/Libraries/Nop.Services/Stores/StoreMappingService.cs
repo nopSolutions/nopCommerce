@@ -17,10 +17,10 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
+        protected CatalogSettings CatalogSettings { get; }
+        protected IRepository<StoreMapping> StoreMappingRepository { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IStoreContext StoreContext { get; }
 
         #endregion
 
@@ -31,10 +31,10 @@ namespace Nop.Services.Stores
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext)
         {
-            _catalogSettings = catalogSettings;
-            _storeMappingRepository = storeMappingRepository;
-            _staticCacheManager = staticCacheManager;
-            _storeContext = storeContext;
+            CatalogSettings = catalogSettings;
+            StoreMappingRepository = storeMappingRepository;
+            StaticCacheManager = staticCacheManager;
+            StoreContext = storeContext;
         }
 
         #endregion
@@ -48,7 +48,7 @@ namespace Nop.Services.Stores
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InsertStoreMappingAsync(StoreMapping storeMapping)
         {
-            await _storeMappingRepository.InsertAsync(storeMapping);
+            await StoreMappingRepository.InsertAsync(storeMapping);
         }
 
         /// <summary>
@@ -62,13 +62,13 @@ namespace Nop.Services.Stores
         protected virtual async Task<bool> IsEntityMappingExistsAsync<TEntity>() where TEntity : BaseEntity, IStoreMappingSupported
         {
             var entityName = typeof(TEntity).Name;
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingExistsCacheKey, entityName);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingExistsCacheKey, entityName);
 
-            var query = from sm in _storeMappingRepository.Table
+            var query = from sm in StoreMappingRepository.Table
                         where sm.EntityName == entityName
                         select sm.StoreId;
 
-            return await _staticCacheManager.GetAsync(key, query.Any);
+            return await StaticCacheManager.GetAsync(key, query.Any);
         }
 
         #endregion
@@ -91,11 +91,11 @@ namespace Nop.Services.Stores
             if (query is null)
                 throw new ArgumentNullException(nameof(query));
 
-            if (storeId == 0 || _catalogSettings.IgnoreStoreLimitations || !await IsEntityMappingExistsAsync<TEntity>())
+            if (storeId == 0 || CatalogSettings.IgnoreStoreLimitations || !await IsEntityMappingExistsAsync<TEntity>())
                 return query;
 
             return from entity in query
-                   where !entity.LimitedToStores || _storeMappingRepository.Table.Any(sm =>
+                   where !entity.LimitedToStores || StoreMappingRepository.Table.Any(sm =>
                          sm.EntityName == typeof(TEntity).Name && sm.EntityId == entity.Id && sm.StoreId == storeId)
                    select entity;
         }
@@ -107,7 +107,7 @@ namespace Nop.Services.Stores
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteStoreMappingAsync(StoreMapping storeMapping)
         {
-            await _storeMappingRepository.DeleteAsync(storeMapping);
+            await StoreMappingRepository.DeleteAsync(storeMapping);
         }
 
         /// <summary>
@@ -127,14 +127,14 @@ namespace Nop.Services.Stores
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingsCacheKey, entityId, entityName);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingsCacheKey, entityId, entityName);
 
-            var query = from sm in _storeMappingRepository.Table
+            var query = from sm in StoreMappingRepository.Table
                         where sm.EntityId == entityId &&
                         sm.EntityName == entityName
                         select sm;
 
-            var storeMappings = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
+            var storeMappings = await StaticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return storeMappings;
         }
@@ -184,14 +184,14 @@ namespace Nop.Services.Stores
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingIdsCacheKey, entityId, entityName);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingIdsCacheKey, entityId, entityName);
 
-            var query = from sm in _storeMappingRepository.Table
+            var query = from sm in StoreMappingRepository.Table
                         where sm.EntityId == entityId &&
                               sm.EntityName == entityName
                         select sm.StoreId;
 
-            return await _staticCacheManager.GetAsync(key, () => query.ToArray());
+            return await StaticCacheManager.GetAsync(key, () => query.ToArray());
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual async Task<bool> AuthorizeAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var store = await StoreContext.GetCurrentStoreAsync();
 
             return await AuthorizeAsync(entity, store.Id);
         }
@@ -229,7 +229,7 @@ namespace Nop.Services.Stores
                 //return true if no store specified/found
                 return true;
 
-            if (_catalogSettings.IgnoreStoreLimitations)
+            if (CatalogSettings.IgnoreStoreLimitations)
                 return true;
 
             if (!entity.LimitedToStores)

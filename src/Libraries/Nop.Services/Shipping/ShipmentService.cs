@@ -20,14 +20,14 @@ namespace Nop.Services.Shipping
     {
         #region Fields
 
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<Shipment> _shipmentRepository;
-        private readonly IRepository<ShipmentItem> _siRepository;
-        private readonly IShippingPluginManager _shippingPluginManager;
+        protected IPickupPluginManager PickupPluginManager { get; }
+        protected IRepository<Address> AddressRepository { get; }
+        protected IRepository<Order> OrderRepository { get; }
+        protected IRepository<OrderItem> OrderItemRepository { get; }
+        protected IRepository<Product> ProductRepository { get; }
+        protected IRepository<Shipment> ShipmentRepository { get; }
+        protected IRepository<ShipmentItem> ShipmentItemRepository { get; }
+        protected IShippingPluginManager ShippingPluginManager { get; }
 
         #endregion
 
@@ -42,14 +42,14 @@ namespace Nop.Services.Shipping
             IRepository<ShipmentItem> siRepository,
             IShippingPluginManager shippingPluginManager)
         {
-            _pickupPluginManager = pickupPluginManager;
-            _addressRepository = addressRepository;
-            _orderRepository = orderRepository;
-            _orderItemRepository = orderItemRepository;
-            _productRepository = productRepository;
-            _shipmentRepository = shipmentRepository;
-            _siRepository = siRepository;
-            _shippingPluginManager = shippingPluginManager;
+            PickupPluginManager = pickupPluginManager;
+            AddressRepository = addressRepository;
+            OrderRepository = orderRepository;
+            OrderItemRepository = orderItemRepository;
+            ProductRepository = productRepository;
+            ShipmentRepository = shipmentRepository;
+            ShipmentItemRepository = siRepository;
+            ShippingPluginManager = shippingPluginManager;
         }
 
         #endregion
@@ -63,7 +63,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteShipmentAsync(Shipment shipment)
         {
-            await _shipmentRepository.DeleteAsync(shipment);
+            await ShipmentRepository.DeleteAsync(shipment);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Nop.Services.Shipping
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var shipments = await _shipmentRepository.GetAllPagedAsync(query =>
+            var shipments = await ShipmentRepository.GetAllPagedAsync(query =>
             {
                 if (orderId > 0)
                     query = query.Where(o => o.OrderId == orderId);
@@ -109,32 +109,32 @@ namespace Nop.Services.Shipping
 
                 if (shippingCountryId > 0)
                     query = from s in query
-                        join o in _orderRepository.Table on s.OrderId equals o.Id
-                        where _addressRepository.Table.Any(a =>
+                        join o in OrderRepository.Table on s.OrderId equals o.Id
+                        where AddressRepository.Table.Any(a =>
                             a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
                             a.CountryId == shippingCountryId)
                         select s;
 
                 if (shippingStateId > 0)
                     query = from s in query
-                        join o in _orderRepository.Table on s.OrderId equals o.Id
-                        where _addressRepository.Table.Any(a =>
+                        join o in OrderRepository.Table on s.OrderId equals o.Id
+                        where AddressRepository.Table.Any(a =>
                             a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
                             a.StateProvinceId == shippingStateId)
                         select s;
 
                 if (!string.IsNullOrWhiteSpace(shippingCounty))
                     query = from s in query
-                        join o in _orderRepository.Table on s.OrderId equals o.Id
-                        where _addressRepository.Table.Any(a =>
+                        join o in OrderRepository.Table on s.OrderId equals o.Id
+                        where AddressRepository.Table.Any(a =>
                             a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
                             a.County.Contains(shippingCounty))
                         select s;
 
                 if (!string.IsNullOrWhiteSpace(shippingCity))
                     query = from s in query
-                        join o in _orderRepository.Table on s.OrderId equals o.Id
-                        where _addressRepository.Table.Any(a =>
+                        join o in OrderRepository.Table on s.OrderId equals o.Id
+                        where AddressRepository.Table.Any(a =>
                             a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
                             a.City.Contains(shippingCity))
                         select s;
@@ -152,7 +152,7 @@ namespace Nop.Services.Shipping
                     query = query.Where(s => createdToUtc.Value >= s.CreatedOnUtc);
 
                 query = from s in query
-                    join o in _orderRepository.Table on s.OrderId equals o.Id
+                    join o in OrderRepository.Table on s.OrderId equals o.Id
                     where !o.Deleted
                     select s;
 
@@ -160,13 +160,13 @@ namespace Nop.Services.Shipping
 
                 if (vendorId > 0)
                 {
-                    var queryVendorOrderItems = from orderItem in _orderItemRepository.Table
-                        join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                    var queryVendorOrderItems = from orderItem in OrderItemRepository.Table
+                        join p in ProductRepository.Table on orderItem.ProductId equals p.Id
                         where p.VendorId == vendorId
                         select orderItem.Id;
 
                     query = from s in query
-                        join si in _siRepository.Table on s.Id equals si.ShipmentId
+                        join si in ShipmentItemRepository.Table on s.Id equals si.ShipmentId
                         where queryVendorOrderItems.Contains(si.OrderItemId)
                         select s;
 
@@ -176,7 +176,7 @@ namespace Nop.Services.Shipping
                 if (warehouseId > 0)
                 {
                     query = from s in query
-                        join si in _siRepository.Table on s.Id equals si.ShipmentId
+                        join si in ShipmentItemRepository.Table on s.Id equals si.ShipmentId
                         where si.WarehouseId == warehouseId
                         select s;
 
@@ -201,7 +201,7 @@ namespace Nop.Services.Shipping
         /// </returns>
         public virtual async Task<IList<Shipment>> GetShipmentsByIdsAsync(int[] shipmentIds)
         {
-            return await _shipmentRepository.GetByIdsAsync(shipmentIds);
+            return await ShipmentRepository.GetByIdsAsync(shipmentIds);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Nop.Services.Shipping
         /// </returns>
         public virtual async Task<Shipment> GetShipmentByIdAsync(int shipmentId)
         {
-            return await _shipmentRepository.GetByIdAsync(shipmentId);
+            return await ShipmentRepository.GetByIdAsync(shipmentId);
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace Nop.Services.Shipping
             if (orderId == 0)
                 return new List<Shipment>();
 
-            var shipments = _shipmentRepository.Table;
+            var shipments = ShipmentRepository.Table;
 
             if (shipped.HasValue) 
                 shipments = shipments.Where(s => s.ShippedDateUtc.HasValue == shipped);
@@ -247,7 +247,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertShipmentAsync(Shipment shipment)
         {
-            await _shipmentRepository.InsertAsync(shipment);
+            await ShipmentRepository.InsertAsync(shipment);
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateShipmentAsync(Shipment shipment)
         {
-            await _shipmentRepository.UpdateAsync(shipment);
+            await ShipmentRepository.UpdateAsync(shipment);
         }
         
         /// <summary>
@@ -273,7 +273,7 @@ namespace Nop.Services.Shipping
             if (shipmentId == 0)
                 return null;
 
-            return await _siRepository.Table.Where(si => si.ShipmentId == shipmentId).ToListAsync();
+            return await ShipmentItemRepository.Table.Where(si => si.ShipmentId == shipmentId).ToListAsync();
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertShipmentItemAsync(ShipmentItem shipmentItem)
         {
-            await _siRepository.InsertAsync(shipmentItem);
+            await ShipmentItemRepository.InsertAsync(shipmentItem);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteShipmentItemAsync(ShipmentItem shipmentItem)
         {
-            await _siRepository.DeleteAsync(shipmentItem);
+            await ShipmentItemRepository.DeleteAsync(shipmentItem);
         }
 
         /// <summary>
@@ -303,7 +303,7 @@ namespace Nop.Services.Shipping
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateShipmentItemAsync(ShipmentItem shipmentItem)
         {
-            await _siRepository.UpdateAsync(shipmentItem);
+            await ShipmentItemRepository.UpdateAsync(shipmentItem);
         }
 
         /// <summary>
@@ -316,7 +316,7 @@ namespace Nop.Services.Shipping
         /// </returns>
         public virtual async Task<ShipmentItem> GetShipmentItemByIdAsync(int shipmentItemId)
         {
-            return await _siRepository.GetByIdAsync(shipmentItemId);
+            return await ShipmentItemRepository.GetByIdAsync(shipmentItemId);
         }
 
         /// <summary>
@@ -344,11 +344,11 @@ namespace Nop.Services.Shipping
 
             const int cancelledOrderStatusId = (int)OrderStatus.Cancelled;
 
-            var query = _siRepository.Table;
+            var query = ShipmentItemRepository.Table;
 
             query = from si in query
-                join s in _shipmentRepository.Table on si.ShipmentId equals s.Id
-                join o in _orderRepository.Table on s.OrderId equals o.Id
+                join s in ShipmentRepository.Table on si.ShipmentId equals s.Id
+                join o in OrderRepository.Table on s.OrderId equals o.Id
                 where !o.Deleted && o.OrderStatusId != cancelledOrderStatusId
                     select si;
 
@@ -359,7 +359,7 @@ namespace Nop.Services.Shipping
             if (ignoreShipped)
             {
                 query = from si in query
-                    join s in _shipmentRepository.Table on si.ShipmentId equals s.Id
+                    join s in ShipmentRepository.Table on si.ShipmentId equals s.Id
                     where !s.ShippedDateUtc.HasValue
                     select si;
             }
@@ -367,12 +367,12 @@ namespace Nop.Services.Shipping
             if (ignoreDelivered)
             {
                 query = from si in query
-                    join s in _shipmentRepository.Table on si.ShipmentId equals s.Id
+                    join s in ShipmentRepository.Table on si.ShipmentId equals s.Id
                     where !s.DeliveryDateUtc.HasValue
                     select si;
             }
 
-            var queryProductOrderItems = from orderItem in _orderItemRepository.Table
+            var queryProductOrderItems = from orderItem in OrderItemRepository.Table
                                          where orderItem.ProductId == product.Id
                                          select orderItem.Id;
             query = from si in query
@@ -394,17 +394,17 @@ namespace Nop.Services.Shipping
         /// </returns>
         public virtual async Task<IShipmentTracker> GetShipmentTrackerAsync(Shipment shipment)
         {
-            var order = await _orderRepository.GetByIdAsync(shipment.OrderId, cache => default);
+            var order = await OrderRepository.GetByIdAsync(shipment.OrderId, cache => default);
 
             if (!order.PickupInStore)
             {
-                var shippingRateComputationMethod = await _shippingPluginManager
+                var shippingRateComputationMethod = await ShippingPluginManager
                     .LoadPluginBySystemNameAsync(order.ShippingRateComputationMethodSystemName);
 
                 return shippingRateComputationMethod?.ShipmentTracker;
             }
 
-            var pickupPointProvider = await _pickupPluginManager
+            var pickupPointProvider = await PickupPluginManager
                 .LoadPluginBySystemNameAsync(order.ShippingRateComputationMethodSystemName);
             return pickupPointProvider?.ShipmentTracker;
         }

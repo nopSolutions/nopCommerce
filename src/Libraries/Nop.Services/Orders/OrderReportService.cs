@@ -25,20 +25,20 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
-        private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkContext _workContext;
+        protected CurrencySettings CurrencySettings { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected IPriceFormatter PriceFormatter { get; }
+        protected IRepository<Address> AddressRepository { get; }
+        protected IRepository<Order> OrderRepository { get; }
+        protected IRepository<OrderItem> OrderItemRepository { get; }
+        protected IRepository<OrderNote> OrderNoteRepository { get; }
+        protected IRepository<Product> ProductRepository { get; }
+        protected IRepository<ProductCategory> ProductCategoryRepository { get; }
+        protected IRepository<ProductManufacturer> ProductManufacturerRepository { get; }
+        protected IRepository<ProductWarehouseInventory> ProductWarehouseInventoryRepository { get; }
+        protected IStoreMappingService StoreMappingService { get; }
+        protected IWorkContext WorkContext { get; }
 
         #endregion
 
@@ -60,20 +60,20 @@ namespace Nop.Services.Orders
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            _currencySettings = currencySettings;
-            _currencyService = currencyService;
-            _dateTimeHelper = dateTimeHelper;
-            _priceFormatter = priceFormatter;
-            _addressRepository = addressRepository;
-            _orderRepository = orderRepository;
-            _orderItemRepository = orderItemRepository;
-            _orderNoteRepository = orderNoteRepository;
-            _productRepository = productRepository;
-            _productCategoryRepository = productCategoryRepository;
-            _productManufacturerRepository = productManufacturerRepository;
-            _productWarehouseInventoryRepository = productWarehouseInventoryRepository;
-            _storeMappingService = storeMappingService;
-            _workContext = workContext;
+            CurrencySettings = currencySettings;
+            CurrencyService = currencyService;
+            DateTimeHelper = dateTimeHelper;
+            PriceFormatter = priceFormatter;
+            AddressRepository = addressRepository;
+            OrderRepository = orderRepository;
+            OrderItemRepository = orderItemRepository;
+            OrderNoteRepository = orderNoteRepository;
+            ProductRepository = productRepository;
+            ProductCategoryRepository = productCategoryRepository;
+            ProductManufacturerRepository = productManufacturerRepository;
+            ProductWarehouseInventoryRepository = productWarehouseInventoryRepository;
+            StoreMappingService = storeMappingService;
+            WorkContext = workContext;
         }
 
         #endregion
@@ -120,10 +120,10 @@ namespace Nop.Services.Orders
             if (ss.HasValue)
                 shippingStatusId = (int)ss.Value;
 
-            var orderItems = from orderItem in _orderItemRepository.Table
-                    join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                    join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                    join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+            var orderItems = from orderItem in OrderItemRepository.Table
+                    join o in OrderRepository.Table on orderItem.OrderId equals o.Id
+                    join p in ProductRepository.Table on orderItem.ProductId equals p.Id
+                    join oba in AddressRepository.Table on o.BillingAddressId equals oba.Id
                     where (storeId == 0 || storeId == o.StoreId) &&
                         (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                         (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
@@ -139,8 +139,8 @@ namespace Nop.Services.Orders
             if (categoryId > 0)
             {
                 orderItems = from orderItem in orderItems
-                    join p in _productRepository.Table on orderItem.ProductId equals p.Id 
-                    join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                    join p in ProductRepository.Table on orderItem.ProductId equals p.Id 
+                    join pc in ProductCategoryRepository.Table on p.Id equals pc.ProductId
                     into p_pc
                     from pc in p_pc.DefaultIfEmpty()
                     where pc.CategoryId == categoryId
@@ -150,8 +150,8 @@ namespace Nop.Services.Orders
             if (manufacturerId > 0)
             {
                 orderItems = from orderItem in orderItems
-                    join p in _productRepository.Table on orderItem.ProductId equals p.Id 
-                    join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                    join p in ProductRepository.Table on orderItem.ProductId equals p.Id 
+                    join pm in ProductManufacturerRepository.Table on p.Id equals pm.ProductId
                     into p_pm
                     from pm in p_pm.DefaultIfEmpty()
                     where pm.ManufacturerId == manufacturerId
@@ -193,7 +193,7 @@ namespace Nop.Services.Orders
             if (ss.HasValue)
                 shippingStatusId = (int)ss.Value;
 
-            var query = _orderRepository.Table;
+            var query = OrderRepository.Table;
             query = query.Where(o => !o.Deleted);
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
@@ -209,7 +209,7 @@ namespace Nop.Services.Orders
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
 
             var report = await (from oq in query
-                          join a in _addressRepository.Table on oq.BillingAddressId equals a.Id
+                          join a in AddressRepository.Table on oq.BillingAddressId equals a.Id
                           group oq by a.CountryId
                           into result
                           select new
@@ -260,7 +260,7 @@ namespace Nop.Services.Orders
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingPhone = null, string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
-            var query = _orderRepository.Table;
+            var query = OrderRepository.Table;
 
             query = query.Where(o => !o.Deleted);
             if (storeId > 0)
@@ -270,14 +270,14 @@ namespace Nop.Services.Orders
 
             if (vendorId > 0)
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    join oi in OrderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in ProductRepository.Table on oi.ProductId equals p.Id
                     where p.VendorId == vendorId
                     select o;
 
             if (productId > 0)
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    join oi in OrderItemRepository.Table on o.Id equals oi.OrderId
                     where oi.ProductId == productId
                     select o;
 
@@ -286,9 +286,9 @@ namespace Nop.Services.Orders
                 var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
 
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
-                    join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId
+                    join oi in OrderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in ProductRepository.Table on oi.ProductId equals p.Id
+                    join pwi in ProductWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId
                     where
                         //"Use multiple warehouses" enabled
                         //we search in each warehouse
@@ -300,7 +300,7 @@ namespace Nop.Services.Orders
             }
 
             query = from o in query
-                join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                join oba in AddressRepository.Table on o.BillingAddressId equals oba.Id
                 where 
                     (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
                     (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
@@ -328,7 +328,7 @@ namespace Nop.Services.Orders
 
             if (!string.IsNullOrEmpty(orderNotes))
                 query = from o in query
-                    join n in _orderNoteRepository.Table on o.Id equals n.OrderId
+                    join n in OrderNoteRepository.Table on o.Id equals n.OrderId
                     where n.Note.Contains(orderNotes)
                     select o;
 
@@ -382,12 +382,12 @@ namespace Nop.Services.Orders
             };
             var orderStatuses = new List<int> { (int)os };
 
-            var nowDt = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
-            var timeZone = await _dateTimeHelper.GetCurrentTimeZoneAsync();
+            var nowDt = await DateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
+            var timeZone = await DateTimeHelper.GetCurrentTimeZoneAsync();
 
             //today
             var t1 = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
-            DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
+            DateTime? startTime1 = DateTimeHelper.ConvertToUtcTime(t1, timeZone);
             var todayResult = await GetOrderAverageReportLineAsync(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime1);
@@ -398,7 +398,7 @@ namespace Nop.Services.Orders
             var fdow = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
             var today = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
             var t2 = today.AddDays(-(today.DayOfWeek - fdow));
-            DateTime? startTime2 = _dateTimeHelper.ConvertToUtcTime(t2, timeZone);
+            DateTime? startTime2 = DateTimeHelper.ConvertToUtcTime(t2, timeZone);
             var weekResult = await GetOrderAverageReportLineAsync(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime2);
@@ -407,7 +407,7 @@ namespace Nop.Services.Orders
 
             //month
             var t3 = new DateTime(nowDt.Year, nowDt.Month, 1);
-            DateTime? startTime3 = _dateTimeHelper.ConvertToUtcTime(t3, timeZone);
+            DateTime? startTime3 = DateTimeHelper.ConvertToUtcTime(t3, timeZone);
             var monthResult = await GetOrderAverageReportLineAsync(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime3);
@@ -416,7 +416,7 @@ namespace Nop.Services.Orders
 
             //year
             var t4 = new DateTime(nowDt.Year, 1, 1);
-            DateTime? startTime4 = _dateTimeHelper.ConvertToUtcTime(t4, timeZone);
+            DateTime? startTime4 = DateTimeHelper.ConvertToUtcTime(t4, timeZone);
             var yearResult = await GetOrderAverageReportLineAsync(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime4);
@@ -476,7 +476,7 @@ namespace Nop.Services.Orders
 
             //var orderItems = SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, null, billingCountryId);
             
-            var query = _orderRepository.Table;            
+            var query = OrderRepository.Table;            
             query = query.Where(o => !o.Deleted);
 
             //filter by date
@@ -497,25 +497,25 @@ namespace Nop.Services.Orders
             //filter by category
             if (categoryId > 0)
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
-                    join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                    join oi in OrderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in ProductRepository.Table on oi.ProductId equals p.Id
+                    join pc in ProductCategoryRepository.Table on p.Id equals pc.ProductId
                     where pc.CategoryId == categoryId                        
                     select o;
 
             //filter by manufacturer
             if (manufacturerId > 0)
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
-                    join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                    join oi in OrderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in ProductRepository.Table on oi.ProductId equals p.Id
+                    join pm in ProductManufacturerRepository.Table on p.Id equals pm.ProductId
                     where pm.ManufacturerId == manufacturerId
                     select o;
 
             //filter by country
             if (billingCountryId > 0)
                 query = from o in query
-                    join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                    join oba in AddressRepository.Table on o.BillingAddressId equals oba.Id
                     where
                         billingCountryId <= 0 || oba.CountryId == billingCountryId
                     select o;
@@ -523,7 +523,7 @@ namespace Nop.Services.Orders
             //filter by product
             if (productId > 0)
                 query = from o in query
-                        join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                        join oi in OrderItemRepository.Table on o.Id equals oi.OrderId
                         where oi.ProductId == productId
                         select o;            
 
@@ -531,13 +531,13 @@ namespace Nop.Services.Orders
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
 
-            var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+            var primaryStoreCurrency = await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId);
 
             var items = groupBy switch
             {
                 GroupByOptions.Day => from oq in query
                                           group oq by $"{oq.CreatedOnUtc.Year}-{oq.CreatedOnUtc.Month}-{oq.CreatedOnUtc.Day}" into result
-                                          let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                          let orderItems = OrderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
                                           select new
                                           {
                                               OrderSummary = result.Key,
@@ -552,7 +552,7 @@ namespace Nop.Services.Orders
                                           },
                 GroupByOptions.Week => from oq in query
                                             group oq by $"{oq.CreatedOnUtc.Year}-{oq.CreatedOnUtc.Month}-{oq.CreatedOnUtc.Day - (int)oq.CreatedOnUtc.DayOfWeek}" into result
-                                            let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                            let orderItems = OrderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
                                             select new
                                             {
                                                 OrderSummary = result.Key,
@@ -567,7 +567,7 @@ namespace Nop.Services.Orders
                                             },
                 GroupByOptions.Month => from oq in query
                                             group oq by $"{oq.CreatedOnUtc.Year}-{oq.CreatedOnUtc.Month}" into result
-                                            let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                            let orderItems = OrderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
                                             select new
                                             {
                                                 OrderSummary = result.Key,
@@ -637,11 +637,11 @@ namespace Nop.Services.Orders
                     reportLine.Summary = date.ToString(dateFormat);
                 }
 
-                reportLine.ProfitStr = await _priceFormatter.FormatPriceAsync(reportLine.Profit, true, false);
-                reportLine.Shipping = await _priceFormatter
-                    .FormatShippingPriceAsync(Convert.ToDecimal(reportLine.Shipping), true, primaryStoreCurrency, (await _workContext.GetWorkingLanguageAsync()).Id, false);
-                reportLine.Tax = await _priceFormatter.FormatPriceAsync(Convert.ToDecimal(reportLine.Tax), true, false);
-                reportLine.OrderTotal = await _priceFormatter.FormatPriceAsync(Convert.ToDecimal(reportLine.OrderTotal), true, false);
+                reportLine.ProfitStr = await PriceFormatter.FormatPriceAsync(reportLine.Profit, true, false);
+                reportLine.Shipping = await PriceFormatter
+                    .FormatShippingPriceAsync(Convert.ToDecimal(reportLine.Shipping), true, primaryStoreCurrency, (await WorkContext.GetWorkingLanguageAsync()).Id, false);
+                reportLine.Tax = await PriceFormatter.FormatPriceAsync(Convert.ToDecimal(reportLine.Tax), true, false);
+                reportLine.OrderTotal = await PriceFormatter.FormatPriceAsync(Convert.ToDecimal(reportLine.OrderTotal), true, false);
             }
 
             return report;            
@@ -762,13 +762,13 @@ namespace Nop.Services.Orders
                 throw new ArgumentException("Product ID is not specified");
 
             //this inner query should retrieve all orders that contains a specified product ID
-            var query1 = from orderItem in _orderItemRepository.Table
+            var query1 = from orderItem in OrderItemRepository.Table
                          where orderItem.ProductId == productId
                          select orderItem.OrderId;
 
-            var query2 = from orderItem in _orderItemRepository.Table
-                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+            var query2 = from orderItem in OrderItemRepository.Table
+                         join p in ProductRepository.Table on orderItem.ProductId equals p.Id
+                         join o in OrderRepository.Table on orderItem.OrderId equals o.Id
                          where query1.Contains(orderItem.OrderId) &&
                          p.Id != productId &&
                          (showHidden || p.Published) &&
@@ -823,15 +823,15 @@ namespace Nop.Services.Orders
             var simpleProductTypeId = (int)ProductType.SimpleProduct;
 
             var availableProductsQuery =
-                from oi in _orderItemRepository.Table
-                join o in _orderRepository.Table on oi.OrderId equals o.Id
+                from oi in OrderItemRepository.Table
+                join o in OrderRepository.Table on oi.OrderId equals o.Id
                 where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                       (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
                       !o.Deleted
                 select new { ProductId = oi.ProductId };
 
             var query = 
-                from p in _productRepository.Table
+                from p in ProductRepository.Table
                 join oi in availableProductsQuery on p.Id equals oi.ProductId
                     into p_oi
                 from oi in p_oi.DefaultIfEmpty()
@@ -845,7 +845,7 @@ namespace Nop.Services.Orders
             if (categoryId > 0)
             {
                 query = from p in query
-                        join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                        join pc in ProductCategoryRepository.Table on p.Id equals pc.ProductId
                             into p_pc
                         from pc in p_pc.DefaultIfEmpty()
                         where pc.CategoryId == categoryId
@@ -855,7 +855,7 @@ namespace Nop.Services.Orders
             if (manufacturerId > 0)
             {
                 query = from p in query
-                        join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                        join pm in ProductManufacturerRepository.Table on p.Id equals pm.ProductId
                             into p_pm
                         from pm in p_pm.DefaultIfEmpty()
                         where pm.ManufacturerId == manufacturerId
@@ -863,7 +863,7 @@ namespace Nop.Services.Orders
             }
 
             //apply store mapping constraints
-            query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+            query = await StoreMappingService.ApplyStoreMapping(query, storeId);
 
             query = query.OrderBy(p => p.Name);
 
@@ -906,7 +906,7 @@ namespace Nop.Services.Orders
             var dontSearchOrderNotes = string.IsNullOrEmpty(orderNotes);
             var dontSearchPaymentMethods = string.IsNullOrEmpty(paymentMethodSystemName);
 
-            var orders = _orderRepository.Table;
+            var orders = OrderRepository.Table;
             if (osIds != null && osIds.Any())
                 orders = orders.Where(o => osIds.Contains(o.OrderStatusId));
             if (psIds != null && psIds.Any())
@@ -916,10 +916,10 @@ namespace Nop.Services.Orders
 
             var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
 
-            var query = from orderItem in _orderItemRepository.Table
+            var query = from orderItem in OrderItemRepository.Table
                 join o in orders on orderItem.OrderId equals o.Id
-                join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                join p in ProductRepository.Table on orderItem.ProductId equals p.Id
+                join oba in AddressRepository.Table on o.BillingAddressId equals oba.Id
                 where (storeId == 0 || storeId == o.StoreId) &&
                       (orderId == 0 || orderId == o.Id) &&
                       (billingCountryId == 0 || (oba.CountryId == billingCountryId)) &&
@@ -934,7 +934,7 @@ namespace Nop.Services.Orders
                           //we search in each warehouse
                           p.ManageInventoryMethodId == manageStockInventoryMethodId &&
                           p.UseMultipleWarehouses &&
-                          _productWarehouseInventoryRepository.Table.Any(pwi =>
+                          ProductWarehouseInventoryRepository.Table.Any(pwi =>
                               pwi.ProductId == orderItem.ProductId && pwi.WarehouseId == warehouseId)
                           ||
                           //"Use multiple warehouses" disabled
@@ -949,7 +949,7 @@ namespace Nop.Services.Orders
                       (dontSearchEmail || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
                       (dontSearchLastName ||
                        (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName))) &&
-                      (dontSearchOrderNotes || _orderNoteRepository.Table.Any(oNote =>
+                      (dontSearchOrderNotes || OrderNoteRepository.Table.Any(oNote =>
                            oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)))
                 select orderItem;
 

@@ -13,7 +13,7 @@ namespace Nop.Services.Topics
     {
         #region Fields
 
-        private readonly IRepository<TopicTemplate> _topicTemplateRepository;
+        protected IRepository<TopicTemplate> TopicTemplateRepository { get; }
 
         #endregion
 
@@ -21,7 +21,7 @@ namespace Nop.Services.Topics
 
         public TopicTemplateService(IRepository<TopicTemplate> topicTemplateRepository)
         {
-            _topicTemplateRepository = topicTemplateRepository;
+            TopicTemplateRepository = topicTemplateRepository;
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace Nop.Services.Topics
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteTopicTemplateAsync(TopicTemplate topicTemplate)
         {
-            await _topicTemplateRepository.DeleteAsync(topicTemplate);
+            await TopicTemplateRepository.DeleteAsync(topicTemplate);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Nop.Services.Topics
         /// </returns>
         public virtual async Task<IList<TopicTemplate>> GetAllTopicTemplatesAsync()
         {
-            var templates = await _topicTemplateRepository.GetAllAsync(query=>
+            var templates = await TopicTemplateRepository.GetAllAsync(query=>
             {
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
@@ -67,7 +67,7 @@ namespace Nop.Services.Topics
         /// </returns>
         public virtual async Task<TopicTemplate> GetTopicTemplateByIdAsync(int topicTemplateId)
         {
-            return await _topicTemplateRepository.GetByIdAsync(topicTemplateId, cache => default);
+            return await TopicTemplateRepository.GetByIdAsync(topicTemplateId, cache => default);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Nop.Services.Topics
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertTopicTemplateAsync(TopicTemplate topicTemplate)
         {
-            await _topicTemplateRepository.InsertAsync(topicTemplate);
+            await TopicTemplateRepository.InsertAsync(topicTemplate);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Nop.Services.Topics
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateTopicTemplateAsync(TopicTemplate topicTemplate)
         {
-            await _topicTemplateRepository.UpdateAsync(topicTemplate);
+            await TopicTemplateRepository.UpdateAsync(topicTemplate);
         }
 
         #endregion

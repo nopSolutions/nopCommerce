@@ -17,7 +17,7 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        protected ICheckoutAttributeService CheckoutAttributeService { get; }
 
         #endregion
 
@@ -25,7 +25,7 @@ namespace Nop.Services.Orders
 
         public CheckoutAttributeParser(ICheckoutAttributeService checkoutAttributeService)
         {
-            _checkoutAttributeService = checkoutAttributeService;
+            CheckoutAttributeService = checkoutAttributeService;
         }
 
         #endregion
@@ -49,7 +49,7 @@ namespace Nop.Services.Orders
             var ids = ParseAttributeIds(attributesXml);
             foreach (var id in ids)
             {
-                var attribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(id);
+                var attribute = await CheckoutAttributeService.GetCheckoutAttributeByIdAsync(id);
                 if (attribute != null) 
                     result.Add(attribute);
             }
@@ -89,7 +89,7 @@ namespace Nop.Services.Orders
                     if (!int.TryParse(valueStr, out var id))
                         continue;
 
-                    var value = await _checkoutAttributeService.GetCheckoutAttributeValueByIdAsync(id);
+                    var value = await CheckoutAttributeService.GetCheckoutAttributeValueByIdAsync(id);
                     if (value != null)
                         yield return value;
                 }

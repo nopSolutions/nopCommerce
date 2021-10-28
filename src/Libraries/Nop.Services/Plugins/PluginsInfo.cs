@@ -20,7 +20,7 @@ namespace Nop.Services.Plugins
         private List<string> _installedPluginNames = new List<string>();
         private IList<PluginDescriptorBaseInfo> _installedPlugins = new List<PluginDescriptorBaseInfo>();
 
-        protected readonly INopFileProvider _fileProvider;
+        protected INopFileProvider FileProvider { get; }
 
         #endregion
 
@@ -36,17 +36,17 @@ namespace Nop.Services.Plugins
         protected virtual async Task<IList<string>> GetObsoleteInstalledPluginNamesAsync()
         {
             //check whether file exists
-            var filePath = _fileProvider.MapPath(NopPluginDefaults.InstalledPluginsFilePath);
-            if (!_fileProvider.FileExists(filePath))
+            var filePath = FileProvider.MapPath(NopPluginDefaults.InstalledPluginsFilePath);
+            if (!FileProvider.FileExists(filePath))
             {
                 //if not, try to parse the file that was used in previous nopCommerce versions
-                filePath = _fileProvider.MapPath(NopPluginDefaults.ObsoleteInstalledPluginsFilePath);
-                if (!_fileProvider.FileExists(filePath))
+                filePath = FileProvider.MapPath(NopPluginDefaults.ObsoleteInstalledPluginsFilePath);
+                if (!FileProvider.FileExists(filePath))
                     return new List<string>();
 
                 //get plugin system names from the old txt file
                 var pluginSystemNames = new List<string>();
-                using (var reader = new StringReader(await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8)))
+                using (var reader = new StringReader(await FileProvider.ReadAllTextAsync(filePath, Encoding.UTF8)))
                 {
                     string pluginName;
                     while ((pluginName = await reader.ReadLineAsync()) != null)
@@ -55,17 +55,17 @@ namespace Nop.Services.Plugins
                 }
 
                 //and delete the old one
-                _fileProvider.DeleteFile(filePath);
+                FileProvider.DeleteFile(filePath);
 
                 return pluginSystemNames;
             }
 
-            var text = await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
+            var text = await FileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
             if (string.IsNullOrEmpty(text))
                 return new List<string>();
 
             //delete the old file
-            _fileProvider.DeleteFile(filePath);
+            FileProvider.DeleteFile(filePath);
 
             //get plugin system names from the JSON file
             return JsonConvert.DeserializeObject<IList<string>>(text);
@@ -96,7 +96,7 @@ namespace Nop.Services.Plugins
 
         public PluginsInfo(INopFileProvider fileProvider)
         {
-            _fileProvider = fileProvider;
+            FileProvider = fileProvider;
         }
 
         #endregion
@@ -110,9 +110,9 @@ namespace Nop.Services.Plugins
         public virtual async Task SaveAsync()
         {
             //save the file
-            var filePath = _fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
+            var filePath = FileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
             var text = JsonConvert.SerializeObject(this, Formatting.Indented);
-            await _fileProvider.WriteAllTextAsync(filePath, text, Encoding.UTF8);
+            await FileProvider.WriteAllTextAsync(filePath, text, Encoding.UTF8);
         }
 
         /// <summary>
@@ -121,9 +121,9 @@ namespace Nop.Services.Plugins
         public virtual void Save()
         {
             //save the file
-            var filePath = _fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
+            var filePath = FileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
             var text = JsonConvert.SerializeObject(this, Formatting.Indented);
-            _fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+            FileProvider.WriteAllText(filePath, text, Encoding.UTF8);
         }
 
         /// <summary>
@@ -136,8 +136,8 @@ namespace Nop.Services.Plugins
         public virtual async Task<bool> LoadPluginInfoAsync()
         {
             //check whether plugins info file exists
-            var filePath = _fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
-            if (!_fileProvider.FileExists(filePath))
+            var filePath = FileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
+            if (!FileProvider.FileExists(filePath))
             {
                 //file doesn't exist, so try to get only installed plugin names from the obsolete file
                 _installedPluginNames.AddRange(await GetObsoleteInstalledPluginNamesAsync());
@@ -148,8 +148,8 @@ namespace Nop.Services.Plugins
             }
 
             //try to get plugin info from the JSON file
-            var text = _fileProvider.FileExists(filePath)
-                ? await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8)
+            var text = FileProvider.FileExists(filePath)
+                ? await FileProvider.ReadAllTextAsync(filePath, Encoding.UTF8)
                 : string.Empty;
             return !string.IsNullOrEmpty(text) && DeserializePluginInfo(text);
         }

@@ -41,49 +41,49 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IAddressService _addressService;
-        private readonly IAffiliateService _affiliateService;
-        private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly ICustomNumberFormatter _customNumberFormatter;
-        private readonly IDiscountService _discountService;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGiftCardService _giftCardService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly IOrderService _orderService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IPdfService _pdfService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly ITaxService _taxService;
-        private readonly IVendorService _vendorService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly OrderSettings _orderSettings;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly TaxSettings _taxSettings;
+        protected CurrencySettings CurrencySettings { get; }
+        protected IAddressService AddressService { get; }
+        protected IAffiliateService AffiliateService { get; }
+        protected ICheckoutAttributeFormatter CheckoutAttributeFormatter { get; }
+        protected ICountryService CountryService { get; }
+        protected ICurrencyService CurrencyService { get; }
+        protected ICustomerActivityService CustomerActivityService { get; }
+        protected ICustomerService CustomerService { get; }
+        protected ICustomNumberFormatter CustomNumberFormatter { get; }
+        protected IDiscountService DiscountService { get; }
+        protected IEncryptionService EncryptionService { get; }
+        protected IEventPublisher EventPublisher { get; }
+        protected IGenericAttributeService GenericAttributeService { get; }
+        protected IGiftCardService GiftCardService { get; }
+        protected ILanguageService LanguageService { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected ILogger Logger { get; }
+        protected IOrderService OrderService { get; }
+        protected IOrderTotalCalculationService OrderTotalCalculationService { get; }
+        protected IPaymentPluginManager PaymentPluginManager { get; }
+        protected IPaymentService PaymentService { get; }
+        protected IPdfService PdfService { get; }
+        protected IPriceCalculationService PriceCalculationService { get; }
+        protected IPriceFormatter PriceFormatter { get; }
+        protected IProductAttributeFormatter ProductAttributeFormatter { get; }
+        protected IProductAttributeParser ProductAttributeParser { get; }
+        protected IProductService ProductService { get; }
+        protected IRewardPointService RewardPointService { get; }
+        protected IShipmentService ShipmentService { get; }
+        protected IShippingService ShippingService { get; }
+        protected IShoppingCartService ShoppingCartService { get; }
+        protected IStateProvinceService StateProvinceService { get; }
+        protected ITaxService TaxService { get; }
+        protected IVendorService VendorService { get; }
+        protected IWebHelper WebHelper { get; }
+        protected IWorkContext WorkContext { get; }
+        protected IWorkflowMessageService WorkflowMessageService { get; }
+        protected LocalizationSettings LocalizationSettings { get; }
+        protected OrderSettings OrderSettings { get; }
+        protected PaymentSettings PaymentSettings { get; }
+        protected RewardPointsSettings RewardPointsSettings { get; }
+        protected ShippingSettings ShippingSettings { get; }
+        protected TaxSettings TaxSettings { get; }
 
         #endregion
 
@@ -133,49 +133,49 @@ namespace Nop.Services.Orders
             ShippingSettings shippingSettings,
             TaxSettings taxSettings)
         {
-            _currencySettings = currencySettings;
-            _addressService = addressService;
-            _affiliateService = affiliateService;
-            _checkoutAttributeFormatter = checkoutAttributeFormatter;
-            _countryService = countryService;
-            _currencyService = currencyService;
-            _customerActivityService = customerActivityService;
-            _customerService = customerService;
-            _customNumberFormatter = customNumberFormatter;
-            _discountService = discountService;
-            _encryptionService = encryptionService;
-            _eventPublisher = eventPublisher;
-            _genericAttributeService = genericAttributeService;
-            _giftCardService = giftCardService;
-            _languageService = languageService;
-            _localizationService = localizationService;
-            _logger = logger;
-            _orderService = orderService;
-            _orderTotalCalculationService = orderTotalCalculationService;
-            _paymentPluginManager = paymentPluginManager;
-            _paymentService = paymentService;
-            _pdfService = pdfService;
-            _priceCalculationService = priceCalculationService;
-            _priceFormatter = priceFormatter;
-            _productAttributeFormatter = productAttributeFormatter;
-            _productAttributeParser = productAttributeParser;
-            _productService = productService;
-            _rewardPointService = rewardPointService;
-            _shipmentService = shipmentService;
-            _shippingService = shippingService;
-            _shoppingCartService = shoppingCartService;
-            _stateProvinceService = stateProvinceService;
-            _taxService = taxService;
-            _vendorService = vendorService;
-            _webHelper = webHelper;
-            _workContext = workContext;
-            _workflowMessageService = workflowMessageService;
-            _localizationSettings = localizationSettings;
-            _orderSettings = orderSettings;
-            _paymentSettings = paymentSettings;
-            _rewardPointsSettings = rewardPointsSettings;
-            _shippingSettings = shippingSettings;
-            _taxSettings = taxSettings;
+            CurrencySettings = currencySettings;
+            AddressService = addressService;
+            AffiliateService = affiliateService;
+            CheckoutAttributeFormatter = checkoutAttributeFormatter;
+            CountryService = countryService;
+            CurrencyService = currencyService;
+            CustomerActivityService = customerActivityService;
+            CustomerService = customerService;
+            CustomNumberFormatter = customNumberFormatter;
+            DiscountService = discountService;
+            EncryptionService = encryptionService;
+            EventPublisher = eventPublisher;
+            GenericAttributeService = genericAttributeService;
+            GiftCardService = giftCardService;
+            LanguageService = languageService;
+            this.LocalizationService = localizationService;
+            Logger = logger;
+            OrderService = orderService;
+            OrderTotalCalculationService = orderTotalCalculationService;
+            PaymentPluginManager = paymentPluginManager;
+            PaymentService = paymentService;
+            PdfService = pdfService;
+            PriceCalculationService = priceCalculationService;
+            PriceFormatter = priceFormatter;
+            ProductAttributeFormatter = productAttributeFormatter;
+            ProductAttributeParser = productAttributeParser;
+            ProductService = productService;
+            RewardPointService = rewardPointService;
+            ShipmentService = shipmentService;
+            ShippingService = shippingService;
+            ShoppingCartService = shoppingCartService;
+            StateProvinceService = stateProvinceService;
+            TaxService = taxService;
+            VendorService = vendorService;
+            WebHelper = webHelper;
+            WorkContext = workContext;
+            WorkflowMessageService = workflowMessageService;
+            LocalizationSettings = localizationSettings;
+            OrderSettings = orderSettings;
+            PaymentSettings = paymentSettings;
+            RewardPointsSettings = rewardPointsSettings;
+            ShippingSettings = shippingSettings;
+            TaxSettings = taxSettings;
         }
 
         #endregion
@@ -382,7 +382,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task AddOrderNoteAsync(Order order, string note)
         {
-            await _orderService.InsertOrderNoteAsync(new OrderNote
+            await OrderService.InsertOrderNoteAsync(new OrderNote
             {
                 OrderId = order.Id,
                 Note = note,
@@ -404,70 +404,70 @@ namespace Nop.Services.Orders
             var details = new PlaceOrderContainer
             {
                 //customer
-                Customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId)
+                Customer = await CustomerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId)
             };
             if (details.Customer == null)
                 throw new ArgumentException("Customer is not set");
 
             //affiliate
-            var affiliate = await _affiliateService.GetAffiliateByIdAsync(details.Customer.AffiliateId);
+            var affiliate = await AffiliateService.GetAffiliateByIdAsync(details.Customer.AffiliateId);
             if (affiliate != null && affiliate.Active && !affiliate.Deleted)
                 details.AffiliateId = affiliate.Id;
 
             //check whether customer is guest
-            if (await _customerService.IsGuestAsync(details.Customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(details.Customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 throw new NopException("Anonymous checkout is not allowed");
 
             //customer currency
-            var currencyTmp = await _currencyService.GetCurrencyByIdAsync(
-                await _genericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.CurrencyIdAttribute, processPaymentRequest.StoreId));
-            var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
+            var currencyTmp = await CurrencyService.GetCurrencyByIdAsync(
+                await GenericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.CurrencyIdAttribute, processPaymentRequest.StoreId));
+            var currentCurrency = await WorkContext.GetWorkingCurrencyAsync();
             var customerCurrency = currencyTmp != null && currencyTmp.Published ? currencyTmp : currentCurrency;
-            var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+            var primaryStoreCurrency = await CurrencyService.GetCurrencyByIdAsync(CurrencySettings.PrimaryStoreCurrencyId);
             details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
             details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
 
             //customer language
-            details.CustomerLanguage = await _languageService.GetLanguageByIdAsync(
-                await _genericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.LanguageIdAttribute, processPaymentRequest.StoreId));
+            details.CustomerLanguage = await LanguageService.GetLanguageByIdAsync(
+                await GenericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.LanguageIdAttribute, processPaymentRequest.StoreId));
             if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
-                details.CustomerLanguage = await _workContext.GetWorkingLanguageAsync();
+                details.CustomerLanguage = await WorkContext.GetWorkingLanguageAsync();
 
             //billing address
             if (details.Customer.BillingAddressId is null)
                 throw new NopException("Billing address is not provided");
 
-            var billingAddress = await _customerService.GetCustomerBillingAddressAsync(details.Customer);
+            var billingAddress = await CustomerService.GetCustomerBillingAddressAsync(details.Customer);
 
             if (!CommonHelper.IsValidEmail(billingAddress?.Email))
                 throw new NopException("Email is not valid");
 
-            details.BillingAddress = _addressService.CloneAddress(billingAddress);
+            details.BillingAddress = AddressService.CloneAddress(billingAddress);
 
-            if (await _countryService.GetCountryByAddressAsync(details.BillingAddress) is Country billingCountry && !billingCountry.AllowsBilling)
+            if (await CountryService.GetCountryByAddressAsync(details.BillingAddress) is Country billingCountry && !billingCountry.AllowsBilling)
                 throw new NopException($"Country '{billingCountry.Name}' is not allowed for billing");
 
             //checkout attributes
-            details.CheckoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(details.Customer, NopCustomerDefaults.CheckoutAttributes, processPaymentRequest.StoreId);
-            details.CheckoutAttributeDescription = await _checkoutAttributeFormatter.FormatAttributesAsync(details.CheckoutAttributesXml, details.Customer);
+            details.CheckoutAttributesXml = await GenericAttributeService.GetAttributeAsync<string>(details.Customer, NopCustomerDefaults.CheckoutAttributes, processPaymentRequest.StoreId);
+            details.CheckoutAttributeDescription = await CheckoutAttributeFormatter.FormatAttributesAsync(details.CheckoutAttributesXml, details.Customer);
 
             //load shopping cart
-            details.Cart = await _shoppingCartService.GetShoppingCartAsync(details.Customer, ShoppingCartType.ShoppingCart, processPaymentRequest.StoreId);
+            details.Cart = await ShoppingCartService.GetShoppingCartAsync(details.Customer, ShoppingCartType.ShoppingCart, processPaymentRequest.StoreId);
 
             if (!details.Cart.Any())
                 throw new NopException("Cart is empty");
 
             //validate the entire shopping cart
-            var warnings = await _shoppingCartService.GetShoppingCartWarningsAsync(details.Cart, details.CheckoutAttributesXml, true);
+            var warnings = await ShoppingCartService.GetShoppingCartWarningsAsync(details.Cart, details.CheckoutAttributesXml, true);
             if (warnings.Any())
                 throw new NopException(warnings.Aggregate(string.Empty, (current, next) => $"{current}{next};"));
 
             //validate individual cart items
             foreach (var sci in details.Cart)
             {
-                var product = await _productService.GetProductByIdAsync(sci.ProductId);
+                var product = await ProductService.GetProductByIdAsync(sci.ProductId);
 
-                var sciWarnings = await _shoppingCartService.GetShoppingCartItemWarningsAsync(details.Customer,
+                var sciWarnings = await ShoppingCartService.GetShoppingCartItemWarningsAsync(details.Customer,
                     sci.ShoppingCartType, product, processPaymentRequest.StoreId, sci.AttributesXml,
                     sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.Id);
                 if (sciWarnings.Any())
@@ -477,48 +477,48 @@ namespace Nop.Services.Orders
             //min totals validation
             if (!await ValidateMinOrderSubtotalAmountAsync(details.Cart))
             {
-                var minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderSubtotalAmount, currentCurrency);
-                throw new NopException(string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderSubtotalAmount"),
-                    await _priceFormatter.FormatPriceAsync(minOrderSubtotalAmount, true, false)));
+                var minOrderSubtotalAmount = await CurrencyService.ConvertFromPrimaryStoreCurrencyAsync(OrderSettings.MinOrderSubtotalAmount, currentCurrency);
+                throw new NopException(string.Format(await LocalizationService.GetResourceAsync("Checkout.MinOrderSubtotalAmount"),
+                    await PriceFormatter.FormatPriceAsync(minOrderSubtotalAmount, true, false)));
             }
 
             if (!await ValidateMinOrderTotalAmountAsync(details.Cart))
             {
-                var minOrderTotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderTotalAmount, currentCurrency);
-                throw new NopException(string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderTotalAmount"),
-                    await _priceFormatter.FormatPriceAsync(minOrderTotalAmount, true, false)));
+                var minOrderTotalAmount = await CurrencyService.ConvertFromPrimaryStoreCurrencyAsync(OrderSettings.MinOrderTotalAmount, currentCurrency);
+                throw new NopException(string.Format(await LocalizationService.GetResourceAsync("Checkout.MinOrderTotalAmount"),
+                    await PriceFormatter.FormatPriceAsync(minOrderTotalAmount, true, false)));
             }
 
             //tax display type
-            if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
-                details.CustomerTaxDisplayType = (TaxDisplayType)await _genericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.TaxDisplayTypeIdAttribute, processPaymentRequest.StoreId);
+            if (TaxSettings.AllowCustomersToSelectTaxDisplayType)
+                details.CustomerTaxDisplayType = (TaxDisplayType)await GenericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.TaxDisplayTypeIdAttribute, processPaymentRequest.StoreId);
             else
-                details.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
+                details.CustomerTaxDisplayType = TaxSettings.TaxDisplayType;
 
             //sub total (incl tax)
-            var (orderSubTotalDiscountAmount, orderSubTotalAppliedDiscounts, subTotalWithoutDiscountBase, _, _) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(details.Cart, true);
+            var (orderSubTotalDiscountAmount, orderSubTotalAppliedDiscounts, subTotalWithoutDiscountBase, _, _) = await OrderTotalCalculationService.GetShoppingCartSubTotalAsync(details.Cart, true);
             details.OrderSubTotalInclTax = subTotalWithoutDiscountBase;
             details.OrderSubTotalDiscountInclTax = orderSubTotalDiscountAmount;
 
             //discount history
             foreach (var disc in orderSubTotalAppliedDiscounts)
-                if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
+                if (!DiscountService.ContainsDiscount(details.AppliedDiscounts, disc))
                     details.AppliedDiscounts.Add(disc);
 
             //sub total (excl tax)
-            (orderSubTotalDiscountAmount, _, subTotalWithoutDiscountBase, _, _) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(details.Cart, false);
+            (orderSubTotalDiscountAmount, _, subTotalWithoutDiscountBase, _, _) = await OrderTotalCalculationService.GetShoppingCartSubTotalAsync(details.Cart, false);
             details.OrderSubTotalExclTax = subTotalWithoutDiscountBase;
             details.OrderSubTotalDiscountExclTax = orderSubTotalDiscountAmount;
 
             //shipping info
-            if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(details.Cart))
+            if (await ShoppingCartService.ShoppingCartRequiresShippingAsync(details.Cart))
             {
-                var pickupPoint = await _genericAttributeService.GetAttributeAsync<PickupPoint>(details.Customer,
+                var pickupPoint = await GenericAttributeService.GetAttributeAsync<PickupPoint>(details.Customer,
                     NopCustomerDefaults.SelectedPickupPointAttribute, processPaymentRequest.StoreId);
-                if (_shippingSettings.AllowPickupInStore && pickupPoint != null)
+                if (ShippingSettings.AllowPickupInStore && pickupPoint != null)
                 {
-                    var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(pickupPoint.CountryCode);
-                    var state = await _stateProvinceService.GetStateProvinceByAbbreviationAsync(pickupPoint.StateAbbreviation, country?.Id);
+                    var country = await CountryService.GetCountryByTwoLetterIsoCodeAsync(pickupPoint.CountryCode);
+                    var state = await StateProvinceService.GetStateProvinceByAbbreviationAsync(pickupPoint.StateAbbreviation, country?.Id);
 
                     details.PickupInStore = true;
                     details.PickupAddress = new Address
@@ -537,19 +537,19 @@ namespace Nop.Services.Orders
                     if (details.Customer.ShippingAddressId == null)
                         throw new NopException("Shipping address is not provided");
 
-                    var shippingAddress = await _customerService.GetCustomerShippingAddressAsync(details.Customer);
+                    var shippingAddress = await CustomerService.GetCustomerShippingAddressAsync(details.Customer);
 
                     if (!CommonHelper.IsValidEmail(shippingAddress?.Email))
                         throw new NopException("Email is not valid");
 
                     //clone shipping address
-                    details.ShippingAddress = _addressService.CloneAddress(shippingAddress);
+                    details.ShippingAddress = AddressService.CloneAddress(shippingAddress);
 
-                    if (await _countryService.GetCountryByAddressAsync(details.ShippingAddress) is Country shippingCountry && !shippingCountry.AllowsShipping)
+                    if (await CountryService.GetCountryByAddressAsync(details.ShippingAddress) is Country shippingCountry && !shippingCountry.AllowsShipping)
                         throw new NopException($"Country '{shippingCountry.Name}' is not allowed for shipping");
                 }
 
-                var shippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(details.Customer,
+                var shippingOption = await GenericAttributeService.GetAttributeAsync<ShippingOption>(details.Customer,
                     NopCustomerDefaults.SelectedShippingOptionAttribute, processPaymentRequest.StoreId);
                 if (shippingOption != null)
                 {
@@ -563,8 +563,8 @@ namespace Nop.Services.Orders
                 details.ShippingStatus = ShippingStatus.ShippingNotRequired;
 
             //shipping total
-            var (orderShippingTotalInclTax, _, shippingTotalDiscounts) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(details.Cart, true);
-            var (orderShippingTotalExclTax, _, _) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(details.Cart, false);
+            var (orderShippingTotalInclTax, _, shippingTotalDiscounts) = await OrderTotalCalculationService.GetShoppingCartShippingTotalAsync(details.Cart, true);
+            var (orderShippingTotalExclTax, _, _) = await OrderTotalCalculationService.GetShoppingCartShippingTotalAsync(details.Cart, false);
             if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
                 throw new NopException("Shipping total couldn't be calculated");
 
@@ -572,29 +572,29 @@ namespace Nop.Services.Orders
             details.OrderShippingTotalExclTax = orderShippingTotalExclTax.Value;
 
             foreach (var disc in shippingTotalDiscounts)
-                if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
+                if (!DiscountService.ContainsDiscount(details.AppliedDiscounts, disc))
                     details.AppliedDiscounts.Add(disc);
 
             //payment total
-            var paymentAdditionalFee = await _paymentService.GetAdditionalHandlingFeeAsync(details.Cart, processPaymentRequest.PaymentMethodSystemName);
-            details.PaymentAdditionalFeeInclTax = (await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentAdditionalFee, true, details.Customer)).price;
-            details.PaymentAdditionalFeeExclTax = (await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentAdditionalFee, false, details.Customer)).price;
+            var paymentAdditionalFee = await PaymentService.GetAdditionalHandlingFeeAsync(details.Cart, processPaymentRequest.PaymentMethodSystemName);
+            details.PaymentAdditionalFeeInclTax = (await TaxService.GetPaymentMethodAdditionalFeeAsync(paymentAdditionalFee, true, details.Customer)).price;
+            details.PaymentAdditionalFeeExclTax = (await TaxService.GetPaymentMethodAdditionalFeeAsync(paymentAdditionalFee, false, details.Customer)).price;
 
             //tax amount
             SortedDictionary<decimal, decimal> taxRatesDictionary;
-            (details.OrderTaxTotal, taxRatesDictionary) = await _orderTotalCalculationService.GetTaxTotalAsync(details.Cart);
+            (details.OrderTaxTotal, taxRatesDictionary) = await OrderTotalCalculationService.GetTaxTotalAsync(details.Cart);
 
             //VAT number
-            var customerVatStatus = (VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
-            if (_taxSettings.EuVatEnabled && customerVatStatus == VatNumberStatus.Valid)
-                details.VatNumber = await _genericAttributeService.GetAttributeAsync<string>(details.Customer, NopCustomerDefaults.VatNumberAttribute);
+            var customerVatStatus = (VatNumberStatus)await GenericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
+            if (TaxSettings.EuVatEnabled && customerVatStatus == VatNumberStatus.Valid)
+                details.VatNumber = await GenericAttributeService.GetAttributeAsync<string>(details.Customer, NopCustomerDefaults.VatNumberAttribute);
 
             //tax rates
             details.TaxRates = taxRatesDictionary.Aggregate(string.Empty, (current, next) =>
                 $"{current}{next.Key.ToString(CultureInfo.InvariantCulture)}:{next.Value.ToString(CultureInfo.InvariantCulture)};   ");
 
             //order total (and applied discounts, gift cards, reward points)
-            var (orderTotal, orderDiscountAmount, orderAppliedDiscounts, appliedGiftCards, redeemedRewardPoints,  redeemedRewardPointsAmount) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(details.Cart);
+            var (orderTotal, orderDiscountAmount, orderAppliedDiscounts, appliedGiftCards, redeemedRewardPoints,  redeemedRewardPointsAmount) = await OrderTotalCalculationService.GetShoppingCartTotalAsync(details.Cart);
             if (!orderTotal.HasValue)
                 throw new NopException("Order total couldn't be calculated");
 
@@ -606,17 +606,17 @@ namespace Nop.Services.Orders
 
             //discount history
             foreach (var disc in orderAppliedDiscounts)
-                if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
+                if (!DiscountService.ContainsDiscount(details.AppliedDiscounts, disc))
                     details.AppliedDiscounts.Add(disc);
 
             processPaymentRequest.OrderTotal = details.OrderTotal;
 
             //recurring or standard shopping cart?
-            details.IsRecurringShoppingCart = await _shoppingCartService.ShoppingCartIsRecurringAsync(details.Cart);
+            details.IsRecurringShoppingCart = await ShoppingCartService.ShoppingCartIsRecurringAsync(details.Cart);
             if (!details.IsRecurringShoppingCart)
                 return details;
 
-            var (recurringCyclesError, recurringCycleLength, recurringCyclePeriod, recurringTotalCycles) = await _shoppingCartService.GetRecurringCycleInfoAsync(details.Cart);
+            var (recurringCyclesError, recurringCycleLength, recurringCyclePeriod, recurringTotalCycles) = await ShoppingCartService.GetRecurringCycleInfoAsync(details.Cart);
 
             if (!string.IsNullOrEmpty(recurringCyclesError))
                 throw new NopException(recurringCyclesError);
@@ -651,17 +651,17 @@ namespace Nop.Services.Orders
             processPaymentRequest.PaymentMethodSystemName = details.InitialOrder.PaymentMethodSystemName;
 
             //customer
-            details.Customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
+            details.Customer = await CustomerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
             if (details.Customer == null)
                 throw new ArgumentException("Customer is not set");
 
             //affiliate
-            var affiliate = await _affiliateService.GetAffiliateByIdAsync(details.Customer.AffiliateId);
+            var affiliate = await AffiliateService.GetAffiliateByIdAsync(details.Customer.AffiliateId);
             if (affiliate != null && affiliate.Active && !affiliate.Deleted)
                 details.AffiliateId = affiliate.Id;
 
             //check whether customer is guest
-            if (await _customerService.IsGuestAsync(details.Customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            if (await CustomerService.IsGuestAsync(details.Customer) && !OrderSettings.AnonymousCheckoutAllowed)
                 throw new NopException("Anonymous checkout is not allowed");
 
             //customer currency
@@ -669,18 +669,18 @@ namespace Nop.Services.Orders
             details.CustomerCurrencyRate = details.InitialOrder.CurrencyRate;
 
             //customer language
-            details.CustomerLanguage = await _languageService.GetLanguageByIdAsync(details.InitialOrder.CustomerLanguageId);
+            details.CustomerLanguage = await LanguageService.GetLanguageByIdAsync(details.InitialOrder.CustomerLanguageId);
             if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
-                details.CustomerLanguage = await _workContext.GetWorkingLanguageAsync();
+                details.CustomerLanguage = await WorkContext.GetWorkingLanguageAsync();
 
             //billing address
             if (details.InitialOrder.BillingAddressId == 0)
                 throw new NopException("Billing address is not available");
 
-            var billingAddress = await _addressService.GetAddressByIdAsync(details.InitialOrder.BillingAddressId);
+            var billingAddress = await AddressService.GetAddressByIdAsync(details.InitialOrder.BillingAddressId);
 
-            details.BillingAddress = _addressService.CloneAddress(billingAddress);
-            if (await _countryService.GetCountryByAddressAsync(billingAddress) is Country billingCountry && !billingCountry.AllowsBilling)
+            details.BillingAddress = AddressService.CloneAddress(billingAddress);
+            if (await CountryService.GetCountryByAddressAsync(billingAddress) is Country billingCountry && !billingCountry.AllowsBilling)
                 throw new NopException($"Country '{billingCountry.Name}' is not allowed for billing");
 
             //checkout attributes
@@ -702,16 +702,16 @@ namespace Nop.Services.Orders
                 details.PickupInStore = details.InitialOrder.PickupInStore;
                 if (!details.PickupInStore)
                 {
-                    if (!details.InitialOrder.ShippingAddressId.HasValue || await _addressService.GetAddressByIdAsync(details.InitialOrder.ShippingAddressId.Value) is not Address shippingAddress)
+                    if (!details.InitialOrder.ShippingAddressId.HasValue || await AddressService.GetAddressByIdAsync(details.InitialOrder.ShippingAddressId.Value) is not Address shippingAddress)
                         throw new NopException("Shipping address is not available");
 
                     //clone shipping address
-                    details.ShippingAddress = _addressService.CloneAddress(shippingAddress);
-                    if (await _countryService.GetCountryByAddressAsync(details.ShippingAddress) is Country shippingCountry && !shippingCountry.AllowsShipping)
+                    details.ShippingAddress = AddressService.CloneAddress(shippingAddress);
+                    if (await CountryService.GetCountryByAddressAsync(details.ShippingAddress) is Country shippingCountry && !shippingCountry.AllowsShipping)
                         throw new NopException($"Country '{shippingCountry.Name}' is not allowed for shipping");
                 }
-                else if (details.InitialOrder.PickupAddressId.HasValue && await _addressService.GetAddressByIdAsync(details.InitialOrder.PickupAddressId.Value) is Address pickupAddress) 
-                    details.PickupAddress = _addressService.CloneAddress(pickupAddress);
+                else if (details.InitialOrder.PickupAddressId.HasValue && await AddressService.GetAddressByIdAsync(details.InitialOrder.PickupAddressId.Value) is Address pickupAddress) 
+                    details.PickupAddress = AddressService.CloneAddress(pickupAddress);
 
                 details.ShippingMethodName = details.InitialOrder.ShippingMethod;
                 details.ShippingRateComputationMethodSystemName = details.InitialOrder.ShippingRateComputationMethodSystemName;
@@ -738,9 +738,9 @@ namespace Nop.Services.Orders
             details.VatNumber = details.InitialOrder.VatNumber;
 
             //discount history (the same)
-            foreach (var duh in await _discountService.GetAllDiscountUsageHistoryAsync(orderId: details.InitialOrder.Id))
+            foreach (var duh in await DiscountService.GetAllDiscountUsageHistoryAsync(orderId: details.InitialOrder.Id))
             {
-                var d = await _discountService.GetDiscountByIdAsync(duh.DiscountId);
+                var d = await DiscountService.GetDiscountByIdAsync(duh.DiscountId);
                 if (d != null)
                     details.AppliedDiscounts.Add(d);
             }
@@ -773,7 +773,7 @@ namespace Nop.Services.Orders
                 CustomerId = details.Customer.Id,
                 CustomerLanguageId = details.CustomerLanguage.Id,
                 CustomerTaxDisplayType = details.CustomerTaxDisplayType,
-                CustomerIp = _webHelper.GetCurrentIpAddress(),
+                CustomerIp = WebHelper.GetCurrentIpAddress(),
                 OrderSubtotalInclTax = details.OrderSubTotalInclTax,
                 OrderSubtotalExclTax = details.OrderSubTotalExclTax,
                 OrderSubTotalDiscountInclTax = details.OrderSubTotalDiscountInclTax,
@@ -794,13 +794,13 @@ namespace Nop.Services.Orders
                 AffiliateId = details.AffiliateId,
                 OrderStatus = OrderStatus.Pending,
                 AllowStoringCreditCardNumber = processPaymentResult.AllowStoringCreditCardNumber,
-                CardType = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardType) : string.Empty,
-                CardName = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardName) : string.Empty,
-                CardNumber = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardNumber) : string.Empty,
-                MaskedCreditCardNumber = _encryptionService.EncryptText(_paymentService.GetMaskedCreditCardNumber(processPaymentRequest.CreditCardNumber)),
-                CardCvv2 = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardCvv2) : string.Empty,
-                CardExpirationMonth = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardExpireMonth.ToString()) : string.Empty,
-                CardExpirationYear = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardExpireYear.ToString()) : string.Empty,
+                CardType = processPaymentResult.AllowStoringCreditCardNumber ? EncryptionService.EncryptText(processPaymentRequest.CreditCardType) : string.Empty,
+                CardName = processPaymentResult.AllowStoringCreditCardNumber ? EncryptionService.EncryptText(processPaymentRequest.CreditCardName) : string.Empty,
+                CardNumber = processPaymentResult.AllowStoringCreditCardNumber ? EncryptionService.EncryptText(processPaymentRequest.CreditCardNumber) : string.Empty,
+                MaskedCreditCardNumber = EncryptionService.EncryptText(PaymentService.GetMaskedCreditCardNumber(processPaymentRequest.CreditCardNumber)),
+                CardCvv2 = processPaymentResult.AllowStoringCreditCardNumber ? EncryptionService.EncryptText(processPaymentRequest.CreditCardCvv2) : string.Empty,
+                CardExpirationMonth = processPaymentResult.AllowStoringCreditCardNumber ? EncryptionService.EncryptText(processPaymentRequest.CreditCardExpireMonth.ToString()) : string.Empty,
+                CardExpirationYear = processPaymentResult.AllowStoringCreditCardNumber ? EncryptionService.EncryptText(processPaymentRequest.CreditCardExpireYear.ToString()) : string.Empty,
                 PaymentMethodSystemName = processPaymentRequest.PaymentMethodSystemName,
                 AuthorizationTransactionId = processPaymentResult.AuthorizationTransactionId,
                 AuthorizationTransactionCode = processPaymentResult.AuthorizationTransactionCode,
@@ -814,7 +814,7 @@ namespace Nop.Services.Orders
                 ShippingStatus = details.ShippingStatus,
                 ShippingMethod = details.ShippingMethodName,
                 ShippingRateComputationMethodSystemName = details.ShippingRateComputationMethodSystemName,
-                CustomValuesXml = _paymentService.SerializeCustomValues(processPaymentRequest),
+                CustomValuesXml = PaymentService.SerializeCustomValues(processPaymentRequest),
                 VatNumber = details.VatNumber,
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
@@ -823,36 +823,36 @@ namespace Nop.Services.Orders
             if (details.BillingAddress is null)
                 throw new NopException("Billing address is not provided");
 
-            await _addressService.InsertAddressAsync(details.BillingAddress);
+            await AddressService.InsertAddressAsync(details.BillingAddress);
             order.BillingAddressId = details.BillingAddress.Id;
 
             if (details.PickupAddress != null)
             {
-                await _addressService.InsertAddressAsync(details.PickupAddress);
+                await AddressService.InsertAddressAsync(details.PickupAddress);
                 order.PickupAddressId = details.PickupAddress.Id;
             }
 
             if (details.ShippingAddress != null)
             {
-                await _addressService.InsertAddressAsync(details.ShippingAddress);
+                await AddressService.InsertAddressAsync(details.ShippingAddress);
                 order.ShippingAddressId = details.ShippingAddress.Id;
             }
 
-            await _orderService.InsertOrderAsync(order);
+            await OrderService.InsertOrderAsync(order);
 
             //generate and set custom order number
-            order.CustomOrderNumber = _customNumberFormatter.GenerateOrderCustomNumber(order);
-            await _orderService.UpdateOrderAsync(order);
+            order.CustomOrderNumber = CustomNumberFormatter.GenerateOrderCustomNumber(order);
+            await OrderService.UpdateOrderAsync(order);
 
             //reward points history
             if (details.RedeemedRewardPointsAmount <= decimal.Zero)
                 return order;
 
-            order.RedeemedRewardPointsEntryId = await _rewardPointService.AddRewardPointsHistoryEntryAsync(details.Customer, -details.RedeemedRewardPoints, order.StoreId,
-                string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.CustomOrderNumber),
+            order.RedeemedRewardPointsEntryId = await RewardPointService.AddRewardPointsHistoryEntryAsync(details.Customer, -details.RedeemedRewardPoints, order.StoreId,
+                string.Format(await LocalizationService.GetResourceAsync("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.CustomOrderNumber),
                 order, details.RedeemedRewardPointsAmount);
-            await _customerService.UpdateCustomerAsync(details.Customer);
-            await _orderService.UpdateOrderAsync(order);
+            await CustomerService.UpdateCustomerAsync(details.Customer);
+            await OrderService.UpdateOrderAsync(order);
 
             return order;
         }
@@ -865,20 +865,20 @@ namespace Nop.Services.Orders
         protected virtual async Task SendNotificationsAndSaveNotesAsync(Order order)
         {
             //notes, messages
-            await AddOrderNoteAsync(order, _workContext.OriginalCustomerIfImpersonated != null
-                ? $"Order placed by a store owner ('{_workContext.OriginalCustomerIfImpersonated.Email}'. ID = {_workContext.OriginalCustomerIfImpersonated.Id}) impersonating the customer."
+            await AddOrderNoteAsync(order, WorkContext.OriginalCustomerIfImpersonated != null
+                ? $"Order placed by a store owner ('{WorkContext.OriginalCustomerIfImpersonated.Email}'. ID = {WorkContext.OriginalCustomerIfImpersonated.Id}) impersonating the customer."
                 : "Order placed");
 
             //send email notifications
-            var orderPlacedStoreOwnerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderPlacedStoreOwnerNotificationAsync(order, _localizationSettings.DefaultAdminLanguageId);
+            var orderPlacedStoreOwnerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderPlacedStoreOwnerNotificationAsync(order, LocalizationSettings.DefaultAdminLanguageId);
             if (orderPlacedStoreOwnerNotificationQueuedEmailIds.Any())
                 await AddOrderNoteAsync(order, $"\"Order placed\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderPlacedStoreOwnerNotificationQueuedEmailIds)}.");
 
-            var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
-                (await _pdfService.PrintOrderToPdfAsync(order)) : null;
-            var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
+            var orderPlacedAttachmentFilePath = OrderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
+                (await PdfService.PrintOrderToPdfAsync(order)) : null;
+            var orderPlacedAttachmentFileName = OrderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
                 "order.pdf" : null;
-            var orderPlacedCustomerNotificationQueuedEmailIds = await _workflowMessageService
+            var orderPlacedCustomerNotificationQueuedEmailIds = await WorkflowMessageService
                 .SendOrderPlacedCustomerNotificationAsync(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName);
             if (orderPlacedCustomerNotificationQueuedEmailIds.Any())
                 await AddOrderNoteAsync(order, $"\"Order placed\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderPlacedCustomerNotificationQueuedEmailIds)}.");
@@ -886,7 +886,7 @@ namespace Nop.Services.Orders
             var vendors = await GetVendorsInOrderAsync(order);
             foreach (var vendor in vendors)
             {
-                var orderPlacedVendorNotificationQueuedEmailIds = await _workflowMessageService.SendOrderPlacedVendorNotificationAsync(order, vendor, _localizationSettings.DefaultAdminLanguageId);
+                var orderPlacedVendorNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderPlacedVendorNotificationAsync(order, vendor, LocalizationSettings.DefaultAdminLanguageId);
                 if (orderPlacedVendorNotificationQueuedEmailIds.Any())
                     await AddOrderNoteAsync(order, $"\"Order placed\" email (to vendor) has been queued. Queued email identifiers: {string.Join(", ", orderPlacedVendorNotificationQueuedEmailIds)}.");
             }
@@ -894,7 +894,7 @@ namespace Nop.Services.Orders
             if (order.AffiliateId == 0)
                 return;
 
-            var orderPlacedAffiliateNotificationQueuedEmailIds = await _workflowMessageService.SendOrderPlacedAffiliateNotificationAsync(order, _localizationSettings.DefaultAdminLanguageId);
+            var orderPlacedAffiliateNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderPlacedAffiliateNotificationAsync(order, LocalizationSettings.DefaultAdminLanguageId);
             if (orderPlacedAffiliateNotificationQueuedEmailIds.Any())
                 await AddOrderNoteAsync(order, $"\"Order placed\" email (to affiliate) has been queued. Queued email identifiers: {string.Join(", ", orderPlacedAffiliateNotificationQueuedEmailIds)}.");
         }
@@ -909,12 +909,12 @@ namespace Nop.Services.Orders
             if (order is null)
                 throw new ArgumentNullException(nameof(order));
 
-            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(order.CustomerId);
 
-            var totalForRewardPoints = _orderTotalCalculationService
+            var totalForRewardPoints = OrderTotalCalculationService
                 .CalculateApplicableOrderTotalForRewardPoints(order.OrderShippingInclTax, order.OrderTotal);
             var points = totalForRewardPoints > decimal.Zero ?
-                await _orderTotalCalculationService.CalculateRewardPointsAsync(customer, totalForRewardPoints) : 0;
+                await OrderTotalCalculationService.CalculateRewardPointsAsync(customer, totalForRewardPoints) : 0;
             if (points == 0)
                 return;
 
@@ -924,24 +924,24 @@ namespace Nop.Services.Orders
 
             //check whether delay is set
             DateTime? activatingDate = null;
-            if (_rewardPointsSettings.ActivationDelay > 0)
+            if (RewardPointsSettings.ActivationDelay > 0)
             {
-                var delayPeriod = (RewardPointsActivatingDelayPeriod)_rewardPointsSettings.ActivationDelayPeriodId;
-                var delayInHours = delayPeriod.ToHours(_rewardPointsSettings.ActivationDelay);
+                var delayPeriod = (RewardPointsActivatingDelayPeriod)RewardPointsSettings.ActivationDelayPeriodId;
+                var delayInHours = delayPeriod.ToHours(RewardPointsSettings.ActivationDelay);
                 activatingDate = DateTime.UtcNow.AddHours(delayInHours);
             }
 
             //whether points validity is set
             DateTime? endDate = null;
-            if (_rewardPointsSettings.PurchasesPointsValidity > 0)
-                endDate = (activatingDate ?? DateTime.UtcNow).AddDays(_rewardPointsSettings.PurchasesPointsValidity.Value);
+            if (RewardPointsSettings.PurchasesPointsValidity > 0)
+                endDate = (activatingDate ?? DateTime.UtcNow).AddDays(RewardPointsSettings.PurchasesPointsValidity.Value);
 
             //add reward points
-            order.RewardPointsHistoryEntryId = await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, points, order.StoreId,
-                string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.EarnedForOrder"), order.CustomOrderNumber),
+            order.RewardPointsHistoryEntryId = await RewardPointService.AddRewardPointsHistoryEntryAsync(customer, points, order.StoreId,
+                string.Format(await LocalizationService.GetResourceAsync("RewardPoints.Message.EarnedForOrder"), order.CustomOrderNumber),
                 activatingDate: activatingDate, endDate: endDate);
 
-            await _orderService.UpdateOrderAsync(order);
+            await OrderService.UpdateOrderAsync(order);
         }
 
         /// <summary>
@@ -959,20 +959,20 @@ namespace Nop.Services.Orders
                 return;
 
             //get appropriate history entry
-            var rewardPointsHistoryEntry = await _rewardPointService.GetRewardPointsHistoryEntryByIdAsync(order.RewardPointsHistoryEntryId.Value);
+            var rewardPointsHistoryEntry = await RewardPointService.GetRewardPointsHistoryEntryByIdAsync(order.RewardPointsHistoryEntryId.Value);
             if (rewardPointsHistoryEntry != null)
             {
                 if (rewardPointsHistoryEntry.CreatedOnUtc > DateTime.UtcNow)
                 {
                     //just delete the upcoming entry (points were not granted yet)
-                    await _rewardPointService.DeleteRewardPointsHistoryEntryAsync(rewardPointsHistoryEntry);
+                    await RewardPointService.DeleteRewardPointsHistoryEntryAsync(rewardPointsHistoryEntry);
                 }
                 {
-                    var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+                    var customer = await CustomerService.GetCustomerByIdAsync(order.CustomerId);
                     
                     //or reduce reward points if the entry already exists
-                    await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, -rewardPointsHistoryEntry.Points, order.StoreId,
-                        string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.ReducedForOrder"), order.CustomOrderNumber));
+                    await RewardPointService.AddRewardPointsHistoryEntryAsync(customer, -rewardPointsHistoryEntry.Points, order.StoreId,
+                        string.Format(await LocalizationService.GetResourceAsync("RewardPoints.Message.ReducedForOrder"), order.CustomOrderNumber));
                 }
             }
         }
@@ -987,10 +987,10 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(order.CustomerId);
 
             //were some reward points spend on the order
-            var allRewardPoints = await _rewardPointService.GetRewardPointsHistoryAsync(order.CustomerId, order.StoreId, orderGuid: order.OrderGuid);
+            var allRewardPoints = await RewardPointService.GetRewardPointsHistoryAsync(order.CustomerId, order.StoreId, orderGuid: order.OrderGuid);
             if (allRewardPoints?.Any() == true)
             {
                 // Here we get the wrong balance of bonus points and return the wrong number of points to the buyer's account, 
@@ -1002,8 +1002,8 @@ namespace Nop.Services.Orders
 
                 foreach (var rewardPoints in allRewardPoints)
                     //return back
-                    await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, -rewardPoints.Points, order.StoreId,
-                        string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
+                    await RewardPointService.AddRewardPointsHistoryEntryAsync(customer, -rewardPoints.Points, order.StoreId,
+                        string.Format(await LocalizationService.GetResourceAsync("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
             }
         }
 
@@ -1015,7 +1015,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SetActivatedValueForPurchasedGiftCardsAsync(Order order, bool activate)
         {
-            var giftCards = await _giftCardService.GetAllGiftCardsAsync(order.Id, isGiftCardActivated: !activate);
+            var giftCards = await GiftCardService.GetAllGiftCardsAsync(order.Id, isGiftCardActivated: !activate);
             foreach (var gc in giftCards)
             {
                 if (activate)
@@ -1028,11 +1028,11 @@ namespace Nop.Services.Orders
                         if (!string.IsNullOrEmpty(gc.RecipientEmail) &&
                             !string.IsNullOrEmpty(gc.SenderEmail))
                         {
-                            var customerLang = await _languageService.GetLanguageByIdAsync(order.CustomerLanguageId) ??
-                                               (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
+                            var customerLang = await LanguageService.GetLanguageByIdAsync(order.CustomerLanguageId) ??
+                                               (await LanguageService.GetAllLanguagesAsync()).FirstOrDefault();
                             if (customerLang == null)
                                 throw new Exception("No languages could be loaded");
-                            var queuedEmailIds = await _workflowMessageService.SendGiftCardNotificationAsync(gc, customerLang.Id);
+                            var queuedEmailIds = await WorkflowMessageService.SendGiftCardNotificationAsync(gc, customerLang.Id);
                             if (queuedEmailIds.Any())
                                 isRecipientNotified = true;
                         }
@@ -1040,13 +1040,13 @@ namespace Nop.Services.Orders
 
                     gc.IsGiftCardActivated = true;
                     gc.IsRecipientNotified = isRecipientNotified;
-                    await _giftCardService.UpdateGiftCardAsync(gc);
+                    await GiftCardService.UpdateGiftCardAsync(gc);
                 }
                 else
                 {
                     //deactivate
                     gc.IsGiftCardActivated = false;
-                    await _giftCardService.UpdateGiftCardAsync(gc);
+                    await GiftCardService.UpdateGiftCardAsync(gc);
                 }
             }
         }
@@ -1069,21 +1069,21 @@ namespace Nop.Services.Orders
 
             //set and save new order status
             order.OrderStatusId = (int)os;
-            await _orderService.UpdateOrderAsync(order);
+            await OrderService.UpdateOrderAsync(order);
 
             //order notes, notifications
-            await AddOrderNoteAsync(order, $"Order status has been changed to {await _localizationService.GetLocalizedEnumAsync(os)}");
+            await AddOrderNoteAsync(order, $"Order status has been changed to {await LocalizationService.GetLocalizedEnumAsync(os)}");
 
             if (prevOrderStatus != OrderStatus.Complete &&
                 os == OrderStatus.Complete
                 && notifyCustomer)
             {
                 //notification
-                var orderCompletedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
-                    await _pdfService.PrintOrderToPdfAsync(order) : null;
-                var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
+                var orderCompletedAttachmentFilePath = OrderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
+                    await PdfService.PrintOrderToPdfAsync(order) : null;
+                var orderCompletedAttachmentFileName = OrderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                     "order.pdf" : null;
-                var orderCompletedCustomerNotificationQueuedEmailIds = await _workflowMessageService
+                var orderCompletedCustomerNotificationQueuedEmailIds = await WorkflowMessageService
                     .SendOrderCompletedCustomerNotificationAsync(order, order.CustomerLanguageId, orderCompletedAttachmentFilePath,
                     orderCompletedAttachmentFileName);
                 if (orderCompletedCustomerNotificationQueuedEmailIds.Any())
@@ -1095,7 +1095,7 @@ namespace Nop.Services.Orders
                 && notifyCustomer)
             {
                 //notification
-                var orderCancelledCustomerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderCancelledCustomerNotificationAsync(order, order.CustomerLanguageId);
+                var orderCancelledCustomerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderCancelledCustomerNotificationAsync(order, order.CustomerLanguageId);
                 if (orderCancelledCustomerNotificationQueuedEmailIds.Any())
                     await AddOrderNoteAsync(order, $"\"Order cancelled\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderCancelledCustomerNotificationQueuedEmailIds)}.");
             }
@@ -1108,11 +1108,11 @@ namespace Nop.Services.Orders
                 await ReduceRewardPointsAsync(order);
 
             //gift cards activation
-            if (_orderSettings.ActivateGiftCardsAfterCompletingOrder && order.OrderStatus == OrderStatus.Complete) 
+            if (OrderSettings.ActivateGiftCardsAfterCompletingOrder && order.OrderStatus == OrderStatus.Complete) 
                 await SetActivatedValueForPurchasedGiftCardsAsync(order, true);
 
             //gift cards deactivation
-            if (_orderSettings.DeactivateGiftCardsAfterCancellingOrder && order.OrderStatus == OrderStatus.Cancelled) 
+            if (OrderSettings.DeactivateGiftCardsAfterCancellingOrder && order.OrderStatus == OrderStatus.Cancelled) 
                 await SetActivatedValueForPurchasedGiftCardsAsync(order, false);
         }
 
@@ -1127,7 +1127,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(order));
 
             //raise event
-            await _eventPublisher.PublishAsync(new OrderPaidEvent(order));
+            await EventPublisher.PublishAsync(new OrderPaidEvent(order));
 
             //order paid email notification
             if (order.OrderTotal != decimal.Zero)
@@ -1135,24 +1135,24 @@ namespace Nop.Services.Orders
                 //we should not send it for free ($0 total) orders?
                 //remove this "if" statement if you want to send it in this case
 
-                var orderPaidAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
-                    await _pdfService.PrintOrderToPdfAsync(order) : null;
-                var orderPaidAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
+                var orderPaidAttachmentFilePath = OrderSettings.AttachPdfInvoiceToOrderPaidEmail ?
+                    await PdfService.PrintOrderToPdfAsync(order) : null;
+                var orderPaidAttachmentFileName = OrderSettings.AttachPdfInvoiceToOrderPaidEmail ?
                     "order.pdf" : null;
-                var orderPaidCustomerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderPaidCustomerNotificationAsync(order, order.CustomerLanguageId,
+                var orderPaidCustomerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderPaidCustomerNotificationAsync(order, order.CustomerLanguageId,
                     orderPaidAttachmentFilePath, orderPaidAttachmentFileName);
 
                 if (orderPaidCustomerNotificationQueuedEmailIds.Any())
                     await AddOrderNoteAsync(order, $"\"Order paid\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderPaidCustomerNotificationQueuedEmailIds)}.");
 
-                var orderPaidStoreOwnerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderPaidStoreOwnerNotificationAsync(order, _localizationSettings.DefaultAdminLanguageId);
+                var orderPaidStoreOwnerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderPaidStoreOwnerNotificationAsync(order, LocalizationSettings.DefaultAdminLanguageId);
                 if (orderPaidStoreOwnerNotificationQueuedEmailIds.Any())
                     await AddOrderNoteAsync(order, $"\"Order paid\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderPaidStoreOwnerNotificationQueuedEmailIds)}.");
 
                 var vendors = await GetVendorsInOrderAsync(order);
                 foreach (var vendor in vendors)
                 {
-                    var orderPaidVendorNotificationQueuedEmailIds = await _workflowMessageService.SendOrderPaidVendorNotificationAsync(order, vendor, _localizationSettings.DefaultAdminLanguageId);
+                    var orderPaidVendorNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderPaidVendorNotificationAsync(order, vendor, LocalizationSettings.DefaultAdminLanguageId);
 
                     if (orderPaidVendorNotificationQueuedEmailIds.Any())
                         await AddOrderNoteAsync(order, $"\"Order paid\" email (to vendor) has been queued. Queued email identifiers: {string.Join(", ", orderPaidVendorNotificationQueuedEmailIds)}.");
@@ -1160,8 +1160,8 @@ namespace Nop.Services.Orders
 
                 if (order.AffiliateId != 0)
                 {
-                    var orderPaidAffiliateNotificationQueuedEmailIds = await _workflowMessageService.SendOrderPaidAffiliateNotificationAsync(order,
-                        _localizationSettings.DefaultAdminLanguageId);
+                    var orderPaidAffiliateNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderPaidAffiliateNotificationAsync(order,
+                        LocalizationSettings.DefaultAdminLanguageId);
                     if (orderPaidAffiliateNotificationQueuedEmailIds.Any())
                         await AddOrderNoteAsync(order, $"\"Order paid\" email (to affiliate) has been queued. Queued email identifiers: {string.Join(", ", orderPaidAffiliateNotificationQueuedEmailIds)}.");
                 }
@@ -1184,13 +1184,13 @@ namespace Nop.Services.Orders
 
             //purchased product identifiers
             var purchasedProductIds = new List<int>();
-            foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
+            foreach (var orderItem in await OrderService.GetOrderItemsAsync(order.Id))
             {
                 //standard items
                 purchasedProductIds.Add(orderItem.ProductId);
 
                 //bundled (associated) products
-                var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(orderItem.AttributesXml);
+                var attributeValues = await ProductAttributeParser.ParseProductAttributeValuesAsync(orderItem.AttributesXml);
                 foreach (var attributeValue in attributeValues)
                 {
                     if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
@@ -1201,7 +1201,7 @@ namespace Nop.Services.Orders
             }
 
             //list of customer roles
-            var customerRoles = (await _customerService
+            var customerRoles = (await CustomerService
                 .GetAllCustomerRolesAsync(true))
                 .Where(cr => purchasedProductIds.Contains(cr.PurchasedWithProductId))
                 .ToList();
@@ -1209,17 +1209,17 @@ namespace Nop.Services.Orders
             if (!customerRoles.Any())
                 return;
 
-            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(order.CustomerId);
             
             foreach (var customerRole in customerRoles)
             {
-                if (!await _customerService.IsInCustomerRoleAsync(customer, customerRole.SystemName))
+                if (!await CustomerService.IsInCustomerRoleAsync(customer, customerRole.SystemName))
                 {
                     //not in the list yet
                     if (add)
                     {
                         //add
-                        await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
+                        await CustomerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
                     }
                 }
                 else
@@ -1228,12 +1228,12 @@ namespace Nop.Services.Orders
                     if (!add)
                     {
                         //remove
-                        await _customerService.RemoveCustomerRoleMappingAsync(customer, customerRole);
+                        await CustomerService.RemoveCustomerRoleMappingAsync(customer, customerRole);
                     }
                 }
             }
 
-            await _customerService.UpdateCustomerAsync(customer);
+            await CustomerService.UpdateCustomerAsync(customer);
         }
 
         /// <summary>
@@ -1246,9 +1246,9 @@ namespace Nop.Services.Orders
         /// </returns>
         protected virtual async Task<IList<Vendor>> GetVendorsInOrderAsync(Order order)
         {
-            var pIds = (await _orderService.GetOrderItemsAsync(order.Id)).Select(x => x.ProductId).ToArray();
+            var pIds = (await OrderService.GetOrderItemsAsync(order.Id)).Select(x => x.ProductId).ToArray();
 
-            return await _vendorService.GetVendorsByProductIdsAsync(pIds);
+            return await VendorService.GetVendorsByProductIdsAsync(pIds);
         }
 
         /// <summary>
@@ -1269,15 +1269,15 @@ namespace Nop.Services.Orders
                 CreatedOnUtc = DateTime.UtcNow,
                 InitialOrderId = order.Id
             };
-            await _orderService.InsertRecurringPaymentAsync(rp);
+            await OrderService.InsertRecurringPaymentAsync(rp);
 
-            switch (await _paymentService.GetRecurringPaymentTypeAsync(processPaymentRequest.PaymentMethodSystemName))
+            switch (await PaymentService.GetRecurringPaymentTypeAsync(processPaymentRequest.PaymentMethodSystemName))
             {
                 case RecurringPaymentType.NotSupported:
                     //not supported
                     break;
                 case RecurringPaymentType.Manual:
-                    await _orderService.InsertRecurringPaymentHistoryAsync(new RecurringPaymentHistory
+                    await OrderService.InsertRecurringPaymentHistoryAsync(new RecurringPaymentHistory
                     {
                         RecurringPaymentId = rp.Id,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -1302,32 +1302,32 @@ namespace Nop.Services.Orders
         {
             foreach (var sc in details.Cart)
             {
-                var product = await _productService.GetProductByIdAsync(sc.ProductId);
+                var product = await ProductService.GetProductByIdAsync(sc.ProductId);
 
                 //prices
-                var scUnitPrice = (await _shoppingCartService.GetUnitPriceAsync(sc, true)).unitPrice;
-                var (scSubTotal, discountAmount, scDiscounts, _) = await _shoppingCartService.GetSubTotalAsync(sc, true);
+                var scUnitPrice = (await ShoppingCartService.GetUnitPriceAsync(sc, true)).unitPrice;
+                var (scSubTotal, discountAmount, scDiscounts, _) = await ShoppingCartService.GetSubTotalAsync(sc, true);
                 var scUnitPriceInclTax =
-                    await _taxService.GetProductPriceAsync(product, scUnitPrice, true, details.Customer);
+                    await TaxService.GetProductPriceAsync(product, scUnitPrice, true, details.Customer);
                 var scUnitPriceExclTax =
-                    await _taxService.GetProductPriceAsync(product, scUnitPrice, false, details.Customer);
+                    await TaxService.GetProductPriceAsync(product, scUnitPrice, false, details.Customer);
                 var scSubTotalInclTax =
-                    await _taxService.GetProductPriceAsync(product, scSubTotal, true, details.Customer);
+                    await TaxService.GetProductPriceAsync(product, scSubTotal, true, details.Customer);
                 var scSubTotalExclTax =
-                    await _taxService.GetProductPriceAsync(product, scSubTotal, false, details.Customer);
+                    await TaxService.GetProductPriceAsync(product, scSubTotal, false, details.Customer);
                 var discountAmountInclTax =
-                    await _taxService.GetProductPriceAsync(product, discountAmount, true, details.Customer);
+                    await TaxService.GetProductPriceAsync(product, discountAmount, true, details.Customer);
                 var discountAmountExclTax =
-                    await _taxService.GetProductPriceAsync(product, discountAmount, false, details.Customer);
+                    await TaxService.GetProductPriceAsync(product, discountAmount, false, details.Customer);
                 foreach (var disc in scDiscounts)
-                    if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
+                    if (!DiscountService.ContainsDiscount(details.AppliedDiscounts, disc))
                         details.AppliedDiscounts.Add(disc);
 
                 //attributes
                 var attributeDescription =
-                    await _productAttributeFormatter.FormatAttributesAsync(product, sc.AttributesXml, details.Customer);
+                    await ProductAttributeFormatter.FormatAttributesAsync(product, sc.AttributesXml, details.Customer);
 
-                var itemWeight = await _shippingService.GetShoppingCartItemWeightAsync(sc);
+                var itemWeight = await ShippingService.GetShoppingCartItemWeightAsync(sc);
 
                 //save order item
                 var orderItem = new OrderItem
@@ -1339,7 +1339,7 @@ namespace Nop.Services.Orders
                     UnitPriceExclTax = scUnitPriceExclTax.price,
                     PriceInclTax = scSubTotalInclTax.price,
                     PriceExclTax = scSubTotalExclTax.price,
-                    OriginalProductCost = await _priceCalculationService.GetProductCostAsync(product, sc.AttributesXml),
+                    OriginalProductCost = await PriceCalculationService.GetProductCostAsync(product, sc.AttributesXml),
                     AttributeDescription = attributeDescription,
                     AttributesXml = sc.AttributesXml,
                     Quantity = sc.Quantity,
@@ -1353,18 +1353,18 @@ namespace Nop.Services.Orders
                     RentalEndDateUtc = sc.RentalEndDateUtc
                 };
 
-                await _orderService.InsertOrderItemAsync(orderItem);
+                await OrderService.InsertOrderItemAsync(orderItem);
 
                 //gift cards
                 await AddGiftCardsAsync(product, sc.AttributesXml, sc.Quantity, orderItem, scUnitPriceExclTax.price);
 
                 //inventory
-                await _productService.AdjustInventoryAsync(product, -sc.Quantity, sc.AttributesXml,
-                    string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
+                await ProductService.AdjustInventoryAsync(product, -sc.Quantity, sc.AttributesXml,
+                    string.Format(await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
             }
 
             //clear shopping cart
-            details.Cart.ToList().ForEach(async sci => await _shoppingCartService.DeleteShoppingCartItemAsync(sci, false));
+            details.Cart.ToList().ForEach(async sci => await ShoppingCartService.DeleteShoppingCartItemAsync(sci, false));
         }
 
         /// <summary>
@@ -1382,17 +1382,17 @@ namespace Nop.Services.Orders
             if (!product.IsGiftCard)
                 return;
 
-            _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName, out var giftCardRecipientEmail, out var giftCardSenderName, out var giftCardSenderEmail, out var giftCardMessage);
+            ProductAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName, out var giftCardRecipientEmail, out var giftCardSenderName, out var giftCardSenderEmail, out var giftCardMessage);
 
             for (var i = 0; i < quantity; i++)
             {
-                await _giftCardService.InsertGiftCardAsync(new GiftCard
+                await GiftCardService.InsertGiftCardAsync(new GiftCard
                 {
                     GiftCardType = product.GiftCardType,
                     PurchasedWithOrderItemId = orderItem.Id,
                     Amount = amount ?? product.OverriddenGiftCardAmount ?? unitPriceExclTax ?? 0,
                     IsGiftCardActivated = false,
-                    GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
+                    GiftCardCouponCode = GiftCardService.GenerateGiftCardCode(),
                     RecipientName = giftCardRecipientName,
                     RecipientEmail = giftCardRecipientEmail,
                     SenderName = giftCardSenderName,
@@ -1420,29 +1420,29 @@ namespace Nop.Services.Orders
             //check if is payment workflow required
             if (await IsPaymentWorkflowRequiredAsync(details.Cart))
             {
-                var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
-                var paymentMethod = await _paymentPluginManager
+                var customer = await CustomerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
+                var paymentMethod = await PaymentPluginManager
                     .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
                     ?? throw new NopException("Payment method couldn't be loaded");
 
                 //ensure that payment method is active
-                if (!_paymentPluginManager.IsPluginActive(paymentMethod))
+                if (!PaymentPluginManager.IsPluginActive(paymentMethod))
                     throw new NopException("Payment method is not active");
 
                 if (details.IsRecurringShoppingCart)
                 {
                     //recurring cart
-                    processPaymentResult = (await _paymentService.GetRecurringPaymentTypeAsync(processPaymentRequest.PaymentMethodSystemName)) switch
+                    processPaymentResult = (await PaymentService.GetRecurringPaymentTypeAsync(processPaymentRequest.PaymentMethodSystemName)) switch
                     {
                         RecurringPaymentType.NotSupported => throw new NopException("Recurring payments are not supported by selected payment method"),
                         RecurringPaymentType.Manual or 
-                        RecurringPaymentType.Automatic => await _paymentService.ProcessRecurringPaymentAsync(processPaymentRequest),
+                        RecurringPaymentType.Automatic => await PaymentService.ProcessRecurringPaymentAsync(processPaymentRequest),
                         _ => throw new NopException("Not supported recurring payment type"),
                     };
                 }
                 else
                     //standard cart
-                    processPaymentResult = await _paymentService.ProcessPaymentAsync(processPaymentRequest);
+                    processPaymentResult = await PaymentService.ProcessPaymentAsync(processPaymentRequest);
             }
             else
                 //payment is not required
@@ -1462,7 +1462,7 @@ namespace Nop.Services.Orders
                 return;
 
             foreach (var agc in details.AppliedGiftCards)
-                await _giftCardService.InsertGiftCardUsageHistoryAsync(new GiftCardUsageHistory
+                await GiftCardService.InsertGiftCardUsageHistoryAsync(new GiftCardUsageHistory
                 {
                     GiftCardId = agc.GiftCard.Id,
                     UsedWithOrderId = order.Id,
@@ -1484,11 +1484,11 @@ namespace Nop.Services.Orders
 
             foreach (var discount in details.AppliedDiscounts)
             {
-                var d = await _discountService.GetDiscountByIdAsync(discount.Id);
+                var d = await DiscountService.GetDiscountByIdAsync(discount.Id);
                 if (d == null) 
                     continue;
 
-                await _discountService.InsertDiscountUsageHistoryAsync(new DiscountUsageHistory
+                await DiscountService.InsertDiscountUsageHistoryAsync(new DiscountUsageHistory
                 {
                     DiscountId = d.Id,
                     OrderId = order.Id,
@@ -1515,7 +1515,7 @@ namespace Nop.Services.Orders
             {
                 //ensure that paid date is set
                 order.PaidDateUtc = DateTime.UtcNow;
-                await _orderService.UpdateOrderAsync(order);
+                await OrderService.UpdateOrderAsync(order);
             }
 
             switch (order.OrderStatus)
@@ -1550,7 +1550,7 @@ namespace Nop.Services.Orders
             else
             {
                 //shipping is required
-                if (_orderSettings.CompleteOrderWhenDelivered)
+                if (OrderSettings.CompleteOrderWhenDelivered)
                     completed = order.ShippingStatus == ShippingStatus.Delivered;
                 else
                     completed = order.ShippingStatus == ShippingStatus.Shipped ||
@@ -1610,26 +1610,26 @@ namespace Nop.Services.Orders
                     await SendNotificationsAndSaveNotesAsync(order);
 
                     //reset checkout data
-                    await _customerService.ResetCheckoutDataAsync(details.Customer, processPaymentRequest.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
-                    await _customerActivityService.InsertActivityAsync("PublicStore.PlaceOrder",
-                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.PlaceOrder"), order.Id), order);
+                    await CustomerService.ResetCheckoutDataAsync(details.Customer, processPaymentRequest.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
+                    await CustomerActivityService.InsertActivityAsync("PublicStore.PlaceOrder",
+                        string.Format(await LocalizationService.GetResourceAsync("ActivityLog.PublicStore.PlaceOrder"), order.Id), order);
 
                     //check order status
                     await CheckOrderStatusAsync(order);
 
                     //raise event       
-                    await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
+                    await EventPublisher.PublishAsync(new OrderPlacedEvent(order));
 
                     if (order.PaymentStatus == PaymentStatus.Paid)
                         await ProcessOrderPaidAsync(order);
                 }
                 else
                     foreach (var paymentError in processPaymentResult.Errors)
-                        result.AddError(string.Format(await _localizationService.GetResourceAsync("Checkout.PaymentError"), paymentError));
+                        result.AddError(string.Format(await LocalizationService.GetResourceAsync("Checkout.PaymentError"), paymentError));
             }
             catch (Exception exc)
             {
-                await _logger.ErrorAsync(exc.Message, exc);
+                await Logger.ErrorAsync(exc.Message, exc);
                 result.AddError(exc.Message);
             }
 
@@ -1639,8 +1639,8 @@ namespace Nop.Services.Orders
             //log errors
             var logError = result.Errors.Aggregate("Error while placing order. ",
                 (current, next) => $"{current}Error {result.Errors.IndexOf(next) + 1}: {next}. ");
-            var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
-            await _logger.ErrorAsync(logError, customer: customer);
+            var customer = await CustomerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
+            await Logger.ErrorAsync(logError, customer: customer);
 
             return result;
         }
@@ -1652,7 +1652,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateOrderTotalsAsync(UpdateOrderParameters updateOrderParameters)
         {
-            if (!_orderSettings.AutoUpdateOrderTotalsOnEditingOrder)
+            if (!OrderSettings.AutoUpdateOrderTotalsOnEditingOrder)
                 return;
 
             var updatedOrder = updateOrderParameters.UpdatedOrder;
@@ -1664,28 +1664,28 @@ namespace Nop.Services.Orders
             var itemDeleted = updatedShoppingCartItem is null;
 
             //validate shopping cart for warnings
-            updateOrderParameters.Warnings.AddRange(await _shoppingCartService.GetShoppingCartWarningsAsync(restoredCart, string.Empty, false));
+            updateOrderParameters.Warnings.AddRange(await ShoppingCartService.GetShoppingCartWarningsAsync(restoredCart, string.Empty, false));
 
-            var customer = await _customerService.GetCustomerByIdAsync(updatedOrder.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(updatedOrder.CustomerId);
 
             if (!itemDeleted)
             {
-                var product = await _productService.GetProductByIdAsync(updatedShoppingCartItem.ProductId);
+                var product = await ProductService.GetProductByIdAsync(updatedShoppingCartItem.ProductId);
 
-                updateOrderParameters.Warnings.AddRange(await _shoppingCartService.GetShoppingCartItemWarningsAsync(customer, updatedShoppingCartItem.ShoppingCartType,
+                updateOrderParameters.Warnings.AddRange(await ShoppingCartService.GetShoppingCartItemWarningsAsync(customer, updatedShoppingCartItem.ShoppingCartType,
                     product, updatedOrder.StoreId, updatedShoppingCartItem.AttributesXml, updatedShoppingCartItem.CustomerEnteredPrice,
                     updatedShoppingCartItem.RentalStartDateUtc, updatedShoppingCartItem.RentalEndDateUtc, updatedShoppingCartItem.Quantity, false, updatedShoppingCartItem.Id));
 
-                updatedOrderItem.ItemWeight = await _shippingService.GetShoppingCartItemWeightAsync(updatedShoppingCartItem);
-                updatedOrderItem.OriginalProductCost = await _priceCalculationService.GetProductCostAsync(product, updatedShoppingCartItem.AttributesXml);
-                updatedOrderItem.AttributeDescription = await _productAttributeFormatter.FormatAttributesAsync(product,
+                updatedOrderItem.ItemWeight = await ShippingService.GetShoppingCartItemWeightAsync(updatedShoppingCartItem);
+                updatedOrderItem.OriginalProductCost = await PriceCalculationService.GetProductCostAsync(product, updatedShoppingCartItem.AttributesXml);
+                updatedOrderItem.AttributeDescription = await ProductAttributeFormatter.FormatAttributesAsync(product,
                     updatedShoppingCartItem.AttributesXml, customer);
 
                 //gift cards
                 await AddGiftCardsAsync(product, updatedShoppingCartItem.AttributesXml, updatedShoppingCartItem.Quantity, updatedOrderItem, updatedOrderItem.UnitPriceExclTax);
             }
 
-            await _orderTotalCalculationService.UpdateOrderTotalsAsync(updateOrderParameters, restoredCart);
+            await OrderTotalCalculationService.UpdateOrderTotalsAsync(updateOrderParameters, restoredCart);
 
             if (updateOrderParameters.PickupPoint != null)
             {
@@ -1696,34 +1696,34 @@ namespace Nop.Services.Orders
                     Address1 = updateOrderParameters.PickupPoint.Address,
                     City = updateOrderParameters.PickupPoint.City,
                     County = updateOrderParameters.PickupPoint.County,
-                    CountryId = (await _countryService.GetCountryByTwoLetterIsoCodeAsync(updateOrderParameters.PickupPoint.CountryCode))?.Id,
+                    CountryId = (await CountryService.GetCountryByTwoLetterIsoCodeAsync(updateOrderParameters.PickupPoint.CountryCode))?.Id,
                     ZipPostalCode = updateOrderParameters.PickupPoint.ZipPostalCode,
                     CreatedOnUtc = DateTime.UtcNow
                 };
 
-                await _addressService.InsertAddressAsync(pickupAddress);
+                await AddressService.InsertAddressAsync(pickupAddress);
 
                 updatedOrder.PickupAddressId = pickupAddress.Id;
                 var shippingMethod = !string.IsNullOrEmpty(updateOrderParameters.PickupPoint.Name) ?
-                    string.Format(await _localizationService.GetResourceAsync("Checkout.PickupPoints.Name"), updateOrderParameters.PickupPoint.Name) :
-                    await _localizationService.GetResourceAsync("Checkout.PickupPoints.NullName");
+                    string.Format(await LocalizationService.GetResourceAsync("Checkout.PickupPoints.Name"), updateOrderParameters.PickupPoint.Name) :
+                    await LocalizationService.GetResourceAsync("Checkout.PickupPoints.NullName");
                 updatedOrder.ShippingMethod = shippingMethod;
                 updatedOrder.ShippingRateComputationMethodSystemName = updateOrderParameters.PickupPoint.ProviderSystemName;
             }
 
-            await _orderService.UpdateOrderAsync(updatedOrder);
+            await OrderService.UpdateOrderAsync(updatedOrder);
 
             //discount usage history
-            var discountUsageHistoryForOrder = await _discountService.GetAllDiscountUsageHistoryAsync(null, customer.Id, updatedOrder.Id);
+            var discountUsageHistoryForOrder = await DiscountService.GetAllDiscountUsageHistoryAsync(null, customer.Id, updatedOrder.Id);
             foreach (var discount in updateOrderParameters.AppliedDiscounts)
             {
                 if (discountUsageHistoryForOrder.Any(history => history.DiscountId == discount.Id))
                     continue;
 
-                var d = await _discountService.GetDiscountByIdAsync(discount.Id);
+                var d = await DiscountService.GetDiscountByIdAsync(discount.Id);
                 if (d != null)
                 {
-                    await _discountService.InsertDiscountUsageHistoryAsync(new DiscountUsageHistory
+                    await DiscountService.InsertDiscountUsageHistoryAsync(new DiscountUsageHistory
                     {
                         DiscountId = d.Id,
                         OrderId = updatedOrder.Id,
@@ -1739,7 +1739,7 @@ namespace Nop.Services.Orders
                 if (order is null)
                     throw new ArgumentNullException(nameof(order));
 
-                var cart = (await _orderService.GetOrderItemsAsync(order.Id)).Select(item => new ShoppingCartItem
+                var cart = (await OrderService.GetOrderItemsAsync(order.Id)).Select(item => new ShoppingCartItem
                 {
                     Id = item.Id,
                     AttributesXml = item.AttributesXml,
@@ -1781,44 +1781,44 @@ namespace Nop.Services.Orders
                 await ReduceRewardPointsAsync(order);
 
                 //cancel recurring payments
-                var recurringPayments = await _orderService.SearchRecurringPaymentsAsync(initialOrderId: order.Id);
+                var recurringPayments = await OrderService.SearchRecurringPaymentsAsync(initialOrderId: order.Id);
                 foreach (var rp in recurringPayments) 
                     await CancelRecurringPaymentAsync(rp);
 
                 //Adjust inventory for already shipped shipments
                 //only products with "use multiple warehouses"
-                foreach (var shipment in await _shipmentService.GetShipmentsByOrderIdAsync(order.Id))
+                foreach (var shipment in await ShipmentService.GetShipmentsByOrderIdAsync(order.Id))
                 {
-                    foreach (var shipmentItem in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+                    foreach (var shipmentItem in await ShipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
                     {
-                        var product = await _orderService.GetProductByOrderItemIdAsync(shipmentItem.OrderItemId);
+                        var product = await OrderService.GetProductByOrderItemIdAsync(shipmentItem.OrderItemId);
                         if (product == null)
                             continue;
 
-                        await _productService.ReverseBookedInventoryAsync(product, shipmentItem,
-                            string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
+                        await ProductService.ReverseBookedInventoryAsync(product, shipmentItem,
+                            string.Format(await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
                     }
                 }
 
                 //Adjust inventory
-                foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
+                foreach (var orderItem in await OrderService.GetOrderItemsAsync(order.Id))
                 {
-                    var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                    var product = await ProductService.GetProductByIdAsync(orderItem.ProductId);
 
-                    await _productService.AdjustInventoryAsync(product, orderItem.Quantity, orderItem.AttributesXml,
-                        string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
+                    await ProductService.AdjustInventoryAsync(product, orderItem.Quantity, orderItem.AttributesXml,
+                        string.Format(await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
                 }
             }
 
             //deactivate gift cards
-            if (_orderSettings.DeactivateGiftCardsAfterDeletingOrder)
+            if (OrderSettings.DeactivateGiftCardsAfterDeletingOrder)
                 await SetActivatedValueForPurchasedGiftCardsAsync(order, false);
 
             //add a note
             await AddOrderNoteAsync(order, "Order has been deleted");
 
             //now delete an order
-            await _orderService.DeleteOrderAsync(order);
+            await OrderService.DeleteOrderAsync(order);
         }
 
         /// <summary>
@@ -1840,11 +1840,11 @@ namespace Nop.Services.Orders
                 if (!recurringPayment.IsActive)
                     throw new NopException("Recurring payment is not active");
 
-                var initialOrder = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
+                var initialOrder = await OrderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
                 if (initialOrder == null)
                     throw new NopException("Initial order could not be loaded");
 
-                var customer = await _customerService.GetCustomerByIdAsync(initialOrder.CustomerId);
+                var customer = await CustomerService.GetCustomerByIdAsync(initialOrder.CustomerId);
                 if (customer == null)
                     throw new NopException("Customer could not be loaded");
 
@@ -1861,7 +1861,7 @@ namespace Nop.Services.Orders
                     RecurringCycleLength = recurringPayment.CycleLength,
                     RecurringCyclePeriod = recurringPayment.CyclePeriod,
                     RecurringTotalCycles = recurringPayment.TotalCycles,
-                    CustomValues = _paymentService.DeserializeCustomValues(initialOrder)
+                    CustomValues = PaymentService.DeserializeCustomValues(initialOrder)
                 };
 
                 //prepare order details
@@ -1872,24 +1872,24 @@ namespace Nop.Services.Orders
                 var skipPaymentWorkflow = details.OrderTotal == decimal.Zero;
                 if (!skipPaymentWorkflow)
                 {
-                    var paymentMethod = await _paymentPluginManager
+                    var paymentMethod = await PaymentPluginManager
                         .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, initialOrder.StoreId)
                         ?? throw new NopException("Payment method couldn't be loaded");
 
-                    if (!_paymentPluginManager.IsPluginActive(paymentMethod))
+                    if (!PaymentPluginManager.IsPluginActive(paymentMethod))
                         throw new NopException("Payment method is not active");
 
                     //Old credit card info
                     if (details.InitialOrder.AllowStoringCreditCardNumber)
                     {
-                        processPaymentRequest.CreditCardType = _encryptionService.DecryptText(details.InitialOrder.CardType);
-                        processPaymentRequest.CreditCardName = _encryptionService.DecryptText(details.InitialOrder.CardName);
-                        processPaymentRequest.CreditCardNumber = _encryptionService.DecryptText(details.InitialOrder.CardNumber);
-                        processPaymentRequest.CreditCardCvv2 = _encryptionService.DecryptText(details.InitialOrder.CardCvv2);
+                        processPaymentRequest.CreditCardType = EncryptionService.DecryptText(details.InitialOrder.CardType);
+                        processPaymentRequest.CreditCardName = EncryptionService.DecryptText(details.InitialOrder.CardName);
+                        processPaymentRequest.CreditCardNumber = EncryptionService.DecryptText(details.InitialOrder.CardNumber);
+                        processPaymentRequest.CreditCardCvv2 = EncryptionService.DecryptText(details.InitialOrder.CardCvv2);
                         try
                         {
-                            processPaymentRequest.CreditCardExpireMonth = Convert.ToInt32(_encryptionService.DecryptText(details.InitialOrder.CardExpirationMonth));
-                            processPaymentRequest.CreditCardExpireYear = Convert.ToInt32(_encryptionService.DecryptText(details.InitialOrder.CardExpirationYear));
+                            processPaymentRequest.CreditCardExpireMonth = Convert.ToInt32(EncryptionService.DecryptText(details.InitialOrder.CardExpirationMonth));
+                            processPaymentRequest.CreditCardExpireYear = Convert.ToInt32(EncryptionService.DecryptText(details.InitialOrder.CardExpirationYear));
                         }
                         catch
                         {
@@ -1898,10 +1898,10 @@ namespace Nop.Services.Orders
                     }
 
                     //payment type
-                    processPaymentResult = (await _paymentService.GetRecurringPaymentTypeAsync(processPaymentRequest.PaymentMethodSystemName)) switch
+                    processPaymentResult = (await PaymentService.GetRecurringPaymentTypeAsync(processPaymentRequest.PaymentMethodSystemName)) switch
                     {
                         RecurringPaymentType.NotSupported => throw new NopException("Recurring payments are not supported by selected payment method"),
-                        RecurringPaymentType.Manual => await _paymentService.ProcessRecurringPaymentAsync(processPaymentRequest),
+                        RecurringPaymentType.Manual => await PaymentService.ProcessRecurringPaymentAsync(processPaymentRequest),
                         //payment is processed on payment gateway site, info about last transaction in paymentResult parameter
                         RecurringPaymentType.Automatic => paymentResult ?? new ProcessPaymentResult(),
                         _ => throw new NopException("Not supported recurring payment type"),
@@ -1918,7 +1918,7 @@ namespace Nop.Services.Orders
                     //save order details
                     var order = await SaveOrderDetailsAsync(processPaymentRequest, processPaymentResult, details);
 
-                    foreach (var orderItem in await _orderService.GetOrderItemsAsync(details.InitialOrder.Id))
+                    foreach (var orderItem in await OrderService.GetOrderItemsAsync(details.InitialOrder.Id))
                     {
                         //save item
                         var newOrderItem = new OrderItem
@@ -1944,16 +1944,16 @@ namespace Nop.Services.Orders
                             RentalEndDateUtc = orderItem.RentalEndDateUtc
                         };
 
-                        await _orderService.InsertOrderItemAsync(newOrderItem);
+                        await OrderService.InsertOrderItemAsync(newOrderItem);
 
-                        var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                        var product = await ProductService.GetProductByIdAsync(orderItem.ProductId);
 
                         //gift cards
                         await AddGiftCardsAsync(product, orderItem.AttributesXml, orderItem.Quantity, newOrderItem, amount: orderItem.UnitPriceExclTax);
 
                         //inventory
-                        await _productService.AdjustInventoryAsync(product, -orderItem.Quantity, orderItem.AttributesXml,
-                            string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
+                        await ProductService.AdjustInventoryAsync(product, -orderItem.Quantity, orderItem.AttributesXml,
+                            string.Format(await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
                     }
 
                     //discount usage history
@@ -1966,7 +1966,7 @@ namespace Nop.Services.Orders
                     await CheckOrderStatusAsync(order);
 
                     //raise event       
-                    await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
+                    await EventPublisher.PublishAsync(new OrderPlacedEvent(order));
 
                     if (order.PaymentStatus == PaymentStatus.Paid)
                         await ProcessOrderPaidAsync(order);
@@ -1975,14 +1975,14 @@ namespace Nop.Services.Orders
                     recurringPayment.LastPaymentFailed = false;
 
                     //next recurring payment
-                    await _orderService.InsertRecurringPaymentHistoryAsync(new RecurringPaymentHistory
+                    await OrderService.InsertRecurringPaymentHistoryAsync(new RecurringPaymentHistory
                     {
                         RecurringPaymentId = recurringPayment.Id,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id
                     });
 
-                    await _orderService.UpdateRecurringPaymentAsync(recurringPayment);
+                    await OrderService.UpdateRecurringPaymentAsync(recurringPayment);
 
                     return new List<string>();
                 }
@@ -1990,32 +1990,32 @@ namespace Nop.Services.Orders
                 //log errors
                 var logError = processPaymentResult.Errors.Aggregate("Error while processing recurring order. ",
                     (current, next) => $"{current}Error {processPaymentResult.Errors.IndexOf(next) + 1}: {next}. ");
-                await _logger.ErrorAsync(logError, customer: customer);
+                await Logger.ErrorAsync(logError, customer: customer);
 
                 if (!processPaymentResult.RecurringPaymentFailed)
                     return processPaymentResult.Errors;
 
                 //set flag that last payment failed
                 recurringPayment.LastPaymentFailed = true;
-                await _orderService.UpdateRecurringPaymentAsync(recurringPayment);
+                await OrderService.UpdateRecurringPaymentAsync(recurringPayment);
 
-                if (_paymentSettings.CancelRecurringPaymentsAfterFailedPayment)
+                if (PaymentSettings.CancelRecurringPaymentsAfterFailedPayment)
                 {
                     //cancel recurring payment
-                    (await CancelRecurringPaymentAsync(recurringPayment)).ToList().ForEach(error => _logger.ErrorAsync(error));
+                    (await CancelRecurringPaymentAsync(recurringPayment)).ToList().ForEach(error => Logger.ErrorAsync(error));
 
                     //notify a customer about cancelled payment
-                    await _workflowMessageService.SendRecurringPaymentCancelledCustomerNotificationAsync(recurringPayment, initialOrder.CustomerLanguageId);
+                    await WorkflowMessageService.SendRecurringPaymentCancelledCustomerNotificationAsync(recurringPayment, initialOrder.CustomerLanguageId);
                 }
                 else
                     //notify a customer about failed payment
-                    await _workflowMessageService.SendRecurringPaymentFailedCustomerNotificationAsync(recurringPayment, initialOrder.CustomerLanguageId);
+                    await WorkflowMessageService.SendRecurringPaymentFailedCustomerNotificationAsync(recurringPayment, initialOrder.CustomerLanguageId);
 
                 return processPaymentResult.Errors;
             }
             catch (Exception exc)
             {
-                await _logger.ErrorAsync($"Error while processing recurring order. {exc.Message}", exc);
+                await Logger.ErrorAsync($"Error while processing recurring order. {exc.Message}", exc);
                 throw;
             }
         }
@@ -2030,7 +2030,7 @@ namespace Nop.Services.Orders
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            var initialOrder = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
+            var initialOrder = await OrderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
             if (initialOrder == null)
                 return new List<string> { "Initial order could not be loaded" };
 
@@ -2039,15 +2039,15 @@ namespace Nop.Services.Orders
             try
             {
                 request.Order = initialOrder;
-                result = await _paymentService.CancelRecurringPaymentAsync(request);
+                result = await PaymentService.CancelRecurringPaymentAsync(request);
                 if (result.Success)
                 {
                     //update recurring payment
                     recurringPayment.IsActive = false;
-                    await _orderService.UpdateRecurringPaymentAsync(recurringPayment);
+                    await OrderService.UpdateRecurringPaymentAsync(recurringPayment);
 
                     //add a note
-                    await _orderService.InsertOrderNoteAsync(new OrderNote
+                    await OrderService.InsertOrderNoteAsync(new OrderNote
                     {
                         OrderId = initialOrder.Id,
                         Note = "Recurring payment has been cancelled",
@@ -2056,9 +2056,9 @@ namespace Nop.Services.Orders
                     });
 
                     //notify a store owner
-                    await _workflowMessageService
+                    await WorkflowMessageService
                         .SendRecurringPaymentCancelledStoreOwnerNotificationAsync(recurringPayment,
-                        _localizationSettings.DefaultAdminLanguageId);
+                        LocalizationSettings.DefaultAdminLanguageId);
                 }
             }
             catch (Exception exc)
@@ -2081,7 +2081,7 @@ namespace Nop.Services.Orders
                 return result.Errors;
 
             //add a note
-            await _orderService.InsertOrderNoteAsync(new OrderNote
+            await OrderService.InsertOrderNoteAsync(new OrderNote
             {
                 OrderId = initialOrder.Id,
                 Note = $"Unable to cancel recurring payment. {error}",
@@ -2091,7 +2091,7 @@ namespace Nop.Services.Orders
 
             //log it
             var logError = $"Error cancelling recurring payment. Order #{initialOrder.Id}. Error: {error}";
-            await _logger.InsertLogAsync(LogLevel.Error, logError, logError);
+            await Logger.InsertLogAsync(LogLevel.Error, logError, logError);
             return result.Errors;
         }
 
@@ -2112,18 +2112,18 @@ namespace Nop.Services.Orders
             if (customerToValidate is null)
                 return false;
 
-            var initialOrder = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
+            var initialOrder = await OrderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
             if (initialOrder is null)
                 return false;
 
-            var customer = await _customerService.GetCustomerByIdAsync(initialOrder.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(initialOrder.CustomerId);
             if (customer is null)
                 return false;
 
             if (initialOrder.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            if (!await _customerService.IsAdminAsync(customerToValidate))
+            if (!await CustomerService.IsAdminAsync(customerToValidate))
                 if (customer.Id != customerToValidate.Id)
                     return false;
 
@@ -2147,20 +2147,20 @@ namespace Nop.Services.Orders
             if (recurringPayment == null || customer == null)
                 return false;
 
-            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
+            var order = await OrderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
 
             if (order is null)
                 return false;
 
-            var orderCustomer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            var orderCustomer = await CustomerService.GetCustomerByIdAsync(order.CustomerId);
             
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            if (!recurringPayment.LastPaymentFailed || await _paymentService.GetRecurringPaymentTypeAsync(order.PaymentMethodSystemName) != RecurringPaymentType.Manual)
+            if (!recurringPayment.LastPaymentFailed || await PaymentService.GetRecurringPaymentTypeAsync(order.PaymentMethodSystemName) != RecurringPaymentType.Manual)
                 return false;
 
-            if (orderCustomer == null || (!await _customerService.IsAdminAsync(customer) && orderCustomer.Id != customer.Id))
+            if (orderCustomer == null || (!await CustomerService.IsAdminAsync(customer) && orderCustomer.Id != customer.Id))
                 return false;
 
             return true;
@@ -2177,7 +2177,7 @@ namespace Nop.Services.Orders
             if (shipment == null)
                 throw new ArgumentNullException(nameof(shipment));
 
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
+            var order = await OrderService.GetOrderByIdAsync(shipment.OrderId);
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
@@ -2185,26 +2185,26 @@ namespace Nop.Services.Orders
                 throw new Exception("This shipment is already shipped");
 
             shipment.ShippedDateUtc = DateTime.UtcNow;
-            await _shipmentService.UpdateShipmentAsync(shipment);
+            await ShipmentService.UpdateShipmentAsync(shipment);
 
             //process products with "Multiple warehouse" support enabled
-            foreach (var item in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+            foreach (var item in await ShipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
             {
-                var product = await _orderService.GetProductByOrderItemIdAsync(item.OrderItemId);
+                var product = await OrderService.GetProductByOrderItemIdAsync(item.OrderItemId);
 
                 if (product is null)
                     continue;
 
-                await _productService.BookReservedInventoryAsync(product, item.WarehouseId, -item.Quantity,
-                    string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Ship"), shipment.OrderId));
+                await ProductService.BookReservedInventoryAsync(product, item.WarehouseId, -item.Quantity,
+                    string.Format(await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Ship"), shipment.OrderId));
             }
 
             //check whether we have more items to ship
-            if (await _orderService.HasItemsToAddToShipmentAsync(order) || await _orderService.HasItemsToShipAsync(order))
+            if (await OrderService.HasItemsToAddToShipmentAsync(order) || await OrderService.HasItemsToShipAsync(order))
                 order.ShippingStatusId = (int)ShippingStatus.PartiallyShipped;
             else
                 order.ShippingStatusId = (int)ShippingStatus.Shipped;
-            await _orderService.UpdateOrderAsync(order);
+            await OrderService.UpdateOrderAsync(order);
 
             //add a note
             await AddOrderNoteAsync(order, $"Shipment# {shipment.Id} has been sent");
@@ -2212,13 +2212,13 @@ namespace Nop.Services.Orders
             if (notifyCustomer)
             {
                 //notify customer
-                var queuedEmailIds = await _workflowMessageService.SendShipmentSentCustomerNotificationAsync(shipment, order.CustomerLanguageId);
+                var queuedEmailIds = await WorkflowMessageService.SendShipmentSentCustomerNotificationAsync(shipment, order.CustomerLanguageId);
                 if (queuedEmailIds.Any())
                     await AddOrderNoteAsync(order, $"\"Shipped\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", queuedEmailIds)}.");
             }
 
             //event
-            await _eventPublisher.PublishShipmentSentAsync(shipment);
+            await EventPublisher.PublishShipmentSentAsync(shipment);
 
             //check order status
             await CheckOrderStatusAsync(order);
@@ -2235,7 +2235,7 @@ namespace Nop.Services.Orders
             if (shipment == null)
                 throw new ArgumentNullException(nameof(shipment));
 
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
+            var order = await OrderService.GetOrderByIdAsync(shipment.OrderId);
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
@@ -2246,11 +2246,11 @@ namespace Nop.Services.Orders
                 throw new Exception("This shipment is already delivered");
 
             shipment.DeliveryDateUtc = DateTime.UtcNow;
-            await _shipmentService.UpdateShipmentAsync(shipment);
+            await ShipmentService.UpdateShipmentAsync(shipment);
 
-            if (!await _orderService.HasItemsToAddToShipmentAsync(order) && !await _orderService.HasItemsToShipAsync(order) && !await _orderService.HasItemsToDeliverAsync(order))
+            if (!await OrderService.HasItemsToAddToShipmentAsync(order) && !await OrderService.HasItemsToShipAsync(order) && !await OrderService.HasItemsToDeliverAsync(order))
                 order.ShippingStatusId = (int)ShippingStatus.Delivered;
-            await _orderService.UpdateOrderAsync(order);
+            await OrderService.UpdateOrderAsync(order);
 
             //add a note
             await AddOrderNoteAsync(order, $"Shipment# {shipment.Id} has been delivered");
@@ -2258,13 +2258,13 @@ namespace Nop.Services.Orders
             if (notifyCustomer)
             {
                 //send email notification
-                var queuedEmailIds = await _workflowMessageService.SendShipmentDeliveredCustomerNotificationAsync(shipment, order.CustomerLanguageId);
+                var queuedEmailIds = await WorkflowMessageService.SendShipmentDeliveredCustomerNotificationAsync(shipment, order.CustomerLanguageId);
                 if (queuedEmailIds.Any())
                     await AddOrderNoteAsync(order, $"\"Delivered\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", queuedEmailIds)}.");
             }
 
             //event
-            await _eventPublisher.PublishShipmentDeliveredAsync(shipment);
+            await EventPublisher.PublishShipmentDeliveredAsync(shipment);
 
             //check order status
             await CheckOrderStatusAsync(order);
@@ -2310,39 +2310,39 @@ namespace Nop.Services.Orders
             await ReturnBackRedeemedRewardPointsAsync(order);
 
             //delete gift card usage history
-            if (_orderSettings.DeleteGiftCardUsageHistory) 
-                await _giftCardService.DeleteGiftCardUsageHistoryAsync(order);
+            if (OrderSettings.DeleteGiftCardUsageHistory) 
+                await GiftCardService.DeleteGiftCardUsageHistoryAsync(order);
 
             //cancel recurring payments
-            var recurringPayments = await _orderService.SearchRecurringPaymentsAsync(initialOrderId: order.Id);
+            var recurringPayments = await OrderService.SearchRecurringPaymentsAsync(initialOrderId: order.Id);
             foreach (var rp in recurringPayments) 
                 await CancelRecurringPaymentAsync(rp);
 
             //Adjust inventory for already shipped shipments
             //only products with "use multiple warehouses"
-            foreach (var shipment in await _shipmentService.GetShipmentsByOrderIdAsync(order.Id))
+            foreach (var shipment in await ShipmentService.GetShipmentsByOrderIdAsync(order.Id))
             {
-                foreach (var shipmentItem in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+                foreach (var shipmentItem in await ShipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
                 {
-                    var product = await _orderService.GetProductByOrderItemIdAsync(shipmentItem.OrderItemId);
+                    var product = await OrderService.GetProductByOrderItemIdAsync(shipmentItem.OrderItemId);
 
                     if (product is null)
                         continue;
 
-                    await _productService.ReverseBookedInventoryAsync(product, shipmentItem,
-                        string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
+                    await ProductService.ReverseBookedInventoryAsync(product, shipmentItem,
+                        string.Format(await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
                 }
             }
             //Adjust inventory
-            foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
+            foreach (var orderItem in await OrderService.GetOrderItemsAsync(order.Id))
             {
-                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                var product = await ProductService.GetProductByIdAsync(orderItem.ProductId);
 
-                await _productService.AdjustInventoryAsync(product, orderItem.Quantity, orderItem.AttributesXml,
-                    string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
+                await ProductService.AdjustInventoryAsync(product, orderItem.Quantity, orderItem.AttributesXml,
+                    string.Format(await LocalizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
             }
 
-            await _eventPublisher.PublishAsync(new OrderCancelledEvent(order));
+            await EventPublisher.PublishAsync(new OrderCancelledEvent(order));
         }
 
         /// <summary>
@@ -2375,7 +2375,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(order));
 
             order.PaymentStatusId = (int)PaymentStatus.Authorized;
-            await _orderService.UpdateOrderAsync(order);
+            await OrderService.UpdateOrderAsync(order);
 
             //add a note
             await AddOrderNoteAsync(order, "Order has been marked as authorized");
@@ -2383,7 +2383,7 @@ namespace Nop.Services.Orders
             //check order status
             await CheckOrderStatusAsync(order);
         
-            await _eventPublisher.PublishAsync(new OrderAuthorizedEvent(order)); 
+            await EventPublisher.PublishAsync(new OrderAuthorizedEvent(order)); 
         }
 
         /// <summary>
@@ -2404,7 +2404,7 @@ namespace Nop.Services.Orders
                 return false;
 
             if (order.PaymentStatus == PaymentStatus.Authorized &&
-                await _paymentService.SupportCaptureAsync(order.PaymentMethodSystemName))
+                await PaymentService.SupportCaptureAsync(order.PaymentMethodSystemName))
                 return true;
 
             return false;
@@ -2432,7 +2432,7 @@ namespace Nop.Services.Orders
             {
                 //old info from placing order
                 request.Order = order;
-                result = await _paymentService.CaptureAsync(request);
+                result = await PaymentService.CaptureAsync(request);
 
                 if (result.Success)
                 {
@@ -2444,7 +2444,7 @@ namespace Nop.Services.Orders
                     order.CaptureTransactionResult = result.CaptureTransactionResult;
                     order.PaymentStatus = result.NewPaymentStatus;
                     order.PaidDateUtc = paidDate;
-                    await _orderService.UpdateOrderAsync(order);
+                    await OrderService.UpdateOrderAsync(order);
 
                     //add a note
                     await AddOrderNoteAsync(order, "Order has been captured");
@@ -2479,7 +2479,7 @@ namespace Nop.Services.Orders
 
             //log it
             var logError = $"Error capturing order #{order.Id}. Error: {error}";
-            await _logger.InsertLogAsync(LogLevel.Error, logError, logError);
+            await Logger.InsertLogAsync(LogLevel.Error, logError, logError);
             return result.Errors;
         }
 
@@ -2519,7 +2519,7 @@ namespace Nop.Services.Orders
 
             order.PaymentStatusId = (int)PaymentStatus.Paid;
             order.PaidDateUtc = DateTime.UtcNow;
-            await _orderService.UpdateOrderAsync(order);
+            await OrderService.UpdateOrderAsync(order);
 
             //add a note
             await AddOrderNoteAsync(order, "Order has been marked as paid");
@@ -2555,7 +2555,7 @@ namespace Nop.Services.Orders
             //    return false;
 
             if (order.PaymentStatus == PaymentStatus.Paid &&
-                await _paymentService.SupportRefundAsync(order.PaymentMethodSystemName))
+                await PaymentService.SupportRefundAsync(order.PaymentMethodSystemName))
                 return true;
 
             return false;
@@ -2584,7 +2584,7 @@ namespace Nop.Services.Orders
                 request.Order = order;
                 request.AmountToRefund = order.OrderTotal;
                 request.IsPartialRefund = false;
-                result = await _paymentService.RefundAsync(request);
+                result = await PaymentService.RefundAsync(request);
                 if (result.Success)
                 {
                     //total amount refunded
@@ -2593,7 +2593,7 @@ namespace Nop.Services.Orders
                     //update order info
                     order.RefundedAmount = totalAmountRefunded;
                     order.PaymentStatus = result.NewPaymentStatus;
-                    await _orderService.UpdateOrderAsync(order);
+                    await OrderService.UpdateOrderAsync(order);
 
                     //add a note
                     await AddOrderNoteAsync(order, $"Order has been refunded. Amount = {request.AmountToRefund}");
@@ -2602,16 +2602,16 @@ namespace Nop.Services.Orders
                     await CheckOrderStatusAsync(order);
 
                     //notifications
-                    var orderRefundedStoreOwnerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderRefundedStoreOwnerNotificationAsync(order, request.AmountToRefund, _localizationSettings.DefaultAdminLanguageId);
+                    var orderRefundedStoreOwnerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderRefundedStoreOwnerNotificationAsync(order, request.AmountToRefund, LocalizationSettings.DefaultAdminLanguageId);
                     if (orderRefundedStoreOwnerNotificationQueuedEmailIds.Any())
                         await AddOrderNoteAsync(order, $"\"Order refunded\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedStoreOwnerNotificationQueuedEmailIds)}.");
 
-                    var orderRefundedCustomerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderRefundedCustomerNotificationAsync(order, request.AmountToRefund, order.CustomerLanguageId);
+                    var orderRefundedCustomerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderRefundedCustomerNotificationAsync(order, request.AmountToRefund, order.CustomerLanguageId);
                     if (orderRefundedCustomerNotificationQueuedEmailIds.Any())
                         await AddOrderNoteAsync(order, $"\"Order refunded\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedCustomerNotificationQueuedEmailIds)}.");
 
                     //raise event       
-                    await _eventPublisher.PublishAsync(new OrderRefundedEvent(order, request.AmountToRefund));
+                    await EventPublisher.PublishAsync(new OrderRefundedEvent(order, request.AmountToRefund));
                 }
             }
             catch (Exception exc)
@@ -2638,7 +2638,7 @@ namespace Nop.Services.Orders
 
             //log it
             var logError = $"Error refunding order #{order.Id}. Error: {error}";
-            await _logger.InsertLogAsync(LogLevel.Error, logError, logError);
+            await Logger.InsertLogAsync(LogLevel.Error, logError, logError);
 
             return result.Errors;
         }
@@ -2692,7 +2692,7 @@ namespace Nop.Services.Orders
             //update order info
             order.RefundedAmount = totalAmountRefunded;
             order.PaymentStatus = PaymentStatus.Refunded;
-            await _orderService.UpdateOrderAsync(order);
+            await OrderService.UpdateOrderAsync(order);
 
             //add a note
             await AddOrderNoteAsync(order, $"Order has been marked as refunded. Amount = {amountToRefund}");
@@ -2701,16 +2701,16 @@ namespace Nop.Services.Orders
             await CheckOrderStatusAsync(order);
 
             //notifications
-            var orderRefundedStoreOwnerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderRefundedStoreOwnerNotificationAsync(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
+            var orderRefundedStoreOwnerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderRefundedStoreOwnerNotificationAsync(order, amountToRefund, LocalizationSettings.DefaultAdminLanguageId);
             if (orderRefundedStoreOwnerNotificationQueuedEmailIds.Any())
                 await AddOrderNoteAsync(order, $"\"Order refunded\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedStoreOwnerNotificationQueuedEmailIds)}.");
 
-            var orderRefundedCustomerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderRefundedCustomerNotificationAsync(order, amountToRefund, order.CustomerLanguageId);
+            var orderRefundedCustomerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderRefundedCustomerNotificationAsync(order, amountToRefund, order.CustomerLanguageId);
             if (orderRefundedCustomerNotificationQueuedEmailIds.Any())
                 await AddOrderNoteAsync(order, $"\"Order refunded\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedCustomerNotificationQueuedEmailIds)}.");
 
             //raise event       
-            await _eventPublisher.PublishAsync(new OrderRefundedEvent(order, amountToRefund));
+            await EventPublisher.PublishAsync(new OrderRefundedEvent(order, amountToRefund));
         }
 
         /// <summary>
@@ -2743,7 +2743,7 @@ namespace Nop.Services.Orders
 
             if ((order.PaymentStatus == PaymentStatus.Paid ||
                 order.PaymentStatus == PaymentStatus.PartiallyRefunded) &&
-                await _paymentService.SupportPartiallyRefundAsync(order.PaymentMethodSystemName))
+                await PaymentService.SupportPartiallyRefundAsync(order.PaymentMethodSystemName))
                 return true;
 
             return false;
@@ -2774,7 +2774,7 @@ namespace Nop.Services.Orders
                 request.AmountToRefund = amountToRefund;
                 request.IsPartialRefund = true;
 
-                result = await _paymentService.RefundAsync(request);
+                result = await PaymentService.RefundAsync(request);
 
                 if (result.Success)
                 {
@@ -2785,7 +2785,7 @@ namespace Nop.Services.Orders
                     order.RefundedAmount = totalAmountRefunded;
                     //mark payment status as 'Refunded' if the order total amount is fully refunded
                     order.PaymentStatus = order.OrderTotal == totalAmountRefunded && result.NewPaymentStatus == PaymentStatus.PartiallyRefunded ? PaymentStatus.Refunded : result.NewPaymentStatus;
-                    await _orderService.UpdateOrderAsync(order);
+                    await OrderService.UpdateOrderAsync(order);
 
                     //add a note
                     await AddOrderNoteAsync(order, $"Order has been partially refunded. Amount = {amountToRefund}");
@@ -2794,16 +2794,16 @@ namespace Nop.Services.Orders
                     await CheckOrderStatusAsync(order);
 
                     //notifications
-                    var orderRefundedStoreOwnerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderRefundedStoreOwnerNotificationAsync(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
+                    var orderRefundedStoreOwnerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderRefundedStoreOwnerNotificationAsync(order, amountToRefund, LocalizationSettings.DefaultAdminLanguageId);
                     if (orderRefundedStoreOwnerNotificationQueuedEmailIds.Any())
                         await AddOrderNoteAsync(order, $"\"Order refunded\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedStoreOwnerNotificationQueuedEmailIds)}.");
 
-                    var orderRefundedCustomerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderRefundedCustomerNotificationAsync(order, amountToRefund, order.CustomerLanguageId);
+                    var orderRefundedCustomerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderRefundedCustomerNotificationAsync(order, amountToRefund, order.CustomerLanguageId);
                     if (orderRefundedCustomerNotificationQueuedEmailIds.Any())
                         await AddOrderNoteAsync(order, $"\"Order refunded\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedCustomerNotificationQueuedEmailIds)}.");
 
                     //raise event       
-                    await _eventPublisher.PublishAsync(new OrderRefundedEvent(order, amountToRefund));
+                    await EventPublisher.PublishAsync(new OrderRefundedEvent(order, amountToRefund));
                 }
             }
             catch (Exception exc)
@@ -2830,7 +2830,7 @@ namespace Nop.Services.Orders
 
             //log it
             var logError = $"Error refunding order #{order.Id}. Error: {error}";
-            await _logger.InsertLogAsync(LogLevel.Error, logError, logError);
+            await Logger.InsertLogAsync(LogLevel.Error, logError, logError);
             return result.Errors;
         }
 
@@ -2887,7 +2887,7 @@ namespace Nop.Services.Orders
             order.RefundedAmount = totalAmountRefunded;
             //mark payment status as 'Refunded' if the order total amount is fully refunded
             order.PaymentStatus = order.OrderTotal == totalAmountRefunded ? PaymentStatus.Refunded : PaymentStatus.PartiallyRefunded;
-            await _orderService.UpdateOrderAsync(order);
+            await OrderService.UpdateOrderAsync(order);
 
             //add a note
             await AddOrderNoteAsync(order, $"Order has been marked as partially refunded. Amount = {amountToRefund}");
@@ -2896,16 +2896,16 @@ namespace Nop.Services.Orders
             await CheckOrderStatusAsync(order);
 
             //notifications
-            var orderRefundedStoreOwnerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderRefundedStoreOwnerNotificationAsync(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
+            var orderRefundedStoreOwnerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderRefundedStoreOwnerNotificationAsync(order, amountToRefund, LocalizationSettings.DefaultAdminLanguageId);
             if (orderRefundedStoreOwnerNotificationQueuedEmailIds.Any())
                 await AddOrderNoteAsync(order, $"\"Order refunded\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedStoreOwnerNotificationQueuedEmailIds)}.");
 
-            var orderRefundedCustomerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderRefundedCustomerNotificationAsync(order, amountToRefund, order.CustomerLanguageId);
+            var orderRefundedCustomerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderRefundedCustomerNotificationAsync(order, amountToRefund, order.CustomerLanguageId);
             if (orderRefundedCustomerNotificationQueuedEmailIds.Any())
                 await AddOrderNoteAsync(order, $"\"Order refunded\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedCustomerNotificationQueuedEmailIds)}.");
 
             //raise event       
-            await _eventPublisher.PublishAsync(new OrderRefundedEvent(order, amountToRefund));
+            await EventPublisher.PublishAsync(new OrderRefundedEvent(order, amountToRefund));
         }
 
         /// <summary>
@@ -2929,7 +2929,7 @@ namespace Nop.Services.Orders
             //    return false;
 
             if (order.PaymentStatus == PaymentStatus.Authorized &&
-                await _paymentService.SupportVoidAsync(order.PaymentMethodSystemName))
+                await PaymentService.SupportVoidAsync(order.PaymentMethodSystemName))
                 return true;
 
             return false;
@@ -2956,13 +2956,13 @@ namespace Nop.Services.Orders
             try
             {
                 request.Order = order;
-                result = await _paymentService.VoidAsync(request);
+                result = await PaymentService.VoidAsync(request);
 
                 if (result.Success)
                 {
                     //update order info
                     order.PaymentStatus = result.NewPaymentStatus;
-                    await _orderService.UpdateOrderAsync(order);
+                    await OrderService.UpdateOrderAsync(order);
 
                     //add a note
                     await AddOrderNoteAsync(order, "Order has been async Tasked");
@@ -2971,7 +2971,7 @@ namespace Nop.Services.Orders
                     await CheckOrderStatusAsync(order);
 
                     //raise event       
-                    await _eventPublisher.PublishAsync(new OrderVoidedEvent(order));
+                    await EventPublisher.PublishAsync(new OrderVoidedEvent(order));
                 }
             }
             catch (Exception exc)
@@ -2998,7 +2998,7 @@ namespace Nop.Services.Orders
 
             //log it
             var logError = $"Error async Tasking order #{order.Id}. Error: {error}";
-            await _logger.InsertLogAsync(LogLevel.Error, logError, logError);
+            await Logger.InsertLogAsync(LogLevel.Error, logError, logError);
             return result.Errors;
         }
 
@@ -3039,7 +3039,7 @@ namespace Nop.Services.Orders
                 throw new NopException("You can't async Task this order");
 
             order.PaymentStatusId = (int)PaymentStatus.Voided;
-            await _orderService.UpdateOrderAsync(order);
+            await OrderService.UpdateOrderAsync(order);
 
             //add a note
             await AddOrderNoteAsync(order, "Order has been marked as async Tasked");
@@ -3048,7 +3048,7 @@ namespace Nop.Services.Orders
             await CheckOrderStatusAsync(order);
 
             //raise event       
-            await _eventPublisher.PublishAsync(new OrderVoidedEvent(order));
+            await EventPublisher.PublishAsync(new OrderVoidedEvent(order));
         }
 
         /// <summary>
@@ -3061,14 +3061,14 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            var customer = await CustomerService.GetCustomerByIdAsync(order.CustomerId);
 
             //move shopping cart items (if possible)
-            foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
+            foreach (var orderItem in await OrderService.GetOrderItemsAsync(order.Id))
             {
-                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                var product = await ProductService.GetProductByIdAsync(orderItem.ProductId);
 
-                await _shoppingCartService.AddToCartAsync(customer, product,
+                await ShoppingCartService.AddToCartAsync(customer, product,
                     ShoppingCartType.ShoppingCart, order.StoreId,
                     orderItem.AttributesXml, orderItem.UnitPriceExclTax,
                     orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
@@ -3077,7 +3077,7 @@ namespace Nop.Services.Orders
 
             //set checkout attributes
             //comment the code below if you want to disable this functionality
-            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CheckoutAttributes, order.CheckoutAttributesXml, order.StoreId);
+            await GenericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CheckoutAttributes, order.CheckoutAttributesXml, order.StoreId);
         }
 
         /// <summary>
@@ -3090,7 +3090,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> IsReturnRequestAllowedAsync(Order order)
         {
-            if (!_orderSettings.ReturnRequestsEnabled)
+            if (!OrderSettings.ReturnRequestsEnabled)
                 return false;
 
             if (order == null || order.Deleted)
@@ -3101,16 +3101,16 @@ namespace Nop.Services.Orders
                 return false;
 
             //validate allowed number of days
-            if (_orderSettings.NumberOfDaysReturnRequestAvailable <= 0)
-                return (await _orderService.GetOrderItemsAsync(order.Id, false)).Any();
+            if (OrderSettings.NumberOfDaysReturnRequestAvailable <= 0)
+                return (await OrderService.GetOrderItemsAsync(order.Id, false)).Any();
 
             var daysPassed = (DateTime.UtcNow - order.CreatedOnUtc).TotalDays;
 
-            if (daysPassed >= _orderSettings.NumberOfDaysReturnRequestAvailable)
+            if (daysPassed >= OrderSettings.NumberOfDaysReturnRequestAvailable)
                 return false;
 
             //ensure that we have at least one returnable product
-            return (await _orderService.GetOrderItemsAsync(order.Id, false)).Any();
+            return (await OrderService.GetOrderItemsAsync(order.Id, false)).Any();
         }
 
         /// <summary>
@@ -3127,13 +3127,13 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(cart));
 
             //min order amount sub-total validation
-            if (!cart.Any() || _orderSettings.MinOrderSubtotalAmount <= decimal.Zero)
+            if (!cart.Any() || OrderSettings.MinOrderSubtotalAmount <= decimal.Zero)
                 return true;
 
             //subtotal
-            var (_, _, subTotalWithoutDiscountBase, _, _) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, _orderSettings.MinOrderSubtotalAmountIncludingTax);
+            var (_, _, subTotalWithoutDiscountBase, _, _) = await OrderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, OrderSettings.MinOrderSubtotalAmountIncludingTax);
 
-            if (subTotalWithoutDiscountBase < _orderSettings.MinOrderSubtotalAmount)
+            if (subTotalWithoutDiscountBase < OrderSettings.MinOrderSubtotalAmount)
                 return false;
 
             return true;
@@ -3152,12 +3152,12 @@ namespace Nop.Services.Orders
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart));
 
-            if (!cart.Any() || _orderSettings.MinOrderTotalAmount <= decimal.Zero)
+            if (!cart.Any() || OrderSettings.MinOrderTotalAmount <= decimal.Zero)
                 return true;
 
-            var shoppingCartTotalBase = (await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart)).shoppingCartTotal;
+            var shoppingCartTotalBase = (await OrderTotalCalculationService.GetShoppingCartTotalAsync(cart)).shoppingCartTotal;
 
-            if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value < _orderSettings.MinOrderTotalAmount)
+            if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value < OrderSettings.MinOrderTotalAmount)
                 return false;
 
             return true;
@@ -3180,7 +3180,7 @@ namespace Nop.Services.Orders
             var result = true;
 
             //check whether order total equals zero
-            var shoppingCartTotalBase = (await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, useRewardPoints: useRewardPoints)).shoppingCartTotal;
+            var shoppingCartTotalBase = (await OrderTotalCalculationService.GetShoppingCartTotalAsync(cart, useRewardPoints: useRewardPoints)).shoppingCartTotal;
             if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
                 result = false;
             return result;
@@ -3199,7 +3199,7 @@ namespace Nop.Services.Orders
             if (!recurringPayment.IsActive)
                 return null;
 
-            var historyCollection = await _orderService.GetRecurringPaymentHistoryAsync(recurringPayment);
+            var historyCollection = await OrderService.GetRecurringPaymentHistoryAsync(recurringPayment);
             if (historyCollection.Count >= recurringPayment.TotalCycles) 
                 return null;
 
@@ -3237,7 +3237,7 @@ namespace Nop.Services.Orders
             if (recurringPayment is null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            var historyCollection = await _orderService.GetRecurringPaymentHistoryAsync(recurringPayment);
+            var historyCollection = await OrderService.GetRecurringPaymentHistoryAsync(recurringPayment);
 
             var result = recurringPayment.TotalCycles - historyCollection.Count;
             if (result < 0)

@@ -13,8 +13,8 @@ namespace Nop.Services.Shipping.Date
     {
         #region Fields
 
-        private readonly IRepository<DeliveryDate> _deliveryDateRepository;
-        private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
+        protected IRepository<DeliveryDate> DeliveryDateRepository { get; }
+        protected IRepository<ProductAvailabilityRange> ProductAvailabilityRangeRepository { get; }
 
         #endregion
 
@@ -23,8 +23,8 @@ namespace Nop.Services.Shipping.Date
         public DateRangeService(IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository)
         {
-            _deliveryDateRepository = deliveryDateRepository;
-            _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
+            DeliveryDateRepository = deliveryDateRepository;
+            ProductAvailabilityRangeRepository = productAvailabilityRangeRepository;
         }
 
         #endregion
@@ -43,7 +43,7 @@ namespace Nop.Services.Shipping.Date
         /// </returns>
         public virtual async Task<DeliveryDate> GetDeliveryDateByIdAsync(int deliveryDateId)
         {
-            return await _deliveryDateRepository.GetByIdAsync(deliveryDateId, cache => default);
+            return await DeliveryDateRepository.GetByIdAsync(deliveryDateId, cache => default);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Nop.Services.Shipping.Date
         /// </returns>
         public virtual async Task<IList<DeliveryDate>> GetAllDeliveryDatesAsync()
         {
-            var deliveryDates = await _deliveryDateRepository.GetAllAsync(query =>
+            var deliveryDates = await DeliveryDateRepository.GetAllAsync(query =>
             {
                 return from dd in query
                     orderby dd.DisplayOrder, dd.Id
@@ -72,7 +72,7 @@ namespace Nop.Services.Shipping.Date
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertDeliveryDateAsync(DeliveryDate deliveryDate)
         {
-            await _deliveryDateRepository.InsertAsync(deliveryDate);
+            await DeliveryDateRepository.InsertAsync(deliveryDate);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Nop.Services.Shipping.Date
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateDeliveryDateAsync(DeliveryDate deliveryDate)
         {
-            await _deliveryDateRepository.UpdateAsync(deliveryDate);
+            await DeliveryDateRepository.UpdateAsync(deliveryDate);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Nop.Services.Shipping.Date
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteDeliveryDateAsync(DeliveryDate deliveryDate)
         {
-            await _deliveryDateRepository.DeleteAsync(deliveryDate);
+            await DeliveryDateRepository.DeleteAsync(deliveryDate);
         }
 
         #endregion
@@ -109,7 +109,7 @@ namespace Nop.Services.Shipping.Date
         /// </returns>
         public virtual async Task<ProductAvailabilityRange> GetProductAvailabilityRangeByIdAsync(int productAvailabilityRangeId)
         {
-            return productAvailabilityRangeId != 0 ? await _productAvailabilityRangeRepository.GetByIdAsync(productAvailabilityRangeId, cache => default) : null;
+            return productAvailabilityRangeId != 0 ? await ProductAvailabilityRangeRepository.GetByIdAsync(productAvailabilityRangeId, cache => default) : null;
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Nop.Services.Shipping.Date
         /// </returns>
         public virtual async Task<IList<ProductAvailabilityRange>> GetAllProductAvailabilityRangesAsync()
         {
-            return await _productAvailabilityRangeRepository.GetAllAsync(query =>
+            return await ProductAvailabilityRangeRepository.GetAllAsync(query =>
             {
                 return from par in query
                     orderby par.DisplayOrder, par.Id
@@ -136,7 +136,7 @@ namespace Nop.Services.Shipping.Date
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductAvailabilityRangeAsync(ProductAvailabilityRange productAvailabilityRange)
         {
-            await _productAvailabilityRangeRepository.InsertAsync(productAvailabilityRange);
+            await ProductAvailabilityRangeRepository.InsertAsync(productAvailabilityRange);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Nop.Services.Shipping.Date
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductAvailabilityRangeAsync(ProductAvailabilityRange productAvailabilityRange)
         {
-            await _productAvailabilityRangeRepository.UpdateAsync(productAvailabilityRange);
+            await ProductAvailabilityRangeRepository.UpdateAsync(productAvailabilityRange);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Nop.Services.Shipping.Date
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductAvailabilityRangeAsync(ProductAvailabilityRange productAvailabilityRange)
         {
-            await _productAvailabilityRangeRepository.DeleteAsync(productAvailabilityRange);
+            await ProductAvailabilityRangeRepository.DeleteAsync(productAvailabilityRange);
         }
 
         #endregion

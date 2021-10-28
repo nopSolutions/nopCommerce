@@ -22,9 +22,9 @@ namespace Nop.Services.Plugins
     {
         #region Fields
 
-        private readonly INopFileProvider _fileProvider;
-        private readonly IStoreContext _storeContext;
-        private readonly IThemeProvider _themeProvider;
+        protected INopFileProvider FileProvider { get; }
+        protected IStoreContext StoreContext { get; }
+        protected IThemeProvider ThemeProvider { get; }
 
         #endregion
 
@@ -34,9 +34,9 @@ namespace Nop.Services.Plugins
             IStoreContext storeContext,
             IThemeProvider themeProvider)
         {
-            _fileProvider = fileProvider;
-            _storeContext = storeContext;
-            _themeProvider = themeProvider;
+            FileProvider = fileProvider;
+            StoreContext = storeContext;
+            ThemeProvider = themeProvider;
         }
 
         #endregion
@@ -54,7 +54,7 @@ namespace Nop.Services.Plugins
             //try to get the entry containing information about the uploaded items 
             var uploadedItemsFileEntry = archive.Entries
                 .FirstOrDefault(entry => entry.Name.Equals(NopPluginDefaults.UploadedItemsFileName, StringComparison.InvariantCultureIgnoreCase)
-                    && string.IsNullOrEmpty(_fileProvider.GetDirectoryName(entry.FullName)));
+                    && string.IsNullOrEmpty(FileProvider.GetDirectoryName(entry.FullName)));
             if (uploadedItemsFileEntry == null)
                 return null;
 
@@ -72,12 +72,12 @@ namespace Nop.Services.Plugins
         protected virtual IDescriptor UploadSingleItem(string archivePath)
         {
             //get path to the plugins directory
-            var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
+            var pluginsDirectory = FileProvider.MapPath(NopPluginDefaults.Path);
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
             if (!string.IsNullOrEmpty(NopPluginDefaults.ThemesPath))
-                themesDirectory = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
+                themesDirectory = FileProvider.MapPath(NopPluginDefaults.ThemesPath);
 
             IDescriptor descriptor = null;
             string uploadedItemDirectoryName;
@@ -124,7 +124,7 @@ namespace Nop.Services.Plugins
 
                     //or whether a theme is upload 
                     if (isThemeDescriptor)
-                        descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
+                        descriptor = ThemeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
 
                     break;
                 }
@@ -138,13 +138,13 @@ namespace Nop.Services.Plugins
 
             //get path to upload
             var directoryPath = descriptor is PluginDescriptor ? pluginsDirectory : themesDirectory;
-            var pathToUpload = _fileProvider.Combine(directoryPath, uploadedItemDirectoryName);
+            var pathToUpload = FileProvider.Combine(directoryPath, uploadedItemDirectoryName);
 
             //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin)
             //furthermore, zip extract functionality cannot override existing files
             //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
-            if (_fileProvider.DirectoryExists(pathToUpload))
-                _fileProvider.DeleteDirectory(pathToUpload);
+            if (FileProvider.DirectoryExists(pathToUpload))
+                FileProvider.DeleteDirectory(pathToUpload);
 
             //unzip archive
             ZipFile.ExtractToDirectory(archivePath, directoryPath);
@@ -161,12 +161,12 @@ namespace Nop.Services.Plugins
         protected virtual IList<IDescriptor> UploadMultipleItems(string archivePath, IList<UploadedItem> uploadedItems)
         {
             //get path to the plugins directory
-            var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
+            var pluginsDirectory = FileProvider.MapPath(NopPluginDefaults.Path);
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
             if (!string.IsNullOrEmpty(NopPluginDefaults.ThemesPath))
-                themesDirectory = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
+                themesDirectory = FileProvider.MapPath(NopPluginDefaults.ThemesPath);
 
             //get descriptors of items contained in the archive
             var descriptors = new List<IDescriptor>();
@@ -208,7 +208,7 @@ namespace Nop.Services.Plugins
 
                         //or whether a theme is upload 
                         if (item.Type == UploadedItemType.Theme)
-                            descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
+                            descriptor = ThemeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
                     }
 
                     if (descriptor == null)
@@ -219,14 +219,14 @@ namespace Nop.Services.Plugins
                         continue;
 
                     //get path to upload
-                    var uploadedItemDirectoryName = _fileProvider.GetFileName(itemPath.TrimEnd('/'));
-                    var pathToUpload = _fileProvider.Combine(item.Type == UploadedItemType.Plugin ? pluginsDirectory : themesDirectory, uploadedItemDirectoryName);
+                    var uploadedItemDirectoryName = FileProvider.GetFileName(itemPath.TrimEnd('/'));
+                    var pathToUpload = FileProvider.Combine(item.Type == UploadedItemType.Plugin ? pluginsDirectory : themesDirectory, uploadedItemDirectoryName);
 
                     //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin or a theme)
                     //furthermore, zip extract functionality cannot override existing files
                     //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
-                    if (_fileProvider.DirectoryExists(pathToUpload))
-                        _fileProvider.DeleteDirectory(pathToUpload);
+                    if (FileProvider.DirectoryExists(pathToUpload))
+                        FileProvider.DeleteDirectory(pathToUpload);
 
                     //unzip entries into files
                     var entries = archive.Entries.Where(entry => entry.FullName.StartsWith(itemPath, StringComparison.InvariantCultureIgnoreCase));
@@ -237,20 +237,20 @@ namespace Nop.Services.Plugins
                         if (string.IsNullOrEmpty(fileName))
                             continue;
 
-                        var filePath = _fileProvider.Combine(pathToUpload, fileName);
+                        var filePath = FileProvider.Combine(pathToUpload, fileName);
 
                         //if it's a folder, we need to create it
-                        if (string.IsNullOrEmpty(entry.Name) && !_fileProvider.DirectoryExists(filePath))
+                        if (string.IsNullOrEmpty(entry.Name) && !FileProvider.DirectoryExists(filePath))
                         {
-                            _fileProvider.CreateDirectory(filePath);
+                            FileProvider.CreateDirectory(filePath);
                             continue;
                         }
 
-                        var directoryPath = _fileProvider.GetDirectoryName(filePath);
+                        var directoryPath = FileProvider.GetDirectoryName(filePath);
 
                         //whether the file directory is already exists, otherwise create the new one
-                        if (!_fileProvider.DirectoryExists(directoryPath))
-                            _fileProvider.CreateDirectory(directoryPath);
+                        if (!FileProvider.DirectoryExists(directoryPath))
+                            FileProvider.CreateDirectory(directoryPath);
 
                         //unzip entry to the file (ignore directory entries)
                         if (!filePath.Equals($"{directoryPath}\\", StringComparison.InvariantCultureIgnoreCase))
@@ -273,14 +273,14 @@ namespace Nop.Services.Plugins
         {
             //if the folder does not exist, create it
             //if the folder is already there - we delete it (since the pictures in the folder are in the unpacked version, there will be many files and it is easier for us to delete the folder than to delete all the files one by one) and create a new
-            if (!_fileProvider.DirectoryExists(path))
+            if (!FileProvider.DirectoryExists(path))
             {
-                _fileProvider.CreateDirectory(path);
+                FileProvider.CreateDirectory(path);
             }
             else
             {
-                _fileProvider.DeleteDirectory(path);
-                _fileProvider.CreateDirectory(path);
+                FileProvider.DeleteDirectory(path);
+                FileProvider.CreateDirectory(path);
             }
         }
 
@@ -303,15 +303,15 @@ namespace Nop.Services.Plugins
             try
             {
                 //only zip archives are supported
-                if (!_fileProvider.GetFileExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
+                if (!FileProvider.GetFileExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
                     throw new Exception("Only zip archives are supported");
 
                 //ensure that temp directory is created
-                var tempDirectory = _fileProvider.MapPath(NopPluginDefaults.UploadsTempPath);
-                _fileProvider.CreateDirectory(tempDirectory);
+                var tempDirectory = FileProvider.MapPath(NopPluginDefaults.UploadsTempPath);
+                FileProvider.CreateDirectory(tempDirectory);
 
                 //copy original archive to the temp directory
-                zipFilePath = _fileProvider.Combine(tempDirectory, archivefile.FileName);
+                zipFilePath = FileProvider.Combine(tempDirectory, archivefile.FileName);
                 using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
                     archivefile.CopyTo(fileStream);
 
@@ -330,7 +330,7 @@ namespace Nop.Services.Plugins
             {
                 //delete temporary file
                 if (!string.IsNullOrEmpty(zipFilePath))
-                    _fileProvider.DeleteFile(zipFilePath);
+                    FileProvider.DeleteFile(zipFilePath);
             }
 
             return descriptors;
@@ -349,15 +349,15 @@ namespace Nop.Services.Plugins
             try
             {
                 //only zip archives are supported
-                if (!_fileProvider.GetFileExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
+                if (!FileProvider.GetFileExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
                     throw new Exception("Only zip archives are supported (*.zip)");
 
                 //check if there is a folder for favicon and app icons for the current store (all store icons folders are in wwwroot/icons and are called icons_{storeId})
-                var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.GetActiveStoreScopeConfigurationAsync().Result));
+                var storeIconsPath = FileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, StoreContext.GetActiveStoreScopeConfigurationAsync().Result));
 
                 CreateDirectory(storeIconsPath);
 
-                zipFilePath = _fileProvider.Combine(storeIconsPath, archivefile.FileName);
+                zipFilePath = FileProvider.Combine(storeIconsPath, archivefile.FileName);
                 using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
                     archivefile.CopyTo(fileStream);
 
@@ -367,7 +367,7 @@ namespace Nop.Services.Plugins
             {
                 //delete the zip file and leave only unpacked files in the folder
                 if (!string.IsNullOrEmpty(zipFilePath))
-                    _fileProvider.DeleteFile(zipFilePath);
+                    FileProvider.DeleteFile(zipFilePath);
             }
         }
 
@@ -381,15 +381,15 @@ namespace Nop.Services.Plugins
                 throw new ArgumentNullException(nameof(favicon));
 
             //only icons are supported
-            if (!_fileProvider.GetFileExtension(favicon.FileName)?.Equals(".ico", StringComparison.InvariantCultureIgnoreCase) ?? true)
+            if (!FileProvider.GetFileExtension(favicon.FileName)?.Equals(".ico", StringComparison.InvariantCultureIgnoreCase) ?? true)
                 throw new Exception("Only icons are supported (*.ico)");
 
             //check if there is a folder for favicon (favicon folder is in wwwroot/icons and is called icons_{storeId})
-            var storeFaviconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.GetActiveStoreScopeConfigurationAsync().Result));
+            var storeFaviconPath = FileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, StoreContext.GetActiveStoreScopeConfigurationAsync().Result));
 
             CreateDirectory(storeFaviconPath);
 
-            var faviconPath = _fileProvider.Combine(storeFaviconPath, favicon.FileName);
+            var faviconPath = FileProvider.Combine(storeFaviconPath, favicon.FileName);
             using var fileStream = new FileStream(faviconPath, FileMode.Create);
             favicon.CopyTo(fileStream);
         }
@@ -402,12 +402,12 @@ namespace Nop.Services.Plugins
         {
             string getPath(string dirPath, string dirName)
             {
-                return _fileProvider.GetAbsolutePath(string.Format(dirPath, dirName));
+                return FileProvider.GetAbsolutePath(string.Format(dirPath, dirName));
             }
 
             bool checkDirectoryExists(string dirPath, string dirName)
             {
-                return _fileProvider.DirectoryExists(getPath(dirPath, dirName));
+                return FileProvider.DirectoryExists(getPath(dirPath, dirName));
             }
 
             var tempFolder = "temp";
@@ -415,7 +415,7 @@ namespace Nop.Services.Plugins
             {
                 //1. check if the archive with localization of templates is in its place
                 var ziplocalePatternPath = getPath(NopCommonDefaults.LocalePatternPath, NopCommonDefaults.LocalePatternArchiveName);
-                if (!_fileProvider.GetFileExtension(ziplocalePatternPath)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
+                if (!FileProvider.GetFileExtension(ziplocalePatternPath)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
                     throw new Exception($"Archive '{NopCommonDefaults.LocalePatternArchiveName}' to retrieve localization patterns not found.");
 
                 var currentCulture = (cultureInfo is CultureInfo) ? cultureInfo : CultureInfo.CurrentCulture;
@@ -430,14 +430,14 @@ namespace Nop.Services.Plugins
                     ZipFile.ExtractToDirectory(ziplocalePatternPath, getPath(NopCommonDefaults.LocalePatternPath, tempFolder));
 
                     //4. Search in the temp unpacked archive a folder with locales by culture
-                    var sourcelocalePath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.Name);
-                    if (_fileProvider.DirectoryExists(sourcelocalePath))
+                    var sourcelocalePath = FileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.Name);
+                    if (FileProvider.DirectoryExists(sourcelocalePath))
                     {
                         cultureToUse = currentCulture.Name;
                     }
 
-                    var sourcelocaleISOPath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.TwoLetterISOLanguageName);
-                    if (_fileProvider.DirectoryExists(sourcelocaleISOPath))
+                    var sourcelocaleISOPath = FileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.TwoLetterISOLanguageName);
+                    if (FileProvider.DirectoryExists(sourcelocaleISOPath))
                     {
                         cultureToUse = currentCulture.TwoLetterISOLanguageName;
                         sourcelocalePath = sourcelocaleISOPath;
@@ -447,12 +447,12 @@ namespace Nop.Services.Plugins
                     if (!string.IsNullOrEmpty(cultureToUse))
                     {
                         var destlocalePath = getPath(NopCommonDefaults.LocalePatternPath, cultureToUse);
-                        if (_fileProvider.DirectoryExists(destlocalePath))
+                        if (FileProvider.DirectoryExists(destlocalePath))
                         {
-                            _fileProvider.DeleteDirectory(destlocalePath);
+                            FileProvider.DeleteDirectory(destlocalePath);
                         }
 
-                        _fileProvider.DirectoryMove(sourcelocalePath, destlocalePath);
+                        FileProvider.DirectoryMove(sourcelocalePath, destlocalePath);
                     }
                 }
             }
@@ -460,7 +460,7 @@ namespace Nop.Services.Plugins
             {
                 //6. delete the zip file and leave only unpacked files in the folder
                 if (checkDirectoryExists(NopCommonDefaults.LocalePatternPath, tempFolder))
-                    _fileProvider.DeleteDirectory(getPath(NopCommonDefaults.LocalePatternPath, tempFolder));
+                    FileProvider.DeleteDirectory(getPath(NopCommonDefaults.LocalePatternPath, tempFolder));
             }
         }
 

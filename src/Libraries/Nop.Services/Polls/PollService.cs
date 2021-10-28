@@ -15,10 +15,10 @@ namespace Nop.Services.Polls
     {
         #region Fields
 
-        private readonly IRepository<Poll> _pollRepository;
-        private readonly IRepository<PollAnswer> _pollAnswerRepository;
-        private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
-        private readonly IStoreMappingService _storeMappingService;
+        protected IRepository<Poll> PollRepository { get; }
+        protected IRepository<PollAnswer> PollAnswerRepository { get; }
+        protected IRepository<PollVotingRecord> PollVotingRecordRepository { get; }
+        protected IStoreMappingService StoreMappingService { get; }
 
         #endregion
 
@@ -30,10 +30,10 @@ namespace Nop.Services.Polls
             IRepository<PollVotingRecord> pollVotingRecordRepository,
             IStoreMappingService storeMappingService)
         {
-            _pollRepository = pollRepository;
-            _pollAnswerRepository = pollAnswerRepository;
-            _pollVotingRecordRepository = pollVotingRecordRepository;
-            _storeMappingService = storeMappingService;
+            PollRepository = pollRepository;
+            PollAnswerRepository = pollAnswerRepository;
+            PollVotingRecordRepository = pollVotingRecordRepository;
+            StoreMappingService = storeMappingService;
         }
 
         #endregion
@@ -50,7 +50,7 @@ namespace Nop.Services.Polls
         /// </returns>
         public virtual async Task<Poll> GetPollByIdAsync(int pollId)
         {
-            return await _pollRepository.GetByIdAsync(pollId, cache => default);
+            return await PollRepository.GetByIdAsync(pollId, cache => default);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Nop.Services.Polls
             bool loadShownOnHomepageOnly = false, string systemKeyword = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _pollRepository.Table;
+            var query = PollRepository.Table;
 
             //whether to load not published, not started and expired polls
             if (!showHidden)
@@ -83,7 +83,7 @@ namespace Nop.Services.Polls
             }
 
             //apply store mapping constraints
-            query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+            query = await StoreMappingService.ApplyStoreMapping(query, storeId);
 
             //load homepage polls only
             if (loadShownOnHomepageOnly)
@@ -111,7 +111,7 @@ namespace Nop.Services.Polls
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeletePollAsync(Poll poll)
         {
-            await _pollRepository.DeleteAsync(poll);
+            await PollRepository.DeleteAsync(poll);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Nop.Services.Polls
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertPollAsync(Poll poll)
         {
-            await _pollRepository.InsertAsync(poll);
+            await PollRepository.InsertAsync(poll);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Nop.Services.Polls
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdatePollAsync(Poll poll)
         {
-            await _pollRepository.UpdateAsync(poll);
+            await PollRepository.UpdateAsync(poll);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Nop.Services.Polls
         /// </returns>
         public virtual async Task<PollAnswer> GetPollAnswerByIdAsync(int pollAnswerId)
         {
-            return await _pollAnswerRepository.GetByIdAsync(pollAnswerId, cache => default);
+            return await PollAnswerRepository.GetByIdAsync(pollAnswerId, cache => default);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Nop.Services.Polls
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeletePollAnswerAsync(PollAnswer pollAnswer)
         {
-            await _pollAnswerRepository.DeleteAsync(pollAnswer);
+            await PollAnswerRepository.DeleteAsync(pollAnswer);
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace Nop.Services.Polls
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IPagedList<PollAnswer>> GetPollAnswerByPollAsync(int pollId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _pollAnswerRepository.Table.Where(pa => pa.PollId == pollId);
+            var query = PollAnswerRepository.Table.Where(pa => pa.PollId == pollId);
 
             //order records by display order
             query = query.OrderBy(pa => pa.DisplayOrder).ThenBy(pa => pa.Id);
@@ -183,7 +183,7 @@ namespace Nop.Services.Polls
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertPollAnswerAsync(PollAnswer pollAnswer)
         {
-            await _pollAnswerRepository.InsertAsync(pollAnswer);
+            await PollAnswerRepository.InsertAsync(pollAnswer);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Nop.Services.Polls
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdatePollAnswerAsync(PollAnswer pollAnswer)
         {
-            await _pollAnswerRepository.UpdateAsync(pollAnswer);
+            await PollAnswerRepository.UpdateAsync(pollAnswer);
         }
 
         /// <summary>
@@ -211,8 +211,8 @@ namespace Nop.Services.Polls
                 return false;
 
             var result = await
-                (from pa in _pollAnswerRepository.Table
-                 join pvr in _pollVotingRecordRepository.Table on pa.Id equals pvr.PollAnswerId
+                (from pa in PollAnswerRepository.Table
+                 join pvr in PollVotingRecordRepository.Table on pa.Id equals pvr.PollAnswerId
                  where pa.PollId == pollId && pvr.CustomerId == customerId
                  select pvr)
                 .AnyAsync();
@@ -226,7 +226,7 @@ namespace Nop.Services.Polls
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertPollVotingRecordAsync(PollVotingRecord pollVotingRecord)
         {
-            await _pollVotingRecordRepository.InsertAsync(pollVotingRecord);
+            await PollVotingRecordRepository.InsertAsync(pollVotingRecord);
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace Nop.Services.Polls
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IPagedList<PollVotingRecord>> GetPollVotingRecordsByPollAnswerAsync(int pollAnswerId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _pollVotingRecordRepository.Table.Where(pa => pa.PollAnswerId == pollAnswerId);
+            var query = PollVotingRecordRepository.Table.Where(pa => pa.PollAnswerId == pollAnswerId);
 
             //return paged list of poll voting records
             return await query.ToPagedListAsync(pageIndex, pageSize);

@@ -16,7 +16,7 @@ namespace Nop.Services.Shipping.Tracking
     {
         #region Fields
 
-        private readonly ITypeFinder _typeFinder;
+        protected ITypeFinder TypeFinder { get; }
 
         #endregion
 
@@ -24,7 +24,7 @@ namespace Nop.Services.Shipping.Tracking
 
         public GeneralShipmentTracker(ITypeFinder typeFinder)
         {
-            _typeFinder = typeFinder;
+            TypeFinder = typeFinder;
         }
 
         #endregion
@@ -37,7 +37,7 @@ namespace Nop.Services.Shipping.Tracking
         /// <returns>All available shipment trackers</returns>
         protected virtual IList<IShipmentTracker> GetAllTrackers()
         {
-            return _typeFinder.FindClassesOfType<IShipmentTracker>()
+            return TypeFinder.FindClassesOfType<IShipmentTracker>()
                 //exclude this one
                 .Where(x => x != typeof(GeneralShipmentTracker))
                 .Select(x => EngineContext.Current.ResolveUnregistered(x) as IShipmentTracker)

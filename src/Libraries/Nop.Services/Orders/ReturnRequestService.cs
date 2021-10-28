@@ -16,9 +16,9 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly IRepository<ReturnRequest> _returnRequestRepository;
-        private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
-        private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
+        protected IRepository<ReturnRequest> ReturnRequestRepository { get; }
+        protected IRepository<ReturnRequestAction> ReturnRequestActionRepository { get; }
+        protected IRepository<ReturnRequestReason> ReturnRequestReasonRepository { get; }
 
         #endregion
 
@@ -28,9 +28,9 @@ namespace Nop.Services.Orders
             IRepository<ReturnRequestAction> returnRequestActionRepository,
             IRepository<ReturnRequestReason> returnRequestReasonRepository)
         {
-            _returnRequestRepository = returnRequestRepository;
-            _returnRequestActionRepository = returnRequestActionRepository;
-            _returnRequestReasonRepository = returnRequestReasonRepository;
+            ReturnRequestRepository = returnRequestRepository;
+            ReturnRequestActionRepository = returnRequestActionRepository;
+            ReturnRequestReasonRepository = returnRequestReasonRepository;
         }
 
         #endregion
@@ -44,7 +44,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteReturnRequestAsync(ReturnRequest returnRequest)
         {
-            await _returnRequestRepository.DeleteAsync(returnRequest);
+            await ReturnRequestRepository.DeleteAsync(returnRequest);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<ReturnRequest> GetReturnRequestByIdAsync(int returnRequestId)
         {
-            return await _returnRequestRepository.GetByIdAsync(returnRequestId);
+            return await ReturnRequestRepository.GetByIdAsync(returnRequestId);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nop.Services.Orders
             int orderItemId = 0, string customNumber = "", ReturnRequestStatus? rs = null, DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
-            var query = _returnRequestRepository.Table;
+            var query = ReturnRequestRepository.Table;
             if (storeId > 0)
                 query = query.Where(rr => storeId == rr.StoreId);
             if (customerId > 0)
@@ -117,7 +117,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteReturnRequestActionAsync(ReturnRequestAction returnRequestAction)
         {
-            await _returnRequestActionRepository.DeleteAsync(returnRequestAction);
+            await ReturnRequestActionRepository.DeleteAsync(returnRequestAction);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<ReturnRequestAction>> GetAllReturnRequestActionsAsync()
         {
-            return await _returnRequestActionRepository.GetAllAsync(query =>
+            return await ReturnRequestActionRepository.GetAllAsync(query =>
             {
                 return from rra in query
                     orderby rra.DisplayOrder, rra.Id
@@ -147,7 +147,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<ReturnRequestAction> GetReturnRequestActionByIdAsync(int returnRequestActionId)
         {
-            return await _returnRequestActionRepository.GetByIdAsync(returnRequestActionId, cache => default);
+            return await ReturnRequestActionRepository.GetByIdAsync(returnRequestActionId, cache => default);
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertReturnRequestAsync(ReturnRequest returnRequest)
         {
-            await _returnRequestRepository.InsertAsync(returnRequest);
+            await ReturnRequestRepository.InsertAsync(returnRequest);
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertReturnRequestActionAsync(ReturnRequestAction returnRequestAction)
         {
-            await _returnRequestActionRepository.InsertAsync(returnRequestAction);
+            await ReturnRequestActionRepository.InsertAsync(returnRequestAction);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateReturnRequestAsync(ReturnRequest returnRequest)
         {
-            await _returnRequestRepository.UpdateAsync(returnRequest);
+            await ReturnRequestRepository.UpdateAsync(returnRequest);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateReturnRequestActionAsync(ReturnRequestAction returnRequestAction)
         {
-            await _returnRequestActionRepository.UpdateAsync(returnRequestAction);
+            await ReturnRequestActionRepository.UpdateAsync(returnRequestAction);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteReturnRequestReasonAsync(ReturnRequestReason returnRequestReason)
         {
-            await _returnRequestReasonRepository.DeleteAsync(returnRequestReason);
+            await ReturnRequestReasonRepository.DeleteAsync(returnRequestReason);
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<ReturnRequestReason>> GetAllReturnRequestReasonsAsync()
         {
-            return await _returnRequestReasonRepository.GetAllAsync(query =>
+            return await ReturnRequestReasonRepository.GetAllAsync(query =>
             {
                 return from rra in query
                     orderby rra.DisplayOrder, rra.Id
@@ -227,7 +227,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<ReturnRequestReason> GetReturnRequestReasonByIdAsync(int returnRequestReasonId)
         {
-            return await _returnRequestReasonRepository.GetByIdAsync(returnRequestReasonId, cache => default);
+            return await ReturnRequestReasonRepository.GetByIdAsync(returnRequestReasonId, cache => default);
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertReturnRequestReasonAsync(ReturnRequestReason returnRequestReason)
         {
-            await _returnRequestReasonRepository.InsertAsync(returnRequestReason);
+            await ReturnRequestReasonRepository.InsertAsync(returnRequestReason);
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateReturnRequestReasonAsync(ReturnRequestReason returnRequestReason)
         {
-            await _returnRequestReasonRepository.UpdateAsync(returnRequestReason);
+            await ReturnRequestReasonRepository.UpdateAsync(returnRequestReason);
         }
 
         #endregion

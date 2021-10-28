@@ -14,7 +14,7 @@ namespace Nop.Services.Security
     {
         #region Fields
 
-        private readonly SecuritySettings _securitySettings;
+        protected SecuritySettings SecuritySettings { get; }
 
         #endregion
 
@@ -22,7 +22,7 @@ namespace Nop.Services.Security
 
         public EncryptionService(SecuritySettings securitySettings)
         {
-            _securitySettings = securitySettings;
+            SecuritySettings = securitySettings;
         }
 
         #endregion
@@ -94,7 +94,7 @@ namespace Nop.Services.Security
                 return plainText;
 
             if (string.IsNullOrEmpty(encryptionPrivateKey))
-                encryptionPrivateKey = _securitySettings.EncryptionKey;
+                encryptionPrivateKey = SecuritySettings.EncryptionKey;
 
             using var provider = new TripleDESCryptoServiceProvider
             {
@@ -118,7 +118,7 @@ namespace Nop.Services.Security
                 return cipherText;
 
             if (string.IsNullOrEmpty(encryptionPrivateKey))
-                encryptionPrivateKey = _securitySettings.EncryptionKey;
+                encryptionPrivateKey = SecuritySettings.EncryptionKey;
 
             using var provider = new TripleDESCryptoServiceProvider
             {

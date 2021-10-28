@@ -16,10 +16,10 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
-        private readonly IRepository<CheckoutAttributeValue> _checkoutAttributeValueRepository;
-        private readonly IStoreMappingService _storeMappingService;
+        protected IStaticCacheManager StaticCacheManager { get; }
+        protected IRepository<CheckoutAttribute> CheckoutAttributeRepository { get; }
+        protected IRepository<CheckoutAttributeValue> CheckoutAttributeValueRepository { get; }
+        protected IStoreMappingService StoreMappingService { get; }
 
         #endregion
 
@@ -30,10 +30,10 @@ namespace Nop.Services.Orders
             IRepository<CheckoutAttributeValue> checkoutAttributeValueRepository,
             IStoreMappingService storeMappingService)
         {
-            _staticCacheManager = staticCacheManager;
-            _checkoutAttributeRepository = checkoutAttributeRepository;
-            _checkoutAttributeValueRepository = checkoutAttributeValueRepository;
-            _storeMappingService = storeMappingService;
+            StaticCacheManager = staticCacheManager;
+            CheckoutAttributeRepository = checkoutAttributeRepository;
+            CheckoutAttributeValueRepository = checkoutAttributeValueRepository;
+            StoreMappingService = storeMappingService;
         }
 
         #endregion
@@ -49,7 +49,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCheckoutAttributeAsync(CheckoutAttribute checkoutAttribute)
         {
-            await _checkoutAttributeRepository.DeleteAsync(checkoutAttribute);
+            await CheckoutAttributeRepository.DeleteAsync(checkoutAttribute);
         }
 
         /// <summary>
@@ -77,11 +77,11 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<CheckoutAttribute>> GetAllCheckoutAttributesAsync(int storeId = 0, bool excludeShippableAttributes = false)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopOrderDefaults.CheckoutAttributesAllCacheKey, storeId, excludeShippableAttributes);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopOrderDefaults.CheckoutAttributesAllCacheKey, storeId, excludeShippableAttributes);
 
-            return await _staticCacheManager.GetAsync(key, async () =>
+            return await StaticCacheManager.GetAsync(key, async () =>
             {
-                var checkoutAttributes = (await _checkoutAttributeRepository.GetAllAsync(query =>
+                var checkoutAttributes = (await CheckoutAttributeRepository.GetAllAsync(query =>
                 {
                     return from ca in query
                         orderby ca.DisplayOrder, ca.Id
@@ -90,7 +90,7 @@ namespace Nop.Services.Orders
 
                 if (storeId > 0)
                     //store mapping
-                    checkoutAttributes = checkoutAttributes.WhereAwait(async ca => await _storeMappingService.AuthorizeAsync(ca, storeId));
+                    checkoutAttributes = checkoutAttributes.WhereAwait(async ca => await StoreMappingService.AuthorizeAsync(ca, storeId));
 
                 if (excludeShippableAttributes)
                     //remove attributes which require shippable products
@@ -110,7 +110,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<CheckoutAttribute> GetCheckoutAttributeByIdAsync(int checkoutAttributeId)
         {
-            return await _checkoutAttributeRepository.GetByIdAsync(checkoutAttributeId, cache => default);
+            return await CheckoutAttributeRepository.GetByIdAsync(checkoutAttributeId, cache => default);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<CheckoutAttribute>> GetCheckoutAttributeByIdsAsync(int[] checkoutAttributeIds)
         {
-            return await _checkoutAttributeRepository.GetByIdsAsync(checkoutAttributeIds);
+            return await CheckoutAttributeRepository.GetByIdsAsync(checkoutAttributeIds);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCheckoutAttributeAsync(CheckoutAttribute checkoutAttribute)
         {
-            await _checkoutAttributeRepository.InsertAsync(checkoutAttribute);
+            await CheckoutAttributeRepository.InsertAsync(checkoutAttribute);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCheckoutAttributeAsync(CheckoutAttribute checkoutAttribute)
         {
-            await _checkoutAttributeRepository.UpdateAsync(checkoutAttribute);
+            await CheckoutAttributeRepository.UpdateAsync(checkoutAttribute);
         }
 
         #endregion
@@ -157,7 +157,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCheckoutAttributeValueAsync(CheckoutAttributeValue checkoutAttributeValue)
         {
-            await _checkoutAttributeValueRepository.DeleteAsync(checkoutAttributeValue);
+            await CheckoutAttributeValueRepository.DeleteAsync(checkoutAttributeValue);
         }
 
         /// <summary>
@@ -170,14 +170,14 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<CheckoutAttributeValue>> GetCheckoutAttributeValuesAsync(int checkoutAttributeId)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopOrderDefaults.CheckoutAttributeValuesAllCacheKey, checkoutAttributeId);
+            var key = StaticCacheManager.PrepareKeyForDefaultCache(NopOrderDefaults.CheckoutAttributeValuesAllCacheKey, checkoutAttributeId);
 
-            var query = from cav in _checkoutAttributeValueRepository.Table
+            var query = from cav in CheckoutAttributeValueRepository.Table
                 orderby cav.DisplayOrder, cav.Id
                 where cav.CheckoutAttributeId == checkoutAttributeId
                 select cav;
             
-            var checkoutAttributeValues = await _staticCacheManager.GetAsync(key, async ()=> await query.ToListAsync());
+            var checkoutAttributeValues = await StaticCacheManager.GetAsync(key, async ()=> await query.ToListAsync());
 
             return checkoutAttributeValues;
         }
@@ -192,7 +192,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<CheckoutAttributeValue> GetCheckoutAttributeValueByIdAsync(int checkoutAttributeValueId)
         {
-            return await _checkoutAttributeValueRepository.GetByIdAsync(checkoutAttributeValueId, cache => default);
+            return await CheckoutAttributeValueRepository.GetByIdAsync(checkoutAttributeValueId, cache => default);
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCheckoutAttributeValueAsync(CheckoutAttributeValue checkoutAttributeValue)
         {
-            await _checkoutAttributeValueRepository.InsertAsync(checkoutAttributeValue);
+            await CheckoutAttributeValueRepository.InsertAsync(checkoutAttributeValue);
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCheckoutAttributeValueAsync(CheckoutAttributeValue checkoutAttributeValue)
         {
-            await _checkoutAttributeValueRepository.UpdateAsync(checkoutAttributeValue);
+            await CheckoutAttributeValueRepository.UpdateAsync(checkoutAttributeValue);
         }
 
         #endregion

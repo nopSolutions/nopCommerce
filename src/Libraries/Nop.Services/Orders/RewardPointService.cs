@@ -17,10 +17,10 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly IRepository<RewardPointsHistory> _rewardPointsHistoryRepository;
-        private readonly RewardPointsSettings _rewardPointsSettings;
+        protected IDateTimeHelper DateTimeHelper { get; }
+        protected ILocalizationService LocalizationService { get; }
+        protected IRepository<RewardPointsHistory> RewardPointsHistoryRepository { get; }
+        protected RewardPointsSettings RewardPointsSettings { get; }
 
         #endregion
 
@@ -31,10 +31,10 @@ namespace Nop.Services.Orders
             IRepository<RewardPointsHistory> rewardPointsHistoryRepository,
             RewardPointsSettings rewardPointsSettings)
         {
-            _dateTimeHelper = dateTimeHelper;
-            _localizationService = localizationService;
-            _rewardPointsHistoryRepository = rewardPointsHistoryRepository;
-            _rewardPointsSettings = rewardPointsSettings;
+            DateTimeHelper = dateTimeHelper;
+            LocalizationService = localizationService;
+            RewardPointsHistoryRepository = rewardPointsHistoryRepository;
+            RewardPointsSettings = rewardPointsSettings;
         }
 
         #endregion
@@ -53,14 +53,14 @@ namespace Nop.Services.Orders
         /// </returns>
         protected virtual async Task<IQueryable<RewardPointsHistory>> GetRewardPointsQueryAsync(int customerId, int? storeId, bool showNotActivated = false)
         {
-            var query = _rewardPointsHistoryRepository.Table;
+            var query = RewardPointsHistoryRepository.Table;
 
             //filter by customer
             if (customerId > 0)
                 query = query.Where(historyEntry => historyEntry.CustomerId == customerId);
 
             //filter by store
-            if (!_rewardPointsSettings.PointsAccumulatedForAllStores && storeId > 0)
+            if (!RewardPointsSettings.PointsAccumulatedForAllStores && storeId > 0)
                 query = query.Where(historyEntry => historyEntry.StoreId == storeId);
 
             //whether to show only the points that already activated
@@ -94,8 +94,8 @@ namespace Nop.Services.Orders
                     CustomerId = historyEntry.CustomerId,
                     StoreId = historyEntry.StoreId,
                     Points = -historyEntry.ValidPoints.Value,
-                    Message = string.Format(await _localizationService.GetResourceAsync("RewardPoints.Expired"),
-                        await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc)),
+                    Message = string.Format(await LocalizationService.GetResourceAsync("RewardPoints.Expired"),
+                        await DateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc)),
                     CreatedOnUtc = historyEntry.EndDateUtc.Value
                 });
 
@@ -133,7 +133,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InsertRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory)
         {
-            await _rewardPointsHistoryRepository.InsertAsync(rewardPointsHistory);
+            await RewardPointsHistoryRepository.InsertAsync(rewardPointsHistory);
         }
 
         #endregion
@@ -193,9 +193,9 @@ namespace Nop.Services.Orders
         /// <returns>Reduced balance</returns>
         public virtual int GetReducedPointsBalance(int rewardPointsBalance)
         {
-            if (_rewardPointsSettings.MaximumRewardPointsToUsePerOrder > 0 &&
-                rewardPointsBalance > _rewardPointsSettings.MaximumRewardPointsToUsePerOrder)
-                return _rewardPointsSettings.MaximumRewardPointsToUsePerOrder;
+            if (RewardPointsSettings.MaximumRewardPointsToUsePerOrder > 0 &&
+                rewardPointsBalance > RewardPointsSettings.MaximumRewardPointsToUsePerOrder)
+                return RewardPointsSettings.MaximumRewardPointsToUsePerOrder;
 
             return rewardPointsBalance;
         }
@@ -273,7 +273,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<RewardPointsHistory> GetRewardPointsHistoryEntryByIdAsync(int rewardPointsHistoryId)
         {
-            return await _rewardPointsHistoryRepository.GetByIdAsync(rewardPointsHistoryId);
+            return await RewardPointsHistoryRepository.GetByIdAsync(rewardPointsHistoryId);
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory)
         {
-            await _rewardPointsHistoryRepository.UpdateAsync(rewardPointsHistory);
+            await RewardPointsHistoryRepository.UpdateAsync(rewardPointsHistory);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory)
         {
-            await _rewardPointsHistoryRepository.DeleteAsync(rewardPointsHistory);
+            await RewardPointsHistoryRepository.DeleteAsync(rewardPointsHistory);
         }
 
         #endregion
