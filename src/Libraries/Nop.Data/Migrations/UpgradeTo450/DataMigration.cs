@@ -26,7 +26,11 @@ namespace Nop.Data.Migrations.UpgradeTo450
             if (!Schema.Table(scheduleTaskTableName).Column(nameof(ScheduleTask.LastEnabledUtc)).Exists())
             {
                 Alter.Table(scheduleTaskTableName)
-                    .AddColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime().Nullable();
+                    .AddColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime2().Nullable();
+            }
+            else
+            {
+                Alter.Table(scheduleTaskTableName).AlterColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime2().Nullable();
             }
         }
 
