@@ -19,7 +19,7 @@ namespace Nop.Core.Caching
         // Flag: Has Dispose already been called?
         private bool _disposed;
 
-        private readonly IMemoryCache _memoryCache;
+        protected IMemoryCache MemoryCache { get; }
 
         private static readonly ConcurrentDictionary<string, CancellationTokenSource> _prefixes = new ConcurrentDictionary<string, CancellationTokenSource>();
         private static CancellationTokenSource _clearToken = new CancellationTokenSource();
@@ -30,7 +30,7 @@ namespace Nop.Core.Caching
 
         public MemoryCacheManager(AppSettings appSettings, IMemoryCache memoryCache) : base(appSettings)
         {
-            _memoryCache = memoryCache;
+            MemoryCache = memoryCache;
         }
 
         #endregion
@@ -69,7 +69,7 @@ namespace Nop.Core.Caching
         private void Remove(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
             cacheKey = PrepareKey(cacheKey, cacheKeyParameters);
-            _memoryCache.Remove(cacheKey.Key);
+            MemoryCache.Remove(cacheKey.Key);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Nop.Core.Caching
             if ((key?.CacheTime ?? 0) <= 0 || data == null)
                 return;
 
-            _memoryCache.Set(key.Key, data, PrepareEntryOptions(key));
+            MemoryCache.Set(key.Key, data, PrepareEntryOptions(key));
         }
 
         #endregion
@@ -117,7 +117,7 @@ namespace Nop.Core.Caching
             if ((key?.CacheTime ?? 0) <= 0)
                 return await acquire();
 
-            if (_memoryCache.TryGetValue(key.Key, out T result))
+            if (MemoryCache.TryGetValue(key.Key, out T result))
                 return result;
 
             result = await acquire();
@@ -143,7 +143,7 @@ namespace Nop.Core.Caching
             if ((key?.CacheTime ?? 0) <= 0)
                 return acquire();
 
-            var result = _memoryCache.GetOrCreate(key.Key, entry =>
+            var result = MemoryCache.GetOrCreate(key.Key, entry =>
             {
                 entry.SetOptions(PrepareEntryOptions(key));
 
@@ -169,7 +169,7 @@ namespace Nop.Core.Caching
             if ((key?.CacheTime ?? 0) <= 0)
                 return acquire();
 
-            if (_memoryCache.TryGetValue(key.Key, out T result))
+            if (MemoryCache.TryGetValue(key.Key, out T result))
                 return result;
 
             result = acquire();
@@ -203,12 +203,12 @@ namespace Nop.Core.Caching
         public bool PerformActionWithLock(string key, TimeSpan expirationTime, Action action)
         {
             //ensure that lock is acquired
-            if (_memoryCache.TryGetValue(key, out _))
+            if (MemoryCache.TryGetValue(key, out _))
                 return false;
 
             try
             {
-                _memoryCache.Set(key, key, expirationTime);
+                MemoryCache.Set(key, key, expirationTime);
 
                 //perform action
                 action();
@@ -218,7 +218,7 @@ namespace Nop.Core.Caching
             finally
             {
                 //release lock even if action fails
-                _memoryCache.Remove(key);
+                MemoryCache.Remove(key);
             }
         }
 
@@ -275,7 +275,7 @@ namespace Nop.Core.Caching
                 return;
 
             if (disposing) 
-                _memoryCache.Dispose();
+                MemoryCache.Dispose();
 
             _disposed = true;
         }

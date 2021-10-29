@@ -18,7 +18,7 @@ namespace Nop.Data.Mapping
     {
         #region Fields
 
-        private readonly IMappingEntityAccessor _mappingEntityAccessor;
+        protected IMappingEntityAccessor MappingEntityAccessor { get; }
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace Nop.Data.Mapping
 
         public FluentMigratorMetadataReader(IMappingEntityAccessor mappingEntityAccessor)
         {
-            _mappingEntityAccessor = mappingEntityAccessor;
+            MappingEntityAccessor = mappingEntityAccessor;
         }
 
         #endregion
@@ -37,7 +37,7 @@ namespace Nop.Data.Mapping
         {
             var attribute = Types.GetOrAdd((type, memberInfo), _ =>
             {
-                var entityDescriptor  = _mappingEntityAccessor.GetEntityDescriptor(type);
+                var entityDescriptor  = MappingEntityAccessor.GetEntityDescriptor(type);
 
                 if (typeof(T) == typeof(TableAttribute))
                     return new TableAttribute(entityDescriptor.EntityName);

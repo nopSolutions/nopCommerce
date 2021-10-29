@@ -12,7 +12,7 @@ namespace Nop.Data.Migrations
     {
         #region Fields
 
-        private readonly INopDataProvider _dataProvider;
+        protected INopDataProvider DataProvider { get; }
 
         #endregion
 
@@ -20,7 +20,7 @@ namespace Nop.Data.Migrations
 
         public NopIndexConvention(INopDataProvider dataProvider)
         {
-            _dataProvider = dataProvider;
+            DataProvider = dataProvider;
         }
 
         #endregion
@@ -34,7 +34,7 @@ namespace Nop.Data.Migrations
         /// <returns>Name of an index</returns>
         private string GetIndexName(IndexDefinition index)
         {
-            return _dataProvider.GetIndexName(index.TableName, string.Join('_', index.Columns.Select(c => c.Name)));
+            return DataProvider.GetIndexName(index.TableName, string.Join('_', index.Columns.Select(c => c.Name)));
         }
 
         #endregion

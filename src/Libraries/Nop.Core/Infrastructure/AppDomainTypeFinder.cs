@@ -17,7 +17,7 @@ namespace Nop.Core.Infrastructure
         #region Fields
 
         private bool _ignoreReflectionErrors = true;
-        protected INopFileProvider _fileProvider;
+        protected INopFileProvider FileProvider { get; }
 
         #endregion
 
@@ -25,7 +25,7 @@ namespace Nop.Core.Infrastructure
 
         public AppDomainTypeFinder(INopFileProvider fileProvider = null)
         {
-            _fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+            FileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
         }
 
         #endregion
@@ -117,12 +117,12 @@ namespace Nop.Core.Infrastructure
                 loadedAssemblyNames.Add(a.FullName);
             }
 
-            if (!_fileProvider.DirectoryExists(directoryPath))
+            if (!FileProvider.DirectoryExists(directoryPath))
             {
                 return;
             }
 
-            foreach (var dllPath in _fileProvider.GetFiles(directoryPath, "*.dll"))
+            foreach (var dllPath in FileProvider.GetFiles(directoryPath, "*.dll"))
             {
                 try
                 {

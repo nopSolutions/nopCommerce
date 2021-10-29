@@ -18,10 +18,10 @@ namespace Nop.Data.Migrations
     {
         #region Fields
 
-        private readonly IFilteringMigrationSource _filteringMigrationSource;
-        private readonly IMigrationRunner _migrationRunner;
-        private readonly IMigrationRunnerConventions _migrationRunnerConventions;
-        private readonly Lazy<IVersionLoader> _versionLoader;
+        protected IFilteringMigrationSource FilteringMigrationSource { get; }
+        protected IMigrationRunner MigrationRunner { get; }
+        protected IMigrationRunnerConventions MigrationRunnerConventions { get; }
+        protected Lazy<IVersionLoader> VersionLoader { get; }
 
         #endregion
 
@@ -32,11 +32,11 @@ namespace Nop.Data.Migrations
             IMigrationRunner migrationRunner,
             IMigrationRunnerConventions migrationRunnerConventions)
         {
-            _versionLoader = new Lazy<IVersionLoader>(() => EngineContext.Current.Resolve<IVersionLoader>());
+            VersionLoader = new Lazy<IVersionLoader>(() => EngineContext.Current.Resolve<IVersionLoader>());
 
-            _filteringMigrationSource = filteringMigrationSource;
-            _migrationRunner = migrationRunner;
-            _migrationRunnerConventions = migrationRunnerConventions;
+            FilteringMigrationSource = filteringMigrationSource;
+            MigrationRunner = migrationRunner;
+            MigrationRunnerConventions = migrationRunnerConventions;
         }
 
         #endregion
@@ -51,11 +51,11 @@ namespace Nop.Data.Migrations
         /// <returns>The instances for found types implementing FluentMigrator.IMigration</returns>
         protected virtual IEnumerable<IMigrationInfo> GetMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.NoMatter)
         {
-            var migrations = _filteringMigrationSource
+            var migrations = FilteringMigrationSource
                 .GetMigrations(t =>
                 {
                     var migrationAttribute = t.GetCustomAttribute<NopMigrationAttribute>();
-                    if (migrationAttribute is null || _versionLoader.Value.VersionInfo.HasAppliedMigration(migrationAttribute.Version))
+                    if (migrationAttribute is null || VersionLoader.Value.VersionInfo.HasAppliedMigration(migrationAttribute.Version))
                         return false;
 
                     if (migrationAttribute.TargetMigrationProcess != MigrationProcessType.NoMatter &&
@@ -67,7 +67,7 @@ namespace Nop.Data.Migrations
                 }) ?? Enumerable.Empty<IMigration>();
 
             return migrations
-                .Select(m => _migrationRunnerConventions.GetMigrationInfoForMigration(m))
+                .Select(m => MigrationRunnerConventions.GetMigrationInfoForMigration(m))
                 //.OrderBy(m => m.Migration.GetType().GetCustomAttribute<NopMigrationAttribute>().MigrationTarget)
                 //.ThenBy(migration => migration.Version);
                 .OrderBy(migration => migration.Version);
@@ -89,14 +89,14 @@ namespace Nop.Data.Migrations
 
             foreach (var migrationInfo in GetMigrations(assembly, migrationProcessType))
             {
-                _migrationRunner.Up(migrationInfo.Migration);
+                MigrationRunner.Up(migrationInfo.Migration);
 
 #if DEBUG
                 if (!string.IsNullOrEmpty(migrationInfo.Description) &&
                     migrationInfo.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)))
                     continue;
 #endif
-                _versionLoader.Value
+                VersionLoader.Value
                     .UpdateVersionInfo(migrationInfo.Version, migrationInfo.Description ?? migrationInfo.Migration.GetType().Name);
             }
         }
@@ -114,8 +114,8 @@ namespace Nop.Data.Migrations
 
             foreach (var migrationInfo in migrations)
             {
-                _migrationRunner.Down(migrationInfo.Migration);
-                _versionLoader.Value.DeleteVersion(migrationInfo.Version);
+                MigrationRunner.Down(migrationInfo.Migration);
+                VersionLoader.Value.DeleteVersion(migrationInfo.Version);
             }
         }
 

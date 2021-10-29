@@ -11,7 +11,7 @@ namespace Nop.Data.Migrations
     {
         #region Fields
 
-        private readonly INopDataProvider _dataProvider;
+        protected INopDataProvider DataProvider { get; }
 
         #endregion
 
@@ -19,7 +19,7 @@ namespace Nop.Data.Migrations
 
         public NopForeignKeyConvention(INopDataProvider dataProvider)
         {
-            _dataProvider = dataProvider;
+            DataProvider = dataProvider;
         }
 
         #endregion
@@ -36,7 +36,7 @@ namespace Nop.Data.Migrations
             var foreignColumns = string.Join('_', foreignKey.ForeignColumns);
             var primaryColumns = string.Join('_', foreignKey.PrimaryColumns);
 
-            var keyName = _dataProvider.CreateForeignKeyName(foreignKey.ForeignTable, foreignColumns, foreignKey.PrimaryTable, primaryColumns);
+            var keyName = DataProvider.CreateForeignKeyName(foreignKey.ForeignTable, foreignColumns, foreignKey.PrimaryTable, primaryColumns);
             
             return keyName;
         }

@@ -24,10 +24,10 @@ namespace Nop.Core
     {
         #region Fields 
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IHostApplicationLifetime _hostApplicationLifetime;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IUrlHelperFactory _urlHelperFactory;
+        protected IActionContextAccessor ActionContextAccessor { get; }
+        protected IHostApplicationLifetime HostApplicationLifetime { get; }
+        protected IHttpContextAccessor HttpContextAccessor { get; }
+        protected IUrlHelperFactory UrlHelperFactory { get; }
 
         #endregion
 
@@ -38,10 +38,10 @@ namespace Nop.Core
             IHttpContextAccessor httpContextAccessor,
             IUrlHelperFactory urlHelperFactory)
         {
-            _actionContextAccessor = actionContextAccessor;
-            _hostApplicationLifetime = hostApplicationLifetime;
-            _httpContextAccessor = httpContextAccessor;
-            _urlHelperFactory = urlHelperFactory;
+            ActionContextAccessor = actionContextAccessor;
+            HostApplicationLifetime = hostApplicationLifetime;
+            HttpContextAccessor = httpContextAccessor;
+            UrlHelperFactory = urlHelperFactory;
         }
 
         #endregion
@@ -54,12 +54,12 @@ namespace Nop.Core
         /// <returns>True if available; otherwise false</returns>
         protected virtual bool IsRequestAvailable()
         {
-            if (_httpContextAccessor?.HttpContext == null)
+            if (HttpContextAccessor?.HttpContext == null)
                 return false;
 
             try
             {
-                if (_httpContextAccessor.HttpContext.Request == null)
+                if (HttpContextAccessor.HttpContext.Request == null)
                     return false;
             }
             catch (Exception)
@@ -96,7 +96,7 @@ namespace Nop.Core
                 return string.Empty;
 
             //URL referrer is null in some case (for example, in IE 8)
-            return _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Referer];
+            return HttpContextAccessor.HttpContext.Request.Headers[HeaderNames.Referer];
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Nop.Core
             if (!IsRequestAvailable())
                 return string.Empty;
 
-            if(_httpContextAccessor.HttpContext.Connection?.RemoteIpAddress is not IPAddress remoteIp)
+            if(HttpContextAccessor.HttpContext.Connection?.RemoteIpAddress is not IPAddress remoteIp)
                 return "";
 
             if(remoteIp.Equals(IPAddress.IPv6Loopback))
@@ -133,11 +133,11 @@ namespace Nop.Core
             var storeLocation = GetStoreLocation(useSsl ?? IsCurrentConnectionSecured());
 
             //add local path to the URL
-            var pageUrl = $"{storeLocation.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.Path}";
+            var pageUrl = $"{storeLocation.TrimEnd('/')}{HttpContextAccessor.HttpContext.Request.Path}";
 
             //add query string to the URL
             if (includeQueryString)
-                pageUrl = $"{pageUrl}{_httpContextAccessor.HttpContext.Request.QueryString}";
+                pageUrl = $"{pageUrl}{HttpContextAccessor.HttpContext.Request.QueryString}";
 
             //whether to convert the URL to lower case
             if (lowercaseUrl)
@@ -155,7 +155,7 @@ namespace Nop.Core
             if (!IsRequestAvailable())
                 return false;
 
-            return _httpContextAccessor.HttpContext.Request.IsHttps;
+            return HttpContextAccessor.HttpContext.Request.IsHttps;
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Nop.Core
                 return string.Empty;
 
             //try to get host from the request HOST header
-            var hostHeader = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
+            var hostHeader = HttpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
             if (StringValues.IsNullOrEmpty(hostHeader))
                 return string.Empty;
 
@@ -196,7 +196,7 @@ namespace Nop.Core
             if (!string.IsNullOrEmpty(storeHost))
             {
                 //add application path base if exists
-                storeLocation = IsRequestAvailable() ? $"{storeHost.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.PathBase}" : storeHost;
+                storeLocation = IsRequestAvailable() ? $"{storeHost.TrimEnd('/')}{HttpContextAccessor.HttpContext.Request.PathBase}" : storeHost;
             }
 
             //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
@@ -222,7 +222,7 @@ namespace Nop.Core
             if (!IsRequestAvailable())
                 return false;
 
-            string path = _httpContextAccessor.HttpContext.Request.Path;
+            string path = HttpContextAccessor.HttpContext.Request.Path;
 
             //a little workaround. FileExtensionContentTypeProvider contains most of static file extensions. So we can use it
             //source: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/FileExtensionContentTypeProvider.cs
@@ -247,13 +247,13 @@ namespace Nop.Core
                 return url;
 
             //prepare URI object
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            var urlHelper = UrlHelperFactory.GetUrlHelper(ActionContextAccessor.ActionContext);
             var isLocalUrl = urlHelper.IsLocalUrl(url);
 
             var uriStr = url;
             if (isLocalUrl)
             {
-                var pathBase = _httpContextAccessor.HttpContext.Request.PathBase;
+                var pathBase = HttpContextAccessor.HttpContext.Request.PathBase;
                 uriStr = $"{GetStoreLocation().TrimEnd('/')}{(url.StartsWith(pathBase) ? url.Replace(pathBase, "") : url)}";
             }
 
@@ -295,7 +295,7 @@ namespace Nop.Core
                 return url;
 
             //prepare URI object
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            var urlHelper = UrlHelperFactory.GetUrlHelper(ActionContextAccessor.ActionContext);
             var isLocalUrl = urlHelper.IsLocalUrl(url);
             var uri = new Uri(isLocalUrl ? $"{GetStoreLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
 
@@ -335,10 +335,10 @@ namespace Nop.Core
             if (!IsRequestAvailable())
                 return default;
 
-            if (StringValues.IsNullOrEmpty(_httpContextAccessor.HttpContext.Request.Query[name]))
+            if (StringValues.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query[name]))
                 return default;
 
-            return CommonHelper.To<T>(_httpContextAccessor.HttpContext.Request.Query[name].ToString());
+            return CommonHelper.To<T>(HttpContextAccessor.HttpContext.Request.Query[name].ToString());
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace Nop.Core
         /// </summary>
         public virtual void RestartAppDomain()
         {
-            _hostApplicationLifetime.StopApplication();
+            HostApplicationLifetime.StopApplication();
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace Nop.Core
         {
             get
             {
-                var response = _httpContextAccessor.HttpContext.Response;
+                var response = HttpContextAccessor.HttpContext.Response;
                 //ASP.NET 4 style - return response.IsRequestBeingRedirected;
                 int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found };
                 
@@ -371,13 +371,13 @@ namespace Nop.Core
         {
             get
             {
-                if (_httpContextAccessor.HttpContext.Items[NopHttpDefaults.IsPostBeingDoneRequestItem] == null)
+                if (HttpContextAccessor.HttpContext.Items[NopHttpDefaults.IsPostBeingDoneRequestItem] == null)
                     return false;
 
-                return Convert.ToBoolean(_httpContextAccessor.HttpContext.Items[NopHttpDefaults.IsPostBeingDoneRequestItem]);
+                return Convert.ToBoolean(HttpContextAccessor.HttpContext.Items[NopHttpDefaults.IsPostBeingDoneRequestItem]);
             }
 
-            set => _httpContextAccessor.HttpContext.Items[NopHttpDefaults.IsPostBeingDoneRequestItem] = value;
+            set => HttpContextAccessor.HttpContext.Items[NopHttpDefaults.IsPostBeingDoneRequestItem] = value;
         }
 
         /// <summary>

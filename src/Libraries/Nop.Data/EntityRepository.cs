@@ -19,9 +19,9 @@ namespace Nop.Data
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected IEventPublisher EventPublisher { get; }
+        protected INopDataProvider DataProvider { get; }
+        protected IStaticCacheManager StaticCacheManager { get; }
 
         #endregion
 
@@ -31,9 +31,9 @@ namespace Nop.Data
             INopDataProvider dataProvider,
             IStaticCacheManager staticCacheManager)
         {
-            _eventPublisher = eventPublisher;
-            _dataProvider = dataProvider;
-            _staticCacheManager = staticCacheManager;
+            EventPublisher = eventPublisher;
+            DataProvider = dataProvider;
+            StaticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -55,9 +55,9 @@ namespace Nop.Data
                 return await getAllAsync();
 
             //caching
-            var cacheKey = getCacheKey(_staticCacheManager)
-                           ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.AllCacheKey);
-            return await _staticCacheManager.GetAsync(cacheKey, getAllAsync);
+            var cacheKey = getCacheKey(StaticCacheManager)
+                           ?? StaticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.AllCacheKey);
+            return await StaticCacheManager.GetAsync(cacheKey, getAllAsync);
         }
 
         /// <summary>
@@ -72,10 +72,10 @@ namespace Nop.Data
                 return getAll();
 
             //caching
-            var cacheKey = getCacheKey(_staticCacheManager)
-                           ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.AllCacheKey);
+            var cacheKey = getCacheKey(StaticCacheManager)
+                           ?? StaticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.AllCacheKey);
 
-            return _staticCacheManager.Get(cacheKey, getAll);
+            return StaticCacheManager.Get(cacheKey, getAll);
         }
 
         /// <summary>
@@ -93,9 +93,9 @@ namespace Nop.Data
                 return await getAllAsync();
 
             //caching
-            var cacheKey = await getCacheKey(_staticCacheManager)
-                           ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.AllCacheKey);
-            return await _staticCacheManager.GetAsync(cacheKey, getAllAsync);
+            var cacheKey = await getCacheKey(StaticCacheManager)
+                           ?? StaticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.AllCacheKey);
+            return await StaticCacheManager.GetAsync(cacheKey, getAllAsync);
         }
 
         /// <summary>
@@ -143,10 +143,10 @@ namespace Nop.Data
                 return await getEntityAsync();
 
             //caching
-            var cacheKey = getCacheKey(_staticCacheManager)
-                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, id);
+            var cacheKey = getCacheKey(StaticCacheManager)
+                ?? StaticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, id);
 
-            return await _staticCacheManager.GetAsync(cacheKey, getEntityAsync);
+            return await StaticCacheManager.GetAsync(cacheKey, getEntityAsync);
         }
 
         /// <summary>
@@ -187,9 +187,9 @@ namespace Nop.Data
                 return await getByIdsAsync();
 
             //caching
-            var cacheKey = getCacheKey(_staticCacheManager)
-                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdsCacheKey, ids);
-            return await _staticCacheManager.GetAsync(cacheKey, getByIdsAsync);
+            var cacheKey = getCacheKey(StaticCacheManager)
+                ?? StaticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdsCacheKey, ids);
+            return await StaticCacheManager.GetAsync(cacheKey, getByIdsAsync);
         }
 
         /// <summary>
@@ -342,11 +342,11 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            await _dataProvider.InsertEntityAsync(entity);
+            await DataProvider.InsertEntityAsync(entity);
 
             //event notification
             if (publishEvent)
-                await _eventPublisher.EntityInsertedAsync(entity);
+                await EventPublisher.EntityInsertedAsync(entity);
         }
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace Nop.Data
                 throw new ArgumentNullException(nameof(entities));
 
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-            await _dataProvider.BulkInsertEntitiesAsync(entities);
+            await DataProvider.BulkInsertEntitiesAsync(entities);
             transaction.Complete();
 
             if (!publishEvent)
@@ -369,7 +369,7 @@ namespace Nop.Data
 
             //event notification
             foreach (var entity in entities)
-                await _eventPublisher.EntityInsertedAsync(entity);
+                await EventPublisher.EntityInsertedAsync(entity);
         }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace Nop.Data
         /// </returns>
         public virtual async Task<TEntity> LoadOriginalCopyAsync(TEntity entity)
         {
-            return await _dataProvider.GetTable<TEntity>()
+            return await DataProvider.GetTable<TEntity>()
                 .FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(entity.Id));
         }
 
@@ -397,11 +397,11 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            await _dataProvider.UpdateEntityAsync(entity);
+            await DataProvider.UpdateEntityAsync(entity);
 
             //event notification
             if (publishEvent)
-                await _eventPublisher.EntityUpdatedAsync(entity);
+                await EventPublisher.EntityUpdatedAsync(entity);
         }
 
         /// <summary>
@@ -418,14 +418,14 @@ namespace Nop.Data
             if (entities.Count == 0)
                 return;
 
-            await _dataProvider.UpdateEntitiesAsync(entities);
+            await DataProvider.UpdateEntitiesAsync(entities);
 
             //event notification
             if (!publishEvent)
                 return;
 
             foreach (var entity in entities)
-                await _eventPublisher.EntityUpdatedAsync(entity);
+                await EventPublisher.EntityUpdatedAsync(entity);
         }
 
         /// <summary>
@@ -443,17 +443,17 @@ namespace Nop.Data
 
                 case ISoftDeletedEntity softDeletedEntity:
                     softDeletedEntity.Deleted = true;
-                    await _dataProvider.UpdateEntityAsync(entity);
+                    await DataProvider.UpdateEntityAsync(entity);
                     break;
 
                 default:
-                    await _dataProvider.DeleteEntityAsync(entity);
+                    await DataProvider.DeleteEntityAsync(entity);
                     break;
             }
 
             //event notification
             if (publishEvent)
-                await _eventPublisher.EntityDeletedAsync(entity);
+                await EventPublisher.EntityDeletedAsync(entity);
         }
 
         /// <summary>
@@ -474,14 +474,14 @@ namespace Nop.Data
                     if (entity is ISoftDeletedEntity softDeletedEntity)
                     {
                         softDeletedEntity.Deleted = true;
-                        await _dataProvider.UpdateEntityAsync(entity);
+                        await DataProvider.UpdateEntityAsync(entity);
                     }
                 }
             }
             else
             {
                 using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-                await _dataProvider.BulkDeleteEntitiesAsync(entities);
+                await DataProvider.BulkDeleteEntitiesAsync(entities);
                 transaction.Complete();
             }
 
@@ -490,7 +490,7 @@ namespace Nop.Data
                 return;
 
             foreach (var entity in entities)
-                await _eventPublisher.EntityDeletedAsync(entity);
+                await EventPublisher.EntityDeletedAsync(entity);
         }
 
         /// <summary>
@@ -507,7 +507,7 @@ namespace Nop.Data
                 throw new ArgumentNullException(nameof(predicate));
 
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-            var countDeletedRecords = await _dataProvider.BulkDeleteEntitiesAsync(predicate);
+            var countDeletedRecords = await DataProvider.BulkDeleteEntitiesAsync(predicate);
             transaction.Complete();
 
             return countDeletedRecords;
@@ -520,7 +520,7 @@ namespace Nop.Data
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task TruncateAsync(bool resetIdentity = false)
         {
-            await _dataProvider.TruncateAsync<TEntity>(resetIdentity);
+            await DataProvider.TruncateAsync<TEntity>(resetIdentity);
         }
 
         #endregion
@@ -530,7 +530,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets a table
         /// </summary>
-        public virtual IQueryable<TEntity> Table => _dataProvider.GetTable<TEntity>();
+        public virtual IQueryable<TEntity> Table => DataProvider.GetTable<TEntity>();
 
         #endregion
     }
