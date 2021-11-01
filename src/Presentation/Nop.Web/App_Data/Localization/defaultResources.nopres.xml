@@ -5763,7 +5763,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering.Hint">
     <Value>Check to enable the manufacturer filtering on catalog pages.</Value>
   </LocaleResource>
-    <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering">
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering">
     <Value>Enable price range filtering</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering.Hint">
@@ -5775,7 +5775,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint">
     <Value>Check to enable the specification attribute filtering on catalog pages.</Value>
   </LocaleResource>
-    <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages">
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages">
     <Value>Export/Import products. Allow download images</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages.Hint">
