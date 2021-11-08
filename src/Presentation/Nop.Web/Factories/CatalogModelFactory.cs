@@ -753,7 +753,6 @@ namespace Nop.Web.Factories
             var filterableOptions = await _specificationAttributeService
                 .GetFiltrableSpecificationAttributeOptionsByCategoryIdAsync(category.Id);
 
-            //filterable specification attribute filtering
             if (_catalogSettings.EnableSpecificationAttributeFiltering)
             {
                 model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
@@ -1025,7 +1024,6 @@ namespace Nop.Web.Factories
             var filterableOptions = await _specificationAttributeService
                 .GetFiltrableSpecificationAttributeOptionsByManufacturerIdAsync(manufacturer.Id);
 
-            //filterable specification attribute filtering
             if (_catalogSettings.EnableSpecificationAttributeFiltering)
             {
                 model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
