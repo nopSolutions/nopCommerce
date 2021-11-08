@@ -1237,7 +1237,7 @@ namespace Nop.Web.Factories
                 }
 
                 //specs
-                if (prepareSpecificationAttributes )
+                if (prepareSpecificationAttributes)
                 {
                     model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
                 }
