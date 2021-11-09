@@ -37,7 +37,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool AssociatedProductPictureSize_OverrideForStore { get; set; }
 
         [UIHint("PictureStaticDefault")]
-        [NopResourceDisplayName("Admin.Configuration.Settings.Media.ProductDefaultImageChanged")]
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.ProductDefaultImage")]
         public int ProductDefaultImageId { get; set; }
         public bool ProductDefaultImageId_OverrideForStore { get; set; }
 
