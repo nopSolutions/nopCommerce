@@ -1066,6 +1066,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //load settings for a chosen store scope
                 var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
                 var mediaSettings = await _settingService.LoadSettingAsync<MediaSettings>(storeScope);
+                var defaultProductImageId = mediaSettings.ProductDefaultImageId;
                 mediaSettings = model.ToSettings(mediaSettings);
 
                 //we do not clear cache after each setting update.
@@ -1086,7 +1087,18 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(mediaSettings, x => x.DefaultImageQuality, model.DefaultImageQuality_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(mediaSettings, x => x.ImportProductImagesUsingHash, model.ImportProductImagesUsingHash_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(mediaSettings, x => x.DefaultPictureZoomEnabled, model.DefaultPictureZoomEnabled_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(mediaSettings, x => x.ProductDefaultImageId, model.ProductDefaultImageId_OverrideForStore, storeScope, false);
 
+                // remove an old default product image from the system
+                if (defaultProductImageId != mediaSettings.ProductDefaultImageId)
+                {
+                    var prevPicture = await _pictureService.GetPictureByIdAsync(defaultProductImageId);
+                    if (prevPicture != null)
+                    {
+                        await _pictureService.DeletePictureAsync(prevPicture);
+                    }
+                }
+                
                 //now clear settings cache
                 await _settingService.ClearCacheAsync();
 

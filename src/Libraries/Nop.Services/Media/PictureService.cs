@@ -470,14 +470,20 @@ namespace Nop.Services.Media
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
+        /// <param name="staticDefault">Returns origin (static) default product image</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the picture URL
         /// </returns>
         public virtual async Task<string> GetDefaultPictureUrlAsync(int targetSize = 0,
             PictureType defaultPictureType = PictureType.Entity,
-            string storeLocation = null)
+            string storeLocation = null, bool staticDefault = false)
         {
+            if (_mediaSettings.ProductDefaultImageId != 0 && !staticDefault)
+            {
+                return await GetPictureUrlAsync(_mediaSettings.ProductDefaultImageId, targetSize);
+            }
+
             var defaultImageFileName = defaultPictureType switch
             {
                 PictureType.Avatar => await _settingService.GetSettingByKeyAsync("Media.Customer.DefaultAvatarImageName", NopMediaDefaults.DefaultAvatarFileName),

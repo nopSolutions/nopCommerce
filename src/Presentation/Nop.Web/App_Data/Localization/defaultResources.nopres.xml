@@ -7755,6 +7755,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.ProductDetailsPictureSize.Hint">
     <Value>The default size (pixels) for product detail images.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductDefaultImage">
+    <Value>Default image</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductDefaultImage.Hint">
+    <Value>Choose an image to upload. If the image exceeds your store's max image size settings, it will be automatically resized. The default image path will be overridden.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSize">
     <Value>Product thumbnail image size (catalog)</Value>
   </LocaleResource>

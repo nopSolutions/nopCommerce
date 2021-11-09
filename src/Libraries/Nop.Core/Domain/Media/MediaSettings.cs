@@ -111,5 +111,10 @@ namespace Nop.Core.Domain.Media
         /// Gets or sets a value indicating whether need to use absolute pictures path
         /// </summary>
         public bool UseAbsoluteImagePath { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating product default image id
+        /// </summary>
+        public int ProductDefaultImageId { get; set; }
     }
 }
