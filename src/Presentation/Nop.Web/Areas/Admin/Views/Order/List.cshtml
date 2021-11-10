@@ -15,7 +15,7 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<form asp-controller="Order" asp-action="List" method="post">
+<form asp-controller="Order" asp-action="List" method="post" id="orders-form">
     <div class="content-header clearfix">
         <h1 class="float-left">
             @T("Admin.Orders")
@@ -206,48 +206,48 @@
                                             </div>
                                         </div>
                                         <div class="form-group row" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                        <div class="col-md-4">
-                                            <nop-label asp-for="VendorId" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
-                                        </div>
-                                    </div>
-                                    @*@if (Model.BillingPhoneEnabled)
-                                    {
-                                            <div class="form-group row">
                                             <div class="col-md-4">
-                                                <nop-label asp-for="BillingPhone" />
+                                                <nop-label asp-for="VendorId" />
                                             </div>
                                             <div class="col-md-8">
-                                                <nop-editor asp-for="BillingPhone" />
+                                                <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
                                             </div>
                                         </div>
-                                    }*@
+                                        @*@if (Model.BillingPhoneEnabled)
+                                            {
+                                                    <div class="form-group row">
+                                                    <div class="col-md-4">
+                                                        <nop-label asp-for="BillingPhone" />
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <nop-editor asp-for="BillingPhone" />
+                                                    </div>
+                                                </div>
+                                            }*@
                                         @*<div class="form-group row">
-                                        <div class="col-md-4">
-                                            <nop-label asp-for="BillingEmail" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <nop-editor asp-for="BillingEmail" />
-                                        </div>
-                                    </div>
-                                        <div class="form-group row">
-                                            <div class="col-md-4">
-                                                <nop-label asp-for="BillingLastName" />
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="BillingEmail" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="BillingEmail" />
+                                                </div>
                                             </div>
-                                            <div class="col-md-8">
-                                                <nop-editor asp-for="BillingLastName" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row" @(Model.AvailableCountries.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                        <div class="col-md-4">
-                                            <nop-label asp-for="BillingCountryId" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <nop-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
-                                        </div>
-                                    </div>*@
+                                                <div class="form-group row">
+                                                    <div class="col-md-4">
+                                                        <nop-label asp-for="BillingLastName" />
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <nop-editor asp-for="BillingLastName" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" @(Model.AvailableCountries.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="BillingCountryId" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
+                                                </div>
+                                            </div>*@
                                         <div class="form-group row" @(Model.AvailablePaymentMethods.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                             <div class="col-md-4">
                                                 <nop-label asp-for="PaymentMethodSystemName" />
@@ -297,18 +297,18 @@
                         <div class="card-body">
                             <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Orders", Docs.Orders + Utm.OnAdmin)" />
 
-                        @{
-                          var gridModel = new DataTablesModel
-                          {
-                            Name = "orders-grid",
-                            UrlRead = new DataUrl("OrderList", "Order", null),
-                            SearchButtonId = "search-orders",
-                            Length = Model.PageSize,
-                            LengthMenu = Model.AvailablePageSizes,
-                            FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
-                            FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
-                            Filters = new List<FilterParameter>
-                                                {
+                            @{
+                                var gridModel = new DataTablesModel
+                                {
+                                    Name = "orders-grid",
+                                    UrlRead = new DataUrl("OrderList", "Order", null),
+                                    SearchButtonId = "search-orders",
+                                    Length = Model.PageSize,
+                                    LengthMenu = Model.AvailablePageSizes,
+                                    FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
+                                    FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
+                                    Filters = new List<FilterParameter>
+                                                                                                                                                                                                                                                        {
                                                     new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
                                                     new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                                                     new FilterParameter(nameof(Model.OrderStatusIds)),
@@ -324,9 +324,9 @@
                                                     new FilterParameter(nameof(Model.ProductId)),
                                                     new FilterParameter(nameof(Model.OrderNotes))
                                                 }
-                          };
-                          gridModel.ColumnCollection = new List<ColumnProperty>
-                            {
+                                };
+                                gridModel.ColumnCollection = new List<ColumnProperty>
+                                                                                                                                                                                                                                    {
                                 new ColumnProperty(nameof(OrderModel.Id))
                                 {
                                     IsMasterCheckBox = true,
@@ -340,81 +340,81 @@
                                     Width = "80"
                                 }
                             };
-                          //a vendor does not have access to this functionality
-                          if (!Model.IsLoggedInAsVendor)
-                          {
-                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderStatus))
-                            {
-                              Title = T("Admin.Orders.Fields.OrderStatus").Text,
-                              Width = "100",
-                              Render = new RenderCustom("renderColumnOrderStatus")
-                            });
-                          }
-                          //a vendor does not have access to this functionality
-                          if (!Model.IsLoggedInAsVendor)
-                          {
-                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
-                            {
-                              Title = T("Admin.Orders.Fields.ShippingStatus").Text,
-                              Width = "150"
-                            });
-                          }
+                                //a vendor does not have access to this functionality
+                                if (!Model.IsLoggedInAsVendor)
+                                {
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderStatus))
+                                    {
+                                        Title = T("Admin.Orders.Fields.OrderStatus").Text,
+                                        Width = "100",
+                                        Render = new RenderCustom("renderColumnOrderStatus")
+                                    });
+                                }
+                                //a vendor does not have access to this functionality
+                                if (!Model.IsLoggedInAsVendor)
+                                {
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
+                                    {
+                                        Title = T("Admin.Orders.Fields.ShippingStatus").Text,
+                                        Width = "150"
+                                    });
+                                }
 
-                          gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerFullName))
-                          {
-                            Title = T("Admin.Orders.Fields.Customer").Text,
-                            Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
-                          });
-                          gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
-                          {
-                            Title = T("Admin.Orders.Fields.Store").Text,
-                            Width = "100",
-                            Visible = storeService.GetAllStoresAsync().Result.Count > 1
-                          });
-                          gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
-                          {
-                            Title = T("Admin.Orders.Fields.CreatedOn").Text,
-                            Width = "120",
-                            Render = new RenderDate()
-                          });
-                          gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingAddress))
-                          {
-                            Title = "Shipping address",
-                            Width = "120",
-                            Render = new RenderCustom("renderShippingAddress")
-                          });
-                          //a vendor does not have access to this functionality
-                          if (!Model.IsLoggedInAsVendor)
-                          {
-                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
-                            {
-                              Title = T("Admin.Orders.Fields.Store").Text,
-                              Width = "100",
-                              Visible = (await storeService.GetAllStoresAsync()).Count > 1
-                            });
-                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
-                            {
-                              Title = T("Admin.Orders.Fields.CreatedOn").Text,
-                              Width = "120",
-                              Render = new RenderDate()
-                            });
-                            //a vendor does not have access to this functionality
-                            if (!Model.IsLoggedInAsVendor)
-                            {
-                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
-                              {
-                                Title = T("Admin.Orders.Fields.OrderTotal").Text,
-                                Width = "100",
-                              });
-                            }
-                          }
-                          gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
-                          {
-                            Title = T("Admin.Common.View").Text,
-                            Width = "50",
-                            ClassName = NopColumnClassDefaults.Button,
-                            Render = new RenderButtonView(new DataUrl("Edit"))
-                          });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerFullName))
+                                {
+                                    Title = T("Admin.Orders.Fields.Customer").Text,
+                                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
+                                });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
+                                {
+                                    Title = T("Admin.Orders.Fields.Store").Text,
+                                    Width = "100",
+                                    Visible = storeService.GetAllStoresAsync().Result.Count > 1
+                                });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
+                                {
+                                    Title = T("Admin.Orders.Fields.CreatedOn").Text,
+                                    Width = "120",
+                                    Render = new RenderDate()
+                                });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingAddress))
+                                {
+                                    Title = "Shipping address",
+                                    Width = "120",
+                                    Render = new RenderCustom("renderShippingAddress")
+                                });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ScheduleDate))
+                                {
+                                    Title = "Delivery date",
+                                    Width = "120",
+                                    Render = new RenderDate()
+                                });
+                                //a vendor does not have access to this functionality
+                                if (!Model.IsLoggedInAsVendor)
+                                {
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
+                                    {
+                                        Title = T("Admin.Orders.Fields.Store").Text,
+                                        Width = "100",
+                                        Visible = (await storeService.GetAllStoresAsync()).Count > 1
+                                    });
+                                    //a vendor does not have access to this functionality
+                                    if (!Model.IsLoggedInAsVendor)
+                                    {
+                                        gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
+                                        {
+                                            Title = T("Admin.Orders.Fields.OrderTotal").Text,
+                                            Width = "100",
+                                        });
+                                    }
+                                }
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
+                                {
+                                    Title = T("Admin.Common.View").Text,
+                                    Width = "50",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonView(new DataUrl("Edit"))
+                                });
                             }
 
                             @await Html.PartialAsync("Table", gridModel)
@@ -492,7 +492,17 @@
                                         }
                                     }
                                 });
-                            }
+                                }
+
+
+                                $("#search-orders").on('click', function () {
+                                    if ('@(Model.IsLoggedInAsVendor)' === '@true' && Date.parse(new Date()) < Date.parse($('#EndDate').val())) {
+                                        var day = new Date();
+                                        var dayWrapper = moment(day);
+                                        var dayString = dayWrapper.format("MM/DD/YYYY");
+                                        $('#EndDate').val(dayString);
+                                    }
+                                });
 
                             </script>
                         </div>
@@ -596,10 +606,12 @@
 @*Print packaging slips selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="PdfInvoiceSelected" method="post" id="pdf-invoice-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+    <input type="hidden" id="pdfSearchModel" name="searchModel" value="" />
 </form>
 
 <script>
     $(document).ready(function () {
+        debugger;
         $('#pdf-invoice-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
@@ -609,6 +621,24 @@
             }
             else {
                 $('#pdf-invoice-selected-form #selectedIds').val(ids);
+
+                var searchModel = new Object();
+                var endDate = $('#EndDate').val();
+                if (endDate) {
+                    searchModel.EndDate = endDate;
+                }
+                var startDate = $('#StartDate').val();
+                if (startDate) {
+                    searchModel.StartDate = startDate;
+                }
+                searchModel.ProductId = $('#ProductId').val();
+                searchModel.VendorId = $('#VendorId').val();
+                searchModel.PaymentMethodSystemName = $('#PaymentMethodSystemName').val();
+                searchModel.OrderNotes = $('#OrderNotes').val();
+                searchModel.GoDirectlyToCustomOrderNumber = $('#GoDirectlyToCustomOrderNumber').val();
+                searchModel.OrderStatusIds = $('#OrderStatusIds').val();
+                searchModel.ShippingStatusIds = $('#ShippingStatusIds').val();
+                $('#pdf-invoice-selected-form #pdfSearchModel').val(JSON.stringify(searchModel));
                 $('#pdf-invoice-selected-form').submit();
                 updateTable('#orders-grid');
             }

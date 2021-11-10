@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -17,6 +18,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
+using Nop.Core.Http.Extensions;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -24,6 +26,7 @@ using Nop.Services.Companies;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -86,6 +89,8 @@ namespace Nop.Services.Orders
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
         private readonly ICompanyService _companyService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 
@@ -134,7 +139,9 @@ namespace Nop.Services.Orders
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings,
-            ICompanyService companyService)
+            ICompanyService companyService,
+            IDateTimeHelper dateTimeHelper,
+            IHttpContextAccessor httpContextAccessor)
         {
             _currencySettings = currencySettings;
             _addressService = addressService;
@@ -180,6 +187,8 @@ namespace Nop.Services.Orders
             _shippingSettings = shippingSettings;
             _taxSettings = taxSettings;
             _companyService = companyService;
+            _dateTimeHelper = dateTimeHelper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -1602,7 +1611,6 @@ namespace Nop.Services.Orders
                             //When Null the order is from Public Site else from Mobile app.
                             var scheduleDate = !string.IsNullOrWhiteSpace(processPaymentRequest.ScheduleDate) ? Convert.ToDateTime(processPaymentRequest.ScheduleDate) : (DateTime?)null;
                             var currentDate = DateTime.UtcNow;
-
                             var dates = _orderSettings.ScheduleDate.Split(',');
                             if (!scheduleDate.HasValue)
                             {
@@ -3340,6 +3348,57 @@ namespace Nop.Services.Orders
             return result;
         }
 
+        public virtual async Task<List<DateTime>> GetAvailableDeliverTimesAsync()
+        {
+            var timezoneInfo = _httpContextAccessor.HttpContext.Session.Get<TimeZoneInfo>("timezoneInfo");
+            var list = new List<DateTime>();
+            var value = _orderSettings.ScheduleDate.Split(',');
+            var scheduleDate1 = value[0];
+            var scheduleDate2 = value[1];
+            var scheduleDate3 = value[2];
+            var now = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, timezoneInfo);
+
+            var firstOrderLastHour = scheduleDate1.Split('-')[1].Split(':');
+            var firstOrederLastdate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(firstOrderLastHour[0]), Convert.ToInt32(firstOrderLastHour[1]), Convert.ToInt32(firstOrderLastHour[2]), DateTimeKind.Utc);
+            var secondOrderLastHour = scheduleDate2.Split('-')[1].Split(':');
+            var secondOrederLastdate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(secondOrderLastHour[0]), Convert.ToInt32(secondOrderLastHour[1]), Convert.ToInt32(secondOrderLastHour[2]), DateTimeKind.Utc);
+            var thirdOrderLastHour = scheduleDate3.Split('-')[1].Split(':');
+            var thirdOrederLastdate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(thirdOrderLastHour[0]), Convert.ToInt32(thirdOrderLastHour[1]), Convert.ToInt32(thirdOrderLastHour[2]), DateTimeKind.Utc);
+
+            var firstDeliveryHour = scheduleDate1.Split('-')[2].Split(':');
+            var secondDeliverHour = scheduleDate2.Split('-')[2].Split(':');
+            var thirdDeliveryHour = scheduleDate3.Split('-')[2].Split(':');
+
+            var firstDeliverDate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(firstDeliveryHour[0]), Convert.ToInt32(firstDeliveryHour[1]), Convert.ToInt32(firstDeliveryHour[2]), DateTimeKind.Utc);
+            var secondDeliveryDate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(secondDeliverHour[0]), Convert.ToInt32(secondDeliverHour[1]), Convert.ToInt32(secondDeliverHour[2]), DateTimeKind.Utc);
+            var thirdDeliveryDate = new DateTime(now.Year, now.Month, now.Day, Convert.ToInt32(thirdDeliveryHour[0]), Convert.ToInt32(thirdDeliveryHour[1]), Convert.ToInt32(thirdDeliveryHour[2]), DateTimeKind.Utc);
+
+            if (now > thirdOrederLastdate)
+            {
+                list.Add(firstDeliverDate.AddDays(1));
+                list.Add(secondDeliveryDate.AddDays(1));
+                list.Add(thirdDeliveryDate.AddDays(1));
+            }
+            else
+            {
+                list.Add(firstDeliverDate);
+                list.Add(secondDeliveryDate);
+                list.Add(thirdDeliveryDate);
+                if (now <= firstOrederLastdate)
+                {
+                }
+                else if (now <= secondOrederLastdate)
+                {
+                    list.RemoveAt(0);
+                }
+                else
+                {
+                    list.RemoveAt(0);
+                    list.RemoveAt(1);
+                }
+            }
+            return list;
+        }
         #endregion
     }
 }

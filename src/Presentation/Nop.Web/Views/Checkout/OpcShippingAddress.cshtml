@@ -34,47 +34,65 @@
                         </label>
                     }
                     <div>
-                      <select name="shipping_address_id" id="shipping-address-select" class="address-select"
-                              title="" onchange="Shipping.newAddress(this.selectedOptions[0].id == 'checkout-newaddress')">
-                        
-                        <option value="" selected="selected"></option>
+                        <select name="shipping_address_id" id="shipping-address-select" class="address-select"
+                                title="" onchange="Shipping.newAddress(this.selectedOptions[0].id == 'checkout-newaddress')">
 
-                        @foreach (var address in Model.ExistingAddresses)
-                        {
-                          var addressLine = "";
-                          addressLine += address.FirstName;
-                          addressLine += " " + address.LastName;
-                          if (address.StreetAddressEnabled && !string.IsNullOrEmpty(address.Address1))
-                          {
-                            addressLine += ", " + address.Address1;
-                          }
-                          if (address.CityEnabled && !string.IsNullOrEmpty(address.City))
-                          {
-                            addressLine += ", " + address.City;
-                          }
-                          if (address.CountyEnabled && !string.IsNullOrEmpty(address.County))
-                          {
-                            addressLine += ", " + address.County;
-                          }
-                          if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
-                          {
-                            addressLine += ", " + address.StateProvinceName;
-                          }
-                          if (address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
-                          {
-                            addressLine += " " + address.ZipPostalCode;
-                          }
-                          if (address.CountryEnabled && !string.IsNullOrWhiteSpace(address.CountryName))
-                          {
-                            addressLine += ", " + address.CountryName;
-                          }
-                          //how should we render "FormattedCustomAddressAttributes" here?
-                          <option value="@(address.Id)">@(addressLine)</option>
-                        }
-                      </select>
-                      <p id="address-selection-error" style="color: red"></p>
+                            <option value="" selected="selected"></option>
+
+                            @foreach (var address in Model.ExistingAddresses)
+                            {
+                                var addressLine = "";
+                                addressLine += address.FirstName;
+                                addressLine += " " + address.LastName;
+                                if (address.StreetAddressEnabled && !string.IsNullOrEmpty(address.Address1))
+                                {
+                                    addressLine += ", " + address.Address1;
+                                }
+                                if (address.CityEnabled && !string.IsNullOrEmpty(address.City))
+                                {
+                                    addressLine += ", " + address.City;
+                                }
+                                if (address.CountyEnabled && !string.IsNullOrEmpty(address.County))
+                                {
+                                    addressLine += ", " + address.County;
+                                }
+                                if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
+                                {
+                                    addressLine += ", " + address.StateProvinceName;
+                                }
+                                if (address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
+                                {
+                                    addressLine += " " + address.ZipPostalCode;
+                                }
+                                if (address.CountryEnabled && !string.IsNullOrWhiteSpace(address.CountryName))
+                                {
+                                    addressLine += ", " + address.CountryName;
+                                }
+                                //how should we render "FormattedCustomAddressAttributes" here?
+                                <option value="@(address.Id)">@(addressLine)</option>
+                            }
+                        </select>
+                        <p id="address-selection-error" style="color: red"></p>
                     </div>
                 </div>
+                @if (Model.AvailableDeliverTimes.Count > 0)
+                {
+                    <div class="section select-delivery-times">
+                        <label for="deliver-hours-select">Select deliver time. <font color="red">*</font></label>
+
+                        <div>
+                            <select name="deliver_time" id="deliver_times-select-id" class="deliver_times-select">
+
+                                @* <option value="@Model.availableDeliverTimes[0]" selected="selected"> @Model.availableDeliverTimes[0]</option>*@
+
+                                @foreach (var date in Model.AvailableDeliverTimes)
+                                {
+                                    <option value="@(date)">@(date.ToString("MM/dd/yyyy HH:mm:ss"))</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                }
             }
             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressMiddle })
             <div class="section new-shipping-address" id="shipping-new-address-form">

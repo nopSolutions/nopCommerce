@@ -560,8 +560,40 @@ label, label + * {
 }
 
 .cart td.quantity input {
+  height: 34px;
   width: 50px;
   text-align: center;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.item-quantities {
+  display: flex;
+}
+  .item-quantities input {
+    font-size: 16px;
+  }
+
+  .minus, .plus {
+    background: transparent;
+    color: deepskyblue;
+    border-radius: 4px;
+    padding: 8px 5px 8px 5px;
+    border: transparent;
+  }
+
+.fontpassword input {
+  height: 34px;
+  width: 100px;
+  text-align: center;
+  font-size: 26px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .cart td.subtotal,
@@ -2407,7 +2439,7 @@ label, label + * {
 
 .overview .qty-input,
 .variant-overview .qty-input {
-  width: 45px;
+  width: 75px;
   height: 43px;
   padding: 0 12px;
   text-align: center;
@@ -8756,3 +8788,5 @@ pre {
     max-width: 100%;
   }
 }
+
+

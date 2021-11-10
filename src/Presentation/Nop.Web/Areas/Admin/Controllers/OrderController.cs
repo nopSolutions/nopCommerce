@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Expo.Server.Client;
 using Microsoft.AspNetCore.Http;
@@ -1083,49 +1084,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
-            {
-                model.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
-            }
-
-            var startDateValue = model.StartDate == null ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
-
-            var endDateValue = model.EndDate == null ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
-
-            var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
-                ? model.OrderStatusIds.ToList()
-                : null;
-            var paymentStatusIds = model.PaymentStatusIds != null && !model.PaymentStatusIds.Contains(0)
-                ? model.PaymentStatusIds.ToList()
-                : null;
-            var shippingStatusIds = model.ShippingStatusIds != null && !model.ShippingStatusIds.Contains(0)
-                ? model.ShippingStatusIds.ToList()
-                : null;
-
-            var filterByProductId = 0;
-            var product = await _productService.GetProductByIdAsync(model.ProductId);
-            if (product != null && (await _workContext.GetCurrentVendorAsync() == null || product.VendorId == (await _workContext.GetCurrentVendorAsync()).Id))
-                filterByProductId = model.ProductId;
+            ////a vendor should have access only to his products
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            var vendorId = vendor != null ? vendor.Id : model.VendorId;
 
             //load orders
-            var orders = await _orderService.SearchOrdersAsync(storeId: model.StoreId,
-                vendorId: model.VendorId,
-                productId: filterByProductId,
-                warehouseId: model.WarehouseId,
-                paymentMethodSystemName: model.PaymentMethodSystemName,
-                createdFromUtc: startDateValue,
-                createdToUtc: endDateValue,
-                osIds: orderStatusIds,
-                psIds: paymentStatusIds,
-                ssIds: shippingStatusIds,
-                //billingPhone: model.BillingPhone,
-                //billingEmail: model.BillingEmail,
-                //billingLastName: model.BillingLastName,
-                //billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes);
+            var orders = await _orderModelFactory.PrepareDownloadedOrdersAsync(model, vendorId);
 
             //ensure that we at least one order selected
             if (!orders.Any())
@@ -1153,29 +1117,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> PdfInvoiceSelected(string selectedIds)
+        public virtual async Task<IActionResult> PdfInvoiceSelected(string selectedIds, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
-
-            var orders = new List<Order>();
-            if (selectedIds != null)
-            {
-                var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x))
-                    .ToArray();
-                orders.AddRange(await _orderService.GetOrdersByIdsAsync(ids));
-            }
+            var searchModel = _orderModelFactory.ConvertToSearchModel(form["searchModel"].ToString());
 
             //a vendor should have access only to his products
-            var vendorId = 0;
-            if (await _workContext.GetCurrentVendorAsync() != null)
-            {
-                orders = await orders.WhereAwait(HasAccessToOrderAsync).ToListAsync();
-                vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
-            }
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            var vendorId = vendor != null ? vendor.Id : searchModel.VendorId;
 
+            var orders = await _orderModelFactory.PrepareDownloadedOrdersAsync(searchModel, vendorId, selectedIds);
             try
             {
                 byte[] bytes;

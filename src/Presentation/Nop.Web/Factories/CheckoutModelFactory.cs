@@ -144,7 +144,7 @@ namespace Nop.Web.Factories
                 AllowPickupInStore = _shippingSettings.AllowPickupInStore
             };
 
-            if (!model.AllowPickupInStore) 
+            if (!model.AllowPickupInStore)
                 return model;
 
             model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
@@ -297,7 +297,7 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the shipping address model
         /// </returns>
-        public virtual async Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart, 
+        public virtual async Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart,
             int? selectedCountryId = null, bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutShippingAddressModel
@@ -309,7 +309,9 @@ namespace Nop.Web.Factories
                 model.PickupPointsModel = await PrepareCheckoutPickupPointsModelAsync(cart);
 
             //existing addresses
-            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
+
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
                 .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is Country country &&
                     (//published
                     country.Published &&
@@ -346,6 +348,7 @@ namespace Nop.Web.Factories
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: await _workContext.GetCurrentCustomerAsync(),
                 overrideAttributesXml: overrideAttributesXml);
+            model.AvailableDeliverTimes = await _orderProcessingService.GetAvailableDeliverTimesAsync();
 
             return model;
         }
@@ -573,31 +576,22 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the checkout completed model
         /// </returns>
-        public virtual async Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order)
+        public virtual async Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order, TimeZoneInfo timeZoneInfo)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var now = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
-            var untilLunchTimeDeliveryDeadline = new DateTime(now.Year, now.Month, now.Day, 11, 0, 0);
-            var lunchTime = new DateTime(now.Year, now.Month, now.Day, 13, 0, 0);
-
             string message;
-            if(now < new DateTime(now.Year, now.Month, now.Day, 11, 30, 00))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var now = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, timeZoneInfo);
+            var schedulDate = _dateTimeHelper.ConvertToUserTime(order.ScheduleDate, TimeZoneInfo.Utc, timeZoneInfo);
+            if (schedulDate.Day == now.Day)
             {
-                message = "Your lunch will be delivered at 1 PM.";
-            }
-            else if(now < new DateTime(now.Year, now.Month, now.Day, 12, 30, 00))
-            {
-                message = "Your lunch will be delivered at 2 PM.";
-            }
-            else if(now < new DateTime(now.Year, now.Month, now.Day, 15, 00, 00))
-            {
-                message = "Your lunch will be delivered at 4 PM.";
+                message = $"Your lunch will be delivered at {schedulDate.Hour % 12} PM.";
             }
             else
             {
-                message = "Your lunch will be delivered TOMORROW at 1 PM.";
+                message = $"Your lunch will be delivered TOMORROW at {schedulDate.Hour % 12} PM.";
             }
 
             var model = new CheckoutCompletedModel
@@ -622,7 +616,7 @@ namespace Nop.Web.Factories
         public virtual Task<CheckoutProgressModel> PrepareCheckoutProgressModelAsync(CheckoutProgressStep step)
         {
             var model = new CheckoutProgressModel { CheckoutProgressStep = step };
-            
+
             return Task.FromResult(model);
         }
 

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
@@ -22,6 +24,26 @@ namespace Nop.Web.Areas.Admin.Factories
         /// The task result contains the order search model
         /// </returns>
         Task<OrderSearchModel> PrepareOrderSearchModelAsync(OrderSearchModel searchModel);
+
+        /// <summary>
+        /// Prepare order search model
+        /// </summary>
+        /// <param name="model">Order search model</param>
+        /// <param name="selectedIds">Selected order id's</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order search model
+        /// </returns>
+        Task<List<Order>> PrepareDownloadedOrdersAsync(OrderSearchModel model,int vendorId, string selectedIds = null);
+
+        /// <summary>
+        /// Convert json string to order search model
+        /// </summary>
+        /// <param name="jsonString">order search model json string</param>
+        /// <returns>
+        /// converted OrderSerachModel 
+        /// </returns>
+        OrderSearchModel ConvertToSearchModel(string jsonString);
 
         /// <summary>
         /// Prepare paged order list model

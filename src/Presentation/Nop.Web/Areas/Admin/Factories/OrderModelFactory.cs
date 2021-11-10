@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Newtonsoft.Json.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -874,6 +875,11 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
             //searchModel.BillingPhoneEnabled = _addressSettings.PhoneEnabled;
 
+            if (searchModel.IsLoggedInAsVendor)
+            {
+                var currentDay = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59);
+                searchModel.EndDate = !searchModel.EndDate.HasValue || (searchModel.EndDate.Value - currentDay).Days > 0 ? currentDay : searchModel.EndDate.Value;
+            }
             //prepare available order, payment and shipping statuses
             await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
             if (searchModel.AvailableOrderStatuses.Any())
@@ -958,8 +964,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
             var paymentStatusIds = (searchModel.PaymentStatusIds?.Contains(0) ?? true) ? null : searchModel.PaymentStatusIds.ToList();
             var shippingStatusIds = (searchModel.ShippingStatusIds?.Contains(0) ?? true) ? null : searchModel.ShippingStatusIds.ToList();
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var isLoggedAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            if (isLoggedAsVendor)
                 searchModel.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+
+            if (isLoggedAsVendor)
+            {
+                var currentDay = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59);
+                searchModel.EndDate = !searchModel.EndDate.HasValue || (searchModel.EndDate.Value - currentDay).Days > 0 ? currentDay : searchModel.EndDate.Value;
+            }
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
@@ -1007,12 +1020,12 @@ namespace Nop.Web.Areas.Admin.Factories
                         CustomerFullName = customerFullName,
                         CustomerId = order.CustomerId,
                         CustomOrderNumber = order.CustomOrderNumber,
-                        ShippingAddress = shippingAddress
+                        ShippingAddress = shippingAddress,
                     };
 
                     //convert dates to the user time
                     orderModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc);
-
+                    orderModel.ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(order.ScheduleDate, DateTimeKind.Utc);
                     //fill in additional values (not existing in the entity)
                     orderModel.StoreName = (await _storeService.GetStoreByIdAsync(order.StoreId))?.Name ?? "Deleted";
                     orderModel.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
@@ -1134,7 +1147,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.CustomOrderNumber = order.CustomOrderNumber;
                 model.CustomerIp = order.CustomerIp;
                 model.CustomerId = customer.Id;
-                model.ScheduleDate = order.ScheduleDate;
+                model.ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(order.ScheduleDate, DateTimeKind.Utc);
                 model.Rating = order.Rating;
                 model.RatingText = order.RatingText;
                 model.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
@@ -1926,6 +1939,112 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = new OrderIncompleteReportListModel().PrepareToGrid(searchModel, pagedList, () => pagedList);
             return model;
+        }
+
+        public async Task<List<Order>> PrepareDownloadedOrdersAsync(OrderSearchModel model, int vendorId, string selectedIds = null)
+        {
+            model.VendorId = vendorId;
+
+            var startDateValue = model.StartDate == null ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+
+            var endDateValue = model.EndDate == null ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+
+            var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
+                ? model.OrderStatusIds.ToList()
+                : null;
+            var paymentStatusIds = model.PaymentStatusIds != null && !model.PaymentStatusIds.Contains(0)
+                ? model.PaymentStatusIds.ToList()
+                : null;
+            var shippingStatusIds = model.ShippingStatusIds != null && !model.ShippingStatusIds.Contains(0)
+                ? model.ShippingStatusIds.ToList()
+                : null;
+
+            var filterByProductId = 0;
+            var product = await _productService.GetProductByIdAsync(model.ProductId);
+            if (product != null && (await _workContext.GetCurrentVendorAsync() == null || product.VendorId == (await _workContext.GetCurrentVendorAsync()).Id))
+                filterByProductId = model.ProductId;
+
+            //load orders
+            var orders = (await _orderService.SearchOrdersAsync(storeId: model.StoreId,
+                vendorId: model.VendorId,
+                productId: filterByProductId,
+                warehouseId: model.WarehouseId,
+                paymentMethodSystemName: model.PaymentMethodSystemName,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
+                //billingPhone: model.BillingPhone,
+                //billingEmail: model.BillingEmail,
+                //billingLastName: model.BillingLastName,
+                //billingCountryId: model.BillingCountryId,
+                orderNotes: model.OrderNotes)).ToList();
+
+            if (!string.IsNullOrEmpty(selectedIds))
+            {
+
+                var ids = selectedIds
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Convert.ToInt32(x))
+                    .ToArray();
+
+                orders = orders.Where(o => ids.Contains(o.Id)).ToList();
+            }
+
+            return orders;
+        }
+
+        public OrderSearchModel ConvertToSearchModel(string jsonString)
+        {
+            OrderSearchModel searchModel = new OrderSearchModel();
+            try
+            {
+                JObject jObject = JObject.Parse(jsonString);
+                searchModel.ProductId = jObject["ProductId"] == null ? 0 : int.Parse(jObject["ProductId"].ToString());
+                searchModel.EndDate = jObject["EndDate"] == null ? null : DateTime.Parse(jObject["EndDate"].ToString());
+                searchModel.StartDate = jObject["StartDate"] == null ? null : DateTime.Parse(jObject["StartDate"].ToString());
+                searchModel.VendorId = jObject["VendorId"] == null ? 0 : int.Parse(jObject["VendorId"].ToString());
+                searchModel.PaymentMethodSystemName = jObject["PaymentMethodSystemName"] == null ? null : jObject["PaymentMethodSystemName"].ToString();
+                searchModel.OrderNotes = jObject["OrderNotes"] == null ? null : jObject["OrderNotes"].ToString();
+                searchModel.GoDirectlyToCustomOrderNumber = jObject["GoDirectlyToCustomOrderNumber"] == null ? null : jObject["GoDirectlyToCustomOrderNumber"].ToString();
+
+                if (jObject["OrderStatusIds"] != null)
+                {
+                    List<int> orderStatusIds = new List<int>();
+                    var jArray = jObject["OrderStatusIds"];
+                    foreach (var item in jArray)
+                    {
+                        var id = int.Parse(item.ToString());
+                        if (id != 0)
+                        {
+                            orderStatusIds.Add(id);
+                        }
+                    }
+                    searchModel.OrderStatusIds = orderStatusIds;
+                }
+                if (jObject["ShippingStatusIds"] != null)
+                {
+                    List<int> shippingStatusIds = new List<int>();
+                    var jArray = jObject["ShippingStatusIds"];
+                    foreach (var item in jArray)
+                    {
+                        var id = int.Parse(item.ToString());
+                        if (id != 0)
+                        {
+                            shippingStatusIds.Add(id);
+                        }
+                    }
+                    searchModel.ShippingStatusIds = shippingStatusIds;
+                }
+            }
+            catch (Exception e)
+            {
+            }
+
+            return searchModel;
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
@@ -89,7 +90,7 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the checkout completed model
         /// </returns>
-        Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order);
+        Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order,TimeZoneInfo timeZoneInfo=null);
 
         /// <summary>
         /// Prepare checkout progress model

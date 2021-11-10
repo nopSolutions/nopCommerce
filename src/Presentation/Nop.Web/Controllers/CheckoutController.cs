@@ -16,6 +16,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -25,6 +26,7 @@ using Nop.Web.Extensions;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Models.Checkout;
+using TimeZoneConverter;
 
 namespace Nop.Web.Controllers
 {
@@ -57,6 +59,7 @@ namespace Nop.Web.Controllers
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion
 
@@ -85,7 +88,8 @@ namespace Nop.Web.Controllers
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            IDateTimeHelper dateTimeHelper)
         {
             _addressSettings = addressSettings;
             _customerSettings = customerSettings;
@@ -111,6 +115,7 @@ namespace Nop.Web.Controllers
             _paymentSettings = paymentSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -299,7 +304,8 @@ namespace Nop.Web.Controllers
             }
 
             //model
-            var model = await _checkoutModelFactory.PrepareCheckoutCompletedModelAsync(order);
+            var timezoneInfo = HttpContext.Session.Get<TimeZoneInfo>("timezoneInfo");
+            var model = await _checkoutModelFactory.PrepareCheckoutCompletedModelAsync(order, timezoneInfo);
             return View(model);
         }
 
@@ -1155,7 +1161,7 @@ namespace Nop.Web.Controllers
         #region Methods (one page checkout)
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task<JsonResult> OpcLoadStepAfterShippingAddress(IList<ShoppingCartItem> cart)
+        protected virtual async Task<JsonResult> OpcLoadStepAfterShippingAddress(IList<ShoppingCartItem> cart, DateTime? deliverTime = null)
         {
             var shippingMethodModel = await _checkoutModelFactory.PrepareShippingMethodModelAsync(cart, await _customerService.GetCustomerShippingAddressAsync(await _workContext.GetCurrentCustomerAsync()));
             if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
@@ -1168,7 +1174,7 @@ namespace Nop.Web.Controllers
                     (await _storeContext.GetCurrentStoreAsync()).Id);
 
                 //load next step
-                return await OpcLoadStepAfterShippingMethod(cart);
+                return await OpcLoadStepAfterShippingMethod(cart, deliverTime);
             }
 
             return Json(new
@@ -1183,7 +1189,7 @@ namespace Nop.Web.Controllers
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task<JsonResult> OpcLoadStepAfterShippingMethod(IList<ShoppingCartItem> cart)
+        protected virtual async Task<JsonResult> OpcLoadStepAfterShippingMethod(IList<ShoppingCartItem> cart, DateTime? deliveryTime = null)
         {
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
@@ -1216,7 +1222,7 @@ namespace Nop.Web.Controllers
                     if (!_paymentPluginManager.IsPluginActive(paymentMethodInst))
                         throw new Exception("Selected payment method can't be parsed");
 
-                    return await OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
+                    return await OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart, deliveryTime);
                 }
 
                 //customer have to choose a payment method
@@ -1248,14 +1254,15 @@ namespace Nop.Web.Controllers
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task<JsonResult> OpcLoadStepAfterPaymentMethod(IPaymentMethod paymentMethod, IList<ShoppingCartItem> cart)
+        protected virtual async Task<JsonResult> OpcLoadStepAfterPaymentMethod(IPaymentMethod paymentMethod, IList<ShoppingCartItem> cart, DateTime? deliveryTime = null)
         {
             if (paymentMethod.SkipPaymentInfo ||
                 (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection && _paymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods))
             {
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
-
+                var timezoneInfo = HttpContext.Session.Get<TimeZoneInfo>("timezoneInfo");
+                paymentInfo.ScheduleDate = _dateTimeHelper.ConvertToUtcTime((DateTime)deliveryTime, timezoneInfo).ToString("MM/dd/yyyy HH:mm:ss");
                 //session save
                 HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
 
@@ -1452,6 +1459,13 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
+
+                var timezone = HttpContext.Session.Get<TimeZoneInfo>("timezoneInfo");
+                var deliveryTime = DateTime.Parse(form["deliver_time"]);
+                if (!(await _orderProcessingService.GetAvailableDeliverTimesAsync()).Contains(deliveryTime))
+                {
+                    throw new Exception("Invalid delivery time");
+                }
                 if (_orderSettings.CheckoutDisabled)
                     throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
 
@@ -1486,7 +1500,6 @@ namespace Nop.Web.Controllers
                 }
 
                 int.TryParse(form["shipping_address_id"], out var shippingAddressId);
-
                 if (shippingAddressId > 0)
                 {
                     //existing address
@@ -1551,7 +1564,7 @@ namespace Nop.Web.Controllers
                     await _customerService.UpdateCustomerAsync(await _workContext.GetCurrentCustomerAsync());
                 }
 
-                return await OpcLoadStepAfterShippingAddress(cart);
+                return await OpcLoadStepAfterShippingAddress(cart, deliveryTime);
             }
             catch (Exception exc)
             {
