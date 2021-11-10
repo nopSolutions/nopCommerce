@@ -135,7 +135,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CountryModel> PrepareCountryModelAsync(CountryModel model, Country country, bool excludeProperties = false)
         {
-            Action<CountryLocalizedModel, int> localizedModelConfiguration = null;
+            Func<CountryLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (country != null)
             {
@@ -218,7 +218,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<StateProvinceModel> PrepareStateProvinceModelAsync(StateProvinceModel model,
             Country country, StateProvince state, bool excludeProperties = false)
         {
-            Action<StateProvinceLocalizedModel, int> localizedModelConfiguration = null;
+            Func<StateProvinceLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (state != null)
             {
