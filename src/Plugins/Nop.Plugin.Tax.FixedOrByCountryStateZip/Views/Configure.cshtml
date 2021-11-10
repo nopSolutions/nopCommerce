@@ -46,13 +46,17 @@
     $(document).ready(function() {
         $("#advanced-settings-mode").click(function() {
             checkAdvancedSettingsMode($(this).is(':checked'));
+
+            var postData = {
+                value: $(this).is(':checked')
+            };
+            addAntiForgeryToken(postData);
+
             $.ajax({
                 cache: false,
                 url: "@Url.Action("SaveMode", "FixedOrByCountryStateZip")",
                 type: "POST",
-                data: {
-                    value: $(this).is(':checked')
-                },
+                data: postData,
                 dataType: "json",
                 error: function (jqXHR, textStatus, errorThrown) {
                     $("#saveModeAlert").click();

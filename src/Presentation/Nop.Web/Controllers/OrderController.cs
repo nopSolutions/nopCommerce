@@ -19,6 +19,7 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class OrderController : BasePublicController
     {
         #region Fields
@@ -77,7 +78,6 @@ namespace Nop.Web.Controllers
 
         //My account / Orders / Cancel recurring order
         [HttpPost, ActionName("CustomerOrders")]
-        [AutoValidateAntiforgeryToken]
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
         public virtual async Task<IActionResult> CancelRecurringPayment(IFormCollection form)
         {
@@ -112,7 +112,6 @@ namespace Nop.Web.Controllers
 
         //My account / Orders / Retry last recurring order
         [HttpPost, ActionName("CustomerOrders")]
-        [AutoValidateAntiforgeryToken]
         [FormValueRequired(FormValueRequirement.StartsWith, "retryLastPayment")]
         public virtual async Task<IActionResult> RetryLastRecurringPayment(IFormCollection form)
         {
@@ -216,7 +215,7 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page / Complete payment
         [HttpPost, ActionName("Details")]
-        [AutoValidateAntiforgeryToken]
+        
         [FormValueRequired("repost-payment")]
         public virtual async Task<IActionResult> RePostPayment(int orderId)
         {

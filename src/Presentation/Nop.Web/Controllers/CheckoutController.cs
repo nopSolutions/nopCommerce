@@ -273,7 +273,6 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CheckoutBillingAddress");
         }
 
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> Completed(int? orderId)
         {
             //validation
@@ -336,7 +335,6 @@ namespace Nop.Web.Controllers
         /// <param name="model"></param>
         /// <param name="opc"></param>
         /// <returns></returns>
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> SaveEditAddress(CheckoutBillingAddressModel model, bool opc = false)
         {
             try
@@ -1339,7 +1337,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSaveBilling(CheckoutBillingAddressModel model)
         {
             try
@@ -1484,7 +1482,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSaveShipping(CheckoutShippingAddressModel model)
         {
             try
@@ -1602,7 +1600,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSaveShippingMethod(string shippingoption, IFormCollection form)
         {
             try
@@ -1687,7 +1685,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSavePaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
         {
             try
@@ -1759,7 +1757,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSavePaymentInfo(IFormCollection form)
         {
             try
@@ -1830,7 +1828,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcConfirmOrder()
         {
             try

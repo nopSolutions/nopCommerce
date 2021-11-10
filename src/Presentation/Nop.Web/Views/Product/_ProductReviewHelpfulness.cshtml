@@ -20,15 +20,17 @@
             });
         });
 
-        function setProductReviewHelpfulness@(Model.ProductReviewId)(wasHelpful){
+        function setProductReviewHelpfulness@(Model.ProductReviewId)(wasHelpful) {
+            var postData = {
+                "productReviewId": @(Model.ProductReviewId),
+                "washelpful": wasHelpful
+            };
+            addAntiForgeryToken(postData);
             $.ajax({
                 cache: false,
                 type: "POST",
                 url: "@(Url.RouteUrl("SetProductReviewHelpfulness"))",
-                data: {
-                    "productReviewId": @(Model.ProductReviewId),
-                    "washelpful": wasHelpful
-                },
+                data: postData,
                 success: function (data, textStatus, jqXHR) {
                     $("#helpfulness-vote-yes-@(Model.ProductReviewId)").html(data.TotalYes);
                     $("#helpfulness-vote-no-@(Model.ProductReviewId)").html(data.TotalNo);

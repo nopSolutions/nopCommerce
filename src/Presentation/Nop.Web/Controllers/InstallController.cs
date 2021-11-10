@@ -22,6 +22,7 @@ using Nop.Web.Models.Install;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class InstallController : Controller
     {
         #region Fields
@@ -130,7 +131,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> Index(InstallModel model)
         {
             if (DataSettingsManager.IsDatabaseInstalled())
@@ -309,7 +309,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual IActionResult RestartInstall()
         {
             if (DataSettingsManager.IsDatabaseInstalled())
