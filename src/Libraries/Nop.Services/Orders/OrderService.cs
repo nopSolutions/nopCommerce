@@ -40,6 +40,7 @@ namespace Nop.Services.Orders
         private readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
         public readonly IRepository<Vendor> _vendorRepository;
         private readonly IShipmentService _shipmentService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -56,7 +57,8 @@ namespace Nop.Services.Orders
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
             IRepository<Vendor> vendorRepositopry,
-            IShipmentService shipmentService)
+            IShipmentService shipmentService,
+            IWorkContext workContext)
         {
             _productService = productService;
             _addressRepository = addressRepository;
@@ -70,6 +72,7 @@ namespace Nop.Services.Orders
             _recurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
             _vendorRepository = vendorRepositopry;
             _shipmentService = shipmentService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -366,14 +369,14 @@ namespace Nop.Services.Orders
             {
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             }
-
-            if (vendorId > 0)
+            var isLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            if (isLoggedInAsVendor && vendorId > 0)
             {
                 var currentDay = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59);
-                var createdToDate = (createdToUtc.Value - currentDay).Days > 0 ? currentDay : createdToUtc.Value;
+                var createdToDate = createdToUtc == null || (createdToUtc.Value - currentDay).Days > 0 ? currentDay : createdToUtc.Value;
                 query = query.Where(o => o.ScheduleDate <= createdToDate);
             }
-            else if(createdToUtc.HasValue)
+            else if (createdToUtc.HasValue)
             {
                 query = query.Where(o => o.CreatedOnUtc <= createdToUtc.Value);
             }

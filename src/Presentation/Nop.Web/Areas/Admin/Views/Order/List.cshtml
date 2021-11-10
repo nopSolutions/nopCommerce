@@ -15,7 +15,7 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<form asp-controller="Order" asp-action="List" method="post">
+<form asp-controller="Order" asp-action="List" method="post" id="orders-form">
     <div class="content-header clearfix">
         <h1 class="float-left">
             @T("Admin.Orders")
@@ -308,7 +308,7 @@
                                     FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
                                     FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
                                     Filters = new List<FilterParameter>
-                                                                                                                                                                                            {
+                                                                                                                                                                                                                                                        {
                                                     new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
                                                     new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                                                     new FilterParameter(nameof(Model.OrderStatusIds)),
@@ -326,7 +326,7 @@
                                                 }
                                 };
                                 gridModel.ColumnCollection = new List<ColumnProperty>
-                                                                                                                                                                        {
+                                                                                                                                                                                                                                    {
                                 new ColumnProperty(nameof(OrderModel.Id))
                                 {
                                     IsMasterCheckBox = true,
@@ -606,10 +606,12 @@
 @*Print packaging slips selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="PdfInvoiceSelected" method="post" id="pdf-invoice-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+    <input type="hidden" id="pdfSearchModel" name="searchModel" value="" />
 </form>
 
 <script>
     $(document).ready(function () {
+        debugger;
         $('#pdf-invoice-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
@@ -619,6 +621,24 @@
             }
             else {
                 $('#pdf-invoice-selected-form #selectedIds').val(ids);
+
+                var searchModel = new Object();
+                var endDate = $('#EndDate').val();
+                if (endDate) {
+                    searchModel.EndDate = endDate;
+                }
+                var startDate = $('#StartDate').val();
+                if (startDate) {
+                    searchModel.StartDate = startDate;
+                }
+                searchModel.ProductId = $('#ProductId').val();
+                searchModel.VendorId = $('#VendorId').val();
+                searchModel.PaymentMethodSystemName = $('#PaymentMethodSystemName').val();
+                searchModel.OrderNotes = $('#OrderNotes').val();
+                searchModel.GoDirectlyToCustomOrderNumber = $('#GoDirectlyToCustomOrderNumber').val();
+                searchModel.OrderStatusIds = $('#OrderStatusIds').val();
+                searchModel.ShippingStatusIds = $('#ShippingStatusIds').val();
+                $('#pdf-invoice-selected-form #pdfSearchModel').val(JSON.stringify(searchModel));
                 $('#pdf-invoice-selected-form').submit();
                 updateTable('#orders-grid');
             }
