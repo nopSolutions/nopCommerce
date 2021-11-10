@@ -166,6 +166,17 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication
                     Seconds = 5 * 60
                 });
             }
+            
+            if (await _scheduleTaskService.GetTaskByTypeAsync(CompanyAddressPropogator.CompanyAddressPropogatorTask) == null)
+            {
+                await _scheduleTaskService.InsertTaskAsync(new Core.Domain.Tasks.ScheduleTask
+                {
+                    Enabled = false,
+                    Name = CompanyAddressPropogator.CompanyAddressPropogatorTaskName,
+                    Type = CompanyAddressPropogator.CompanyAddressPropogatorTask,
+                    Seconds = 60 * 60
+                });
+            }
 
             await base.InstallAsync();
         }
