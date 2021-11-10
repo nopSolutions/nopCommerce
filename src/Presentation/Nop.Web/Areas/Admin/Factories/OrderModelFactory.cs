@@ -964,10 +964,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
             var paymentStatusIds = (searchModel.PaymentStatusIds?.Contains(0) ?? true) ? null : searchModel.PaymentStatusIds.ToList();
             var shippingStatusIds = (searchModel.ShippingStatusIds?.Contains(0) ?? true) ? null : searchModel.ShippingStatusIds.ToList();
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var isLoggedAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+            if (isLoggedAsVendor)
                 searchModel.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
 
-            if (searchModel.VendorId > 0)
+            if (isLoggedAsVendor)
             {
                 var currentDay = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59);
                 searchModel.EndDate = !searchModel.EndDate.HasValue || (searchModel.EndDate.Value - currentDay).Days > 0 ? currentDay : searchModel.EndDate.Value;
@@ -2031,7 +2032,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     foreach (var item in jArray)
                     {
                         var id = int.Parse(item.ToString());
-                        if (id!=0)
+                        if (id != 0)
                         {
                             shippingStatusIds.Add(id);
                         }
