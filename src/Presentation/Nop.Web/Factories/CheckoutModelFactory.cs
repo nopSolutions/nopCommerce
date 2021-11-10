@@ -591,7 +591,7 @@ namespace Nop.Web.Factories
             {
                 message = "Your lunch will be delivered at 2 PM.";
             }
-            else if(now < new DateTime(now.Year, now.Month, now.Day, 15, 30, 00))
+            else if(now < new DateTime(now.Year, now.Month, now.Day, 15, 00, 00))
             {
                 message = "Your lunch will be delivered at 4 PM.";
             }
