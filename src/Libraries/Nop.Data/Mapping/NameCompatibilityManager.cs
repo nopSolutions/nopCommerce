@@ -14,11 +14,11 @@ namespace Nop.Data.Mapping
     {
         #region Fields
 
-        private static readonly Dictionary<Type, string> _tableNames = new Dictionary<Type, string>();
-        private static readonly Dictionary<(Type, string), string> _columnName =new Dictionary<(Type, string), string>();
+        private static readonly Dictionary<Type, string> _tableNames = new();
+        private static readonly Dictionary<(Type, string), string> _columnName =new();
         private static readonly IList<Type> _loadedFor=new List<Type>();
         private static bool _isInitialized;
-        private static readonly ReaderWriterLockSlim _locker = new ReaderWriterLockSlim();
+        private static readonly ReaderWriterLockSlim _locker = new();
 
         #endregion
 

@@ -316,7 +316,7 @@ namespace Nop.Plugin.Misc.Sendinblue
         /// <summary>
         /// Gets a key of cache synchronization
         /// </summary>
-        public static CacheKey SyncKeyCache => new CacheKey("PLUGINS_MISC_SENDINBLUE_SYNCINFO");
+        public static CacheKey SyncKeyCache => new("PLUGINS_MISC_SENDINBLUE_SYNCINFO");
 
         /// <summary>
         /// Gets a key of notification message

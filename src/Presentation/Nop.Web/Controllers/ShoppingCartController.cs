@@ -259,7 +259,7 @@ namespace Nop.Web.Controllers
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            Guid.TryParse(form[controlId], out var downloadGuid);
+                            _ = Guid.TryParse(form[controlId], out var downloadGuid);
                             var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                             if (download != null)
                             {
@@ -735,7 +735,7 @@ namespace Nop.Web.Controllers
             foreach (var formKey in form.Keys)
                 if (formKey.Equals($"addtocart_{productId}.UpdatedShoppingCartItemId", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    int.TryParse(form[formKey], out updatecartitemid);
+                    _ = int.TryParse(form[formKey], out updatecartitemid);
                     break;
                 }
 

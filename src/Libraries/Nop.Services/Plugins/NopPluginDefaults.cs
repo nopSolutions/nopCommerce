@@ -66,7 +66,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Gets supported extensions of logo file
         /// </summary>
-        public static List<string> SupportedLogoImageExtensions => new List<string> { "jpg", "png", "gif" };
+        public static List<string> SupportedLogoImageExtensions => new() { "jpg", "png", "gif" };
 
         /// <summary>
         /// Gets the path to temp directory with uploads
@@ -94,7 +94,7 @@ namespace Nop.Services.Plugins
         /// <remarks>
         /// {0} : customer identifier
         /// </remarks>
-        public static CacheKey AdminNavigationPluginsCacheKey => new CacheKey("Nop.plugins.adminnavigation.{0}", AdminNavigationPluginsPrefix);
+        public static CacheKey AdminNavigationPluginsCacheKey => new("Nop.plugins.adminnavigation.{0}", AdminNavigationPluginsPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache

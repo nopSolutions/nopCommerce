@@ -27,7 +27,7 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Gets a default list of slugs (sename) reserved for some other needs
         /// </summary>
-        public static List<string> ReservedUrlRecordSlugs => new List<string>
+        public static List<string> ReservedUrlRecordSlugs => new()
         {
             //routes that redirected customers to the specific actions
             "admin",
@@ -82,7 +82,7 @@ namespace Nop.Services.Seo
         /// {1} : entity name
         /// {2} : language ID
         /// </remarks>
-        public static CacheKey UrlRecordCacheKey => new CacheKey("Nop.urlrecord.{0}-{1}-{2}");
+        public static CacheKey UrlRecordCacheKey => new("Nop.urlrecord.{0}-{1}-{2}");
 
         /// <summary>
         /// Gets a key for caching
@@ -90,7 +90,7 @@ namespace Nop.Services.Seo
         /// <remarks>
         /// {0} : slug
         /// </remarks>
-        public static CacheKey UrlRecordBySlugCacheKey => new CacheKey("Nop.urlrecord.byslug.{0}");
+        public static CacheKey UrlRecordBySlugCacheKey => new("Nop.urlrecord.byslug.{0}");
 
         #endregion
     }

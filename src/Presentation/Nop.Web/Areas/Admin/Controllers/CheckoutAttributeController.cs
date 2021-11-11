@@ -123,7 +123,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
-                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
+                    if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
                         await _storeMappingService.InsertStoreMappingAsync(checkoutAttribute, store.Id);
                 }
                 else
@@ -358,7 +358,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             var checkoutAttributes = await _checkoutAttributeService.GetCheckoutAttributeByIdsAsync(selectedIds.ToArray());

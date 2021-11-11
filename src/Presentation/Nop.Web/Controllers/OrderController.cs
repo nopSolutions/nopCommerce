@@ -191,8 +191,10 @@ namespace Nop.Web.Controllers
             if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
-            var orders = new List<Order>();
-            orders.Add(order);
+            var orders = new List<Order>
+            {
+                order
+            };
             byte[] bytes;
             await using (var stream = new MemoryStream())
             {

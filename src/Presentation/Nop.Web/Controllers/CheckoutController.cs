@@ -146,7 +146,7 @@ namespace Nop.Web.Controllers
 
             var pickupInStoreParameter = form["PickupInStore"].FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(pickupInStoreParameter))
-                bool.TryParse(pickupInStoreParameter, out pickupInStore);
+                _ = bool.TryParse(pickupInStoreParameter, out pickupInStore);
 
             return pickupInStore;
         }
@@ -1363,7 +1363,7 @@ namespace Nop.Web.Controllers
 
                 var form = model.Form;
 
-                int.TryParse(form["billing_address_id"], out var billingAddressId);
+                _ = int.TryParse(form["billing_address_id"], out var billingAddressId);
 
                 if (billingAddressId > 0)
                 {
@@ -1527,7 +1527,7 @@ namespace Nop.Web.Controllers
                     await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
                 }
 
-                int.TryParse(form["shipping_address_id"], out var shippingAddressId);
+                _ = int.TryParse(form["shipping_address_id"], out var shippingAddressId);
 
                 if (shippingAddressId > 0)
                 {

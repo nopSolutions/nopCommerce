@@ -43,7 +43,7 @@ namespace Nop.Services.Localization
         /// {0} : store ID
         /// {1} : show hidden records?
         /// </remarks>
-        public static CacheKey LanguagesAllCacheKey => new CacheKey("Nop.language.all.{0}-{1}", LanguagesByStorePrefix, NopEntityCacheDefaults<Language>.AllPrefix);
+        public static CacheKey LanguagesAllCacheKey => new("Nop.language.all.{0}-{1}", LanguagesByStorePrefix, NopEntityCacheDefaults<Language>.AllPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -63,7 +63,7 @@ namespace Nop.Services.Localization
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public static CacheKey LocaleStringResourcesAllPublicCacheKey => new CacheKey("Nop.localestringresource.bylanguage.public.{0}", NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+        public static CacheKey LocaleStringResourcesAllPublicCacheKey => new("Nop.localestringresource.bylanguage.public.{0}", NopEntityCacheDefaults<LocaleStringResource>.Prefix);
 
         /// <summary>
         /// Gets a key for caching
@@ -71,7 +71,7 @@ namespace Nop.Services.Localization
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public static CacheKey LocaleStringResourcesAllAdminCacheKey => new CacheKey("Nop.localestringresource.bylanguage.admin.{0}", NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+        public static CacheKey LocaleStringResourcesAllAdminCacheKey => new("Nop.localestringresource.bylanguage.admin.{0}", NopEntityCacheDefaults<LocaleStringResource>.Prefix);
 
         /// <summary>
         /// Gets a key for caching
@@ -79,7 +79,7 @@ namespace Nop.Services.Localization
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public static CacheKey LocaleStringResourcesAllCacheKey => new CacheKey("Nop.localestringresource.bylanguage.{0}", NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+        public static CacheKey LocaleStringResourcesAllCacheKey => new("Nop.localestringresource.bylanguage.{0}", NopEntityCacheDefaults<LocaleStringResource>.Prefix);
 
         /// <summary>
         /// Gets a key for caching
@@ -88,7 +88,7 @@ namespace Nop.Services.Localization
         /// {0} : language ID
         /// {1} : resource key
         /// </remarks>
-        public static CacheKey LocaleStringResourcesByNameCacheKey => new CacheKey("Nop.localestringresource.byname.{0}-{1}", LocaleStringResourcesByNamePrefix, NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+        public static CacheKey LocaleStringResourcesByNameCacheKey => new("Nop.localestringresource.byname.{0}-{1}", LocaleStringResourcesByNamePrefix, NopEntityCacheDefaults<LocaleStringResource>.Prefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -111,7 +111,7 @@ namespace Nop.Services.Localization
         /// {2} : locale key group
         /// {3} : locale key
         /// </remarks>
-        public static CacheKey LocalizedPropertyCacheKey => new CacheKey("Nop.localizedproperty.value.{0}-{1}-{2}-{3}");
+        public static CacheKey LocalizedPropertyCacheKey => new("Nop.localizedproperty.value.{0}-{1}-{2}-{3}");
 
         #endregion
 

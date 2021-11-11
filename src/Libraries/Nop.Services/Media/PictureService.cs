@@ -347,8 +347,7 @@ namespace Nop.Services.Media
         protected virtual string GetMimeTypeFromFileName(string fileName)
         {
             var provider = new FileExtensionContentTypeProvider();
-            string contentType;
-            if (!provider.TryGetContentType(fileName, out contentType))
+            if (!provider.TryGetContentType(fileName, out var contentType))
             {
                 contentType = "application/octet-stream";
             }

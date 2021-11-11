@@ -952,13 +952,13 @@ namespace Nop.Web.Areas.Admin.Factories
             for (var i = 0; i < productTags.Count; i++)
             {
                 var tag = productTags[i];
-                productTagsSb.Append("'");
+                productTagsSb.Append('\'');
                 productTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
-                productTagsSb.Append("'");
+                productTagsSb.Append('\'');
                 if (i != productTags.Count - 1)
-                    productTagsSb.Append(",");
+                    productTagsSb.Append(',');
             }
-            productTagsSb.Append("]");
+            productTagsSb.Append(']');
 
             model.InitialProductTags = productTagsSb.ToString();
 

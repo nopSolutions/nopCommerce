@@ -25,7 +25,7 @@ namespace Nop.Services.Vendors
         /// <remarks>
         /// {0} : vendor attribute ID
         /// </remarks>
-        public static CacheKey VendorAttributeValuesByAttributeCacheKey => new CacheKey("Nop.vendorattributevalue.byattribute.{0}");
+        public static CacheKey VendorAttributeValuesByAttributeCacheKey => new("Nop.vendorattributevalue.byattribute.{0}");
 
         #endregion
     }

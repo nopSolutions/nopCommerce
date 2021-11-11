@@ -1000,7 +1000,7 @@ namespace Nop.Web.Factories
                                 if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
                                 {
                                     var downloadGuidStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id).FirstOrDefault();
-                                    Guid.TryParse(downloadGuidStr, out var downloadGuid);
+                                    _ = Guid.TryParse(downloadGuidStr, out var downloadGuid);
                                     var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                                     if (download != null)
                                         attributeModel.DefaultValue = download.DownloadGuid.ToString();
@@ -1133,7 +1133,7 @@ namespace Nop.Web.Factories
 
                 //all pictures
                 var pictureModels = new List<PictureModel>();
-                for (var i = 0; i < pictures.Count(); i++ )
+                for (var i = 0; i < pictures.Count; i++ )
                 {
                     var picture = pictures[i];
 

@@ -89,7 +89,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
-                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
+                    if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
                         await _storeMappingService.InsertStoreMappingAsync(currency, store.Id);
                 }
                 else

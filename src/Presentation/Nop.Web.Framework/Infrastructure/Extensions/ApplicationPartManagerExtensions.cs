@@ -24,8 +24,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
         private static readonly INopFileProvider _fileProvider;
         private static readonly List<string> _baseAppLibraries;
-        private static readonly Dictionary<string, PluginLoadedAssemblyInfo> _loadedAssemblies = new Dictionary<string, PluginLoadedAssemblyInfo>();
-        private static readonly ReaderWriterLockSlim _locker = new ReaderWriterLockSlim();
+        private static readonly Dictionary<string, PluginLoadedAssemblyInfo> _loadedAssemblies = new();
+        private static readonly ReaderWriterLockSlim _locker = new();
 
         #endregion
 

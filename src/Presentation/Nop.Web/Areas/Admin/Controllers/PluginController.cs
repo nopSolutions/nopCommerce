@@ -418,7 +418,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!pluginDescriptor.Installed)
                     return View(model);
 
-                var pluginIsActive = false;
+                bool pluginIsActive;
                 switch (pluginInstance)
                 {
                     case IPaymentMethod paymentMethod:
