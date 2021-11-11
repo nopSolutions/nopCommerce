@@ -140,5 +140,10 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets the request delay in the shipping calculation popup (on product page/shopping cart page) when user enter the shipping address.
         /// </summary>
         public int RequestDelay { get; set; }
+
+        /// <summary>
+        /// Sort Shipping Methods By 
+        /// </summary>
+        public SortShippingMethodsBy SortShippingMethodsBy { get; set; }
     }
 }

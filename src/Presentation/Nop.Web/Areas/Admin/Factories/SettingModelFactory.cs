@@ -990,6 +990,9 @@ namespace Nop.Web.Areas.Admin.Factories
             model.ActiveStoreScopeConfiguration = storeId;
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
 
+            //5204
+            model.SortShippingMethodsByValues = await shippingSettings.SortShippingMethodsBy.ToSelectListAsync();
+            
             //fill in overridden values
             if (storeId > 0)
             {
@@ -1012,6 +1015,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.BypassShippingMethodSelectionIfOnlyOne, storeId);
                 model.ConsiderAssociatedProductsDimensions_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.ConsiderAssociatedProductsDimensions, storeId);
                 model.ShippingOriginAddress_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.ShippingOriginAddressId, storeId);
+                model.SortShippingMethodsBy_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.SortShippingMethodsBy, storeId);
             }
 
             //prepare shipping origin address
@@ -1042,7 +1046,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model ??= taxSettings.ToSettingsModel<TaxSettingsModel>();
             model.TaxBasedOnValues = await taxSettings.TaxBasedOn.ToSelectListAsync();
             model.TaxDisplayTypeValues = await taxSettings.TaxDisplayType.ToSelectListAsync();
-
+            
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
 

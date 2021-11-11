@@ -103,7 +103,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
                 //#5551
                 ["Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering"] = "Enable specification attribute filtering",
-                ["Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint"] = "Check to enable the specification attribute filtering on catalog pages."
+                ["Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint"] = "Check to enable the specification attribute filtering on catalog pages.",
+
+                //#5204
+                ["Admin.Configuration.Settings.Shipping.SortShippingMethodsBy"] = "Sort shipping methods by",
+                ["Admin.Configuration.Settings.Shipping.SortShippingMethodsBy.Hint"] = "Select the field to sort the delivery by."
 
             }, languageId).Wait();
 

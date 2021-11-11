@@ -1427,6 +1427,13 @@ namespace Nop.Web.Factories
                         });
                     }
 
+                    //sorted shipping methods
+                    if (model.ShippingOptions.Count > 1 && _shippingSettings.SortShippingMethodsBy == SortShippingMethodsBy.ShippingСost)
+                    {
+                        var sortedShippingMethods = model.ShippingOptions.OrderBy(x => x.Price).ToList();
+                        model.ShippingOptions = sortedShippingMethods;
+                    }
+
                     //if no option has been selected, let's do it for the first one
                     if (!model.ShippingOptions.Any(so => so.Selected))
                         model.ShippingOptions.First().Selected = true;
