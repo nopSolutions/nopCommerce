@@ -3381,20 +3381,20 @@ namespace Nop.Services.Orders
             }
             else
             {
-                list.Add(firstDeliverDate);
-                list.Add(secondDeliveryDate);
-                list.Add(thirdDeliveryDate);
                 if (now <= firstOrederLastdate)
                 {
+                    list.Add(firstDeliverDate);
+                    list.Add(secondDeliveryDate);
+                    list.Add(thirdDeliveryDate);
                 }
                 else if (now <= secondOrederLastdate)
                 {
-                    list.RemoveAt(0);
+                    list.Add(secondDeliveryDate);
+                    list.Add(thirdDeliveryDate);
                 }
                 else
                 {
-                    list.RemoveAt(0);
-                    list.RemoveAt(1);
+                    list.Add(thirdDeliveryDate);
                 }
             }
             return list;
