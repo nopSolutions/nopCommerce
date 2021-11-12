@@ -6,6 +6,7 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Configuration;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450
 {
@@ -43,6 +44,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             {
                 catalogSettings.EnableSpecificationAttributeFiltering = true;
                 settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            //#5204
+            var shippingSettings = settingService.LoadSettingAsync<ShippingSettings>().Result;
+
+            if (!settingService.SettingExistsAsync(shippingSettings, settings => settings.ShippingSorting).Result)
+            {
+                shippingSettings.ShippingSorting = ShippingSortingEnum.Position;
+                settingService.SaveSettingAsync(shippingSettings).Wait();
             }
 
         }

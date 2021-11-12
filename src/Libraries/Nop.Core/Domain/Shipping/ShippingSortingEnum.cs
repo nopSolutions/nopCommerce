@@ -6,7 +6,19 @@ using System.Threading.Tasks;
 
 namespace Nop.Core.Domain.Shipping
 {
-    class ShippingSortingEnum
+    /// <summary>
+    /// Represents the shipping methods' sorting
+    /// </summary>
+    public enum ShippingSortingEnum
     {
+        /// <summary>
+        /// Position
+        /// </summary>
+        Position = 1,
+
+        /// <summary>
+        /// Shipping Cost
+        /// </summary>
+        ShippingСost = 2
     }
 }
