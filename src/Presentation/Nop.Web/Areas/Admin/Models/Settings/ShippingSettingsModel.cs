@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ConsiderAssociatedProductsDimensions { get; set; }
         public bool ConsiderAssociatedProductsDimensions_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.SortShippingMethodsBy")]
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ShippingSorting")]
         public int ShippingSorting { get; set; }
         public bool ShippingSorting_OverrideForStore { get; set; }
         public SelectList SortShippingValues { get; set; }
