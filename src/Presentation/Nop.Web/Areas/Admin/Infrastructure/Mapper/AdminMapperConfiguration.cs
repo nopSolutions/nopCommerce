@@ -1519,7 +1519,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.ReturnValidOptionsIfThereAreAny, options => options.Ignore())
                 .ForMember(settings => settings.ShipSeparatelyOneItemEach, options => options.Ignore())
                 .ForMember(settings => settings.UseCubeRootMethod, options => options.Ignore())
-                .ForMember(settings => settings.RequestDelay, options => options.Ignore());
+                .ForMember(settings => settings.RequestDelay, options => options.Ignore())
+                .ForMember(settings => settings.ShippingSorting, options => options.Ignore());
         }
 
         /// <summary>
