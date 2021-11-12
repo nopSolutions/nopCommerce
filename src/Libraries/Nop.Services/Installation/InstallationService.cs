@@ -3341,6 +3341,7 @@ namespace Nop.Services.Installation
                 ConsiderAssociatedProductsDimensions = true,
                 ShipSeparatelyOneItemEach = true,
                 RequestDelay = 300,
+                ShippingSorting = ShippingSortingEnum.Position,
             });
 
             await settingService.SaveSettingAsync(new PaymentSettings

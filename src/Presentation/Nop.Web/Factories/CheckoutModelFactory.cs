@@ -398,8 +398,16 @@ namespace Nop.Web.Factories
                     var (rateBase, _) = await _taxService.GetShippingPriceAsync(shippingTotal, customer);
                     var rate = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rateBase, await _workContext.GetWorkingCurrencyAsync());
                     soModel.Fee = await _priceFormatter.FormatShippingPriceAsync(rate, true);
+                    soModel.Price = rate;
 
                     model.ShippingMethods.Add(soModel);
+                }
+
+                //sort shipping methods
+                if (model.ShippingMethods.Count > 1 && _shippingSettings.ShippingSorting == ShippingSortingEnum.ShippingСost)
+                {
+                    var sortedShippingMethods = model.ShippingMethods.OrderBy(x => x.Price).ToList();
+                    model.ShippingMethods = sortedShippingMethods;
                 }
 
                 //find a selected (previously) shipping method
