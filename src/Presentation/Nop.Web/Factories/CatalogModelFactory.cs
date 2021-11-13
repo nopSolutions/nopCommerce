@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -755,7 +755,7 @@ namespace Nop.Web.Factories
             var filterableOptions = await SpecificationAttributeService
                 .GetFiltrableSpecificationAttributeOptionsByCategoryIdAsync(category.Id);
 
-            if (_catalogSettings.EnableSpecificationAttributeFiltering)
+            if (CatalogSettings.EnableSpecificationAttributeFiltering)
             {
                 model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
             }
@@ -1028,7 +1028,7 @@ namespace Nop.Web.Factories
             var filterableOptions = await SpecificationAttributeService
                 .GetFiltrableSpecificationAttributeOptionsByManufacturerIdAsync(manufacturer.Id);
 
-            if (_catalogSettings.EnableSpecificationAttributeFiltering)
+            if (CatalogSettings.EnableSpecificationAttributeFiltering)
             {
                 model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
             }
