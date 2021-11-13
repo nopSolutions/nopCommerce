@@ -152,7 +152,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<TopicModel> PrepareTopicModelAsync(TopicModel model, Topic topic, bool excludeProperties = false)
         {
-            Action<TopicLocalizedModel, int> localizedModelConfiguration = null;
+            Func<TopicLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (topic != null)
             {

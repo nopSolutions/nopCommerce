@@ -152,7 +152,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ProductAttributeModel> PrepareProductAttributeModelAsync(ProductAttributeModel model,
             ProductAttribute productAttribute, bool excludeProperties = false)
         {
-            Action<ProductAttributeLocalizedModel, int> localizedModelConfiguration = null;
+            Func<ProductAttributeLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (productAttribute != null)
             {
@@ -236,7 +236,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productAttribute == null)
                 throw new ArgumentNullException(nameof(productAttribute));
 
-            Action<PredefinedProductAttributeValueLocalizedModel, int> localizedModelConfiguration = null;
+            Func<PredefinedProductAttributeValueLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (productAttributeValue != null)
             {

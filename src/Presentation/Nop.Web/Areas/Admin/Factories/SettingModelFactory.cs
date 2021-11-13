@@ -1566,7 +1566,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<GdprConsentModel> PrepareGdprConsentModelAsync(GdprConsentModel model, GdprConsent gdprConsent, bool excludeProperties = false)
         {
-            Action<GdprConsentLocalizedModel, int> localizedModelConfiguration = null;
+            Func<GdprConsentLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             //fill in model values from the entity
             if (gdprConsent != null)

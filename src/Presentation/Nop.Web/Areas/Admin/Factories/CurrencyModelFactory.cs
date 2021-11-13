@@ -182,7 +182,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CurrencyModel> PrepareCurrencyModelAsync(CurrencyModel model, Currency currency, bool excludeProperties = false)
         {
-            Action<CurrencyLocalizedModel, int> localizedModelConfiguration = null;
+            Func<CurrencyLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (currency != null)
             {

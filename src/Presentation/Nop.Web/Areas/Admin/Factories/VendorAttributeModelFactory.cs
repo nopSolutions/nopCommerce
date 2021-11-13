@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<VendorAttributeModel> PrepareVendorAttributeModelAsync(VendorAttributeModel model,
             VendorAttribute vendorAttribute, bool excludeProperties = false)
         {
-            Action<VendorAttributeLocalizedModel, int> localizedModelConfiguration = null;
+            Func<VendorAttributeLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (vendorAttribute != null)
             {
@@ -204,7 +204,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendorAttribute == null)
                 throw new ArgumentNullException(nameof(vendorAttribute));
 
-            Action<VendorAttributeValueLocalizedModel, int> localizedModelConfiguration = null;
+            Func<VendorAttributeValueLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (vendorAttributeValue != null)
             {

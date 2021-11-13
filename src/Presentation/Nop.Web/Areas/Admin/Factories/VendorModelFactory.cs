@@ -294,7 +294,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<VendorModel> PrepareVendorModelAsync(VendorModel model, Vendor vendor, bool excludeProperties = false)
         {
-            Action<VendorLocalizedModel, int> localizedModelConfiguration = null;
+            Func<VendorLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (vendor != null)
             {

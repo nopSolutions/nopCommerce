@@ -195,7 +195,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ManufacturerModel> PrepareManufacturerModelAsync(ManufacturerModel model,
             Manufacturer manufacturer, bool excludeProperties = false)
         {
-            Action<ManufacturerLocalizedModel, int> localizedModelConfiguration = null;
+            Func<ManufacturerLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (manufacturer != null)
             {

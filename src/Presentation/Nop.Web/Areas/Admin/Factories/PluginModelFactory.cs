@@ -233,7 +233,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<PluginModel> PreparePluginModelAsync(PluginModel model, PluginDescriptor pluginDescriptor, bool excludeProperties = false)
         {
-            Action<PluginLocalizedModel, int> localizedModelConfiguration = null;
+            Func<PluginLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (pluginDescriptor != null)
             {

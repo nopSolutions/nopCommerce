@@ -26,6 +26,7 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Common;
 using Nop.Services.Security;
 using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.ModelBinding.Binders;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
@@ -292,7 +293,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //set some options
             mvcBuilder.AddMvcOptions(options =>
             {
-                //add custom display metadata provider
+                //we'll use this until https://github.com/dotnet/aspnetcore/issues/6566 is solved 
+                options.ModelBinderProviders.Insert(0, new InvariantNumberModelBinderProvider());
+                //add custom display metadata provider 
                 options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider());
 
                 //in .NET model binding for a non-nullable property may fail with an error message "The value '' is invalid"

@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -34,6 +35,16 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 commonSettings.ClearLogOlderThanDays = 0;
                 settingService.SaveSettingAsync(commonSettings).Wait();
             }
+
+            //#5551
+            var catalogSettings = settingService.LoadSettingAsync<CatalogSettings>().Result;
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering).Result)
+            {
+                catalogSettings.EnableSpecificationAttributeFiltering = true;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
         }
 
         public override void Down()

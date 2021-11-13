@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<CustomerAttributeModel> PrepareCustomerAttributeModelAsync(CustomerAttributeModel model,
             CustomerAttribute customerAttribute, bool excludeProperties = false)
         {
-            Action<CustomerAttributeLocalizedModel, int> localizedModelConfiguration = null;
+            Func<CustomerAttributeLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (customerAttribute != null)
             {
@@ -205,7 +205,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerAttribute == null)
                 throw new ArgumentNullException(nameof(customerAttribute));
 
-            Action<CustomerAttributeValueLocalizedModel, int> localizedModelConfiguration = null;
+            Func<CustomerAttributeValueLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (customerAttributeValue != null)
             {
