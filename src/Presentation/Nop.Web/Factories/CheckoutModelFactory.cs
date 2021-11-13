@@ -11,6 +11,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Companies;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -23,6 +24,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Models.Checkout;
 using Nop.Web.Models.Common;
+using TimeZoneConverter;
 
 namespace Nop.Web.Factories
 {
@@ -59,6 +61,7 @@ namespace Nop.Web.Factories
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ICompanyService _companyService;
 
         #endregion
 
@@ -92,7 +95,8 @@ namespace Nop.Web.Factories
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            ICompanyService companyService)
         {
             _addressSettings = addressSettings;
             _commonSettings = commonSettings;
@@ -123,6 +127,7 @@ namespace Nop.Web.Factories
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
             _dateTimeHelper = dateTimeHelper;
+            _companyService = companyService;
         }
 
         #endregion
@@ -576,13 +581,15 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the checkout completed model
         /// </returns>
-        public virtual async Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order, TimeZoneInfo timeZoneInfo)
+        public virtual async Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
             string message;
             var customer = await _workContext.GetCurrentCustomerAsync();
+            var company = await _companyService.GetCompanyByCustomerIdAsync(customer.Id);
+            var timeZoneInfo = TZConvert.GetTimeZoneInfo(company.TimeZone);
             var now = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, timeZoneInfo);
             var schedulDate = _dateTimeHelper.ConvertToUserTime(order.ScheduleDate, TimeZoneInfo.Utc, timeZoneInfo);
             if (schedulDate.Day == now.Day)

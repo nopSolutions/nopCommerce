@@ -943,9 +943,6 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> CheckoutAttributeChange(IFormCollection form, bool isEditable)
         {
-            var timezone = form["timezone"].ToString();
-            var timezoneInfo = TZConvert.GetTimeZoneInfo(timezone);
-            HttpContext.Session.Set("timezoneInfo", timezoneInfo);
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
 
             //save selected attributes
