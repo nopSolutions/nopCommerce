@@ -35,6 +35,7 @@ using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
+using TimeZoneConverter;
 
 namespace Nop.Services.Orders
 {
@@ -3350,7 +3351,9 @@ namespace Nop.Services.Orders
 
         public virtual async Task<List<DateTime>> GetAvailableDeliverTimesAsync()
         {
-            var timezoneInfo = _httpContextAccessor.HttpContext.Session.Get<TimeZoneInfo>("timezoneInfo");
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var company = await _companyService.GetCompanyByCustomerIdAsync(currentCustomer.Id);
+            var timezoneInfo = TZConvert.GetTimeZoneInfo(company.TimeZone);
             var list = new List<DateTime>();
             var value = _orderSettings.ScheduleDate.Split(',');
             var scheduleDate1 = value[0];

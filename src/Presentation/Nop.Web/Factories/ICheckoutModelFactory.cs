@@ -90,7 +90,7 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the checkout completed model
         /// </returns>
-        Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order,TimeZoneInfo timeZoneInfo=null);
+        Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order);
 
         /// <summary>
         /// Prepare checkout progress model

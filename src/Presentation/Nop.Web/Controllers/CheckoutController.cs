@@ -14,6 +14,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Http.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Companies;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -60,6 +61,7 @@ namespace Nop.Web.Controllers
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ICompanyService _companyService;
 
         #endregion
 
@@ -89,7 +91,8 @@ namespace Nop.Web.Controllers
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            ICompanyService companyService)
         {
             _addressSettings = addressSettings;
             _customerSettings = customerSettings;
@@ -116,6 +119,7 @@ namespace Nop.Web.Controllers
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
             _dateTimeHelper = dateTimeHelper;
+            _companyService = companyService;
         }
 
         #endregion
@@ -304,8 +308,7 @@ namespace Nop.Web.Controllers
             }
 
             //model
-            var timezoneInfo = HttpContext.Session.Get<TimeZoneInfo>("timezoneInfo");
-            var model = await _checkoutModelFactory.PrepareCheckoutCompletedModelAsync(order, timezoneInfo);
+            var model = await _checkoutModelFactory.PrepareCheckoutCompletedModelAsync(order);
             return View(model);
         }
 
@@ -1261,7 +1264,9 @@ namespace Nop.Web.Controllers
             {
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
-                var timezoneInfo = HttpContext.Session.Get<TimeZoneInfo>("timezoneInfo");
+                var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+                var company = await _companyService.GetCompanyByCustomerIdAsync(currentCustomer.Id);
+                var timezoneInfo = TZConvert.GetTimeZoneInfo(company.TimeZone);
                 paymentInfo.ScheduleDate = _dateTimeHelper.ConvertToUtcTime((DateTime)deliveryTime, timezoneInfo).ToString("MM/dd/yyyy HH:mm:ss");
                 //session save
                 HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
@@ -1460,7 +1465,6 @@ namespace Nop.Web.Controllers
             {
                 //validation
 
-                var timezone = HttpContext.Session.Get<TimeZoneInfo>("timezoneInfo");
                 var deliveryTime = DateTime.Parse(form["deliver_time"]);
                 if (!(await _orderProcessingService.GetAvailableDeliverTimesAsync()).Contains(deliveryTime))
                 {
