@@ -22,6 +22,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageVendors = new PermissionRecord { Name = "Admin area. Manage Vendors", SystemName = "ManageVendors", Category = "Customers" };
         public static readonly PermissionRecord ManageCurrentCarts = new PermissionRecord { Name = "Admin area. Manage Current Carts", SystemName = "ManageCurrentCarts", Category = "Orders" };
         public static readonly PermissionRecord ManageOrders = new PermissionRecord { Name = "Admin area. Manage Orders", SystemName = "ManageOrders", Category = "Orders" };
+        public static readonly PermissionRecord SalesSummaryReport = new PermissionRecord { Name = "Admin area. Access sales summary report", SystemName = "SalesSummaryReport", Category = "Orders" };
         public static readonly PermissionRecord ManageRecurringPayments = new PermissionRecord { Name = "Admin area. Manage Recurring Payments", SystemName = "ManageRecurringPayments", Category = "Orders" };
         public static readonly PermissionRecord ManageGiftCards = new PermissionRecord { Name = "Admin area. Manage Gift Cards", SystemName = "ManageGiftCards", Category = "Orders" };
         public static readonly PermissionRecord ManageReturnRequests = new PermissionRecord { Name = "Admin area. Manage Return Requests", SystemName = "ManageReturnRequests", Category = "Orders" };
@@ -90,6 +91,7 @@ namespace Nop.Services.Security
                 ManageGiftCards,
                 ManageReturnRequests,
                 OrderCountryReport,
+                SalesSummaryReport,
                 ManageAffiliates,
                 ManageCampaigns,
                 ManageDiscounts,
@@ -157,6 +159,7 @@ namespace Nop.Services.Security
                         ManageGiftCards,
                         ManageReturnRequests,
                         OrderCountryReport,
+                        SalesSummaryReport,
                         ManageAffiliates,
                         ManageCampaigns,
                         ManageDiscounts,
