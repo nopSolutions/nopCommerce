@@ -3295,7 +3295,7 @@
     <Value>Short description</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShortDescription.Hint">
-    <Value>Short description is the text that is displayed in product list i.e. сategory / manufacturer pages.</Value>
+    <Value>Short description is the text that is displayed in product list i.e. category / manufacturer pages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomepage">
     <Value>Show on home page</Value>
