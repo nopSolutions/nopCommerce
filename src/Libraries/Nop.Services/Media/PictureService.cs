@@ -965,9 +965,8 @@ namespace Nop.Services.Media
 
             var seoFilename = CommonHelper.EnsureMaximumLength(picture.SeoFilename, 100);
 
-            //delete old thumbs if a picture has been changed
-            if (seoFilename != picture.SeoFilename)
-                await DeletePictureThumbsAsync(picture);
+            //delete old thumbs if exists
+            await DeletePictureThumbsAsync(picture);
 
             picture.SeoFilename = seoFilename;
 
