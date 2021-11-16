@@ -1586,6 +1586,12 @@ namespace Nop.Services.Orders
             var result = new PlaceOrderResult();
             try
             {
+
+                var scheduleDate = !string.IsNullOrWhiteSpace(processPaymentRequest.ScheduleDate) ? Convert.ToDateTime(processPaymentRequest.ScheduleDate) : (DateTime?)null;
+                if (scheduleDate == null)
+                    throw new Exception("Delivery time is not selected");
+                DateTime? orderScheduleDate = scheduleDate.Value;
+
                 if (processPaymentRequest.OrderGuid == Guid.Empty)
                     throw new Exception("Order GUID is not generated");
 
@@ -1597,7 +1603,7 @@ namespace Nop.Services.Orders
                 if (processPaymentResult == null)
                     throw new NopException("processPaymentResult is not available");
 
-                DateTime? orderScheduleDate = null;
+                ;
                 if (processPaymentResult.Success)
                 {
                     //Check Customer today orders total amount is greater than company limited amount
@@ -1610,49 +1616,7 @@ namespace Nop.Services.Orders
                         {
                             //Checks if the schedule date has any previous orders, if yes then checks limit according to that!
                             //When Null the order is from Public Site else from Mobile app.
-                            var scheduleDate = !string.IsNullOrWhiteSpace(processPaymentRequest.ScheduleDate) ? Convert.ToDateTime(processPaymentRequest.ScheduleDate) : (DateTime?)null;
                             var currentDate = DateTime.UtcNow;
-                            var dates = _orderSettings.ScheduleDate.Split(',');
-                            if (!scheduleDate.HasValue)
-                            {
-                                scheduleDate = DateTime.UtcNow;
-                                if (scheduleDate.Value.Date == currentDate.Date)
-                                {
-                                    var time = dates[0].Split('-')[0].Split(':');
-                                    var firstTime = dates[0].Split('-')[1].Split(':');
-                                    var secondTime = dates[1].Split('-')[1].Split(':');
-                                    var thirdTime = dates[2].Split('-')[1].Split(':');
-                                    //Get the first value of the first setting
-                                    var nextDayDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(firstTime[0]), Convert.ToInt32(firstTime[1]), Convert.ToInt32(firstTime[2]), DateTimeKind.Utc).AddDays(1);
-                                    //Get the first value of the second setting
-                                    var firstDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(firstTime[0]), Convert.ToInt32(firstTime[1]), Convert.ToInt32(firstTime[2]), DateTimeKind.Utc);
-                                    //Get the second value of the second setting
-                                    var secondDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(secondTime[0]), Convert.ToInt32(secondTime[1]), Convert.ToInt32(secondTime[2]), DateTimeKind.Utc);
-                                    //Get the second value of the third setting
-                                    var thirdDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(thirdTime[0]), Convert.ToInt32(thirdTime[1]), Convert.ToInt32(thirdTime[2]), DateTimeKind.Utc);
-
-                                    //check current date is less then first time of setting
-                                    if (currentDate.TimeOfDay < firstDateTime.TimeOfDay)
-                                        scheduleDate = firstDateTime;
-
-                                    //check current date is equal to second time of setting
-                                    else if (currentDate.TimeOfDay <= secondDateTime.TimeOfDay)
-                                    {
-                                        scheduleDate = secondDateTime;
-                                    }
-                                    //check current date is equal to third Time of setting
-                                    else if (currentDate.TimeOfDay <= thirdDateTime.TimeOfDay)
-                                    {
-                                        scheduleDate = thirdDateTime;
-                                    }
-                                    //check current date is greater then nextday Time of setting
-                                    else if (currentDate.TimeOfDay > nextDayDateTime.TimeOfDay)
-                                    {
-                                        scheduleDate = nextDayDateTime;
-                                    }
-                                }
-                            }
-                            orderScheduleDate = scheduleDate.Value;
 
                             var ordersAccordingToScheduleDate = orders.Where(x => x.ScheduleDate.Date == scheduleDate.Value.Date).ToList();
                             var todayOrderTotal = ordersAccordingToScheduleDate.Sum(x => x.OrderTotal) + cartTotal.shoppingCartTotal;

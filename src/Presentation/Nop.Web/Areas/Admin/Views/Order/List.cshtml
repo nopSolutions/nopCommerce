@@ -308,7 +308,7 @@
                                     FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
                                     FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
                                     Filters = new List<FilterParameter>
-                                                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                                                                            {
                                                     new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
                                                     new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                                                     new FilterParameter(nameof(Model.OrderStatusIds)),
@@ -326,7 +326,7 @@
                                                 }
                                 };
                                 gridModel.ColumnCollection = new List<ColumnProperty>
-                                                                                                                                                                                                                                    {
+                                                                                                                                                                                                                                                        {
                                 new ColumnProperty(nameof(OrderModel.Id))
                                 {
                                     IsMasterCheckBox = true,
@@ -371,12 +371,15 @@
                                     Width = "100",
                                     Visible = storeService.GetAllStoresAsync().Result.Count > 1
                                 });
-                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
+                                if (!Model.IsLoggedInAsVendor)
                                 {
-                                    Title = T("Admin.Orders.Fields.CreatedOn").Text,
-                                    Width = "120",
-                                    Render = new RenderDate()
-                                });
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
+                                    {
+                                        Title = T("Admin.Orders.Fields.CreatedOn").Text,
+                                        Width = "120",
+                                        Render = new RenderDate()
+                                    });
+                                }
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingAddress))
                                 {
                                     Title = "Shipping address",
@@ -611,7 +614,6 @@
 
 <script>
     $(document).ready(function () {
-        debugger;
         $('#pdf-invoice-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
