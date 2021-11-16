@@ -20,6 +20,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Companies;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -41,6 +42,7 @@ using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Models.Extensions;
+using TimeZoneConverter;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -94,6 +96,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ShippingSettings _shippingSettings;
         private readonly IUrlRecordService _urlRecordService;
         private readonly TaxSettings _taxSettings;
+        private readonly ICompanyService _companyService;
 
         #endregion
 
@@ -141,7 +144,8 @@ namespace Nop.Web.Areas.Admin.Factories
             OrderSettings orderSettings,
             ShippingSettings shippingSettings,
             IUrlRecordService urlRecordService,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            ICompanyService companyService)
         {
             _addressSettings = addressSettings;
             _catalogSettings = catalogSettings;
@@ -186,6 +190,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _shippingSettings = shippingSettings;
             _urlRecordService = urlRecordService;
             _taxSettings = taxSettings;
+            _companyService = companyService;
         }
 
         #endregion
@@ -1025,7 +1030,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //convert dates to the user time
                     orderModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc);
-                    orderModel.ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(order.ScheduleDate, DateTimeKind.Utc);
+                    var company = await _companyService.GetCompanyByCustomerIdAsync(customer.Id);
+                    var timezoneInfo = TZConvert.GetTimeZoneInfo(company.TimeZone);
+                    orderModel.ScheduleDate = _dateTimeHelper.ConvertToUserTime(order.ScheduleDate, TimeZoneInfo.Utc, timezoneInfo);
                     //fill in additional values (not existing in the entity)
                     orderModel.StoreName = (await _storeService.GetStoreByIdAsync(order.StoreId))?.Name ?? "Deleted";
                     orderModel.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
