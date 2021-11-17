@@ -2037,6 +2037,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(new { Result = string.Empty });
         }
 
+        //Action that displays a notification (warning) to the store owner about the need to restart the application after changing the setting
+        public async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning()
+        {
+            return Json(new
+            {
+                Result = await _localizationService
+                    .GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning")
+            });
+        }
+
         #endregion
     }
 }

@@ -106,7 +106,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint"] = "Check to enable the specification attribute filtering on catalog pages.",
 
                 //#5952
-                ["Admin.Catalog.Products.Fields.ShortDescription.Hint"] = "Short description is the text that is displayed in product list i.e. category / manufacturer pages."
+                ["Admin.Catalog.Products.Fields.ShortDescription.Hint"] = "Short description is the text that is displayed in product list i.e. category / manufacturer pages.",
+
+                //#5654
+                ["Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning"] = "Attention! The changes will take effect only after the application is restarted.",
 
             }, languageId).Wait();
 
