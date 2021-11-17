@@ -2038,13 +2038,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         //Action that displays a notification (warning) to the store owner about the need to restart the application after changing the setting
-        public async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning()
+        public async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning(bool seoFriendlyUrlsForLanguagesEnabled)
         {
-            return Json(new
+            //load settings for a chosen store scope
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var localizationSettings = await _settingService.LoadSettingAsync<LocalizationSettings>(storeScope);
+
+            if (seoFriendlyUrlsForLanguagesEnabled != localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
-                Result = await _localizationService
-                    .GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning")
-            });
+                return Json(new
+                {
+                    Result = await _localizationService
+                        .GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning")
+                });
+            }
+
+            return Json(new { Result = string.Empty });
         }
 
         #endregion
