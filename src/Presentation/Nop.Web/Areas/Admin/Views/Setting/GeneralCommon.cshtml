@@ -97,6 +97,8 @@
         $(document).ready(function () {
             $("#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)").click(toggleLoadAllLocaleRecordsOnStartup);
             toggleLoadAllLocaleRecordsOnStartup();
+
+            $("#@Html.IdFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)").click(toggleSeoFriendlyUrlsForLanguagesEnabled);
         });
 
         function toggleLoadAllLocaleRecordsOnStartup() {
@@ -104,6 +106,14 @@
                 '@Html.NameFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)',
                 {
                     loadAllLocaleRecordsOnStartup: $('#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)').is(':checked')
+                });
+        }
+
+        function toggleSeoFriendlyUrlsForLanguagesEnabled() {
+            warningValidation('@Url.Action("SeoFriendlyUrlsForLanguagesEnabledWarning", "Setting")',
+                '@Html.NameFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)',
+                {
+                    seoFriendlyUrlsForLanguagesEnabled: $('#@Html.IdFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)').is(':checked')
                 });
         }
     </script>

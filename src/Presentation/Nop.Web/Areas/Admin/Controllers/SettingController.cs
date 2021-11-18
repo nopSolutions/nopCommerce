@@ -2037,6 +2037,25 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(new { Result = string.Empty });
         }
 
+        //Action that displays a notification (warning) to the store owner about the need to restart the application after changing the setting
+        public async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning(bool seoFriendlyUrlsForLanguagesEnabled)
+        {
+            //load settings for a chosen store scope
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var localizationSettings = await _settingService.LoadSettingAsync<LocalizationSettings>(storeScope);
+
+            if (seoFriendlyUrlsForLanguagesEnabled != localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            {
+                return Json(new
+                {
+                    Result = await _localizationService
+                        .GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning")
+                });
+            }
+
+            return Json(new { Result = string.Empty });
+        }
+
         #endregion
     }
 }
