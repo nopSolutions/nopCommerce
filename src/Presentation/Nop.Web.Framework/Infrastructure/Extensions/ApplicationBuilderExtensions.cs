@@ -31,7 +31,7 @@ using Nop.Services.Plugins;
 using Nop.Services.ScheduleTasks;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
-using WebMarkupMin.AspNetCore5;
+using WebMarkupMin.AspNetCore6;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {

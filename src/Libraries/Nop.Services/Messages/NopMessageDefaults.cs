@@ -21,7 +21,7 @@ namespace Nop.Services.Messages
         /// <remarks>
         /// {0} : store ID
         /// </remarks>
-        public static CacheKey MessageTemplatesAllCacheKey => new CacheKey("Nop.messagetemplate.all.{0}", NopEntityCacheDefaults<MessageTemplate>.AllPrefix);
+        public static CacheKey MessageTemplatesAllCacheKey => new("Nop.messagetemplate.all.{0}", NopEntityCacheDefaults<MessageTemplate>.AllPrefix);
 
         /// <summary>
         /// Gets a key for caching
@@ -30,7 +30,7 @@ namespace Nop.Services.Messages
         /// {0} : template name
         /// {1} : store ID
         /// </remarks>
-        public static CacheKey MessageTemplatesByNameCacheKey => new CacheKey("Nop.messagetemplate.byname.{0}-{1}", MessageTemplatesByNamePrefix);
+        public static CacheKey MessageTemplatesByNameCacheKey => new("Nop.messagetemplate.byname.{0}-{1}", MessageTemplatesByNamePrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache

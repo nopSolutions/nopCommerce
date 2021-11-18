@@ -107,7 +107,7 @@ namespace Nop.Services.Orders
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                         {
                             //file upload
-                            Guid.TryParse(valueStr, out var downloadGuid);
+                            _ = Guid.TryParse(valueStr, out var downloadGuid);
                             var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                             if (download != null)
                             {

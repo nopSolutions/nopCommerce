@@ -37,7 +37,7 @@ namespace Nop.Core.Domain.Shipping
         /// <returns>Result</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (!(value is string)) 
+            if (value is not string) 
                 return base.ConvertFrom(context, culture, value);
             
             var valueStr = value as string;
@@ -72,7 +72,7 @@ namespace Nop.Core.Domain.Shipping
             if (destinationType != typeof(string)) 
                 return base.ConvertTo(context, culture, value, destinationType);
 
-            if (!(value is PickupPoint)) 
+            if (value is not PickupPoint) 
                 return string.Empty;
 
             var sb = new StringBuilder();

@@ -342,7 +342,7 @@ namespace Nop.Web.Factories
                         {
                             var downloadGuidStr = _checkoutAttributeParser
                                 .ParseValues(selectedCheckoutAttributes, attribute.Id).FirstOrDefault();
-                            Guid.TryParse(downloadGuidStr, out var downloadGuid);
+                            _ = Guid.TryParse(downloadGuidStr, out var downloadGuid);
                             var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                             if (download != null)
                                 attributeModel.DefaultValue = download.DownloadGuid.ToString();
@@ -1352,7 +1352,7 @@ namespace Nop.Web.Factories
                     {
                         if (pickupPointsResponse.PickupPoints.Any())
                         {
-                            pickupPointsNumber = pickupPointsResponse.PickupPoints.Count();
+                            pickupPointsNumber = pickupPointsResponse.PickupPoints.Count;
                             var pickupPoint = pickupPointsResponse.PickupPoints.OrderBy(p => p.PickupFee).First();
 
                             rawShippingOptions.Add(new ShippingOption

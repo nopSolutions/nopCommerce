@@ -356,7 +356,7 @@ namespace Nop.Web.Factories
                 var customer = await _customerService.GetCustomerByIdAsync(post.CustomerId);
 
                 var customerIsGuest = await _customerService.IsGuestAsync(customer);
-                var customerIsModerator = customerIsGuest ? false : await _customerService.IsForumModeratorAsync(customer);
+                var customerIsModerator = !customerIsGuest && await _customerService.IsForumModeratorAsync(customer);
 
                 var forumPostModel = new ForumPostModel
                 {
@@ -759,13 +759,13 @@ namespace Nop.Web.Factories
             };
             model.WithinList = withinList;
 
-            int.TryParse(forumId, out var forumIdSelected);
+            _ = int.TryParse(forumId, out var forumIdSelected);
             model.ForumIdSelected = forumIdSelected;
 
-            int.TryParse(within, out var withinSelected);
+            _ = int.TryParse(within, out var withinSelected);
             model.WithinSelected = withinSelected;
 
-            int.TryParse(limitDays, out var limitDaysSelected);
+            _ = int.TryParse(limitDays, out var limitDaysSelected);
             model.LimitDaysSelected = limitDaysSelected;
 
             var searchTermMinimumLength = _forumSettings.ForumSearchTermMinimumLength;

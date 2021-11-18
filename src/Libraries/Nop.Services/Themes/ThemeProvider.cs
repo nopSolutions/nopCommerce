@@ -16,7 +16,7 @@ namespace Nop.Services.Themes
     {
         #region Fields
 
-        private static readonly object _locker = new object();
+        private static readonly object _locker = new();
 
         private readonly INopFileProvider _fileProvider;
 

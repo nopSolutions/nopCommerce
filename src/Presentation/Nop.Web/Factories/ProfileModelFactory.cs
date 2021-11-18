@@ -230,7 +230,7 @@ namespace Nop.Web.Factories
 
             foreach (var forumPost in list)
             {
-                var posted = string.Empty;
+                string posted;
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
                 {
                     var languageCode = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
