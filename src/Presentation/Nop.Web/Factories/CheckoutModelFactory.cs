@@ -373,7 +373,6 @@ namespace Nop.Web.Factories
             var customer = await _workContext.GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
             var getShippingOptionResponse = await _shippingService.GetShippingOptionsAsync(cart, shippingAddress, customer, storeId: store.Id);
-           
             if (getShippingOptionResponse.Success)
             {
                 //performance optimization. cache returned shipping options.
@@ -391,7 +390,6 @@ namespace Nop.Web.Factories
                         Description = shippingOption.Description,
                         ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName,
                         ShippingOption = shippingOption,
-                       
                     };
 
                     //adjust rate
