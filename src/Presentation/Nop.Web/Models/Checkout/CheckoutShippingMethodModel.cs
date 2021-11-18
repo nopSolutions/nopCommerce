@@ -30,8 +30,8 @@ namespace Nop.Web.Models.Checkout
             public string Description { get; set; }
             public string Fee { get; set; }
             public decimal Price { get; set; }
+            public int DisplayOrder { get; set; }
             public bool Selected { get; set; }
-
             public ShippingOption ShippingOption { get; set; }
         }
 

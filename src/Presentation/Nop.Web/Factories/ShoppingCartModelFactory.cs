@@ -1428,7 +1428,7 @@ namespace Nop.Web.Factories
                     }
 
                     //sorted shipping methods
-                    if (model.ShippingOptions.Count > 1 && _shippingSettings.ShippingSorting == ShippingSortingEnum.ShippingСost)
+                    if (model.ShippingOptions.Count > 1 && _shippingSettings.ShippingSorting == ShippingSortingEnum.ShippingCost)
                     {
                         var sortedShippingMethods = model.ShippingOptions.OrderBy(x => x.Rate).ToList();
                         model.ShippingOptions = sortedShippingMethods;

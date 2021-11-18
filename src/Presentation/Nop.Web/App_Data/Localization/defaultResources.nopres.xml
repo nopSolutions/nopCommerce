@@ -8505,12 +8505,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions.Hint">
     <Value>Check to consider associated products dimensions and weight on shipping, uncheck for example, if the main product already includes them.</Value>
   </LocaleResource>
-    <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingSorting">
-    <Value>Sort shipping methods by</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingSorting.Hint">
-    <Value>Select the field to sort the delivery by</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayPickupPointsOnMap">
     <Value>Display pickup points on the map</Value>
   </LocaleResource>
@@ -8597,6 +8591,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress.Hint">
     <Value>Check to display "ship to the same address" option during checkout ("billing address" step). In this case "shipping address" with appropriate options (e.g. pick up in store) will be skipped. Also note that all billing countries should support shipping ("Allow shipping" checkbox ticked).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingSorting">
+    <Value>Sort shipping methods by</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingSorting.Hint">
+    <Value>Select the field to sort the delivery by</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.UseWarehouseLocation">
     <Value>Use warehouse location</Value>
