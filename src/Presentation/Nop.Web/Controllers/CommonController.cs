@@ -311,7 +311,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed

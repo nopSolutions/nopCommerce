@@ -20,6 +20,7 @@ using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class CatalogController : BasePublicController
     {
         #region Fields
@@ -139,7 +140,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> GetCatalogRoot()
         {
             var model = await _catalogModelFactory.PrepareRootCategoriesAsync();
@@ -148,7 +148,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> GetCatalogSubCategories(int id)
         {
             var model = await _catalogModelFactory.PrepareSubCategoriesAsync(id);

@@ -18,6 +18,7 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class FacebookAuthenticationController : BasePluginController
     {
         #region Fields
@@ -80,8 +81,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             return View("~/Plugins/ExternalAuth.Facebook/Views/Configure.cshtml", model);
         }
 
-        [HttpPost]
-        [AutoValidateAntiforgeryToken]
+        [HttpPost]        
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
         public async Task<IActionResult> Configure(ConfigurationModel model)
