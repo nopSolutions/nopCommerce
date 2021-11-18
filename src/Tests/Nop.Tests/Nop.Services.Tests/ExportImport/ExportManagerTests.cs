@@ -130,7 +130,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
 
                 //https://github.com/ClosedXML/ClosedXML/blob/develop/ClosedXML/Extensions/ObjectExtensions.cs#L61
                 if (objectProperty.PropertyType == typeof(DateTime))
-                    objectPropertyValue = DateTime.FromOADate(double.Parse(((DateTime)objectPropertyValue).ToOADate().ToString("G15", CultureInfo.InvariantCulture)));
+                    objectPropertyValue = DateTime.FromOADate(double.Parse(((DateTime)objectPropertyValue).ToOADate().ToString("G15", CultureInfo.InvariantCulture), CultureInfo.InvariantCulture));
 
                 if (objectProperty.PropertyType == typeof(DateTime?))
                     objectPropertyValue = objectPropertyValue != null ? DateTime.FromOADate(double.Parse(((DateTime?)objectPropertyValue)?.ToOADate().ToString("G15", CultureInfo.InvariantCulture))) : null;
