@@ -449,6 +449,9 @@ namespace Nop.Web.Factories
         {
             var model = new CheckoutPaymentMethodModel();
 
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //reward points
             if (_rewardPointsSettings.Enabled && !await _shoppingCartService.ShoppingCartIsRecurringAsync(cart))
             {
@@ -456,8 +459,9 @@ namespace Nop.Web.Factories
                 if (shoppingCartTotal.redeemedRewardPoints > 0)
                 {
                     model.DisplayRewardPoints = true;
-                    model.RewardPointsAmount = await _priceFormatter.FormatPriceAsync(shoppingCartTotal.redeemedRewardPointsAmount, true, false);
-                    model.RewardPointsBalance = shoppingCartTotal.redeemedRewardPoints;
+                    model.RewardPointsToUseAmount = await _priceFormatter.FormatPriceAsync(shoppingCartTotal.redeemedRewardPointsAmount, true, false);
+                    model.RewardPointsToUse = shoppingCartTotal.redeemedRewardPoints;
+                    model.RewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
 
                     //are points enough to pay for entire order? like if this option (to use them) was selected
                     model.RewardPointsEnoughToPayForOrder = !await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart, true);
@@ -466,7 +470,7 @@ namespace Nop.Web.Factories
 
             //filter by country
             var paymentMethods = await (await _paymentPluginManager
-                .LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id, filterByCountryId))
+                .LoadActivePluginsAsync(customer, store.Id, filterByCountryId))
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
                 .WhereAwait(async pm => !await pm.HidePaymentMethodAsync(cart))
                 .ToListAsync();
@@ -484,7 +488,7 @@ namespace Nop.Web.Factories
                 };
                 //payment method additional fee
                 var paymentMethodAdditionalFee = await _paymentService.GetAdditionalHandlingFeeAsync(cart, pm.PluginDescriptor.SystemName);
-                var (rateBase, _) = await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, await _workContext.GetCurrentCustomerAsync());
+                var (rateBase, _) = await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, customer);
                 var rate = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rateBase, await _workContext.GetWorkingCurrencyAsync());
                 if (rate > decimal.Zero)
                     pmModel.Fee = await _priceFormatter.FormatPaymentMethodAdditionalFeeAsync(rate, true);
@@ -493,8 +497,8 @@ namespace Nop.Web.Factories
             }
 
             //find a selected (previously) payment method
-            var selectedPaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(),
-                NopCustomerDefaults.SelectedPaymentMethodAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var selectedPaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
+                NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
             if (!string.IsNullOrEmpty(selectedPaymentMethodSystemName))
             {
                 var paymentMethodToSelect = model.PaymentMethods.ToList()

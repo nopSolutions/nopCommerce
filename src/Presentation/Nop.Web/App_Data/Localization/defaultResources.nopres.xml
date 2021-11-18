@@ -16159,7 +16159,7 @@
     <Value>Continue</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.UseRewardPoints">
-    <Value>Use my reward points, {0} reward points ({1}) available for this order</Value>
+    <Value>Use my reward points, {0} of {1} reward points ({2}) available for this order</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.YourOrderHasBeenSuccessfullyProcessed">
     <Value>Your order has been successfully processed!</Value>

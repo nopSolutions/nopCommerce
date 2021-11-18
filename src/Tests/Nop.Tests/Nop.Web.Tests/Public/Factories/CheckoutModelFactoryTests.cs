@@ -156,8 +156,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             
             model.DisplayRewardPoints.Should().BeTrue();
             model.PaymentMethods.Count.Should().Be(1);
-            model.RewardPointsAmount.Should().Be("$1,944.90");
-            model.RewardPointsBalance.Should().Be(1945);
+            model.RewardPointsToUseAmount.Should().Be("$1,944.90");
+            model.RewardPointsToUse.Should().Be(1945);
+            model.RewardPointsBalance.Should().Be(10000);
             model.RewardPointsEnoughToPayForOrder.Should().BeTrue();
             model.UseRewardPoints.Should().BeFalse();
         }
@@ -167,7 +168,8 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         {
             var model = await _checkoutModelFactory.PreparePaymentMethodModelAsync(_cart, 0);
             model.DisplayRewardPoints.Should().BeTrue();
-            model.RewardPointsBalance.Should().Be(1945);
+            model.RewardPointsToUse.Should().Be(1945);
+            model.RewardPointsBalance.Should().Be(10000);
 
             _rewardPointsSettings.Enabled = false;
             await _settingService.SaveSettingAsync(_rewardPointsSettings);
