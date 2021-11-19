@@ -1420,18 +1420,22 @@ namespace Nop.Web.Factories
                             Name = option.Name,
                             ShippingRateComputationMethodSystemName = option.ShippingRateComputationMethodSystemName,
                             Description = option.Description,
+                            DisplayOrder = option.DisplayOrder ?? 0,
                             Price = shippingRateString,
-                            Rate = option.Rate,
+                            Rate = shippingRate,
                             DeliveryDateFormat = deliveryDateFormat,
                             Selected = selected
                         });
                     }
 
-                    //sorted shipping methods
-                    if (model.ShippingOptions.Count > 1 && _shippingSettings.ShippingSorting == ShippingSortingEnum.ShippingCost)
+                    //sort shipping methods
+                    if (model.ShippingOptions.Count > 1)
                     {
-                        var sortedShippingMethods = model.ShippingOptions.OrderBy(x => x.Rate).ToList();
-                        model.ShippingOptions = sortedShippingMethods;
+                        model.ShippingOptions = (_shippingSettings.ShippingSorting switch
+                        {
+                            ShippingSortingEnum.ShippingCost => model.ShippingOptions.OrderBy(option => option.Rate),
+                            _ => model.ShippingOptions.OrderBy(option => option.DisplayOrder)
+                        }).ToList();
                     }
 
                     //if no option has been selected, let's do it for the first one
