@@ -22,7 +22,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
             //do not use DI, because it produces exception on the installation process
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            var lsrRepository = EngineContext.Current.Resolve<IRepository<LocaleStringResource>>();
 
             //use localizationService to add, update and delete localization resources
             localizationService.DeleteLocaleResourcesAsync(new List<string>
@@ -133,15 +132,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                     }
                 }
             }
-
-            //#5942 change all ResourceName to lower case
-            lsrRepository.UpdateAsync(lsrRepository.GetAll(query => query).Select(r => new LocaleStringResource
-            {
-                Id = r.Id,
-                LanguageId = r.LanguageId,
-                ResourceName = r.ResourceName.Trim().ToLowerInvariant(),
-                ResourceValue = r.ResourceValue
-            }).ToList(), false).Wait();
         }
 
         /// <summary>Collects the DOWN migration expressions</summary>
