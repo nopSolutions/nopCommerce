@@ -593,6 +593,19 @@ namespace Nop.Web.Areas.Admin.Factories
             _ = int.TryParse(searchModel.SearchDayOfBirth, out var dayOfBirth);
             _ = int.TryParse(searchModel.SearchMonthOfBirth, out var monthOfBirth);
 
+            DateTime? lastActivityFrom = searchModel.LastActivityFrom != null ?
+                _dateTimeHelper.ConvertToUtcTime(searchModel.LastActivityFrom.Value, DateTimeKind.Utc) : null;
+
+            DateTime? lastActivityTo = searchModel.LastActivityTo != null ?
+                _dateTimeHelper.ConvertToUtcTime(searchModel.LastActivityTo.Value, DateTimeKind.Utc) : null;
+
+            DateTime? registeredFrom = searchModel.RegisteredFrom != null ?
+                _dateTimeHelper.ConvertToUtcTime(searchModel.RegisteredFrom.Value, DateTimeKind.Utc) : null;
+
+            DateTime? registeredTo = searchModel.RegisteredTo != null ?
+                _dateTimeHelper.ConvertToUtcTime(searchModel.RegisteredTo.Value, DateTimeKind.Utc) : null;
+
+
             //get customers
             var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
                 email: searchModel.SearchEmail,
@@ -605,7 +618,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 phone: searchModel.SearchPhone,
                 zipPostalCode: searchModel.SearchZipPostalCode,
                 ipAddress: searchModel.SearchIpAddress,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
+                lastActivityFrom: lastActivityFrom, lastActivityTo: lastActivityTo,
+                registeredFrom: registeredFrom, registeredTo: registeredTo);
 
             //prepare list model
             var model = await new CustomerListModel().PrepareToGridAsync(searchModel, customers, () =>

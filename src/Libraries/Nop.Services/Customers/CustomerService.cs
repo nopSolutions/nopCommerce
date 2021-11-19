@@ -131,6 +131,10 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+        /// <param name="lastActivityFrom">An initial date of the query when customers had activities on the store</param>
+        /// <param name="lastActivityTo">An end date of the query when customers had activities on the store</param>
+        /// <param name="registeredFrom">An initial date of the query when customers registered on the store</param>
+        /// <param name="registeredTo">An end date of the query when customers registered on the store</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the customers
@@ -140,9 +144,10 @@ namespace Nop.Services.Customers
             string email = null, string username = null, string firstName = null, string lastName = null,
             int dayOfBirth = 0, int monthOfBirth = 0,
             string company = null, string phone = null, string zipPostalCode = null, string ipAddress = null,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false,
+            DateTime? lastActivityFrom = null, DateTime? lastActivityTo = null, DateTime? registeredFrom = null, DateTime? registeredTo = null)
         {
-            var customers = await _customerRepository.GetAllPagedAsync(query =>
+            var customers = await _customerRepository.GetAllPagedAsync(async query =>
             {
                 if (createdFromUtc.HasValue)
                     query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
@@ -153,6 +158,12 @@ namespace Nop.Services.Customers
                 if (vendorId > 0)
                     query = query.Where(c => vendorId == c.VendorId);
 
+                if (lastActivityFrom.HasValue)
+                    query = query.Where(x => x.LastActivityDateUtc >= lastActivityFrom.Value);
+                if (lastActivityTo.HasValue)
+                    query = query.Where(x => x.LastActivityDateUtc <= lastActivityTo.Value);
+
+
                 query = query.Where(c => !c.Deleted);
 
                 if (customerRoleIds != null && customerRoleIds.Length > 0)
@@ -162,6 +173,27 @@ namespace Nop.Services.Customers
                         .Where(z => customerRoleIds.Contains(z.Mapping.CustomerRoleId))
                         .Select(z => z.Customer)
                         .Distinct();
+                }
+
+                var registeredRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
+                if (registeredFrom.HasValue)
+                {
+                    query = query.Join(_customerCustomerRoleMappingRepository.Table, x => x.Id, y => y.CustomerId,
+                        (x, y) => new { Customer = x, Mapping = y })
+                    .Where(z => z.Mapping.CustomerRoleId == registeredRole.Id)
+                    .Where(z => z.Customer.CreatedOnUtc >= registeredFrom.Value)
+                    .Select(z => z.Customer)
+                    .Distinct();
+                }
+
+                if (registeredTo.HasValue)
+                {
+                    query = query.Join(_customerCustomerRoleMappingRepository.Table, x => x.Id, y => y.CustomerId,
+                        (x, y) => new { Customer = x, Mapping = y })
+                    .Where(z => z.Mapping.CustomerRoleId == registeredRole.Id)
+                    .Where(z => z.Customer.CreatedOnUtc <= registeredTo.Value)
+                    .Select(z => z.Customer)
+                    .Distinct();
                 }
 
                 if (!string.IsNullOrWhiteSpace(email))

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
@@ -73,6 +74,22 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         public string SearchIpAddress { get; set; }
 
         public bool AvatarEnabled { get; internal set; }
+        
+        [NopResourceDisplayName("Admin.Customers.Customers.List.RegisteredFrom")]
+        [UIHint("DateTimeNullable")]
+        public DateTime? RegisteredFrom { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.List.RegisteredTo")]
+        [UIHint("DateTimeNullable")]
+        public DateTime? RegisteredTo { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.List.LastActivityFrom")]
+        [UIHint("DateTimeNullable")]
+        public DateTime? LastActivityFrom { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.List.LastActivityTo")]
+        [UIHint("DateTimeNullable")]
+        public DateTime? LastActivityTo { get; set; }
 
         #endregion
     }
