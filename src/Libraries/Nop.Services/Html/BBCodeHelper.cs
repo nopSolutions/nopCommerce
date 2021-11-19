@@ -7,7 +7,6 @@ namespace Nop.Services.Html
     /// <summary>
     /// Represents a BBCode helper
     /// </summary>
-    //TODO: the class need a refactoring
     public partial class BBCodeHelper : IBBCodeHelper
     {
         #region Filds

@@ -4,7 +4,6 @@ using Nop.Services.Localization;
 
 namespace Nop.Web.Models.Common
 {
-    //TODO: the class need a refactoring
     public partial record PagerModel
     {
         #region Ctor

@@ -7,7 +7,6 @@ namespace Nop.Services.Html
     /// <summary>
     /// Represents a HTML helper
     /// </summary>
-    //TODO: the class need a refactoring
     public partial class NopHtmlHelper : INopHtmlHelper
     {
         #region Filds
