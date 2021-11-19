@@ -107,9 +107,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
                 //#5204
                 ["Admin.Configuration.Settings.Shipping.ShippingSorting"] = "Sort shipping methods by",
-                ["Admin.Configuration.Settings.Shipping.ShippingSorting.Hint"] = "Select the field to sort the delivery by.",
+                ["Admin.Configuration.Settings.Shipping.ShippingSorting.Hint"] = "Select the field to sort the shipping by.",
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position"] = "Position",
-                ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingСost"] = "Shipping Сost"
+                ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost"] = "Shipping Cost",
                 
             }, languageId).Wait();
 
