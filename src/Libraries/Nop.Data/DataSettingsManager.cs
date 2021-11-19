@@ -57,7 +57,7 @@ namespace Nop.Data
                         dataSettings.ConnectionString = value;
                         continue;
                     case "SQLCommandTimeout":
-                        //If parsing isn't successful, we set a negative timeout, that means the current provider will usе a default value
+                        //If parsing isn't successful, we set a negative timeout, that means the current provider will use a default value
                         dataSettings.SQLCommandTimeout = int.TryParse(value, out var timeout) ? timeout : -1;
                         continue;
                     default:

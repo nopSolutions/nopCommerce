@@ -416,7 +416,7 @@ namespace Nop.Tests
         {
             get
             {
-                if (!(Singleton<MappingSchema>.Instance is null))
+                if (Singleton<MappingSchema>.Instance is not null)
                     return Singleton<MappingSchema>.Instance;
 
                 Singleton<MappingSchema>.Instance =

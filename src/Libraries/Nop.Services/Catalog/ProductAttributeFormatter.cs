@@ -130,7 +130,7 @@ namespace Nop.Services.Catalog
                             else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                             {
                                 //file upload
-                                Guid.TryParse(value, out var downloadGuid);
+                                _ = Guid.TryParse(value, out var downloadGuid);
                                 var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                                 if (download != null)
                                 {

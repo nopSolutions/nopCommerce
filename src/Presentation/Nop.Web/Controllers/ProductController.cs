@@ -505,7 +505,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> SetProductReviewHelpfulness(int productReviewId, bool washelpful)
         {
             var productReview = await _productService.GetProductReviewByIdAsync(productReviewId);
@@ -624,7 +623,6 @@ namespace Nop.Web.Controllers
         #region Comparing products
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> AddProductToCompareList(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);

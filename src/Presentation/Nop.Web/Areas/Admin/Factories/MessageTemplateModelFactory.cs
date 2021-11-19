@@ -141,7 +141,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<MessageTemplateModel> PrepareMessageTemplateModelAsync(MessageTemplateModel model,
             MessageTemplate messageTemplate, bool excludeProperties = false)
         {
-            Action<MessageTemplateLocalizedModel, int> localizedModelConfiguration = null;
+            Func<MessageTemplateLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (messageTemplate != null)
             {

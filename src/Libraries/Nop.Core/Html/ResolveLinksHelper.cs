@@ -14,7 +14,7 @@ namespace Nop.Core.Html
         /// <summary>
         /// The regular expression used to parse links.
         /// </summary>
-        private static readonly Regex _regex = new Regex("((http://|https://|www\\.)([A-Z0-9.\\-]{1,})\\.[0-9A-Z?;~&\\(\\)#,=\\-_\\./\\+]{2,})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex _regex = new("((http://|https://|www\\.)([A-Z0-9.\\-]{1,})\\.[0-9A-Z?;~&\\(\\)#,=\\-_\\./\\+]{2,})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #endregion
 

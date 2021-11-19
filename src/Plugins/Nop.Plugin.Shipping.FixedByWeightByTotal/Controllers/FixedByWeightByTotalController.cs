@@ -149,7 +149,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> SaveMode(bool value)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))

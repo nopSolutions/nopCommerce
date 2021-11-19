@@ -178,13 +178,13 @@ namespace Nop.Web.Areas.Admin.Factories
             for (var i = 0; i < blogTags.Count; i++)
             {
                 var tag = blogTags[i];
-                blogTagsSb.Append("'");
+                blogTagsSb.Append('\'');
                 blogTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
-                blogTagsSb.Append("'");
+                blogTagsSb.Append('\'');
                 if (i != blogTags.Count - 1)
-                    blogTagsSb.Append(",");
+                    blogTagsSb.Append(',');
             }
-            blogTagsSb.Append("]");
+            blogTagsSb.Append(']');
 
             model.InitialBlogTags = blogTagsSb.ToString();
 

@@ -282,7 +282,7 @@ columns: [
             @if (column.Encode && column.Render == null)
             {
                 <text>
-                render: function (data, type, row, meta) {                    
+                render: function (data, type, row, meta) {
                     return escapeHtml(data)
                 },
                 </text>

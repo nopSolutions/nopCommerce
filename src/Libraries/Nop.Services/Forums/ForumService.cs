@@ -1216,18 +1216,18 @@ namespace Nop.Services.Forums
         /// Get post vote made since the parameter date
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="сreatedFromUtc">Date</param>
+        /// <param name="createdFromUtc">Date</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the post votes count
         /// </returns>
-        public virtual async Task<int> GetNumberOfPostVotesAsync(Customer customer, DateTime сreatedFromUtc)
+        public virtual async Task<int> GetNumberOfPostVotesAsync(Customer customer, DateTime createdFromUtc)
         {
             if (customer == null)
                 return 0;
 
             return await _forumPostVoteRepository.Table
-                .CountAsync(pv => pv.CustomerId == customer.Id && pv.CreatedOnUtc > сreatedFromUtc);
+                .CountAsync(pv => pv.CustomerId == customer.Id && pv.CreatedOnUtc > createdFromUtc);
         }
 
         /// <summary>

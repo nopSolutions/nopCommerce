@@ -90,7 +90,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             await _taxTransactionLogService.DeleteTaxTransactionLogAsync(selectedIds.ToArray());

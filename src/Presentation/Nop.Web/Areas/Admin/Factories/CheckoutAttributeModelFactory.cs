@@ -199,7 +199,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<CheckoutAttributeModel> PrepareCheckoutAttributeModelAsync(CheckoutAttributeModel model,
             CheckoutAttribute checkoutAttribute, bool excludeProperties = false)
         {
-            Action<CheckoutAttributeLocalizedModel, int> localizedModelConfiguration = null;
+            Func<CheckoutAttributeLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (checkoutAttribute != null)
             {
@@ -301,7 +301,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (checkoutAttribute == null)
                 throw new ArgumentNullException(nameof(checkoutAttribute));
 
-            Action<CheckoutAttributeValueLocalizedModel, int> localizedModelConfiguration = null;
+            Func<CheckoutAttributeValueLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (checkoutAttributeValue != null)
             {

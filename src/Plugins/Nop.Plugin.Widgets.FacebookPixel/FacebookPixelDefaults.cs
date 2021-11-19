@@ -50,7 +50,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <remarks>
         /// {0} : configuration identifier
         /// </remarks>
-        public static CacheKey ConfigurationCacheKey => new CacheKey("Nop.Plugin.Widgets.FacebookPixel.Configuration-{0}", PrefixCacheKey);
+        public static CacheKey ConfigurationCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.Configuration-{0}", PrefixCacheKey);
 
         /// <summary>
         /// Gets the cache key for configurations
@@ -58,17 +58,17 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <remarks>
         /// {0} : store identifier
         /// </remarks>
-        public static CacheKey ConfigurationsCacheKey => new CacheKey("Nop.Plugin.Widgets.FacebookPixel.Configurations-{0}", PrefixCacheKey);
+        public static CacheKey ConfigurationsCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.Configurations-{0}", PrefixCacheKey);
 
         /// <summary>
         /// Gets the cache key for custom events
         /// </summary>
-        public static CacheKey CustomEventsCacheKey => new CacheKey("Nop.Plugin.Widgets.FacebookPixel.CustomEvents-{0}", PrefixCacheKey);
+        public static CacheKey CustomEventsCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.CustomEvents-{0}", PrefixCacheKey);
 
         /// <summary>
         /// Gets the cache key for widget zones
         /// </summary>
-        public static CacheKey WidgetZonesCacheKey => new CacheKey("Nop.Plugin.Widgets.FacebookPixel.WidgetZones", PrefixCacheKey);
+        public static CacheKey WidgetZonesCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.WidgetZones", PrefixCacheKey);
 
         /// <summary>
         /// Gets the prefix key to clear cache

@@ -11,11 +11,11 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.PrivateMessages;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class PrivateMessagesController : BasePublicController
     {
         #region Fields
@@ -73,7 +73,6 @@ namespace Nop.Web.Controllers
         }
         
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
-        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> DeleteInboxPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -103,7 +102,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, FormValueRequired("mark-unread"), ActionName("InboxUpdate")]
-        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> MarkUnread(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -134,7 +132,6 @@ namespace Nop.Web.Controllers
 
         //updates sent items (deletes PrivateMessages)
         [HttpPost, FormValueRequired("delete-sent"), ActionName("SentUpdate")]
-        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> DeleteSentPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -187,7 +184,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> SendPM(SendPrivateMessageModel model)
         {
             if (!_forumSettings.AllowPrivateMessages)

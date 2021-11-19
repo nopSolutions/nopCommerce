@@ -24,6 +24,7 @@ using Nop.Web.Models.Vendors;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class VendorController : BasePublicController
     {
         #region Fields
@@ -190,7 +191,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ApplyVendor")]
-        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile)
         {
@@ -294,7 +294,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Info")]
-        [AutoValidateAntiforgeryToken]
         [FormValueRequired("save-info-button")]
         public virtual async Task<IActionResult> Info(VendorInfoModel model, IFormFile uploadedFile)
         {
@@ -365,7 +364,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Info")]
-        [AutoValidateAntiforgeryToken]
         [FormValueRequired("remove-picture")]
         public virtual async Task<IActionResult> RemovePicture()
         {

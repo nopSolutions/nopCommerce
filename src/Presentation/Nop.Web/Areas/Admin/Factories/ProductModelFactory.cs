@@ -777,7 +777,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ProductModel> PrepareProductModelAsync(ProductModel model, Product product, bool excludeProperties = false)
         {
-            Action<ProductLocalizedModel, int> localizedModelConfiguration = null;
+            Func<ProductLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (product != null)
             {
@@ -952,13 +952,13 @@ namespace Nop.Web.Areas.Admin.Factories
             for (var i = 0; i < productTags.Count; i++)
             {
                 var tag = productTags[i];
-                productTagsSb.Append("'");
+                productTagsSb.Append('\'');
                 productTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
-                productTagsSb.Append("'");
+                productTagsSb.Append('\'');
                 if (i != productTags.Count - 1)
-                    productTagsSb.Append(",");
+                    productTagsSb.Append(',');
             }
-            productTagsSb.Append("]");
+            productTagsSb.Append(']');
 
             model.InitialProductTags = productTagsSb.ToString();
 
@@ -1695,7 +1695,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ProductTagModel> PrepareProductTagModelAsync(ProductTagModel model, ProductTag productTag, bool excludeProperties = false)
         {
-            Action<ProductTagLocalizedModel, int> localizedModelConfiguration = null;
+            Func<ProductTagLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (productTag != null)
             {
@@ -1977,7 +1977,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ProductAttributeMappingModel> PrepareProductAttributeMappingModelAsync(ProductAttributeMappingModel model,
             Product product, ProductAttributeMapping productAttributeMapping, bool excludeProperties = false)
         {
-            Action<ProductAttributeMappingLocalizedModel, int> localizedModelConfiguration = null;
+            Func<ProductAttributeMappingLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -2117,7 +2117,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productAttributeMapping == null)
                 throw new ArgumentNullException(nameof(productAttributeMapping));
 
-            Action<ProductAttributeValueLocalizedModel, int> localizedModelConfiguration = null;
+            Func<ProductAttributeValueLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (productAttributeValue != null)
             {
