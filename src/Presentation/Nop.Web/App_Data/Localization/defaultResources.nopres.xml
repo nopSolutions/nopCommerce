@@ -8589,6 +8589,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingOriginAddress">
     <Value>Shipping origin</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingSorting">
+    <Value>Sort shipping methods by</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingSorting.Hint">
+    <Value>Select the field to sort the shipping by.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress">
     <Value>Ship to the same address</Value>
   </LocaleResource>
@@ -16820,6 +16826,12 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Seo.WwwRequirement.WithWww">
     <Value>Pages should have WWW prefix</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position">
+    <Value>Position</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost">
+    <Value>Shipping Cost</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Shipping.ShippingStatus.Delivered">
     <Value>Delivered</Value>

@@ -112,6 +112,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 //#5654
                 ["Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning"] = "Attention! The changes will take effect only after the application is restarted.",
 
+                //#5204
+                ["Admin.Configuration.Settings.Shipping.ShippingSorting"] = "Sort shipping methods by",
+                ["Admin.Configuration.Settings.Shipping.ShippingSorting.Hint"] = "Select the field to sort the shipping by.",
+                ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position"] = "Position",
+                ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost"] = "Shipping Cost",
+                
             }, languageId).Wait();
 
             // rename locales
