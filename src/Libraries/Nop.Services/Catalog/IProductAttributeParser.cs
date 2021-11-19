@@ -34,7 +34,6 @@ namespace Nop.Services.Catalog
         /// </returns>
         Task<IList<ProductAttributeValue>> ParseProductAttributeValuesAsync(string attributesXml, int productAttributeMappingId = 0);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Gets selected product attribute values
         /// </summary>
@@ -43,7 +42,6 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute values</returns>
         IList<string> ParseValues(string attributesXml, int productAttributeMappingId);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Adds an attribute
         /// </summary>
@@ -54,7 +52,6 @@ namespace Nop.Services.Catalog
         /// <returns>Updated result (XML format)</returns>
         string AddProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping, string value, int? quantity = null);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Remove an attribute
         /// </summary>
@@ -123,7 +120,6 @@ namespace Nop.Services.Catalog
         /// </returns>
         Task<decimal> ParseCustomerEnteredPriceAsync(Product product, IFormCollection form);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Parse a entered quantity of the product
         /// </summary>
@@ -132,7 +128,6 @@ namespace Nop.Services.Catalog
         /// <returns>Customer entered price of the product</returns>
         int ParseEnteredQuantity(Product product, IFormCollection form);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Parse product rental dates on the product details page
         /// </summary>
@@ -158,7 +153,6 @@ namespace Nop.Services.Catalog
 
         #region Gift card attributes
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Add gift card attributes
         /// </summary>
@@ -172,7 +166,6 @@ namespace Nop.Services.Catalog
         string AddGiftCardAttribute(string attributesXml, string recipientName,
             string recipientEmail, string senderName, string senderEmail, string giftCardMessage);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Get gift card attributes
         /// </summary>

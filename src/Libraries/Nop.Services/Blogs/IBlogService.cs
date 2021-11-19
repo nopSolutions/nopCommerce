@@ -114,7 +114,6 @@ namespace Nop.Services.Blogs
         /// </returns>
         Task<IList<string>> ParseTagsAsync(BlogPost blogPost);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Get a value indicating whether a blog post is available now (availability dates)
         /// </summary>

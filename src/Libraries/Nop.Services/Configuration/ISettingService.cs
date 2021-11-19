@@ -178,7 +178,6 @@ namespace Nop.Services.Configuration
         /// <returns>A task that represents the asynchronous operation</returns>
         Task ClearCacheAsync();
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Get setting key (stored into database)
         /// </summary>
