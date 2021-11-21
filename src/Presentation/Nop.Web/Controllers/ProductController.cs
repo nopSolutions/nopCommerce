@@ -334,19 +334,6 @@ namespace Nop.Web.Controllers
 
         #region New (recently added) products page
 
-        public virtual async Task<IActionResult> NewProducts()
-        {
-            if (!_catalogSettings.NewProductsEnabled)
-                return Content("");
-
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var storeId = store.Id;
-            var products = await _productService.GetProductsMarkedAsNewAsync(storeId);
-            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
-
-            return View(model);
-        }
-
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> NewProductsRss()
         {

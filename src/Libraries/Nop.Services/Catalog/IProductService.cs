@@ -147,6 +147,11 @@ namespace Nop.Services.Catalog
         /// true - load only "Published" products
         /// false - load only "Unpublished" products
         /// </param>
+        /// <param name="isNew">
+        /// null - both "new" and "old" - all
+        /// true - only "new"
+        /// false - only "old" (not "new")
+        /// </param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the products
@@ -174,7 +179,8 @@ namespace Nop.Services.Catalog
             IList<SpecificationAttributeOption> filteredSpecOptions = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
-            bool? overridePublished = null);
+            bool? overridePublished = null,
+            bool? isNew = null);
 
         /// <summary>
         /// Gets products by product attribute

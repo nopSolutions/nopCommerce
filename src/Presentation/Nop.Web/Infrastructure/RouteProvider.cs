@@ -118,7 +118,7 @@ namespace Nop.Web.Infrastructure
             //new products
             endpointRouteBuilder.MapControllerRoute(name: "NewProducts",
                 pattern: $"{lang}/newproducts/",
-                defaults: new { controller = "Product", action = "NewProducts" });
+                defaults: new { controller = "Catalog", action = "NewProducts" });
 
             //blog
             endpointRouteBuilder.MapControllerRoute(name: "Blog",

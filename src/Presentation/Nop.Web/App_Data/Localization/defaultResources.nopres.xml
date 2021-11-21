@@ -1125,6 +1125,9 @@
     <LocaleResource Name="ActivityLog.PublicStore.ViewManufacturer">
         <Value>Public store. Viewed a manufacturer details page ('{0}')</Value>
     </LocaleResource>
+    <LocaleResource Name="ActivityLog.PublicStore.ViewNewProducts">
+        <Value>Public store. Viewed the new products page.</Value>
+    </LocaleResource>
     <LocaleResource Name="ActivityLog.PublicStore.ViewProduct">
         <Value>Public store. Viewed a product details page ('{0}')</Value>
     </LocaleResource>

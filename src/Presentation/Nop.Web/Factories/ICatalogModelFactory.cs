@@ -293,6 +293,18 @@ namespace Nop.Web.Factories
 
         #endregion
 
+        #region New Products
+
+        /// <summary>
+        /// Prepare a pageable new products model for New Products view.
+        /// </summary>
+        /// <param name="command">Model to get the new products</param>
+        /// <returns>Model for presentation new products</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        Task<CatalogProductsModel> PrepareNewProductsModelAsync(CatalogProductsCommand command);
+       
+       #endregion
+
         #region Common
 
         /// <summary>

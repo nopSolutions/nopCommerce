@@ -775,6 +775,9 @@ namespace Nop.Services.Catalog
         /// true - load only "Published" products
         /// false - load only "Unpublished" products
         /// </param>
+        /// <param name="isNew">
+        /// null - all both "new" and "old"; true - only "new"; false - only "old" (not "new")
+        /// </param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the products
@@ -802,7 +805,8 @@ namespace Nop.Services.Catalog
             IList<SpecificationAttributeOption> filteredSpecOptions = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
-            bool? overridePublished = null)
+            bool? overridePublished = null,
+            bool? isNew = null)
         {
             //some databases don't support int.MaxValue
             if (pageSize == int.MaxValue)
@@ -823,6 +827,25 @@ namespace Nop.Services.Catalog
             {
                 var customer = await _workContext.GetCurrentCustomerAsync();
                 productsQuery = await _aclService.ApplyAcl(productsQuery, customer);
+            }
+
+            // marked as new products
+            if (isNew.HasValue)
+            {
+                if (isNew.Value)
+                    productsQuery = from p in productsQuery
+                                    where p.Published && p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
+                                        DateTime.UtcNow >= (p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue) &&
+                                        DateTime.UtcNow <= (p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
+                                    orderby p.CreatedOnUtc descending
+                                    select p;
+                else
+                    productsQuery = from p in productsQuery
+                                    where p.Published && p.VisibleIndividually && !p.MarkAsNew && !p.Deleted &&
+                                          DateTime.UtcNow <= (p.MarkAsNewStartDateTimeUtc ?? DateTime.MaxValue) &&
+                                          DateTime.UtcNow >= (p.MarkAsNewEndDateTimeUtc ?? DateTime.MinValue)
+                                    orderby p.CreatedOnUtc descending
+                                    select p;
             }
 
             productsQuery =

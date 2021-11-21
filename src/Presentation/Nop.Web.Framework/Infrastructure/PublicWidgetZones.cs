@@ -120,6 +120,9 @@
         public static string NewsListPageAfterItems => "newslist_page_after_items";
         public static string NewsListPageBeforeItems => "newslist_page_before_items";
         public static string NewsListPageInsideItem => "newslist_page_inside_item";
+        public static string NewProductsBeforeList => "newproducts_page_before_list";
+        public static string NewProductsBottom => "newproducts_page_bottom";
+        public static string NewProductsTop => "newproducts_page_top";
         public static string Notifications => "notifications";
         public static string OpcContentAfter => "opc_content_after";
         public static string OpcContentBefore => "opc_content_before";

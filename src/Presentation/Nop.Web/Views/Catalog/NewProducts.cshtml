@@ -1,0 +1,31 @@
+﻿@model CatalogProductsModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.NewProducts").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-recently-added-products-page");
+}
+
+@section CatalogFilters {
+    @await Html.PartialAsync("_CatalogFilters", Model)
+}
+
+<div class="page recently-added-products-page">
+    <div class="page-title">
+        <a href="@Url.RouteUrl("NewProductsRSS")" class="link-rss" title="@T("Products.NewProducts.RSS.Hint")">@T("Products.NewProducts.RSS")</a>
+        <h1>@T("Products.NewProducts")</h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewProductsTop, additionalData = Model })
+        @await Html.PartialAsync("_CatalogSelectors", Model)
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewProductsBeforeList, additionalData = Model })
+        @{
+            var catalogProductsViewData = new ViewDataDictionary(ViewData);
+            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("GetNewProducts", "Catalog"));
+        }
+        @await Html.PartialAsync("_CatalogProducts", Model, catalogProductsViewData)
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewProductsBottom, additionalData = Model })
+    </div>
+</div>

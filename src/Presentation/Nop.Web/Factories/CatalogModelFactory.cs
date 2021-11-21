@@ -1849,8 +1849,92 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Common
+        #region  New (recently added) products page
         
+        /// <summary>
+        /// Prepare a pageable new products model for New Products view.
+        /// </summary>
+        /// <param name="command">Model to get the new products</param>
+        /// <returns>Model for presentation new products</returns>
+        public virtual async Task<CatalogProductsModel> PrepareNewProductsModelAsync(CatalogProductsCommand command)
+        {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+
+            var model = new CatalogProductsModel
+            {
+                UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading,
+            };
+
+            //sorting
+            await PrepareSortingOptionsAsync(model, command);
+            //view mode
+            await PrepareViewModesAsync(model, command);
+            //page size
+            await PreparePageSizeOptionsAsync(model, command, true,
+                _catalogSettings.DefaultCategoryPageSizeOptions, _catalogSettings.DefaultCategoryPageSize);
+
+            //price range
+            PriceRangeModel selectedPriceRange = null;
+            if (_catalogSettings.EnablePriceRangeFiltering)
+            {
+                selectedPriceRange = await GetConvertedPriceRangeAsync(command);
+
+                PriceRangeModel availablePriceRange = null;
+
+                async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
+                {
+                    var prods = await _productService.SearchProductsAsync(0, 1,
+                        storeId: currentStore.Id,
+                        visibleIndividuallyOnly: true,
+                        orderBy: orderBy,
+                        isNew: true);
+
+                    return prods?.FirstOrDefault()?.Price ?? 0;
+                }
+
+                availablePriceRange = new PriceRangeModel
+                {
+                    From = await getProductPriceAsync(ProductSortingEnum.PriceAsc),
+                    To = await getProductPriceAsync(ProductSortingEnum.PriceDesc)
+                };
+
+                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
+            }
+
+            //TODO the manufacturer filter for new poducts
+            if (_catalogSettings.EnableManufacturerFiltering)
+            {
+                var prods = await _productService.GetProductsMarkedAsNewAsync(currentStore.Id);
+                var productmanufacturers = await prods.SelectManyAwait(async p => await _manufacturerService.GetProductManufacturersByProductIdAsync(p.Id)).ToListAsync();
+                var manufacturers = await _manufacturerService.GetManufacturersByIdsAsync(productmanufacturers.Select(x => x.ManufacturerId).ToArray());
+               
+                model.ManufacturerFilter = await PrepareManufacturerFilterModel(command.ManufacturerIds, manufacturers);
+            }
+
+            //products
+            var products = await _productService.SearchProductsAsync(
+                command.PageNumber - 1,
+                command.PageSize,
+                storeId: currentStore.Id,
+                visibleIndividuallyOnly: true,
+                priceMin: selectedPriceRange?.From,
+                priceMax: selectedPriceRange?.To,
+                manufacturerIds: command.ManufacturerIds,
+                orderBy: (ProductSortingEnum)command.OrderBy,
+                isNew: true);
+
+            var isFiltering = selectedPriceRange?.From is not null;
+            await PrepareCatalogProductsAsync(model, products, isFiltering);
+            return model;
+        }
+
+        #endregion
+
+        #region Common
+
         /// <summary>
         /// Prepare sorting options
         /// </summary>

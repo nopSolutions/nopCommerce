@@ -373,6 +373,40 @@ namespace Nop.Web.Controllers
 
         #endregion
 
+        #region  New (recently added) products page
+
+        public virtual async Task<IActionResult> NewProducts(CatalogProductsCommand command)
+        {
+            if (!_catalogSettings.NewProductsEnabled)
+                return Content("");
+
+            //'Continue shopping' URL
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
+                NopCustomerDefaults.LastContinueShoppingPageAttribute,
+                _webHelper.GetThisPageUrl(true),
+                (await _storeContext.GetCurrentStoreAsync()).Id);
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("PublicStore.ViewCategory",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.ViewNewProducts")));
+
+            //model
+            var model = await _catalogModelFactory.PrepareNewProductsModelAsync(command);
+
+            return View(model);
+        }
+
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        public virtual async Task<IActionResult> GetNewProducts(CatalogProductsCommand command)
+        {
+            var model = await _catalogModelFactory.PrepareNewProductsModelAsync(command);
+
+            return PartialView("_ProductsInGridOrLines", model);
+        }
+
+        #endregion
+
         #region Utilities
 
         private async Task<bool> CheckCategoryAvailabilityAsync(Category category)
