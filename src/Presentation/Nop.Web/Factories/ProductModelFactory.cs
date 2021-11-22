@@ -732,7 +732,6 @@ namespace Nop.Web.Factories
                 model.OldPrice = null;
                 model.OldPriceValue = null;
                 model.Price = null;
-                model.PriceValue = null;
             }
 
             return model;
