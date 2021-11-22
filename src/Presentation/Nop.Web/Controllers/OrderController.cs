@@ -200,7 +200,7 @@ namespace Nop.Web.Controllers
                 await _pdfService.PrintOrdersToPdfAsync(stream, orders, (await _workContext.GetWorkingLanguageAsync()).Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.Id}.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.CustomOrderNumber}.pdf");
         }
 
         //My account / Order details page / re-order

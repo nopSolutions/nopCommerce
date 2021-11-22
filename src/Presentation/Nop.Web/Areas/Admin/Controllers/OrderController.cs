@@ -925,7 +925,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 bytes = stream.ToArray();
             }
 
-            return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.Id}.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.CustomOrderNumber}.pdf");
         }
 
         [HttpPost, ActionName("PdfInvoice")]
