@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
@@ -179,10 +178,12 @@ namespace Nop.Web.Models.Catalog
             public string CurrencyCode { get; set; }
 
             public string OldPrice { get; set; }
+            public decimal? OldPriceValue { get; set; }
 
             public string Price { get; set; }
+            public decimal? PriceValue { get; set; }
             public string PriceWithDiscount { get; set; }
-            public decimal PriceValue { get; set; }
+            public decimal? PriceWithDiscountValue { get; set; }
 
             public bool CustomerEntersPrice { get; set; }
 
@@ -195,6 +196,7 @@ namespace Nop.Web.Models.Catalog
             //rental
             public bool IsRental { get; set; }
             public string RentalPrice { get; set; }
+            public decimal? RentalPriceValue { get; set; }
 
             /// <summary>
             /// A value indicating whether we should display tax/shipping info (used in Germany)
@@ -204,6 +206,7 @@ namespace Nop.Web.Models.Catalog
             /// PAngV baseprice (used in Germany)
             /// </summary>
             public string BasePricePAngV { get; set; }
+            public decimal? BasePricePAngVValue { get; set; }
         }
 
         public partial record GiftCardModel : BaseNopModel
@@ -233,6 +236,7 @@ namespace Nop.Web.Models.Catalog
         public partial record TierPriceModel : BaseNopModel
         {
             public string Price { get; set; }
+            public decimal PriceValue { get; set; }
 
             public int Quantity { get; set; }
         }
@@ -304,7 +308,7 @@ namespace Nop.Web.Models.Catalog
             public PictureModel ImageSquaresPictureModel { get; set; }
 
             public string PriceAdjustment { get; set; }
-            
+
             public bool PriceAdjustmentUsePercentage { get; set; }
 
             public decimal PriceAdjustmentValue { get; set; }
