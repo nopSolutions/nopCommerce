@@ -905,7 +905,7 @@ namespace Nop.Services.Messages
             url.StartsWithSegments(pathBase, out url);
 
             //compose the result
-            return Uri.EscapeDataString(WebUtility.UrlDecode($"{store.Url.TrimEnd('/')}{url}"));
+            return WebUtility.UrlDecode($"{store.Url.TrimEnd('/')}{url}");
         }
 
         #endregion

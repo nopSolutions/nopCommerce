@@ -48,7 +48,7 @@ namespace Nop.Web.Framework.Mvc.Routing
             {
                 //passed redirect URL may contain non-ASCII characters, that are not allowed now (see https://github.com/aspnet/KestrelHttpServer/issues/1144)
                 //so we force to encode this URL before processing
-                result.Url = Uri.EscapeDataString(WebUtility.UrlDecode(result.Url));
+                result.Url = WebUtility.UrlDecode(result.Url);
             }
 
             return base.ExecuteAsync(context, result);
