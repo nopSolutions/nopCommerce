@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework
 {
@@ -45,15 +44,7 @@ namespace Nop.Web.Framework
         /// Parames
         /// </summary>
         public NameValueCollection Params { get; }
-
-        /// <summary>
-        /// Creates a new instance of the RemotePost class
-        /// </summary>
-        public RemotePost()
-            : this(EngineContext.Current.Resolve<IHttpContextAccessor>(), EngineContext.Current.Resolve<IWebHelper>())
-        {
-        }
-
+        
         /// <summary>
         /// Creates a new instance of the RemotePost class
         /// </summary>

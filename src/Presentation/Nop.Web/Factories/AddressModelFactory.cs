@@ -8,7 +8,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -31,6 +30,7 @@ namespace Nop.Web.Factories
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -43,7 +43,8 @@ namespace Nop.Web.Factories
             ICountryService countryService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            IStateProvinceService stateProvinceService)
+            IStateProvinceService stateProvinceService,
+            IWorkContext workContext)
         {
             _addressSettings = addressSettings;
             _addressAttributeFormatter = addressAttributeFormatter;
@@ -53,6 +54,7 @@ namespace Nop.Web.Factories
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _stateProvinceService = stateProvinceService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -244,7 +246,7 @@ namespace Nop.Web.Factories
 
                 if (addressSettings.StateProvinceEnabled)
                 {
-                    var languageId = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Id;
+                    var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
                     var states = (await _stateProvinceService
                         .GetStateProvincesByCountryIdAsync(model.CountryId ?? 0, languageId))
                         .ToList();

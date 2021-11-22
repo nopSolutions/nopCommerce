@@ -1,15 +1,29 @@
-﻿using System.Text.RegularExpressions;
+﻿﻿using System.Text.RegularExpressions;
 using Nop.Core.Domain.Common;
-using Nop.Core.Html.CodeFormatter;
-using Nop.Core.Infrastructure;
+using Nop.Services.Html.CodeFormatter;
 
-namespace Nop.Core.Html
+namespace Nop.Services.Html
 {
     /// <summary>
     /// Represents a BBCode helper
     /// </summary>
-    public partial class BBCodeHelper
+    public partial class BBCodeHelper : IBBCodeHelper
     {
+        #region Filds
+
+        private readonly CommonSettings _commonSettings;
+
+        #endregion
+
+        #region Ctor
+
+        public BBCodeHelper(CommonSettings commonSettings)
+        {
+            _commonSettings = commonSettings;
+        }
+
+        #endregion
+
         #region Fields
 
         private static readonly Regex regexBold = new(@"\[b\](.+?)\[/b\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -36,7 +50,7 @@ namespace Nop.Core.Html
         /// <param name="replaceQuote">A value indicating whether to replace Quote</param>
         /// <param name="replaceImg">A value indicating whether to replace Img</param>
         /// <returns>Formatted text</returns>
-        public static string FormatText(string text, bool replaceBold, bool replaceItalic,
+        public virtual string FormatText(string text, bool replaceBold, bool replaceItalic,
             bool replaceUnderline, bool replaceUrl, bool replaceCode, bool replaceQuote, bool replaceImg)
         {
             if (string.IsNullOrEmpty(text))
@@ -65,7 +79,7 @@ namespace Nop.Core.Html
 
             if (replaceUrl)
             {
-                var newWindow = EngineContext.Current.Resolve<CommonSettings>().BbcodeEditorOpenLinksInNewWindow;
+                var newWindow = _commonSettings.BbcodeEditorOpenLinksInNewWindow;
                 // format the URL tags: [url=https://www.nopCommerce.com]my site[/url]
                 // becomes: <a href="https://www.nopCommerce.com">my site</a>
                 text = regexUrl1.Replace(text, $"<a href=\"$1\" rel=\"nofollow\"{(newWindow ? " target=_blank" : "")}>$2</a>");
@@ -101,7 +115,7 @@ namespace Nop.Core.Html
         /// </summary>
         /// <param name="str">Source string</param>
         /// <returns>string</returns>
-        public static string RemoveQuotes(string str)
+        public virtual string RemoveQuotes(string str)
         {
             str = Regex.Replace(str, @"\[quote=(.+?)\]", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             str = Regex.Replace(str, @"\[/quote\]", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);

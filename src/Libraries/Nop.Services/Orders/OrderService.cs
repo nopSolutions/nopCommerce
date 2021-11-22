@@ -10,10 +10,9 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Html;
 using Nop.Data;
-using Nop.Data.Extensions;
 using Nop.Services.Catalog;
+using Nop.Services.Html;
 using Nop.Services.Shipping;
 
 namespace Nop.Services.Orders
@@ -25,6 +24,7 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
+        private readonly INopHtmlHelper _htmlHelper;
         private readonly IProductService _productService;
         private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Customer> _customerRepository;
@@ -41,7 +41,8 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        public OrderService(IProductService productService,
+        public OrderService(INopHtmlHelper htmlHelper,
+            IProductService productService,
             IRepository<Address> addressRepository,
             IRepository<Customer> customerRepository,
             IRepository<Order> orderRepository,
@@ -53,6 +54,7 @@ namespace Nop.Services.Orders
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
             IShipmentService shipmentService)
         {
+            _htmlHelper = htmlHelper;
             _productService = productService;
             _addressRepository = addressRepository;
             _customerRepository = customerRepository;
@@ -885,7 +887,7 @@ namespace Nop.Services.Orders
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = _htmlHelper.FormatText(text, false, true, false, false, false, false);
 
             return text;
         }

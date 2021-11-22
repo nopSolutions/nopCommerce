@@ -229,10 +229,13 @@ namespace Nop.Services.ScheduleTasks
                 }
                 finally
                 {
-                    if (RunOnlyOnce)
-                        Dispose();
-                    else
-                        _timer.Change(Interval, Interval);
+                    if (!_disposed)
+                    {
+                        if (RunOnlyOnce)
+                            Dispose();
+                        else
+                            _timer.Change(Interval, Interval);
+                    }
                 }
             }
 

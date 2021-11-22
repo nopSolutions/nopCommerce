@@ -1766,7 +1766,7 @@ namespace Nop.Web.Factories
                 productReviews.Add(productReviewModel);
             }
 
-            var pagerModel = new PagerModel
+            var pagerModel = new PagerModel(_localizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

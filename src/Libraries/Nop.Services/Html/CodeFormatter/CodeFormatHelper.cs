@@ -1,7 +1,7 @@
-﻿using System.Net;
+﻿﻿using System.Net;
 using System.Text.RegularExpressions;
 
-namespace Nop.Core.Html.CodeFormatter
+namespace Nop.Services.Html.CodeFormatter
 {
     /// <summary>
     /// Represents a code format helper
@@ -13,8 +13,7 @@ namespace Nop.Core.Html.CodeFormatter
         //private static Regex regexCode1 = new Regex(@"(?<begin>\[code:(?<lang>.*?)(?:;ln=(?<linenumbers>(?:on|off)))?(?:;alt=(?<altlinenumbers>(?:on|off)))?(?:;(?<title>.*?))?\])(?<code>.*?)(?<end>\[/code\])", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private static readonly Regex _regexHtml = new("<[^>]*>", RegexOptions.Compiled);
 
-        private static readonly Regex _regexCode =
-            new(@"\[code\](?<inner>(.*?))\[/code\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex _regexCode = new(@"\[code\](?<inner>(.*?))\[/code\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #endregion
 
