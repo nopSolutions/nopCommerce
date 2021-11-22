@@ -17928,6 +17928,9 @@
   <LocaleResource Name="PDFInvoice.Fax">
     <Value>Fax: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="PDFInvoice.FileName">
+    <Value>order</Value>
+  </LocaleResource>  
   <LocaleResource Name="PDFInvoice.GiftCardInfo">
     <Value>Gift card ({0}):</Value>
   </LocaleResource>

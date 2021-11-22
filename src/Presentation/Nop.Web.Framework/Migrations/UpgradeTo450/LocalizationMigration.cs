@@ -117,6 +117,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Admin.Configuration.Settings.Shipping.ShippingSorting.Hint"] = "Select the field to sort the shipping by.",
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position"] = "Position",
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost"] = "Shipping Cost",
+                //#5138
+                ["PDFInvoice.FileName"] = "order"
                 
             }, languageId).Wait();
 
