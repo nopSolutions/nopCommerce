@@ -231,7 +231,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (await WorkContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("List");
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             //filter not approved reviews
@@ -264,7 +264,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (await WorkContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("List");
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             //filter approved reviews
@@ -294,7 +294,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (await WorkContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("List");
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             var productReviews = await ProductService.GetProductReviewsByIdsAsync(selectedIds.ToArray());

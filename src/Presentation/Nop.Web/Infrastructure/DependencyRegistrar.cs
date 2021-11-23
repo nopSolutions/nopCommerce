@@ -3,6 +3,7 @@ using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Helpers;
 using Nop.Web.Framework.Factories;
 using Nop.Web.Infrastructure.Installation;
 
@@ -108,6 +109,9 @@ namespace Nop.Web.Infrastructure
             services.AddScoped<Factories.ITopicModelFactory, Factories.TopicModelFactory>();
             services.AddScoped<Factories.IVendorModelFactory, Factories.VendorModelFactory>();
             services.AddScoped<Factories.IWidgetModelFactory, Factories.WidgetModelFactory>();
+
+            //helpers classes
+            services.AddScoped<ITinyMceHelper, TinyMceHelper>();
         }
 
         /// <summary>

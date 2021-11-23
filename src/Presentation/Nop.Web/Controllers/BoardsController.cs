@@ -201,7 +201,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> ForumWatch(int id)
         {
             var watchTopic = await LocalizationService.GetResourceAsync("Forum.WatchForum");
@@ -264,7 +263,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> TopicWatch(int id)
         {
             var watchTopic = await LocalizationService.GetResourceAsync("Forum.WatchTopic");
@@ -927,7 +925,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("CustomerForumSubscriptions")]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> CustomerForumSubscriptionsPOST(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)

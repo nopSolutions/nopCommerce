@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 
 namespace Nop.Services.Catalog
@@ -18,6 +17,7 @@ namespace Nop.Services.Catalog
         #region Fields
 
         protected IRepository<PredefinedProductAttributeValue> PredefinedProductAttributeValueRepository { get; }
+        private readonly IRepository<Product> _productRepository;
         protected IRepository<ProductAttribute> ProductAttributeRepository { get; }
         protected IRepository<ProductAttributeCombination> ProductAttributeCombinationRepository { get; }
         protected IRepository<ProductAttributeMapping> ProductAttributeMappingRepository { get; }
@@ -30,14 +30,15 @@ namespace Nop.Services.Catalog
         #region Ctor
 
         public ProductAttributeService(IRepository<PredefinedProductAttributeValue> predefinedProductAttributeValueRepository,
+            IRepository<Product> productRepository,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,
             IRepository<ProductAttributeValue> productAttributeValueRepository,
-            IRepository<Product> productRepository,
             IStaticCacheManager staticCacheManager)
         {
             PredefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
+            _productRepository = productRepository;
             ProductAttributeRepository = productAttributeRepository;
             ProductAttributeCombinationRepository = productAttributeCombinationRepository;
             ProductAttributeMappingRepository = productAttributeMappingRepository;

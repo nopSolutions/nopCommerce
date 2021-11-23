@@ -128,7 +128,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //generate editor
             var tagName = For != null ? For.Name : Name;
-            bool.TryParse(IsMultiple, out var multiple);
+            _ = bool.TryParse(IsMultiple, out var multiple);
             if (!string.IsNullOrEmpty(tagName))
             {
                 IHtmlContent selectList;

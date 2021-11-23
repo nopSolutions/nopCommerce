@@ -60,7 +60,6 @@ namespace Nop.Services.News
         /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateNewsAsync(NewsItem news);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Get a value indicating whether a news item is available now (availability dates)
         /// </summary>

@@ -28,7 +28,7 @@ namespace Nop.Web.Framework.Validators
         /// <returns>Result</returns>
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (decimal.TryParse(context.PropertyValue.ToString(), out decimal value))
+            if (decimal.TryParse(context.PropertyValue.ToString(), out var value))
                 return Math.Round(value, 3) < _maxValue;
 
             return false;

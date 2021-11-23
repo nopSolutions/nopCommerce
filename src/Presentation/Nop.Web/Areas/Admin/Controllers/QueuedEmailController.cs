@@ -201,7 +201,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             await QueuedEmailService.DeleteQueuedEmailsAsync(await QueuedEmailService.GetQueuedEmailsByIdsAsync(selectedIds.ToArray()));

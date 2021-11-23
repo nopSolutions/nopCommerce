@@ -7,6 +7,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.PrivateMessages;
 
@@ -24,6 +25,7 @@ namespace Nop.Web.Factories
         protected ICustomerService CustomerService { get; }
         protected IDateTimeHelper DateTimeHelper { get; }
         protected IForumService ForumService { get; }
+        private readonly ILocalizationService _localizationService;
         protected IStoreContext StoreContext { get; }
         protected IWorkContext WorkContext { get; }
 
@@ -36,6 +38,7 @@ namespace Nop.Web.Factories
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IForumService forumService,
+            ILocalizationService localizationService,
             IStoreContext storeContext,
             IWorkContext workContext)
         {
@@ -44,6 +47,7 @@ namespace Nop.Web.Factories
             CustomerService = customerService;
             DateTimeHelper = dateTimeHelper;
             ForumService = forumService;
+            _localizationService = localizationService;
             StoreContext = storeContext;
             WorkContext = workContext;
         }
@@ -126,7 +130,7 @@ namespace Nop.Web.Factories
             foreach (var pm in list)
                 messages.Add(await PreparePrivateMessageModelAsync(pm));
 
-            var pagerModel = new PagerModel
+            var pagerModel = new PagerModel(_localizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,
@@ -172,7 +176,7 @@ namespace Nop.Web.Factories
             foreach (var pm in list)
                 messages.Add(await PreparePrivateMessageModelAsync(pm));
 
-            var pagerModel = new PagerModel
+            var pagerModel = new PagerModel(_localizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

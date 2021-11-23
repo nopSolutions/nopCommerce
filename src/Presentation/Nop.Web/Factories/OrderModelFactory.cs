@@ -521,22 +521,25 @@ namespace Nop.Web.Factories
                 var shipmentTracker = await ShipmentService.GetShipmentTrackerAsync(shipment);
                 if (shipmentTracker != null)
                 {
-                    model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber);
+                    model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment);
                     if (ShippingSettings.DisplayShipmentEventsToCustomers)
                     {
-                        var shipmentEvents = await shipmentTracker.GetShipmentEventsAsync(shipment.TrackingNumber);
+                        var shipmentEvents = await shipmentTracker.GetShipmentEventsAsync(shipment.TrackingNumber, shipment);
                         if (shipmentEvents != null)
+                        {
                             foreach (var shipmentEvent in shipmentEvents)
                             {
                                 var shipmentStatusEventModel = new ShipmentDetailsModel.ShipmentStatusEventModel();
                                 var shipmentEventCountry = await CountryService.GetCountryByTwoLetterIsoCodeAsync(shipmentEvent.CountryCode);
                                 shipmentStatusEventModel.Country = shipmentEventCountry != null
                                     ? await LocalizationService.GetLocalizedAsync(shipmentEventCountry, x => x.Name) : shipmentEvent.CountryCode;
+                                shipmentStatusEventModel.Status = shipmentEvent.Status;
                                 shipmentStatusEventModel.Date = shipmentEvent.Date;
                                 shipmentStatusEventModel.EventName = shipmentEvent.EventName;
                                 shipmentStatusEventModel.Location = shipmentEvent.Location;
                                 model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
                             }
+                        }
                     }
                 }
             }
@@ -615,7 +618,7 @@ namespace Nop.Web.Factories
                     };
                 }).ToListAsync(),
 
-                PagerModel = new PagerModel
+                PagerModel = new PagerModel(_localizationService)
                 {
                     PageSize = rewardPoints.PageSize,
                     TotalRecords = rewardPoints.TotalCount,

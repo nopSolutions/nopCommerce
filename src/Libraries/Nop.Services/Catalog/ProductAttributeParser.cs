@@ -300,7 +300,7 @@ namespace Nop.Services.Catalog
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            Guid.TryParse(form[controlId], out var downloadGuid);
+                            _ = Guid.TryParse(form[controlId], out var downloadGuid);
                             var download = await DownloadService.GetDownloadByGuidAsync(downloadGuid);
                             if (download != null)
                                 attributesXml = AddProductAttribute(attributesXml,
@@ -842,7 +842,7 @@ namespace Nop.Services.Catalog
             foreach (var formKey in form.Keys)
                 if (formKey.Equals($"addtocart_{product.Id}.EnteredQuantity", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    int.TryParse(form[formKey], out quantity);
+                    _ = int.TryParse(form[formKey], out quantity);
                     break;
                 }
 

@@ -8,12 +8,12 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
-using Nop.Core.Html;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Web.Framework.Extensions;
@@ -32,6 +32,7 @@ namespace Nop.Web.Factories
         protected CaptchaSettings CaptchaSettings { get; }
         protected CustomerSettings CustomerSettings { get; }
         protected ForumSettings ForumSettings { get; }
+        private readonly IBBCodeHelper _bbCodeHelper;
         protected ICountryService CountryService { get; }
         protected ICustomerService CustomerService { get; }
         protected IDateTimeHelper DateTimeHelper { get; }
@@ -49,6 +50,7 @@ namespace Nop.Web.Factories
         public ForumModelFactory(CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
             ForumSettings forumSettings,
+            IBBCodeHelper bbCodeHelper,
             ICountryService countryService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
@@ -62,6 +64,7 @@ namespace Nop.Web.Factories
             CaptchaSettings = captchaSettings;
             CustomerSettings = customerSettings;
             ForumSettings = forumSettings;
+            _bbCodeHelper = bbCodeHelper;
             CountryService = countryService;
             CustomerService = customerService;
             DateTimeHelper = dateTimeHelper;
@@ -356,7 +359,7 @@ namespace Nop.Web.Factories
                 var customer = await CustomerService.GetCustomerByIdAsync(post.CustomerId);
 
                 var customerIsGuest = await CustomerService.IsGuestAsync(customer);
-                var customerIsModerator = customerIsGuest ? false : await CustomerService.IsForumModeratorAsync(customer);
+                var customerIsModerator = !customerIsGuest && await _customerService.IsForumModeratorAsync(customer);
 
                 var forumPostModel = new ForumPostModel
                 {
@@ -759,13 +762,13 @@ namespace Nop.Web.Factories
             };
             model.WithinList = withinList;
 
-            int.TryParse(forumId, out var forumIdSelected);
+            _ = int.TryParse(forumId, out var forumIdSelected);
             model.ForumIdSelected = forumIdSelected;
 
-            int.TryParse(within, out var withinSelected);
+            _ = int.TryParse(within, out var withinSelected);
             model.WithinSelected = withinSelected;
 
-            int.TryParse(limitDays, out var limitDaysSelected);
+            _ = int.TryParse(limitDays, out var limitDaysSelected);
             model.LimitDaysSelected = limitDaysSelected;
 
             var searchTermMinimumLength = ForumSettings.ForumSearchTermMinimumLength;
@@ -989,7 +992,7 @@ namespace Nop.Web.Factories
                 });
             }
 
-            model.PagerModel = new PagerModel
+            model.PagerModel = new PagerModel(_localizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

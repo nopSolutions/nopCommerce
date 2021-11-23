@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Html;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Vendors
@@ -16,6 +16,7 @@ namespace Nop.Services.Vendors
         #region Fields
 
         protected ILocalizationService LocalizationService { get; }
+        private readonly INopHtmlHelper _nopHtmlHelper;
         protected IVendorAttributeParser VendorAttributeParser { get; }
         protected IVendorAttributeService VendorAttributeService { get; }
         protected IWorkContext WorkContext { get; }
@@ -25,11 +26,13 @@ namespace Nop.Services.Vendors
         #region Ctor
 
         public VendorAttributeFormatter(ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             IVendorAttributeParser vendorAttributeParser,
             IVendorAttributeService vendorAttributeService,
             IWorkContext workContext)
         {
             LocalizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             VendorAttributeParser = vendorAttributeParser;
             VendorAttributeService = vendorAttributeService;
             WorkContext = workContext;
@@ -72,7 +75,7 @@ namespace Nop.Services.Vendors
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
-                            formattedAttribute = $"{attributeName}: {HtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
+                            formattedAttribute = $"{attributeName}: {_nopHtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)

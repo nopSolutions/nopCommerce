@@ -15,7 +15,7 @@ namespace Nop.Services.Helpers
     {
         #region Fields
 
-        private static readonly object _locker = new object();
+        private static readonly object _locker = new();
         private static readonly Regex _firstMobileDeviceRegex;
         private static readonly Regex _secondMobileDeviceRegex;
 

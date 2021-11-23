@@ -408,7 +408,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             await UrlRecordService.DeleteUrlRecordsAsync(await UrlRecordService.GetUrlRecordsByIdsAsync(selectedIds.ToArray()));
@@ -434,7 +434,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(seName))
                 return Json(new { Result = string.Empty });
 
-            int.TryParse(entityId, out var parsedEntityId);
+            _ = int.TryParse(entityId, out var parsedEntityId);
             var validatedSeName = await UrlRecordService.ValidateSeNameAsync(parsedEntityId, entityName, seName, null, false);
 
             if (seName.Equals(validatedSeName, StringComparison.InvariantCultureIgnoreCase))

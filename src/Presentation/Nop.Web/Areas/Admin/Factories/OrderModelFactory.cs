@@ -773,7 +773,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             var shipmentTracker = await ShipmentService.GetShipmentTrackerAsync(shipment);
-            var shipmentEvents = await shipmentTracker.GetShipmentEventsAsync(shipment.TrackingNumber);
+            var shipmentEvents = await shipmentTracker?.GetShipmentEventsAsync(shipment.TrackingNumber, shipment);
             if (shipmentEvents == null)
                 return;
 
@@ -781,6 +781,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 var shipmentStatusEventModel = new ShipmentStatusEventModel
                 {
+                    Status = shipmentEvent.Status,
                     Date = shipmentEvent.Date,
                     EventName = shipmentEvent.EventName,
                     Location = shipmentEvent.Location
@@ -1038,6 +1039,9 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
+
+            if (!_orderSettings.DisplayOrderSummary)
+                return null;
 
             //get parameters to filter orders
             var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
@@ -1524,7 +1528,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var shipmentTracker = await ShipmentService.GetShipmentTrackerAsync(shipment);
                     if (shipmentTracker != null)
                     {
-                        model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber);
+                        model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment);
                         if (ShippingSettings.DisplayShipmentEventsToStoreOwner)
                             await PrepareShipmentStatusEventModelsAsync(model.ShipmentStatusEvents, shipment);
                     }

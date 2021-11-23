@@ -4,8 +4,8 @@ using System.Net;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -32,7 +32,7 @@ using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.Validators;
 using StackExchange.Profiling.Storage;
-using WebMarkupMin.AspNetCore5;
+using WebMarkupMin.AspNetCore6;
 using WebMarkupMin.NUglify;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -46,18 +46,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// Add services to the application and configure service provider
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="configuration">Configuration of the application</param>
-        /// <param name="webHostEnvironment">Hosting environment</param>
-        /// <returns>Configured engine and app settings</returns>
-        public static (IEngine, AppSettings) ConfigureApplicationServices(this IServiceCollection services,
-            IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+        /// <param name="builder">A builder for web applications and services</param>
+        public static void ConfigureApplicationServices(this IServiceCollection services,
+            WebApplicationBuilder builder)
         {
             //let the operating system decide what TLS protocol version to use
             //see https://docs.microsoft.com/dotnet/framework/network-programming/tls
             ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;
 
             //create default file provider
-            CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment);
+            CommonHelper.DefaultFileProvider = new NopFileProvider(builder.Environment);
 
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
@@ -65,7 +63,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
             var pluginConfig = new PluginConfig();
-            configuration.GetSection(nameof(PluginConfig)).Bind(pluginConfig, options => options.BindNonPublicProperties = true);
+            builder.Configuration.GetSection(nameof(PluginConfig)).Bind(pluginConfig, options => options.BindNonPublicProperties = true);
             mvcCoreBuilder.PartManager.InitializePlugins(pluginConfig);
 
             //add configuration parameters
@@ -76,7 +74,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 .ToList();
             foreach (var config in configurations)
             {
-                configuration.GetSection(config.Name).Bind(config, options => options.BindNonPublicProperties = true);
+                builder.Configuration.GetSection(config.Name).Bind(config, options => options.BindNonPublicProperties = true);
             }
             var appSettings = AppSettingsHelper.SaveAppSettings(configurations, CommonHelper.DefaultFileProvider, false);
             services.AddSingleton(appSettings);
@@ -84,10 +82,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //create engine and configure service provider
             var engine = EngineContext.Create();
 
-            engine.ConfigureServices(services, configuration);
+            engine.ConfigureServices(services, builder.Configuration);
             engine.RegisterDependencies(services, appSettings);
-
-            return (engine, appSettings);
         }
 
         /// <summary>

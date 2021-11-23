@@ -1,33 +1,34 @@
-//------------------------------------------------------------------------------
-// Contributor(s): oskar.kjellin 
-//------------------------------------------------------------------------------
-
-using System;
+﻿using System;
 
 namespace Nop.Services.Shipping.Tracking
 {
     /// <summary>
-    /// Shipment status event
+    /// Represents a shipment status event
     /// </summary>
     public partial class ShipmentStatusEvent
     {
         /// <summary>
-        /// Event name
+        /// Gets or sets a status
+        /// </summary>
+        public string Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets an event name
         /// </summary>
         public string EventName { get; set; }
 
         /// <summary>
-        /// Location
+        /// Gets or sets a location (address)
         /// </summary>
         public string Location { get; set; }
 
         /// <summary>
-        /// two-letter country code
+        /// Gets or sets a two-letter country code
         /// </summary>
         public string CountryCode { get; set; }
 
         /// <summary>
-        /// Date
+        /// Gets or sets a date
         /// </summary>
         public DateTime? Date { get; set; }
     }

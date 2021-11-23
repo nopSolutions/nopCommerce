@@ -11,6 +11,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Common;
 using Nop.Services.Directory;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -35,6 +36,7 @@ namespace Nop.Web.Controllers
         protected IGenericAttributeService GenericAttributeService { get; }
         protected ILanguageService LanguageService { get; }
         protected ILocalizationService LocalizationService { get; }
+        private readonly INopHtmlHelper _nopHtmlHelper;
         protected IStoreContext StoreContext { get; }
         protected IThemeContext ThemeContext { get; }
         protected IVendorService VendorService { get; }
@@ -58,6 +60,7 @@ namespace Nop.Web.Controllers
             IGenericAttributeService genericAttributeService,
             ILanguageService languageService,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             IStoreContext storeContext,
             IThemeContext themeContext,
             IVendorService vendorService,
@@ -77,6 +80,7 @@ namespace Nop.Web.Controllers
             GenericAttributeService = genericAttributeService;
             LanguageService = languageService;
             LocalizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             StoreContext = storeContext;
             ThemeContext = themeContext;
             VendorService = vendorService;
@@ -201,7 +205,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 var subject = CommonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-                var body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+                var body = _nopHtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
 
                 await WorkflowMessageService.SendContactUsMessageAsync((await WorkContext.GetWorkingLanguageAsync()).Id,
                     model.Email.Trim(), model.FullName, subject, body);
@@ -257,7 +261,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 var subject = CommonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-                var body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+                var body = _nopHtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
 
                 await WorkflowMessageService.SendContactVendorMessageAsync(vendor, (await WorkContext.GetWorkingLanguageAsync()).Id,
                     model.Email.Trim(), model.FullName, subject, body);
@@ -311,7 +315,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed

@@ -342,7 +342,7 @@ namespace Nop.Web.Factories
                         {
                             var downloadGuidStr = CheckoutAttributeParser
                                 .ParseValues(selectedCheckoutAttributes, attribute.Id).FirstOrDefault();
-                            Guid.TryParse(downloadGuidStr, out var downloadGuid);
+                            _ = Guid.TryParse(downloadGuidStr, out var downloadGuid);
                             var download = await DownloadService.GetDownloadByGuidAsync(downloadGuid);
                             if (download != null)
                                 attributeModel.DefaultValue = download.DownloadGuid.ToString();
@@ -1352,7 +1352,7 @@ namespace Nop.Web.Factories
                     {
                         if (pickupPointsResponse.PickupPoints.Any())
                         {
-                            pickupPointsNumber = pickupPointsResponse.PickupPoints.Count();
+                            pickupPointsNumber = pickupPointsResponse.PickupPoints.Count;
                             var pickupPoint = pickupPointsResponse.PickupPoints.OrderBy(p => p.PickupFee).First();
 
                             rawShippingOptions.Add(new ShippingOption
@@ -1420,11 +1420,22 @@ namespace Nop.Web.Factories
                             Name = option.Name,
                             ShippingRateComputationMethodSystemName = option.ShippingRateComputationMethodSystemName,
                             Description = option.Description,
+                            DisplayOrder = option.DisplayOrder ?? 0,
                             Price = shippingRateString,
-                            Rate = option.Rate,
+                            Rate = shippingRate,
                             DeliveryDateFormat = deliveryDateFormat,
                             Selected = selected
                         });
+                    }
+
+                    //sort shipping methods
+                    if (model.ShippingOptions.Count > 1)
+                    {
+                        model.ShippingOptions = (_shippingSettings.ShippingSorting switch
+                        {
+                            ShippingSortingEnum.ShippingCost => model.ShippingOptions.OrderBy(option => option.Rate),
+                            _ => model.ShippingOptions.OrderBy(option => option.DisplayOrder)
+                        }).ToList();
                     }
 
                     //if no option has been selected, let's do it for the first one

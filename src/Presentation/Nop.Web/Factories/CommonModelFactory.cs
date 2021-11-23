@@ -481,6 +481,7 @@ namespace Nop.Web.Factories
                 NewProductsEnabled = CatalogSettings.NewProductsEnabled,
                 DisplayTaxShippingInfoFooter = CatalogSettings.DisplayTaxShippingInfoFooter,
                 HidePoweredByNopCommerce = StoreInformationSettings.HidePoweredByNopCommerce,
+                IsHomePage = _webHelper.GetStoreLocation().Equals(_webHelper.GetThisPageUrl(false), StringComparison.InvariantCultureIgnoreCase),
                 AllowCustomersToApplyForVendorAccount = VendorSettings.AllowCustomersToApplyForVendorAccount,
                 AllowCustomersToCheckGiftCardBalance = CustomerSettings.AllowCustomersToCheckGiftCardBalance && CaptchaSettings.Enabled,
                 Topics = topicModels,

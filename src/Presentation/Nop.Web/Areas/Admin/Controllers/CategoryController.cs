@@ -156,7 +156,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
-                    if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
+                    if (!existingAclRecords.Any(acl => acl.CustomerRoleId == customerRole.Id))
                         await AclService.InsertAclRecordAsync(category, customerRole.Id);
                 }
                 else
@@ -181,7 +181,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
-                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
+                    if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
                         await StoreMappingService.InsertStoreMappingAsync(category, store.Id);
                 }
                 else
@@ -432,7 +432,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             await CategoryService.DeleteCategoriesAsync(await (await CategoryService.GetCategoriesByIdsAsync(selectedIds.ToArray())).WhereAwait(async p => await WorkContext.GetCurrentVendorAsync() == null).ToListAsync());

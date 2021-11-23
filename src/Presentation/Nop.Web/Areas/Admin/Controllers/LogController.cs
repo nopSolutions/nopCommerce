@@ -134,7 +134,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             await Logger.DeleteLogsAsync((await Logger.GetLogByIdsAsync(selectedIds.ToArray())).ToList());

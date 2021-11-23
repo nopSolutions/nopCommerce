@@ -590,8 +590,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get parameters to filter customers
-            int.TryParse(searchModel.SearchDayOfBirth, out var dayOfBirth);
-            int.TryParse(searchModel.SearchMonthOfBirth, out var monthOfBirth);
+            _ = int.TryParse(searchModel.SearchDayOfBirth, out var dayOfBirth);
+            _ = int.TryParse(searchModel.SearchMonthOfBirth, out var monthOfBirth);
 
             //get customers
             var customers = await CustomerService.GetAllCustomersAsync(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),

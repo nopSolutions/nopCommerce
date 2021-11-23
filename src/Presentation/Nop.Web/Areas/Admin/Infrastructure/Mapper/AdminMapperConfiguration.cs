@@ -1292,7 +1292,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.GeneratePdfInvoiceInCustomerLanguage, options => options.Ignore())
                 .ForMember(settings => settings.MinimumOrderPlacementInterval, options => options.Ignore())
                 .ForMember(settings => settings.DisplayCustomerCurrencyOnOrders, options => options.Ignore())
-                .ForMember(settings => settings.ReturnRequestsFileMaximumSize, options => options.Ignore());
+                .ForMember(settings => settings.ReturnRequestsFileMaximumSize, options => options.Ignore())
+                .ForMember(settings => settings.DisplayOrderSummary, options => options.Ignore());
 
             CreateMap<ReturnRequestAction, ReturnRequestActionModel>();
             CreateMap<ReturnRequestActionModel, ReturnRequestAction>();
@@ -1494,6 +1495,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AllowPickupInStore_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ConsiderAssociatedProductsDimensions_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.SortShippingValues, options => options.Ignore())
+                .ForMember(model => model.ShippingSorting_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DisplayPickupPointsOnMap_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DisplayShipmentEventsToCustomers_OverrideForStore, options => options.Ignore())

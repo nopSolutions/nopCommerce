@@ -56,7 +56,6 @@ namespace Nop.Web.Factories
         protected IManufacturerService ManufacturerService { get; }
         protected IManufacturerTemplateService ManufacturerTemplateService { get; }
         protected IPictureService PictureService { get; }
-        protected IPriceFormatter PriceFormatter { get; }
         protected IProductModelFactory ProductModelFactory { get; }
         protected IProductService ProductService { get; }
         protected IProductTagService ProductTagService { get; }
@@ -92,7 +91,6 @@ namespace Nop.Web.Factories
             IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService,
             IPictureService pictureService,
-            IPriceFormatter priceFormatter,
             IProductModelFactory productModelFactory,
             IProductService productService,
             IProductTagService productTagService,
@@ -124,7 +122,6 @@ namespace Nop.Web.Factories
             ManufacturerService = manufacturerService;
             ManufacturerTemplateService = manufacturerTemplateService;
             PictureService = pictureService;
-            PriceFormatter = priceFormatter;
             ProductModelFactory = productModelFactory;
             ProductService = productService;
             ProductTagService = productTagService;
@@ -1248,7 +1245,7 @@ namespace Nop.Web.Factories
             {
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
-                PriceRangeModel availablePriceRange = null;
+                PriceRangeModel availablePriceRange;
                 if (!vendor.ManuallyPriceRange)
                 {
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
@@ -1494,7 +1491,7 @@ namespace Nop.Web.Factories
             {
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
-                PriceRangeModel availablePriceRange = null;
+                PriceRangeModel availablePriceRange;
                 if (!CatalogSettings.ProductsByTagManuallyPriceRange)
                 {
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
@@ -1734,7 +1731,7 @@ namespace Nop.Web.Factories
                     {
                         selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
-                        PriceRangeModel availablePriceRange = null;
+                        PriceRangeModel availablePriceRange;
                         if (!CatalogSettings.SearchPageManuallyPriceRange)
                         {
                             async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)

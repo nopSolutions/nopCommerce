@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Html;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Common
@@ -18,6 +18,7 @@ namespace Nop.Services.Common
         protected IAddressAttributeParser AddressAttributeParser { get; }
         protected IAddressAttributeService AddressAttributeService { get; }
         protected ILocalizationService LocalizationService { get; }
+        private readonly INopHtmlHelper _nopHtmlHelper;
         protected IWorkContext WorkContext { get; }
 
         #endregion
@@ -25,13 +26,15 @@ namespace Nop.Services.Common
         #region Ctor
 
         public AddressAttributeFormatter(IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,            
+            IAddressAttributeService addressAttributeService,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             IWorkContext workContext)
         {
             AddressAttributeParser = addressAttributeParser;
             AddressAttributeService = addressAttributeService;
             LocalizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             WorkContext = workContext;
         }
 
@@ -74,7 +77,7 @@ namespace Nop.Services.Common
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
-                            formattedAttribute = $"{attributeName}: {HtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
+                            formattedAttribute = $"{attributeName}: {_nopHtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)

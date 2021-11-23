@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Html;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Tax;
@@ -26,6 +26,7 @@ namespace Nop.Services.Orders
         protected ICurrencyService CurrencyService { get; }
         protected IDownloadService DownloadService { get; }
         protected ILocalizationService LocalizationService { get; }
+        private readonly INopHtmlHelper _nopHtmlHelper;
         protected IPriceFormatter PriceFormatter { get; }
         protected ITaxService TaxService { get; }
         protected IWebHelper WebHelper { get; }
@@ -40,6 +41,7 @@ namespace Nop.Services.Orders
             ICurrencyService currencyService,
             IDownloadService downloadService,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             IPriceFormatter priceFormatter,
             ITaxService taxService,
             IWebHelper webHelper,
@@ -50,6 +52,7 @@ namespace Nop.Services.Orders
             CurrencyService = currencyService;
             DownloadService = downloadService;
             LocalizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             PriceFormatter = priceFormatter;
             TaxService = taxService;
             WebHelper = webHelper;
@@ -101,13 +104,13 @@ namespace Nop.Services.Orders
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
-                            formattedAttribute = $"{attributeName}: {HtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
+                            formattedAttribute = $"{attributeName}: {_nopHtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                         {
                             //file upload
-                            Guid.TryParse(valueStr, out var downloadGuid);
+                            _ = Guid.TryParse(valueStr, out var downloadGuid);
                             var download = await DownloadService.GetDownloadByGuidAsync(downloadGuid);
                             if (download != null)
                             {

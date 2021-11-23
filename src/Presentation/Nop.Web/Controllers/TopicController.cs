@@ -10,6 +10,7 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class TopicController : BasePublicController
     {
         #region Fields
@@ -77,7 +78,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> Authenticate(int id, string password)
         {
             var authResult = false;

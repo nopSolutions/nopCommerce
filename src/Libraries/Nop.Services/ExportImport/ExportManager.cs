@@ -659,7 +659,7 @@ namespace Nop.Services.ExportImport
             var orderItemProperties = new[]
             {
                 new PropertyByName<OrderItem>("Name", async oi => (await ProductService.GetProductByIdAsync(oi.ProductId)).Name),
-                new PropertyByName<OrderItem>("Sku", async oi => (await ProductService.GetProductByIdAsync(oi.ProductId)).Sku),
+                new PropertyByName<OrderItem>("Sku", async oi => await _productService.FormatSkuAsync(await _productService.GetProductByIdAsync(oi.ProductId), oi.AttributesXml)),
                 new PropertyByName<OrderItem>("PriceExclTax", oi => oi.UnitPriceExclTax),
                 new PropertyByName<OrderItem>("PriceInclTax", oi => oi.UnitPriceInclTax),
                 new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
@@ -1540,7 +1540,7 @@ namespace Nop.Services.ExportImport
                             await xmlWriter.WriteStringAsync("Id", orderItem.Id);
                             await xmlWriter.WriteStringAsync("OrderItemGuid", orderItem.OrderItemGuid);
                             await xmlWriter.WriteStringAsync("Name", product.Name);
-                            await xmlWriter.WriteStringAsync("Sku", product.Sku);
+                            await xmlWriter.WriteStringAsync("Sku", await _productService.FormatSkuAsync(product, orderItem.AttributesXml));
                             await xmlWriter.WriteStringAsync("PriceExclTax", orderItem.UnitPriceExclTax);
                             await xmlWriter.WriteStringAsync("PriceInclTax", orderItem.UnitPriceInclTax);
                             await xmlWriter.WriteStringAsync("Quantity", orderItem.Quantity);
@@ -2029,7 +2029,7 @@ namespace Nop.Services.ExportImport
 
             var orderItemsManager = new PropertyManager<OrderItem>(new[]
             { 
-                new PropertyByName<OrderItem>("SKU", async oi => (await ProductService.GetProductByIdAsync(oi.ProductId)).Sku),
+                new PropertyByName<OrderItem>("SKU", async oi => await _productService.FormatSkuAsync(await _productService.GetProductByIdAsync(oi.ProductId), oi.AttributesXml)),
                 new PropertyByName<OrderItem>("Name", async oi => await LocalizationService.GetLocalizedAsync(await ProductService.GetProductByIdAsync(oi.ProductId), p => p.Name)),
                 new PropertyByName<OrderItem>("Price", async oi => await PriceFormatter.FormatPriceAsync(CurrencyService.ConvertCurrency((await OrderService.GetOrderByIdAsync(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, (await OrderService.GetOrderByIdAsync(oi.OrderId)).CurrencyRate), true, (await OrderService.GetOrderByIdAsync(oi.OrderId)).CustomerCurrencyCode, false, currentLanguage.Id)),
                 new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),

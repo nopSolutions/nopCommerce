@@ -7,7 +7,7 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework> 
+    <TargetFramework>net6.0</TargetFramework> 
     <OutputPath>..\..\Presentation\Nop.Web\Plugins\PLUGIN_OUTPUT_DIRECTORY</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
 	<!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.

@@ -1685,6 +1685,7 @@ namespace Nop.Services.Catalog
                 //send email notification
                 if (quantityToChange < 0 && totalStock < product.NotifyAdminForQuantityBelow)
                 {
+                    //do not inject IWorkflowMessageService via constructor because it'll cause circular references
                     var workflowMessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
                     await workflowMessageService.SendQuantityBelowStoreOwnerNotificationAsync(product, LocalizationSettings.DefaultAdminLanguageId);
                 }
@@ -1713,6 +1714,7 @@ namespace Nop.Services.Catalog
                     //send email notification
                     if (quantityToChange < 0 && combination.StockQuantity < combination.NotifyAdminForQuantityBelow)
                     {
+                        //do not inject IWorkflowMessageService via constructor because it'll cause circular references
                         var workflowMessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
                         await workflowMessageService.SendQuantityBelowStoreOwnerNotificationAsync(combination, LocalizationSettings.DefaultAdminLanguageId);
                     }

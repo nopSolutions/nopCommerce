@@ -91,16 +91,7 @@ namespace Nop.Tests
                 ? DataSettingsManager.LoadSettings().ConnectionString
                 : connectionString);
         }
-
-        /// <summary>
-        /// Initialize database
-        /// </summary>
-        public void InitializeDatabase()
-        {
-            var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
-        }
-
+        
         /// <summary>
         /// Inserts record into table. Returns inserted entity with identity
         /// </summary>
@@ -416,7 +407,7 @@ namespace Nop.Tests
         {
             get
             {
-                if (!(Singleton<MappingSchema>.Instance is null))
+                if (Singleton<MappingSchema>.Instance is not null)
                     return Singleton<MappingSchema>.Instance;
 
                 Singleton<MappingSchema>.Instance =

@@ -156,6 +156,15 @@ namespace Nop.Data.DataProviders
         #region Methods
 
         /// <summary>
+        /// Initialize database
+        /// </summary>
+        public virtual void InitializeDatabase()
+        {
+            var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
+            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
+        }
+
+        /// <summary>
         /// Creates a new temporary storage and populate it using data from provided query
         /// </summary>
         /// <param name="storeKey">Name of temporary storage</param>

@@ -12,6 +12,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
@@ -24,6 +25,7 @@ using Nop.Web.Models.Vendors;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class VendorController : BasePublicController
     {
         #region Fields
@@ -33,6 +35,7 @@ namespace Nop.Web.Controllers
         protected IDownloadService DownloadService { get; }
         protected IGenericAttributeService GenericAttributeService { get; }
         protected ILocalizationService LocalizationService { get; }
+        private readonly INopHtmlHelper _nopHtmlHelper;
         protected IPictureService PictureService { get; }
         protected IUrlRecordService UrlRecordService { get; }
         protected IVendorAttributeParser VendorAttributeParser { get; }
@@ -53,6 +56,7 @@ namespace Nop.Web.Controllers
             IDownloadService downloadService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             IPictureService pictureService,
             IUrlRecordService urlRecordService,
             IVendorAttributeParser vendorAttributeParser,
@@ -69,6 +73,7 @@ namespace Nop.Web.Controllers
             DownloadService = downloadService;
             GenericAttributeService = genericAttributeService;
             LocalizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             PictureService = pictureService;
             UrlRecordService = urlRecordService;
             VendorAttributeParser = vendorAttributeParser;
@@ -190,7 +195,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ApplyVendor")]
-        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile)
         {
@@ -236,7 +240,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+                var description = _nopHtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
                 //disabled by default
                 var vendor = new Vendor
                 {
@@ -294,7 +298,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Info")]
-        [AutoValidateAntiforgeryToken]
         [FormValueRequired("save-info-button")]
         public virtual async Task<IActionResult> Info(VendorInfoModel model, IFormFile uploadedFile)
         {
@@ -330,7 +333,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+                var description = _nopHtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
 
                 vendor.Name = model.Name;
                 vendor.Email = model.Email;
@@ -365,7 +368,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Info")]
-        [AutoValidateAntiforgeryToken]
         [FormValueRequired("remove-picture")]
         public virtual async Task<IActionResult> RemovePicture()
         {

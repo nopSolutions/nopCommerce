@@ -249,7 +249,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
-                    if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
+                    if (!existingAclRecords.Any(acl => acl.CustomerRoleId == customerRole.Id))
                         await AclService.InsertAclRecordAsync(product, customerRole.Id);
                 }
                 else
@@ -530,7 +530,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (!formKey.Equals($"warehouse_qty_{warehouse.Id}", StringComparison.InvariantCultureIgnoreCase))
                         continue;
 
-                    int.TryParse(formData[formKey], out stockQuantity);
+                    _ = int.TryParse(formData[formKey], out stockQuantity);
                     break;
                 }
 
@@ -539,7 +539,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var formKey in formData.Keys)
                     if (formKey.Equals($"warehouse_reserved_{warehouse.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int.TryParse(formData[formKey], out reservedQuantity);
+                        _ = int.TryParse(formData[formKey], out reservedQuantity);
                         break;
                     }
 
@@ -548,7 +548,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var formKey in formData.Keys)
                     if (formKey.Equals($"warehouse_used_{warehouse.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int.TryParse(formData[formKey], out var tmp);
+                        _ = int.TryParse(formData[formKey], out var tmp);
                         used = tmp == warehouse.Id;
                         break;
                     }
@@ -1122,7 +1122,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             var currentVendor = await WorkContext.GetCurrentVendorAsync();
@@ -2055,7 +2055,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             var tags = await ProductTagService.GetProductTagsByIdsAsync(selectedIds.ToArray());

@@ -1,4 +1,5 @@
-﻿@model NewsItemModel
+﻿@inject Nop.Services.Html.INopHtmlHelper htmlHelper
+@model NewsItemModel
 @{
     Layout = "_ColumnsTwo";
 
@@ -43,7 +44,7 @@
                     <div class="form-fields">
                         <div class="inputs">
                             <label asp-for="AddNewComment.CommentTitle" asp-postfix=":"></label>
-                            <input asp-for="AddNewComment.CommentTitle" class="enter-comment-title" asp-disabled="@Model.PreventNotRegisteredUsersToLeaveComments"/>
+                            <input asp-for="AddNewComment.CommentTitle" class="enter-comment-title" asp-disabled="@Model.PreventNotRegisteredUsersToLeaveComments" />
                             <span asp-validation-for="AddNewComment.CommentTitle"></span>
                         </div>
                         <div class="inputs">
@@ -95,7 +96,7 @@
                                                 @if (comment.AllowViewingProfiles)
                                                 {
                                                     <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="avatar-img-link">
-                                                        <img src="@(comment.CustomerAvatarUrl)" class="avatar-img"  alt="avatar" />
+                                                        <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
                                                     </a>
                                                 }
                                                 else
@@ -115,7 +116,7 @@
                                         <strong class="comment-text">@comment.CommentTitle</strong>
                                     </div>
                                     <div class="comment-body">
-                                        <p class="comment-text">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
+                                        <p class="comment-text">@Html.Raw(htmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
                                     </div>
                                 </div>
                                 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsItemPageInsideComment, additionalData = comment })

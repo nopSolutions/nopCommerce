@@ -3304,7 +3304,8 @@ namespace Nop.Services.Installation
                 CustomOrderNumberMask = "{ID}",
                 ExportWithProducts = true,
                 AllowAdminsToBuyCallForPriceProducts = true,
-                DisplayCustomerCurrencyOnOrders = false
+                DisplayCustomerCurrencyOnOrders = false,
+                DisplayOrderSummary = true
             });
 
             await settingService.SaveSettingAsync(new SecuritySettings
@@ -3341,6 +3342,7 @@ namespace Nop.Services.Installation
                 ConsiderAssociatedProductsDimensions = true,
                 ShipSeparatelyOneItemEach = true,
                 RequestDelay = 300,
+                ShippingSorting = ShippingSortingEnum.Position,
             });
 
             await settingService.SaveSettingAsync(new PaymentSettings

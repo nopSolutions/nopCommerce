@@ -200,7 +200,7 @@ namespace Nop.Services.Localization
         {
             var query = from lsr in LsrRepository.Table
                         orderby lsr.ResourceName
-                        where lsr.LanguageId == languageId && lsr.ResourceName == resourceName
+                        where lsr.LanguageId == languageId && lsr.ResourceName == resourceName.ToLowerInvariant()
                         select lsr;
 
             var localeStringResource = await query.FirstOrDefaultAsync();
@@ -218,7 +218,10 @@ namespace Nop.Services.Localization
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertLocaleStringResourceAsync(LocaleStringResource localeStringResource)
         {
-            await LsrRepository.InsertAsync(localeStringResource);
+            if (!string.IsNullOrEmpty(localeStringResource?.ResourceName))
+                localeStringResource.ResourceName = localeStringResource.ResourceName.Trim().ToLowerInvariant();
+
+            await _lsrRepository.InsertAsync(localeStringResource);
         }
 
         /// <summary>
@@ -742,7 +745,7 @@ namespace Nop.Services.Localization
                     .Where(language => !languageId.HasValue || language.Id == languageId.Value)
                     .SelectMany(language => resourcesToInsert.Select(resource => new LocaleStringResource
                     {
-                        LanguageId = language.Id, ResourceName = resource.Key, ResourceValue = resource.Value
+                        LanguageId = language.Id, ResourceName = resource.Key.Trim().ToLowerInvariant(), ResourceValue = resource.Value
                     }))
                     .ToList();
 

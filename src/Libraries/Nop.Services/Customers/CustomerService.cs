@@ -837,8 +837,8 @@ namespace Nop.Services.Customers
             if (customer == null)
                 return string.Empty;
 
-            //TODO: try to use DI
             if (await IsGuestAsync(customer))
+                //do not inject ILocalizationService via constructor because it'll cause circular references
                 return await EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync("Customer.Guest");
 
             var result = string.Empty;

@@ -227,6 +227,7 @@ namespace Nop.Services.Orders
             var result = attributesXml;
 
             //removing "shippable" checkout attributes if there's no any shippable products in the cart
+            //do not inject IShoppingCartService via constructor because it'll cause circular references
             var shoppingCartService = EngineContext.Current.Resolve<IShoppingCartService>();
             if (await shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                 return result;

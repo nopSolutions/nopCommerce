@@ -1,5 +1,9 @@
-﻿using FluentMigrator;
+﻿using System;
+using System.Linq;
+using FluentMigrator;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.ScheduleTasks;
+using Nop.Core.Domain.Security;
 using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo450
@@ -31,6 +35,32 @@ namespace Nop.Data.Migrations.UpgradeTo450
             else
             {
                 Alter.Table(scheduleTaskTableName).AlterColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime2().Nullable();
+            }
+
+            //#5939
+            if (!_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "SalesSummaryReport", StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                var salesSummaryReportPermission = _dataProvider.InsertEntity(
+                    new PermissionRecord
+                    {
+                        Name = "Admin area. Access sales summary report",
+                        SystemName = "SalesSummaryReport",
+                        Category = "Orders"
+                    }
+                );
+
+                //add it to the Admin role by default
+                var adminRole = _dataProvider
+                    .GetTable<CustomerRole>()
+                    .FirstOrDefault(x => x.IsSystemRole && x.SystemName == NopCustomerDefaults.AdministratorsRoleName);
+
+                _dataProvider.InsertEntity(
+                    new PermissionRecordCustomerRoleMapping
+                    {
+                        CustomerRoleId = adminRole.Id,
+                        PermissionRecordId = salesSummaryReportPermission.Id
+                    }
+                );
             }
         }
 

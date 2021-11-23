@@ -7,13 +7,7 @@ namespace Nop.Web.Models.Common
     public partial record PagerModel
     {
         #region Ctor
-
-        public PagerModel()
-            : this(EngineContext.Current.Resolve<ILocalizationService>())
-        {
-
-        }
-
+        
         public PagerModel(ILocalizationService localizationService)
         {
             _localizationService = localizationService;

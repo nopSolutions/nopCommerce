@@ -25,6 +25,7 @@ using Nop.Web.Models.News;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class NewsController : BasePublicController
     {
         #region Fields
@@ -154,8 +155,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("NewsItem")]
-        [AutoValidateAntiforgeryToken]
+        [HttpPost, ActionName("NewsItem")]        
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)

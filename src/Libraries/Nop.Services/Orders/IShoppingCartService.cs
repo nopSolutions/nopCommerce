@@ -213,7 +213,6 @@ namespace Nop.Services.Orders
         Task<(decimal subTotal, decimal discountAmount, List<Discount> appliedDiscounts, int? maximumDiscountQty)> GetSubTotalAsync(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Finds a shopping cart item in the cart
         /// </summary>

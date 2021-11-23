@@ -528,7 +528,8 @@ namespace Nop.Services.Discounts
                 discount.DiscountType == DiscountType.AssignedToOrderTotal)
             {
                 var store = await StoreContext.GetCurrentStoreAsync();
-                //TODO: try to move into constructor
+
+                //do not inject IShoppingCartService via constructor because it'll cause circular references
                 var shoppingCartService = EngineContext.Current.Resolve<IShoppingCartService>();
                 var cart = await shoppingCartService.GetShoppingCartAsync(customer,
                     ShoppingCartType.ShoppingCart, storeId: store.Id);

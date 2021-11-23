@@ -342,6 +342,8 @@ namespace Nop.Web.Factories
                     //call for price
                     priceModel.OldPrice = null;
                     priceModel.Price = await LocalizationService.GetResourceAsync("Products.CallForPrice");
+                    priceModel.OldPriceValue = null;
+                    priceModel.PriceValue = null;
                 }
                 else
                 {
@@ -379,6 +381,7 @@ namespace Nop.Web.Factories
                     {
                         priceModel.OldPrice = null;
                         priceModel.Price = string.Format(await LocalizationService.GetResourceAsync("Products.PriceRangeFrom"), await PriceFormatter.FormatPriceAsync(finalPriceWithDiscount));
+                        priceModel.OldPriceValue = null;
                         priceModel.PriceValue = finalPriceWithDiscount;
                     }
                     else
@@ -393,6 +396,8 @@ namespace Nop.Web.Factories
 
                         if (strikeThroughPrice > decimal.Zero)
                             priceModel.OldPrice = await PriceFormatter.FormatPriceAsync(strikeThroughPrice);
+                            priceModel.OldPriceValue = strikeThroughPrice;
+                        }
 
                         priceModel.Price = await PriceFormatter.FormatPriceAsync(finalPriceWithDiscount);
                         priceModel.PriceValue = finalPriceWithDiscount;
@@ -403,6 +408,7 @@ namespace Nop.Web.Factories
                         //rental product
                         priceModel.OldPrice = await PriceFormatter.FormatRentalProductPeriodAsync(product, priceModel.OldPrice);
                         priceModel.Price = await PriceFormatter.FormatRentalProductPeriodAsync(product, priceModel.Price);
+                        priceModel.PriceValue = priceModel.PriceValue;
                     }
 
                     //property for German market
@@ -412,13 +418,16 @@ namespace Nop.Web.Factories
 
                     //PAngV default baseprice (used in Germany)
                     priceModel.BasePricePAngV = await PriceFormatter.FormatBasePriceAsync(product, finalPriceWithDiscount);
+                    priceModel.BasePricePAngVValue = finalPriceWithDiscount;
                 }
             }
             else
             {
                 //hide prices
                 priceModel.OldPrice = null;
+                priceModel.OldPriceValue = null;
                 priceModel.Price = null;
+                priceModel.PriceValue = null;
             }
         }
 
@@ -477,7 +486,9 @@ namespace Nop.Web.Factories
                      WorkContext.OriginalCustomerIfImpersonated == null))
                 {
                     priceModel.OldPrice = null;
+                    priceModel.OldPriceValue = null;
                     priceModel.Price = await LocalizationService.GetResourceAsync("Products.CallForPrice");
+                    priceModel.PriceValue = null;
                 }
                 else
                 {
@@ -486,18 +497,22 @@ namespace Nop.Web.Factories
                     var finalPrice = await CurrencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceBase, await WorkContext.GetWorkingCurrencyAsync());
 
                     priceModel.OldPrice = null;
+                    priceModel.OldPriceValue = null;
                     priceModel.Price = string.Format(await LocalizationService.GetResourceAsync("Products.PriceRangeFrom"), await PriceFormatter.FormatPriceAsync(finalPrice));
                     priceModel.PriceValue = finalPrice;
 
                     //PAngV default baseprice (used in Germany)
                     priceModel.BasePricePAngV = await PriceFormatter.FormatBasePriceAsync(product, finalPriceBase);
+                    priceModel.BasePricePAngVValue = finalPriceBase;
                 }
             }
             else
             {
                 //hide prices
                 priceModel.OldPrice = null;
+                priceModel.OldPriceValue = null;
                 priceModel.Price = null;
+                priceModel.PriceValue = null;
             }
         }
 
@@ -671,11 +686,15 @@ namespace Nop.Web.Factories
 
                         if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
                             model.OldPrice = await PriceFormatter.FormatPriceAsync(oldPrice);
+                            model.OldPriceValue = oldPrice;
+                        }
 
                         model.Price = await PriceFormatter.FormatPriceAsync(finalPriceWithoutDiscount);
 
                         if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
                             model.PriceWithDiscount = await PriceFormatter.FormatPriceAsync(finalPriceWithDiscount);
+                            model.PriceWithDiscountValue = finalPriceWithDiscount;
+                        }
 
                         model.PriceValue = finalPriceWithDiscount;
 
@@ -688,6 +707,7 @@ namespace Nop.Web.Factories
 
                         //PAngV baseprice (used in Germany)
                         model.BasePricePAngV = await PriceFormatter.FormatBasePriceAsync(product, finalPriceWithDiscountBase);
+                        model.BasePricePAngVValue = finalPriceWithDiscountBase;
                         //currency code
                         model.CurrencyCode = (await WorkContext.GetWorkingCurrencyAsync()).CurrencyCode;
 
@@ -697,6 +717,7 @@ namespace Nop.Web.Factories
                             model.IsRental = true;
                             var priceStr = await PriceFormatter.FormatPriceAsync(finalPriceWithDiscount);
                             model.RentalPrice = await PriceFormatter.FormatRentalProductPeriodAsync(product, priceStr);
+                            model.RentalPriceValue = finalPriceWithDiscount;
                         }
                     }
                 }
@@ -705,6 +726,7 @@ namespace Nop.Web.Factories
             {
                 model.HidePrices = true;
                 model.OldPrice = null;
+                model.OldPriceValue = null;
                 model.Price = null;
             }
 
@@ -1000,7 +1022,7 @@ namespace Nop.Web.Factories
                                 if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
                                 {
                                     var downloadGuidStr = ProductAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id).FirstOrDefault();
-                                    Guid.TryParse(downloadGuidStr, out var downloadGuid);
+                                    _ = Guid.TryParse(downloadGuidStr, out var downloadGuid);
                                     var download = await DownloadService.GetDownloadByGuidAsync(downloadGuid);
                                     if (download != null)
                                         attributeModel.DefaultValue = download.DownloadGuid.ToString();
@@ -1047,6 +1069,7 @@ namespace Nop.Web.Factories
                        {
                            Quantity = tierPrice.Quantity,
                            Price = await PriceFormatter.FormatPriceAsync(price, false, false)
+                           PriceValue = price
                        };
                    }).ToListAsync();
 
@@ -1133,7 +1156,7 @@ namespace Nop.Web.Factories
 
                 //all pictures
                 var pictureModels = new List<PictureModel>();
-                for (var i = 0; i < pictures.Count(); i++ )
+                for (var i = 0; i < pictures.Count; i++ )
                 {
                     var picture = pictures[i];
 
@@ -1766,7 +1789,7 @@ namespace Nop.Web.Factories
                 productReviews.Add(productReviewModel);
             }
 
-            var pagerModel = new PagerModel
+            var pagerModel = new PagerModel(_localizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

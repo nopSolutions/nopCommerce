@@ -360,7 +360,9 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CopyProductSpecificationsAsync(Product product, Product productCopy)
         {
+            var allLanguages = await _languageService.GetAllLanguagesAsync();
             foreach (var productSpecificationAttribute in await SpecificationAttributeService.GetProductSpecificationAttributesAsync(product.Id))
+
             {
                 var psaCopy = new ProductSpecificationAttribute
                 {
@@ -373,6 +375,13 @@ namespace Nop.Services.Catalog
                     DisplayOrder = productSpecificationAttribute.DisplayOrder
                 };
                 await SpecificationAttributeService.InsertProductSpecificationAttributeAsync(psaCopy);
+                
+                foreach (var language in allLanguages)
+                {
+                    var customValue = await _localizationService.GetLocalizedAsync(productSpecificationAttribute, x => x.CustomValue, language.Id, false, false);
+                    if (!string.IsNullOrEmpty(customValue))
+                        await _localizedEntityService.SaveLocalizedValueAsync(psaCopy, x => x.CustomValue, customValue, language.Id);
+                }
             }
         }
 

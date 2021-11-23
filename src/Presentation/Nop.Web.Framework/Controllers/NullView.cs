@@ -7,7 +7,7 @@ namespace Nop.Web.Framework
 {
     public class NullView : IView
     {
-        public static readonly NullView Instance = new NullView();
+        public static readonly NullView Instance = new();
 
         public string Path => string.Empty;
 

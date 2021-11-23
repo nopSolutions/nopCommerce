@@ -44,9 +44,12 @@
                 $(document).ready(function () {
                     $("#back-in-stock-notify-me").on('click', function () {
                         var subscribeButton = this;
+                        var postData = {};
+                        addAntiForgeryToken(postData);
                         $.ajax({
                             cache: false,
                             type: "POST",
+                            data: postData,
                             url: "@(Url.RouteUrl("BackInStockSubscribeSend", new { productId = Model.ProductId }))",
                             success: function (data, textStatus, jqXHR) {
                                 $(subscribeButton).closest('.ui-dialog-content').dialog('destroy').remove();

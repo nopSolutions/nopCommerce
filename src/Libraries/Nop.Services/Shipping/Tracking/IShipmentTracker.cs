@@ -1,45 +1,34 @@
-﻿//------------------------------------------------------------------------------
-// Contributor(s): oskar.kjellin 
-//------------------------------------------------------------------------------
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping.Tracking
 {
     /// <summary>
-    /// Shipment tracker
+    /// Represents a shipment tracker
     /// </summary>
     public partial interface IShipmentTracker
     {
         /// <summary>
-        /// Gets if the current tracker can track the tracking number.
-        /// </summary>
-        /// <param name="trackingNumber">The tracking number to track.</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the rue if the tracker can track, otherwise false.
-        /// </returns>
-        Task<bool> IsMatchAsync(string trackingNumber);
-
-        /// <summary>
-        /// Gets an URL for a page to show tracking info (third party tracking page).
-        /// </summary>
-        /// <param name="trackingNumber">The tracking number to track.</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the uRL of a tracking page.
-        /// </returns>
-        Task<string> GetUrlAsync(string trackingNumber);
-
-        /// <summary>
-        /// Gets all events for a tracking number.
+        /// Get URL for a page to show tracking info (third party tracking page)
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track</param>
+        /// <param name="shipment">Shipment; pass null if the tracking number is not associated with a specific shipment</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the list of Shipment Events.
+        /// The task result contains the URL of a tracking page
         /// </returns>
-        Task<IList<ShipmentStatusEvent>> GetShipmentEventsAsync(string trackingNumber);
+        Task<string> GetUrlAsync(string trackingNumber, Shipment shipment = null);
+
+        /// <summary>
+        /// Get all shipment events
+        /// </summary>
+        /// <param name="trackingNumber">The tracking number to track</param>
+        /// <param name="shipment">Shipment; pass null if the tracking number is not associated with a specific shipment</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of shipment events
+        /// </returns>
+        Task<IList<ShipmentStatusEvent>> GetShipmentEventsAsync(string trackingNumber, Shipment shipment = null);
     }
 }

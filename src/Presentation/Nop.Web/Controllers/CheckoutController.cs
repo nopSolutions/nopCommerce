@@ -146,7 +146,7 @@ namespace Nop.Web.Controllers
 
             var pickupInStoreParameter = form["PickupInStore"].FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(pickupInStoreParameter))
-                bool.TryParse(pickupInStoreParameter, out pickupInStore);
+                _ = bool.TryParse(pickupInStoreParameter, out pickupInStore);
 
             return pickupInStore;
         }
@@ -273,7 +273,6 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CheckoutBillingAddress");
         }
 
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> Completed(int? orderId)
         {
             //validation
@@ -336,7 +335,6 @@ namespace Nop.Web.Controllers
         /// <param name="model"></param>
         /// <param name="opc"></param>
         /// <returns></returns>
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> SaveEditAddress(CheckoutBillingAddressModel model, bool opc = false)
         {
             try
@@ -1339,7 +1337,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSaveBilling(CheckoutBillingAddressModel model)
         {
             try
@@ -1363,7 +1361,7 @@ namespace Nop.Web.Controllers
 
                 var form = model.Form;
 
-                int.TryParse(form["billing_address_id"], out var billingAddressId);
+                _ = int.TryParse(form["billing_address_id"], out var billingAddressId);
 
                 if (billingAddressId > 0)
                 {
@@ -1484,7 +1482,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSaveShipping(CheckoutShippingAddressModel model)
         {
             try
@@ -1527,7 +1525,7 @@ namespace Nop.Web.Controllers
                     await GenericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
                 }
 
-                int.TryParse(form["shipping_address_id"], out var shippingAddressId);
+                _ = int.TryParse(form["shipping_address_id"], out var shippingAddressId);
 
                 if (shippingAddressId > 0)
                 {
@@ -1602,7 +1600,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSaveShippingMethod(string shippingoption, IFormCollection form)
         {
             try
@@ -1687,7 +1685,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSavePaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
         {
             try
@@ -1759,7 +1757,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSavePaymentInfo(IFormCollection form)
         {
             try
@@ -1830,7 +1828,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcConfirmOrder()
         {
             try

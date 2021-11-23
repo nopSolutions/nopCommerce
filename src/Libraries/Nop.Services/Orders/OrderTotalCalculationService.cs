@@ -1273,6 +1273,27 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Calculate payment method fee
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="fee">Fee value</param>
+        /// <param name="usePercentage">Is fee amount specified as percentage or fixed value?</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<decimal> CalculatePaymentAdditionalFeeAsync(IList<ShoppingCartItem> cart, decimal fee, bool usePercentage)
+        {
+            if (!usePercentage || fee <= 0) 
+                return fee;
+
+            var orderTotalWithoutPaymentFee = (await GetShoppingCartTotalAsync(cart, usePaymentMethodAdditionalFee: false)).shoppingCartTotal ?? 0;
+            var result = (decimal)((float)orderTotalWithoutPaymentFee * (float)fee / 100f);
+
+            return result;
+        }
+
+        /// <summary>
         /// Converts existing reward points to amount
         /// </summary>
         /// <param name="rewardPoints">Reward points</param>

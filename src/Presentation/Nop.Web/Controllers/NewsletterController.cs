@@ -10,6 +10,7 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class NewsletterController : BasePublicController
     {
         protected ILocalizationService LocalizationService { get; }
@@ -37,7 +38,6 @@ namespace Nop.Web.Controllers
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> SubscribeNewsletter(string email, bool subscribe)
         {
             string result;

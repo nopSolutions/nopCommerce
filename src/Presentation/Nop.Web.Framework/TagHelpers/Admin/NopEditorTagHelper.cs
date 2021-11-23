@@ -132,7 +132,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             viewContextAware?.Contextualize(ViewContext);
 
             //add form-control class
-            bool.TryParse(RenderFormControlClass, out var renderFormControlClass);
+            _ = bool.TryParse(RenderFormControlClass, out var renderFormControlClass);
             if (string.IsNullOrEmpty(RenderFormControlClass) && For.Metadata.ModelType.Name.Equals("String") || renderFormControlClass)
                 htmlAttributes.Add("class", "form-control");
 

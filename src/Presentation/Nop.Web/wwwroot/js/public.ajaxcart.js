@@ -32,10 +32,14 @@ var AjaxCart = {
         }
         this.setLoadWaiting(true);
 
+        var postData = {};
+        addAntiForgeryToken(postData);
+
         $.ajax({
             cache: false,
             url: urladd,
             type: "POST",
+            data: postData,
             success: this.success_process,
             complete: this.resetLoadWaiting,
             error: this.ajaxFailure
@@ -67,10 +71,14 @@ var AjaxCart = {
         }
         this.setLoadWaiting(true);
 
+        var postData = {};
+        addAntiForgeryToken(postData);
+
         $.ajax({
             cache: false,
             url: urladd,
             type: "POST",
+            data: postData,
             success: this.success_process,
             complete: this.resetLoadWaiting,
             error: this.ajaxFailure

@@ -8,6 +8,7 @@ using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Tax.Avalara.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class AddressValidationController : BaseController
     {
         #region Fields
@@ -37,7 +38,6 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         #region Methods
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> UseValidatedAddress(int addressId, bool isNewAddress)
         {
             //try to get an address by the passed identifier

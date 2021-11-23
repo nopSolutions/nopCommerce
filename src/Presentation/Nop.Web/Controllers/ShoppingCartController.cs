@@ -14,13 +14,13 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Html;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
@@ -57,6 +57,7 @@ namespace Nop.Web.Controllers
         protected IGenericAttributeService GenericAttributeService { get; }
         protected IGiftCardService GiftCardService { get; }
         protected ILocalizationService LocalizationService { get; }
+        private readonly INopHtmlHelper _nopHtmlHelper;
         protected INopFileProvider FileProvider { get; }
         protected INotificationService NotificationService { get; }
         protected IPermissionService PermissionService { get; }
@@ -96,6 +97,7 @@ namespace Nop.Web.Controllers
             IGenericAttributeService genericAttributeService,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             INopFileProvider fileProvider,
             INotificationService notificationService,
             IPermissionService permissionService,
@@ -131,6 +133,7 @@ namespace Nop.Web.Controllers
             GenericAttributeService = genericAttributeService;
             GiftCardService = giftCardService;
             LocalizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             FileProvider = fileProvider;
             NotificationService = notificationService;
             PermissionService = permissionService;
@@ -259,7 +262,7 @@ namespace Nop.Web.Controllers
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            Guid.TryParse(form[controlId], out var downloadGuid);
+                            _ = Guid.TryParse(form[controlId], out var downloadGuid);
                             var download = await DownloadService.GetDownloadByGuidAsync(downloadGuid);
                             if (download != null)
                             {
@@ -507,7 +510,6 @@ namespace Nop.Web.Controllers
         //add product to cart using AJAX
         //currently we use this method on catalog pages (category/manufacturer/etc)
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> AddProductToCart_Catalog(int productId, int shoppingCartTypeId,
             int quantity, bool forceredirection = false)
         {
@@ -708,7 +710,6 @@ namespace Nop.Web.Controllers
         //add product to cart using AJAX
         //currently we use this method on the product details pages
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> AddProductToCart_Details(int productId, int shoppingCartTypeId, IFormCollection form)
         {
             var product = await ProductService.GetProductByIdAsync(productId);
@@ -735,7 +736,7 @@ namespace Nop.Web.Controllers
             foreach (var formKey in form.Keys)
                 if (formKey.Equals($"addtocart_{productId}.UpdatedShoppingCartItemId", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    int.TryParse(form[formKey], out updatecartitemid);
+                    _ = int.TryParse(form[formKey], out updatecartitemid);
                     break;
                 }
 
@@ -794,7 +795,6 @@ namespace Nop.Web.Controllers
         //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
         //currently we use this method on the product details pages
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
             bool loadPicture, IFormCollection form)
         {
@@ -945,7 +945,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> CheckoutAttributeChange(IFormCollection form, bool isEditable)
         {
             var customer = await WorkContext.GetCurrentCustomerAsync();
@@ -1697,7 +1696,7 @@ namespace Nop.Web.Controllers
                 //email
                 await WorkflowMessageService.SendWishlistEmailAFriendMessageAsync(customer,
                         (await WorkContext.GetWorkingLanguageAsync()).Id, model.YourEmailAddress,
-                        model.FriendEmail, HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+                        model.FriendEmail, _nopHtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 
                 model.SuccessfullySent = true;
                 model.Result = await LocalizationService.GetResourceAsync("Wishlist.EmailAFriend.SuccessfullySent");

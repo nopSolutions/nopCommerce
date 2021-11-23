@@ -13,6 +13,7 @@ using Nop.Core.Events;
 using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -42,6 +43,7 @@ namespace Nop.Web.Controllers
         protected ICustomerService CustomerService { get; }
         protected IEventPublisher EventPublisher { get; }
         protected ILocalizationService LocalizationService { get; }
+        private readonly INopHtmlHelper _nopHtmlHelper;
         protected IOrderService OrderService { get; }
         protected IPermissionService PermissionService { get; }
         protected IProductAttributeParser ProductAttributeParser { get; }
@@ -73,6 +75,7 @@ namespace Nop.Web.Controllers
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             IOrderService orderService,
             IPermissionService permissionService,
             IProductAttributeParser productAttributeParser,
@@ -100,6 +103,7 @@ namespace Nop.Web.Controllers
             CustomerService = customerService;
             EventPublisher = eventPublisher;
             LocalizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             OrderService = orderService;
             PermissionService = permissionService;
             ProductAttributeParser = productAttributeParser;
@@ -505,7 +509,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> SetProductReviewHelpfulness(int productReviewId, bool washelpful)
         {
             var productReview = await ProductService.GetProductReviewByIdAsync(productReviewId);
@@ -605,7 +608,7 @@ namespace Nop.Web.Controllers
                 await WorkflowMessageService.SendProductEmailAFriendMessageAsync(customer,
                         (await WorkContext.GetWorkingLanguageAsync()).Id, product,
                         model.YourEmailAddress, model.FriendEmail,
-                        Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+                        _nopHtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 
                 model = await ProductModelFactory.PrepareProductEmailAFriendModelAsync(model, product, true);
                 model.SuccessfullySent = true;
@@ -624,7 +627,6 @@ namespace Nop.Web.Controllers
         #region Comparing products
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> AddProductToCompareList(int productId)
         {
             var product = await ProductService.GetProductByIdAsync(productId);

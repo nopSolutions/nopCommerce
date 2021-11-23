@@ -21,8 +21,8 @@ namespace Nop.Core.Caching
 
         protected IMemoryCache MemoryCache { get; }
 
-        private static readonly ConcurrentDictionary<string, CancellationTokenSource> _prefixes = new ConcurrentDictionary<string, CancellationTokenSource>();
-        private static CancellationTokenSource _clearToken = new CancellationTokenSource();
+        private static readonly ConcurrentDictionary<string, CancellationTokenSource> _prefixes = new();
+        private static CancellationTokenSource _clearToken = new();
 
         #endregion
 
