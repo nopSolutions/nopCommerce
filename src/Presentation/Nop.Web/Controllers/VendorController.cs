@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -35,7 +35,7 @@ namespace Nop.Web.Controllers
         protected IDownloadService DownloadService { get; }
         protected IGenericAttributeService GenericAttributeService { get; }
         protected ILocalizationService LocalizationService { get; }
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected INopHtmlHelper NopHtmlHelper { get; }
         protected IPictureService PictureService { get; }
         protected IUrlRecordService UrlRecordService { get; }
         protected IVendorAttributeParser VendorAttributeParser { get; }
@@ -73,7 +73,7 @@ namespace Nop.Web.Controllers
             DownloadService = downloadService;
             GenericAttributeService = genericAttributeService;
             LocalizationService = localizationService;
-            _nopHtmlHelper = nopHtmlHelper;
+            NopHtmlHelper = nopHtmlHelper;
             PictureService = pictureService;
             UrlRecordService = urlRecordService;
             VendorAttributeParser = vendorAttributeParser;
@@ -240,7 +240,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var description = _nopHtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+                var description = NopHtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
                 //disabled by default
                 var vendor = new Vendor
                 {
@@ -333,7 +333,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var description = _nopHtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+                var description = NopHtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
 
                 vendor.Name = model.Name;
                 vendor.Email = model.Email;

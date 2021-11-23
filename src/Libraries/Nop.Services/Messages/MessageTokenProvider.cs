@@ -71,7 +71,7 @@ namespace Nop.Services.Messages
         protected ILanguageService LanguageService { get; }
         protected ILocalizationService LocalizationService { get; }
         protected INewsService NewsService { get; }
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected INopHtmlHelper NopHtmlHelper { get; }
         protected IOrderService OrderService { get; }
         protected IPaymentPluginManager PaymentPluginManager { get; }
         protected IPaymentService PaymentService { get; }
@@ -151,7 +151,7 @@ namespace Nop.Services.Messages
             LanguageService = languageService;
             LocalizationService = localizationService;
             NewsService = newsService;
-            _nopHtmlHelper = nopHtmlHelper;
+            NopHtmlHelper = nopHtmlHelper;
             OrderService = orderService;
             PaymentPluginManager = paymentPluginManager;
             PaymentService = paymentService;
@@ -1072,7 +1072,7 @@ namespace Nop.Services.Messages
             var trackingNumberUrl = string.Empty;
             if (!string.IsNullOrEmpty(shipment.TrackingNumber))
             {
-                var shipmentTracker = await _shipmentService.GetShipmentTrackerAsync(shipment);
+                var shipmentTracker = await ShipmentService.GetShipmentTrackerAsync(shipment);
                 if (shipmentTracker != null)
                     trackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment);
             }
@@ -1141,8 +1141,8 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ReturnRequest.Product.Name", await LocalizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
             tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
             tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
-            tokens.Add(new Token("ReturnRequest.CustomerComment", _nopHtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
-            tokens.Add(new Token("ReturnRequest.StaffNotes", _nopHtmlHelper.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
+            tokens.Add(new Token("ReturnRequest.CustomerComment", NopHtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
+            tokens.Add(new Token("ReturnRequest.StaffNotes", NopHtmlHelper.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
             tokens.Add(new Token("ReturnRequest.Status", await LocalizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus, languageId)));
 
             //event notification
@@ -1165,7 +1165,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("GiftCard.CouponCode", giftCard.GiftCardCouponCode));
 
             var giftCardMessage = !string.IsNullOrWhiteSpace(giftCard.Message) ?
-                _nopHtmlHelper.FormatText(giftCard.Message, false, true, false, false, false, false) : string.Empty;
+                NopHtmlHelper.FormatText(giftCard.Message, false, true, false, false, false, false) : string.Empty;
 
             tokens.Add(new Token("GiftCard.Message", giftCardMessage, true));
 

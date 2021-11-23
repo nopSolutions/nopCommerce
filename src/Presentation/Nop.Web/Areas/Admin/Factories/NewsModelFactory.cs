@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,7 +34,7 @@ namespace Nop.Web.Areas.Admin.Factories
         protected ILanguageService LanguageService { get; }
         protected ILocalizationService LocalizationService { get; }
         protected INewsService NewsService { get; }
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected INopHtmlHelper NopHtmlHelper { get; }
         protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
         protected IStoreService StoreService { get; }
         protected IUrlRecordService UrlRecordService { get; }
@@ -62,7 +62,7 @@ namespace Nop.Web.Areas.Admin.Factories
             LanguageService = languageService;
             LocalizationService = localizationService;
             NewsService = newsService;
-            _nopHtmlHelper = nopHtmlHelper;
+            NopHtmlHelper = nopHtmlHelper;
             StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             StoreService = storeService;
             UrlRecordService = urlRecordService;
@@ -277,7 +277,7 @@ namespace Nop.Web.Areas.Admin.Factories
                             : await LocalizationService.GetResourceAsync("Admin.Customers.Guest");
                     }
 
-                    commentModel.CommentText = _nopHtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
+                    commentModel.CommentText = NopHtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
                     commentModel.StoreName = storeNames.ContainsKey(newsComment.StoreId) ? storeNames[newsComment.StoreId] : "Deleted";
 
                     return commentModel;

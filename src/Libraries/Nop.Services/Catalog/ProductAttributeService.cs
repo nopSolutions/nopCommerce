@@ -17,7 +17,6 @@ namespace Nop.Services.Catalog
         #region Fields
 
         protected IRepository<PredefinedProductAttributeValue> PredefinedProductAttributeValueRepository { get; }
-        private readonly IRepository<Product> _productRepository;
         protected IRepository<ProductAttribute> ProductAttributeRepository { get; }
         protected IRepository<ProductAttributeCombination> ProductAttributeCombinationRepository { get; }
         protected IRepository<ProductAttributeMapping> ProductAttributeMappingRepository { get; }
@@ -38,7 +37,6 @@ namespace Nop.Services.Catalog
             IStaticCacheManager staticCacheManager)
         {
             PredefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
-            _productRepository = productRepository;
             ProductAttributeRepository = productAttributeRepository;
             ProductAttributeCombinationRepository = productAttributeCombinationRepository;
             ProductAttributeMappingRepository = productAttributeMappingRepository;

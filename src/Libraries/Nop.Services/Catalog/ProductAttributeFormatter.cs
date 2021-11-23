@@ -25,7 +25,7 @@ namespace Nop.Services.Catalog
         protected IDownloadService DownloadService { get; }
         protected ILocalizationService LocalizationService { get; }
         protected IPriceCalculationService PriceCalculationService { get; }
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected INopHtmlHelper NopHtmlHelper { get; }
         protected IPriceFormatter PriceFormatter { get; }
         protected IProductAttributeParser ProductAttributeParser { get; }
         protected IProductAttributeService ProductAttributeService { get; }
@@ -55,7 +55,7 @@ namespace Nop.Services.Catalog
             DownloadService = downloadService;
             LocalizationService = localizationService;
             PriceCalculationService = priceCalculationService;
-            _nopHtmlHelper = nopHtmlHelper;
+            NopHtmlHelper = nopHtmlHelper;
             PriceFormatter = priceFormatter;
             ProductAttributeParser = productAttributeParser;
             ProductAttributeService = productAttributeService;
@@ -128,7 +128,7 @@ namespace Nop.Services.Catalog
                                     attributeName = WebUtility.HtmlEncode(attributeName);
 
                                 //we never encode multiline textbox input
-                                formattedAttribute = $"{attributeName}: {_nopHtmlHelper.FormatText(value, false, true, false, false, false, false)}";
+                                formattedAttribute = $"{attributeName}: {NopHtmlHelper.FormatText(value, false, true, false, false, false, false)}";
                             }
                             else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                             {

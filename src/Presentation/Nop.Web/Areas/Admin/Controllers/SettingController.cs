@@ -518,7 +518,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await SettingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.HideShippingTotal, model.HideShippingTotal_OverrideForStore, storeScope, false);
                 await SettingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.BypassShippingMethodSelectionIfOnlyOne, model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, storeScope, false);
                 await SettingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.ConsiderAssociatedProductsDimensions, model.ConsiderAssociatedProductsDimensions_OverrideForStore, storeScope, false);
-                await _settingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.ShippingSorting, model.ShippingSorting_OverrideForStore, storeScope, false);
+                await SettingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.ShippingSorting, model.ShippingSorting_OverrideForStore, storeScope, false);
 
                 if (model.ShippingOriginAddress_OverrideForStore || storeScope == 0)
                 {
@@ -2041,14 +2041,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         public async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning(bool seoFriendlyUrlsForLanguagesEnabled)
         {
             //load settings for a chosen store scope
-            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var localizationSettings = await _settingService.LoadSettingAsync<LocalizationSettings>(storeScope);
+            var storeScope = await StoreContext.GetActiveStoreScopeConfigurationAsync();
+            var localizationSettings = await SettingService.LoadSettingAsync<LocalizationSettings>(storeScope);
 
             if (seoFriendlyUrlsForLanguagesEnabled != localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 return Json(new
                 {
-                    Result = await _localizationService
+                    Result = await LocalizationService
                         .GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning")
                 });
             }

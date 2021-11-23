@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -254,7 +254,7 @@ namespace Nop.Web.Factories
                 });
             }
 
-            var pagerModel = new PagerModel(_localizationService)
+            var pagerModel = new PagerModel(LocalizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

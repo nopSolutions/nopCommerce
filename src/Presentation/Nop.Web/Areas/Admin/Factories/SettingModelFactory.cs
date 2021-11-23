@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -1013,7 +1013,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.BypassShippingMethodSelectionIfOnlyOne, storeId);
                 model.ConsiderAssociatedProductsDimensions_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.ConsiderAssociatedProductsDimensions, storeId);
                 model.ShippingOriginAddress_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.ShippingOriginAddressId, storeId);
-                model.ShippingSorting_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.ShippingSorting, storeId);
+                model.ShippingSorting_OverrideForStore = await SettingService.SettingExistsAsync(shippingSettings, x => x.ShippingSorting, storeId);
             }
 
             //prepare shipping origin address

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -540,10 +540,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             var dirPermissionsOk = true;
-            var dirsToCheck = _fileProvider.GetDirectoriesWrite();
+            var dirsToCheck = FileProvider.GetDirectoriesWrite();
             foreach (var dir in dirsToCheck)
             {
-                if (_fileProvider.CheckPermissions(dir, false, true, true, false))
+                if (FileProvider.CheckPermissions(dir, false, true, true, false))
                     continue;
 
                 models.Add(new SystemWarningModel
@@ -565,10 +565,10 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             var filePermissionsOk = true;
-            var filesToCheck = _fileProvider.GetFilesWrite();
+            var filesToCheck = FileProvider.GetFilesWrite();
             foreach (var file in filesToCheck)
             {
-                if (_fileProvider.CheckPermissions(file, false, true, true, true))
+                if (FileProvider.CheckPermissions(file, false, true, true, true))
                     continue;
 
                 models.Add(new SystemWarningModel

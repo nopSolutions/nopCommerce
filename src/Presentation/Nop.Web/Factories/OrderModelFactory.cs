@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -618,7 +618,7 @@ namespace Nop.Web.Factories
                     };
                 }).ToListAsync(),
 
-                PagerModel = new PagerModel(_localizationService)
+                PagerModel = new PagerModel(LocalizationService)
                 {
                     PageSize = rewardPoints.PageSize,
                     TotalRecords = rewardPoints.TotalCount,

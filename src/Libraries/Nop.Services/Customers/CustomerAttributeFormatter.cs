@@ -18,7 +18,7 @@ namespace Nop.Services.Customers
         protected ICustomerAttributeParser CustomerAttributeParser { get; }
         protected ICustomerAttributeService CustomerAttributeService { get; }
         protected ILocalizationService LocalizationService { get; }
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected INopHtmlHelper NopHtmlHelper { get; }
         protected IWorkContext WorkContext { get; }
 
         #endregion
@@ -34,7 +34,7 @@ namespace Nop.Services.Customers
             CustomerAttributeParser = customerAttributeParser;
             CustomerAttributeService = customerAttributeService;
             LocalizationService = localizationService;
-            _nopHtmlHelper = nopHtmlHelper;
+            NopHtmlHelper = nopHtmlHelper;
             WorkContext = workContext;
         }
 
@@ -75,7 +75,7 @@ namespace Nop.Services.Customers
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
-                            formattedAttribute = $"{attributeName}: {_nopHtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
+                            formattedAttribute = $"{attributeName}: {NopHtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)

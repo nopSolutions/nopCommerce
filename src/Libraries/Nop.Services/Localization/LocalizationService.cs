@@ -221,7 +221,7 @@ namespace Nop.Services.Localization
             if (!string.IsNullOrEmpty(localeStringResource?.ResourceName))
                 localeStringResource.ResourceName = localeStringResource.ResourceName.Trim().ToLowerInvariant();
 
-            await _lsrRepository.InsertAsync(localeStringResource);
+            await LsrRepository.InsertAsync(localeStringResource);
         }
 
         /// <summary>

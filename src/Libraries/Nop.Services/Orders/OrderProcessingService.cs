@@ -877,7 +877,7 @@ namespace Nop.Services.Orders
             var orderPlacedAttachmentFilePath = OrderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
                 (await PdfService.PrintOrderToPdfAsync(order)) : null;
             var orderPlacedAttachmentFileName = OrderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
-                (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
+                (string.Format(await LocalizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
             var orderPlacedCustomerNotificationQueuedEmailIds = await WorkflowMessageService
                 .SendOrderPlacedCustomerNotificationAsync(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName);
             if (orderPlacedCustomerNotificationQueuedEmailIds.Any())
@@ -1083,7 +1083,7 @@ namespace Nop.Services.Orders
                 var orderCompletedAttachmentFilePath = OrderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                     await PdfService.PrintOrderToPdfAsync(order) : null;
                 var orderCompletedAttachmentFileName = OrderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
-                    (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
+                    (string.Format(await LocalizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
                 var orderCompletedCustomerNotificationQueuedEmailIds = await WorkflowMessageService
                     .SendOrderCompletedCustomerNotificationAsync(order, order.CustomerLanguageId, orderCompletedAttachmentFilePath,
                     orderCompletedAttachmentFileName);
@@ -1139,7 +1139,7 @@ namespace Nop.Services.Orders
                 var orderPaidAttachmentFilePath = OrderSettings.AttachPdfInvoiceToOrderPaidEmail ?
                     await PdfService.PrintOrderToPdfAsync(order) : null;
                 var orderPaidAttachmentFileName = OrderSettings.AttachPdfInvoiceToOrderPaidEmail ?
-                    (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
+                    (string.Format(await LocalizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
                 var orderPaidCustomerNotificationQueuedEmailIds = await WorkflowMessageService.SendOrderPaidCustomerNotificationAsync(order, order.CustomerLanguageId,
                     orderPaidAttachmentFilePath, orderPaidAttachmentFileName);
 
@@ -1308,18 +1308,12 @@ namespace Nop.Services.Orders
                 //prices
                 var scUnitPrice = (await ShoppingCartService.GetUnitPriceAsync(sc, true)).unitPrice;
                 var (scSubTotal, discountAmount, scDiscounts, _) = await ShoppingCartService.GetSubTotalAsync(sc, true);
-                var scUnitPriceInclTax = await _taxService.GetProductPriceAsync(product, scUnitPrice, true, details.Customer);
-                    await TaxService.GetProductPriceAsync(product, scUnitPrice, true, details.Customer);
-                var scSubTotalInclTax = await _taxService.GetProductPriceAsync(product, scSubTotal, true, details.Customer);
-                    await TaxService.GetProductPriceAsync(product, scUnitPrice, false, details.Customer);
-                var discountAmountInclTax = await _taxService.GetProductPriceAsync(product, discountAmount, true, details.Customer);
-                    await TaxService.GetProductPriceAsync(product, scSubTotal, true, details.Customer);
-                var scSubTotalExclTax =
-                    await TaxService.GetProductPriceAsync(product, scSubTotal, false, details.Customer);
-                var discountAmountInclTax =
-                    await TaxService.GetProductPriceAsync(product, discountAmount, true, details.Customer);
-                var discountAmountExclTax =
-                    await TaxService.GetProductPriceAsync(product, discountAmount, false, details.Customer);
+                var scUnitPriceInclTax = await TaxService.GetProductPriceAsync(product, scUnitPrice, true, details.Customer);
+                var scUnitPriceExclTax = await TaxService.GetProductPriceAsync(product, scUnitPrice, false, details.Customer);
+                var scSubTotalInclTax = await TaxService.GetProductPriceAsync(product, scSubTotal, true, details.Customer);
+                var scSubTotalExclTax = await TaxService.GetProductPriceAsync(product, scSubTotal, false, details.Customer);
+                var discountAmountInclTax = await TaxService.GetProductPriceAsync(product, discountAmount, true, details.Customer);
+                var discountAmountExclTax = await TaxService.GetProductPriceAsync(product, discountAmount, false, details.Customer);
                 foreach (var disc in scDiscounts)
                     if (!DiscountService.ContainsDiscount(details.AppliedDiscounts, disc))
                         details.AppliedDiscounts.Add(disc);

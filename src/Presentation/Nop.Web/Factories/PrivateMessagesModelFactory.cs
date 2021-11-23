@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -25,7 +25,7 @@ namespace Nop.Web.Factories
         protected ICustomerService CustomerService { get; }
         protected IDateTimeHelper DateTimeHelper { get; }
         protected IForumService ForumService { get; }
-        private readonly ILocalizationService _localizationService;
+        protected ILocalizationService LocalizationService { get; }
         protected IStoreContext StoreContext { get; }
         protected IWorkContext WorkContext { get; }
 
@@ -47,7 +47,7 @@ namespace Nop.Web.Factories
             CustomerService = customerService;
             DateTimeHelper = dateTimeHelper;
             ForumService = forumService;
-            _localizationService = localizationService;
+            LocalizationService = localizationService;
             StoreContext = storeContext;
             WorkContext = workContext;
         }
@@ -130,7 +130,7 @@ namespace Nop.Web.Factories
             foreach (var pm in list)
                 messages.Add(await PreparePrivateMessageModelAsync(pm));
 
-            var pagerModel = new PagerModel(_localizationService)
+            var pagerModel = new PagerModel(LocalizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,
@@ -176,7 +176,7 @@ namespace Nop.Web.Factories
             foreach (var pm in list)
                 messages.Add(await PreparePrivateMessageModelAsync(pm));
 
-            var pagerModel = new PagerModel(_localizationService)
+            var pagerModel = new PagerModel(LocalizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

@@ -33,7 +33,7 @@ namespace Nop.Services.Authentication.External
         protected IEventPublisher EventPublisher { get; }
         protected IGenericAttributeService GenericAttributeService { get; }
         protected ILocalizationService LocalizationService { get; }
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        protected IHttpContextAccessor HttpContextAccessor { get; }
         protected IRepository<ExternalAuthenticationRecord> ExternalAuthenticationRecordRepository { get; }
         protected IStoreContext StoreContext { get; }
         protected IWorkContext WorkContext { get; }
@@ -67,7 +67,7 @@ namespace Nop.Services.Authentication.External
             EventPublisher = eventPublisher;
             GenericAttributeService = genericAttributeService;
             LocalizationService = localizationService;
-            _httpContextAccessor = httpContextAccessor;
+            HttpContextAccessor = httpContextAccessor;
             ExternalAuthenticationRecordRepository = externalAuthenticationRecordRepository;
             StoreContext = storeContext;
             WorkContext = workContext;
@@ -219,7 +219,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>Result of an authentication</returns>
         protected virtual IActionResult ErrorAuthentication(IEnumerable<string> errors, string returnUrl)
         {
-            var session = _httpContextAccessor.HttpContext?.Session;
+            var session = HttpContextAccessor.HttpContext?.Session;
 
             if (session != null)
             {

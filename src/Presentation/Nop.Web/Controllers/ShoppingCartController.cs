@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -57,7 +57,7 @@ namespace Nop.Web.Controllers
         protected IGenericAttributeService GenericAttributeService { get; }
         protected IGiftCardService GiftCardService { get; }
         protected ILocalizationService LocalizationService { get; }
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected INopHtmlHelper NopHtmlHelper { get; }
         protected INopFileProvider FileProvider { get; }
         protected INotificationService NotificationService { get; }
         protected IPermissionService PermissionService { get; }
@@ -133,7 +133,7 @@ namespace Nop.Web.Controllers
             GenericAttributeService = genericAttributeService;
             GiftCardService = giftCardService;
             LocalizationService = localizationService;
-            _nopHtmlHelper = nopHtmlHelper;
+            NopHtmlHelper = nopHtmlHelper;
             FileProvider = fileProvider;
             NotificationService = notificationService;
             PermissionService = permissionService;
@@ -1696,7 +1696,7 @@ namespace Nop.Web.Controllers
                 //email
                 await WorkflowMessageService.SendWishlistEmailAFriendMessageAsync(customer,
                         (await WorkContext.GetWorkingLanguageAsync()).Id, model.YourEmailAddress,
-                        model.FriendEmail, _nopHtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+                        model.FriendEmail, NopHtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 
                 model.SuccessfullySent = true;
                 model.Result = await LocalizationService.GetResourceAsync("Wishlist.EmailAFriend.SuccessfullySent");

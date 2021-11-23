@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         protected ICustomerService CustomerService { get; }
         protected IDateTimeHelper DateTimeHelper { get; }
         protected ILocalizationService LocalizationService { get; }
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected INopHtmlHelper NopHtmlHelper { get; }
         protected IProductService ProductService { get; }
         protected IReviewTypeService ReviewTypeService { get; }
         protected IStoreService StoreService { get; }
@@ -56,7 +56,7 @@ namespace Nop.Web.Areas.Admin.Factories
             CustomerService = customerService;
             DateTimeHelper = dateTimeHelper;
             LocalizationService = localizationService;
-            _nopHtmlHelper = nopHtmlHelper;
+            NopHtmlHelper = nopHtmlHelper;
             ProductService = productService;
             ReviewTypeService = reviewTypeService;
             StoreService = storeService;
@@ -162,8 +162,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         ? customer.Email
                         : await LocalizationService.GetResourceAsync("Admin.Customers.Guest");
 
-                    productReviewModel.ReviewText = _nopHtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
-                    productReviewModel.ReplyText = _nopHtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
+                    productReviewModel.ReviewText = NopHtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
+                    productReviewModel.ReplyText = NopHtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
 
                     return productReviewModel;
                 });

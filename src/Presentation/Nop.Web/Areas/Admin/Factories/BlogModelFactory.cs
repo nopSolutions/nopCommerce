@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -36,7 +36,7 @@ namespace Nop.Web.Areas.Admin.Factories
         protected IDateTimeHelper DateTimeHelper { get; }
         protected ILanguageService LanguageService { get; }
         protected ILocalizationService LocalizationService { get; }
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected INopHtmlHelper NopHtmlHelper { get; }
         protected IStoreMappingSupportedModelFactory StoreMappingSupportedModelFactory { get; }
         protected IStoreService StoreService { get; }
         protected IUrlRecordService UrlRecordService { get; }
@@ -64,7 +64,7 @@ namespace Nop.Web.Areas.Admin.Factories
             DateTimeHelper = dateTimeHelper;
             LanguageService = languageService;
             LocalizationService = localizationService;
-            _nopHtmlHelper = nopHtmlHelper;
+            NopHtmlHelper = nopHtmlHelper;
             StoreMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             StoreService = storeService;
             UrlRecordService = urlRecordService;
@@ -290,7 +290,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
                     //fill in additional values (not existing in the entity)
                     commentModel.CreatedOn = await DateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc);
-                    commentModel.Comment = _nopHtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
+                    commentModel.Comment = NopHtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
                     commentModel.StoreName = storeNames.ContainsKey(blogComment.StoreId) ? storeNames[blogComment.StoreId] : "Deleted";
 
                     return commentModel;

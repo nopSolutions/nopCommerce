@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,7 +32,7 @@ namespace Nop.Web.Factories
         protected CaptchaSettings CaptchaSettings { get; }
         protected CustomerSettings CustomerSettings { get; }
         protected ForumSettings ForumSettings { get; }
-        private readonly IBBCodeHelper _bbCodeHelper;
+        protected IBBCodeHelper BbCodeHelper { get; }
         protected ICountryService CountryService { get; }
         protected ICustomerService CustomerService { get; }
         protected IDateTimeHelper DateTimeHelper { get; }
@@ -64,7 +64,7 @@ namespace Nop.Web.Factories
             CaptchaSettings = captchaSettings;
             CustomerSettings = customerSettings;
             ForumSettings = forumSettings;
-            _bbCodeHelper = bbCodeHelper;
+            BbCodeHelper = bbCodeHelper;
             CountryService = countryService;
             CustomerService = customerService;
             DateTimeHelper = dateTimeHelper;
@@ -359,7 +359,7 @@ namespace Nop.Web.Factories
                 var customer = await CustomerService.GetCustomerByIdAsync(post.CustomerId);
 
                 var customerIsGuest = await CustomerService.IsGuestAsync(customer);
-                var customerIsModerator = !customerIsGuest && await _customerService.IsForumModeratorAsync(customer);
+                var customerIsModerator = !customerIsGuest && await CustomerService.IsForumModeratorAsync(customer);
 
                 var forumPostModel = new ForumPostModel
                 {
@@ -583,7 +583,7 @@ namespace Nop.Web.Factories
                                 text = $"{await CustomerService.FormatUsernameAsync(customer)}:\n{quotePostText}\n";
                                 break;
                             case EditorType.BBCodeEditor:
-                                text = $"[quote={await CustomerService.FormatUsernameAsync(customer)}]{BBCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
+                                text = $"[quote={await CustomerService.FormatUsernameAsync(customer)}]{BbCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
                                 break;
                         }
                         model.Text = text;
@@ -992,7 +992,7 @@ namespace Nop.Web.Factories
                 });
             }
 
-            model.PagerModel = new PagerModel(_localizationService)
+            model.PagerModel = new PagerModel(LocalizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

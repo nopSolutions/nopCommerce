@@ -22,7 +22,7 @@ namespace Nop.Services.Catalog
         protected ILocalizationService LocalizationService { get; }
         protected IMeasureService MeasureService { get; }
         protected IWorkContext WorkContext { get; }
-        private readonly IPriceCalculationService _priceCalculationService;
+        protected IPriceCalculationService PriceCalculationService { get; }
         protected TaxSettings TaxSettings { get; }
 
         #endregion
@@ -42,7 +42,7 @@ namespace Nop.Services.Catalog
             LocalizationService = localizationService;
             MeasureService = measureService;
             WorkContext = workContext;
-            _priceCalculationService = priceCalculationService;
+            PriceCalculationService = priceCalculationService;
             TaxSettings = taxSettings;
         }
 
@@ -293,7 +293,7 @@ namespace Nop.Services.Catalog
             Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax)
         {
             //we should round it no matter of "ShoppingCartSettings.RoundPricesDuringCalculation" setting
-            price = await _priceCalculationService.RoundPriceAsync(price, targetCurrency);
+            price = await PriceCalculationService.RoundPriceAsync(price, targetCurrency);
 
             var currencyString = GetCurrencyString(price, showCurrency, targetCurrency);
             if (!showTax)

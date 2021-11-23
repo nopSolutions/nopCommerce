@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -1040,7 +1040,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            if (!_orderSettings.DisplayOrderSummary)
+            if (!OrderSettings.DisplayOrderSummary)
                 return null;
 
             //get parameters to filter orders

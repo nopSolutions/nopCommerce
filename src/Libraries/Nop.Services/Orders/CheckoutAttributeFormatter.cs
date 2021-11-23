@@ -26,7 +26,7 @@ namespace Nop.Services.Orders
         protected ICurrencyService CurrencyService { get; }
         protected IDownloadService DownloadService { get; }
         protected ILocalizationService LocalizationService { get; }
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected INopHtmlHelper NopHtmlHelper { get; }
         protected IPriceFormatter PriceFormatter { get; }
         protected ITaxService TaxService { get; }
         protected IWebHelper WebHelper { get; }
@@ -52,7 +52,7 @@ namespace Nop.Services.Orders
             CurrencyService = currencyService;
             DownloadService = downloadService;
             LocalizationService = localizationService;
-            _nopHtmlHelper = nopHtmlHelper;
+            NopHtmlHelper = nopHtmlHelper;
             PriceFormatter = priceFormatter;
             TaxService = taxService;
             WebHelper = webHelper;
@@ -104,7 +104,7 @@ namespace Nop.Services.Orders
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
-                            formattedAttribute = $"{attributeName}: {_nopHtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
+                            formattedAttribute = $"{attributeName}: {NopHtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)

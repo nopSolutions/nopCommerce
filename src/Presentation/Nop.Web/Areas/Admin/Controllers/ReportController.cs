@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
@@ -45,7 +45,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> SalesSummaryList(SalesSummarySearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.SalesSummaryReport))
+            if (!await PermissionService.AuthorizeAsync(StandardPermissionProvider.SalesSummaryReport))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model

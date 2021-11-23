@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -406,7 +406,7 @@ namespace Nop.Web.Factories
                 //sort shipping methods
                 if (model.ShippingMethods.Count > 1)
                 {
-                    model.ShippingMethods = (_shippingSettings.ShippingSorting switch
+                    model.ShippingMethods = (ShippingSettings.ShippingSorting switch
                     {
                         ShippingSortingEnum.ShippingCost => model.ShippingMethods.OrderBy(option => option.Rate),
                         _ => model.ShippingMethods.OrderBy(option => option.DisplayOrder)

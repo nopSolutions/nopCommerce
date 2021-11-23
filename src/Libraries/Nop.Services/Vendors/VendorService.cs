@@ -18,7 +18,7 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
-        private readonly INopHtmlHelper _htmlHelper;
+        protected INopHtmlHelper HtmlHelper { get; }
         protected IRepository<Customer> CustomerRepository { get; }
         protected IRepository<Product> ProductRepository { get; }
         protected IRepository<Vendor> VendorRepository { get; }
@@ -34,7 +34,7 @@ namespace Nop.Services.Vendors
             IRepository<Vendor> vendorRepository,
             IRepository<VendorNote> vendorNoteRepository)
         {
-            _htmlHelper = htmlHelper;
+            HtmlHelper = htmlHelper;
             CustomerRepository = customerRepository;
             ProductRepository = productRepository;
             VendorRepository = vendorRepository;
@@ -246,7 +246,7 @@ namespace Nop.Services.Vendors
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = _htmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
 
             return text;
         }

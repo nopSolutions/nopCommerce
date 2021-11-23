@@ -32,7 +32,7 @@ namespace Nop.Data.Migrations
             IMigrationRunnerConventions migrationRunnerConventions,
             Lazy<IVersionLoader> versionLoader)
         {
-            _versionLoader = versionLoader;
+            VersionLoader = versionLoader;
 
             FilteringMigrationSource = filteringMigrationSource;
             MigrationRunner = migrationRunner;

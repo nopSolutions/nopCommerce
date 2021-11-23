@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -28,14 +28,15 @@ namespace Nop.Web.Controllers
         #region Fields
 
         protected AppSettings AppSettings { get; }
-        private readonly Lazy<IInstallationLocalizationService> _locService;
-        private readonly Lazy<IInstallationService> _installationService;
-        private readonly Lazy<IPermissionService> _permissionService;
-        private readonly Lazy<IPluginService> _pluginService;
-        private readonly Lazy<IStaticCacheManager> _staticCacheManager;
-        private readonly Lazy<IUploadService> _uploadService;
-        private readonly Lazy<IWebHelper> _webHelper;
-        private readonly Lazy<NopHttpClient> _nopHttpClient;
+        protected Lazy<IInstallationLocalizationService> LocService { get; }
+        protected Lazy<IInstallationService> InstallationService { get; }
+        protected INopFileProvider FileProvider { get; }
+        protected Lazy<IPermissionService> PermissionService { get; }
+        protected Lazy<IPluginService> PluginService { get; }
+        protected Lazy<IStaticCacheManager> StaticCacheManager { get; }
+        protected Lazy<IUploadService> UploadService { get; }
+        protected Lazy<IWebHelper> WebHelper { get; }
+        protected Lazy<NopHttpClient> NopHttpClient { get; }
 
         #endregion
 
@@ -54,14 +55,14 @@ namespace Nop.Web.Controllers
         {
             AppSettings = appSettings;
             LocService = locService;
-            _installationService = installationService;
+            InstallationService = installationService;
             FileProvider = fileProvider;
-            _permissionService = permissionService;
-            _pluginService = pluginService;
-            _staticCacheManager = staticCacheManager;
-            _uploadService = uploadService;
-            _webHelper = webHelper;
-            _nopHttpClient = nopHttpClient;
+            PermissionService = permissionService;
+            PluginService = pluginService;
+            StaticCacheManager = staticCacheManager;
+            UploadService = uploadService;
+            WebHelper = webHelper;
+            NopHttpClient = nopHttpClient;
         }
 
         #endregion
@@ -73,11 +74,11 @@ namespace Nop.Web.Controllers
             if (!model.InstallRegionalResources)
                 return model;
 
-            var browserCulture = _locService.Value.GetBrowserCulture();
+            var browserCulture = LocService.Value.GetBrowserCulture();
             var countries = new List<SelectListItem>
             {
                 //This item was added in case it was not possible to automatically determine the country by culture
-                new SelectListItem { Value = string.Empty, Text = _locService.Value.GetResource("CountrySelect") }
+                new SelectListItem { Value = string.Empty, Text = LocService.Value.GetResource("CountrySelect") }
             };
             countries.AddRange(from country in ISO3166.GetCollection()
                                from localization in ISO3166.GetLocalizationInfo(country.Alpha2)
@@ -96,13 +97,13 @@ namespace Nop.Web.Controllers
 
         private InstallModel PrepareLanguageList(InstallModel model)
         {
-            foreach (var lang in _locService.Value.GetAvailableLanguages())
+            foreach (var lang in LocService.Value.GetAvailableLanguages())
             {
                 model.AvailableLanguages.Add(new SelectListItem
                 {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
-                    Selected = _locService.Value.GetCurrentLanguage().Code == lang.Code
+                    Selected = LocService.Value.GetCurrentLanguage().Code == lang.Code
                 });
             }
 
@@ -112,7 +113,7 @@ namespace Nop.Web.Controllers
         private InstallModel PrepareAvailableDataProviders(InstallModel model)
         {
             model.AvailableDataProviders.AddRange(
-                _locService.Value.GetAvailableProviderTypes()
+                LocService.Value.GetAvailableProviderTypes()
                 .OrderBy(v => v.Value)
                 .Select(pt => new SelectListItem
                 {
@@ -171,19 +172,19 @@ namespace Nop.Web.Controllers
             //the identity will be the anonymous user (typically IUSR_MACHINENAME) or the authenticated request user.
 
             //validate permissions
-            var dirsToCheck = _fileProvider.GetDirectoriesWrite();
+            var dirsToCheck = FileProvider.GetDirectoriesWrite();
             foreach (var dir in dirsToCheck)
-                if (!_fileProvider.CheckPermissions(dir, false, true, true, false))
-                    ModelState.AddModelError(string.Empty, string.Format(_locService.Value.GetResource("ConfigureDirectoryPermissions"), CurrentOSUser.FullName, dir));
+                if (!FileProvider.CheckPermissions(dir, false, true, true, false))
+                    ModelState.AddModelError(string.Empty, string.Format(LocService.Value.GetResource("ConfigureDirectoryPermissions"), CurrentOSUser.FullName, dir));
 
-            var filesToCheck = _fileProvider.GetFilesWrite();
+            var filesToCheck = FileProvider.GetFilesWrite();
             foreach (var file in filesToCheck)
             {
                 if (!FileProvider.FileExists(file))
                     continue;
 
-                if (!_fileProvider.CheckPermissions(file, false, true, true, true))
-                    ModelState.AddModelError(string.Empty, string.Format(_locService.Value.GetResource("ConfigureFilePermissions"), CurrentOSUser.FullName, file));
+                if (!FileProvider.CheckPermissions(file, false, true, true, true))
+                    ModelState.AddModelError(string.Empty, string.Format(LocService.Value.GetResource("ConfigureFilePermissions"), CurrentOSUser.FullName, file));
             }
 
             if (!ModelState.IsValid)
@@ -196,7 +197,7 @@ namespace Nop.Web.Controllers
                 var connectionString = model.ConnectionStringRaw ? model.ConnectionString : dataProvider.BuildConnectionString(model);
 
                 if (string.IsNullOrEmpty(connectionString))
-                    throw new Exception(_locService.Value.GetResource("ConnectionStringWrongFormat"));
+                    throw new Exception(LocService.Value.GetResource("ConnectionStringWrongFormat"));
 
                 DataSettingsManager.SaveSettings(new DataConfig
                 {
@@ -212,14 +213,14 @@ namespace Nop.Web.Controllers
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(string.Format(_locService.Value.GetResource("DatabaseCreationError"), ex.Message));
+                        throw new Exception(string.Format(LocService.Value.GetResource("DatabaseCreationError"), ex.Message));
                     }
                 }
                 else
                 {
                     //check whether database exists
                     if (!await dataProvider.DatabaseExistsAsync())
-                        throw new Exception(_locService.Value.GetResource("DatabaseNotExists"));
+                        throw new Exception(LocService.Value.GetResource("DatabaseNotExists"));
                 }
 
                 dataProvider.InitializeDatabase();
@@ -243,8 +244,8 @@ namespace Nop.Web.Controllers
                     {
                         try
                         {
-                            var languageCode = _locService.Value.GetCurrentLanguage().Code[0..2];
-                            var resultString = await _nopHttpClient.Value.InstallationCompletedAsync(model.AdminEmail, languageCode, cultureInfo.Name);
+                            var languageCode = LocService.Value.GetCurrentLanguage().Code[0..2];
+                            var resultString = await NopHttpClient.Value.InstallationCompletedAsync(model.AdminEmail, languageCode, cultureInfo.Name);
                             var result = JsonConvert.DeserializeAnonymousType(resultString,
                                 new { Message = string.Empty, LanguagePack = new { Culture = string.Empty, Progress = 0, DownloadLink = string.Empty } });
                             if (result.LanguagePack.Progress > NopCommonDefaults.LanguagePackMinTranslationProgressToInstall)
@@ -258,17 +259,17 @@ namespace Nop.Web.Controllers
                     }
 
                     //upload CLDR
-                    _uploadService.Value.UploadLocalePattern(cultureInfo);
+                    UploadService.Value.UploadLocalePattern(cultureInfo);
                 }
 
                 //now resolve installation service
-                await _installationService.Value.InstallRequiredDataAsync(model.AdminEmail, model.AdminPassword, languagePackInfo, regionInfo, cultureInfo);
+                await InstallationService.Value.InstallRequiredDataAsync(model.AdminEmail, model.AdminPassword, languagePackInfo, regionInfo, cultureInfo);
 
                 if (model.InstallSampleData)
-                    await _installationService.Value.InstallSampleDataAsync(model.AdminEmail);
+                    await InstallationService.Value.InstallSampleDataAsync(model.AdminEmail);
 
                 //prepare plugins to install
-                _pluginService.Value.ClearInstalledPluginsList();
+                PluginService.Value.ClearInstalledPluginsList();
 
                 var pluginsIgnoredDuringInstallation = new List<string>();
                 if (!string.IsNullOrEmpty(AppSettings.Get<InstallationConfig>().DisabledPlugins))
@@ -277,14 +278,14 @@ namespace Nop.Web.Controllers
                         .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
                 }
 
-                var plugins = (await _pluginService.Value.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.All))
+                var plugins = (await PluginService.Value.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.All))
                     .Where(pluginDescriptor => !pluginsIgnoredDuringInstallation.Contains(pluginDescriptor.SystemName))
                     .OrderBy(pluginDescriptor => pluginDescriptor.Group).ThenBy(pluginDescriptor => pluginDescriptor.DisplayOrder)
                     .ToList();
 
                 foreach (var plugin in plugins)
                 {
-                    await _pluginService.Value.PreparePluginToInstallAsync(plugin.SystemName, checkDependencies: false);
+                    await PluginService.Value.PreparePluginToInstallAsync(plugin.SystemName, checkDependencies: false);
                 }
 
                 //register default permissions
@@ -292,7 +293,7 @@ namespace Nop.Web.Controllers
                 foreach (var providerType in permissionProviders)
                 {
                     var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
-                    await _permissionService.Value.InstallPermissionsAsync(provider);
+                    await PermissionService.Value.InstallPermissionsAsync(provider);
                 }
 
                 return View(new InstallModel { RestartUrl = Url.RouteUrl("Homepage") });
@@ -300,12 +301,12 @@ namespace Nop.Web.Controllers
             }
             catch (Exception exception)
             {
-                await _staticCacheManager.Value.ClearAsync();
+                await StaticCacheManager.Value.ClearAsync();
 
                 //clear provider settings if something got wrong
                 DataSettingsManager.SaveSettings(new DataConfig(), FileProvider);
 
-                ModelState.AddModelError(string.Empty, string.Format(_locService.Value.GetResource("SetupFailed"), exception.Message));
+                ModelState.AddModelError(string.Empty, string.Format(LocService.Value.GetResource("SetupFailed"), exception.Message));
             }
 
             return View(model);
@@ -316,7 +317,7 @@ namespace Nop.Web.Controllers
             if (DataSettingsManager.IsDatabaseInstalled())
                 return RedirectToRoute("Homepage");
 
-            _locService.Value.SaveCurrentLanguage(language);
+            LocService.Value.SaveCurrentLanguage(language);
 
             //Reload the page
             return RedirectToAction("Index", "Install");
@@ -337,7 +338,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
 
             //restart application
-            _webHelper.Value.RestartAppDomain();
+            WebHelper.Value.RestartAppDomain();
 
             return new EmptyResult();
         }

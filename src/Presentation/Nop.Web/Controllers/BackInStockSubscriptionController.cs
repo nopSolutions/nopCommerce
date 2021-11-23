@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -195,7 +195,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            model.PagerModel = new PagerModel(_localizationService)
+            model.PagerModel = new PagerModel(LocalizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

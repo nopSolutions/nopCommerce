@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -481,7 +481,7 @@ namespace Nop.Web.Factories
                 NewProductsEnabled = CatalogSettings.NewProductsEnabled,
                 DisplayTaxShippingInfoFooter = CatalogSettings.DisplayTaxShippingInfoFooter,
                 HidePoweredByNopCommerce = StoreInformationSettings.HidePoweredByNopCommerce,
-                IsHomePage = _webHelper.GetStoreLocation().Equals(_webHelper.GetThisPageUrl(false), StringComparison.InvariantCultureIgnoreCase),
+                IsHomePage = WebHelper.GetStoreLocation().Equals(WebHelper.GetThisPageUrl(false), StringComparison.InvariantCultureIgnoreCase),
                 AllowCustomersToApplyForVendorAccount = VendorSettings.AllowCustomersToApplyForVendorAccount,
                 AllowCustomersToCheckGiftCardBalance = CustomerSettings.AllowCustomersToCheckGiftCardBalance && CaptchaSettings.Enabled,
                 Topics = topicModels,

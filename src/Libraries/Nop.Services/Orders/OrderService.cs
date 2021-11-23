@@ -24,7 +24,7 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly INopHtmlHelper _htmlHelper;
+        protected INopHtmlHelper HtmlHelper { get; }
         protected IProductService ProductService { get; }
         protected IRepository<Address> AddressRepository { get; }
         protected IRepository<Customer> CustomerRepository { get; }
@@ -54,7 +54,7 @@ namespace Nop.Services.Orders
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
             IShipmentService shipmentService)
         {
-            _htmlHelper = htmlHelper;
+            HtmlHelper = htmlHelper;
             ProductService = productService;
             AddressRepository = addressRepository;
             CustomerRepository = customerRepository;
@@ -887,7 +887,7 @@ namespace Nop.Services.Orders
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = _htmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
 
             return text;
         }

@@ -26,7 +26,7 @@ namespace Nop.Services.Payments
         protected IHttpContextAccessor HttpContextAccessor { get; }
         protected IPaymentPluginManager PaymentPluginManager { get; }
         protected PaymentSettings PaymentSettings { get; }
-        private readonly IPriceCalculationService _priceCalculationService;
+        protected IPriceCalculationService PriceCalculationService { get; }
         protected ShoppingCartSettings ShoppingCartSettings { get; }
 
         #endregion
@@ -43,7 +43,7 @@ namespace Nop.Services.Payments
             CustomerService = customerService;
             HttpContextAccessor = httpContextAccessor;
             PaymentPluginManager = paymentPluginManager;
-            _priceCalculationService = priceCalculationService;
+            PriceCalculationService = priceCalculationService;
             PaymentSettings = paymentSettings;
             ShoppingCartSettings = shoppingCartSettings;
         }
@@ -167,7 +167,7 @@ namespace Nop.Services.Payments
             if (!ShoppingCartSettings.RoundPricesDuringCalculation)
                 return result;
 
-            result = await _priceCalculationService.RoundPriceAsync(result);
+            result = await PriceCalculationService.RoundPriceAsync(result);
 
             return result;
         }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,7 +43,7 @@ namespace Nop.Web.Controllers
         protected ICustomerService CustomerService { get; }
         protected IEventPublisher EventPublisher { get; }
         protected ILocalizationService LocalizationService { get; }
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected INopHtmlHelper NopHtmlHelper { get; }
         protected IOrderService OrderService { get; }
         protected IPermissionService PermissionService { get; }
         protected IProductAttributeParser ProductAttributeParser { get; }
@@ -103,7 +103,7 @@ namespace Nop.Web.Controllers
             CustomerService = customerService;
             EventPublisher = eventPublisher;
             LocalizationService = localizationService;
-            _nopHtmlHelper = nopHtmlHelper;
+            NopHtmlHelper = nopHtmlHelper;
             OrderService = orderService;
             PermissionService = permissionService;
             ProductAttributeParser = productAttributeParser;
@@ -608,7 +608,7 @@ namespace Nop.Web.Controllers
                 await WorkflowMessageService.SendProductEmailAFriendMessageAsync(customer,
                         (await WorkContext.GetWorkingLanguageAsync()).Id, product,
                         model.YourEmailAddress, model.FriendEmail,
-                        _nopHtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+                        NopHtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 
                 model = await ProductModelFactory.PrepareProductEmailAFriendModelAsync(model, product, true);
                 model.SuccessfullySent = true;
