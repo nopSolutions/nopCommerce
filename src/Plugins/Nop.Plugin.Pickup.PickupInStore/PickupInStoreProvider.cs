@@ -51,15 +51,6 @@ namespace Nop.Plugin.Pickup.PickupInStore
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Gets a shipment tracker
-        /// </summary>
-        public IShipmentTracker ShipmentTracker => null;
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -106,6 +97,18 @@ namespace Nop.Plugin.Pickup.PickupInStore
                 result.AddError(await _localizationService.GetResourceAsync("Plugins.Pickup.PickupInStore.NoPickupPoints"));
 
             return result;
+        }
+
+        /// <summary>
+        /// Get associated shipment tracker
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment tracker
+        /// </returns>
+        public Task<IShipmentTracker> GetShipmentTrackerAsync()
+        {
+            return Task.FromResult<IShipmentTracker>(null);
         }
 
         /// <summary>

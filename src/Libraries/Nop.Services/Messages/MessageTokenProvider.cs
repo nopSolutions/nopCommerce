@@ -1074,7 +1074,7 @@ namespace Nop.Services.Messages
             {
                 var shipmentTracker = await _shipmentService.GetShipmentTrackerAsync(shipment);
                 if (shipmentTracker != null)
-                    trackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber);
+                    trackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment);
             }
 
             tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));

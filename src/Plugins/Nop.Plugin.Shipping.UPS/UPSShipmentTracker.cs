@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Shipping.UPS.Services;
 using Nop.Services.Shipping.Tracking;
 
@@ -29,47 +29,29 @@ namespace Nop.Plugin.Shipping.UPS
         #region Methods
 
         /// <summary>
-        /// Gets if the current tracker can track the tracking number.
+        /// Get URL for a page to show tracking info (third party tracking page)
         /// </summary>
-        /// <param name="trackingNumber">The tracking number to track.</param>
+        /// <param name="trackingNumber">The tracking number to track</param>
+        /// <param name="shipment">Shipment; pass null if the tracking number is not associated with a specific shipment</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue if the tracker can track, otherwise false.
+        /// The task result contains the URL of a tracking page
         /// </returns>
-        public virtual Task<bool> IsMatchAsync(string trackingNumber)
-        {
-            if (string.IsNullOrEmpty(trackingNumber))
-                return Task.FromResult(false);
-
-            //details on https://www.ups.com/us/en/tracking/help/tracking/tnh.page
-            return Task.FromResult(Regex.IsMatch(trackingNumber, "^1Z[A-Z0-9]{16}$", RegexOptions.IgnoreCase) ||
-                                   Regex.IsMatch(trackingNumber, "^\\d{9}$", RegexOptions.IgnoreCase) ||
-                                   Regex.IsMatch(trackingNumber, "^T\\d{10}$", RegexOptions.IgnoreCase) ||
-                                   Regex.IsMatch(trackingNumber, "^\\d{12}$", RegexOptions.IgnoreCase));
-        }
-
-        /// <summary>
-        /// Gets an URL for a page to show tracking info (third party tracking page).
-        /// </summary>
-        /// <param name="trackingNumber">The tracking number to track.</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the uRL of a tracking page.
-        /// </returns>
-        public virtual Task<string> GetUrlAsync(string trackingNumber)
+        public Task<string> GetUrlAsync(string trackingNumber, Shipment shipment = null)
         {
             return Task.FromResult($"https://www.ups.com/track?&tracknum={trackingNumber}");
         }
 
         /// <summary>
-        /// Gets all events for a tracking number.
+        /// Get all shipment events
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track</param>
+        /// <param name="shipment">Shipment; pass null if the tracking number is not associated with a specific shipment</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the list of Shipment Events.
+        /// The task result contains the list of shipment events
         /// </returns>
-        public virtual async Task<IList<ShipmentStatusEvent>> GetShipmentEventsAsync(string trackingNumber)
+        public async Task<IList<ShipmentStatusEvent>> GetShipmentEventsAsync(string trackingNumber, Shipment shipment = null)
         {
             var result = new List<ShipmentStatusEvent>();
 
