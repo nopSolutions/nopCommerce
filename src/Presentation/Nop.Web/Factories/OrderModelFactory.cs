@@ -521,22 +521,25 @@ namespace Nop.Web.Factories
                 var shipmentTracker = await _shipmentService.GetShipmentTrackerAsync(shipment);
                 if (shipmentTracker != null)
                 {
-                    model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber);
+                    model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment);
                     if (_shippingSettings.DisplayShipmentEventsToCustomers)
                     {
-                        var shipmentEvents = await shipmentTracker.GetShipmentEventsAsync(shipment.TrackingNumber);
+                        var shipmentEvents = await shipmentTracker.GetShipmentEventsAsync(shipment.TrackingNumber, shipment);
                         if (shipmentEvents != null)
+                        {
                             foreach (var shipmentEvent in shipmentEvents)
                             {
                                 var shipmentStatusEventModel = new ShipmentDetailsModel.ShipmentStatusEventModel();
                                 var shipmentEventCountry = await _countryService.GetCountryByTwoLetterIsoCodeAsync(shipmentEvent.CountryCode);
                                 shipmentStatusEventModel.Country = shipmentEventCountry != null
                                     ? await _localizationService.GetLocalizedAsync(shipmentEventCountry, x => x.Name) : shipmentEvent.CountryCode;
+                                shipmentStatusEventModel.Status = shipmentEvent.Status;
                                 shipmentStatusEventModel.Date = shipmentEvent.Date;
                                 shipmentStatusEventModel.EventName = shipmentEvent.EventName;
                                 shipmentStatusEventModel.Location = shipmentEvent.Location;
                                 model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
                             }
+                        }
                     }
                 }
             }
