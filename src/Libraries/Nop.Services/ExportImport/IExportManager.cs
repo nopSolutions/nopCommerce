@@ -78,7 +78,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="orders">Orders</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task<byte[]> ExportOrdersToXlsxAsync(IList<Order> orders);
+        Task<byte[]> ExportOrdersToXlsxAsync(IList<Order> orders,int vendorId);
 
         /// <summary>
         /// Export customer list to XLSX

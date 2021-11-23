@@ -484,7 +484,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var bytes = await _exportManager.ExportOrdersToXlsxAsync(orders);
+                var bytes = await _exportManager.ExportOrdersToXlsxAsync(orders, model.VendorId);
                 return File(bytes, MimeTypes.TextXlsx, "orders.xlsx");
             }
             catch (Exception exc)
@@ -495,24 +495,25 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> ExportExcelSelected(string selectedIds)
+        public virtual async Task<IActionResult> ExportExcelSelected(string selectedIds, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
             var orders = new List<Order>();
+            int vendorId = 0;
             if (selectedIds != null)
             {
-                var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x))
-                    .ToArray();
-                orders.AddRange(await (await _orderService.GetOrdersByIdsAsync(ids)).WhereAwait(HasAccessToOrderAsync).ToListAsync());
+                var searchModel = _orderModelFactory.ConvertToSearchModel(form["searchModel"].ToString());
+                //a vendor should have access only to his products
+                var vendor = await _workContext.GetCurrentVendorAsync();
+                vendorId = vendor != null ? vendor.Id : searchModel.VendorId;
+                orders = await _orderModelFactory.PrepareDownloadedOrdersAsync(searchModel, vendorId, selectedIds);
             }
 
             try
             {
-                var bytes = await _exportManager.ExportOrdersToXlsxAsync(orders);
+                var bytes = await _exportManager.ExportOrdersToXlsxAsync(orders, vendorId);
                 return File(bytes, MimeTypes.TextXlsx, "orders.xlsx");
             }
             catch (Exception exc)
