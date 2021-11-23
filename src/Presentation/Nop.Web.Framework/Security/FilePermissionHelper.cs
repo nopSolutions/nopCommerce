@@ -180,8 +180,8 @@ namespace Nop.Web.Framework.Security
         {
             //MacOSX file permission check differs slightly from linux
             var arguments = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                ? $"-c \"stat -f '%A %u %g' {path}\""
-                : $"-c \"stat -c '%a %u %g' {path}\"";
+                ? $"-c \"stat -f '%A %u %g' '{path}'\""
+                : $"-c \"stat -c '%a %u %g' '{path}'\"";
 
             try
             {
