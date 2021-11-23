@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -53,6 +54,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             {
                 shippingSettings.ShippingSorting = ShippingSortingEnum.Position;
                 settingService.SaveSettingAsync(shippingSettings).Wait();
+            }
+
+            //#5698
+            var orderSettings = settingService.LoadSettingAsync<OrderSettings>().Result;
+            if (!settingService.SettingExistsAsync(orderSettings, settings => settings.DisplayOrderSummary).Result)
+            {
+                orderSettings.DisplayOrderSummary = true;
+                settingService.SaveSettingAsync(orderSettings).Wait();
             }
         }
 
