@@ -16,8 +16,8 @@
   <ItemGroup>
     <PackageReference Include="FluentMigrator" Version="3.3.1" />
     <PackageReference Include="FluentMigrator.Runner" Version="3.3.1" />
-    <PackageReference Include="linq2db" Version="3.5.2" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="3.0.1" />
+    <PackageReference Include="linq2db" Version="3.6.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="4.0.0" />
     <PackageReference Include="MySql.Data" Version="8.0.27" />
     <PackageReference Include="Npgsql" Version="6.0.0" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
