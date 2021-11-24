@@ -268,7 +268,8 @@ namespace Nop.Data.DataProviders
                 DataSource = nopConnectionString.ServerName,
                 InitialCatalog = nopConnectionString.DatabaseName,
                 PersistSecurityInfo = false,
-                IntegratedSecurity = nopConnectionString.IntegratedSecurity
+                IntegratedSecurity = nopConnectionString.IntegratedSecurity,
+                TrustServerCertificate = true
             };
 
             if (!nopConnectionString.IntegratedSecurity)
