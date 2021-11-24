@@ -230,22 +230,6 @@ namespace Nop.Services.Catalog
 
             string stockMessage;
 
-            /*TODO implement #5510
-            if (_catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.AlwaysDisplay)
-            {
-                //let's check whether all required attributes are already selected
-                //if some attribute is not selected, then return a "Products.Availability.SelectRequiredAttributes" locale 
-            }
-            else
-            {
-                //let's check whether all required attributes that could be selected are already selected
-
-                //note that it's possible that some required attribute is not selected yet, but its values are already disabled (not available)
-                //hence a customer cannot select it. in this case proceed to the logic below
-
-                //otherwise, return a "Products.Availability.SelectRequiredAttributes" locale
-            }*/
-
             var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
             if (combination != null)
             {
@@ -280,6 +264,28 @@ namespace Nop.Services.Catalog
                 //no combination configured
                 if (product.AllowAddingOnlyExistingAttributeCombinations)
                 {
+                    var allIds = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id)).Where(pa => pa.IsRequired).Select(pa => pa.Id).ToList();
+                    var exIds = (await _productAttributeParser.ParseProductAttributeMappingsAsync(attributesXml)).Select(pa => pa.Id).ToList();
+
+                    var selectedIds = allIds.Intersect(exIds).ToList();
+
+                    if (selectedIds.Count() != allIds.Count)
+                        if (_catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.AlwaysDisplay)
+                            return await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
+                        else
+                        {
+                            var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
+
+                            combinations = combinations.Where(p => p.StockQuantity >= 0 || p.AllowOutOfStockOrders).ToList();
+
+                            var attributes = await combinations.SelectAwait(async c => await _productAttributeParser.ParseProductAttributeMappingsAsync(c.AttributesXml)).ToListAsync();
+
+                            var flag = attributes.SelectMany(a => a).Any(a => selectedIds.Contains(a.Id));
+
+                            if (flag)
+                                return await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
+                        }
+
                     var productAvailabilityRange = await
                         _dateRangeService.GetProductAvailabilityRangeByIdAsync(product.ProductAvailabilityRangeId);
                     stockMessage = productAvailabilityRange == null
