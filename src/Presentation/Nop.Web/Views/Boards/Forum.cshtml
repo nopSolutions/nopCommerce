@@ -65,7 +65,7 @@
                 ShowTotalSummary = false,
                 RouteActionName = "ForumSlugPaged",
                 UseRouteLinks = true,
-                RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+                RouteValues = new RouteValues { Id = Model.Id, Slug = Model.SeName }
             });
         }
         @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))

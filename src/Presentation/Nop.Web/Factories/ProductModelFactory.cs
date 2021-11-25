@@ -1801,7 +1801,7 @@ namespace Nop.Web.Factories
                 ShowTotalSummary = false,
                 RouteActionName = "CustomerProductReviewsPaged",
                 UseRouteLinks = true,
-                RouteValues = new CustomerProductReviewsModel.CustomerProductReviewsRouteValues { pageNumber = pageIndex }
+                RouteValues = new CustomerProductReviewsModel.CustomerProductReviewsRouteValues { PageNumber = pageIndex }
             };
 
             var model = new CustomerProductReviewsModel

@@ -95,7 +95,7 @@
                     PageIndex = Model.TopicPageIndex,
                     ShowTotalSummary = false,
                     RouteActionName = "Search",
-                    RouteValues = new ForumSearchRouteValues { advs = advs, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
+                    RouteValues = new ForumSearchRouteValues { Advs = advs, Searchterms = searchterms, ForumId = forumId, Within = within, LimitDays = limitDays },
                 });
             }
             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchBeforeResults, additionalData = Model })

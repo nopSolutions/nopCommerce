@@ -1000,7 +1000,7 @@ namespace Nop.Web.Factories
                 ShowTotalSummary = false,
                 RouteActionName = "CustomerForumSubscriptions",
                 UseRouteLinks = true,
-                RouteValues = new ForumSubscriptionsRouteValues { pageNumber = pageIndex }
+                RouteValues = new ForumSubscriptionsRouteValues { PageNumber = pageIndex }
             };
 
             return model;

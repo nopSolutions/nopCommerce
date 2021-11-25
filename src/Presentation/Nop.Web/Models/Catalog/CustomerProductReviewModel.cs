@@ -39,7 +39,7 @@ namespace Nop.Web.Models.Catalog
         /// </summary>
         public partial record CustomerProductReviewsRouteValues : IRouteValues
         {
-            public int pageNumber { get; set; }
+            public int PageNumber { get; set; }
         }
 
         #endregion

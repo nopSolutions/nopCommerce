@@ -626,7 +626,7 @@ namespace Nop.Web.Factories
                     ShowTotalSummary = true,
                     RouteActionName = "CustomerRewardPointsPaged",
                     UseRouteLinks = true,
-                    RouteValues = new RewardPointsRouteValues { pageNumber = page ?? 0 }
+                    RouteValues = new RewardPointsRouteValues { PageNumber = page ?? 0 }
                 }
             };
 

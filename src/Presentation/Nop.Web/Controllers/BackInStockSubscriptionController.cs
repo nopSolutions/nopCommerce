@@ -203,7 +203,7 @@ namespace Nop.Web.Controllers
                 ShowTotalSummary = false,
                 RouteActionName = "CustomerBackInStockSubscriptions",
                 UseRouteLinks = true,
-                RouteValues = new BackInStockSubscriptionsRouteValues { pageNumber = pageIndex }
+                RouteValues = new BackInStockSubscriptionsRouteValues { PageNumber = pageIndex }
             };
 
             return View(model);
