@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -237,7 +238,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> EstimateShipping([FromQuery] ProductDetailsModel.ProductEstimateShippingModel model)
+        public virtual async Task<IActionResult> EstimateShipping([FromQuery] ProductDetailsModel.ProductEstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
                 model = new ProductDetailsModel.ProductEstimateShippingModel();
@@ -282,8 +283,6 @@ namespace Nop.Web.Controllers
                 ProductId = product.Id,
                 CreatedOnUtc = DateTime.UtcNow
             };
-
-            var form = model.Form;
 
             var addToCartWarnings = new List<string>();
             //customer entered price

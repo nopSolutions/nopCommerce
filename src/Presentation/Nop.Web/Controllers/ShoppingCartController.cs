@@ -423,7 +423,7 @@ namespace Nop.Web.Controllers
         #region Shopping cart
 
         [HttpPost]
-        public virtual async Task<IActionResult> SelectShippingOption([FromQuery] string name, [FromQuery] EstimateShippingModel model)
+        public virtual async Task<IActionResult> SelectShippingOption([FromQuery] string name, [FromQuery] EstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
                 model = new EstimateShippingModel();
@@ -446,7 +446,7 @@ namespace Nop.Web.Controllers
             var store = await _storeContext.GetCurrentStoreAsync();
             var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
             //parse and save checkout attributes
-            await ParseAndSaveCheckoutAttributesAsync(cart, model.Form);
+            await ParseAndSaveCheckoutAttributesAsync(cart, form);
 
             var shippingOptions = new List<ShippingOption>();
             ShippingOption selectedShippingOption = null;
@@ -1403,7 +1403,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> GetEstimateShipping(EstimateShippingModel model)
+        public virtual async Task<IActionResult> GetEstimateShipping(EstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
                 model = new EstimateShippingModel();
@@ -1429,7 +1429,7 @@ namespace Nop.Web.Controllers
             var store = await _storeContext.GetCurrentStoreAsync();
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, store.Id);
             //parse and save checkout attributes
-            await ParseAndSaveCheckoutAttributesAsync(cart, model.Form);
+            await ParseAndSaveCheckoutAttributesAsync(cart, form);
 
             var result = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(cart, model, true);
 

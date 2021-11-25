@@ -246,13 +246,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual async Task<IActionResult> Create(VendorModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Create(VendorModel model, bool continueEditing, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
             //parse vendor attributes
-            var vendorAttributesXml = await ParseVendorAttributesAsync(model.Form);
+            var vendorAttributesXml = await ParseVendorAttributesAsync(form);
             (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
@@ -323,7 +323,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual async Task<IActionResult> Edit(VendorModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Edit(VendorModel model, bool continueEditing, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -334,7 +334,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //parse vendor attributes
-            var vendorAttributesXml = await ParseVendorAttributesAsync(model.Form);
+            var vendorAttributesXml = await ParseVendorAttributesAsync(form);
             (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 

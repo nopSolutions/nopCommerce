@@ -459,7 +459,7 @@ namespace Nop.Web.Controllers
 
                 TryValidateModel(model);
                 TryValidateModel(model.BillingNewAddress);
-                return await NewBillingAddress(model);
+                return await NewBillingAddress(model, form);
             }
 
             return View(model);
@@ -502,7 +502,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("BillingAddress")]
         [FormValueRequired("nextstep")]
-        public virtual async Task<IActionResult> NewBillingAddress(CheckoutBillingAddressModel model)
+        public virtual async Task<IActionResult> NewBillingAddress(CheckoutBillingAddressModel model, IFormCollection form)
         {
             //validation
             if (_orderSettings.CheckoutDisabled)
@@ -522,7 +522,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -641,7 +641,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ShippingAddress")]
         [FormValueRequired("nextstep")]
-        public virtual async Task<IActionResult> NewShippingAddress(CheckoutShippingAddressModel model)
+        public virtual async Task<IActionResult> NewShippingAddress(CheckoutShippingAddressModel model, IFormCollection form)
         {
             //validation
             if (_orderSettings.CheckoutDisabled)
@@ -662,8 +662,6 @@ namespace Nop.Web.Controllers
 
             if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                 return RedirectToRoute("CheckoutShippingMethod");
-
-            var form = model.Form;
 
             //pickup point
             if (_shippingSettings.AllowPickupInStore && !_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
@@ -1338,7 +1336,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> OpcSaveBilling(CheckoutBillingAddressModel model)
+        public virtual async Task<IActionResult> OpcSaveBilling(CheckoutBillingAddressModel model, IFormCollection form)
         {
             try
             {
@@ -1358,8 +1356,6 @@ namespace Nop.Web.Controllers
 
                 if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
-
-                var form = model.Form;
 
                 _ = int.TryParse(form["billing_address_id"], out var billingAddressId);
 
@@ -1483,7 +1479,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> OpcSaveShipping(CheckoutShippingAddressModel model)
+        public virtual async Task<IActionResult> OpcSaveShipping(CheckoutShippingAddressModel model, IFormCollection form)
         {
             try
             {
@@ -1506,8 +1502,6 @@ namespace Nop.Web.Controllers
 
                 if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                     throw new Exception("Shipping is not required");
-
-                var form = model.Form;
 
                 //pickup point
                 if (_shippingSettings.AllowPickupInStore && !_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
