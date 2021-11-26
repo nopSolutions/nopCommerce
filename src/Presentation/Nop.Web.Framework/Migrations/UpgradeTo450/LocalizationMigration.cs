@@ -118,7 +118,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position"] = "Position",
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost"] = "Shipping Cost",
                 //#5138
-                ["PDFInvoice.FileName"] = "order"
+                ["PDFInvoice.FileName"] = "order",
                 
                 //#4905
                 ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate"] = "Maximum redeemed rate",
