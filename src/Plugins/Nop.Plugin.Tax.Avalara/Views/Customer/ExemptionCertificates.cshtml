@@ -16,17 +16,10 @@
 
 @section left
 {
-    @(await Component.InvokeAsync("CustomerNavigation",
-        //since we can neither extend enum nor use the default value (e.g. null or 0), we set the least used element
-        //new { selectedTabId = AvalaraTaxDefaults.ExemptionCertificatesMenuTab }
-        new { selectedTabId = Nop.Web.Models.Customer.CustomerNavigationEnum.ForumSubscriptions }))
+    @(await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = AvalaraTaxDefaults.ExemptionCertificatesMenuTab }))
 }
 
 <script asp-location="Footer">
-    $(document).ready(function () {
-        $('li.@AvalaraTaxDefaults.ExemptionCertificatesMenuClassName').addClass('active');
-    });
-
 @if (!string.IsNullOrEmpty(Model.Token))
 {
 <text>

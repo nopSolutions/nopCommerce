@@ -582,7 +582,7 @@ namespace Nop.Web.Factories
             {
                 RouteName = "CustomerInfo",
                 Title = await _localizationService.GetResourceAsync("Account.CustomerInfo"),
-                Tab = CustomerNavigationEnum.Info,
+                Tab = (int)CustomerNavigationEnum.Info,
                 ItemClass = "customer-info"
             });
 
@@ -590,7 +590,7 @@ namespace Nop.Web.Factories
             {
                 RouteName = "CustomerAddresses",
                 Title = await _localizationService.GetResourceAsync("Account.CustomerAddresses"),
-                Tab = CustomerNavigationEnum.Addresses,
+                Tab = (int)CustomerNavigationEnum.Addresses,
                 ItemClass = "customer-addresses"
             });
 
@@ -598,7 +598,7 @@ namespace Nop.Web.Factories
             {
                 RouteName = "CustomerOrders",
                 Title = await _localizationService.GetResourceAsync("Account.CustomerOrders"),
-                Tab = CustomerNavigationEnum.Orders,
+                Tab = (int)CustomerNavigationEnum.Orders,
                 ItemClass = "customer-orders"
             });
 
@@ -613,7 +613,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerReturnRequests",
                     Title = await _localizationService.GetResourceAsync("Account.CustomerReturnRequests"),
-                    Tab = CustomerNavigationEnum.ReturnRequests,
+                    Tab = (int)CustomerNavigationEnum.ReturnRequests,
                     ItemClass = "return-requests"
                 });
             }
@@ -624,7 +624,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerDownloadableProducts",
                     Title = await _localizationService.GetResourceAsync("Account.DownloadableProducts"),
-                    Tab = CustomerNavigationEnum.DownloadableProducts,
+                    Tab = (int)CustomerNavigationEnum.DownloadableProducts,
                     ItemClass = "downloadable-products"
                 });
             }
@@ -635,7 +635,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerBackInStockSubscriptions",
                     Title = await _localizationService.GetResourceAsync("Account.BackInStockSubscriptions"),
-                    Tab = CustomerNavigationEnum.BackInStockSubscriptions,
+                    Tab = (int)CustomerNavigationEnum.BackInStockSubscriptions,
                     ItemClass = "back-in-stock-subscriptions"
                 });
             }
@@ -646,7 +646,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerRewardPoints",
                     Title = await _localizationService.GetResourceAsync("Account.RewardPoints"),
-                    Tab = CustomerNavigationEnum.RewardPoints,
+                    Tab = (int)CustomerNavigationEnum.RewardPoints,
                     ItemClass = "reward-points"
                 });
             }
@@ -655,7 +655,7 @@ namespace Nop.Web.Factories
             {
                 RouteName = "CustomerChangePassword",
                 Title = await _localizationService.GetResourceAsync("Account.ChangePassword"),
-                Tab = CustomerNavigationEnum.ChangePassword,
+                Tab = (int)CustomerNavigationEnum.ChangePassword,
                 ItemClass = "change-password"
             });
 
@@ -665,7 +665,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerAvatar",
                     Title = await _localizationService.GetResourceAsync("Account.Avatar"),
-                    Tab = CustomerNavigationEnum.Avatar,
+                    Tab = (int)CustomerNavigationEnum.Avatar,
                     ItemClass = "customer-avatar"
                 });
             }
@@ -676,7 +676,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerForumSubscriptions",
                     Title = await _localizationService.GetResourceAsync("Account.ForumSubscriptions"),
-                    Tab = CustomerNavigationEnum.ForumSubscriptions,
+                    Tab = (int)CustomerNavigationEnum.ForumSubscriptions,
                     ItemClass = "forum-subscriptions"
                 });
             }
@@ -686,7 +686,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerProductReviews",
                     Title = await _localizationService.GetResourceAsync("Account.CustomerProductReviews"),
-                    Tab = CustomerNavigationEnum.ProductReviews,
+                    Tab = (int)CustomerNavigationEnum.ProductReviews,
                     ItemClass = "customer-reviews"
                 });
             }
@@ -696,7 +696,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerVendorInfo",
                     Title = await _localizationService.GetResourceAsync("Account.VendorInfo"),
-                    Tab = CustomerNavigationEnum.VendorInfo,
+                    Tab = (int)CustomerNavigationEnum.VendorInfo,
                     ItemClass = "customer-vendor-info"
                 });
             }
@@ -706,7 +706,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "GdprTools",
                     Title = await _localizationService.GetResourceAsync("Account.Gdpr"),
-                    Tab = CustomerNavigationEnum.GdprTools,
+                    Tab = (int)CustomerNavigationEnum.GdprTools,
                     ItemClass = "customer-gdpr"
                 });
             }
@@ -717,7 +717,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CheckGiftCardBalance",
                     Title = await _localizationService.GetResourceAsync("CheckGiftCardBalance"),
-                    Tab = CustomerNavigationEnum.CheckGiftCardBalance,
+                    Tab = (int)CustomerNavigationEnum.CheckGiftCardBalance,
                     ItemClass = "customer-check-gift-card-balance"
                 });
             }
@@ -728,12 +728,12 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "MultiFactorAuthenticationSettings",
                     Title = await _localizationService.GetResourceAsync("PageTitle.MultiFactorAuthentication"),
-                    Tab = CustomerNavigationEnum.MultiFactorAuthentication,
+                    Tab = (int)CustomerNavigationEnum.MultiFactorAuthentication,
                     ItemClass = "customer-multiFactor-authentication"
                 });
             }
 
-            model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
+            model.SelectedTab = selectedTabId;
 
             return model;
         }
@@ -911,7 +911,7 @@ namespace Nop.Web.Factories
 
             model.IsEnabled = !string.IsNullOrEmpty(
                 await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute));
-            
+
             var store = await _storeContext.GetCurrentStoreAsync();
             var multiFactorAuthenticationProviders = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, store.Id)).ToList();
             foreach (var multiFactorAuthenticationProvider in multiFactorAuthenticationProviders)
