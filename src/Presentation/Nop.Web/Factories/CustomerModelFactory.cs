@@ -1011,7 +1011,10 @@ namespace Nop.Web.Factories
                         {
                             if (!string.IsNullOrEmpty(selectedAttributesXml))
                             {
-                                //clear default selection
+                                if (!_customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id).Any())
+                                    break;
+
+                                //clear default selection                                
                                 foreach (var item in attributeModel.Values)
                                     item.IsPreSelected = false;
 
