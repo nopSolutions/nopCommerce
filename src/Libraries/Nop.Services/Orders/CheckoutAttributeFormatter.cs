@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Html;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Tax;
@@ -26,6 +26,7 @@ namespace Nop.Services.Orders
         private readonly ICurrencyService _currencyService;
         private readonly IDownloadService _downloadService;
         private readonly ILocalizationService _localizationService;
+        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ITaxService _taxService;
         private readonly IWebHelper _webHelper;
@@ -40,6 +41,7 @@ namespace Nop.Services.Orders
             ICurrencyService currencyService,
             IDownloadService downloadService,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             IPriceFormatter priceFormatter,
             ITaxService taxService,
             IWebHelper webHelper,
@@ -50,6 +52,7 @@ namespace Nop.Services.Orders
             _currencyService = currencyService;
             _downloadService = downloadService;
             _localizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             _priceFormatter = priceFormatter;
             _taxService = taxService;
             _webHelper = webHelper;
@@ -81,7 +84,7 @@ namespace Nop.Services.Orders
             bool allowHyperlinks = true)
         {
             var result = new StringBuilder();
-
+            var currentLanguage = _workContext.GetWorkingLanguageAsync();
             var attributes = await _checkoutAttributeParser.ParseCheckoutAttributesAsync(attributesXml);
             for (var i = 0; i < attributes.Count; i++)
             {
@@ -97,17 +100,17 @@ namespace Nop.Services.Orders
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = await _localizationService.GetLocalizedAsync(attribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id);
+                            var attributeName = await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id);
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
-                            formattedAttribute = $"{attributeName}: {HtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
+                            formattedAttribute = $"{attributeName}: {_nopHtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                         {
                             //file upload
-                            Guid.TryParse(valueStr, out var downloadGuid);
+                            _ = Guid.TryParse(valueStr, out var downloadGuid);
                             var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                             if (download != null)
                             {
@@ -128,7 +131,7 @@ namespace Nop.Services.Orders
                                     attributeText = fileName;
                                 }
 
-                                var attributeName = await _localizationService.GetLocalizedAsync(attribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id);
+                                var attributeName = await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id);
                                 //encode (if required)
                                 if (htmlEncode)
                                     attributeName = WebUtility.HtmlEncode(attributeName);
@@ -138,7 +141,7 @@ namespace Nop.Services.Orders
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id)}: {valueStr}";
+                            formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {valueStr}";
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
@@ -152,7 +155,7 @@ namespace Nop.Services.Orders
 
                             if (attributeValue != null)
                             {
-                                formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id)}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id)}";
+                                formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
                                 if (renderPrices)
                                 {
                                     var priceAdjustmentBase = (await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, customer)).price;

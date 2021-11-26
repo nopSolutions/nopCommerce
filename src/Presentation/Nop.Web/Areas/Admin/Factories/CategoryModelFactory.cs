@@ -194,7 +194,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CategoryModel> PrepareCategoryModelAsync(CategoryModel model, Category category, bool excludeProperties = false)
         {
-            Action<CategoryLocalizedModel, int> localizedModelConfiguration = null;
+            Func<CategoryLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (category != null)
             {

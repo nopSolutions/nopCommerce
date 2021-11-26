@@ -54,7 +54,7 @@ namespace Nop.Services.ScheduleTasks
         /// </summary>
         public async Task InitializeAsync()
         {
-            if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             if (_taskThreads.Any())
@@ -65,7 +65,9 @@ namespace Nop.Services.ScheduleTasks
                 .OrderBy(x => x.Seconds)
                 .ToList();
 
-            var scheduleTaskUrl = $"{_storeContext.GetCurrentStoreAsync().Result.Url.TrimEnd('/')}/{NopTaskDefaults.ScheduleTaskPath}";
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            var scheduleTaskUrl = $"{store.Url.TrimEnd('/')}/{NopTaskDefaults.ScheduleTaskPath}";
             var timeout = _appSettings.Get<CommonConfig>().ScheduleTaskRunTimeout;
 
             foreach (var scheduleTask in scheduleTasks)
@@ -82,6 +84,19 @@ namespace Nop.Services.ScheduleTasks
                 {
                     //seconds left since the last start
                     var secondsLeft = (DateTime.UtcNow - scheduleTask.LastStartUtc).Value.TotalSeconds;
+
+                    if (secondsLeft >= scheduleTask.Seconds)
+                        //run now (immediately)
+                        taskThread.InitSeconds = 0;
+                    else
+                        //calculate start time
+                        //and round it (so "ensureRunOncePerPeriod" parameter was fine)
+                        taskThread.InitSeconds = (int)(scheduleTask.Seconds - secondsLeft) + 1;
+                }
+                else if (scheduleTask.LastEnabledUtc.HasValue)
+                {
+                    //seconds left since the last enable
+                    var secondsLeft = (DateTime.UtcNow - scheduleTask.LastEnabledUtc).Value.TotalSeconds;
 
                     if (secondsLeft >= scheduleTask.Seconds)
                         //run now (immediately)
@@ -185,9 +200,10 @@ namespace Nop.Services.ScheduleTasks
                     var storeContext = EngineContext.Current.Resolve<IStoreContext>(scope);
 
                     var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? await localizationService.GetResourceAsync("ScheduleTasks.TimeoutError") : ex.Message;
+                    var store = await storeContext.GetCurrentStoreAsync();
 
                     message = string.Format(await localizationService.GetResourceAsync("ScheduleTasks.Error"), _scheduleTask.Name,
-                        message, _scheduleTask.Type, (await storeContext.GetCurrentStoreAsync()).Name, _scheduleTaskUrl);
+                        message, _scheduleTask.Type, store.Name, _scheduleTaskUrl);
 
                     await logger.ErrorAsync(message, ex);
                 }
@@ -213,10 +229,13 @@ namespace Nop.Services.ScheduleTasks
                 }
                 finally
                 {
-                    if (RunOnlyOnce)
-                        Dispose();
-                    else
-                        _timer.Change(Interval, Interval);
+                    if (!_disposed)
+                    {
+                        if (RunOnlyOnce)
+                            Dispose();
+                        else
+                            _timer.Change(Interval, Interval);
+                    }
                 }
             }
 

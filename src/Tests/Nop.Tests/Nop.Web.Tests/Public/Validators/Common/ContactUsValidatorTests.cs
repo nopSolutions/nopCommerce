@@ -23,9 +23,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Common
             {
                 Email = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Email);
             model.Email = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Email);
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Common
             {
                 Email = "adminexample.com"
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Email);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Common
             {
                 Email = "admin@example.com"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Email, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Email);
         }
 
         [Test]
@@ -55,9 +55,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Common
             {
                 FullName = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.FullName, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.FullName);
             model.FullName = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.FullName, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.FullName);
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Common
             {
                 FullName = "John Smith"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.FullName, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.FullName);
         }
 
         [Test]
@@ -77,9 +77,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Common
             {
                 Enquiry = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.Enquiry, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Enquiry);
             model.Enquiry = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.Enquiry, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Enquiry);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Common
             {
                 Enquiry = "please call me back"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Enquiry, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Enquiry);
         }
     }
 }

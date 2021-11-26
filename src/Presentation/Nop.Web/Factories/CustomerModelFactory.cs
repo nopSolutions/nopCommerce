@@ -209,6 +209,7 @@ namespace Nop.Web.Factories
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == (await _dateTimeHelper.GetCurrentTimeZoneAsync()).Id) });
 
+            var store = await _storeContext.GetCurrentStoreAsync();
             if (!excludeProperties)
             {
                 model.VatNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
@@ -236,7 +237,7 @@ namespace Nop.Web.Factories
                 model.Fax = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
 
                 //newsletter
-                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, (await _storeContext.GetCurrentStoreAsync()).Id);
+                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
                 model.Newsletter = newsletter != null && newsletter.Active;
 
                 model.Signature = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute);
@@ -253,11 +254,12 @@ namespace Nop.Web.Factories
             if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
                 model.EmailToRevalidate = customer.EmailToRevalidate;
 
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
-                foreach (var c in await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id))
+                foreach (var c in await _countryService.GetAllCountriesAsync(currentLanguage.Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
@@ -270,7 +272,7 @@ namespace Nop.Web.Factories
                 if (_customerSettings.StateProvinceEnabled)
                 {
                     //states
-                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, (await _workContext.GetWorkingLanguageAsync()).Id)).ToList();
+                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
                     if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
@@ -331,14 +333,15 @@ namespace Nop.Web.Factories
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
 
             //external authentication
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
             model.NumberOfExternalAuthenticationProviders = (await _authenticationPluginManager
-                .LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
+                .LoadActivePluginsAsync(currentCustomer, store.Id))
                 .Count;
             foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             {
                 var authMethod = await _authenticationPluginManager
-                    .LoadPluginBySystemNameAsync(record.ProviderSystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
+                    .LoadPluginBySystemNameAsync(record.ProviderSystemName, currentCustomer, store.Id);
                 if (!_authenticationPluginManager.IsPluginActive(authMethod))
                     continue;
 
@@ -348,7 +351,7 @@ namespace Nop.Web.Factories
                     Email = record.Email,
                     ExternalIdentifier = !string.IsNullOrEmpty(record.ExternalDisplayIdentifier)
                         ? record.ExternalDisplayIdentifier : record.ExternalIdentifier,
-                    AuthMethodName = await _localizationService.GetLocalizedFriendlyNameAsync(authMethod, (await _workContext.GetWorkingLanguageAsync()).Id)
+                    AuthMethodName = await _localizationService.GetLocalizedFriendlyNameAsync(authMethod, currentLanguage.Id)
                 });
             }
 
@@ -363,7 +366,7 @@ namespace Nop.Web.Factories
                 var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
                 foreach (var consent in consents)
                 {
-                    var accepted = await _gdprService.IsConsentAcceptedAsync(consent.Id, (await _workContext.GetCurrentCustomerAsync()).Id);
+                    var accepted = await _gdprService.IsConsentAcceptedAsync(consent.Id, currentCustomer.Id);
                     model.GdprConsents.Add(await PrepareGdprConsentModelAsync(consent, accepted.HasValue && accepted.Value));
                 }
             }
@@ -439,8 +442,8 @@ namespace Nop.Web.Factories
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
-
-                foreach (var c in await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id))
+                var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+                foreach (var c in await _countryService.GetAllCountriesAsync(currentLanguage.Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
@@ -453,7 +456,7 @@ namespace Nop.Web.Factories
                 if (_customerSettings.StateProvinceEnabled)
                 {
                     //states
-                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, (await _workContext.GetWorkingLanguageAsync()).Id)).ToList();
+                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
                     if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
@@ -579,7 +582,7 @@ namespace Nop.Web.Factories
             {
                 RouteName = "CustomerInfo",
                 Title = await _localizationService.GetResourceAsync("Account.CustomerInfo"),
-                Tab = CustomerNavigationEnum.Info,
+                Tab = (int)CustomerNavigationEnum.Info,
                 ItemClass = "customer-info"
             });
 
@@ -587,7 +590,7 @@ namespace Nop.Web.Factories
             {
                 RouteName = "CustomerAddresses",
                 Title = await _localizationService.GetResourceAsync("Account.CustomerAddresses"),
-                Tab = CustomerNavigationEnum.Addresses,
+                Tab = (int)CustomerNavigationEnum.Addresses,
                 ItemClass = "customer-addresses"
             });
 
@@ -595,19 +598,22 @@ namespace Nop.Web.Factories
             {
                 RouteName = "CustomerOrders",
                 Title = await _localizationService.GetResourceAsync("Account.CustomerOrders"),
-                Tab = CustomerNavigationEnum.Orders,
+                Tab = (int)CustomerNavigationEnum.Orders,
                 ItemClass = "customer-orders"
             });
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             if (_orderSettings.ReturnRequestsEnabled &&
-                (await _returnRequestService.SearchReturnRequestsAsync((await _storeContext.GetCurrentStoreAsync()).Id,
-                    (await _workContext.GetCurrentCustomerAsync()).Id, pageIndex: 0, pageSize: 1)).Any())
+                (await _returnRequestService.SearchReturnRequestsAsync(store.Id,
+                    customer.Id, pageIndex: 0, pageSize: 1)).Any())
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerReturnRequests",
                     Title = await _localizationService.GetResourceAsync("Account.CustomerReturnRequests"),
-                    Tab = CustomerNavigationEnum.ReturnRequests,
+                    Tab = (int)CustomerNavigationEnum.ReturnRequests,
                     ItemClass = "return-requests"
                 });
             }
@@ -618,7 +624,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerDownloadableProducts",
                     Title = await _localizationService.GetResourceAsync("Account.DownloadableProducts"),
-                    Tab = CustomerNavigationEnum.DownloadableProducts,
+                    Tab = (int)CustomerNavigationEnum.DownloadableProducts,
                     ItemClass = "downloadable-products"
                 });
             }
@@ -629,7 +635,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerBackInStockSubscriptions",
                     Title = await _localizationService.GetResourceAsync("Account.BackInStockSubscriptions"),
-                    Tab = CustomerNavigationEnum.BackInStockSubscriptions,
+                    Tab = (int)CustomerNavigationEnum.BackInStockSubscriptions,
                     ItemClass = "back-in-stock-subscriptions"
                 });
             }
@@ -640,7 +646,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerRewardPoints",
                     Title = await _localizationService.GetResourceAsync("Account.RewardPoints"),
-                    Tab = CustomerNavigationEnum.RewardPoints,
+                    Tab = (int)CustomerNavigationEnum.RewardPoints,
                     ItemClass = "reward-points"
                 });
             }
@@ -649,7 +655,7 @@ namespace Nop.Web.Factories
             {
                 RouteName = "CustomerChangePassword",
                 Title = await _localizationService.GetResourceAsync("Account.ChangePassword"),
-                Tab = CustomerNavigationEnum.ChangePassword,
+                Tab = (int)CustomerNavigationEnum.ChangePassword,
                 ItemClass = "change-password"
             });
 
@@ -659,7 +665,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerAvatar",
                     Title = await _localizationService.GetResourceAsync("Account.Avatar"),
-                    Tab = CustomerNavigationEnum.Avatar,
+                    Tab = (int)CustomerNavigationEnum.Avatar,
                     ItemClass = "customer-avatar"
                 });
             }
@@ -670,7 +676,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerForumSubscriptions",
                     Title = await _localizationService.GetResourceAsync("Account.ForumSubscriptions"),
-                    Tab = CustomerNavigationEnum.ForumSubscriptions,
+                    Tab = (int)CustomerNavigationEnum.ForumSubscriptions,
                     ItemClass = "forum-subscriptions"
                 });
             }
@@ -680,7 +686,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerProductReviews",
                     Title = await _localizationService.GetResourceAsync("Account.CustomerProductReviews"),
-                    Tab = CustomerNavigationEnum.ProductReviews,
+                    Tab = (int)CustomerNavigationEnum.ProductReviews,
                     ItemClass = "customer-reviews"
                 });
             }
@@ -690,7 +696,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerVendorInfo",
                     Title = await _localizationService.GetResourceAsync("Account.VendorInfo"),
-                    Tab = CustomerNavigationEnum.VendorInfo,
+                    Tab = (int)CustomerNavigationEnum.VendorInfo,
                     ItemClass = "customer-vendor-info"
                 });
             }
@@ -700,7 +706,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "GdprTools",
                     Title = await _localizationService.GetResourceAsync("Account.Gdpr"),
-                    Tab = CustomerNavigationEnum.GdprTools,
+                    Tab = (int)CustomerNavigationEnum.GdprTools,
                     ItemClass = "customer-gdpr"
                 });
             }
@@ -711,7 +717,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CheckGiftCardBalance",
                     Title = await _localizationService.GetResourceAsync("CheckGiftCardBalance"),
-                    Tab = CustomerNavigationEnum.CheckGiftCardBalance,
+                    Tab = (int)CustomerNavigationEnum.CheckGiftCardBalance,
                     ItemClass = "customer-check-gift-card-balance"
                 });
             }
@@ -722,12 +728,12 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "MultiFactorAuthenticationSettings",
                     Title = await _localizationService.GetResourceAsync("PageTitle.MultiFactorAuthentication"),
-                    Tab = CustomerNavigationEnum.MultiFactorAuthentication,
+                    Tab = (int)CustomerNavigationEnum.MultiFactorAuthentication,
                     ItemClass = "customer-multiFactor-authentication"
                 });
             }
 
-            model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
+            model.SelectedTab = selectedTabId;
 
             return model;
         }
@@ -741,7 +747,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CustomerAddressListModel> PrepareCustomerAddressListModelAsync()
         {
-            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
                 //enabled for the current store
                 .WhereAwait(async a => a.CountryId == null || await _storeMappingService.AuthorizeAsync(await _countryService.GetCountryByAddressAsync(a)))
                 .ToListAsync();
@@ -770,7 +778,8 @@ namespace Nop.Web.Factories
         public virtual async Task<CustomerDownloadableProductsModel> PrepareCustomerDownloadableProductsModelAsync()
         {
             var model = new CustomerDownloadableProductsModel();
-            var items = await _orderService.GetDownloadableOrderItemsAsync((await _workContext.GetCurrentCustomerAsync()).Id);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var items = await _orderService.GetDownloadableOrderItemsAsync(customer.Id);
             foreach (var item in items)
             {
                 var order = await _orderService.GetOrderByIdAsync(item.OrderId);
@@ -903,7 +912,8 @@ namespace Nop.Web.Factories
             model.IsEnabled = !string.IsNullOrEmpty(
                 await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute));
 
-            var multiFactorAuthenticationProviders = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id)).ToList();
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var multiFactorAuthenticationProviders = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, store.Id)).ToList();
             foreach (var multiFactorAuthenticationProvider in multiFactorAuthenticationProviders)
             {
                 var providerModel = new MultiFactorAuthenticationProviderModel();
@@ -928,8 +938,9 @@ namespace Nop.Web.Factories
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var selectedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+            var store = await _storeContext.GetCurrentStoreAsync();
 
-            var multiFactorAuthenticationProvider = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id))
+            var multiFactorAuthenticationProvider = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, store.Id))
                     .FirstOrDefault(provider => provider.PluginDescriptor.SystemName == sysName);
 
             if (multiFactorAuthenticationProvider != null)
@@ -1000,7 +1011,10 @@ namespace Nop.Web.Factories
                         {
                             if (!string.IsNullOrEmpty(selectedAttributesXml))
                             {
-                                //clear default selection
+                                if (!_customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id).Any())
+                                    break;
+
+                                //clear default selection                                
                                 foreach (var item in attributeModel.Values)
                                     item.IsPreSelected = false;
 

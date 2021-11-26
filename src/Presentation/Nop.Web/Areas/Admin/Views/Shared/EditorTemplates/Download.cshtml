@@ -25,13 +25,17 @@
         $('#saveDownloadUrl@(randomNumber)').click(function () {
             var downloadUrl = $("#downloadurl@(randomNumber)").val();
             $('#saveDownloadUrl@(randomNumber)').attr('disabled', true);
+
+            var postData = {
+                "downloadUrl": downloadUrl
+            };
+            addAntiForgeryToken(postData);
+
             $.ajax({
                 cache: false,
                 type: "POST",
                 url: "@(Url.Action("SaveDownloadUrl", "Download", new { area = AreaNames.Admin }))",
-                data: {
-                    "downloadUrl": downloadUrl
-                },
+                data: postData,
                 success: function (data, textStatus, jqXHR) {
                     if (data.success) {
                         $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");

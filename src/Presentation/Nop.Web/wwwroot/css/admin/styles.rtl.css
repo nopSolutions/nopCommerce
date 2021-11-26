@@ -894,7 +894,7 @@ table .btn {
 }
 
 .k-numeric-wrap.k-state-default {
-  padding-right: 20px;
+  padding-left: 28px;
 }
 
 .k-picker-wrap.k-state-hover {
@@ -941,6 +941,12 @@ table .btn {
   padding: 3px 0;
 }
 
+.k-numeric-wrap .k-input {
+  unicode-bidi: plaintext;
+  text-align: right;
+  padding-right: 25px;
+}
+
 .k-picker-wrap.k-state-focused.k-state-selected,
 .k-numeric-wrap.k-state-focused.k-state-selected,
 td.k-state-focused.k-state-selected {
@@ -979,6 +985,10 @@ td.k-state-focused.k-state-selected {
 .k-picker-wrap.k-state-focused .k-input,
 .k-numeric-wrap.k-state-focused .k-input {
   border: none;
+}
+.k-numeric-wrap.k-state-focused .k-input {
+  border: none;
+  padding-right: 28px;
 }
 
 .k-numerictextbox .k-link {

@@ -11,11 +11,11 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.PrivateMessages;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class PrivateMessagesController : BasePublicController
     {
         #region Fields
@@ -73,7 +73,6 @@ namespace Nop.Web.Controllers
         }
         
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
-        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> DeleteInboxPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -88,7 +87,9 @@ namespace Nop.Web.Controllers
                         var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
                         if (pm != null)
                         {
-                            if (pm.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+                            var customer = await _workContext.GetCurrentCustomerAsync();
+
+                            if (pm.ToCustomerId == customer.Id)
                             {
                                 pm.IsDeletedByRecipient = true;
                                 await _forumService.UpdatePrivateMessageAsync(pm);
@@ -101,7 +102,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, FormValueRequired("mark-unread"), ActionName("InboxUpdate")]
-        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> MarkUnread(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -116,7 +116,9 @@ namespace Nop.Web.Controllers
                         var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
                         if (pm != null)
                         {
-                            if (pm.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+                            var customer = await _workContext.GetCurrentCustomerAsync();
+
+                            if (pm.ToCustomerId == customer.Id)
                             {
                                 pm.IsRead = false;
                                 await _forumService.UpdatePrivateMessageAsync(pm);
@@ -130,7 +132,6 @@ namespace Nop.Web.Controllers
 
         //updates sent items (deletes PrivateMessages)
         [HttpPost, FormValueRequired("delete-sent"), ActionName("SentUpdate")]
-        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> DeleteSentPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -145,7 +146,9 @@ namespace Nop.Web.Controllers
                         var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
                         if (pm != null)
                         {
-                            if (pm.FromCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+                            var customer = await _workContext.GetCurrentCustomerAsync();
+
+                            if (pm.FromCustomerId == customer.Id)
                             {
                                 pm.IsDeletedByAuthor = true;
                                 await _forumService.UpdatePrivateMessageAsync(pm);
@@ -181,7 +184,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> SendPM(SendPrivateMessageModel model)
         {
             if (!_forumSettings.AllowPrivateMessages)
@@ -189,7 +191,8 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer))
             {
                 return Challenge();
             }
@@ -199,10 +202,10 @@ namespace Nop.Web.Controllers
             if (replyToPM != null)
             {
                 //reply to a previous PM
-                if (replyToPM.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id || replyToPM.FromCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+                if (replyToPM.ToCustomerId == customer.Id || replyToPM.FromCustomerId == customer.Id)
                 {
                     //Reply to already sent PM (by current customer) should not be sent to yourself
-                    toCustomer = await _customerService.GetCustomerByIdAsync(replyToPM.FromCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id
+                    toCustomer = await _customerService.GetCustomerByIdAsync(replyToPM.FromCustomerId == customer.Id
                         ? replyToPM.ToCustomerId
                         : replyToPM.FromCustomerId);
                 }
@@ -239,12 +242,13 @@ namespace Nop.Web.Controllers
                     }
 
                     var nowUtc = DateTime.UtcNow;
+                    var store = await _storeContext.GetCurrentStoreAsync();
 
                     var privateMessage = new PrivateMessage
                     {
-                        StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                        StoreId = store.Id,
                         ToCustomerId = toCustomer.Id,
-                        FromCustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                        FromCustomerId = customer.Id,
                         Subject = subject,
                         Text = text,
                         IsDeletedByAuthor = false,
@@ -278,7 +282,8 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer))
             {
                 return Challenge();
             }
@@ -286,12 +291,12 @@ namespace Nop.Web.Controllers
             var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
             if (pm != null)
             {
-                if (pm.ToCustomerId != (await _workContext.GetCurrentCustomerAsync()).Id && pm.FromCustomerId != (await _workContext.GetCurrentCustomerAsync()).Id)
+                if (pm.ToCustomerId != customer.Id && pm.FromCustomerId != customer.Id)
                 {
                     return RedirectToRoute("PrivateMessages");
                 }
 
-                if (!pm.IsRead && pm.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+                if (!pm.IsRead && pm.ToCustomerId == customer.Id)
                 {
                     pm.IsRead = true;
                     await _forumService.UpdatePrivateMessageAsync(pm);
@@ -313,7 +318,8 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer))
             {
                 return Challenge();
             }
@@ -321,13 +327,13 @@ namespace Nop.Web.Controllers
             var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
             if (pm != null)
             {
-                if (pm.FromCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+                if (pm.FromCustomerId == customer.Id)
                 {
                     pm.IsDeletedByAuthor = true;
                     await _forumService.UpdatePrivateMessageAsync(pm);
                 }
 
-                if (pm.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+                if (pm.ToCustomerId == customer.Id)
                 {
                     pm.IsDeletedByRecipient = true;
                     await _forumService.UpdatePrivateMessageAsync(pm);

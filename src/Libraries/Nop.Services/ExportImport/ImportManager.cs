@@ -1199,14 +1199,15 @@ namespace Nop.Services.ExportImport
             }
 
             //performance optimization, load all products by SKU in one SQL request
-            var allProductsBySku = await _productService.GetProductsBySkuAsync(metadata.AllSku.ToArray(), (await _workContext.GetCurrentVendorAsync())?.Id ?? 0);
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var allProductsBySku = await _productService.GetProductsBySkuAsync(metadata.AllSku.ToArray(), currentVendor?.Id ?? 0);
 
             //validate maximum number of products per vendor
             if (_vendorSettings.MaximumProductNumber > 0 &&
-                await _workContext.GetCurrentVendorAsync() != null)
+                currentVendor != null)
             {
                 var newProductsCount = metadata.CountProductsInFile - allProductsBySku.Count;
-                if (await _productService.GetNumberOfProductsByVendorIdAsync((await _workContext.GetCurrentVendorAsync()).Id) + newProductsCount > _vendorSettings.MaximumProductNumber)
+                if (await _productService.GetNumberOfProductsByVendorIdAsync(currentVendor.Id) + newProductsCount > _vendorSettings.MaximumProductNumber)
                     throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
             }
 
@@ -1316,7 +1317,7 @@ namespace Nop.Services.ExportImport
                             break;
                         case "Vendor":
                             //vendor can't change this field
-                            if (await _workContext.GetCurrentVendorAsync() == null)
+                            if (currentVendor == null)
                                 product.VendorId = property.IntValue;
                             break;
                         case "ProductTemplate":
@@ -1324,12 +1325,12 @@ namespace Nop.Services.ExportImport
                             break;
                         case "ShowOnHomepage":
                             //vendor can't change this field
-                            if (await _workContext.GetCurrentVendorAsync() == null)
+                            if (currentVendor == null)
                                 product.ShowOnHomepage = property.BooleanValue;
                             break;
                         case "DisplayOrder":
                             //vendor can't change this field
-                            if (await _workContext.GetCurrentVendorAsync() == null)
+                            if (currentVendor == null)
                                 product.DisplayOrder = property.IntValue;
                             break;
                         case "MetaKeywords":
@@ -1581,8 +1582,8 @@ namespace Nop.Services.ExportImport
                     product.Published = true;
 
                 //sets the current vendor for the new product
-                if (isNew && await _workContext.GetCurrentVendorAsync() != null)
-                    product.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                if (isNew && currentVendor != null)
+                    product.VendorId = currentVendor.Id;
 
                 product.UpdatedOnUtc = DateTime.UtcNow;
 
@@ -1805,7 +1806,8 @@ namespace Nop.Services.ExportImport
 
                     var isActive = true;
 
-                    var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+                    var store = await _storeContext.GetCurrentStoreAsync();
+                    var storeId = store.Id;
 
                     //"email" field specified
                     var email = tmp[0].Trim();
@@ -2178,13 +2180,13 @@ namespace Nop.Services.ExportImport
 
         public class CategoryKey
         {
-        /// <returns>A task that represents the asynchronous operation</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             public static async Task<CategoryKey> CreateCategoryKeyAsync(Category category, ICategoryService categoryService, IList<Category> allCategories, IStoreMappingService storeMappingService)
             {
-                var categoryKey = new CategoryKey(await categoryService.GetFormattedBreadCrumbAsync(category, allCategories), category.LimitedToStores ? (await storeMappingService.GetStoresIdsWithAccessAsync(category)).ToList() : new List<int>());
-                categoryKey.Category = category;
-
-                return categoryKey;
+                return new CategoryKey(await categoryService.GetFormattedBreadCrumbAsync(category, allCategories), category.LimitedToStores ? (await storeMappingService.GetStoresIdsWithAccessAsync(category)).ToList() : new List<int>())
+                {
+                    Category = category
+                };
             }
 
             public CategoryKey(string key, List<int> storesIds = null)

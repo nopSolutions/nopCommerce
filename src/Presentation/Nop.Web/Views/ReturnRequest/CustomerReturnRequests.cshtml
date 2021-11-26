@@ -1,4 +1,5 @@
-﻿@model CustomerReturnRequestsModel
+﻿@inject Nop.Services.Html.INopHtmlHelper htmlHelper
+@model CustomerReturnRequestsModel
 @{
     Layout = "_ColumnsTwo";
 
@@ -56,7 +57,7 @@
                     {
                         <li class="comments">
                             <label>@T("Account.CustomerReturnRequests.Comments")</label>
-                            <div>@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(item.Comments, false, true, false, false, false, false))</div>
+                            <div>@Html.Raw(htmlHelper.FormatText(item.Comments, false, true, false, false, false, false))</div>
                         </li>
                     }
                 </ul>

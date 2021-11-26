@@ -172,7 +172,8 @@ namespace Nop.Services.Customers
             }
 
             var selectedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
-            var methodIsActive = await _multiFactorAuthenticationPluginManager.IsPluginActiveAsync(selectedProvider, customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var methodIsActive = await _multiFactorAuthenticationPluginManager.IsPluginActiveAsync(selectedProvider, customer, store.Id);
             if (methodIsActive)
                 return CustomerLoginResults.MultiFactorAuthenticationRequired;
             if (!string.IsNullOrEmpty(selectedProvider))
@@ -414,10 +415,11 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<IActionResult> SignInCustomerAsync(Customer customer, string returnUrl, bool isPersist = false)
         {
-            if ((await _workContext.GetCurrentCustomerAsync())?.Id != customer.Id)
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            if (currentCustomer?.Id != customer.Id)
             {
                 //migrate shopping cart
-                await _shoppingCartService.MigrateShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), customer, true);
+                await _shoppingCartService.MigrateShoppingCartAsync(currentCustomer, customer, true);
 
                 await _workContext.SetCurrentCustomerAsync(customer);
             }

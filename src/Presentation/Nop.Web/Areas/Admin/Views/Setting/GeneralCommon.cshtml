@@ -11,43 +11,44 @@
     var showTour = ViewBag.ShowTour ?? false;
 
     const string hideCommonBlockAttributeName = "GeneralCommonSettingsPage.HideCommonBlock";
-    var hideCommonBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 
     const string hideFaviconBlockAttributeName = "GeneralCommonSettingsPage.HideFaviconBlock";
-    var hideFaviconBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideFaviconBlockAttributeName);
+    var hideFaviconBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideFaviconBlockAttributeName);
 
     const string hideTopMenuItemsBlockAttributeName = "GeneralCommonSettingsPage.HideTopMenuItemsBlock";
-    var hideTopMenuItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideTopMenuItemsBlockAttributeName);
+    var hideTopMenuItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTopMenuItemsBlockAttributeName);
 
     const string hideFooterItemsBlockAttributeName = "GeneralCommonSettingsPage.HideFooterItemsBlock";
-    var hideFooterItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideFooterItemsBlockAttributeName);
+    var hideFooterItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideFooterItemsBlockAttributeName);
 
     const string hideSocialMediaBlockAttributeName = "GeneralCommonSettingsPage.HideSocialMediaBlock";
-    var hideSocialMediaBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSocialMediaBlockAttributeName);
+    var hideSocialMediaBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSocialMediaBlockAttributeName);
 
     const string hideSitemapBlockAttributeName = "GeneralCommonSettingsPage.HideSitemapBlock";
-    var hideSitemapBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSitemapBlockAttributeName);
+    var hideSitemapBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSitemapBlockAttributeName);
 
     const string hideSEOBlockAttributeName = "GeneralCommonSettingsPage.HideSEOBlock";
-    var hideSEOBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSEOBlockAttributeName);
+    var hideSEOBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSEOBlockAttributeName);
 
     const string hideMinificationBlockAttributeName = "GeneralCommonSettingsPage.HideMinificationBlock";
-    var hideMinificationBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideMinificationBlockAttributeName);
+    var hideMinificationBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideMinificationBlockAttributeName);
 
     const string hideSecurityBlockAttributeName = "GeneralCommonSettingsPage.HideSecurityBlock";
-    var hideSecurityBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSecurityBlockAttributeName);
+    var hideSecurityBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSecurityBlockAttributeName);
 
     const string hideCaptchaBlockAttributeName = "GeneralCommonSettingsPage.HideCaptchaBlock";
-    var hideCaptchaBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCaptchaBlockAttributeName);
+    var hideCaptchaBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCaptchaBlockAttributeName);
 
     const string hidePDFBlockAttributeName = "GeneralCommonSettingsPage.HidePDFBlock";
-    var hidePDFBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePDFBlockAttributeName);
+    var hidePDFBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePDFBlockAttributeName);
 
     const string hideLocalizationBlockAttributeName = "GeneralCommonSettingsPage.HideLocalizationBlock";
-    var hideLocalizationBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideLocalizationBlockAttributeName);
+    var hideLocalizationBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideLocalizationBlockAttributeName);
 
     const string hideAdminAreaBlockAttributeName = "GeneralCommonSettingsPage.HideAdminAreaBlock";
-    var hideAdminAreaBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAdminAreaBlockAttributeName);
+    var hideAdminAreaBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAdminAreaBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="GeneralCommon" method="post">
@@ -96,6 +97,8 @@
         $(document).ready(function () {
             $("#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)").click(toggleLoadAllLocaleRecordsOnStartup);
             toggleLoadAllLocaleRecordsOnStartup();
+
+            $("#@Html.IdFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)").click(toggleSeoFriendlyUrlsForLanguagesEnabled);
         });
 
         function toggleLoadAllLocaleRecordsOnStartup() {
@@ -103,6 +106,14 @@
                 '@Html.NameFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)',
                 {
                     loadAllLocaleRecordsOnStartup: $('#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)').is(':checked')
+                });
+        }
+
+        function toggleSeoFriendlyUrlsForLanguagesEnabled() {
+            warningValidation('@Url.Action("SeoFriendlyUrlsForLanguagesEnabledWarning", "Setting")',
+                '@Html.NameFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)',
+                {
+                    seoFriendlyUrlsForLanguagesEnabled: $('#@Html.IdFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)').is(':checked')
                 });
         }
     </script>

@@ -6,9 +6,8 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Vendors;
-using Nop.Core.Html;
 using Nop.Data;
-using Nop.Data.Extensions;
+using Nop.Services.Html;
 
 namespace Nop.Services.Vendors
 {
@@ -19,6 +18,7 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
+        private readonly INopHtmlHelper _htmlHelper;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<Vendor> _vendorRepository;
@@ -28,11 +28,13 @@ namespace Nop.Services.Vendors
 
         #region Ctor
 
-        public VendorService(IRepository<Customer> customerRepository,
+        public VendorService(INopHtmlHelper htmlHelper,
+            IRepository<Customer> customerRepository,
             IRepository<Product> productRepository,
             IRepository<Vendor> vendorRepository,
             IRepository<VendorNote> vendorNoteRepository)
         {
+            _htmlHelper = htmlHelper;
             _customerRepository = customerRepository;
             _productRepository = productRepository;
             _vendorRepository = vendorRepository;
@@ -244,7 +246,7 @@ namespace Nop.Services.Vendors
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = _htmlHelper.FormatText(text, false, true, false, false, false, false);
 
             return text;
         }

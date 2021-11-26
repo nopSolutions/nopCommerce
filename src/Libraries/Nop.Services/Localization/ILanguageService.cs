@@ -51,7 +51,6 @@ namespace Nop.Services.Localization
         /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateLanguageAsync(Language language);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Get 2 letter ISO language code
         /// </summary>

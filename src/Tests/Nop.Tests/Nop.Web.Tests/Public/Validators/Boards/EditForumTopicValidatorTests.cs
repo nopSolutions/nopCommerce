@@ -23,9 +23,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Boards
             {
                 Subject = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.Subject, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Subject);
             model.Subject = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.Subject, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Subject);
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Boards
             {
                 Subject = "some comment"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Subject, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Subject);
         }
 
         [Test]
@@ -45,9 +45,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Boards
             {
                 Text = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.Text, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Text);
             model.Text = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.Text, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Text);
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Boards
             {
                 Text = "some comment"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Text, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Text);
         }
     }
 }

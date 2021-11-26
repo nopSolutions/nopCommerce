@@ -36,7 +36,8 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
-            var nivoSliderSettings = await _settingService.LoadSettingAsync<NivoSliderSettings>((await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var nivoSliderSettings = await _settingService.LoadSettingAsync<NivoSliderSettings>(store.Id);
 
             var model = new PublicInfoModel
             {

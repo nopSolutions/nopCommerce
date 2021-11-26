@@ -153,19 +153,7 @@ namespace Nop.Services.Payments
         /// <param name="creditCardNumber">Credit card number</param>
         /// <returns>Masked credit card number</returns>
         string GetMaskedCreditCardNumber(string creditCardNumber);
-
-        /// <summary>
-        /// Calculate payment method fee
-        /// </summary>
-        /// <param name="cart">Shopping cart</param>
-        /// <param name="fee">Fee value</param>
-        /// <param name="usePercentage">Is fee amount specified as percentage or fixed value?</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the result
-        /// </returns>
-        Task<decimal> CalculateAdditionalFeeAsync(IList<ShoppingCartItem> cart, decimal fee, bool usePercentage);
-
+        
         /// <summary>
         /// Serialize CustomValues of ProcessPaymentRequest
         /// </summary>

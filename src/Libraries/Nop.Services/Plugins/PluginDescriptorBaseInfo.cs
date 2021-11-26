@@ -54,6 +54,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         [JsonIgnore]
         public virtual PluginDescriptorBaseInfo GetBaseInfoCopy =>
-            new PluginDescriptorBaseInfo {SystemName = SystemName, Version = Version};
+            new()
+            { SystemName = SystemName, Version = Version };
     }
 }

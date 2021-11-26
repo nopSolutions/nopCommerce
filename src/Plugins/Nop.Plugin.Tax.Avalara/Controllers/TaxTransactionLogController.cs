@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Core.Html;
 using Nop.Plugin.Tax.Avalara.Models.Log;
 using Nop.Plugin.Tax.Avalara.Services;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -23,6 +23,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
+        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly TaxTransactionLogService _taxTransactionLogService;
@@ -34,6 +35,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         public TaxTransactionLogController(ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             INotificationService notificationService,
             IPermissionService permissionService,
             TaxTransactionLogService taxTransactionLogService)
@@ -41,6 +43,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _localizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             _notificationService = notificationService;
             _permissionService = permissionService;
             _taxTransactionLogService = taxTransactionLogService;
@@ -90,7 +93,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             await _taxTransactionLogService.DeleteTaxTransactionLogAsync(selectedIds.ToArray());
@@ -113,8 +116,8 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 Id = logItem.Id,
                 StatusCode = logItem.StatusCode,
                 Url = logItem.Url,
-                RequestMessage = HtmlHelper.FormatText(logItem.RequestMessage, false, true, false, false, false, false),
-                ResponseMessage = HtmlHelper.FormatText(logItem.ResponseMessage, false, true, false, false, false, false),
+                RequestMessage = _nopHtmlHelper.FormatText(logItem.RequestMessage, false, true, false, false, false, false),
+                ResponseMessage = _nopHtmlHelper.FormatText(logItem.ResponseMessage, false, true, false, false, false, false),
                 CustomerId = logItem.CustomerId,
                 CustomerEmail = (await _customerService.GetCustomerByIdAsync(logItem.CustomerId))?.Email,
                 CreatedDate = await _dateTimeHelper.ConvertToUserTimeAsync(logItem.CreatedDateUtc, DateTimeKind.Utc)

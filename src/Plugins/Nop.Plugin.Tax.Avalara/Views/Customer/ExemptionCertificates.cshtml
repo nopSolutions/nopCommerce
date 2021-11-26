@@ -16,28 +16,21 @@
 
 @section left
 {
-    @(await Component.InvokeAsync("CustomerNavigation",
-        //since we can neither extend enum nor use the default value (e.g. null or 0), we set the least used element
-        //new { selectedTabId = AvalaraTaxDefaults.ExemptionCertificatesMenuTab }
-        new { selectedTabId = Nop.Web.Models.Customer.CustomerNavigationEnum.ForumSubscriptions }))
+    @(await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = AvalaraTaxDefaults.ExemptionCertificatesMenuTab }))
 }
 
 <script asp-location="Footer">
-    $(document).ready(function () {
-        $('li.@AvalaraTaxDefaults.ExemptionCertificatesMenuClassName').addClass('active');
-    });
-
 @if (!string.IsNullOrEmpty(Model.Token))
 {
 <text>
     function showCertificateForm() {
         GenCert.init(document.getElementById('certificate-form'), {
             token: '@Model.Token',
-            submit_to_stack: '@((!avalaraTaxSettings.AutoValidateCertificate).ToString().ToLower())',
-            edit_purchaser: '@(avalaraTaxSettings.AllowEditCustomer.ToString().ToLower())',
-            preview: '@(avalaraTaxSettings.PreviewCertificate.ToString().ToLower())',
-            fill_only: '@(avalaraTaxSettings.FillOnly.ToString().ToLower())',
-            upload_only: '@(avalaraTaxSettings.UploadOnly.ToString().ToLower())',
+            submit_to_stack: '@((!avalaraTaxSettings.AutoValidateCertificate).ToString().ToLowerInvariant())',
+            edit_purchaser: '@(avalaraTaxSettings.AllowEditCustomer.ToString().ToLowerInvariant())',
+            preview: '@(avalaraTaxSettings.PreviewCertificate.ToString().ToLowerInvariant())',
+            fill_only: '@(avalaraTaxSettings.FillOnly.ToString().ToLowerInvariant())',
+            upload_only: '@(avalaraTaxSettings.UploadOnly.ToString().ToLowerInvariant())',
 
             //we can customize colors of buttons here
             //primary_color: '#ff6600',

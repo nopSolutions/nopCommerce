@@ -13,7 +13,7 @@
 <script asp-location="Footer">
     $(document).ready(function () {
         CatalogProducts.init({
-            ajax: @Model.UseAjaxLoading.ToString().ToLower(),
+            ajax: @Model.UseAjaxLoading.ToString().ToLowerInvariant(),
             browserPath: '@Context.Request.Path',
             fetchUrl: '@ViewData["fetchUrl"]'
         });

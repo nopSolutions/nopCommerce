@@ -54,7 +54,7 @@
                     <h2 class="title">@T("Checkout.BillingAddress")</h2>
                 </div>
                 <div id="checkout-step-billing" class="step a-item" style="display: none;">
-                    <form id="co-billing-form" action="">
+                    <form id="co-billing-form" action="" method="post">
                         <div id="checkout-billing-load">
                             @await Html.PartialAsync("OpcBillingAddress", Model.BillingAddress)
                             @*billing address content will be loaded here*@
@@ -89,7 +89,7 @@
                         <h2 class="title">@T("Checkout.ShippingAddress")</h2>
                     </div>
                     <div id="checkout-step-shipping" class="step a-item" style="display: none;">
-                        <form action="" id="co-shipping-form">
+                        <form action="" id="co-shipping-form" method="post">
                             <div id="checkout-shipping-load">
                                 @*shipping address content will be loaded here*@
                             </div>
@@ -118,7 +118,7 @@
                         <h2 class="title">@T("Checkout.ShippingMethod")</h2>
                     </div>
                     <div id="checkout-step-shipping-method" class="step a-item" style="display: none;">
-                        <form id="co-shipping-method-form" action="">
+                        <form id="co-shipping-method-form" action="" method="post">
                             <div id="checkout-shipping-method-load">
                                 @*shipping methods content will be loaded here*@
                             </div>
@@ -146,7 +146,7 @@
                     <h2 class="title">@T("Checkout.PaymentMethod")</h2>
                 </div>
                 <div id="checkout-step-payment-method" class="step a-item" style="display: none;">
-                    <form action="" id="co-payment-method-form">
+                    <form action="" id="co-payment-method-form" method="post">
                         <div id="checkout-payment-method-load">
                             @*payment methods content will be loaded here*@ Payment is not required
                         </div>
@@ -173,7 +173,7 @@
                     <h2 class="title">@T("Checkout.PaymentInfo")</h2>
                 </div>
                 <div id="checkout-step-payment-info" class="step a-item" style="display: none;">
-                    <form action="" id="co-payment-info-form">
+                    <form action="" id="co-payment-info-form" method="post">
                         <div id="checkout-payment-info-load">
                             @*payment info content will be loaded here*@ Payment is not required
                         </div>

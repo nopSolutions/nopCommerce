@@ -26,6 +26,7 @@ using Nop.Services.ExportImport;
 using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
+using Nop.Services.Html;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -49,6 +50,7 @@ using Nop.Services.Tax;
 using Nop.Services.Themes;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
+using Nop.Web.Framework.Menu;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
@@ -213,6 +215,8 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<IReviewTypeService, ReviewTypeService>();
             services.AddSingleton<IEventPublisher, EventPublisher>();
             services.AddScoped<ISettingService, SettingService>();
+            services.AddScoped<IBBCodeHelper, BBCodeHelper>();
+            services.AddScoped<INopHtmlHelper, NopHtmlHelper>();
 
             //plugin managers
             services.AddScoped(typeof(IPluginManager<>), typeof(PluginManager<>));
@@ -270,9 +274,7 @@ namespace Nop.Web.Framework.Infrastructure
             //schedule tasks
             services.AddSingleton<ITaskScheduler, TaskScheduler>();
             services.AddTransient<IScheduleTaskRunner, ScheduleTaskRunner>();
-            if (DataSettingsManager.IsDatabaseInstalled()) 
-                services.AddHostedService<ScheduleTaskHostedService>();
-
+            
             //event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
             foreach (var consumer in consumers)
@@ -282,6 +284,9 @@ namespace Nop.Web.Framework.Infrastructure
                     return isMatch;
                 }, typeof(IConsumer<>)))
                     services.AddScoped(findInterface, consumer);
+
+            //XML sitemap
+            services.AddScoped<IXmlSiteMap, XmlSiteMap>();
         }
 
         /// <summary>

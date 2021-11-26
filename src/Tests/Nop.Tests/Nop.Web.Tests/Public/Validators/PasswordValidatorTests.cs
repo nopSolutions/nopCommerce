@@ -55,10 +55,12 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
 
             //ShouldHaveValidationError
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "NOP123");
+            _person.Password = "NOP123";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
 
             //ShouldNotHaveValidationError
-            validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "nop123");
+            _person.Password = "nop123";
+            validator.TestValidate(_person).ShouldNotHaveValidationErrorFor(x => x.Password);
         }
 
         [Test]
@@ -75,10 +77,12 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
 
             //ShouldHaveValidationError
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nop");           
+            _person.Password = "nop";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
 
             //ShouldNotHaveValidationError
-            validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "Nop");
+            _person.Password = "Nop";
+            validator.TestValidate(_person).ShouldNotHaveValidationErrorFor(x => x.Password);
         }
 
         [Test]
@@ -95,10 +99,12 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
 
             //ShouldHaveValidationError
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nop");
+            _person.Password = "nop";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
 
             //ShouldNotHaveValidationError
-            validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "Nop1");
+            _person.Password = "Nop1";
+            validator.TestValidate(_person).ShouldNotHaveValidationErrorFor(x => x.Password);
         }
 
         [Test]
@@ -115,10 +121,12 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
             
             //ShouldHaveValidationError
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nop");
+            _person.Password = "nop";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
 
             //ShouldNotHaveValidationError
-            validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "Nop#");
+            _person.Password = "Nop#";
+            validator.TestValidate(_person).ShouldNotHaveValidationErrorFor(x => x.Password);
         }
 
         [Test]
@@ -130,19 +138,30 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             validator.RuleFor(x => x.Password).IsPassword(_localizationService, _customerSettings);
 
             //ShouldHaveValidationError
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = string.Empty);
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "123");
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "12345678");
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopcommerce");
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce");
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopcommerce123");
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce123");
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopcommerce123$");
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "NOPCOMMERCE123$");
-            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce123~");
+            _person.Password = string.Empty;
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
+            _person.Password = "123";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
+            _person.Password = "12345678";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
+            _person.Password = "nopcommerce";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
+            _person.Password = "nopCommerce";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
+            _person.Password = "nopcommerce123";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
+            _person.Password = "nopCommerce123";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
+            _person.Password = "nopcommerce123$";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
+            _person.Password = "NOPCOMMERCE123$";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
+            _person.Password = "nopCommerce123~";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
 
             //ShouldNotHaveValidationError
-            validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce123$");            
+            _person.Password = "nopCommerce123$";
+            validator.TestValidate(_person).ShouldNotHaveValidationErrorFor(x => x.Password);            
         }
         
         [Test]
@@ -154,11 +173,11 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             };
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
-            _changePasswordValidator.ShouldHaveValidationErrorFor(x => x.NewPassword, model);
+            _changePasswordValidator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.NewPassword);
             model.NewPassword = "nopCommerce123$";
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
-            _changePasswordValidator.ShouldNotHaveValidationErrorFor(x => x.NewPassword, model);
+            _changePasswordValidator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.NewPassword);
         }
 
         [Test]
@@ -170,11 +189,11 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             };
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
-            _passwordRecoveryConfirmValidator.ShouldHaveValidationErrorFor(x => x.NewPassword, model);
+            _passwordRecoveryConfirmValidator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.NewPassword);
             model.NewPassword = "nopCommerce123$";
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
-            _passwordRecoveryConfirmValidator.ShouldNotHaveValidationErrorFor(x => x.NewPassword, model);
+            _passwordRecoveryConfirmValidator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.NewPassword);
         }
 
         [Test]
@@ -186,11 +205,11 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             };
             //we know that password should equal confirmation password
             model.ConfirmPassword = model.Password;
-            _registerValidator.ShouldHaveValidationErrorFor(x => x.Password, model);
+            _registerValidator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Password);
             model.Password = "nopCommerce123$";
             //we know that password should equal confirmation password
             model.ConfirmPassword = model.Password;
-            _registerValidator.ShouldNotHaveValidationErrorFor(x => x.Password, model);
+            _registerValidator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Password);
         }        
     }
 }

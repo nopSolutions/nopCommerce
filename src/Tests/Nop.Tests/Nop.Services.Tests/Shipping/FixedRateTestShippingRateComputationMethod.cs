@@ -55,13 +55,16 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
             return Task.FromResult<decimal?>(GetRate());
         }
 
-        #region Properties
-        
         /// <summary>
-        /// Gets a shipment tracker
+        /// Get associated shipment tracker
         /// </summary>
-        public IShipmentTracker ShipmentTracker => null;
-
-        #endregion
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment tracker
+        /// </returns>
+        public Task<IShipmentTracker> GetShipmentTrackerAsync()
+        {
+            return Task.FromResult<IShipmentTracker>(null);
+        }
     }
 }

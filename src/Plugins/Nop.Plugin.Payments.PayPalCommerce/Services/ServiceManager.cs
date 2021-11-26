@@ -282,11 +282,11 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 var parameters = new Dictionary<string, string>
                 {
                     ["client-id"] = settings.ClientId,
-                    ["currency"] = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode?.ToUpper(),
-                    ["intent"] = settings.PaymentType.ToString().ToLower(),
-                    ["commit"] = (settings.PaymentType == Domain.PaymentType.Capture).ToString().ToLower(),
-                    ["vault"] = false.ToString().ToLower(),
-                    ["debug"] = false.ToString().ToLower(),
+                    ["currency"] = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode?.ToUpperInvariant(),
+                    ["intent"] = settings.PaymentType.ToString().ToLowerInvariant(),
+                    ["commit"] = (settings.PaymentType == Domain.PaymentType.Capture).ToString().ToLowerInvariant(),
+                    ["vault"] = false.ToString().ToLowerInvariant(),
+                    ["debug"] = false.ToString().ToLowerInvariant(),
                     ["components"] = "buttons",
                     //["buyer-country"] = null, //available in the sandbox only
                     //["locale"] = null, //PayPal auto detects this
@@ -338,24 +338,30 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 var billingAddress = await _addresService.GetAddressByIdAsync(customer.BillingAddressId ?? 0)
                     ?? throw new NopException("Customer billing address not set");
 
+                var shoppingCart = (await _shoppingCartService
+                    .GetShoppingCartAsync(customer, Core.Domain.Orders.ShoppingCartType.ShoppingCart, store.Id))
+                    .ToList();
+
                 var shippingAddress = await _addresService.GetAddressByIdAsync(customer.ShippingAddressId ?? 0);
+                if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(shoppingCart))
+                    shippingAddress = null;
 
                 var billStateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress);
                 var shipStateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress);
 
                 //prepare order details
-                var orderDetails = new OrderRequest { CheckoutPaymentIntent = settings.PaymentType.ToString().ToUpper() };
+                var orderDetails = new OrderRequest { CheckoutPaymentIntent = settings.PaymentType.ToString().ToUpperInvariant() };
 
                 //prepare some common properties
                 orderDetails.ApplicationContext = new ApplicationContext
                 {
                     BrandName = CommonHelper.EnsureMaximumLength(store.Name, 127),
-                    LandingPage = LandingPageType.Billing.ToString().ToUpper(),
+                    LandingPage = LandingPageType.Billing.ToString().ToUpperInvariant(),
                     UserAction = settings.PaymentType == Domain.PaymentType.Authorize
-                        ? UserActionType.Continue.ToString().ToUpper()
-                        : UserActionType.Pay_now.ToString().ToUpper(),
+                        ? UserActionType.Continue.ToString().ToUpperInvariant()
+                        : UserActionType.Pay_now.ToString().ToUpperInvariant(),
                     ShippingPreference = (shippingAddress != null ? ShippingPreferenceType.Set_provided_address : ShippingPreferenceType.No_shipping)
-                        .ToString().ToUpper()
+                        .ToString().ToUpperInvariant()
                 };
 
                 //prepare customer billing details
@@ -384,9 +390,6 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 }
 
                 //prepare purchase unit details
-                var shoppingCart = (await _shoppingCartService
-                    .GetShoppingCartAsync(customer, Core.Domain.Orders.ShoppingCartType.ShoppingCart, store.Id))
-                    .ToList();
                 var taxTotal = Math.Round((await _orderTotalCalculationService.GetTaxTotalAsync(shoppingCart, false)).taxTotal, 2);
                 var shippingTotal = Math.Round(await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(shoppingCart) ?? decimal.Zero, 2);
                 var (shoppingCartTotal, _, _, _, _, _) = await _orderTotalCalculationService
@@ -435,7 +438,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                         Sku = CommonHelper.EnsureMaximumLength(product.Sku, 127),
                         Quantity = item.Quantity.ToString(),
                         Category = (product.IsDownload ? ItemCategoryType.Digital_goods : ItemCategoryType.Physical_goods)
-                            .ToString().ToUpper(),
+                            .ToString().ToUpperInvariant(),
                         UnitAmount = new PayPalCheckoutSdk.Orders.Money { CurrencyCode = currency, Value = itemPrice.ToString("0.00", CultureInfo.InvariantCulture) }
                     };
                 }).ToListAsync();

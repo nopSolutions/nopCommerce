@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Html;
 using Nop.Services.Blogs;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
@@ -36,6 +36,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
+        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
@@ -51,6 +52,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStoreService storeService,
             IUrlRecordService urlRecordService)
@@ -62,6 +64,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _dateTimeHelper = dateTimeHelper;
             _languageService = languageService;
             _localizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             _storeService = storeService;
             _urlRecordService = urlRecordService;
@@ -178,13 +181,13 @@ namespace Nop.Web.Areas.Admin.Factories
             for (var i = 0; i < blogTags.Count; i++)
             {
                 var tag = blogTags[i];
-                blogTagsSb.Append("'");
+                blogTagsSb.Append('\'');
                 blogTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
-                blogTagsSb.Append("'");
+                blogTagsSb.Append('\'');
                 if (i != blogTags.Count - 1)
-                    blogTagsSb.Append(",");
+                    blogTagsSb.Append(',');
             }
-            blogTagsSb.Append("]");
+            blogTagsSb.Append(']');
 
             model.InitialBlogTags = blogTagsSb.ToString();
 
@@ -287,7 +290,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
                     //fill in additional values (not existing in the entity)
                     commentModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc);
-                    commentModel.Comment = HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
+                    commentModel.Comment = _nopHtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
                     commentModel.StoreName = storeNames.ContainsKey(blogComment.StoreId) ? storeNames[blogComment.StoreId] : "Deleted";
 
                     return commentModel;

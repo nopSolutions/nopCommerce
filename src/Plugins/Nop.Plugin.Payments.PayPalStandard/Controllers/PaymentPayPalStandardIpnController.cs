@@ -104,7 +104,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                         //failed payment
                         var failedPaymentResult = new ProcessPaymentResult
                         {
-                            Errors = new[] { $"PayPal IPN. Recurring payment is {nameof(PaymentStatus.Voided).ToLower()} ." },
+                            Errors = new[] { $"PayPal IPN. Recurring payment is {nameof(PaymentStatus.Voided).ToLowerInvariant()} ." },
                             RecurringPaymentFailed = true
                         };
                         await _orderProcessingService.ProcessNextRecurringPaymentAsync(rp, failedPaymentResult);

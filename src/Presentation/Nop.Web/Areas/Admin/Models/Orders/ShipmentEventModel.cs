@@ -10,6 +10,8 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     {
         #region Properties
 
+        public string Status { get; set; }
+
         public string EventName { get; set; }
 
         public string Location { get; set; }

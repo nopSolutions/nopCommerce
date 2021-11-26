@@ -381,6 +381,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ProductsByTagManuallyPriceRange_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.EnableManufacturerFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.EnablePriceRangeFiltering_OverrideForStore, mo => mo.Ignore())
+                .ForMember(model => model.EnableSpecificationAttributeFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.AttributeValueOutOfStockDisplayTypes, mo => mo.Ignore())
                 .ForMember(model => model.AttributeValueOutOfStockDisplayType_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.SortOptionSearchModel, options => options.Ignore())
@@ -1292,7 +1293,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.GeneratePdfInvoiceInCustomerLanguage, options => options.Ignore())
                 .ForMember(settings => settings.MinimumOrderPlacementInterval, options => options.Ignore())
                 .ForMember(settings => settings.DisplayCustomerCurrencyOnOrders, options => options.Ignore())
-                .ForMember(settings => settings.ReturnRequestsFileMaximumSize, options => options.Ignore());
+                .ForMember(settings => settings.ReturnRequestsFileMaximumSize, options => options.Ignore())
+                .ForMember(settings => settings.DisplayOrderSummary, options => options.Ignore());
 
             CreateMap<ReturnRequestAction, ReturnRequestActionModel>();
             CreateMap<ReturnRequestActionModel, ReturnRequestAction>();
@@ -1349,9 +1351,11 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.Store, options => options.Ignore())
                 .ForMember(model => model.AttributeInfo, options => options.Ignore())
                 .ForMember(model => model.UnitPrice, options => options.Ignore())
+                .ForMember(model => model.UnitPriceValue, options => options.Ignore())
                 .ForMember(model => model.UpdatedOn, options => options.Ignore())
                 .ForMember(model => model.ProductName, options => options.Ignore())
-                .ForMember(model => model.Total, options => options.Ignore());
+                .ForMember(model => model.Total, options => options.Ignore())
+                .ForMember(model => model.TotalValue, options => options.Ignore());
         }
 
         /// <summary>
@@ -1492,6 +1496,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AllowPickupInStore_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ConsiderAssociatedProductsDimensions_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.SortShippingValues, options => options.Ignore())
+                .ForMember(model => model.ShippingSorting_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DisplayPickupPointsOnMap_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DisplayShipmentEventsToCustomers_OverrideForStore, options => options.Ignore())
@@ -1539,7 +1545,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.Type, options => options.Ignore())
                 .ForMember(entity => entity.LastStartUtc, options => options.Ignore())
                 .ForMember(entity => entity.LastEndUtc, options => options.Ignore())
-                .ForMember(entity => entity.LastSuccessUtc, options => options.Ignore());
+                .ForMember(entity => entity.LastSuccessUtc, options => options.Ignore())
+                .ForMember(entity => entity.LastEnabledUtc, options => options.Ignore());
         }
 
         /// <summary>

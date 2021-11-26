@@ -70,7 +70,6 @@ namespace Nop.Services.Common
         /// </returns>
         Task<bool> IsAddressValidAsync(Address address);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Find an address
         /// </summary>
@@ -94,7 +93,6 @@ namespace Nop.Services.Common
             string faxNumber, string company, string address1, string address2, string city, string county, int? stateProvinceId,
             string zipPostalCode, int? countryId, string customAttributes);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Clone address
         /// </summary>

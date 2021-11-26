@@ -401,12 +401,12 @@ namespace Nop.Services.Shipping
                 var shippingRateComputationMethod = await _shippingPluginManager
                     .LoadPluginBySystemNameAsync(order.ShippingRateComputationMethodSystemName);
 
-                return shippingRateComputationMethod?.ShipmentTracker;
+                return await shippingRateComputationMethod?.GetShipmentTrackerAsync();
             }
 
             var pickupPointProvider = await _pickupPluginManager
                 .LoadPluginBySystemNameAsync(order.ShippingRateComputationMethodSystemName);
-            return pickupPointProvider?.ShipmentTracker;
+            return await pickupPointProvider?.GetShipmentTrackerAsync();
         }
 
         #endregion
