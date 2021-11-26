@@ -23,9 +23,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Catalog
             {
                 FriendEmail = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.FriendEmail, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.FriendEmail);
             model.FriendEmail = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.FriendEmail, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.FriendEmail);
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Catalog
             {
                 FriendEmail = "adminexample.com"
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.FriendEmail, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.FriendEmail);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Catalog
             {
                 FriendEmail = "admin@example.com"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.FriendEmail, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.FriendEmail);
         }
 
         [Test]
@@ -55,9 +55,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Catalog
             {
                 YourEmailAddress = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.YourEmailAddress, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.YourEmailAddress);
             model.YourEmailAddress = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.YourEmailAddress, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.YourEmailAddress);
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Catalog
             {
                 YourEmailAddress = "adminexample.com"
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.YourEmailAddress, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.YourEmailAddress);
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Catalog
             {
                 YourEmailAddress = "admin@example.com"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.YourEmailAddress, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.YourEmailAddress);
         }
     }
 }
