@@ -3212,6 +3212,7 @@ namespace Nop.Services.Installation
                 PointsForPurchases_Points = 1,
                 MinOrderTotalToAwardPoints = 0,
                 MaximumRewardPointsToUsePerOrder = 0,
+                MaximumRedeemedRate = 0,
                 PurchasesPointsValidity = 45,
                 ActivationDelay = 0,
                 ActivationDelayPeriodId = 0,

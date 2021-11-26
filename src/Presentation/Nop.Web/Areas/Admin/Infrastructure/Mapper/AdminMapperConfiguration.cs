@@ -764,6 +764,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.MinOrderTotalToAwardPoints_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PageSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PointsForPurchases_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.MaximumRedeemedRate_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PointsForRegistration_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
                 .ForMember(model => model.PurchasesPointsValidity_OverrideForStore, options => options.Ignore())

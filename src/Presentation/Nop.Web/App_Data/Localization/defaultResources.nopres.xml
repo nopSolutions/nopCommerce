@@ -8418,6 +8418,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2">
     <Value>1 reward point =</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate">
+    <Value>Maximum redeemed rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate.Hint">
+    <Value>Limit the maximum order total that could be paid by reward points (in percent). For example, if set to 0.6, then only 60% of order total could be paid using reward points, but not more than the 'Maximum reward points to use per order'. Set to 0 if you do not want to use this setting.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder">
     <Value>Maximum reward points to use per order</Value>
   </LocaleResource>
@@ -16168,7 +16174,7 @@
     <Value>Continue</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.UseRewardPoints">
-    <Value>Use my reward points, {0} reward points ({1}) available for this order</Value>
+    <Value>Use my reward points, {0} of {1} reward points ({2}) available for this order</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.YourOrderHasBeenSuccessfullyProcessed">
     <Value>Your order has been successfully processed!</Value>

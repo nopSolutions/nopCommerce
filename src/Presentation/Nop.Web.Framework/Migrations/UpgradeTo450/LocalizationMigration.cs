@@ -118,8 +118,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position"] = "Position",
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost"] = "Shipping Cost",
                 //#5138
-                ["PDFInvoice.FileName"] = "order"
+                ["PDFInvoice.FileName"] = "order",
                 
+                //#4905
+                ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate"] = "Maximum redeemed rate",
+                ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate.Hint"] = "Limit the maximum order total that could be paid by reward points (in percent). For example, if set to 0.6, then only 60% of order total could be paid using reward points, but not more than the 'Maximum reward points to use per order'. Set to 0 if you do not want to use this setting.",
+                ["Checkout.UseRewardPoints"] = "Use my reward points, {0} of {1} reward points ({2}) available for this order"
             }, languageId).Wait();
 
             // rename locales

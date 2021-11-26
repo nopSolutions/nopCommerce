@@ -21,7 +21,7 @@
                 {
                     <div class="use-reward-points">
                         <input asp-for="UseRewardPoints"/>
-                        <label asp-for="UseRewardPoints">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</label>
+                        <label asp-for="UseRewardPoints">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsToUse, Model.RewardPointsBalance, Model.RewardPointsToUseAmount)</label>
                         @if (Model.RewardPointsEnoughToPayForOrder)
                         {
                         <script asp-location="Footer">
