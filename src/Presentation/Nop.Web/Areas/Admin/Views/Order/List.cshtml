@@ -584,6 +584,7 @@
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+    <input type="hidden" id="excelSearchModel" name="searchModel" value="" />
 </form>
 
 <script>
@@ -597,6 +598,24 @@
             }
             else {
                 $('#export-excel-selected-form #selectedIds').val(ids);
+
+                var searchModel = new Object();
+                var endDate = $('#EndDate').val();
+                if (endDate) {
+                    searchModel.EndDate = endDate;
+                }
+                var startDate = $('#StartDate').val();
+                if (startDate) {
+                    searchModel.StartDate = startDate;
+                }
+                searchModel.ProductId = $('#ProductId').val();
+                searchModel.VendorId = $('#VendorId').val();
+                searchModel.PaymentMethodSystemName = $('#PaymentMethodSystemName').val();
+                searchModel.OrderNotes = $('#OrderNotes').val();
+                searchModel.GoDirectlyToCustomOrderNumber = $('#GoDirectlyToCustomOrderNumber').val();
+                searchModel.OrderStatusIds = $('#OrderStatusIds').val();
+                searchModel.ShippingStatusIds = $('#ShippingStatusIds').val();
+                $('#export-excel-selected-form #excelSearchModel').val(JSON.stringify(searchModel));
                 $('#export-excel-selected-form').submit();
                 updateTable('#orders-grid');
             }

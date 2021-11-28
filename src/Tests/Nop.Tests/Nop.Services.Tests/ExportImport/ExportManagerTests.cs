@@ -184,7 +184,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
         {
             var orders = await _orderService.SearchOrdersAsync();
 
-            var excelData = await _exportManager.ExportOrdersToXlsxAsync(orders);
+            var excelData = await _exportManager.ExportOrdersToXlsxAsync(orders,0);
             var worksheet = GetWorksheets(excelData);
             var manager = GetPropertyManager<Order>(worksheet);
 
