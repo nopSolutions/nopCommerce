@@ -279,6 +279,8 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 if (!IsConfigured(settings))
                     throw new NopException("Plugin not configured");
 
+                var components = new List<string>() { "buttons" };
+
                 var parameters = new Dictionary<string, string>
                 {
                     ["client-id"] = settings.ClientId,
@@ -287,7 +289,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                     ["commit"] = (settings.PaymentType == Domain.PaymentType.Capture).ToString().ToLowerInvariant(),
                     ["vault"] = false.ToString().ToLowerInvariant(),
                     ["debug"] = false.ToString().ToLowerInvariant(),
-                    ["components"] = "buttons",
+                    ["components"] = "",
                     //["buyer-country"] = null, //available in the sandbox only
                     //["locale"] = null, //PayPal auto detects this
                 };
@@ -296,7 +298,10 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 if (!string.IsNullOrEmpty(settings.EnabledFunding))
                     parameters["enable-funding"] = settings.EnabledFunding;
                 if (widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore) || widgetZone.Equals(PublicWidgetZones.ProductDetailsTop))
-                    parameters["components"] = "buttons,funding-eligibility";
+                    components.Add("funding-eligibility");
+                if (settings.DisplayPayLaterMessages)
+                    components.Add("messages");
+                parameters["components"] = string.Join(",", components);
                 var scriptUrl = QueryHelpers.AddQueryString(PayPalCommerceDefaults.ServiceScriptUrl, parameters);
 
                 var pageType = widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore)

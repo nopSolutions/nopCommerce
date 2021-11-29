@@ -92,6 +92,11 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         public string LogoInFooter { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to display Pay Later messages
+        /// </summary>
+        public bool DisplayPayLaterMessages { get; set; }
+
+        /// <summary>
         /// Gets or sets the disabled funding sources for the transaction (separated by comma)
         /// By default, funding source eligibility is determined based on a variety of factors
         /// </summary>

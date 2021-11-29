@@ -445,6 +445,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce
                 StyleLabel = "paypal",
                 DisplayButtonsOnProductDetails = true,
                 DisplayButtonsOnShoppingCart = true,
+                DisplayPayLaterMessages = false,
                 RequestTimeout = PayPalCommerceDefaults.RequestTimeout
             });
 
@@ -479,6 +480,8 @@ namespace Nop.Plugin.Payments.PayPalCommerce
                 ["Plugins.Payments.PayPalCommerce.Fields.DisplayLogoInFooter.Hint"] = "Determine whether to display PayPal logo in the footer. These logos and banners are a great way to let your buyers know that you choose PayPal to securely process their payments.",
                 ["Plugins.Payments.PayPalCommerce.Fields.DisplayLogoInHeaderLinks"] = "Display logo in header links",
                 ["Plugins.Payments.PayPalCommerce.Fields.DisplayLogoInHeaderLinks.Hint"] = "Determine whether to display PayPal logo in header links. These logos and banners are a great way to let your buyers know that you choose PayPal to securely process their payments.",
+                ["Plugins.Payments.PayPalCommerce.Fields.DisplayPayLaterMessages"] = "Display Pay Later messages",
+                ["Plugins.Payments.PayPalCommerce.Fields.DisplayPayLaterMessages.Hint"] = "Determine whether to display Pay Later messages. This message displays how much the customer pays in four payments. The message will be shown next to the PayPal buttons.",
                 ["Plugins.Payments.PayPalCommerce.Fields.Email"] = "Email",
                 ["Plugins.Payments.PayPalCommerce.Fields.Email.Hint"] = "Enter your email to get access to PayPal payments.",
                 ["Plugins.Payments.PayPalCommerce.Fields.LogoInFooter"] = "Logo source code",
