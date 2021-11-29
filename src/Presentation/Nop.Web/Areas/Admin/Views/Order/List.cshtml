@@ -279,6 +279,30 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @if (Model.IsLoggedInAsVendor)
+                                        {
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SortByDeliveryDate" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="input-group">
+                                                        <select name="SortByDeliveryDate" asp-for="SortByDeliveryDate" id="SortByDeliveryDate" class="form-control">
+                                                            @if (!Model.SortByDeliveryDate)
+                                                            {
+                                                                <option value="true">True</option>
+                                                                <option selected="selected" value="false">False</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option selected="selected" value="true">True</option>
+                                                                <option value="false">False</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                                 <div class="row">
@@ -322,7 +346,8 @@
                                                     //new FilterParameter(nameof(Model.BillingCountryId)),
                                                     new FilterParameter(nameof(Model.PaymentMethodSystemName)),
                                                     new FilterParameter(nameof(Model.ProductId)),
-                                                    new FilterParameter(nameof(Model.OrderNotes))
+                                                    new FilterParameter(nameof(Model.OrderNotes)),
+                                                    new FilterParameter(nameof(Model.SortByDeliveryDate))
                                                 }
                                 };
                                 gridModel.ColumnCollection = new List<ColumnProperty>

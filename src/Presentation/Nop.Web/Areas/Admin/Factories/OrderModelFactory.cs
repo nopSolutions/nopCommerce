@@ -1002,7 +1002,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //billingLastName: searchModel.BillingLastName,
                 //billingCountryId: searchModel.BillingCountryId,
                 orderNotes: searchModel.OrderNotes,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,sortByDeliveryDate: searchModel.SortByDeliveryDate);
 
             //prepare list model
             var model = await new OrderListModel().PrepareToGridAsync(searchModel, orders, () =>
