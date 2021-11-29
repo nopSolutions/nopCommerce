@@ -313,7 +313,8 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             string billingPhone = null, string billingEmail = null, string billingLastName = "",
-            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false, bool sendRateNotification = false)
+            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue,
+            bool getOnlyTotalCount = false, bool sendRateNotification = false, bool sortByDeliveryDate = true)
         {
             var query = _orderRepository.Table;
 
@@ -405,7 +406,7 @@ namespace Nop.Services.Orders
                 query = query.Where(o => !o.RateNotificationSend);
 
             query = query.Where(o => !o.Deleted);
-            query = query.OrderByDescending(o => o.CreatedOnUtc);
+            query = isLoggedInAsVendor && sortByDeliveryDate ? query.OrderByDescending(o => o.ScheduleDate) : query.OrderByDescending(o => o.CreatedOnUtc);
 
             //database layer paging
             return await query.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
