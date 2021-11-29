@@ -3,7 +3,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.ContentManagement.Blog.BlogPosts.AddNew").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Blog posts");
+    NopHtml.SetActiveMenuItemSystemName("Blog posts");
 }
 
 <form asp-controller="Blog" asp-action="BlogPostCreate" method="post">

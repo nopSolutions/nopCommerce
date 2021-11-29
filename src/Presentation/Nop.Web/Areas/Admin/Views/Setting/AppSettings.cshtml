@@ -2,7 +2,7 @@
 
 @{
     ViewBag.PageTitle = T("Admin.Configuration.AppSettings").Text;
-    Html.SetActiveMenuItemSystemName("App settings");
+    NopHtml.SetActiveMenuItemSystemName("App settings");
 
     const string hideCacheBlockAttributeName = "AppSettingsPage.HideCacheBlock";
     var customer = await workContext.GetCurrentCustomerAsync();

@@ -15,7 +15,7 @@
     var closeConfigurationStepsCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), closeCardAttributeName);
 
      //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Dashboard");
+    NopHtml.SetActiveMenuItemSystemName("Dashboard");
 }
 
 <link rel="stylesheet" href="~/lib_npm/ionicons/css/ionicons.min.css" />

@@ -15,7 +15,7 @@
     //custom tag(s);
     if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
     {
-        Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
+        NopHtml.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
 
     var displayMiniProfiler = appSettings.Get<CommonConfig>().MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
@@ -24,23 +24,23 @@
     await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
-<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" @Html.NopPageCssClasses()>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
 <head>
-    <title>@Html.NopTitle()</title>
+    <title>@NopHtml.GenerateTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <meta name="description" content="@(Html.NopMetaDescription())" />
-    <meta name="keywords" content="@(Html.NopMetaKeywords())" />
+    <meta name="description" content="@NopHtml.GenerateMetaDescription()" />
+    <meta name="keywords" content="@NopHtml.GenerateMetaKeywords()" />
     <meta name="generator" content="nopCommerce" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    @Html.NopHeadCustom()
+    @NopHtml.GenerateHeadCustom()
     @*This is used so that themes can inject content into the header*@
     @await Html.PartialAsync("Head")
 
-    @Html.NopCssFiles(ResourceLocation.Head)
+    @NopHtml.GenerateCssFiles(ResourceLocation.Head)
     <style-bundle /> @* bundle tag must be below other link tags *@
 
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
-    @Html.NopCanonicalUrls()
+    @NopHtml.GenerateCanonicalUrls()
     @await Component.InvokeAsync("NewsRssHeaderLink")
     @await Component.InvokeAsync("BlogRssHeaderLink")
     @*Insert favicon and app icons head code*@
@@ -49,8 +49,8 @@
     {
         <mini-profiler />
     }
-    @Html.NopScripts(ResourceLocation.Head)
-    @Html.NopInlineScripts(ResourceLocation.Head)
+    @NopHtml.GenerateScripts(ResourceLocation.Head)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->
 </head>
 <body>
@@ -78,7 +78,7 @@
     <!-- FooterScripts  -->
     <script-bundle />
 
-    @Html.NopScripts(ResourceLocation.Footer)
-    @Html.NopInlineScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
 </body>
 </html>

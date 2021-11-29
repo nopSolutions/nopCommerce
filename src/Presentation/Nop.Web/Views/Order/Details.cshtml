@@ -9,9 +9,9 @@
         Layout = "_Print";
     }
     //title
-    Html.AddTitleParts(T("PageTitle.OrderDetails").Text);
+    NopHtml.AddTitleParts(T("PageTitle.OrderDetails").Text);
     //page class
-    Html.AppendPageCssClassParts("html-order-details-page");
+    NopHtml.AppendPageCssClassParts("html-order-details-page");
 }
 @if (Model.PrintMode)
 {

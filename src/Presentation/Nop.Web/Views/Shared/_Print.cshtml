@@ -4,9 +4,9 @@
     var themeName = await themeContext.GetWorkingThemeNameAsync();
 }
 <!DOCTYPE html>
-<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" @Html.NopPageCssClasses()>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" class="@NopHtml.GeneratePageCssClasses()">
 <head>
-    <title>@Html.NopTitle()</title>
+    <title>@NopHtml.GenerateTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <link href="@Url.Content($"~/Themes/{themeName}/Content/css/print.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/lib_npm/jquery/jquery.min.js")"></script>
@@ -19,10 +19,10 @@
     {
         <script src="@Url.Content("~/lib_npm/jquery-migrate/jquery-migrate.min.js")"></script>
     }
-    @Html.NopInlineScripts(ResourceLocation.Head)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
 </head>
 <body>
     @RenderBody()
-    @Html.NopInlineScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
 </body>
 </html>

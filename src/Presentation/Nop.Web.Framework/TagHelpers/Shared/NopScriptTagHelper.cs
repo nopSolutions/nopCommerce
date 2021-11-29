@@ -45,7 +45,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
         private readonly AppSettings _appSettings;
         private readonly IAssetPipeline _assetPipeline;
-        private readonly IHtmlHelper _htmlHelper;
+        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         #endregion
@@ -55,13 +55,13 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         public NopScriptTagHelper(AppSettings appSettings,
             HtmlEncoder htmlEncoder,
             IAssetPipeline assetPipeline,
-            IHtmlHelper htmlHelper,
+            INopHtmlHelper nopHtmlHelper,
             IUrlHelperFactory urlHelperFactory,
             IWebHostEnvironment webHostEnvironment) : base(urlHelperFactory, htmlEncoder)
         {
             _appSettings = appSettings;
             _assetPipeline = assetPipeline ?? throw new ArgumentNullException(nameof(assetPipeline));
-            _htmlHelper = htmlHelper;
+            _nopHtmlHelper = nopHtmlHelper;
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -175,9 +175,9 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             }
 
             if (string.IsNullOrEmpty(Src))
-                _htmlHelper.AddInlineScriptParts(Location, tagHtml);
+                _nopHtmlHelper.AddInlineScriptParts(Location, tagHtml);
             else
-                _htmlHelper.AddScriptParts(Location, Src, DebugSrc);
+                _nopHtmlHelper.AddScriptParts(Location, Src, DebugSrc);
         }
 
         #endregion

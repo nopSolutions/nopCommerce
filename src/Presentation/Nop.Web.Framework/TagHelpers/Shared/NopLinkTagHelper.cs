@@ -38,7 +38,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
         private readonly AppSettings _appSettings;
         private readonly IAssetPipeline _assetPipeline;
-        private readonly IHtmlHelper _htmlHelper;
+        private readonly INopHtmlHelper _nopHtmlHelper;
 
         #endregion
 
@@ -47,12 +47,12 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         public NopLinkTagHelper(AppSettings appSettings,
             HtmlEncoder htmlEncoder,
             IAssetPipeline assetPipeline,
-            IHtmlHelper htmlHelper,
+            INopHtmlHelper nopHtmlHelper,
             IUrlHelperFactory urlHelperFactory) : base(urlHelperFactory, htmlEncoder)
         {
             _appSettings = appSettings;
             _assetPipeline = assetPipeline ?? throw new ArgumentNullException(nameof(assetPipeline));
-            _htmlHelper = htmlHelper;
+            _nopHtmlHelper = nopHtmlHelper;
         }
 
         #endregion
@@ -139,7 +139,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
             ProcessSrcAttribute(context, output);
 
-            _htmlHelper.AddCssFileParts(ResourceLocation.Head, Href);
+            _nopHtmlHelper.AddCssFileParts(ResourceLocation.Head, Href, string.Empty);
             output.SuppressOutput();
 
             return Task.CompletedTask;

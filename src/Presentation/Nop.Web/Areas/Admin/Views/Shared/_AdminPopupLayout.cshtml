@@ -16,7 +16,7 @@
 <head>
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    @Html.NopHeadCustom()
+    @NopHtml.GenerateHeadCustom()
 
     @* CSS & Script resources *@
     @{ await Html.RenderPartialAsync("_AdminScripts");  }
@@ -35,8 +35,8 @@
     <!-- FooterScripts  -->
     <script-bundle />
 
-    @Html.NopScripts(ResourceLocation.Footer)
-    @Html.NopInlineScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
 
     <script>
         $(document).ready(function () {

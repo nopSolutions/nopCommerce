@@ -57,7 +57,7 @@ else
     <link rel="stylesheet" href="~/css/admin/styles.css"/>
 }
 
-@Html.NopCssFiles(ResourceLocation.Head)
+@NopHtml.GenerateCssFiles(ResourceLocation.Head)
 <style-bundle /> @* bundle tag must be below other link tags *@
 
 @* scripts *@
@@ -129,5 +129,5 @@ else
         kendo.culture("@(culture.Name)");
 </script>
 
-@Html.NopScripts(ResourceLocation.Head)
-@Html.NopInlineScripts(ResourceLocation.Head)
+@NopHtml.GenerateScripts(ResourceLocation.Head)
+@NopHtml.GenerateInlineScripts(ResourceLocation.Head)

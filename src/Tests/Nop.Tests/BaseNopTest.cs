@@ -171,6 +171,8 @@ namespace Nop.Tests
             webHostEnvironment.Setup(p => p.ApplicationName).Returns("nopCommerce");
             services.AddSingleton(webHostEnvironment.Object);
 
+            services.AddWebEncoders();
+
             var httpContext = new DefaultHttpContext
             {
                 Request = { Headers = { { HeaderNames.Host, NopTestsDefaults.HostIpAddress } } }
@@ -392,7 +394,7 @@ namespace Nop.Tests
             services.AddTransient<IWorkContext, WebWorkContext>();
             services.AddTransient<IThemeContext, ThemeContext>();
 
-            services.AddTransient<IPageHeadBuilder, PageHeadBuilder>();
+            services.AddTransient<INopHtmlHelper, NopHtmlHelper>();
 
             //schedule tasks
             services.AddSingleton<ITaskScheduler, TestTaskScheduler>();

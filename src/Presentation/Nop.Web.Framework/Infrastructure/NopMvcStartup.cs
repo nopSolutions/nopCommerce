@@ -24,6 +24,8 @@ namespace Nop.Web.Framework.Infrastructure
             //add and configure MVC feature
             services.AddNopMvc();
 
+            services.AddWebEncoders();
+
             //add custom redirect result executor
             services.AddNopRedirectResultExecutor();
         }

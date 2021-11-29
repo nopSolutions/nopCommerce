@@ -39,7 +39,7 @@
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    @Html.NopHeadCustom()
+    @NopHtml.GenerateHeadCustom()
 
     @* CSS & Script resources *@
     @{
@@ -217,8 +217,8 @@
     <!-- FooterScripts  -->
     <script-bundle />
 
-    @Html.NopScripts(ResourceLocation.Footer)
-    @Html.NopInlineScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
 
     <script>
         var AdminLTEOptions = {
