@@ -183,7 +183,7 @@ namespace Nop.Data.DataProviders
         {
             try
             {
-                await using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+                await using var connection = GetInternalDbConnection(GetCurrentConnectionString());
 
                 //just try to connect
                 await connection.OpenAsync();
@@ -195,16 +195,7 @@ namespace Nop.Data.DataProviders
                 return false;
             }
         }
-
-        /// <summary>
-        /// Initialize database
-        /// </summary>
-        public void InitializeDatabase()
-        {
-            var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
-        }
-
+        
         /// <summary>
         /// Get the current identity value
         /// </summary>
@@ -213,16 +204,16 @@ namespace Nop.Data.DataProviders
         /// A task that represents the asynchronous operation
         /// The task result contains the integer identity; null if cannot get the result
         /// </returns>
-        public virtual async Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
+        public virtual Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
         {
-            using var currentConnection = await CreateDataConnectionAsync();
+            using var currentConnection = CreateDataConnection();
 
             var seqName = GetSequenceName<TEntity>(currentConnection);
 
             var result = currentConnection.Query<int>($"SELECT COALESCE(last_value + CASE WHEN is_called THEN 1 ELSE 0 END, 1) as Value FROM {seqName};")
                 .FirstOrDefault();
 
-            return result;
+            return Task.FromResult<int?>(result);
         }
 
         /// <summary>
@@ -237,7 +228,7 @@ namespace Nop.Data.DataProviders
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            using var currentConnection = await CreateDataConnectionAsync();
+            using var currentConnection = CreateDataConnection();
 
             var seqName = GetSequenceName<TEntity>(currentConnection);
 
@@ -286,7 +277,7 @@ namespace Nop.Data.DataProviders
         /// </returns>
         public override async Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity)
         {
-            using var dataContext = await CreateDataConnectionAsync();
+            using var dataContext = CreateDataConnection();
             try
             {
                 entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
@@ -316,7 +307,7 @@ namespace Nop.Data.DataProviders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ReIndexTablesAsync()
         {
-            using var currentConnection = await CreateDataConnectionAsync();
+            using var currentConnection = CreateDataConnection();
             await currentConnection.ExecuteAsync($"REINDEX DATABASE \"{currentConnection.Connection.Database}\";");
         }
 
@@ -337,7 +328,7 @@ namespace Nop.Data.DataProviders
             {
                 Host = nopConnectionString.ServerName,
                 //Cast DatabaseName to lowercase to avoid case-sensitivity problems
-                Database = nopConnectionString.DatabaseName.ToLower(),
+                Database = nopConnectionString.DatabaseName.ToLowerInvariant(),
                 Username = nopConnectionString.Username,
                 Password = nopConnectionString.Password,
             };

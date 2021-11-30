@@ -3295,7 +3295,7 @@
     <Value>Short description</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShortDescription.Hint">
-    <Value>Short description is the text that is displayed in product list i.e. сategory / manufacturer pages.</Value>
+    <Value>Short description is the text that is displayed in product list i.e. category / manufacturer pages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomepage">
     <Value>Show on home page</Value>
@@ -5769,6 +5769,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering.Hint">
     <Value>Check to enable the price range filtering on catalog pages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering">
+    <Value>Enable specification attribute filtering</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint">
+    <Value>Check to enable the specification attribute filtering on catalog pages.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages">
     <Value>Export/Import products. Allow download images</Value>
   </LocaleResource>
@@ -7536,6 +7542,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Hint">
     <Value>When enabled, your URLs will be http://www.yourStore.com/en/ or http://www.yourStore.com/ru/ (SEO friendly).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning">
+      <Value>Attention! The changes will take effect only after the application is restarted.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions">
     <Value><![CDATA[<p>These settings do not apply to sitemap.xml, only for your site map. You can configure generation for sitemap.xml on <a href="{0}">all settings page</a></p>]]></Value>
   </LocaleResource>
@@ -8409,6 +8418,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2">
     <Value>1 reward point =</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate">
+    <Value>Maximum redeemed rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate.Hint">
+    <Value>Limit the maximum order total that could be paid by reward points (in percent). For example, if set to 0.6, then only 60% of order total could be paid using reward points, but not more than the 'Maximum reward points to use per order'. Set to 0 if you do not want to use this setting.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder">
     <Value>Maximum reward points to use per order</Value>
   </LocaleResource>
@@ -8579,6 +8594,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingOriginAddress">
     <Value>Shipping origin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingSorting">
+    <Value>Sort shipping methods by</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingSorting.Hint">
+    <Value>Select the field to sort the shipping by.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress">
     <Value>Ship to the same address</Value>
@@ -12372,14 +12393,17 @@
   <LocaleResource Name="Admin.Help">
     <Value>Help</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Help.Documentation">
+    <Value>Documentation</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Help.Forums">
     <Value>Community forums</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Help.SolutionPartners">
+     <Value>Solution partners</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Help.SupportServices">
     <Value>Premium support services</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Help.Topics">
-    <Value>Help topics</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Home">
     <Value>Home</Value>
@@ -16195,7 +16219,7 @@
     <Value>Continue</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.UseRewardPoints">
-    <Value>Use my reward points, {0} reward points ({1}) available for this order</Value>
+    <Value>Use my reward points, {0} of {1} reward points ({2}) available for this order</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.YourOrderHasBeenSuccessfullyProcessed">
     <Value>Your order has been successfully processed!</Value>
@@ -16853,6 +16877,12 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Seo.WwwRequirement.WithWww">
     <Value>Pages should have WWW prefix</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position">
+    <Value>Position</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost">
+    <Value>Shipping Cost</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Shipping.ShippingStatus.Delivered">
     <Value>Delivered</Value>
@@ -17955,6 +17985,9 @@
   <LocaleResource Name="PDFInvoice.Fax">
     <Value>Fax: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="PDFInvoice.FileName">
+    <Value>order</Value>
+  </LocaleResource>  
   <LocaleResource Name="PDFInvoice.GiftCardInfo">
     <Value>Gift card ({0}):</Value>
   </LocaleResource>

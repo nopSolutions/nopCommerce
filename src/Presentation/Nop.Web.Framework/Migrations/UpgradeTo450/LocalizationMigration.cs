@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using FluentMigrator;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -30,7 +31,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 "Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto",
                 "Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto.Hint",
                 "Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader",
-                "Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader.Hint"
+                "Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader.Hint",
+                //#5042
+                "Admin.Help.Topics"
             }).Wait();
 
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
@@ -115,6 +118,33 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Order.Shipments.ReadyForPickupDate.NotYet"] = "Not yet",
                 ["Admin.Orders.Shipments.Products.QtyReadyForPickup"] = "Qty ready for pickup",
                 ["Admin.Orders.Shipments.Products.QtyToPickup"] = "Qty to pickup",
+                
+                //#5042
+                ["Admin.Help.Documentation"] = "Documentation",
+                ["Admin.Help.SolutionPartners"] = "Solution partners",
+
+                //#5551
+                ["Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering"] = "Enable specification attribute filtering",
+                ["Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint"] = "Check to enable the specification attribute filtering on catalog pages.",
+
+                //#5952
+                ["Admin.Catalog.Products.Fields.ShortDescription.Hint"] = "Short description is the text that is displayed in product list i.e. category / manufacturer pages.",
+
+                //#5654
+                ["Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning"] = "Attention! The changes will take effect only after the application is restarted.",
+
+                //#5204
+                ["Admin.Configuration.Settings.Shipping.ShippingSorting"] = "Sort shipping methods by",
+                ["Admin.Configuration.Settings.Shipping.ShippingSorting.Hint"] = "Select the field to sort the shipping by.",
+                ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position"] = "Position",
+                ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost"] = "Shipping Cost",
+                //#5138
+                ["PDFInvoice.FileName"] = "order",
+                
+                //#4905
+                ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate"] = "Maximum redeemed rate",
+                ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate.Hint"] = "Limit the maximum order total that could be paid by reward points (in percent). For example, if set to 0.6, then only 60% of order total could be paid using reward points, but not more than the 'Maximum reward points to use per order'. Set to 0 if you do not want to use this setting.",
+                ["Checkout.UseRewardPoints"] = "Use my reward points, {0} of {1} reward points ({2}) available for this order"
             }, languageId).Wait();
 
             // rename locales

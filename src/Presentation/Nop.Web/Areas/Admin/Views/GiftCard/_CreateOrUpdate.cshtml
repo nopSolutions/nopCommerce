@@ -4,10 +4,11 @@
 @inject IWorkContext workContext
 @{
     const string hideInfoBlockAttributeName = "GiftCardPage.HideInfoBlock";
-    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
 
     const string hideUsageHistoryBlockAttributeName = "GiftCardPage.HideUsageHistoryBlock";
-    var HideUsageHistoryBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideUsageHistoryBlockAttributeName, defaultValue: true);
+    var HideUsageHistoryBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideUsageHistoryBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

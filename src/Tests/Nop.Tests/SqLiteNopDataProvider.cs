@@ -91,16 +91,7 @@ namespace Nop.Tests
                 ? DataSettingsManager.LoadSettings().ConnectionString
                 : connectionString);
         }
-
-        /// <summary>
-        /// Initialize database
-        /// </summary>
-        public void InitializeDatabase()
-        {
-            var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
-        }
-
+        
         /// <summary>
         /// Inserts record into table. Returns inserted entity with identity
         /// </summary>
@@ -244,7 +235,7 @@ namespace Nop.Tests
         /// </summary>
         /// <typeparam name="TEntity">Entity</typeparam>
         /// <returns>Integer identity; null if cannot get the result</returns>
-        public int? GetTableIdent<TEntity>() where TEntity : BaseEntity
+        public Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
@@ -253,7 +244,7 @@ namespace Nop.Tests
                 var result = DataContext.Query<int?>($"select seq from sqlite_sequence where name = \"{tableName}\"")
                     .FirstOrDefault();
 
-                return result ?? 1;
+                return Task.FromResult<int?>(result ?? 1);
             }
         }
 
@@ -381,16 +372,6 @@ namespace Nop.Tests
             return Task.FromResult<ITempDataStorage<TItem>>(new TempSqlDataStorage<TItem>(storageKey, query, DataContext));
         }
 
-        public override Task<IQueryable<TEntity>> GetTableAsync<TEntity>()
-        {
-            return Task.FromResult(GetTable<TEntity>());
-        }
-
-        public Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
-        {
-            return Task.FromResult(GetTableIdent<TEntity>());
-        }
-
         public Task<bool> DatabaseExistsAsync()
         {
             return Task.FromResult(DatabaseExists());
@@ -426,7 +407,7 @@ namespace Nop.Tests
         {
             get
             {
-                if (!(Singleton<MappingSchema>.Instance is null))
+                if (Singleton<MappingSchema>.Instance is not null)
                     return Singleton<MappingSchema>.Instance;
 
                 Singleton<MappingSchema>.Instance =

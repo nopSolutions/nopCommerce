@@ -205,7 +205,9 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual async Task<bool> AuthorizeAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
         {
-            return await AuthorizeAsync(entity, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            return await AuthorizeAsync(entity, store.Id);
         }
 
         /// <summary>

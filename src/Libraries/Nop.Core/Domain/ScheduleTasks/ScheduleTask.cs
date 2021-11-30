@@ -23,6 +23,11 @@ namespace Nop.Core.Domain.ScheduleTasks
         public string Type { get; set; }
 
         /// <summary>
+        /// Gets or sets the datetime when task was enabled last time
+        /// </summary>
+        public DateTime? LastEnabledUtc { get; set; }
+
+        /// <summary>
         /// Gets or sets the value indicating whether a task is enabled
         /// </summary>
         public bool Enabled { get; set; }

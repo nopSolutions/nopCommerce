@@ -137,17 +137,6 @@ namespace Nop.Data
         /// mapped to database table or view.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the queryable source
-        /// </returns>
-        Task<IQueryable<TEntity>> GetTableAsync<TEntity>() where TEntity : BaseEntity;
-
-        /// <summary>
-        /// Returns queryable source for specified mapping class for current connection,
-        /// mapped to database table or view.
-        /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Queryable source</returns>
         IQueryable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity;
 

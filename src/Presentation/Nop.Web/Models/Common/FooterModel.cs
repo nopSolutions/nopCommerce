@@ -11,6 +11,7 @@ namespace Nop.Web.Models.Common
         }
 
         public string StoreName { get; set; }
+        public bool IsHomePage { get; set; }
         public bool WishlistEnabled { get; set; }
         public bool ShoppingCartEnabled { get; set; }
         public bool SitemapEnabled { get; set; }

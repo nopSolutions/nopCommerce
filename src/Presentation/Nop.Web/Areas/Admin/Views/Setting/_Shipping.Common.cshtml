@@ -127,4 +127,14 @@
                 <span asp-validation-for="ConsiderAssociatedProductsDimensions"></span>
             </div>
         </div>
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ShippingSorting_OverrideForStore" asp-input="ShippingSorting" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ShippingSorting" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="ShippingSorting" asp-items="Model.SortShippingValues" />
+                <span asp-validation-for="ShippingSorting"></span>
+            </div>
+        </div>
     </div>

@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<StoreModel> PrepareStoreModelAsync(StoreModel model, Store store, bool excludeProperties = false)
         {
-            Action<StoreLocalizedModel, int> localizedModelConfiguration = null;
+            Func<StoreLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (store != null)
             {

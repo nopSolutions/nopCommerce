@@ -183,6 +183,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (args is not AvaTaxCallEventArgs avaTaxCallEventArgs)
                 return;
 
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             //log request results
             await _taxTransactionLogService.InsertTaxTransactionLogAsync(new TaxTransactionLog
             {
@@ -190,7 +192,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 Url = avaTaxCallEventArgs.RequestUri.ToString(),
                 RequestMessage = avaTaxCallEventArgs.RequestBody,
                 ResponseMessage = avaTaxCallEventArgs.ResponseString,
-                CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                CustomerId = customer.Id,
                 CreatedDateUtc = DateTime.UtcNow
             });
         }
@@ -713,7 +715,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             {
                 companyId = companyId,
                 customerCode = customer.Id.ToString(),
-                alternateId = customer.CustomerGuid.ToString().ToLower(),
+                alternateId = customer.CustomerGuid.ToString().ToLowerInvariant(),
                 name = await _customerService.GetCustomerFullNameAsync(customer),
                 emailAddress = customer.Email,
                 line1 = address.line1,
@@ -1093,8 +1095,9 @@ namespace Nop.Plugin.Tax.Avalara.Services
         {
             return await HandleFunctionAsync(async () =>
             {
+                var customer = await _workContext.GetCurrentCustomerAsync();
                 //create tax transaction for a simplified item and without saving 
-                var model = await PrepareTransactionModelAsync(address, (await _workContext.GetCurrentCustomerAsync()).Id.ToString(), DocumentType.SalesOrder);
+                var model = await PrepareTransactionModelAsync(address, customer.Id.ToString(), DocumentType.SalesOrder);
                 model.lines = new List<LineItemModel> { new LineItemModel { amount = 100, quantity = 1 } };
                 return CreateTransaction(model);
             });

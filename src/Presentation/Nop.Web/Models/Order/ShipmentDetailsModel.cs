@@ -40,6 +40,7 @@ namespace Nop.Web.Models.Order
 
         public partial record ShipmentStatusEventModel : BaseNopModel
         {
+            public string Status { get; set; }
             public string EventName { get; set; }
             public string Location { get; set; }
             public string Country { get; set; }

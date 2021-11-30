@@ -217,6 +217,39 @@ namespace Nop.Services.Security
         }
 
         /// <summary>
+        /// Install permissions
+        /// </summary>
+        /// <param name="permissionProvider">Permission provider</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UninstallPermissionsAsync(IPermissionProvider permissionProvider)
+        {
+            //default customer role mappings
+            var defaultPermissions = permissionProvider.GetDefaultPermissions().ToList();
+
+            //uninstall permissions
+            foreach (var permission in permissionProvider.GetPermissions())
+            {
+                var permission1 = await GetPermissionRecordBySystemNameAsync(permission.SystemName);
+                if (permission1 == null)
+                    continue;
+
+                //clear permission record customer role mapping
+                foreach (var defaultPermission in defaultPermissions)
+                {
+                    var customerRole = await _customerService.GetCustomerRoleBySystemNameAsync(defaultPermission.systemRoleName);
+                    
+                    await DeletePermissionRecordCustomerRoleMappingAsync(permission1.Id, customerRole.Id);
+                }
+
+                //delete permission
+                await DeletePermissionRecordAsync(permission1);
+
+                //save localization
+                await _localizationService.DeleteLocalizedPermissionNameAsync(permission1);
+            }
+        }
+
+        /// <summary>
         /// Authorize permission
         /// </summary>
         /// <param name="permission">Permission record</param>

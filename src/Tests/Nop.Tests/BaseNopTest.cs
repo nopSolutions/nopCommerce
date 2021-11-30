@@ -53,6 +53,7 @@ using Nop.Services.ExportImport;
 using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
+using Nop.Services.Html;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -203,6 +204,7 @@ namespace Nop.Tests
             services.AddSingleton(tempDataDictionaryFactory.Object);
 
             services.AddSingleton<ITypeFinder>(typeFinder);
+            Singleton<ITypeFinder>.Instance = typeFinder;
 
             //file provider
             services.AddTransient<INopFileProvider, NopFileProvider>();
@@ -329,6 +331,8 @@ namespace Nop.Tests
             services.AddTransient<IUploadService, UploadService>();
             services.AddTransient<IThemeProvider, ThemeProvider>();
             services.AddTransient<IExternalAuthenticationService, ExternalAuthenticationService>();
+            services.AddScoped<IBBCodeHelper, BBCodeHelper>();
+            services.AddScoped<INopHtmlHelper, NopHtmlHelper>();
 
             //slug route transformer
             services.AddSingleton<IReviewTypeService, ReviewTypeService>();
@@ -368,6 +372,7 @@ namespace Nop.Tests
             }
 
             services.AddSingleton<IInstallationService, InstallationService>();
+            services.AddTransient(p => new Lazy<IVersionLoader>(p.GetRequiredService<IVersionLoader>()));
 
             services
                 // add common FluentMigrator services
@@ -383,6 +388,7 @@ namespace Nop.Tests
                         .ScanIn(mAssemblies).For.Migrations());
 
             services.AddTransient<IStoreContext, WebStoreContext>();
+            services.AddTransient<Lazy<IStoreContext>>();
             services.AddTransient<IWorkContext, WebWorkContext>();
             services.AddTransient<IThemeContext, ThemeContext>();
 
@@ -493,7 +499,7 @@ namespace Nop.Tests
             _serviceProvider.GetService<IInstallationService>().InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
 
             var provider = (IPermissionProvider)Activator.CreateInstance(typeof(StandardPermissionProvider));
-            EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider).Wait();
+            _serviceProvider.GetService<IPermissionService>().InstallPermissionsAsync(provider).Wait();
         }
 
         public static T GetService<T>()

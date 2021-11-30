@@ -1,6 +1,7 @@
 ﻿@model string
 @inject IPermissionService permissionService
 @inject AdminAreaSettings adminAreaSettings
+@inject ITinyMceHelper tinyMceHelper
 @using Nop.Web.Areas.Admin.Helpers
 @using Nop.Core
 @using Nop.Services.Security
@@ -10,7 +11,7 @@
     Html.AddScriptParts("~/lib_npm/tinymce/tinymce.min.js", excludeFromBundle: true);
 
     // tinyMCE language
-    var language = await TinyMceHelper.GetTinyMceLanguageAsync();
+    var language = await tinyMceHelper.GetTinyMceLanguageAsync();
 
     var allowRoxyFileman = await permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures);
 

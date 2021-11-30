@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 
 namespace Nop.Services.Catalog
@@ -18,11 +17,11 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
         private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
         private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
         private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
-        private readonly IRepository<Product> _productRepository;
         private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
@@ -30,19 +29,19 @@ namespace Nop.Services.Catalog
         #region Ctor
 
         public ProductAttributeService(IRepository<PredefinedProductAttributeValue> predefinedProductAttributeValueRepository,
+            IRepository<Product> productRepository,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,
             IRepository<ProductAttributeValue> productAttributeValueRepository,
-            IRepository<Product> productRepository,
             IStaticCacheManager staticCacheManager)
         {
             _predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
+            _productRepository = productRepository;
             _productAttributeRepository = productAttributeRepository;
             _productAttributeCombinationRepository = productAttributeCombinationRepository;
             _productAttributeMappingRepository = productAttributeMappingRepository;
             _productAttributeValueRepository = productAttributeValueRepository;
-            _productRepository = productRepository;
             _staticCacheManager = staticCacheManager;
         }
 

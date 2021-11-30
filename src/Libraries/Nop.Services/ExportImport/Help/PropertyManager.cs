@@ -224,8 +224,6 @@ namespace Nop.Services.ExportImport.Help
                 cell.Value = caption;
 
                 SetCaptionStyle(cell);
-                //todo
-                //cell.Style.Hidden = false;
             }
         }
 

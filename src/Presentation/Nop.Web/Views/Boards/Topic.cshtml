@@ -1,4 +1,6 @@
-﻿@model ForumTopicPageModel
+﻿@using Nop.Services.Localization
+@model ForumTopicPageModel
+@inject ILocalizationService localizationService
 @{
     Layout = "_ColumnsOne";
 
@@ -60,9 +62,12 @@
                 <script asp-location="Footer">
                     $(document).ready(function () {
                         $('#watch-topic-top').on('click', function () {
+                            var postData = {};
+                            addAntiForgeryToken(postData);
                             $.ajax({
                                 cache: false,
                                 type: "POST",
+                                data: postData,
                                 url: "@Url.RouteUrl("TopicWatch", new { id = Model.Id })",
                                 dataType: "json",
                                 success: function (data, textStatus, jqXHR) {
@@ -79,7 +84,7 @@
             }
         </div>
         @{
-            var pager = await Html.PagerAsync(new PagerModel
+            var pager = await Html.PagerAsync(new PagerModel(localizationService)
             {
                 PageSize = Model.PostsPageSize,
                 TotalRecords = Model.PostsTotalRecords,

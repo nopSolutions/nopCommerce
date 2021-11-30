@@ -1946,8 +1946,8 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException(nameof(giftCard));
 
             var order = await _orderService.GetOrderByOrderItemAsync(giftCard.PurchasedWithOrderItemId ?? 0);
-
-            var store = order != null ? await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync() : await _storeContext.GetCurrentStoreAsync();
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+            var store = order != null ? await _storeService.GetStoreByIdAsync(order.StoreId) ?? currentStore : currentStore;
 
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
@@ -2043,6 +2043,14 @@ namespace Nop.Services.Messages
                 return new List<int>();
 
             var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId);
+            
+            //We should not send notifications to guests
+            if (await _customerService.IsGuestAsync(customer))
+                return new List<int>();
+
+            //We should not send notifications to guests
+            if (await _customerService.IsGuestAsync(customer))
+                return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
@@ -2368,8 +2376,7 @@ namespace Nop.Services.Messages
             var commonTokens = new List<Token>
             {
                 new Token("ContactUs.SenderEmail", senderEmail),
-                new Token("ContactUs.SenderName", senderName),
-                new Token("ContactUs.Body", body, true)
+                new Token("ContactUs.SenderName", senderName)
             };
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
@@ -2394,6 +2401,8 @@ namespace Nop.Services.Messages
                     fromEmail = senderEmail;
                     fromName = senderName;
                 }
+
+                tokens.Add(new Token("ContactUs.Body", body, true));
 
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);

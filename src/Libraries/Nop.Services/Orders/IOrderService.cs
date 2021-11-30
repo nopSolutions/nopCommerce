@@ -241,7 +241,7 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains the otal number of items in all shipments
         /// </returns>
-        Task<int> GetTotalNumberOfItemsInAllShipmentAsync(OrderItem orderItem);
+        Task<int> GetTotalNumberOfItemsInAllShipmentsAsync(OrderItem orderItem);
 
         /// <summary>
         /// Gets a total number of already items which can be added to new shipments

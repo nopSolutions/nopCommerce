@@ -35,7 +35,7 @@ namespace Nop.Services.Media
         /// <remarks>
         /// {0} : thumb file name
         /// </remarks>
-        public static CacheKey ThumbExistsCacheKey => new CacheKey("Nop.azure.thumb.exists.{0}", ThumbsExistsPrefix);
+        public static CacheKey ThumbExistsCacheKey => new("Nop.azure.thumb.exists.{0}", ThumbsExistsPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache

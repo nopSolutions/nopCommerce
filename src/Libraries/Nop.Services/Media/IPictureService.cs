@@ -12,7 +12,6 @@ namespace Nop.Services.Media
     /// </summary>
     public partial interface IPictureService
     {
-        //TODO: migrate to an extension method
         /// <summary>
         /// Returns the file extension from mime type.
         /// </summary>

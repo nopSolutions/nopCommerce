@@ -73,7 +73,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!StringValues.IsNullOrEmpty(HttpContext.Request.Query["a"]))
                     action = HttpContext.Request.Query["a"];
 
-                switch (action.ToUpper())
+                switch (action.ToUpperInvariant())
                 {
                     case "DIRLIST":
                         await _roxyFilemanService.GetDirectoriesAsync(HttpContext.Request.Query["type"]);

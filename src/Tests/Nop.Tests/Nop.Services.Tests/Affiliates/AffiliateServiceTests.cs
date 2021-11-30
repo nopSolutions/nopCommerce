@@ -132,7 +132,7 @@ namespace Nop.Tests.Nop.Services.Tests.Affiliates
         public async Task CanValidateFriendlyUrlName()
         {
             var friendlyUrlName = await _affiliateService.ValidateFriendlyUrlNameAsync(_activeAffiliate1, _activeAffiliate2.FriendlyUrlName);
-            friendlyUrlName.Should().Be(_activeAffiliate2.FriendlyUrlName.ToLower());
+            friendlyUrlName.Should().Be(_activeAffiliate2.FriendlyUrlName.ToLowerInvariant());
 
             friendlyUrlName = await _affiliateService.ValidateFriendlyUrlNameAsync(_activeAffiliate1, "not/valid/url*name");
             friendlyUrlName.Should().Be("notvalidurlname");

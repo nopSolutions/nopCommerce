@@ -446,12 +446,12 @@ namespace Nop.Services.Forums
         /// Get post vote made since the parameter date
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="сreatedFromUtc">Date</param>
+        /// <param name="createdFromUtc">Date</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the post votes count
         /// </returns>
-        Task<int> GetNumberOfPostVotesAsync(Customer customer, DateTime сreatedFromUtc);
+        Task<int> GetNumberOfPostVotesAsync(Customer customer, DateTime createdFromUtc);
 
         /// <summary>
         /// Insert a post vote
@@ -467,7 +467,6 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         Task DeletePostVoteAsync(ForumPostVote postVote);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats the forum post text
         /// </summary>
@@ -475,7 +474,6 @@ namespace Nop.Services.Forums
         /// <returns>Formatted text</returns>
         string FormatPostText(ForumPost forumPost);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Strips the topic subject
         /// </summary>
@@ -483,7 +481,6 @@ namespace Nop.Services.Forums
         /// <returns>Formatted subject</returns>
         string StripTopicSubject(ForumTopic forumTopic);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats the forum signature text
         /// </summary>
@@ -491,7 +488,6 @@ namespace Nop.Services.Forums
         /// <returns>Formatted text</returns>
         string FormatForumSignatureText(string text);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats the private message text
         /// </summary>

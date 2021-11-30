@@ -608,10 +608,10 @@ namespace Nop.Services.Orders
             foreach (var reportLine in report)
             {
                 var isCorrectDate =
-                    DateTime.TryParseExact(reportLine.Summary, "yyyy-MM-dd", null, DateTimeStyles.None, out var date) ||
-                    DateTime.TryParseExact(reportLine.Summary, "yyyy-M-d", null, DateTimeStyles.None, out date) ||
-                    DateTime.TryParseExact(reportLine.Summary, "yyyy-MM", null, DateTimeStyles.None, out date) ||
-                    DateTime.TryParseExact(reportLine.Summary, "yyyy-M", null, DateTimeStyles.None, out date);
+                    DateTime.TryParseExact(reportLine.Summary, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date) ||
+                    DateTime.TryParseExact(reportLine.Summary, "yyyy-M-d", CultureInfo.InvariantCulture, DateTimeStyles.None, out date) ||
+                    DateTime.TryParseExact(reportLine.Summary, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out date) ||
+                    DateTime.TryParseExact(reportLine.Summary, "yyyy-M", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
 
                 if (groupBy == GroupByOptions.Week)
                 {

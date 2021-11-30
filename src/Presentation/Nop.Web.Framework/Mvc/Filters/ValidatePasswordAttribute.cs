@@ -72,7 +72,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (_webHelper.IsAjaxRequest(context.HttpContext.Request))
                     return;
 
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
                 //get action and controller names
@@ -90,7 +90,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //check password expiration
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                if (!await _customerService.PasswordIsExpiredAsync(customer))
+                if (!await _customerService.IsPasswordExpiredAsync(customer))
                     return;
 
                 var returnUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
