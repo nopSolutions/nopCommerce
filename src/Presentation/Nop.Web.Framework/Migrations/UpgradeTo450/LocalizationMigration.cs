@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using FluentMigrator;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
