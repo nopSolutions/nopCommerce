@@ -652,7 +652,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<byte[]> ExportOrderToXlsxWithProductsAsync(PropertyByName<Order>[] properties, IEnumerable<Order> itemsToExport)
+        private async Task<byte[]> ExportOrderToXlsxWithProductsAsync(PropertyByName<Order>[] properties, IEnumerable<Order> itemsToExport,int vendorId)
         {
             var orderItemProperties = new[]
             {
@@ -691,8 +691,8 @@ namespace Nop.Services.ExportImport
                     manager.CurrentObject = order;
                     await manager.WriteToXlsxAsync(worksheet, row++);
 
-                    //a vendor should have access only to his products
-                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0);
+                    //a vendor should have access only to his products 
+                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: vendorId);
 
                     if (!orderItems.Any())
                         continue;
@@ -1583,7 +1583,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="orders">Orders</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task<byte[]> ExportOrdersToXlsxAsync(IList<Order> orders)
+        public virtual async Task<byte[]> ExportOrdersToXlsxAsync(IList<Order> orders,int vendorId)
         {
             //a vendor should have access only to part of order information
             var ignore = await _workContext.GetCurrentVendorAsync() != null;
@@ -1654,7 +1654,7 @@ namespace Nop.Services.ExportImport
             };
 
             return _orderSettings.ExportWithProducts
-                ? await ExportOrderToXlsxWithProductsAsync(properties, orders)
+                ? await ExportOrderToXlsxWithProductsAsync(properties, orders,vendorId)
                 : await new PropertyManager<Order>(properties, _catalogSettings).ExportToXlsxAsync(orders);
         }
 

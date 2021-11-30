@@ -13002,6 +13002,12 @@
   <LocaleResource Name="Admin.Orders.List.EndDate.Hint">
     <Value>The end date for the search.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.SortByDeliveryDate">
+    <Value>Order By Delivery Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.SortByDeliveryDate.Hint">
+    <Value>Order By Delivery Date</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.GoDirectlyToNumber">
     <Value>Go directly to order #</Value>
   </LocaleResource>
