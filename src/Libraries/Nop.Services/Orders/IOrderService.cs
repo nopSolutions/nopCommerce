@@ -111,7 +111,7 @@ namespace Nop.Services.Orders
             string billingPhone = null, string billingEmail = null, string billingLastName = "",
             string orderNotes = null, int pageIndex = 0,
             int pageSize = int.MaxValue, bool getOnlyTotalCount = false,
-            bool sendRateNotification = false, bool sortByDeliveryDate = true);
+            bool sendRateNotification = false, bool sortByDeliveryDate = false);
 
         /// <summary>
         /// Inserts an order
