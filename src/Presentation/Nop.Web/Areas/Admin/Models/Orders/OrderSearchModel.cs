@@ -86,7 +86,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public string GoDirectlyToCustomOrderNumber { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.SortByDeliveryDate")]
-        public bool SortByDeliveryDate { get; set; } = true;
+        public bool SortByDeliveryDate { get; set; } = false;
 
         public bool IsLoggedInAsVendor { get; set; }
 
