@@ -83,7 +83,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var engine = EngineContext.Create();
 
             engine.ConfigureServices(services, builder.Configuration);
-            engine.RegisterDependencies(services, appSettings);
         }
 
         /// <summary>

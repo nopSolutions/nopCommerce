@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Configuration;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Helpers;
 using Nop.Web.Framework.Factories;
@@ -10,17 +10,16 @@ using Nop.Web.Infrastructure.Installation;
 namespace Nop.Web.Infrastructure
 {
     /// <summary>
-    /// Dependency registrar
+    /// Represents the registering services on application startup
     /// </summary>
-    public class DependencyRegistrar : IDependencyRegistrar
+    public class NopStartup : INopStartup
     {
         /// <summary>
-        /// Register services and interfaces
+        /// Add and configure any of the middleware
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="typeFinder">Type finder</param>
-        /// <param name="appSettings">App settings</param>
-        public virtual void Register(IServiceCollection services, ITypeFinder typeFinder, AppSettings appSettings)
+        /// <param name="configuration">Configuration of the application</param>
+        public virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //installation localization service
             services.AddScoped<IInstallationLocalizationService, InstallationLocalizationService>();
@@ -114,9 +113,17 @@ namespace Nop.Web.Infrastructure
             services.AddScoped<ITinyMceHelper, TinyMceHelper>();
         }
 
-        /// <summary>
-        /// Gets order of this dependency registrar implementation
+        // <summary>
+        /// Configure the using of added middleware
         /// </summary>
-        public int Order => 2;
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public void Configure(IApplicationBuilder application)
+        {
+        }
+
+        /// <summary>
+        /// Gets order of this startup configuration implementation
+        /// </summary>
+        public int Order => 2002;
     }
 }

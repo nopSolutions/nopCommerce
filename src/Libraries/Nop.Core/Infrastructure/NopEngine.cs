@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Configuration;
-using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Infrastructure.Mapper;
 
 namespace Nop.Core.Infrastructure
@@ -57,37 +55,6 @@ namespace Nop.Core.Infrastructure
         }
 
         /// <summary>
-        /// Register dependencies
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        /// <param name="appSettings">App settings</param>
-        public virtual void RegisterDependencies(IServiceCollection services, AppSettings appSettings)
-        {
-            var typeFinder = new WebAppTypeFinder();
-
-            //register engine
-            services.AddSingleton<IEngine>(this);
-
-            //register type finder
-            services.AddSingleton<ITypeFinder>(typeFinder);
-            Singleton<ITypeFinder>.Instance = typeFinder;
-
-            //find dependency registrars provided by other assemblies
-            var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
-
-            //create and sort instances of dependency registrars
-            var instances = dependencyRegistrars
-                .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
-                .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
-
-            //register all provided dependencies
-            foreach (var dependencyRegistrar in instances)
-                dependencyRegistrar.Register(services, typeFinder, appSettings);
-
-            services.AddSingleton(services);
-        }
-
-        /// <summary>
         /// Register and configure AutoMapper
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
@@ -123,7 +90,7 @@ namespace Nop.Core.Infrastructure
                 return assembly;
 
             //get assembly from TypeFinder
-            var tf = Singleton<ITypeFinder>.Instance;            
+            var tf = Singleton<ITypeFinder>.Instance;
             assembly = tf?.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
             return assembly;
         }
@@ -139,8 +106,16 @@ namespace Nop.Core.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();
+
+            //register engine
+            services.AddSingleton<IEngine>(this);
+
+            //register type finder
+            services.AddSingleton<ITypeFinder>(typeFinder);
+            Singleton<ITypeFinder>.Instance = typeFinder;
+
+            //find startup configurations provided by other assemblies
             var startupConfigurations = typeFinder.FindClassesOfType<INopStartup>();
 
             //create and sort instances of startup configurations
@@ -154,6 +129,8 @@ namespace Nop.Core.Infrastructure
 
             //register mapper configurations
             AddAutoMapper(services, typeFinder);
+
+            services.AddSingleton(services);
 
             //run startup tasks
             RunStartupTasks(typeFinder);
@@ -204,7 +181,7 @@ namespace Nop.Core.Infrastructure
         public object Resolve(Type type, IServiceScope scope = null)
         {
             return GetServiceProvider(scope)?.GetService(type);
-        }        
+        }
 
         /// <summary>
         /// Resolve dependencies

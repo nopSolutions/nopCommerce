@@ -1,31 +1,38 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Configuration;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Plugin.Shipping.UPS.Services;
 
 namespace Nop.Plugin.Shipping.UPS.Infrastructure
 {
     /// <summary>
-    /// Dependency registrar
+    /// Represents object for the configuring services on application startup
     /// </summary>
-    public class DependencyRegistrar : IDependencyRegistrar
+    public class NopStartup : INopStartup
     {
         /// <summary>
-        /// Register services and interfaces
+        /// Add and configure any of the middleware
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="typeFinder">Type finder</param>
-        /// <param name="appSettings">App settings</param>
-        public virtual void Register(IServiceCollection services, ITypeFinder typeFinder, AppSettings appSettings)
+        /// <param name="configuration">Configuration of the application</param>
+        public virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //register UPSService
             services.AddScoped<UPSService>();
         }
 
-        /// <summary>
-        /// Order of this dependency registrar implementation
+        // <summary>
+        /// Configure the using of added middleware
         /// </summary>
-        public int Order => 1;
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public void Configure(IApplicationBuilder application)
+        {
+        }
+
+        /// <summary>
+        /// Gets order of this startup configuration implementation
+        /// </summary>
+        public int Order => 3000;
     }
 }

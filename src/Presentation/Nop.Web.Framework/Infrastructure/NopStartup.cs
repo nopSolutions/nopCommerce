@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication;
@@ -58,17 +59,16 @@ using Nop.Web.Framework.UI;
 namespace Nop.Web.Framework.Infrastructure
 {
     /// <summary>
-    /// Dependency registrar
+    /// Represents the registering services on application startup
     /// </summary>
-    public class DependencyRegistrar : IDependencyRegistrar
+    public class NopStartup : INopStartup
     {
         /// <summary>
-        /// Register services and interfaces
+        /// Add and configure any of the middleware
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="typeFinder">Type finder</param>
-        /// <param name="appSettings">App settings</param>
-        public virtual void Register(IServiceCollection services, ITypeFinder typeFinder, AppSettings appSettings)
+        /// <param name="configuration">Configuration of the application</param>
+        public virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //file provider
             services.AddScoped<INopFileProvider, NopFileProvider>();
@@ -92,6 +92,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<OfficialFeedManager>();
 
             //static cache manager
+            var appSettings = Singleton<AppSettings>.Instance;
             if (appSettings.Get<DistributedCacheConfig>().Enabled)
             {
                 services.AddScoped<ILocker, DistributedCacheManager>();
@@ -233,6 +234,8 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             //register all settings
+            var typeFinder = Singleton<ITypeFinder>.Instance;
+
             var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
             foreach (var setting in settings)
             {
@@ -274,7 +277,7 @@ namespace Nop.Web.Framework.Infrastructure
             //schedule tasks
             services.AddSingleton<ITaskScheduler, TaskScheduler>();
             services.AddTransient<IScheduleTaskRunner, ScheduleTaskRunner>();
-            
+
             //event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
             foreach (var consumer in consumers)
@@ -289,9 +292,17 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<IXmlSiteMap, XmlSiteMap>();
         }
 
-        /// <summary>
-        /// Gets order of this dependency registrar implementation
+        // <summary>
+        /// Configure the using of added middleware
         /// </summary>
-        public int Order => 0;
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public void Configure(IApplicationBuilder application)
+        {
+        }
+
+        /// <summary>
+        /// Gets order of this startup configuration implementation
+        /// </summary>
+        public int Order => 2000;
     }
 }
