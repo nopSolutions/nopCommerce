@@ -28,15 +28,5 @@ namespace Nop.Web.Factories
         /// The task result contains the customer return requests model
         /// </returns>
         Task<CustomerReturnRequestsModel> PrepareCustomerReturnRequestsModelAsync();
-
-        /// <summary>
-        /// Prepare the order item model
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the order item model
-        /// </returns>
-        Task<SubmitReturnRequestModel.OrderItemModel> PrepareSubmitReturnRequestOrderItemModelAsync(OrderItem orderItem);
     }
 }

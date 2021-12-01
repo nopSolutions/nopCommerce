@@ -57,6 +57,13 @@ namespace Nop.Services.Orders
             DateTime? createdToUtc = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
 
         /// <summary>
+        /// Gets the return request availability
+        /// </summary>
+        /// <param name="orderId">The order identifier</param>
+        /// <returns>The <see cref="Task"/> containing the <see cref="ReturnRequestAvailability"/></returns>
+        Task<ReturnRequestAvailability> GetReturnRequestAvailabilityAsync(int orderId);
+
+        /// <summary>
         /// Delete a return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
