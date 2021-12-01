@@ -1,5 +1,5 @@
 # create the build instance 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
 WORKDIR /src                                                                    
 COPY ./src ./
@@ -21,6 +21,8 @@ WORKDIR /src/Plugins/Nop.Plugin.ExternalAuth.Facebook
 RUN dotnet build Nop.Plugin.ExternalAuth.Facebook.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Misc.Sendinblue
 RUN dotnet build Nop.Plugin.Misc.Sendinblue.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.Misc.WebApi.Frontend
+RUN dotnet build Nop.Plugin.Misc.WebApi.Frontend.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.CheckMoneyOrder
 RUN dotnet build Nop.Plugin.Payments.CheckMoneyOrder.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.Manual
@@ -55,7 +57,7 @@ WORKDIR /src/Presentation/Nop.Web
 RUN dotnet publish Nop.Web.csproj -c Release -o /app/published
 
 # create the runtime instance 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine AS runtime 
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS runtime 
 
 # add globalization support
 RUN apk add --no-cache icu-libs
@@ -74,12 +76,6 @@ WORKDIR /app
 RUN mkdir bin
 RUN mkdir logs 
 
-# create empty App_Data/datasettings.json to allow using datasettings environment variables
-RUN mkdir App_Data
-WORKDIR /app/App_Data
-RUN echo "" > dataSettings.json
-WORKDIR /app 
-                                                            
 COPY --from=build /app/published .
                             
 ENTRYPOINT "/entrypoint.sh"

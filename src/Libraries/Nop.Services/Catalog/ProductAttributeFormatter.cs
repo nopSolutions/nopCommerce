@@ -6,8 +6,8 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Html;
 using Nop.Services.Directory;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Tax;
@@ -24,6 +24,7 @@ namespace Nop.Services.Catalog
         private readonly ICurrencyService _currencyService;
         private readonly IDownloadService _downloadService;
         private readonly ILocalizationService _localizationService;
+        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -40,6 +41,7 @@ namespace Nop.Services.Catalog
         public ProductAttributeFormatter(ICurrencyService currencyService,
             IDownloadService downloadService,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeParser productAttributeParser,
@@ -52,6 +54,7 @@ namespace Nop.Services.Catalog
             _currencyService = currencyService;
             _downloadService = downloadService;
             _localizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _productAttributeParser = productAttributeParser;
@@ -125,12 +128,12 @@ namespace Nop.Services.Catalog
                                     attributeName = WebUtility.HtmlEncode(attributeName);
 
                                 //we never encode multiline textbox input
-                                formattedAttribute = $"{attributeName}: {HtmlHelper.FormatText(value, false, true, false, false, false, false)}";
+                                formattedAttribute = $"{attributeName}: {_nopHtmlHelper.FormatText(value, false, true, false, false, false, false)}";
                             }
                             else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                             {
                                 //file upload
-                                Guid.TryParse(value, out var downloadGuid);
+                                _ = Guid.TryParse(value, out var downloadGuid);
                                 var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                                 if (download != null)
                                 {

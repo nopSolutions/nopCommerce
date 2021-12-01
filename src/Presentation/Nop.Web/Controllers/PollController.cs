@@ -11,6 +11,7 @@ using Nop.Web.Factories;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class PollController : BasePublicController
     {
         #region Fields
@@ -46,7 +47,6 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> Vote(int pollAnswerId)
         {
             var pollAnswer = await _pollService.GetPollAnswerByIdAsync(pollAnswerId);

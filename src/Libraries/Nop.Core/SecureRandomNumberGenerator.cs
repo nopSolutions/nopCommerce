@@ -19,7 +19,7 @@ namespace Nop.Core
 
         public SecureRandomNumberGenerator()
         {
-            _rng = new RNGCryptoServiceProvider();
+            _rng = Create();
         }
 
         #endregion

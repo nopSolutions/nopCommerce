@@ -192,6 +192,53 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
+        /// Prepares the shipment model
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <param name="model">Predefined shipment model if any</param>
+        /// <returns>The <see cref="Task"/> containing the <see cref="ShipmentModel"/></returns>
+        protected virtual async Task<ShipmentModel> PrepareShipmentModelAsync(Shipment shipment, ShipmentModel model = null)
+        {
+            //fill in model values from the entity
+            var shipmentModel = model ?? shipment.ToModel<ShipmentModel>();
+
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
+
+            shipmentModel.PickupInStore = order.PickupInStore;
+            shipmentModel.CustomOrderNumber = order.CustomOrderNumber;
+
+            //convert dates to the user time
+            if (order.PickupInStore)
+            {
+                shipmentModel.ShippedDate = await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DateNotAvailable");
+                shipmentModel.ReadyForPickupDate = shipment.ReadyForPickupDateUtc.HasValue
+                    ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ReadyForPickupDateUtc.Value, DateTimeKind.Utc)).ToString()
+                    : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.ReadyForPickupDate.NotYet");
+            }
+            else
+            {
+                shipmentModel.ReadyForPickupDate = await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DateNotAvailable");
+                shipmentModel.ShippedDate = shipment.ShippedDateUtc.HasValue
+                    ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc)).ToString()
+                    : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.ShippedDate.NotYet");
+            }
+
+            shipmentModel.DeliveryDate = shipment.DeliveryDateUtc.HasValue
+                ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc)).ToString()
+                : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DeliveryDate.NotYet");
+
+            //fill in additional values (not existing in the entity)
+            shipmentModel.CanShip = !order.PickupInStore && !shipment.ShippedDateUtc.HasValue;
+            shipmentModel.CanMarkAsReadyForPickup = order.PickupInStore && !shipment.ReadyForPickupDateUtc.HasValue;
+            shipmentModel.CanDeliver = (shipment.ShippedDateUtc.HasValue || shipment.ReadyForPickupDateUtc.HasValue) && !shipment.DeliveryDateUtc.HasValue;
+
+            if (shipment.TotalWeight.HasValue)
+                shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{(await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name}]";
+
+            return shipmentModel;
+        }
+
+        /// <summary>
         /// Set some address fields as required
         /// </summary>
         /// <param name="model">Address model</param>
@@ -773,7 +820,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             var shipmentTracker = await _shipmentService.GetShipmentTrackerAsync(shipment);
-            var shipmentEvents = await shipmentTracker.GetShipmentEventsAsync(shipment.TrackingNumber);
+            var shipmentEvents = await shipmentTracker?.GetShipmentEventsAsync(shipment.TrackingNumber, shipment);
             if (shipmentEvents == null)
                 return;
 
@@ -781,6 +828,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 var shipmentStatusEventModel = new ShipmentStatusEventModel
                 {
+                    Status = shipmentEvent.Status,
                     Date = shipmentEvent.Date,
                     EventName = shipmentEvent.EventName,
                     Location = shipmentEvent.Location
@@ -1038,6 +1086,9 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
+
+            if (!_orderSettings.DisplayOrderSummary)
+                return null;
 
             //get parameters to filter orders
             var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
@@ -1417,6 +1468,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.City,
                 searchModel.TrackingNumber,
                 searchModel.LoadNotShipped,
+                searchModel.LoadNotReadyForPickup,
                 searchModel.LoadNotDelivered,
                 0,
                 startDateValue,
@@ -1428,32 +1480,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new ShipmentListModel().PrepareToGridAsync(searchModel, shipments, () =>
             {
                 //fill in model values from the entity
-                return shipments.SelectAwait(async shipment =>
-                {
-                    //fill in model values from the entity
-                    var shipmentModel = shipment.ToModel<ShipmentModel>();
-
-                    //convert dates to the user time
-                    shipmentModel.ShippedDate = shipment.ShippedDateUtc.HasValue
-                        ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc)).ToString()
-                        : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.ShippedDate.NotYet");
-                    shipmentModel.DeliveryDate = shipment.DeliveryDateUtc.HasValue
-                        ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc)).ToString()
-                        : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DeliveryDate.NotYet");
-
-                    //fill in additional values (not existing in the entity)
-                    shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
-                    shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
-
-                    var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-
-                    shipmentModel.CustomOrderNumber = order.CustomOrderNumber;
-
-                    if (shipment.TotalWeight.HasValue)
-                        shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{(await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name}]";
-
-                    return shipmentModel;
-                });
+                return shipments.SelectAwait(async shipment => await PrepareShipmentModelAsync(shipment));
             });
 
             return model;
@@ -1476,25 +1503,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (shipment != null)
             {
                 //fill in model values from the entity
-                model ??= shipment.ToModel<ShipmentModel>();
-
-                model.CanShip = !shipment.ShippedDateUtc.HasValue;
-                model.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
-
-                var shipmentOrder = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-
-                model.CustomOrderNumber = shipmentOrder.CustomOrderNumber;
-
-                model.ShippedDate = shipment.ShippedDateUtc.HasValue
-                    ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc)).ToString()
-                    : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.ShippedDate.NotYet");
-                model.DeliveryDate = shipment.DeliveryDateUtc.HasValue
-                    ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc)).ToString()
-                    : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DeliveryDate.NotYet");
-
-                if (shipment.TotalWeight.HasValue)
-                    model.TotalWeight =
-                        $"{shipment.TotalWeight:F2} [{(await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name}]";
+                model = await PrepareShipmentModelAsync(shipment, model);
 
                 //prepare shipment items
                 foreach (var item in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
@@ -1524,7 +1533,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var shipmentTracker = await _shipmentService.GetShipmentTrackerAsync(shipment);
                     if (shipmentTracker != null)
                     {
-                        model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber);
+                        model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment);
                         if (_shippingSettings.DisplayShipmentEventsToStoreOwner)
                             await PrepareShipmentStatusEventModelsAsync(model.ShipmentStatusEvents, shipment);
                     }
@@ -1535,6 +1544,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             model.OrderId = order.Id;
+            model.PickupInStore = order.PickupInStore;
             model.CustomOrderNumber = order.CustomOrderNumber;
 
             var vendor = await _workContext.GetCurrentVendorAsync();
@@ -1626,32 +1636,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new OrderShipmentListModel().PrepareToGridAsync(searchModel, pagedShipments, () =>
             {
                 //fill in model values from the entity
-                return pagedShipments.SelectAwait(async shipment =>
-                {
-                    //fill in model values from the entity
-                    var shipmentModel = shipment.ToModel<ShipmentModel>();
-
-                    //convert dates to the user time
-                    shipmentModel.ShippedDate = shipment.ShippedDateUtc.HasValue
-                        ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc)).ToString()
-                        : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.ShippedDate.NotYet");
-                    shipmentModel.DeliveryDate = shipment.DeliveryDateUtc.HasValue
-                        ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc)).ToString()
-                        : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DeliveryDate.NotYet");
-
-                    //fill in additional values (not existing in the entity)
-                    shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
-                    shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
-
-                    shipmentModel.CustomOrderNumber = order.CustomOrderNumber;
-
-                    var baseWeight = (await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name;
-
-                    if (shipment.TotalWeight.HasValue)
-                        shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{baseWeight}]";
-
-                    return shipmentModel;
-                });
+                return pagedShipments.SelectAwait(async shipment => await PrepareShipmentModelAsync(shipment));
             });
 
             return model;

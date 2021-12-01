@@ -95,7 +95,7 @@ namespace Nop.Plugin.Tax.Avalara
         /// {5} - Country identifier
         /// {6} - Zip postal code
         /// </remarks>
-        public static CacheKey TaxRateCacheKey => new CacheKey("Nop.avalara.taxrate.{0}-{1}-{2}-{3}-{4}-{5}-{6}", TaxRateCacheKeyByCustomerPrefix);
+        public static CacheKey TaxRateCacheKey => new("Nop.avalara.taxrate.{0}-{1}-{2}-{3}-{4}-{5}-{6}", TaxRateCacheKeyByCustomerPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -108,12 +108,12 @@ namespace Nop.Plugin.Tax.Avalara
         /// <summary>
         /// Gets the key for caching Avalara tax code types
         /// </summary>
-        public static CacheKey TaxCodeTypesCacheKey => new CacheKey("Nop.avalara.taxcodetypes");
+        public static CacheKey TaxCodeTypesCacheKey => new("Nop.avalara.taxcodetypes");
 
         /// <summary>
         /// Gets the key for caching Avalara system entity use codes
         /// </summary>
-        public static CacheKey EntityUseCodesCacheKey => new CacheKey("Nop.avalara.entityusecodes");
+        public static CacheKey EntityUseCodesCacheKey => new("Nop.avalara.entityusecodes");
 
         /// <summary>
         /// Gets the name of the view component to display entity use code field

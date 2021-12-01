@@ -30,8 +30,12 @@ namespace Nop.Services.Shipping
         Task<decimal?> GetFixedRateAsync(GetShippingOptionRequest getShippingOptionRequest);
 
         /// <summary>
-        /// Gets a shipment tracker
+        /// Get associated shipment tracker
         /// </summary>
-        IShipmentTracker ShipmentTracker { get; }
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment tracker
+        /// </returns>
+        Task<IShipmentTracker> GetShipmentTrackerAsync();
     }
 }

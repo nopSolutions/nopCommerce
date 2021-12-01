@@ -251,8 +251,8 @@ namespace Nop.Web.Factories
 
                 model.ShippingMethod = order.ShippingMethod;
 
-                //shipments (only already shipped)
-                var shipments = (await _shipmentService.GetShipmentsByOrderIdAsync(order.Id, true)).OrderBy(x => x.CreatedOnUtc).ToList();
+                //shipments (only already shipped or ready for pickup)
+                var shipments = (await _shipmentService.GetShipmentsByOrderIdAsync(order.Id, !order.PickupInStore, order.PickupInStore)).OrderBy(x => x.CreatedOnUtc).ToList();
                 foreach (var shipment in shipments)
                 {
                     var shipmentModel = new OrderDetailsModel.ShipmentBriefModel
@@ -262,6 +262,8 @@ namespace Nop.Web.Factories
                     };
                     if (shipment.ShippedDateUtc.HasValue)
                         shipmentModel.ShippedDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
+                    if (shipment.ReadyForPickupDateUtc.HasValue)
+                        shipmentModel.ReadyForPickupDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ReadyForPickupDateUtc.Value, DateTimeKind.Utc);
                     if (shipment.DeliveryDateUtc.HasValue)
                         shipmentModel.DeliveryDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
                     model.Shipments.Add(shipmentModel);
@@ -511,6 +513,8 @@ namespace Nop.Web.Factories
             };
             if (shipment.ShippedDateUtc.HasValue)
                 model.ShippedDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
+            if (shipment.ReadyForPickupDateUtc.HasValue)
+                model.ReadyForPickupDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ReadyForPickupDateUtc.Value, DateTimeKind.Utc);
             if (shipment.DeliveryDateUtc.HasValue)
                 model.DeliveryDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
 
@@ -521,22 +525,25 @@ namespace Nop.Web.Factories
                 var shipmentTracker = await _shipmentService.GetShipmentTrackerAsync(shipment);
                 if (shipmentTracker != null)
                 {
-                    model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber);
+                    model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment);
                     if (_shippingSettings.DisplayShipmentEventsToCustomers)
                     {
-                        var shipmentEvents = await shipmentTracker.GetShipmentEventsAsync(shipment.TrackingNumber);
+                        var shipmentEvents = await shipmentTracker.GetShipmentEventsAsync(shipment.TrackingNumber, shipment);
                         if (shipmentEvents != null)
+                        {
                             foreach (var shipmentEvent in shipmentEvents)
                             {
                                 var shipmentStatusEventModel = new ShipmentDetailsModel.ShipmentStatusEventModel();
                                 var shipmentEventCountry = await _countryService.GetCountryByTwoLetterIsoCodeAsync(shipmentEvent.CountryCode);
                                 shipmentStatusEventModel.Country = shipmentEventCountry != null
                                     ? await _localizationService.GetLocalizedAsync(shipmentEventCountry, x => x.Name) : shipmentEvent.CountryCode;
+                                shipmentStatusEventModel.Status = shipmentEvent.Status;
                                 shipmentStatusEventModel.Date = shipmentEvent.Date;
                                 shipmentStatusEventModel.EventName = shipmentEvent.EventName;
                                 shipmentStatusEventModel.Location = shipmentEvent.Location;
                                 model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
                             }
+                        }
                     }
                 }
             }
@@ -615,7 +622,7 @@ namespace Nop.Web.Factories
                     };
                 }).ToListAsync(),
 
-                PagerModel = new PagerModel
+                PagerModel = new PagerModel(_localizationService)
                 {
                     PageSize = rewardPoints.PageSize,
                     TotalRecords = rewardPoints.TotalCount,

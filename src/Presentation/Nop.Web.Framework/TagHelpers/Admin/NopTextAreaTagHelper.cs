@@ -16,17 +16,17 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         private const string FOR_ATTRIBUTE_NAME = "asp-for";
         private const string REQUIRED_ATTRIBUTE_NAME = "asp-required";
-        private const string DISABLED_ATTRIBUTE_NAME = "asp-disabled";
+        private const string CUSTOM_HTML_ATTRIBUTES = "html-attributes";
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Indicates whether the input is disabled
+        /// Custom html attributes
         /// </summary>
-        [HtmlAttributeName(DISABLED_ATTRIBUTE_NAME)]
-        public string IsDisabled { set; get; }
+        [HtmlAttributeName(CUSTOM_HTML_ATTRIBUTES)]
+        public object CustomHtmlAttributes { set; get; }
 
         /// <summary>
         /// Indicates whether the field is required
@@ -70,10 +70,16 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 : "form-control";
             output.Attributes.SetAttribute("class", classValue);
 
-            //add disabled attribute
-            if (bool.TryParse(IsDisabled, out var disabled) && disabled)
-                output.Attributes.Add(new TagHelperAttribute("disabled", "disabled"));
-
+            //set custom html attributes
+            var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(CustomHtmlAttributes);
+            if (htmlAttributesDictionary?.Count > 0)
+            {
+                foreach (var (key, value) in htmlAttributesDictionary)
+                {
+                    output.Attributes.Add(key, value);
+                }
+            }
+            
             //additional parameters
             var rowsNumber = output.Attributes.ContainsName("rows") ? output.Attributes["rows"].Value : 4;
             output.Attributes.SetAttribute("rows", rowsNumber);

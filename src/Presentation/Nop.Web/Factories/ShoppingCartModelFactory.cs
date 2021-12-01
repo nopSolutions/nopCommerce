@@ -342,7 +342,7 @@ namespace Nop.Web.Factories
                         {
                             var downloadGuidStr = _checkoutAttributeParser
                                 .ParseValues(selectedCheckoutAttributes, attribute.Id).FirstOrDefault();
-                            Guid.TryParse(downloadGuidStr, out var downloadGuid);
+                            _ = Guid.TryParse(downloadGuidStr, out var downloadGuid);
                             var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                             if (download != null)
                                 attributeModel.DefaultValue = download.DownloadGuid.ToString();
@@ -444,12 +444,14 @@ namespace Nop.Web.Factories
                 (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
             {
                 cartItemModel.UnitPrice = await _localizationService.GetResourceAsync("Products.CallForPrice");
+                cartItemModel.UnitPriceValue = 0;
             }
             else
             {
                 var (shoppingCartUnitPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _shoppingCartService.GetUnitPriceAsync(sci, true)).unitPrice);
                 var shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartUnitPriceWithDiscountBase, currentCurrency);
                 cartItemModel.UnitPrice = await _priceFormatter.FormatPriceAsync(shoppingCartUnitPriceWithDiscount);
+                cartItemModel.UnitPriceValue = shoppingCartUnitPriceWithDiscount;
             }
             //subtotal, discount
             if (product.CallForPrice &&
@@ -457,6 +459,7 @@ namespace Nop.Web.Factories
                 (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
             {
                 cartItemModel.SubTotal = await _localizationService.GetResourceAsync("Products.CallForPrice");
+                cartItemModel.SubTotalValue = 0;
             }
             else
             {
@@ -465,6 +468,7 @@ namespace Nop.Web.Factories
                 var (shoppingCartItemSubTotalWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, subTotal);
                 var shoppingCartItemSubTotalWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartItemSubTotalWithDiscountBase, currentCurrency);
                 cartItemModel.SubTotal = await _priceFormatter.FormatPriceAsync(shoppingCartItemSubTotalWithDiscount);
+                cartItemModel.SubTotalValue = shoppingCartItemSubTotalWithDiscount;
                 cartItemModel.MaximumDiscountedQty = maximumDiscountQty;
 
                 //display an applied discount amount
@@ -475,6 +479,7 @@ namespace Nop.Web.Factories
                     {
                         var shoppingCartItemDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartItemDiscountBase, currentCurrency);
                         cartItemModel.Discount = await _priceFormatter.FormatPriceAsync(shoppingCartItemDiscount);
+                        cartItemModel.DiscountValue = shoppingCartItemDiscount;
                     }
                 }
             }
@@ -580,12 +585,14 @@ namespace Nop.Web.Factories
                 (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
             {
                 cartItemModel.UnitPrice = await _localizationService.GetResourceAsync("Products.CallForPrice");
+                cartItemModel.UnitPriceValue = 0;
             }
             else
             {
                 var (shoppingCartUnitPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _shoppingCartService.GetUnitPriceAsync(sci, true)).unitPrice);
                 var shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartUnitPriceWithDiscountBase, currentCurrency);
                 cartItemModel.UnitPrice = await _priceFormatter.FormatPriceAsync(shoppingCartUnitPriceWithDiscount);
+                cartItemModel.UnitPriceValue = shoppingCartUnitPriceWithDiscount;
             }
             //subtotal, discount
             if (product.CallForPrice &&
@@ -593,6 +600,7 @@ namespace Nop.Web.Factories
                 (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
             {
                 cartItemModel.SubTotal = await _localizationService.GetResourceAsync("Products.CallForPrice");
+                cartItemModel.SubTotalValue = 0;
             }
             else
             {
@@ -601,6 +609,7 @@ namespace Nop.Web.Factories
                 var (shoppingCartItemSubTotalWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, subTotal);
                 var shoppingCartItemSubTotalWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartItemSubTotalWithDiscountBase, currentCurrency);
                 cartItemModel.SubTotal = await _priceFormatter.FormatPriceAsync(shoppingCartItemSubTotalWithDiscount);
+                cartItemModel.SubTotalValue = shoppingCartItemSubTotalWithDiscount;
                 cartItemModel.MaximumDiscountedQty = maximumDiscountQty;
 
                 //display an applied discount amount
@@ -611,6 +620,7 @@ namespace Nop.Web.Factories
                     {
                         var shoppingCartItemDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartItemDiscountBase, currentCurrency);
                         cartItemModel.Discount = await _priceFormatter.FormatPriceAsync(shoppingCartItemDiscount);
+                        cartItemModel.DiscountValue = shoppingCartItemDiscount;
                     }
                 }
             }
@@ -1024,6 +1034,7 @@ namespace Nop.Web.Factories
                     var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
                     var subtotal = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(subtotalBase, currentCurrency);
                     model.SubTotal = await _priceFormatter.FormatPriceAsync(subtotal, false, currentCurrency, (await _workContext.GetWorkingLanguageAsync()).Id, subTotalIncludingTax);
+                    model.SubTotalValue = subtotal;
 
                     var requiresShipping = await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart);
                     //a customer should visit the shopping cart page (hide checkout button) before going to checkout if:
@@ -1071,12 +1082,14 @@ namespace Nop.Web.Factories
                             (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
                         {
                             cartItemModel.UnitPrice = await _localizationService.GetResourceAsync("Products.CallForPrice");
+                            cartItemModel.UnitPriceValue = 0;
                         }
                         else
                         {
                             var (shoppingCartUnitPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _shoppingCartService.GetUnitPriceAsync(sci, true)).unitPrice);
                             var shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartUnitPriceWithDiscountBase, currentCurrency);
                             cartItemModel.UnitPrice = await _priceFormatter.FormatPriceAsync(shoppingCartUnitPriceWithDiscount);
+                            cartItemModel.UnitPriceValue = shoppingCartUnitPriceWithDiscount;
                         }
 
                         //picture
@@ -1339,7 +1352,7 @@ namespace Nop.Web.Factories
                     {
                         if (pickupPointsResponse.PickupPoints.Any())
                         {
-                            pickupPointsNumber = pickupPointsResponse.PickupPoints.Count();
+                            pickupPointsNumber = pickupPointsResponse.PickupPoints.Count;
                             var pickupPoint = pickupPointsResponse.PickupPoints.OrderBy(p => p.PickupFee).First();
 
                             rawShippingOptions.Add(new ShippingOption
@@ -1407,11 +1420,22 @@ namespace Nop.Web.Factories
                             Name = option.Name,
                             ShippingRateComputationMethodSystemName = option.ShippingRateComputationMethodSystemName,
                             Description = option.Description,
+                            DisplayOrder = option.DisplayOrder ?? 0,
                             Price = shippingRateString,
-                            Rate = option.Rate,
+                            Rate = shippingRate,
                             DeliveryDateFormat = deliveryDateFormat,
                             Selected = selected
                         });
+                    }
+
+                    //sort shipping methods
+                    if (model.ShippingOptions.Count > 1)
+                    {
+                        model.ShippingOptions = (_shippingSettings.ShippingSorting switch
+                        {
+                            ShippingSortingEnum.ShippingCost => model.ShippingOptions.OrderBy(option => option.Rate),
+                            _ => model.ShippingOptions.OrderBy(option => option.DisplayOrder)
+                        }).ToList();
                     }
 
                     //if no option has been selected, let's do it for the first one

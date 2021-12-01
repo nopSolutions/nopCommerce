@@ -1,10 +1,13 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Configuration;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450
 {
@@ -33,6 +36,32 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             {
                 commonSettings.ClearLogOlderThanDays = 0;
                 settingService.SaveSettingAsync(commonSettings).Wait();
+            }
+
+            //#5551
+            var catalogSettings = settingService.LoadSettingAsync<CatalogSettings>().Result;
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering).Result)
+            {
+                catalogSettings.EnableSpecificationAttributeFiltering = true;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            //#5204
+            var shippingSettings = settingService.LoadSettingAsync<ShippingSettings>().Result;
+
+            if (!settingService.SettingExistsAsync(shippingSettings, settings => settings.ShippingSorting).Result)
+            {
+                shippingSettings.ShippingSorting = ShippingSortingEnum.Position;
+                settingService.SaveSettingAsync(shippingSettings).Wait();
+            }
+
+            //#5698
+            var orderSettings = settingService.LoadSettingAsync<OrderSettings>().Result;
+            if (!settingService.SettingExistsAsync(orderSettings, settings => settings.DisplayOrderSummary).Result)
+            {
+                orderSettings.DisplayOrderSummary = true;
+                settingService.SaveSettingAsync(orderSettings).Wait();
             }
         }
 

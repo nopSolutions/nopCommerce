@@ -925,7 +925,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 bytes = stream.ToArray();
             }
 
-            return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.Id}.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.CustomOrderNumber}.pdf");
         }
 
         [HttpPost, ActionName("PdfInvoice")]
@@ -1670,11 +1670,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No customer found with the specified id");
 
             //basic properties
-            decimal.TryParse(form["UnitPriceInclTax"], out var unitPriceInclTax);
-            decimal.TryParse(form["UnitPriceExclTax"], out var unitPriceExclTax);
-            int.TryParse(form["Quantity"], out var quantity);
-            decimal.TryParse(form["SubTotalInclTax"], out var priceInclTax);
-            decimal.TryParse(form["SubTotalExclTax"], out var priceExclTax);
+            _ = decimal.TryParse(form["UnitPriceInclTax"], out var unitPriceInclTax);
+            _ = decimal.TryParse(form["UnitPriceExclTax"], out var unitPriceExclTax);
+            _ = int.TryParse(form["Quantity"], out var quantity);
+            _ = decimal.TryParse(form["SubTotalInclTax"], out var priceInclTax);
+            _ = decimal.TryParse(form["SubTotalExclTax"], out var priceExclTax);
 
             //warnings
             var warnings = new List<string>();
@@ -1825,7 +1825,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> AddressEdit(OrderAddressModel model)
+        public virtual async Task<IActionResult> AddressEdit(OrderAddressModel model, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1844,7 +1844,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No address found with the specified id");
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1979,7 +1979,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual async Task<IActionResult> AddShipment(ShipmentModel model, bool continueEditing)
+        public virtual async Task<IActionResult> AddShipment(ShipmentModel model, IFormCollection form, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2013,7 +2013,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             var shipmentItems = new List<ShipmentItem>();
 
             decimal? totalWeight = null;
-            var form = model.Form;
 
             foreach (var orderItem in orderItems)
             {
@@ -2028,7 +2027,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var formKey in form.Keys)
                     if (formKey.Equals($"qtyToAdd{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int.TryParse(form[formKey], out qtyToAdd);
+                        _ = int.TryParse(form[formKey], out qtyToAdd);
                         break;
                     }
 
@@ -2041,7 +2040,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     foreach (var formKey in form.Keys)
                         if (formKey.Equals($"warehouse_{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            int.TryParse(form[formKey], out warehouseId);
+                            _ = int.TryParse(form[formKey], out warehouseId);
                             break;
                         }
                 }
@@ -2097,10 +2096,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                     CreatedOnUtc = DateTime.UtcNow
                 });
 
-                if (model.CanShip)
+                var canShip = !order.PickupInStore && model.CanShip;
+                if (canShip)
                     await _orderProcessingService.ShipAsync(shipment, true);
 
-                if (model.CanShip && model.CanDeliver)
+                var canMarkAsReadyForPickup = order.PickupInStore && model.CanMarkAsReadyForPickup;
+                if (canMarkAsReadyForPickup)
+                    await _orderProcessingService.ReadyForPickupAsync(shipment, true);
+
+                if ((canShip || canMarkAsReadyForPickup) && model.CanDeliver)
                     await _orderProcessingService.DeliverAsync(shipment, true);
 
                 await LogEditOrderAsync(order.Id);
@@ -2292,6 +2296,68 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("setasreadyforpickup")]
+        public virtual async Task<IActionResult> SetAsReadyForPickup(int id)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //try to get a shipment with the specified id
+            var shipment = await _shipmentService.GetShipmentByIdAsync(id);
+            if (shipment == null)
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
+                return RedirectToAction("List");
+
+            try
+            {
+                await _orderProcessingService.ReadyForPickupAsync(shipment, true);
+                await LogEditOrderAsync(shipment.OrderId);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+            catch (Exception exc)
+            {
+                //error
+                await _notificationService.ErrorNotificationAsync(exc);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+        }
+
+        [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("savereadyforpickupdate")]
+        public virtual async Task<IActionResult> EditReadyForPickupDate(ShipmentModel model)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //try to get a shipment with the specified id
+            var shipment = await _shipmentService.GetShipmentByIdAsync(model.Id);
+            if (shipment == null)
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
+                return RedirectToAction("List");
+
+            try
+            {
+                if (!model.ReadyForPickupDateUtc.HasValue)
+                    throw new Exception("Enter ready for pickup date");
+
+                shipment.ReadyForPickupDateUtc = model.ReadyForPickupDateUtc;
+                await _shipmentService.UpdateShipmentAsync(shipment);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+            catch (Exception exc)
+            {
+                await _notificationService.ErrorNotificationAsync(exc);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+        }
+
+        [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("setasdelivered")]
         public virtual async Task<IActionResult> SetAsDelivered(int id)
         {
@@ -2413,6 +2479,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 shippingCity: model.City,
                 trackingNumber: model.TrackingNumber,
                 loadNotShipped: model.LoadNotShipped,
+                loadNotReadyForPickup: model.LoadNotReadyForPickup,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue);
 
@@ -2486,7 +2553,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
@@ -2513,12 +2580,44 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> SetAsDeliveredSelected(ICollection<int> selectedIds)
+        public virtual async Task<IActionResult> SetAsReadyForPickupSelected(ICollection<int> selectedIds)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
             if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
+
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+
+            //a vendor should have access only to his products
+            if (await _workContext.GetCurrentVendorAsync() != null)
+            {
+                shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
+            }
+
+            foreach (var shipment in shipments)
+            {
+                try
+                {
+                    await _orderProcessingService.ReadyForPickupAsync(shipment, true);
+                }
+                catch
+                {
+                    //ignore any exception
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> SetAsDeliveredSelected(ICollection<int> selectedIds)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
             var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());

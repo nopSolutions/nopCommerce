@@ -146,7 +146,7 @@ namespace Nop.Web.Controllers
 
             var pickupInStoreParameter = form["PickupInStore"].FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(pickupInStoreParameter))
-                bool.TryParse(pickupInStoreParameter, out pickupInStore);
+                _ = bool.TryParse(pickupInStoreParameter, out pickupInStore);
 
             return pickupInStore;
         }
@@ -273,7 +273,6 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CheckoutBillingAddress");
         }
 
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> Completed(int? orderId)
         {
             //validation
@@ -336,7 +335,6 @@ namespace Nop.Web.Controllers
         /// <param name="model"></param>
         /// <param name="opc"></param>
         /// <returns></returns>
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> SaveEditAddress(CheckoutBillingAddressModel model, bool opc = false)
         {
             try
@@ -461,7 +459,7 @@ namespace Nop.Web.Controllers
 
                 TryValidateModel(model);
                 TryValidateModel(model.BillingNewAddress);
-                return await NewBillingAddress(model);
+                return await NewBillingAddress(model, form);
             }
 
             return View(model);
@@ -504,7 +502,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("BillingAddress")]
         [FormValueRequired("nextstep")]
-        public virtual async Task<IActionResult> NewBillingAddress(CheckoutBillingAddressModel model)
+        public virtual async Task<IActionResult> NewBillingAddress(CheckoutBillingAddressModel model, IFormCollection form)
         {
             //validation
             if (_orderSettings.CheckoutDisabled)
@@ -524,7 +522,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -643,7 +641,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ShippingAddress")]
         [FormValueRequired("nextstep")]
-        public virtual async Task<IActionResult> NewShippingAddress(CheckoutShippingAddressModel model)
+        public virtual async Task<IActionResult> NewShippingAddress(CheckoutShippingAddressModel model, IFormCollection form)
         {
             //validation
             if (_orderSettings.CheckoutDisabled)
@@ -664,8 +662,6 @@ namespace Nop.Web.Controllers
 
             if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                 return RedirectToRoute("CheckoutShippingMethod");
-
-            var form = model.Form;
 
             //pickup point
             if (_shippingSettings.AllowPickupInStore && !_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
@@ -1339,8 +1335,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [IgnoreAntiforgeryToken]
-        public virtual async Task<IActionResult> OpcSaveBilling(CheckoutBillingAddressModel model)
+        [HttpPost]
+        public virtual async Task<IActionResult> OpcSaveBilling(CheckoutBillingAddressModel model, IFormCollection form)
         {
             try
             {
@@ -1361,9 +1357,7 @@ namespace Nop.Web.Controllers
                 if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                var form = model.Form;
-
-                int.TryParse(form["billing_address_id"], out var billingAddressId);
+                _ = int.TryParse(form["billing_address_id"], out var billingAddressId);
 
                 if (billingAddressId > 0)
                 {
@@ -1484,8 +1478,8 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
-        public virtual async Task<IActionResult> OpcSaveShipping(CheckoutShippingAddressModel model)
+        [HttpPost]
+        public virtual async Task<IActionResult> OpcSaveShipping(CheckoutShippingAddressModel model, IFormCollection form)
         {
             try
             {
@@ -1509,8 +1503,6 @@ namespace Nop.Web.Controllers
                 if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                     throw new Exception("Shipping is not required");
 
-                var form = model.Form;
-
                 //pickup point
                 if (_shippingSettings.AllowPickupInStore && !_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
                 {
@@ -1527,7 +1519,7 @@ namespace Nop.Web.Controllers
                     await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
                 }
 
-                int.TryParse(form["shipping_address_id"], out var shippingAddressId);
+                _ = int.TryParse(form["shipping_address_id"], out var shippingAddressId);
 
                 if (shippingAddressId > 0)
                 {
@@ -1602,7 +1594,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSaveShippingMethod(string shippingoption, IFormCollection form)
         {
             try
@@ -1687,7 +1679,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSavePaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
         {
             try
@@ -1759,7 +1751,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcSavePaymentInfo(IFormCollection form)
         {
             try
@@ -1830,7 +1822,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost]
         public virtual async Task<IActionResult> OpcConfirmOrder()
         {
             try

@@ -677,15 +677,23 @@ namespace Nop.Services.Orders
             if (!useRewardPoints.Value)
                 return (redeemedRewardPoints, redeemedRewardPointsAmount);
 
-            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
-            rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
-
-            if (!CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
+            if (orderTotal <= decimal.Zero)
                 return (redeemedRewardPoints, redeemedRewardPointsAmount);
+
+            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
+
+            if (_rewardPointsSettings.MaximumRewardPointsToUsePerOrder > 0 && rewardPointsBalance > _rewardPointsSettings.MaximumRewardPointsToUsePerOrder)
+                rewardPointsBalance = _rewardPointsSettings.MaximumRewardPointsToUsePerOrder;
 
             var rewardPointsBalanceAmount = await ConvertRewardPointsToAmountAsync(rewardPointsBalance);
 
-            if (orderTotal <= decimal.Zero)
+            if (_rewardPointsSettings.MaximumRedeemedRate > 0 && _rewardPointsSettings.MaximumRedeemedRate < rewardPointsBalanceAmount / orderTotal)
+            {
+                rewardPointsBalance = ConvertAmountToRewardPoints(orderTotal * _rewardPointsSettings.MaximumRedeemedRate);
+                rewardPointsBalanceAmount = await ConvertRewardPointsToAmountAsync(rewardPointsBalance);
+            }
+
+            if (!CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 return (redeemedRewardPoints, redeemedRewardPointsAmount);
 
             if (orderTotal > rewardPointsBalanceAmount)
@@ -1270,6 +1278,27 @@ namespace Nop.Services.Orders
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 orderTotal = await _priceCalculationService.RoundPriceAsync(orderTotal);
             return (orderTotal, discountAmount, appliedDiscounts, appliedGiftCards, redeemedRewardPoints, redeemedRewardPointsAmount);
+        }
+
+        /// <summary>
+        /// Calculate payment method fee
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="fee">Fee value</param>
+        /// <param name="usePercentage">Is fee amount specified as percentage or fixed value?</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<decimal> CalculatePaymentAdditionalFeeAsync(IList<ShoppingCartItem> cart, decimal fee, bool usePercentage)
+        {
+            if (!usePercentage || fee <= 0) 
+                return fee;
+
+            var orderTotalWithoutPaymentFee = (await GetShoppingCartTotalAsync(cart, usePaymentMethodAdditionalFee: false)).shoppingCartTotal ?? 0;
+            var result = (decimal)((float)orderTotalWithoutPaymentFee * (float)fee / 100f);
+
+            return result;
         }
 
         /// <summary>

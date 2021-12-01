@@ -2180,13 +2180,13 @@ namespace Nop.Services.ExportImport
 
         public class CategoryKey
         {
-        /// <returns>A task that represents the asynchronous operation</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             public static async Task<CategoryKey> CreateCategoryKeyAsync(Category category, ICategoryService categoryService, IList<Category> allCategories, IStoreMappingService storeMappingService)
             {
-                var categoryKey = new CategoryKey(await categoryService.GetFormattedBreadCrumbAsync(category, allCategories), category.LimitedToStores ? (await storeMappingService.GetStoresIdsWithAccessAsync(category)).ToList() : new List<int>());
-                categoryKey.Category = category;
-
-                return categoryKey;
+                return new CategoryKey(await categoryService.GetFormattedBreadCrumbAsync(category, allCategories), category.LimitedToStores ? (await storeMappingService.GetStoresIdsWithAccessAsync(category)).ToList() : new List<int>())
+                {
+                    Category = category
+                };
             }
 
             public CategoryKey(string key, List<int> storesIds = null)

@@ -27,7 +27,6 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
-using Nop.Core.Html;
 using Nop.Core.Infrastructure;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
@@ -36,6 +35,7 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.News;
 using Nop.Services.Orders;
@@ -71,6 +71,7 @@ namespace Nop.Services.Messages
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly INewsService _newsService;
+        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IOrderService _orderService;
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPaymentService _paymentService;
@@ -113,6 +114,7 @@ namespace Nop.Services.Messages
             ILanguageService languageService,
             ILocalizationService localizationService,
             INewsService newsService,
+            INopHtmlHelper nopHtmlHelper,
             IOrderService orderService,
             IPaymentPluginManager paymentPluginManager,
             IPaymentService paymentService,
@@ -149,6 +151,7 @@ namespace Nop.Services.Messages
             _languageService = languageService;
             _localizationService = localizationService;
             _newsService = newsService;
+            _nopHtmlHelper = nopHtmlHelper;
             _orderService = orderService;
             _paymentPluginManager = paymentPluginManager;
             _paymentService = paymentService;
@@ -260,7 +263,10 @@ namespace Nop.Services.Messages
                     "%Order.CreatedOn%",
                     "%Order.OrderURLForCustomer%",
                     "%Order.PickupInStore%",
-                    "%Order.OrderId%"
+                    "%Order.OrderId%",
+                    "%Order.IsCompletelyShipped%",
+                    "%Order.IsCompletelyReadyForPickup%",
+                    "%Order.IsCompletelyDelivered%"
                 });
 
                 //shipment tokens
@@ -905,7 +911,7 @@ namespace Nop.Services.Messages
             url.StartsWithSegments(pathBase, out url);
 
             //compose the result
-            return Uri.EscapeUriString(WebUtility.UrlDecode($"{store.Url.TrimEnd('/')}{url}"));
+            return new Uri(WebUtility.UrlDecode($"{store.Url.TrimEnd('/')}{url}"), UriKind.Absolute).AbsoluteUri;
         }
 
         #endregion
@@ -993,6 +999,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingZipPostalCode", (await orderAddress(order))?.ZipPostalCode ?? string.Empty));
             tokens.Add(new Token("Order.ShippingCountry", await _countryService.GetCountryByAddressAsync(await orderAddress(order)) is Country orderCountry ? await _localizationService.GetLocalizedAsync(orderCountry, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingCustomAttributes", await _addressAttributeFormatter.FormatAttributesAsync((await orderAddress(order))?.CustomAttributes ?? string.Empty), true));
+            tokens.Add(new Token("Order.IsCompletelyShipped", !order.PickupInStore && order.ShippingStatus == ShippingStatus.Shipped));
+            tokens.Add(new Token("Order.IsCompletelyReadyForPickup", order.PickupInStore && !await _orderService.HasItemsToAddToShipmentAsync(order) && !await _orderService.HasItemsToReadyForPickupAsync(order)));
+            tokens.Add(new Token("Order.IsCompletelyDelivered", order.ShippingStatus == ShippingStatus.Delivered));
 
             var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(order.PaymentMethodSystemName);
             var paymentMethodName = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, (await _workContext.GetWorkingLanguageAsync()).Id) : order.PaymentMethodSystemName;
@@ -1069,10 +1078,9 @@ namespace Nop.Services.Messages
             var trackingNumberUrl = string.Empty;
             if (!string.IsNullOrEmpty(shipment.TrackingNumber))
             {
-                var shipmentService = EngineContext.Current.Resolve<IShipmentService>();
-                var shipmentTracker = await shipmentService.GetShipmentTrackerAsync(shipment);
+                var shipmentTracker = await _shipmentService.GetShipmentTrackerAsync(shipment);
                 if (shipmentTracker != null)
-                    trackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber);
+                    trackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment);
             }
 
             tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));
@@ -1139,8 +1147,8 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ReturnRequest.Product.Name", await _localizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
             tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
             tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
-            tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
-            tokens.Add(new Token("ReturnRequest.StaffNotes", HtmlHelper.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
+            tokens.Add(new Token("ReturnRequest.CustomerComment", _nopHtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
+            tokens.Add(new Token("ReturnRequest.StaffNotes", _nopHtmlHelper.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
             tokens.Add(new Token("ReturnRequest.Status", await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus, languageId)));
 
             //event notification
@@ -1163,7 +1171,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("GiftCard.CouponCode", giftCard.GiftCardCouponCode));
 
             var giftCardMessage = !string.IsNullOrWhiteSpace(giftCard.Message) ?
-                HtmlHelper.FormatText(giftCard.Message, false, true, false, false, false, false) : string.Empty;
+                _nopHtmlHelper.FormatText(giftCard.Message, false, true, false, false, false, false) : string.Empty;
 
             tokens.Add(new Token("GiftCard.Message", giftCardMessage, true));
 
@@ -1537,6 +1545,7 @@ namespace Nop.Services.Messages
                 MessageTemplateSystemNames.OrderCancelledCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
                 MessageTemplateSystemNames.ShipmentSentCustomerNotification or 
+                MessageTemplateSystemNames.ShipmentReadyForPickupCustomerNotification or 
                 MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ShipmentTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
                 MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification or 

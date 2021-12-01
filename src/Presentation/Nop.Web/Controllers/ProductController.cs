@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -13,6 +14,7 @@ using Nop.Core.Events;
 using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -42,6 +44,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
+        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -73,6 +76,7 @@ namespace Nop.Web.Controllers
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             IOrderService orderService,
             IPermissionService permissionService,
             IProductAttributeParser productAttributeParser,
@@ -100,6 +104,7 @@ namespace Nop.Web.Controllers
             _customerService = customerService;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             _orderService = orderService;
             _permissionService = permissionService;
             _productAttributeParser = productAttributeParser;
@@ -233,7 +238,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> EstimateShipping([FromQuery] ProductDetailsModel.ProductEstimateShippingModel model)
+        public virtual async Task<IActionResult> EstimateShipping([FromQuery] ProductDetailsModel.ProductEstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
                 model = new ProductDetailsModel.ProductEstimateShippingModel();
@@ -278,8 +283,6 @@ namespace Nop.Web.Controllers
                 ProductId = product.Id,
                 CreatedOnUtc = DateTime.UtcNow
             };
-
-            var form = model.Form;
 
             var addToCartWarnings = new List<string>();
             //customer entered price
@@ -505,7 +508,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> SetProductReviewHelpfulness(int productReviewId, bool washelpful)
         {
             var productReview = await _productService.GetProductReviewByIdAsync(productReviewId);
@@ -605,7 +607,7 @@ namespace Nop.Web.Controllers
                 await _workflowMessageService.SendProductEmailAFriendMessageAsync(customer,
                         (await _workContext.GetWorkingLanguageAsync()).Id, product,
                         model.YourEmailAddress, model.FriendEmail,
-                        Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+                        _nopHtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 
                 model = await _productModelFactory.PrepareProductEmailAFriendModelAsync(model, product, true);
                 model.SuccessfullySent = true;
@@ -624,7 +626,6 @@ namespace Nop.Web.Controllers
         #region Comparing products
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> AddProductToCompareList(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);

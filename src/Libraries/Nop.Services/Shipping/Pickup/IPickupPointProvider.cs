@@ -10,15 +10,6 @@ namespace Nop.Services.Shipping.Pickup
     /// </summary>
     public partial interface IPickupPointProvider : IPlugin
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets a shipment tracker
-        /// </summary>
-        IShipmentTracker ShipmentTracker { get; }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -30,7 +21,16 @@ namespace Nop.Services.Shipping.Pickup
         /// The task result contains the represents a response of getting pickup points
         /// </returns>
         Task<GetPickupPointsResponse> GetPickupPointsAsync(Address address);
-        
+
+        /// <summary>
+        /// Get associated shipment tracker
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment tracker
+        /// </returns>
+        Task<IShipmentTracker> GetShipmentTrackerAsync();
+
         #endregion
     }
 }

@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Framework.Events
 {
@@ -52,9 +53,23 @@ namespace Nop.Web.Framework.Events
                 return OverriddenRouteName;
 
             //or try to get a registered endpoint route name
-            var endpointFeature = Helper.ViewContext.HttpContext.Features.Get<IEndpointFeature>();
-            var routeNameMetadata = endpointFeature.Endpoint.Metadata.GetMetadata<RouteNameMetadata>();
-            return routeNameMetadata.RouteName;
+            var httpContext = Helper.ViewContext.HttpContext;
+            var routeName = httpContext.GetEndpoint()?.Metadata.GetMetadata<RouteNameMetadata>()?.RouteName;
+
+            //then try to get a generic one (actually it's an action name, not the route)
+            if (string.IsNullOrEmpty(routeName) && httpContext.GetRouteValue(NopPathRouteDefaults.SeNameFieldKey) is not null)
+            {
+                routeName = httpContext.GetRouteValue(NopPathRouteDefaults.ActionFieldKey)?.ToString();
+
+                //there are some cases when the action name doesn't match the route name
+                //it's not easy to make them the same, so we'll just handle them here
+                if (routeName == "ProductDetails")
+                    routeName = "Product";
+                if (routeName == "TopicDetails")
+                    routeName = "Topic";
+            }
+
+            return routeName;
         }
 
         #endregion

@@ -44,7 +44,7 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
         protected IQueryable<LocaleStringResource> filter(Dictionary<string, string> resources, IQueryable<LocaleStringResource> query)
         {
             query = query.Where(p =>
-                resources.Keys.Contains(p.ResourceName, StringComparer.InvariantCultureIgnoreCase));
+                resources.Keys.Select(k=>k.ToLowerInvariant()).Contains(p.ResourceName));
 
             return query;
         }

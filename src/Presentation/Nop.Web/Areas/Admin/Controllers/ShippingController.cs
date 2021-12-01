@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
@@ -819,15 +820,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         //we use 2048 value because in some cases default value (1024) is too small for this action
         [RequestFormLimits(ValueCountLimit = 2048)]
         [HttpPost, ActionName("Restrictions")]
-        public virtual async Task<IActionResult> RestrictionSave(ShippingMethodRestrictionModel model)
+        public virtual async Task<IActionResult> RestrictionSave(ShippingMethodRestrictionModel model, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
             var shippingMethods = await _shippingService.GetAllShippingMethodsAsync();
-
-            var form = model.Form;
 
             foreach (var shippingMethod in shippingMethods)
             {

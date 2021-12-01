@@ -152,15 +152,6 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
-        /// Initialize database
-        /// </summary>
-        public void InitializeDatabase()
-        {
-            var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
-        }
-
-        /// <summary>
         /// Get the current identity value
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
@@ -277,7 +268,8 @@ namespace Nop.Data.DataProviders
                 DataSource = nopConnectionString.ServerName,
                 InitialCatalog = nopConnectionString.DatabaseName,
                 PersistSecurityInfo = false,
-                IntegratedSecurity = nopConnectionString.IntegratedSecurity
+                IntegratedSecurity = nopConnectionString.IntegratedSecurity,
+                TrustServerCertificate = true
             };
 
             if (!nopConnectionString.IntegratedSecurity)

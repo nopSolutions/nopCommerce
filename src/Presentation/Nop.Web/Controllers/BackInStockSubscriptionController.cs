@@ -16,6 +16,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class BackInStockSubscriptionController : BasePublicController
     {
         #region Fields
@@ -98,7 +99,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> SubscribePopupPOST(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -195,7 +195,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            model.PagerModel = new PagerModel
+            model.PagerModel = new PagerModel(_localizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,
@@ -210,7 +210,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("CustomerSubscriptions")]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> CustomerSubscriptionsPOST(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)

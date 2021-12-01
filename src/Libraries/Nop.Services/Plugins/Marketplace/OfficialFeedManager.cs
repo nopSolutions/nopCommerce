@@ -145,7 +145,7 @@ namespace Nop.Services.Plugins.Marketplace
                 Price = GetElementValue(node, @"price")
             }).ToList();
 
-            int.TryParse(GetElementValue(xml.SelectNodes(@"//totalRecords")?[0], @"value"), out var totalRecords);
+            _ = int.TryParse(GetElementValue(xml.SelectNodes(@"//totalRecords")?[0], @"value"), out var totalRecords);
 
             return new PagedList<OfficialFeedPlugin>(list, pageIndex, pageSize, totalRecords);
         }

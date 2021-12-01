@@ -3295,7 +3295,7 @@
     <Value>Short description</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShortDescription.Hint">
-    <Value>Short description is the text that is displayed in product list i.e. сategory / manufacturer pages.</Value>
+    <Value>Short description is the text that is displayed in product list i.e. category / manufacturer pages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomepage">
     <Value>Show on home page</Value>
@@ -5769,6 +5769,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering.Hint">
     <Value>Check to enable the price range filtering on catalog pages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering">
+    <Value>Enable specification attribute filtering</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint">
+    <Value>Check to enable the specification attribute filtering on catalog pages.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages">
     <Value>Export/Import products. Allow download images</Value>
   </LocaleResource>
@@ -7536,6 +7542,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Hint">
     <Value>When enabled, your URLs will be http://www.yourStore.com/en/ or http://www.yourStore.com/ru/ (SEO friendly).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning">
+      <Value>Attention! The changes will take effect only after the application is restarted.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions">
     <Value><![CDATA[<p>These settings do not apply to sitemap.xml, only for your site map. You can configure generation for sitemap.xml on <a href="{0}">all settings page</a></p>]]></Value>
   </LocaleResource>
@@ -8409,6 +8418,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2">
     <Value>1 reward point =</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate">
+    <Value>Maximum redeemed rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate.Hint">
+    <Value>Limit the maximum order total that could be paid by reward points (in percent). For example, if set to 0.6, then only 60% of order total could be paid using reward points, but not more than the 'Maximum reward points to use per order'. Set to 0 if you do not want to use this setting.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder">
     <Value>Maximum reward points to use per order</Value>
   </LocaleResource>
@@ -8579,6 +8594,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingOriginAddress">
     <Value>Shipping origin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingSorting">
+    <Value>Sort shipping methods by</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingSorting.Hint">
+    <Value>Select the field to sort the shipping by.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress">
     <Value>Ship to the same address</Value>
@@ -10321,10 +10342,13 @@
     <Value>This message template is used to send "email a friend" message.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ShipmentDelivered.CustomerNotification">
-    <Value><![CDATA[This message template is used to notify a customer that the shipping status of the certain order is set to delivered. You can set up this option in Configuration - Settings - Shipping settings by ticking the checkbox <strong>Display shipment events (customers)</strong>.]]></Value>
+    <Value>This message template is used to notify a customer that the shipment of the certain order is delivered.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ShipmentReadyForPickup.CustomerNotification">
+    <Value>This message template is used to notify a customer that the shipment of the certain order is ready for pickup.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ShipmentSent.CustomerNotification">
-    <Value><![CDATA[This message template is used to notify a customer that the shipping status of the certain order is sent. You can set up this option in Configuration - Settings - Shipping settings by ticking the checkbox <strong>Display shipment events (customers)</strong>.]]></Value>
+    <Value>This message template is used to notify a customer that the shipment of the certain order is sent.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.VendorAccountApply.StoreOwnerNotification">
     <Value><![CDATA[This message template is used to notify a store owner that new user has applied for vendor account. You can allow customers to apply for vendor account in Configuration - Setting - Vendor settings by ticking the checkbox <strong>Allow customers to apply for vendor account</strong>.]]></Value>
@@ -13158,6 +13182,12 @@
   <LocaleResource Name="Admin.Orders.Shipments.CanDeliver.Hint">
     <Value>Check to apply current date to delivery.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CanMarkAsReadyForPickup">
+    <Value>Ready for pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CanMarkAsReadyForPickup.Hint">
+    <Value>Check to apply current date to shipment.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.CanShip">
     <Value>Shipped</Value>
   </LocaleResource>
@@ -13169,6 +13199,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.CustomOrderNumber.Hint">
     <Value>The order associated to this shipment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.DateNotAvailable">
+    <Value>-</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Deleted">
     <Value>The shipment has been deleted successfully.</Value>
@@ -13227,6 +13260,12 @@
   <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotDelivered.Hint">
     <Value>Load only undelivered shipments</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotReadyForPickup">
+    <Value>Load not ready for pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotReadyForPickup.Hint">
+    <Value>Load only not ready for pickup shipments.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotShipped">
     <Value>Load not shipped</Value>
   </LocaleResource>
@@ -13269,6 +13308,9 @@
   <LocaleResource Name="Admin.Orders.Shipments.NoShipmentsSelected">
     <Value>No shipments selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PickupInStore">
+    <Value>Pickup from store</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip">
     <Value>Print packaging slip</Value>
   </LocaleResource>
@@ -13296,8 +13338,14 @@
   <LocaleResource Name="Admin.Orders.Shipments.Products.QtyOrdered">
     <Value>Qty ordered</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.QtyReadyForPickup">
+    <Value>Qty ready for pickup</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.QtyShipped">
     <Value>Qty shipped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.QtyToPickup">
+    <Value>Qty to pickup</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.QtyToShip">
     <Value>Qty to ship</Value>
@@ -13322,6 +13370,24 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough">
     <Value>[Reserved - Planned] quantity value of some products are less than specified quantity to be shipped. Are you sure?</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ReadyForPickupDate">
+    <Value>Date ready for pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ReadyForPickupDate.Button">
+    <Value>Set as ready for pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ReadyForPickupDate.EnterUtc">
+    <Value>Date and time should be entered in Coordinated Universal Time (UTC)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ReadyForPickupDate.Hint">
+    <Value>The date this shipment was ready for pickup.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ReadyForPickupDate.NotYet">
+    <Value>Not yet</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ReadyForPickupSelected">
+    <Value>Set as ready for pickup (selected)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents">
     <Value>Shipment status events</Value>
@@ -16177,7 +16243,7 @@
     <Value>Continue</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.UseRewardPoints">
-    <Value>Use my reward points, {0} reward points ({1}) available for this order</Value>
+    <Value>Use my reward points, {0} of {1} reward points ({2}) available for this order</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.YourOrderHasBeenSuccessfullyProcessed">
     <Value>Your order has been successfully processed!</Value>
@@ -16835,6 +16901,12 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Seo.WwwRequirement.WithWww">
     <Value>Pages should have WWW prefix</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position">
+    <Value>Position</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost">
+    <Value>Shipping Cost</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Shipping.ShippingStatus.Delivered">
     <Value>Delivered</Value>
@@ -17646,6 +17718,12 @@
   <LocaleResource Name="Order.Shipments.Product(s).SKU">
     <Value>SKU</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.Shipments.ReadyForPickupDate">
+    <Value>Date ready for pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.ReadyForPickupDate.NotYet">
+    <Value>Not yet</Value>
+  </LocaleResource>
   <LocaleResource Name="Order.Shipments.ShippedDate">
     <Value>Date shipped</Value>
   </LocaleResource>
@@ -17931,6 +18009,9 @@
   <LocaleResource Name="PDFInvoice.Fax">
     <Value>Fax: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="PDFInvoice.FileName">
+    <Value>order</Value>
+  </LocaleResource>  
   <LocaleResource Name="PDFInvoice.GiftCardInfo">
     <Value>Gift card ({0}):</Value>
   </LocaleResource>

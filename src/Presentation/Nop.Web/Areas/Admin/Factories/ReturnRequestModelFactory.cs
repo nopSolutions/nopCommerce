@@ -237,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ReturnRequestReasonModel> PrepareReturnRequestReasonModelAsync(ReturnRequestReasonModel model,
             ReturnRequestReason returnRequestReason, bool excludeProperties = false)
         {
-            Action<ReturnRequestReasonLocalizedModel, int> localizedModelConfiguration = null;
+            Func<ReturnRequestReasonLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (returnRequestReason != null)
             {
@@ -315,7 +315,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ReturnRequestActionModel> PrepareReturnRequestActionModelAsync(ReturnRequestActionModel model,
             ReturnRequestAction returnRequestAction, bool excludeProperties = false)
         {
-            Action<ReturnRequestActionLocalizedModel, int> localizedModelConfiguration = null;
+            Func<ReturnRequestActionLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (returnRequestAction != null)
             {

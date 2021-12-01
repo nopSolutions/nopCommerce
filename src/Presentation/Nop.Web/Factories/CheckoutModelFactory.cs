@@ -388,6 +388,7 @@ namespace Nop.Web.Factories
                     {
                         Name = shippingOption.Name,
                         Description = shippingOption.Description,
+                        DisplayOrder = shippingOption.DisplayOrder ?? 0,
                         ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName,
                         ShippingOption = shippingOption,
                     };
@@ -398,8 +399,18 @@ namespace Nop.Web.Factories
                     var (rateBase, _) = await _taxService.GetShippingPriceAsync(shippingTotal, customer);
                     var rate = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rateBase, await _workContext.GetWorkingCurrencyAsync());
                     soModel.Fee = await _priceFormatter.FormatShippingPriceAsync(rate, true);
-
+                    soModel.Rate = rate;
                     model.ShippingMethods.Add(soModel);
+                }
+
+                //sort shipping methods
+                if (model.ShippingMethods.Count > 1)
+                {
+                    model.ShippingMethods = (_shippingSettings.ShippingSorting switch
+                    {
+                        ShippingSortingEnum.ShippingCost => model.ShippingMethods.OrderBy(option => option.Rate),
+                        _ => model.ShippingMethods.OrderBy(option => option.DisplayOrder)
+                    }).ToList();
                 }
 
                 //find a selected (previously) shipping method
@@ -455,23 +466,20 @@ namespace Nop.Web.Factories
         public virtual async Task<CheckoutPaymentMethodModel> PreparePaymentMethodModelAsync(IList<ShoppingCartItem> cart, int filterByCountryId)
         {
             var model = new CheckoutPaymentMethodModel();
+
             var customer = await _workContext.GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
-            var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
+
             //reward points
             if (_rewardPointsSettings.Enabled && !await _shoppingCartService.ShoppingCartIsRecurringAsync(cart))
             {
-                var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
-                rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
-
-                var rewardPointsAmountBase = await _orderTotalCalculationService.ConvertRewardPointsToAmountAsync(rewardPointsBalance);
-                var rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rewardPointsAmountBase, currentCurrency);
-                if (rewardPointsAmount > decimal.Zero &&
-                    _orderTotalCalculationService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
+                var shoppingCartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, true, false);
+                if (shoppingCartTotal.redeemedRewardPoints > 0)
                 {
                     model.DisplayRewardPoints = true;
-                    model.RewardPointsAmount = await _priceFormatter.FormatPriceAsync(rewardPointsAmount, true, false);
-                    model.RewardPointsBalance = rewardPointsBalance;
+                    model.RewardPointsToUseAmount = await _priceFormatter.FormatPriceAsync(shoppingCartTotal.redeemedRewardPointsAmount, true, false);
+                    model.RewardPointsToUse = shoppingCartTotal.redeemedRewardPoints;
+                    model.RewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
 
                     //are points enough to pay for entire order? like if this option (to use them) was selected
                     model.RewardPointsEnoughToPayForOrder = !await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart, true);
@@ -499,7 +507,8 @@ namespace Nop.Web.Factories
                 //payment method additional fee
                 var paymentMethodAdditionalFee = await _paymentService.GetAdditionalHandlingFeeAsync(cart, pm.PluginDescriptor.SystemName);
                 var (rateBase, _) = await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, customer);
-                var rate = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rateBase, currentCurrency);
+                var rate = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rateBase, await _workContext.GetWorkingCurrencyAsync());
+
                 if (rate > decimal.Zero)
                     pmModel.Fee = await _priceFormatter.FormatPaymentMethodAdditionalFeeAsync(rate, true);
 

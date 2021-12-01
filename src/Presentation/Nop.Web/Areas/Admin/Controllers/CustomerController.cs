@@ -310,7 +310,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual async Task<IActionResult> Create(CustomerModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Create(CustomerModel model, bool continueEditing, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -347,7 +347,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //custom customer attributes
-            var customerAttributesXml = await ParseCustomCustomerAttributesAsync(model.Form);
+            var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
             if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
             {
                 var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
@@ -520,7 +520,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual async Task<IActionResult> Edit(CustomerModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Edit(CustomerModel model, bool continueEditing, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -554,7 +554,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //custom customer attributes
-            var customerAttributesXml = await ParseCustomCustomerAttributesAsync(model.Form);
+            var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
             if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
             {
                 var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
@@ -1229,7 +1229,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> AddressCreate(CustomerAddressModel model)
+        public virtual async Task<IActionResult> AddressCreate(CustomerAddressModel model, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1240,7 +1240,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1297,7 +1297,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> AddressEdit(CustomerAddressModel model)
+        public virtual async Task<IActionResult> AddressEdit(CustomerAddressModel model, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1313,7 +1313,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("Edit", new { id = customer.Id });
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(model.Form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {

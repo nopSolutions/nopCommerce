@@ -150,6 +150,16 @@ namespace Nop.Services.Orders
         Task<bool> HasItemsToShipAsync(Order order);
 
         /// <summary>
+        /// Gets a value indicating whether there are shipment items to mark as 'ready for pickup' in order shipments.
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether there are shipment items to mark as 'ready for pickup' in order shipments.
+        /// </returns>
+        Task<bool> HasItemsToReadyForPickupAsync(Order order);
+
+        /// <summary>
         /// Gets a value indicating whether an order has items to deliver
         /// </summary>
         /// <param name="order">Order</param>

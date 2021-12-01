@@ -58,7 +58,7 @@ namespace Nop.Core.ComponentModel
         /// <returns>Result</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (!(value is string))
+            if (value is not string)
                 return base.ConvertFrom(context, culture, value);
 
             var input = (string)value;

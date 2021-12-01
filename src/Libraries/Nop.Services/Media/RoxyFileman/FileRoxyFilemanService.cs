@@ -56,7 +56,7 @@ namespace Nop.Services.Media.RoxyFileman
         }
 
         /// <summary>
-        /// Сopy the directory with the embedded files and directories
+        /// Copy the directory with the embedded files and directories
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="destinationPath">Path to the destination directory</param>
@@ -494,7 +494,7 @@ namespace Nop.Services.Media.RoxyFileman
             }
             catch
             {
-                throw new Exception(await GetLanguageResourceAsync("E_DeletеFile"));
+                throw new Exception(await GetLanguageResourceAsync("E_DeleteFile"));
             }
         }
 
@@ -657,8 +657,8 @@ namespace Nop.Services.Media.RoxyFileman
                         if (GetFileType(new FileInfo(uniqueFileName).Extension) != "image")
                             continue;
 
-                        int.TryParse(await GetSettingAsync("MAX_IMAGE_WIDTH"), out var w);
-                        int.TryParse(await GetSettingAsync("MAX_IMAGE_HEIGHT"), out var h);
+                        _ = int.TryParse(await GetSettingAsync("MAX_IMAGE_WIDTH"), out var w);
+                        _ = int.TryParse(await GetSettingAsync("MAX_IMAGE_HEIGHT"), out var h);
                         ImageResize(destinationFile, destinationFile, w, h);
                     }
                     else
@@ -726,7 +726,7 @@ namespace Nop.Services.Media.RoxyFileman
                 file = cropImg.Encode().ToArray();
             }
 
-            await response.Body.WriteAsync(file, 0, file.Length);
+            await response.Body.WriteAsync(file.AsMemory(0, file.Length));
             response.Body.Close();
         }
 

@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Html;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -30,6 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
+        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IProductService _productService;
         private readonly IReviewTypeService _reviewTypeService;
         private readonly IStoreService _storeService;
@@ -44,6 +45,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             IProductService productService,
             IReviewTypeService reviewTypeService,
             IStoreService storeService,
@@ -54,6 +56,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _localizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             _productService = productService;
             _reviewTypeService = reviewTypeService;
             _storeService = storeService;
@@ -159,8 +162,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         ? customer.Email
                         : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
 
-                    productReviewModel.ReviewText = HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
-                    productReviewModel.ReplyText = HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
+                    productReviewModel.ReviewText = _nopHtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
+                    productReviewModel.ReplyText = _nopHtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
 
                     return productReviewModel;
                 });

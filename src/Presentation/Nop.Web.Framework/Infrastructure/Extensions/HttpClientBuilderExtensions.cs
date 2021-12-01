@@ -2,7 +2,6 @@
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Domain.Security;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {
@@ -17,13 +16,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="httpClientBuilder">A builder for configuring HttpClient</param>
         public static void WithProxy(this IHttpClientBuilder httpClientBuilder)
         {
-            httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
+            httpClientBuilder.ConfigurePrimaryHttpMessageHandler(provider =>
             {
                 var handler = new HttpClientHandler();
 
                 //whether proxy is enabled
-                var proxySettings = EngineContext.Current.Resolve<ProxySettings>();
-                if (!proxySettings.Enabled)
+                var proxySettings = provider.GetService<ProxySettings>();
+                if (!proxySettings?.Enabled ?? true)
                     return handler;
 
                 //configure proxy connection

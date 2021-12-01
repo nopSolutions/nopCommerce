@@ -378,6 +378,63 @@ namespace Nop.Services.Orders
         #region Utilities
 
         /// <summary>
+        /// Books the inventory by specified shipment
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <param name="message">Message for the stock quantity history</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task BookReservedInventoryAsync(Shipment shipment, string message)
+        {
+            foreach (var item in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+            {
+                var product = await _orderService.GetProductByOrderItemIdAsync(item.OrderItemId);
+                if (product is null)
+                    continue;
+
+                await _productService.BookReservedInventoryAsync(product, item.WarehouseId, -item.Quantity, message);
+            }
+        }
+
+        /// <summary>
+        /// Reveres the booked inventory by specified order
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="message">Message for the stock quantity history</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task ReverseBookedInventoryAsync(Order order, string message)
+        {
+            foreach (var shipment in await _shipmentService.GetShipmentsByOrderIdAsync(order.Id))
+            {
+                foreach (var shipmentItem in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+                {
+                    var product = await _orderService.GetProductByOrderItemIdAsync(shipmentItem.OrderItemId);
+                    if (product is null)
+                        continue;
+
+                    await _productService.ReverseBookedInventoryAsync(product, shipmentItem, message);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the stock by specified order
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="message">Message for the stock quantity history</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task ReturnOrderStockAsync(Order order, string message)
+        {
+            foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
+            {
+                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                if (product is null)
+                    continue;
+
+                await _productService.AdjustInventoryAsync(product, orderItem.Quantity, orderItem.AttributesXml, message);
+            }
+        }
+
+        /// <summary>
         /// Add order note
         /// </summary>
         /// <param name="order">Order</param>
@@ -880,7 +937,7 @@ namespace Nop.Services.Orders
             var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
                 (await _pdfService.PrintOrderToPdfAsync(order)) : null;
             var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
-                "order.pdf" : null;
+                (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
             var orderPlacedCustomerNotificationQueuedEmailIds = await _workflowMessageService
                 .SendOrderPlacedCustomerNotificationAsync(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName);
             if (orderPlacedCustomerNotificationQueuedEmailIds.Any())
@@ -970,6 +1027,7 @@ namespace Nop.Services.Orders
                     //just delete the upcoming entry (points were not granted yet)
                     await _rewardPointService.DeleteRewardPointsHistoryEntryAsync(rewardPointsHistoryEntry);
                 }
+                else
                 {
                     var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
                     
@@ -1085,7 +1143,7 @@ namespace Nop.Services.Orders
                 var orderCompletedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                     await _pdfService.PrintOrderToPdfAsync(order) : null;
                 var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
-                    "order.pdf" : null;
+                    (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
                 var orderCompletedCustomerNotificationQueuedEmailIds = await _workflowMessageService
                     .SendOrderCompletedCustomerNotificationAsync(order, order.CustomerLanguageId, orderCompletedAttachmentFilePath,
                     orderCompletedAttachmentFileName);
@@ -1141,7 +1199,7 @@ namespace Nop.Services.Orders
                 var orderPaidAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
                     await _pdfService.PrintOrderToPdfAsync(order) : null;
                 var orderPaidAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
-                    "order.pdf" : null;
+                    (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
                 var orderPaidCustomerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderPaidCustomerNotificationAsync(order, order.CustomerLanguageId,
                     orderPaidAttachmentFilePath, orderPaidAttachmentFileName);
 
@@ -1310,18 +1368,12 @@ namespace Nop.Services.Orders
                 //prices
                 var scUnitPrice = (await _shoppingCartService.GetUnitPriceAsync(sc, true)).unitPrice;
                 var (scSubTotal, discountAmount, scDiscounts, _) = await _shoppingCartService.GetSubTotalAsync(sc, true);
-                var scUnitPriceInclTax =
-                    await _taxService.GetProductPriceAsync(product, scUnitPrice, true, details.Customer);
-                var scUnitPriceExclTax =
-                    await _taxService.GetProductPriceAsync(product, scUnitPrice, false, details.Customer);
-                var scSubTotalInclTax =
-                    await _taxService.GetProductPriceAsync(product, scSubTotal, true, details.Customer);
-                var scSubTotalExclTax =
-                    await _taxService.GetProductPriceAsync(product, scSubTotal, false, details.Customer);
-                var discountAmountInclTax =
-                    await _taxService.GetProductPriceAsync(product, discountAmount, true, details.Customer);
-                var discountAmountExclTax =
-                    await _taxService.GetProductPriceAsync(product, discountAmount, false, details.Customer);
+                var scUnitPriceInclTax = await _taxService.GetProductPriceAsync(product, scUnitPrice, true, details.Customer);
+                var scUnitPriceExclTax = await _taxService.GetProductPriceAsync(product, scUnitPrice, false, details.Customer);
+                var scSubTotalInclTax = await _taxService.GetProductPriceAsync(product, scSubTotal, true, details.Customer);
+                var scSubTotalExclTax = await _taxService.GetProductPriceAsync(product, scSubTotal, false, details.Customer);
+                var discountAmountInclTax = await _taxService.GetProductPriceAsync(product, discountAmount, true, details.Customer);
+                var discountAmountExclTax = await _taxService.GetProductPriceAsync(product, discountAmount, false, details.Customer);
                 foreach (var disc in scDiscounts)
                     if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
                         details.AppliedDiscounts.Add(disc);
@@ -1790,27 +1842,10 @@ namespace Nop.Services.Orders
 
                 //Adjust inventory for already shipped shipments
                 //only products with "use multiple warehouses"
-                foreach (var shipment in await _shipmentService.GetShipmentsByOrderIdAsync(order.Id))
-                {
-                    foreach (var shipmentItem in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                    {
-                        var product = await _orderService.GetProductByOrderItemIdAsync(shipmentItem.OrderItemId);
-                        if (product == null)
-                            continue;
-
-                        await _productService.ReverseBookedInventoryAsync(product, shipmentItem,
-                            string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
-                    }
-                }
+                await ReverseBookedInventoryAsync(order, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
 
                 //Adjust inventory
-                foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
-                {
-                    var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
-
-                    await _productService.AdjustInventoryAsync(product, orderItem.Quantity, orderItem.AttributesXml,
-                        string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
-                }
+                await ReturnOrderStockAsync(order, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
             }
 
             //deactivate gift cards
@@ -2184,6 +2219,9 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
+            if (order.PickupInStore)
+                throw new Exception("This shipment is can't be shipped. The order has been placed with 'pickup in store' shipping option.");
+
             if (shipment.ShippedDateUtc.HasValue)
                 throw new Exception("This shipment is already shipped");
 
@@ -2191,16 +2229,7 @@ namespace Nop.Services.Orders
             await _shipmentService.UpdateShipmentAsync(shipment);
 
             //process products with "Multiple warehouse" support enabled
-            foreach (var item in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-            {
-                var product = await _orderService.GetProductByOrderItemIdAsync(item.OrderItemId);
-
-                if (product is null)
-                    continue;
-
-                await _productService.BookReservedInventoryAsync(product, item.WarehouseId, -item.Quantity,
-                    string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Ship"), shipment.OrderId));
-            }
+            await BookReservedInventoryAsync(shipment, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Ship"), shipment.OrderId));
 
             //check whether we have more items to ship
             if (await _orderService.HasItemsToAddToShipmentAsync(order) || await _orderService.HasItemsToShipAsync(order))
@@ -2228,6 +2257,42 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Marks a shipment as ready for pickup
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <param name="notifyCustomer">True to notify customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task ReadyForPickupAsync(Shipment shipment, bool notifyCustomer)
+        {
+            if (shipment == null)
+                throw new ArgumentNullException(nameof(shipment));
+
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
+            if (order == null)
+                throw new Exception("Order cannot be loaded");
+
+            if (!order.PickupInStore)
+                throw new Exception("This shipment is can't be marked as 'ready for pickup'. The order has been placed without 'pickup in store' shipping option.");
+
+            if (shipment.ReadyForPickupDateUtc.HasValue)
+                throw new Exception("This shipment is already marked as 'ready for pickup'");
+
+            shipment.ReadyForPickupDateUtc = DateTime.UtcNow;
+            await _shipmentService.UpdateShipmentAsync(shipment);
+
+            await AddOrderNoteAsync(order, $"Shipment# {shipment.Id} has been ready for pickup");
+
+            if (notifyCustomer)
+            {
+                var queuedEmailIds = await _workflowMessageService.SendShipmentReadyForPickupNotificationAsync(shipment, order.CustomerLanguageId);
+                if (queuedEmailIds.Any())
+                    await AddOrderNoteAsync(order, $"\"Ready for pickup\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", queuedEmailIds)}.");
+            }
+
+            await _eventPublisher.PublishShipmentReadyForPickupAsync(shipment);
+        }
+
+        /// <summary>
         /// Marks a shipment as delivered
         /// </summary>
         /// <param name="shipment">Shipment</param>
@@ -2242,8 +2307,11 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            if (!shipment.ShippedDateUtc.HasValue)
+            if (!order.PickupInStore && !shipment.ShippedDateUtc.HasValue)
                 throw new Exception("This shipment is not shipped yet");
+
+            if (order.PickupInStore && !shipment.ReadyForPickupDateUtc.HasValue)
+                throw new Exception("This shipment is not yet ready for pickup");
 
             if (shipment.DeliveryDateUtc.HasValue)
                 throw new Exception("This shipment is already delivered");
@@ -2251,12 +2319,24 @@ namespace Nop.Services.Orders
             shipment.DeliveryDateUtc = DateTime.UtcNow;
             await _shipmentService.UpdateShipmentAsync(shipment);
 
-            if (!await _orderService.HasItemsToAddToShipmentAsync(order) && !await _orderService.HasItemsToShipAsync(order) && !await _orderService.HasItemsToDeliverAsync(order))
+            if (!await _orderService.HasItemsToAddToShipmentAsync(order) && 
+                   !await _orderService.HasItemsToShipAsync(order) && 
+                      !await _orderService.HasItemsToReadyForPickupAsync(order) && 
+                         !await _orderService.HasItemsToDeliverAsync(order))
+            {
                 order.ShippingStatusId = (int)ShippingStatus.Delivered;
-            await _orderService.UpdateOrderAsync(order);
+                await _orderService.UpdateOrderAsync(order);
+            }
 
             //add a note
             await AddOrderNoteAsync(order, $"Shipment# {shipment.Id} has been delivered");
+
+            if (order.PickupInStore)
+            {
+                // Shipment has been collected by customer.
+                // We must process products with "Multiple warehouse" support enabled.
+                await BookReservedInventoryAsync(shipment, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.ReadyForPickupByCustomer"), shipment.OrderId));
+            }
 
             if (notifyCustomer)
             {
@@ -2323,27 +2403,10 @@ namespace Nop.Services.Orders
 
             //Adjust inventory for already shipped shipments
             //only products with "use multiple warehouses"
-            foreach (var shipment in await _shipmentService.GetShipmentsByOrderIdAsync(order.Id))
-            {
-                foreach (var shipmentItem in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                {
-                    var product = await _orderService.GetProductByOrderItemIdAsync(shipmentItem.OrderItemId);
+            await ReverseBookedInventoryAsync(order, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
 
-                    if (product is null)
-                        continue;
-
-                    await _productService.ReverseBookedInventoryAsync(product, shipmentItem,
-                        string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
-                }
-            }
             //Adjust inventory
-            foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
-            {
-                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
-
-                await _productService.AdjustInventoryAsync(product, orderItem.Quantity, orderItem.AttributesXml,
-                    string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
-            }
+            await ReturnOrderStockAsync(order, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
 
             await _eventPublisher.PublishAsync(new OrderCancelledEvent(order));
         }

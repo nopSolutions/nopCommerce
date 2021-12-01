@@ -540,10 +540,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             var dirPermissionsOk = true;
-            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
+            var dirsToCheck = _fileProvider.GetDirectoriesWrite();
             foreach (var dir in dirsToCheck)
             {
-                if (FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
+                if (_fileProvider.CheckPermissions(dir, false, true, true, false))
                     continue;
 
                 models.Add(new SystemWarningModel
@@ -565,10 +565,10 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             var filePermissionsOk = true;
-            var filesToCheck = FilePermissionHelper.GetFilesWrite();
+            var filesToCheck = _fileProvider.GetFilesWrite();
             foreach (var file in filesToCheck)
             {
-                if (FilePermissionHelper.CheckPermissions(file, false, true, true, true))
+                if (_fileProvider.CheckPermissions(file, false, true, true, true))
                     continue;
 
                 models.Add(new SystemWarningModel

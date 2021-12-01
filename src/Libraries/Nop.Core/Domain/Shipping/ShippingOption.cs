@@ -34,5 +34,10 @@
         /// Gets or sets a value indicating if it's pickup in store shipping option
         /// </summary>
         public bool IsPickupInStore { get; set; }
+
+        /// <summary>
+        /// Gets or sets a display order
+        /// </summary>
+        public int? DisplayOrder { get; set; }
     }
 }
