@@ -13,6 +13,12 @@ namespace Nop.Core.Configuration
     /// </summary>
     public partial class AppSettingsHelper
     {
+        #region Fields
+
+        private static Dictionary<string, int> _configurationOrder;
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -26,6 +32,9 @@ namespace Nop.Core.Configuration
         {
             if (configurations is null)
                 throw new ArgumentNullException(nameof(configurations));
+
+            if (_configurationOrder is null)
+                _configurationOrder = configurations.ToDictionary(config => config.Name, config => config.GetOrder());
 
             //create app settings
             var appSettings = Singleton<AppSettings>.Instance ?? new AppSettings();
@@ -48,9 +57,9 @@ namespace Nop.Core.Configuration
 
             //sort configurations for display by order (e.g. data configuration with 0 will be the first)
             appSettings.Configuration = configuration
-                .SelectMany(outConfig => configurations.Where(inConfig => inConfig.Name == outConfig.Key).DefaultIfEmpty(),
+                .SelectMany(outConfig => _configurationOrder.Where(inConfig => inConfig.Key == outConfig.Key).DefaultIfEmpty(),
                     (outConfig, inConfig) => new { OutConfig = outConfig, InConfig = inConfig })
-                .OrderBy(config => config.InConfig?.GetOrder() ?? int.MaxValue)
+                .OrderBy(config => config.InConfig.Value)
                 .Select(config => config.OutConfig)
                 .ToDictionary(config => config.Key, config => config.Value);
 
