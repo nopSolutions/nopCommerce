@@ -59,6 +59,12 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// </summary>
         public int? RequestTimeout { get; set; }
 
+        /// <summary>
+        /// Gets or sets a minimum value that can be considered a real discount, and not a rounding error in calculations, 
+        /// for example, if you are sure that the store will not have discounts less than a $1, set here 1.00
+        /// </summary>
+        public decimal MinDiscountAmount { get; set; }
+
         #region Advanced settings
 
         /// <summary>
