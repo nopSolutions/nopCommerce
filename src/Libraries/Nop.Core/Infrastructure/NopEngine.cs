@@ -36,10 +36,10 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Run startup tasks
         /// </summary>
-        /// <param name="typeFinder">Type finder</param>
-        protected virtual void RunStartupTasks(ITypeFinder typeFinder)
+        protected virtual void RunStartupTasks()
         {
             //find startup tasks provided by other assemblies
+            var typeFinder = Singleton<ITypeFinder>.Instance;
             var startupTasks = typeFinder.FindClassesOfType<IStartupTask>();
 
             //create and sort instances of startup tasks
@@ -57,11 +57,10 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Register and configure AutoMapper
         /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        /// <param name="typeFinder">Type finder</param>
-        protected virtual void AddAutoMapper(IServiceCollection services, ITypeFinder typeFinder)
+        protected virtual void AddAutoMapper()
         {
             //find mapper configurations provided by other assemblies
+            var typeFinder = Singleton<ITypeFinder>.Instance;
             var mapperConfigurations = typeFinder.FindClassesOfType<IOrderedMapperProfile>();
 
             //create and sort instances of mapper configurations
@@ -90,8 +89,8 @@ namespace Nop.Core.Infrastructure
                 return assembly;
 
             //get assembly from TypeFinder
-            var tf = Singleton<ITypeFinder>.Instance;
-            assembly = tf?.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
+            var typeFinder = Singleton<ITypeFinder>.Instance;
+            assembly = typeFinder?.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
             return assembly;
         }
 
@@ -106,16 +105,11 @@ namespace Nop.Core.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            var typeFinder = new WebAppTypeFinder();
-
             //register engine
             services.AddSingleton<IEngine>(this);
 
-            //register type finder
-            services.AddSingleton<ITypeFinder>(typeFinder);
-            Singleton<ITypeFinder>.Instance = typeFinder;
-
             //find startup configurations provided by other assemblies
+            var typeFinder = Singleton<ITypeFinder>.Instance;
             var startupConfigurations = typeFinder.FindClassesOfType<INopStartup>();
 
             //create and sort instances of startup configurations
@@ -127,13 +121,13 @@ namespace Nop.Core.Infrastructure
             foreach (var instance in instances)
                 instance.ConfigureServices(services, configuration);
 
-            //register mapper configurations
-            AddAutoMapper(services, typeFinder);
-
             services.AddSingleton(services);
 
+            //register mapper configurations
+            AddAutoMapper();
+
             //run startup tasks
-            RunStartupTasks(typeFinder);
+            RunStartupTasks();
 
             //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;

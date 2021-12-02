@@ -25,7 +25,8 @@ namespace Nop.Data
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            var mAssemblies = new AppDomainTypeFinder().FindClassesOfType<MigrationBase>()
+            var typeFinder = Singleton<ITypeFinder>.Instance;
+            var mAssemblies = typeFinder.FindClassesOfType<MigrationBase>()
                 .Select(t => t.Assembly)
                 .Where(assembly => !assembly.FullName.Contains("FluentMigrator.Runner"))
                 .Distinct()

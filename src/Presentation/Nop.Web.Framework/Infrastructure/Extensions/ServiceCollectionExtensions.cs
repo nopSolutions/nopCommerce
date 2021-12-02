@@ -66,8 +66,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             builder.Configuration.GetSection(nameof(PluginConfig)).Bind(pluginConfig, options => options.BindNonPublicProperties = true);
             mvcCoreBuilder.PartManager.InitializePlugins(pluginConfig);
 
-            //add configuration parameters
+            //register type finder
             var typeFinder = new WebAppTypeFinder();
+            Singleton<ITypeFinder>.Instance = typeFinder;
+            services.AddSingleton<ITypeFinder>(typeFinder);
+
+            //add configuration parameters
             var configurations = typeFinder
                 .FindClassesOfType<IConfig>()
                 .Select(configType => (IConfig)Activator.CreateInstance(configType))
@@ -243,7 +247,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             });
 
             //register and configure external authentication plugins now
-            var typeFinder = new WebAppTypeFinder();
+            var typeFinder = Singleton<ITypeFinder>.Instance;
             var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
             var externalAuthInstances = externalAuthConfigurations
                 .Select(x => (IExternalAuthenticationRegistrar)Activator.CreateInstance(x));

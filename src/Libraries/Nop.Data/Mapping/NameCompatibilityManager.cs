@@ -32,8 +32,7 @@ namespace Nop.Data.Mapping
                 if (_isInitialized)
                     return;
 
-                var typeFinder = new AppDomainTypeFinder();
-
+                var typeFinder = Singleton<ITypeFinder>.Instance;
                 var compatibilities = typeFinder.FindClassesOfType<INameCompatibility>()
                     ?.Select(type => EngineContext.Current.ResolveUnregistered(type) as INameCompatibility).ToList() ?? new List<INameCompatibility>();
 

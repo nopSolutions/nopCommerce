@@ -113,12 +113,12 @@ namespace Nop.Data.Extensions
         /// <param name="type">Type of entity</param>
         public static void RetrieveTableExpressions(this CreateTableExpressionBuilder builder, Type type)
         {
-            var tp = Singleton<ITypeFinder>.Instance
+            var typeFinder = Singleton<ITypeFinder>.Instance
                 .FindClassesOfType(typeof(IEntityBuilder))
                 .FirstOrDefault(t => t.BaseType?.GetGenericArguments().Contains(type) ?? false);
 
-            if (tp != null)
-                (EngineContext.Current.ResolveUnregistered(tp) as IEntityBuilder)?.MapEntity(builder);
+            if (typeFinder != null)
+                (EngineContext.Current.ResolveUnregistered(typeFinder) as IEntityBuilder)?.MapEntity(builder);
 
             var expression = builder.Expression;
             if (!expression.Columns.Any(c => c.IsPrimaryKey))
