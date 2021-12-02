@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -445,7 +446,8 @@ namespace Nop.Plugin.Payments.PayPalCommerce
                 StyleLabel = "paypal",
                 DisplayButtonsOnProductDetails = true,
                 DisplayButtonsOnShoppingCart = true,
-                RequestTimeout = PayPalCommerceDefaults.RequestTimeout
+                RequestTimeout = PayPalCommerceDefaults.RequestTimeout,
+                MinDiscountAmount = 0.5M
             });
 
             if (!_paymentSettings.ActivePaymentMethodSystemNames.Contains(PayPalCommerceDefaults.SystemName))
@@ -552,6 +554,28 @@ namespace Nop.Plugin.Payments.PayPalCommerce
             await _localizationService.DeleteLocaleResourcesAsync("Plugins.Payments.PayPalCommerce");
 
             await base.UninstallAsync();
+        }
+
+        /// <summary>
+        /// Update plugin
+        /// </summary>
+        /// <param name="currentVersion">Current version of plugin</param>
+        /// <param name="targetVersion">New version of plugin</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task UpdateAsync(string currentVersion, string targetVersion)
+        {
+            var current = decimal.TryParse(currentVersion, NumberStyles.Any, CultureInfo.InvariantCulture, out var value) ? value : 1.00M;
+
+            //new setting added in 1.09
+            if (current < 1.09M)
+            {
+                var settings = await _settingService.LoadSettingAsync<PayPalCommerceSettings>();
+                if (!await _settingService.SettingExistsAsync(settings, setting => setting.MinDiscountAmount))
+                {
+                    settings.MinDiscountAmount = 0.5M;
+                    await _settingService.SaveSettingAsync(settings);
+                }
+            }
         }
 
         /// <summary>
