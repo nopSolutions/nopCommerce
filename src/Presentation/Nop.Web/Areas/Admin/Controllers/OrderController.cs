@@ -11,6 +11,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -45,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
         private readonly IEncryptionService _encryptionService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IExportManager _exportManager;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
@@ -78,6 +80,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
             IEncryptionService encryptionService,
+            IEventPublisher eventPublisher,
             IExportManager exportManager,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
@@ -107,6 +110,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _dateTimeHelper = dateTimeHelper;
             _downloadService = downloadService;
             _encryptionService = encryptionService;
+            _eventPublisher = eventPublisher;
             _exportManager = exportManager;
             _giftCardService = giftCardService;
             _localizationService = localizationService;
@@ -2095,6 +2099,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
+
+                await _eventPublisher.PublishAsync(new ShipmentCreatedEvent(shipment));
 
                 var canShip = !order.PickupInStore && model.CanShip;
                 if (canShip)
