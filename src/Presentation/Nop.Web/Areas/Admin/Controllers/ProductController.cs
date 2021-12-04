@@ -835,6 +835,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (currentVendor != null && model.ShowOnHomepage)
                     model.ShowOnHomepage = false;
 
+                //cannot publish 
+                if (await _workContext.GetCurrentVendorAsync() != null && model.Published && !await _permissionService.AuthorizeAsync(StandardPermissionProvider.PublishProducts))
+                    model.Published = false;
+
                 //product
                 var product = model.ToEntity<Product>();
                 product.CreatedOnUtc = DateTime.UtcNow;
@@ -948,6 +952,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //vendors cannot edit "Show on home page" property
                 if (currentVendor != null && model.ShowOnHomepage != product.ShowOnHomepage)
                     model.ShowOnHomepage = product.ShowOnHomepage;
+
+                //cannot publish after edit
+                if (await _workContext.GetCurrentVendorAsync() != null && model.Published && !await _permissionService.AuthorizeAsync(StandardPermissionProvider.PublishProducts))
+                    model.Published = false;
 
                 //some previously used values
                 var prevTotalStockQuantity = await _productService.GetTotalStockQuantityAsync(product);
