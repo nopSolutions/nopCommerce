@@ -84,6 +84,14 @@ namespace Nop.Plugin.Tax.Avalara
         public static string EntityUseCodeAttribute => "AvalaraEntityUseCode";
 
         /// <summary>
+        /// Gets the key for caching tax rate by zip code
+        /// </summary>
+        /// <remarks>
+        /// {0} - Zip postal code
+        /// </remarks>
+        public static CacheKey TaxRateByZipCacheKey => new("Nop.avalara.taxratebyzip.{0}");
+
+        /// <summary>
         /// Gets the key for caching tax rate
         /// </summary>
         /// <remarks>
@@ -114,6 +122,17 @@ namespace Nop.Plugin.Tax.Avalara
         /// Gets the key for caching Avalara system entity use codes
         /// </summary>
         public static CacheKey EntityUseCodesCacheKey => new("Nop.avalara.entityusecodes");
+
+        /// <summary>
+        /// Gets the path to file that contains tax rates
+        /// </summary>
+        public static string TaxRatesFilePath => "wwwroot/files/taxrates.csv";
+
+        /// <summary>
+        /// Gets the name, type and period in days of a schedule task to download tax rates
+        /// </summary>
+        public static (string Name, string Type, int Days) DownloadTaxRatesTask =>
+            ($"Download tax rates ({SystemName})", "Nop.Plugin.Tax.Avalara.Services.DownloadTaxRatesTask", 7);
 
         /// <summary>
         /// Gets the name of the view component to display entity use code field

@@ -110,6 +110,15 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-md-3">
+                        <nop-label asp-for="UseTaxRateTables" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="UseTaxRateTables" />
+                        <span asp-validation-for="UseTaxRateTables"></span>
+                    </div>
+                </div>
+                <div class="form-group row" id="pnlGetTaxRateByAddressOnly">
+                    <div class="col-md-3">
                         <nop-label asp-for="GetTaxRateByAddressOnly" />
                     </div>
                     <div class="col-md-9">
@@ -117,6 +126,21 @@
                         <span asp-validation-for="GetTaxRateByAddressOnly"></span>
                     </div>
                 </div>
+                <script>
+	                $(document).ready(function () {
+                        $('#@Html.IdFor(model => model.UseTaxRateTables)').click(toggleUseTaxRateTables);
+                        toggleUseTaxRateTables();
+	                });
+
+                    function toggleUseTaxRateTables() {
+                        if ($('#@Html.IdFor(model => model.UseTaxRateTables)').is(':checked')) {
+                            $('#pnlGetTaxRateByAddressOnly').hideElement();
+                        }
+                        else {
+                            $('#pnlGetTaxRateByAddressOnly').showElement();
+                        }
+                    }
+                </script>
             </div>
         </div>
 

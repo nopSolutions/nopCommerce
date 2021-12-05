@@ -91,7 +91,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalara.AvaTax" Version="21.6.0" />
+    <PackageReference Include="Avalara.AvaTax" Version="21.10.0" />
   </ItemGroup>
 
   <ItemGroup>
