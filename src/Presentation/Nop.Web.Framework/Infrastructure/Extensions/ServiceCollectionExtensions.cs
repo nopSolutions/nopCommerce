@@ -32,7 +32,6 @@ using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.Validators;
-using NUglify.JavaScript;
 using StackExchange.Profiling.Storage;
 using WebMarkupMin.AspNetCore6;
 using WebMarkupMin.NUglify;
