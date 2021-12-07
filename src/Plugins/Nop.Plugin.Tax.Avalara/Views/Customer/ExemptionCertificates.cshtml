@@ -4,14 +4,14 @@
     Layout = "_ColumnsTwo";
     Html.AddTitleParts(T("Plugins.Tax.Avalara.ExemptionCertificates").Text);
     Html.AppendPageCssClassParts("html-account-page");
+}
 
-    if (!string.IsNullOrEmpty(Model.Token))
-    {
-        var scriptUrl = avalaraTaxSettings.UseSandbox ? AvalaraTaxDefaults.CertificatesSandboxScriptUrl : AvalaraTaxDefaults.CertificatesScriptUrl;
-        Html.AddScriptParts(scriptUrl, excludeFromBundle: true);
-    }
+<link rel="stylesheet" href="~/Plugins/Tax.Avalara/Content/css/avalara.css" />
 
-    Html.AddCssFileParts("~/Plugins/Tax.Avalara/Content/css/avalara.css");
+@if (!string.IsNullOrEmpty(Model.Token))
+{    
+    var scriptUrl = avalaraTaxSettings.UseSandbox ? AvalaraTaxDefaults.CertificatesSandboxScriptUrl : AvalaraTaxDefaults.CertificatesScriptUrl;
+    <script asp-location="Head" asp-exclude-from-bundle="true" src="@scriptUrl"></script>
 }
 
 @section left

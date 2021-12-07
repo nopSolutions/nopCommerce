@@ -149,7 +149,18 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost"] = "Shipping Cost",
                 //#5138
                 ["PDFInvoice.FileName"] = "order",
-                
+
+                //#5834
+                ["Admin.Configuration.AppSettings.WebOptimizer"] = "Bundling & minimization",
+                ["Admin.Configuration.AppSettings.WebOptimizer.EnableDiskCache"] = "Enable disk cache",
+                ["Admin.Configuration.AppSettings.WebOptimizer.EnableDiskCache.Hint"] = "Check to store assets on disk.",
+                ["Admin.Configuration.AppSettings.WebOptimizer.CacheDirectory"] = "Cache directory",
+                ["Admin.Configuration.AppSettings.WebOptimizer.CacheDirectory.Hint"] = "Path of the directory where assets will be stored if disk cache is enabled.",
+                ["Admin.Configuration.AppSettings.WebOptimizer.JavaScriptBundleSuffix"] = "Suffix of JavaScript bundle files",
+                ["Admin.Configuration.AppSettings.WebOptimizer.JavaScriptBundleSuffix.Hint"] = "Enter the key that will be put to the end of the bundle name.",
+                ["Admin.Configuration.AppSettings.WebOptimizer.CssBundleSuffix"] = "Suffix of style bundle files",
+                ["Admin.Configuration.AppSettings.WebOptimizer.CssBundleSuffix.Hint"] = "Enter the key that will be put to the end of the bundle name.",
+
                 //#4905
                 ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate"] = "Maximum redeemed rate",
                 ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate.Hint"] = "Limit the maximum order total that could be paid by reward points (in percent). For example, if set to 0.6, then only 60% of order total could be paid using reward points, but not more than the 'Maximum reward points to use per order'. Set to 0 if you do not want to use this setting.",
@@ -159,7 +170,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             // rename locales
             var localesToRename = new[]
             {
-                new { Name = "", NewName = "" }
+                //#5834
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableJsBundling", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling.Hint" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableCssBundling", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling.Hint" }
             };
 
             foreach (var lang in languages)

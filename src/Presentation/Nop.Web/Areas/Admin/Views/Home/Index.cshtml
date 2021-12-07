@@ -2,8 +2,6 @@
 @inject IPermissionService permissionService
 @using Nop.Services.Security
 @{
-    Html.AppendCssFileParts("~/lib_npm/ionicons/css/ionicons.min.css");
-
     //page title
     ViewBag.PageTitle = T("Admin.Dashboard").Text;
 
@@ -19,6 +17,8 @@
      //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Dashboard");
 }
+
+<link rel="stylesheet" href="~/lib_npm/ionicons/css/ionicons.min.css" />
 
 <div class="content-header">
     <h1>

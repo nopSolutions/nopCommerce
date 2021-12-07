@@ -25,12 +25,14 @@ using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
 using Nop.Services.Security;
+using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.ModelBinding.Binders;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.Validators;
+using NUglify.JavaScript;
 using StackExchange.Profiling.Storage;
 using WebMarkupMin.AspNetCore6;
 using WebMarkupMin.NUglify;
@@ -386,6 +388,32 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     settings.RenderEmptyTagsWithSpace = true;
                     settings.CollapseTagsWithoutContent = true;
                 });
+        }
+
+        /// <summary>
+        /// Adds WebOptimizer to the specified <see cref="IServiceCollection"/> and enables CSS and JavaScript minification.
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopWebOptimizer(this IServiceCollection services)
+        {
+            var appSettings = Singleton<AppSettings>.Instance;
+            var cssBundling = appSettings.Get<WebOptimizerConfig>().EnableCssBundling;
+            var jsBundling = appSettings.Get<WebOptimizerConfig>().EnableJavaScriptBundling;
+
+            //add minification & bundling
+            var cssSettings = new CssBundlingSettings
+            {
+                FingerprintUrls = false, 
+                Minify = cssBundling
+            };
+
+            var codeSettings = new CodeBundlingSettings
+            {
+                Minify = jsBundling,
+                AdjustRelativePaths = false //disable this feature because it breaks function names that have "Url(" at the end
+            };
+
+            services.AddWebOptimizer(null, cssSettings, codeSettings);
         }
 
         /// <summary>

@@ -7,9 +7,6 @@
 @{
     Layout = "_ColumnsOne";
 
-    //scripts
-    Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.billingaddress.js");
-
     var storeLocation = webHelper.GetStoreLocation();
 
     //title
@@ -18,6 +15,9 @@
     Html.AppendPageCssClassParts("html-checkout-page");
     Html.AppendPageCssClassParts("html-billing-address-page");
 }
+
+<script src="~/js/public.billingaddress.js" asp-location="Footer"></script>
+
 <div class="page checkout-page billing-address-page">
     @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Address })
     <div class="page-title">

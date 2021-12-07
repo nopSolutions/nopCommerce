@@ -94,11 +94,11 @@
                                 }
                             })
 
-                            <script>
-                        function renderColumnCustomerInfo(data, type, row, meta) {
-                            var textRenderer = $.fn.dataTable.render.text().display;
-                            return '<a href="@Url.Content("~/Admin/Customer/Edit/")' + row.CustomerId + '">' + textRenderer(row.CustomerEmail) + '</a>';
-                        }
+                            <script asp-location="Footer">
+                                function renderColumnCustomerInfo(data, type, row, meta) {
+                                    var textRenderer = $.fn.dataTable.render.text().display;
+                                    return '<a href="@Url.Content("~/Admin/Customer/Edit/")' + row.CustomerId + '">' + textRenderer(row.CustomerEmail) + '</a>';
+                                }
                             </script>
                         </div>
                     </div>

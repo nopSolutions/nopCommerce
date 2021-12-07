@@ -7,6 +7,10 @@ namespace Nop.Web.Framework.UI
     public enum ResourceLocation
     {
         /// <summary>
+        /// Not set
+        /// </summary>
+        None,
+        /// <summary>
         /// Header
         /// </summary>
         Head,

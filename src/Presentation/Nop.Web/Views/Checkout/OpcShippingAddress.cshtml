@@ -1,12 +1,12 @@
 ﻿@model CheckoutShippingAddressModel
-@{
-    Context.Items["nop.IgnoreScriptTagLocation"] = true;
-}
 
 <div class="checkout-data">
     @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
     {
-        @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel)
+        @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel, new ViewDataDictionary(ViewData)
+                                {
+                                    { "scriptLocation", ResourceLocation.None }
+                                })
         <script>
             $(document).ready(function () {
                 $(document).unbind('checkout_toggle_pickup_in_store');

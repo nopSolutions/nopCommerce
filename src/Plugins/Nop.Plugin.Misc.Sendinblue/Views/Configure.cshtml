@@ -5,8 +5,9 @@
 
 @{
     Layout = "_ConfigurePlugin";
-    Html.AddCssFileParts("~/Plugins/Misc.Sendinblue/Content/styles.css", excludeFromBundle: true);
 }
+
+<link rel="stylesheet" href="~/Plugins/Misc.Sendinblue/Content/styles.css" />
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
 

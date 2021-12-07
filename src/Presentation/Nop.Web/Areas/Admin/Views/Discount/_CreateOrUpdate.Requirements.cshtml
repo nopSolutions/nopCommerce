@@ -1,8 +1,6 @@
 ﻿@model DiscountModel
-@{
-    Html.AddScriptParts("~/lib_npm/jsrender/jsrender.min.js");
-}
 
+<script src="~/lib_npm/jsrender/jsrender.min.js" asp-location="Head"></script>
 <div class="card-body">
     <div class="cards-group">
         @if (Model.Id > 0)

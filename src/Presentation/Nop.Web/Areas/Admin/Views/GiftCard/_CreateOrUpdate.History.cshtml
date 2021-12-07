@@ -28,7 +28,7 @@
             }
         }
     })
-    <script>
+    <script asp-location="Footer">
         function renderColumnOrderNumber(data, type, row, meta) {
             var textRenderer = $.fn.dataTable.render.text().display;
             return '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")' + row.OrderId + '"><i class="far fa-eye"></i>' + textRenderer(row.CustomOrderNumber) + ' - @T("Admin.Common.View").Text</a>';

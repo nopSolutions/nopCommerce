@@ -398,6 +398,9 @@ namespace Nop.Tests
             services.AddSingleton<ITaskScheduler, TestTaskScheduler>();
             services.AddTransient<IScheduleTaskRunner, ScheduleTaskRunner>();
 
+            //WebOptimizer
+            services.AddWebOptimizer();
+
             //common factories
             services.AddTransient<IAclSupportedModelFactory, AclSupportedModelFactory>();
             services.AddTransient<IDiscountSupportedModelFactory, DiscountSupportedModelFactory>();

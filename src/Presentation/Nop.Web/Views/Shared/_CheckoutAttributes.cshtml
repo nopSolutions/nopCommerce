@@ -111,9 +111,9 @@
                                     download = await downloadService.GetDownloadByGuidAsync(new Guid(attribute.DefaultValue));
                                 }
 
-                                //register CSS and JS
-                                Html.AddCssFileParts("~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css");
-                                Html.AddScriptParts(ResourceLocation.Footer, "~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js");
+                                @* register CSS and JS *@
+                                <link rel="stylesheet" href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" />
+                                <script asp-exclude-from-bundle="true" src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js" asp-location="Footer"></script>
 
                                 //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                 var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
