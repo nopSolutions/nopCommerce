@@ -86,20 +86,21 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             // Retrieve the TagHelperOutput variation of the "src" attribute in case other TagHelpers in the
             // pipeline have touched the value. If the value is already encoded this ScriptTagHelper may
             // not function properly.
-            var srcAttribute = output.Attributes[SRC_ATTRIBUTE_NAME];
-
-            if (srcAttribute is null)
+            if (output.Attributes[SRC_ATTRIBUTE_NAME]?.Value is not string srcAttribute)
                 return;
 
-            Src = srcAttribute.Value as string;
+            var sourceFile = srcAttribute;
+            var pathBase = ViewContext.HttpContext?.Request?.PathBase.Value;
+            if (!string.IsNullOrEmpty(pathBase) && srcAttribute.StartsWith(pathBase))
+                sourceFile = srcAttribute[pathBase.Length..];
 
-            if (!_assetPipeline.TryGetAssetFromRoute(Src, out var asset))
+            if (!_assetPipeline.TryGetAssetFromRoute(sourceFile, out var asset))
             {
-                asset = _assetPipeline.AddFiles(MimeTypes.TextJavascript, Src).First();
+                asset = _assetPipeline.AddFiles(MimeTypes.TextJavascript, sourceFile).First();
             }
 
-            var hash = asset.GenerateCacheKey(ViewContext.HttpContext);
-            output.Attributes.SetAttribute(SRC_ATTRIBUTE_NAME, $"{asset.Route}?v={hash}");
+            Src = $"{srcAttribute}?v={asset.GenerateCacheKey(ViewContext.HttpContext)}";
+            output.Attributes.SetAttribute(SRC_ATTRIBUTE_NAME, Src);
         }
 
         private string GetBundleSuffix()

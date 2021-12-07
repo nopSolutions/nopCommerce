@@ -70,23 +70,24 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             // If there's no "src" attribute in output.Attributes this will noop.
             ProcessUrlAttribute(HREF_ATTRIBUTE_NAME, output);
 
-            // Retrieve the TagHelperOutput variation of the "src" attribute in case other TagHelpers in the
+            // Retrieve the TagHelperOutput variation of the "href" attribute in case other TagHelpers in the
             // pipeline have touched the value. If the value is already encoded this ScriptTagHelper may
             // not function properly.
-            var hrefAttribute = output.Attributes[HREF_ATTRIBUTE_NAME];
-
-            if (hrefAttribute is null)
+            if (output.Attributes[HREF_ATTRIBUTE_NAME]?.Value is not string hrefAttribute)
                 return;
 
-            var src = hrefAttribute.Value as string;
+            var sourceFile = hrefAttribute;
+            var pathBase = ViewContext.HttpContext?.Request?.PathBase.Value;
+            if (!string.IsNullOrEmpty(pathBase) && hrefAttribute.StartsWith(pathBase))
+                sourceFile = hrefAttribute[pathBase.Length..];
 
-            if (!_assetPipeline.TryGetAssetFromRoute(src, out var asset))
+            if (!_assetPipeline.TryGetAssetFromRoute(sourceFile, out var asset))
             {
-                asset = _assetPipeline.AddFiles(MimeTypes.TextCss, src).First();
+                asset = _assetPipeline.AddFiles(MimeTypes.TextCss, sourceFile).First();
             }
 
-            var hash = asset.GenerateCacheKey(ViewContext.HttpContext);
-            Href = $"{asset.Route}?v={hash}";
+            Href = $"{hrefAttribute}?v={asset.GenerateCacheKey(ViewContext.HttpContext)}";
+            output.Attributes.SetAttribute(HREF_ATTRIBUTE_NAME, Href);
         }
 
         private string GetBundleSuffix()
