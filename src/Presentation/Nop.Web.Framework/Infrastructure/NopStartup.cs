@@ -217,7 +217,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddSingleton<IEventPublisher, EventPublisher>();
             services.AddScoped<ISettingService, SettingService>();
             services.AddScoped<IBBCodeHelper, BBCodeHelper>();
-            services.AddScoped<INopHtmlHelper, NopHtmlHelper>();
+            services.AddScoped<IHtmlFormatter, HtmlFormatter>();
 
             //plugin managers
             services.AddScoped(typeof(IPluginManager<>), typeof(PluginManager<>));

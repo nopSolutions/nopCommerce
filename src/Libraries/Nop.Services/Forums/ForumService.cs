@@ -26,7 +26,7 @@ namespace Nop.Services.Forums
         private readonly ForumSettings _forumSettings;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly INopHtmlHelper _htmlHelper;
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Forum> _forumRepository;
         private readonly IRepository<ForumGroup> _forumGroupRepository;
@@ -48,7 +48,7 @@ namespace Nop.Services.Forums
         public ForumService(ForumSettings forumSettings,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
-            INopHtmlHelper htmlHelper,
+            IHtmlFormatter htmlFormatter,
             IRepository<Customer> customerRepository,
             IRepository<Forum> forumRepository,
             IRepository<ForumGroup> forumGroupRepository,
@@ -66,7 +66,7 @@ namespace Nop.Services.Forums
             _forumSettings = forumSettings;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
-            _htmlHelper = htmlHelper;
+            _htmlFormatter = htmlFormatter;
             _customerRepository = customerRepository;
             _forumRepository = forumRepository;
             _forumGroupRepository = forumGroupRepository;
@@ -1283,13 +1283,13 @@ namespace Nop.Services.Forums
             {
                 case EditorType.SimpleTextBox:
                     {
-                        text = _htmlHelper.FormatText(text, false, true, false, false, false, false);
+                        text = _htmlFormatter.FormatText(text, false, true, false, false, false, false);
                     }
 
                     break;
                 case EditorType.BBCodeEditor:
                     {
-                        text = _htmlHelper.FormatText(text, false, true, false, true, false, false);
+                        text = _htmlFormatter.FormatText(text, false, true, false, true, false, false);
                     }
 
                     break;
@@ -1338,7 +1338,7 @@ namespace Nop.Services.Forums
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = _htmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = _htmlFormatter.FormatText(text, false, true, false, false, false, false);
             return text;
         }
 
@@ -1354,7 +1354,7 @@ namespace Nop.Services.Forums
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = _htmlHelper.FormatText(text, false, true, false, true, false, false);
+            text = _htmlFormatter.FormatText(text, false, true, false, true, false, false);
 
             return text;
         }

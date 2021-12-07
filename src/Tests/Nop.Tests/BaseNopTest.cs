@@ -332,7 +332,7 @@ namespace Nop.Tests
             services.AddTransient<IThemeProvider, ThemeProvider>();
             services.AddTransient<IExternalAuthenticationService, ExternalAuthenticationService>();
             services.AddScoped<IBBCodeHelper, BBCodeHelper>();
-            services.AddScoped<INopHtmlHelper, NopHtmlHelper>();
+            services.AddScoped<IHtmlFormatter, HtmlFormatter>();
 
             //slug route transformer
             services.AddSingleton<IReviewTypeService, ReviewTypeService>();

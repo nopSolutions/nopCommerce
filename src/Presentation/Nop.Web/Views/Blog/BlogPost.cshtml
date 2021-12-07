@@ -1,4 +1,4 @@
-﻿@inject Nop.Services.Html.INopHtmlHelper htmlHelper
+﻿@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
 @model BlogPostModel
 @{
     Layout = "_ColumnsTwo";
@@ -134,7 +134,7 @@
                                         <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
                                     </div>
                                     <div class="comment-body">
-                                        @Html.Raw(htmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
+                                        @Html.Raw(htmlFormatter.FormatText(comment.CommentText, false, true, false, false, false, false))
                                     </div>
                                 </div>
                                 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogPostPageInsideComment, additionalData = comment })

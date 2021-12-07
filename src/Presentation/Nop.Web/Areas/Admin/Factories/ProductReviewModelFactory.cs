@@ -29,8 +29,8 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILocalizationService _localizationService;
-        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IProductService _productService;
         private readonly IReviewTypeService _reviewTypeService;
         private readonly IStoreService _storeService;
@@ -44,8 +44,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
+            IHtmlFormatter htmlFormatter,
             ILocalizationService localizationService,
-            INopHtmlHelper nopHtmlHelper,
             IProductService productService,
             IReviewTypeService reviewTypeService,
             IStoreService storeService,
@@ -55,8 +55,8 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory = baseAdminModelFactory;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
+            _htmlFormatter = htmlFormatter;
             _localizationService = localizationService;
-            _nopHtmlHelper = nopHtmlHelper;
             _productService = productService;
             _reviewTypeService = reviewTypeService;
             _storeService = storeService;
@@ -162,8 +162,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         ? customer.Email
                         : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
 
-                    productReviewModel.ReviewText = _nopHtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
-                    productReviewModel.ReplyText = _nopHtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
+                    productReviewModel.ReviewText = _htmlFormatter.FormatText(productReview.ReviewText, false, true, false, false, false, false);
+                    productReviewModel.ReplyText = _htmlFormatter.FormatText(productReview.ReplyText, false, true, false, false, false, false);
 
                     return productReviewModel;
                 });

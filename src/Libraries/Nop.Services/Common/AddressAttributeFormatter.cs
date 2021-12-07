@@ -17,8 +17,8 @@ namespace Nop.Services.Common
 
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILocalizationService _localizationService;
-        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -27,14 +27,14 @@ namespace Nop.Services.Common
 
         public AddressAttributeFormatter(IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
+            IHtmlFormatter htmlFormatter,
             ILocalizationService localizationService,
-            INopHtmlHelper nopHtmlHelper,
             IWorkContext workContext)
         {
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
+            _htmlFormatter = htmlFormatter;
             _localizationService = localizationService;
-            _nopHtmlHelper = nopHtmlHelper;
             _workContext = workContext;
         }
 
@@ -77,7 +77,7 @@ namespace Nop.Services.Common
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
-                            formattedAttribute = $"{attributeName}: {_nopHtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
+                            formattedAttribute = $"{attributeName}: {_htmlFormatter.FormatText(valueStr, false, true, false, false, false, false)}";
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)

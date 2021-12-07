@@ -34,9 +34,9 @@ namespace Nop.Web.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
         private readonly IVendorService _vendorService;
@@ -58,9 +58,9 @@ namespace Nop.Web.Controllers
             ICurrencyService currencyService,
             ICustomerActivityService customerActivityService,
             IGenericAttributeService genericAttributeService,
+            IHtmlFormatter htmlFormatter,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            INopHtmlHelper nopHtmlHelper,
             IStoreContext storeContext,
             IThemeContext themeContext,
             IVendorService vendorService,
@@ -78,9 +78,9 @@ namespace Nop.Web.Controllers
             _currencyService = currencyService;
             _customerActivityService = customerActivityService;
             _genericAttributeService = genericAttributeService;
+            _htmlFormatter = htmlFormatter;
             _languageService = languageService;
             _localizationService = localizationService;
-            _nopHtmlHelper = nopHtmlHelper;
             _storeContext = storeContext;
             _themeContext = themeContext;
             _vendorService = vendorService;
@@ -205,7 +205,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-                var body = _nopHtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+                var body = _htmlFormatter.FormatText(model.Enquiry, false, true, false, false, false, false);
 
                 await _workflowMessageService.SendContactUsMessageAsync((await _workContext.GetWorkingLanguageAsync()).Id,
                     model.Email.Trim(), model.FullName, subject, body);
@@ -261,7 +261,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-                var body = _nopHtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+                var body = _htmlFormatter.FormatText(model.Enquiry, false, true, false, false, false, false);
 
                 await _workflowMessageService.SendContactVendorMessageAsync(vendor, (await _workContext.GetWorkingLanguageAsync()).Id,
                     model.Email.Trim(), model.FullName, subject, body);

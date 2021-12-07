@@ -1,4 +1,4 @@
-﻿@inject Nop.Services.Html.INopHtmlHelper htmlHelper
+﻿@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
 @model NewsItemModel
 @{
     Layout = "_ColumnsTwo";
@@ -116,7 +116,7 @@
                                         <strong class="comment-text">@comment.CommentTitle</strong>
                                     </div>
                                     <div class="comment-body">
-                                        <p class="comment-text">@Html.Raw(htmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
+                                        <p class="comment-text">@Html.Raw(htmlFormatter.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
                                     </div>
                                 </div>
                                 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsItemPageInsideComment, additionalData = comment })
