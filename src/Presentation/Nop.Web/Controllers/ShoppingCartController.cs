@@ -429,7 +429,7 @@ namespace Nop.Web.Controllers
                 model = new EstimateShippingModel();
 
             var errors = new List<string>();
-            if (string.IsNullOrEmpty(model.ZipPostalCode))
+            if (string.IsNullOrEmpty(model.ZipPostalCode) && !_shippingSettings.EstimateShippingCityNameEnabled)
                 errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.ZipPostalCode.Required"));
 
             if (model.CountryId == null || model.CountryId == 0)
