@@ -9,17 +9,6 @@ namespace Nop.Plugin.Tax.Avalara
     /// </summary>
     public class AvalaraTaxSettings : ISettings
     {
-        #region Ctor
-
-        public AvalaraTaxSettings()
-        {
-            CustomerRoleIds = new List<int>();
-        }
-
-        #endregion
-
-        #region Properties
-
         #region Common
 
         /// <summary>
@@ -72,7 +61,12 @@ namespace Nop.Plugin.Tax.Avalara
         public TaxOriginAddressType TaxOriginAddressType { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to get the tax rate by address only. 
+        /// Gets or sets a value indicating whether to use tax rate tables based on the zip rate lookup to estimate 
+        /// </summary>
+        public bool UseTaxRateTables { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to get the tax rate by address only 
         /// </summary>
         public bool GetTaxRateByAddressOnly { get; set; }
 
@@ -108,7 +102,7 @@ namespace Nop.Plugin.Tax.Avalara
         /// <summary>
         /// Gets or sets the identifiers of customer roles for which certificates are available
         /// </summary>
-        public List<int> CustomerRoleIds { get; set; }
+        public List<int> CustomerRoleIds { get; set; } = new();
 
         /// <summary>
         /// Gets or sets a value indicating whether to disaply a preview of customer's new certificate before signing and submitting
@@ -124,8 +118,6 @@ namespace Nop.Plugin.Tax.Avalara
         /// Gets or sets a value indicating whether to disable the upload of prefilled documents, so that customers must generate a new copy of the certificate by entering their information
         /// </summary>
         public bool FillOnly { get; set; }
-
-        #endregion 
 
         #endregion
     }

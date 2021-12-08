@@ -31,10 +31,10 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly INewsService _newsService;
-        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
@@ -47,10 +47,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
+            IHtmlFormatter htmlFormatter,
             ILanguageService languageService,
             ILocalizationService localizationService,
             INewsService newsService,
-            INopHtmlHelper nopHtmlHelper,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStoreService storeService,
             IUrlRecordService urlRecordService)
@@ -59,10 +59,10 @@ namespace Nop.Web.Areas.Admin.Factories
             _customerService = customerService;
             _baseAdminModelFactory = baseAdminModelFactory;
             _dateTimeHelper = dateTimeHelper;
+            _htmlFormatter = htmlFormatter;
             _languageService = languageService;
             _localizationService = localizationService;
             _newsService = newsService;
-            _nopHtmlHelper = nopHtmlHelper;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             _storeService = storeService;
             _urlRecordService = urlRecordService;
@@ -277,7 +277,7 @@ namespace Nop.Web.Areas.Admin.Factories
                             : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
                     }
 
-                    commentModel.CommentText = _nopHtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
+                    commentModel.CommentText = _htmlFormatter.FormatText(newsComment.CommentText, false, true, false, false, false, false);
                     commentModel.StoreName = storeNames.ContainsKey(newsComment.StoreId) ? storeNames[newsComment.StoreId] : "Deleted";
 
                     return commentModel;

@@ -203,7 +203,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<INewsService, NewsService>();
             services.AddScoped<IDateTimeHelper, DateTimeHelper>();
             services.AddScoped<ISitemapGenerator, SitemapGenerator>();
-            services.AddScoped<IPageHeadBuilder, PageHeadBuilder>();
+            services.AddScoped<INopHtmlHelper, NopHtmlHelper>();
             services.AddScoped<IScheduleTaskService, ScheduleTaskService>();
             services.AddScoped<IExportManager, ExportManager>();
             services.AddScoped<IImportManager, ImportManager>();
@@ -217,7 +217,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddSingleton<IEventPublisher, EventPublisher>();
             services.AddScoped<ISettingService, SettingService>();
             services.AddScoped<IBBCodeHelper, BBCodeHelper>();
-            services.AddScoped<INopHtmlHelper, NopHtmlHelper>();
+            services.AddScoped<IHtmlFormatter, HtmlFormatter>();
 
             //plugin managers
             services.AddScoped(typeof(IPluginManager<>), typeof(PluginManager<>));

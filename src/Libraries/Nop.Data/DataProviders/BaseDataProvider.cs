@@ -42,22 +42,20 @@ namespace Nop.Data.DataProviders
         {
             if (Singleton<MappingSchema>.Instance is null)
             {
-                Singleton<MappingSchema>.Instance = new MappingSchema(ConfigurationName)
+                var mappings = new MappingSchema(ConfigurationName)
                 {
                     MetadataReader = new FluentMigratorMetadataReader(this)
                 };
-            }
 
-            if (MiniProfillerEnabled)
-            {
-                var mpMappingSchema = new MappingSchema(new[] { Singleton<MappingSchema>.Instance });
+                if (MiniProfillerEnabled)
+                {
+                    mappings.SetConvertExpression<ProfiledDbConnection, IDbConnection>(db => db.WrappedConnection);
+                    mappings.SetConvertExpression<ProfiledDbDataReader, IDataReader>(db => db.WrappedReader);
+                    mappings.SetConvertExpression<ProfiledDbTransaction, IDbTransaction>(db => db.WrappedTransaction);
+                    mappings.SetConvertExpression<ProfiledDbCommand, IDbCommand>(db => db.InternalCommand);
+                }
 
-                mpMappingSchema.SetConvertExpression<ProfiledDbConnection, IDbConnection>(db => db.WrappedConnection);
-                mpMappingSchema.SetConvertExpression<ProfiledDbDataReader, IDataReader>(db => db.WrappedReader);
-                mpMappingSchema.SetConvertExpression<ProfiledDbTransaction, IDbTransaction>(db => db.WrappedTransaction);
-                mpMappingSchema.SetConvertExpression<ProfiledDbCommand, IDbCommand>(db => db.InternalCommand);
-
-                return mpMappingSchema;
+                Singleton<MappingSchema>.Instance = mappings;
             }
 
             return Singleton<MappingSchema>.Instance;

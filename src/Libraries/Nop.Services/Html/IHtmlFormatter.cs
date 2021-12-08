@@ -1,6 +1,9 @@
 ﻿namespace Nop.Services.Html
 {
-    public interface INopHtmlHelper
+    /// <summary>
+    /// Represents a HTML formatter
+    /// </summary>
+    public interface IHtmlFormatter
     {
         /// <summary>
         /// Formats the text

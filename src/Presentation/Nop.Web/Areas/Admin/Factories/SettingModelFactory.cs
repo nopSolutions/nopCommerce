@@ -37,6 +37,7 @@ using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;
+using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Models.Extensions;
 
@@ -419,8 +420,6 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new MinificationSettingsModel
             {
                 EnableHtmlMinification = minificationSettings.EnableHtmlMinification,
-                EnableJsBundling = minificationSettings.EnableJsBundling,
-                EnableCssBundling = minificationSettings.EnableCssBundling,
                 UseResponseCompression = minificationSettings.UseResponseCompression
             };
 
@@ -429,8 +428,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in overridden values
             model.EnableHtmlMinification_OverrideForStore = await _settingService.SettingExistsAsync(minificationSettings, x => x.EnableHtmlMinification, storeId);
-            model.EnableJsBundling_OverrideForStore = await _settingService.SettingExistsAsync(minificationSettings, x => x.EnableJsBundling, storeId);
-            model.EnableCssBundling_OverrideForStore = await _settingService.SettingExistsAsync(minificationSettings, x => x.EnableCssBundling, storeId);
             model.UseResponseCompression_OverrideForStore = await _settingService.SettingExistsAsync(minificationSettings, x => x.UseResponseCompression, storeId);
 
             return model;
@@ -787,7 +784,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 InstallationConfigModel = _appSettings.Get<InstallationConfig>().ToConfigModel<InstallationConfigModel>(),
                 PluginConfigModel = _appSettings.Get<PluginConfig>().ToConfigModel<PluginConfigModel>(),
                 CommonConfigModel = _appSettings.Get<CommonConfig>().ToConfigModel<CommonConfigModel>(),
-                DataConfigModel = _appSettings.Get<DataConfig>().ToConfigModel<DataConfigModel>()
+                DataConfigModel = _appSettings.Get<DataConfig>().ToConfigModel<DataConfigModel>(),
+                WebOptimizerConfigModel = _appSettings.Get<WebOptimizerConfig>().ToConfigModel<WebOptimizerConfigModel>(),
             };
 
             model.DistributedCacheConfigModel.DistributedCacheTypeValues = await _appSettings.Get<DistributedCacheConfig>().DistributedCacheType.ToSelectListAsync();

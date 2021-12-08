@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.ReturnRequests").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Return requests");
+    NopHtml.SetActiveMenuItemSystemName("Return requests");
 }
 
 @{
@@ -162,7 +162,7 @@
                         }
                     })
 
-                    <script>
+                    <script asp-location="Footer">
                         function renderColumnProductName(data, type, row, meta) {
                             if (row.ProductId > 0) {
                                 var textRenderer = $.fn.dataTable.render.text().display;

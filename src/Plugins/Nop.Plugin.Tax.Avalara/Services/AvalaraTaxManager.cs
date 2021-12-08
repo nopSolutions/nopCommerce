@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Avalara.AvaTax.RestClient;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -13,6 +15,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Plugin.Tax.Avalara.Domain;
 using Nop.Services.Catalog;
@@ -46,6 +49,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly IGeoLookupService _geoLookupService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
+        private readonly INopFileProvider _fileProvider;
         private readonly IOrderService _orderService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPaymentService _paymentService;
@@ -85,6 +89,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             IGeoLookupService geoLookupService,
             ILocalizationService localizationService,
             ILogger logger,
+            INopFileProvider fileProvider,
             IOrderService orderService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IPaymentService paymentService,
@@ -117,6 +122,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _geoLookupService = geoLookupService;
             _localizationService = localizationService;
             _logger = logger;
+            _fileProvider = fileProvider;
             _orderService = orderService;
             _orderTotalCalculationService = orderTotalCalculationService;
             _paymentService = paymentService;
@@ -431,7 +437,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private async Task<List<LineItemModel>> GetItemLinesAsync(Order order, IList<OrderItem> orderItems)
         {
             //get purchased products details
-            var items = await CreateLinesForOrderItems(order, orderItems);
+            var items = await CreateLinesForOrderItemsAsync(order, orderItems);
 
             //set payment method additional fee as the separate item line
             if (order.PaymentMethodAdditionalFeeExclTax > decimal.Zero)
@@ -443,7 +449,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
 
             //set checkout attributes as the separate item lines
             if (!string.IsNullOrEmpty(order.CheckoutAttributesXml))
-                items.AddRange(await CreateLinesForCheckoutAttributes(order));
+                items.AddRange(await CreateLinesForCheckoutAttributesAsync(order));
 
             return items;
         }
@@ -457,7 +463,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the collection of item lines
         /// </returns>
-        private async Task<List<LineItemModel>> CreateLinesForOrderItems(Order order, IList<OrderItem> orderItems)
+        private async Task<List<LineItemModel>> CreateLinesForOrderItemsAsync(Order order, IList<OrderItem> orderItems)
         {
             return await orderItems.SelectAwait(async orderItem =>
             {
@@ -606,7 +612,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the collection of item lines
         /// </returns>
-        private async Task<IEnumerable<LineItemModel>> CreateLinesForCheckoutAttributes(Order order)
+        private async Task<IEnumerable<LineItemModel>> CreateLinesForCheckoutAttributesAsync(Order order)
         {
             //get checkout attributes values
             var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(order.CheckoutAttributesXml);
@@ -685,6 +691,61 @@ namespace Nop.Plugin.Tax.Avalara.Services
             return model;
         }
 
+        /// <summary>
+        /// Get tax rates from the file
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the tax rates list
+        /// </returns>
+        private async Task<List<TaxRate>> GetTaxRatesFromFileAsync()
+        {
+            //try to create file if doesn't exist
+            var filePath = _fileProvider.MapPath(AvalaraTaxDefaults.TaxRatesFilePath);
+            if (!_fileProvider.FileExists(filePath))
+                await DownloadTaxRatesAsync();
+
+            if (!_fileProvider.FileExists(filePath))
+                throw new NopException($"File {AvalaraTaxDefaults.TaxRatesFilePath} not found");
+
+            //get file lines
+            var text = await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
+            if (string.IsNullOrEmpty(text))
+                throw new NopException($"File {AvalaraTaxDefaults.TaxRatesFilePath} is empty");
+
+            var lines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+            if (!lines.Any() || lines[0].Split(',').Length < 14)
+                throw new NopException($"Unsupported file {AvalaraTaxDefaults.TaxRatesFilePath} structure");
+
+            //prepare tax rates
+            var taxRates = lines.Skip(1).Select(line =>
+            {
+                try
+                {
+                    var values = line.Split(',', StringSplitOptions.TrimEntries);
+                    return new TaxRate
+                    {
+                        Zip = values[0], //ZIP_CODE
+                        State = values[1], //STATE_ABBREV
+                        County = values[2], //COUNTY_NAME
+                        City = values[3], //CITY_NAME
+                        StateTax = decimal.Parse(values[4], NumberStyles.Any, CultureInfo.InvariantCulture), //STATE_SALES_TAX
+                        CountyTax = decimal.Parse(values[6], NumberStyles.Any, CultureInfo.InvariantCulture), //COUNTY_SALES_TAX
+                        CityTax = decimal.Parse(values[8], NumberStyles.Any, CultureInfo.InvariantCulture), //CITY_SALES_TAX
+                        TotalTax = decimal.Parse(values[10], NumberStyles.Any, CultureInfo.InvariantCulture), //TOTAL_SALES_TAX
+                        ShippingTaxable = string.Equals(values[11], "y", StringComparison.InvariantCultureIgnoreCase), //TAX_SHIPPING_ALONE
+                        ShippingAndHadlingTaxable = string.Equals(values[12], "y", StringComparison.InvariantCultureIgnoreCase) //TAX_SHIPPING_AND_HANDLING_TOGETHER
+                    };
+                }
+                catch
+                {
+                    return null;
+                }
+            }).Where(taxRate => taxRate is not null).ToList();
+
+            return taxRates;
+        }
+
         #endregion
 
         #region Certificates
@@ -699,7 +760,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the customer details
         /// </returns>
-        public async Task<CustomerModel> CreateOrUpdateCustomerAsync(Customer customer, int companyId, bool customerExists)
+        private async Task<CustomerModel> CreateOrUpdateCustomerAsync(Customer customer, int companyId, bool customerExists)
         {
             var defaultAddress = new Address
             {
@@ -987,7 +1048,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                     ?? throw new NopException("Failed to retrieve company");
 
                 //get existing items
-                var items = await ServiceClient.ListItemsByCompanyAsync(selectedCompany.id, null, null, null, null, null)
+                var items = await ServiceClient.ListItemsByCompanyAsync(selectedCompany.id, null, null, null, null, null, null)
                     ?? throw new NopException("No response from the service");
 
                 //return the paginated and filtered list
@@ -1095,6 +1156,23 @@ namespace Nop.Plugin.Tax.Avalara.Services
         {
             return await HandleFunctionAsync(async () =>
             {
+                if (_avalaraTaxSettings.UseTaxRateTables)
+                {
+                    var taxRates = await GetTaxRatesFromFileAsync();
+                    var taxRate = taxRates.FirstOrDefault(record => record.Zip == address.ZipPostalCode);
+                    if (taxRate?.TotalTax is null)
+                        throw new NopException($"No rate found for zip code {address.ZipPostalCode}");
+
+                    var summary = new List<TransactionSummary>();
+                    if (!string.IsNullOrEmpty(taxRate.State))
+                        summary.Add(new() { jurisName = taxRate.State, rate = taxRate.StateTax });
+                    if (!string.IsNullOrEmpty(taxRate.County))
+                        summary.Add(new() { jurisName = taxRate.County, rate = taxRate.CountyTax });
+                    if (!string.IsNullOrEmpty(taxRate.City))
+                        summary.Add(new() { jurisName = taxRate.City, rate = taxRate.CityTax });
+                    return new TransactionModel { totalTax = taxRate.TotalTax * 100, summary = summary };
+                }
+
                 var customer = await _workContext.GetCurrentCustomerAsync();
                 //create tax transaction for a simplified item and without saving 
                 var model = await PrepareTransactionModelAsync(address, customer.Id.ToString(), DocumentType.SalesOrder);
@@ -1113,6 +1191,18 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// </returns>
         public async Task<decimal?> GetTaxRateAsync(TaxRateRequest taxRateRequest)
         {
+            if (_avalaraTaxSettings.UseTaxRateTables)
+            {
+                var key = _staticCacheManager
+                    .PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxRateByZipCacheKey, taxRateRequest.Address.ZipPostalCode);
+                return await _staticCacheManager.GetAsync(key, async () => await HandleFunctionAsync(async () =>
+                {
+                    var taxRates = await GetTaxRatesFromFileAsync();
+                    var taxRate = taxRates.FirstOrDefault(record => record.Zip == taxRateRequest.Address.ZipPostalCode);
+                    return taxRate?.TotalTax * 100;
+                }));
+            }
+
             //prepare cache key
             var address = await _addressService.GetAddressByIdAsync(taxRateRequest.Address.Id);
             var customer = taxRateRequest.Customer ?? await _workContext.GetCurrentCustomerAsync();
@@ -1339,6 +1429,24 @@ namespace Nop.Plugin.Tax.Avalara.Services
                     ?? throw new NopException("No response from the service");
 
                 return Task.FromResult(transaction);
+            });
+        }
+
+        /// <summary>
+        /// Download a file listing tax rates by postal code
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task DownloadTaxRatesAsync()
+        {
+            await HandleFunctionAsync(async () =>
+            {
+                var file = ServiceClient.DownloadTaxRatesByZipCode(DateTime.UtcNow, null)
+                    ?? throw new NopException("No response from the service");
+
+                var filePath = _fileProvider.MapPath(AvalaraTaxDefaults.TaxRatesFilePath);
+                await _fileProvider.WriteAllBytesAsync(filePath, file.Data);
+
+                return true;
             });
         }
 

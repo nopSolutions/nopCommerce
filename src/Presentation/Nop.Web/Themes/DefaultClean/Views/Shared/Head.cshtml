@@ -1,18 +1,17 @@
-﻿@inject IThemeContext themeContext
-
+﻿@using Nop.Core
+@using Nop.Services.Helpers
+@using Nop.Web.Framework.UI
+@inject IThemeContext themeContext
+@inject IUserAgentHelper userAgentHelper
 @{
+    Layout ="";
     var themeName = await themeContext.GetWorkingThemeNameAsync();
-
-    //add main CSS file
-    if (await Html.ShouldUseRtlThemeAsync(themeName))
-    {
-        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.rtl.css");
-    }
-    else
-    {
-        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.css");
-    }
-
-    //add jQuery UI css file
-    Html.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
+    var supportRtl = await Html.ShouldUseRtlThemeAsync();
+    var href = $"~/Themes/{themeName}/Content/css/styles{(supportRtl ? ".rtl" : "")}.css";
 }
+
+@* add main CSS file *@
+<link rel="stylesheet" href="@href" />
+
+@* add jQuery UI css file *@
+<link rel="stylesheet" href="~/lib_npm/jquery-ui-dist/jquery-ui.min.css" />

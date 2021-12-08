@@ -3,9 +3,9 @@
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("Forum.PageTitle.Default").Text);
+    NopHtml.AddTitleParts(T("Forum.PageTitle.Default").Text);
     //page class
-    Html.AppendPageCssClassParts("html-forums-main-page");
+    NopHtml.AppendPageCssClassParts("html-forums-main-page");
 }
 <div class="page forums-main-page">
     @await Component.InvokeAsync("TopicBlock", new { systemName = "ForumWelcomeMessage" })
