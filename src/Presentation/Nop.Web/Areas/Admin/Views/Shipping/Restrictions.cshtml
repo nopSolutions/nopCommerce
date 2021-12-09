@@ -48,9 +48,7 @@
                                     @foreach (var sm in Model.AvailableShippingMethods)
                                     {
                                         <text>
-                                            $('#selectall-@(sm.Id)').click(function () {
-                                                $('.restrict_@(sm.Id)').attr('checked', $(this).is(':checked')).change();
-                                            });
+                                            prepareTableCheckboxes('#selectall-@(sm.Id)', '.restrict_@(sm.Id)');
                                         </text>
                                     }
                                 });
