@@ -17,7 +17,7 @@ namespace Nop.Web.Framework.UI
     /// <summary>
     /// Represents the HTML helper implementation
     /// </summary>
-    public partial class NopHtmlHelper : INopHtmlHelper
+    public class NopHtmlHelper : INopHtmlHelper
     {
         #region Fields
 
@@ -96,7 +96,8 @@ namespace Nop.Web.Framework.UI
         {
             AppendTitleParts(part);
 
-            var specificTitle = string.Join(_seoSettings.PageTitleSeparator, _titleParts.AsEnumerable().Reverse().ToArray());
+            var specificTitle = string.Join(_seoSettings.PageTitleSeparator,
+                _titleParts.AsEnumerable().Reverse().ToArray());
             string result;
             if (!string.IsNullOrEmpty(specificTitle))
             {
@@ -106,15 +107,16 @@ namespace Nop.Web.Framework.UI
                     switch (_seoSettings.PageTitleSeoAdjustment)
                     {
                         case PageTitleSeoAdjustment.PagenameAfterStorename:
-                            {
-                                result = string.Join(_seoSettings.PageTitleSeparator, _seoSettings.DefaultTitle, specificTitle);
-                            }
+                        {
+                            result = string.Join(_seoSettings.PageTitleSeparator, _seoSettings.DefaultTitle,
+                                specificTitle);
+                        }
                             break;
-                        case PageTitleSeoAdjustment.StorenameAfterPagename:
                         default:
-                            {
-                                result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, _seoSettings.DefaultTitle);
-                            }
+                        {
+                            result = string.Join(_seoSettings.PageTitleSeparator, specificTitle,
+                                _seoSettings.DefaultTitle);
+                        }
                             break;
                     }
                 }
@@ -129,6 +131,7 @@ namespace Nop.Web.Framework.UI
                 //store name only
                 result = _seoSettings.DefaultTitle;
             }
+
             return _htmlEncoder.Encode(result);
         }
 
@@ -217,7 +220,8 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool isAsync = false)
+        public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc = "",
+            bool isAsync = false)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
@@ -228,12 +232,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
-            _scriptParts[location].Add(new ScriptReferenceMeta
-            {
-                IsAsync = isAsync,
-                Src = src,
-                DebugSrc = debugSrc
-            });
+            _scriptParts[location].Add(new ScriptReferenceMeta {IsAsync = isAsync, Src = src, DebugSrc = debugSrc});
         }
 
         /// <summary>
@@ -243,7 +242,8 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool isAsync = false)
+        public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "",
+            bool isAsync = false)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
@@ -254,12 +254,8 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
-            _scriptParts[location].Insert(0, new ScriptReferenceMeta
-            {
-                IsAsync = isAsync,
-                Src = src,
-                DebugSrc = debugSrc
-            });
+            _scriptParts[location]
+                .Insert(0, new ScriptReferenceMeta {IsAsync = isAsync, Src = src, DebugSrc = debugSrc});
         }
 
         /// <summary>
@@ -283,7 +279,8 @@ namespace Nop.Web.Framework.UI
             foreach (var item in _scriptParts[location].Distinct())
             {
                 var src = debugModel ? item.DebugSrc : item.Src;
-                result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src), item.IsAsync ? "async " : "");
+                result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src),
+                    item.IsAsync ? "async " : "");
                 result.Append(Environment.NewLine);
             }
 
@@ -347,6 +344,7 @@ namespace Nop.Web.Framework.UI
                 result.Append(item);
                 result.Append(Environment.NewLine);
             }
+
             return new HtmlString(result.ToString());
         }
 
@@ -367,11 +365,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
-            _cssParts[location].Add(new CssReferenceMeta
-            {
-                Src = src,
-                DebugSrc = debugSrc
-            });
+            _cssParts[location].Add(new CssReferenceMeta {Src = src, DebugSrc = debugSrc});
         }
 
         /// <summary>
@@ -391,11 +385,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
-            _cssParts[location].Insert(0, new CssReferenceMeta
-            {
-                Src = src,
-                DebugSrc = debugSrc
-            });
+            _cssParts[location].Insert(0, new CssReferenceMeta {Src = src, DebugSrc = debugSrc});
         }
 
         /// <summary>
@@ -419,9 +409,11 @@ namespace Nop.Web.Framework.UI
             foreach (var item in _cssParts[location].Distinct())
             {
                 var src = debugModel ? item.DebugSrc : item.Src;
-                result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(src), MimeTypes.TextCss);
+                result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(src),
+                    MimeTypes.TextCss);
                 result.AppendLine();
             }
+
             return new HtmlString(result.ToString());
         }
 
@@ -438,7 +430,8 @@ namespace Nop.Web.Framework.UI
             if (withQueryString)
             {
                 //add ordered query string parameters
-                var queryParameters = _actionContextAccessor.ActionContext.HttpContext.Request.Query.OrderBy(parameter => parameter.Key)
+                var queryParameters = _actionContextAccessor.ActionContext.HttpContext.Request.Query
+                    .OrderBy(parameter => parameter.Key)
                     .ToDictionary(parameter => parameter.Key, parameter => parameter.Value.ToString());
                 part = QueryHelpers.AddQueryString(part, queryParameters);
             }
@@ -470,6 +463,7 @@ namespace Nop.Web.Framework.UI
                 result.AppendFormat("<link rel=\"canonical\" href=\"{0}\" />", canonicalUrl);
                 result.Append(Environment.NewLine);
             }
+
             return new HtmlString(result.ToString());
         }
 
@@ -514,6 +508,7 @@ namespace Nop.Web.Framework.UI
                 result.Append(path);
                 result.Append(Environment.NewLine);
             }
+
             return new HtmlString(result.ToString());
         }
 
@@ -629,6 +624,7 @@ namespace Nop.Web.Framework.UI
                     return false;
                 return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc);
             }
+
             /// <summary>
             /// Get hash code
             /// </summary>
@@ -665,6 +661,7 @@ namespace Nop.Web.Framework.UI
                     return false;
                 return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc);
             }
+
             /// <summary>
             /// Get hash code
             /// </summary>
