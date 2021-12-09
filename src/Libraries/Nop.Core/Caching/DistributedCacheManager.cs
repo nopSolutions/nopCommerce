@@ -22,8 +22,8 @@ namespace Nop.Core.Caching
 
         private readonly IDistributedCache _distributedCache;
         private readonly PerRequestCache _perRequestCache;
-        private static readonly List<string> _keys;
         private static readonly AsyncLock _locker;
+        private const string CACHE_KEYS_KEY = "Nop.CacheKeys";
 
         #endregion
 
@@ -32,10 +32,9 @@ namespace Nop.Core.Caching
         static DistributedCacheManager()
         {
             _locker = new AsyncLock();
-            _keys = new List<string>();
         }
 
-        public DistributedCacheManager(AppSettings appSettings, IDistributedCache distributedCache, IHttpContextAccessor httpContextAccessor) :base(appSettings)
+        public DistributedCacheManager(AppSettings appSettings, IDistributedCache distributedCache, IHttpContextAccessor httpContextAccessor) : base(appSettings)
         {
             _distributedCache = distributedCache;
             _perRequestCache = new PerRequestCache(httpContextAccessor);
@@ -57,7 +56,7 @@ namespace Nop.Core.Caching
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(key.CacheTime)
             };
-            
+
             return options;
         }
 
@@ -74,7 +73,7 @@ namespace Nop.Core.Caching
         {
             var json = await _distributedCache.GetStringAsync(key.Key);
 
-            if (string.IsNullOrEmpty(json)) 
+            if (string.IsNullOrEmpty(json))
                 return (false, default);
 
             var item = JsonConvert.DeserializeObject<T>(json);
@@ -116,7 +115,13 @@ namespace Nop.Core.Caching
             _perRequestCache.Set(key.Key, data);
 
             using var _ = _locker.Lock();
-            _keys.Add(key.Key);
+            var (isSet, keys) = TryGetItem<HashSet<string>>(new CacheKey(CACHE_KEYS_KEY));
+            if (!isSet)
+            {
+                keys = new HashSet<string>();
+            }
+            keys.Add(key.Key);
+            _distributedCache.SetString(CACHE_KEYS_KEY, JsonConvert.SerializeObject(keys));
         }
 
         #endregion
@@ -244,7 +249,13 @@ namespace Nop.Core.Caching
             _perRequestCache.Remove(cacheKey.Key);
 
             using var _ = await _locker.LockAsync();
-            _keys.Remove(cacheKey.Key);
+            var (isSet, keys) = await TryGetItemAsync<HashSet<string>>(new CacheKey(CACHE_KEYS_KEY));
+            if (!isSet)
+            {
+                return;
+            }
+            keys.Remove(cacheKey.Key);
+            await _distributedCache.SetStringAsync(CACHE_KEYS_KEY, JsonConvert.SerializeObject(keys));
         }
 
         /// <summary>
@@ -262,7 +273,13 @@ namespace Nop.Core.Caching
             _perRequestCache.Set(key.Key, data);
 
             using var _ = await _locker.LockAsync();
-            _keys.Add(key.Key);
+            var (isSet, keys) = await TryGetItemAsync<HashSet<string>>(new CacheKey(CACHE_KEYS_KEY));
+            if (!isSet)
+            {
+                keys = new HashSet<string>();
+            }
+            keys.Add(key.Key);
+            await _distributedCache.SetStringAsync(CACHE_KEYS_KEY, JsonConvert.SerializeObject(keys));
         }
 
         /// <summary>
@@ -277,12 +294,19 @@ namespace Nop.Core.Caching
             _perRequestCache.RemoveByPrefix(prefix);
 
             using var _ = await _locker.LockAsync();
-            
-            foreach (var key in _keys.Where(key => key.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase)).ToList())
+
+            var (isSet, keys) = await TryGetItemAsync<HashSet<string>>(new CacheKey(CACHE_KEYS_KEY));
+            if (!isSet)
+            {
+                return;
+            }
+
+            foreach (var key in keys.Where(key => key.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase)).ToList())
             {
                 await _distributedCache.RemoveAsync(key);
-                _keys.Remove(key);
+                keys.Remove(key);
             }
+            await _distributedCache.SetStringAsync(CACHE_KEYS_KEY, JsonConvert.SerializeObject(keys));
         }
 
         /// <summary>
@@ -293,15 +317,21 @@ namespace Nop.Core.Caching
         {
             //we can't use _perRequestCache.Clear(),
             //because HttpContext stores some server data that we should not delete
-            foreach (var redisKey in _keys)
-                _perRequestCache.Remove(redisKey);
-
             using var _ = await _locker.LockAsync();
 
-            foreach (var key in _keys) 
+            var (isSet, keys) = await TryGetItemAsync<HashSet<string>>(new CacheKey(CACHE_KEYS_KEY));
+            if (!isSet)
+            {
+                return;
+            }
+            foreach (var key in keys)
+                _perRequestCache.Remove(key);
+
+            foreach (var key in keys)
                 await _distributedCache.RemoveAsync(key);
 
-            _keys.Clear();
+            keys.Clear();
+            await _distributedCache.SetStringAsync(CACHE_KEYS_KEY, JsonConvert.SerializeObject(keys));
         }
 
         /// <summary>
@@ -478,9 +508,9 @@ namespace Nop.Core.Caching
                         return;
 
                     using (new ReaderWriteLockDisposable(_lockSlim))
-                    //remove matching values
-                    foreach (var key in matchesKeys) 
-                        items.Remove(key);
+                        //remove matching values
+                        foreach (var key in matchesKeys)
+                            items.Remove(key);
                 }
             }
 
