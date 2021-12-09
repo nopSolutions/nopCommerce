@@ -164,7 +164,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 //#4905
                 ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate"] = "Maximum redeemed rate",
                 ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate.Hint"] = "Limit the maximum order total that could be paid by reward points (in percent). For example, if set to 0.6, then only 60% of order total could be paid using reward points, but not more than the 'Maximum reward points to use per order'. Set to 0 if you do not want to use this setting.",
-                ["Checkout.UseRewardPoints"] = "Use my reward points, {0} of {1} reward points ({2}) available for this order"
+                ["Checkout.UseRewardPoints"] = "Use my reward points, {0} of {1} reward points ({2}) available for this order",
+
+                //#6007
+                ["Admin.System.Templates.NotDeleteOnlyOne"] = "It is forbidden to delete a template if it is the only one."
             }, languageId).Wait();
 
             // rename locales

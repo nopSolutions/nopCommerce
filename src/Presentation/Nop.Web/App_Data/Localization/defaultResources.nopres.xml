@@ -15489,6 +15489,9 @@
   <LocaleResource Name="Admin.System.Templates.Manufacturer.ViewPath.Required">
     <Value>View path is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.NotDeleteOnlyOne">
+      <Value>It is forbidden to delete a template if it is the only one.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Product">
     <Value>Product templates</Value>
   </LocaleResource>
