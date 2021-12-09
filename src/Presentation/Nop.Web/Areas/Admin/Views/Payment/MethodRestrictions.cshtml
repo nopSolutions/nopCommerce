@@ -53,9 +53,7 @@
                                     {
                                         var systemNameWithoutDot = pm.SystemName.Replace(".", "");
                                         <text>
-                                            $('#selectall-@(systemNameWithoutDot)').click(function () {
-                                                $('.restrict_@(systemNameWithoutDot)').attr('checked', $(this).is(':checked')).change();
-                                            });
+                                            prepareTableCheckboxes('#selectall-@(systemNameWithoutDot)', '.restrict_@(systemNameWithoutDot)');
                                         </text>
                                     }
                                 });

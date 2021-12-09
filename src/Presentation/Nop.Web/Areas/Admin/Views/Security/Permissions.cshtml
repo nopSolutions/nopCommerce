@@ -46,11 +46,8 @@
                                     @foreach (var cr in Model.AvailableCustomerRoles)
                                     {
                                         <text>
-                                    $('#selectall-@(cr.Id)').click(function () {
-                                        $('.allow_@(cr.Id)').attr('checked', $(this).is(':checked')).change();
-                                    });
-
-                                    </text>
+                                            prepareTableCheckboxes('#selectall-@(cr.Id)', '.allow_@(cr.Id)');
+                                        </text>
                                     }
                                 });
                                 </script>
