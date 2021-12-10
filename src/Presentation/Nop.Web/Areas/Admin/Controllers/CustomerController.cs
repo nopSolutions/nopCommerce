@@ -160,8 +160,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new ArgumentNullException(nameof(existingCustomerRoles));
 
             //check ACL permission to manage customer roles
-            var rolesToAdd = customerRoles.Except(existingCustomerRoles);
-            var rolesToDelete = existingCustomerRoles.Except(customerRoles);
+            var rolesToAdd = customerRoles.Except(existingCustomerRoles, new CustomerRoleComparerByName());
+            var rolesToDelete = existingCustomerRoles.Except(customerRoles, new CustomerRoleComparerByName());
             if (rolesToAdd.Any(role => role.SystemName != NopCustomerDefaults.RegisteredRoleName) || rolesToDelete.Any())
             {
                 if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
