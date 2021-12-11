@@ -71,7 +71,7 @@ namespace Nop.Web.Factories
         private readonly IManufacturerService _manufacturerService;
         private readonly INewsService _newsService;
         private readonly INopFileProvider _fileProvider;
-        private readonly IPageHeadBuilder _pageHeadBuilder;
+        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
@@ -119,7 +119,7 @@ namespace Nop.Web.Factories
             IManufacturerService manufacturerService,
             INewsService newsService,
             INopFileProvider fileProvider,
-            IPageHeadBuilder pageHeadBuilder,
+            INopHtmlHelper nopHtmlHelper,
             IPermissionService permissionService,
             IPictureService pictureService,
             IProductService productService,
@@ -163,7 +163,7 @@ namespace Nop.Web.Factories
             _manufacturerService = manufacturerService;
             _newsService = newsService;
             _fileProvider = fileProvider;
-            _pageHeadBuilder = pageHeadBuilder;
+            _nopHtmlHelper = nopHtmlHelper;
             _permissionService = permissionService;
             _pictureService = pictureService;
             _productService = productService;
@@ -414,7 +414,7 @@ namespace Nop.Web.Factories
                 ImpersonatedCustomerName = await _customerService.IsRegisteredAsync(customer) ? await _customerService.FormatUsernameAsync(customer) : string.Empty,
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel),
-                EditPageUrl = _pageHeadBuilder.GetEditPageUrl()
+                EditPageUrl = _nopHtmlHelper.GetEditPageUrl()
             };
 
             return model;

@@ -11,6 +11,8 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Models
 
         public string OrderId { get; set; }
 
+        public string OrderTotal { get; set; }
+
         public string Errors { get; set; }
 
         #endregion

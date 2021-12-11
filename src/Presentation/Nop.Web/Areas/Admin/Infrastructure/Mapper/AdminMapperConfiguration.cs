@@ -63,6 +63,7 @@ using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Areas.Admin.Models.Vendors;
+using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
@@ -210,6 +211,15 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<DataConfig, DataConfigModel>()
                 .ForMember(model => model.DataProviderTypeValues, options => options.Ignore());
             CreateMap<DataConfigModel, DataConfig>();
+
+            CreateMap<WebOptimizerConfig, WebOptimizerConfigModel>();
+            CreateMap<WebOptimizerConfigModel, WebOptimizerConfig>()
+                .ForMember(entity => entity.CdnUrl, options => options.Ignore())
+                .ForMember(entity => entity.AllowEmptyBundle, options => options.Ignore())
+                .ForMember(entity => entity.HttpsCompression, options => options.Ignore())
+                .ForMember(entity => entity.EnableTagHelperBundling, options => options.Ignore())
+                .ForMember(entity => entity.EnableCaching, options => options.Ignore())
+                .ForMember(entity => entity.EnableMemoryCache, options => options.Ignore());
         }
 
         /// <summary>
@@ -764,6 +774,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.MinOrderTotalToAwardPoints_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PageSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PointsForPurchases_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.MaximumRedeemedRate_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PointsForRegistration_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
                 .ForMember(model => model.PurchasesPointsValidity_OverrideForStore, options => options.Ignore())
@@ -1482,12 +1493,15 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<Shipment, ShipmentModel>()
                 .ForMember(model => model.ShippedDate, options => options.Ignore())
+                .ForMember(model => model.ReadyForPickupDate, options => options.Ignore())
                 .ForMember(model => model.DeliveryDate, options => options.Ignore())
                 .ForMember(model => model.TotalWeight, options => options.Ignore())
                 .ForMember(model => model.TrackingNumberUrl, options => options.Ignore())
                 .ForMember(model => model.Items, options => options.Ignore())
                 .ForMember(model => model.ShipmentStatusEvents, options => options.Ignore())
+                .ForMember(model => model.PickupInStore, options => options.Ignore())
                 .ForMember(model => model.CanShip, options => options.Ignore())
+                .ForMember(model => model.CanMarkAsReadyForPickup, options => options.Ignore())
                 .ForMember(model => model.CanDeliver, options => options.Ignore())
                 .ForMember(model => model.CustomOrderNumber, options => options.Ignore());
 

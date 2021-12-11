@@ -136,9 +136,9 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="editPageUrl">Edit page URL</param>
         protected virtual void DisplayEditLink(string editPageUrl)
         {
-            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            var nopHtmlHelper = EngineContext.Current.Resolve<INopHtmlHelper>();
 
-            pageHeadBuilder.AddEditPageUrl(editPageUrl);
+            nopHtmlHelper.AddEditPageUrl(editPageUrl);
         }
 
         #endregion

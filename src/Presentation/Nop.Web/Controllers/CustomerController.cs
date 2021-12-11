@@ -1065,7 +1065,7 @@ namespace Nop.Web.Controllers
             var usernameAvailable = false;
             var statusText = await _localizationService.GetResourceAsync("Account.CheckUsernameAvailability.NotAvailable");
 
-            if (!UsernamePropertyValidator.IsValid(username, _customerSettings))
+            if (!UsernamePropertyValidator<string, string>.IsValid(username, _customerSettings))
             {
                 statusText = await _localizationService.GetResourceAsync("Account.Fields.Username.NotValid");
             }

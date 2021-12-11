@@ -125,6 +125,7 @@ namespace Nop.Web.Models.Order
         {
             public string TrackingNumber { get; set; }
             public DateTime? ShippedDate { get; set; }
+            public DateTime? ReadyForPickupDate { get; set; }
             public DateTime? DeliveryDate { get; set; }
         }
 

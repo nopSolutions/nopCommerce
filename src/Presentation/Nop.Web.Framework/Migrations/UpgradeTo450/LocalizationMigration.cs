@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using FluentMigrator;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -97,11 +96,42 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Admin.System.Warnings.PluginNotInstalled.HelpText"] = "You may delete the plugins you don't use in order to increase startup time",
 
                 ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination"] = "This attribute value cannot be removed because it is already used in this combination: {0}.",
+
+                //#5162
+                ["Admin.ContentManagement.MessageTemplates.Description.ShipmentDelivered.CustomerNotification"] = "This message template is used to notify a customer that the shipment of the certain order is delivered.",
+                ["Admin.ContentManagement.MessageTemplates.Description.ShipmentReadyForPickup.CustomerNotification"] = "This message template is used to notify a customer that the shipment of the certain order is ready for pickup.",
+                ["Admin.ContentManagement.MessageTemplates.Description.ShipmentSent.CustomerNotification"] = "This message template is used to notify a customer that the shipment of the certain order is sent.",
+                ["Admin.Orders.Shipments.CanMarkAsReadyForPickup"] = "Ready for pickup",
+                ["Admin.Orders.Shipments.CanMarkAsReadyForPickup.Hint"] = "Check to apply current date to shipment.",
+                ["Admin.Orders.Shipments.DateNotAvailable"] = "-",
+                ["Admin.Orders.Shipments.List.LoadNotReadyForPickup"] = "Load not ready for pickup",
+                ["Admin.Orders.Shipments.List.LoadNotReadyForPickup.Hint"] = "Load only not ready for pickup shipments.",
+                ["Admin.Orders.Shipments.PickupInStore"] = "Pickup from store",
+                ["Admin.Orders.Shipments.ReadyForPickupDate"] = "Date ready for pickup",
+                ["Admin.Orders.Shipments.ReadyForPickupDate.Button"] = "Set as ready for pickup",
+                ["Admin.Orders.Shipments.ReadyForPickupDate.EnterUtc"] = "Date and time should be entered in Coordinated Universal Time (UTC)",
+                ["Admin.Orders.Shipments.ReadyForPickupDate.Hint"] = "The date this shipment was ready for pickup.",
+                ["Admin.Orders.Shipments.ReadyForPickupDate.NotYet"] = "Not yet",
+                ["Admin.Orders.Shipments.ReadyForPickupSelected"] = "Set as ready for pickup (selected)",
+                ["Order.Shipments.ReadyForPickupDate"] = "Date ready for pickup",
+                ["Order.Shipments.ReadyForPickupDate.NotYet"] = "Not yet",
+                ["Admin.Orders.Shipments.Products.QtyReadyForPickup"] = "Qty ready for pickup",
+                ["Admin.Orders.Shipments.Products.QtyToPickup"] = "Qty to pickup",
                 
                 //#5042
                 ["Admin.Help.Documentation"] = "Documentation",
                 ["Admin.Help.SolutionPartners"] = "Solution partners",
 
+                //#2061
+                ["Admin.ReturnRequests.QuantityReturnedToStock"] = "{0} item(s) have been successfully returned to the stock.",
+                ["Admin.ReturnRequests.Fields.ReturnedQuantity"] = "Quantity returned to stock",
+                ["Admin.ReturnRequests.Fields.ReturnedQuantity.Hint"] = "The quantity already returned to stock.",
+                ["Admin.ReturnRequests.Fields.ReturnedQuantity.CannotBeLessThanQuantityAlreadyReturned"] = "The quantity to be returned to stock cannot be less than quantity already returned: {0}.",
+                ["Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeEqualOrGreaterThanZero"] = "The quantity to be returned to stock must be equal or greater than zero.",
+                ["Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeLessOrEqualQuantityField"] = "The quantity to be returned to stock must be less or equal the quantity field: {0}.",
+                ["Admin.ReturnRequests.Fields.Quantity.MustBeEqualOrGreaterThanReturnedQuantityField"] = "The quantity must be equal or greater than the quantity to be returned to stock: {0}.",
+                ["Admin.ReturnRequests.Fields.Quantity.Required"] = "The quantity is required.",
+                
                 //#5551
                 ["Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering"] = "Enable specification attribute filtering",
                 ["Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint"] = "Check to enable the specification attribute filtering on catalog pages.",
@@ -118,14 +148,36 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position"] = "Position",
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost"] = "Shipping Cost",
                 //#5138
-                ["PDFInvoice.FileName"] = "order"
-                
+                ["PDFInvoice.FileName"] = "order",
+
+                //#5834
+                ["Admin.Configuration.AppSettings.WebOptimizer"] = "Bundling & minimization",
+                ["Admin.Configuration.AppSettings.WebOptimizer.EnableDiskCache"] = "Enable disk cache",
+                ["Admin.Configuration.AppSettings.WebOptimizer.EnableDiskCache.Hint"] = "Check to store assets on disk.",
+                ["Admin.Configuration.AppSettings.WebOptimizer.CacheDirectory"] = "Cache directory",
+                ["Admin.Configuration.AppSettings.WebOptimizer.CacheDirectory.Hint"] = "Path of the directory where assets will be stored if disk cache is enabled.",
+                ["Admin.Configuration.AppSettings.WebOptimizer.JavaScriptBundleSuffix"] = "Suffix of JavaScript bundle files",
+                ["Admin.Configuration.AppSettings.WebOptimizer.JavaScriptBundleSuffix.Hint"] = "Enter the key that will be put to the end of the bundle name.",
+                ["Admin.Configuration.AppSettings.WebOptimizer.CssBundleSuffix"] = "Suffix of style bundle files",
+                ["Admin.Configuration.AppSettings.WebOptimizer.CssBundleSuffix.Hint"] = "Enter the key that will be put to the end of the bundle name.",
+
+                //#4905
+                ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate"] = "Maximum redeemed rate",
+                ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate.Hint"] = "Limit the maximum order total that could be paid by reward points (in percent). For example, if set to 0.6, then only 60% of order total could be paid using reward points, but not more than the 'Maximum reward points to use per order'. Set to 0 if you do not want to use this setting.",
+                ["Checkout.UseRewardPoints"] = "Use my reward points, {0} of {1} reward points ({2}) available for this order",
+
+                //#6007
+                ["Admin.System.Templates.NotDeleteOnlyOne"] = "It is forbidden to delete a template if it is the only one."
             }, languageId).Wait();
 
             // rename locales
             var localesToRename = new[]
             {
-                new { Name = "", NewName = "" }
+                //#5834
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableJsBundling", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling.Hint" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableCssBundling", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling.Hint" }
             };
 
             foreach (var lang in languages)

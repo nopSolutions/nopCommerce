@@ -1,15 +1,15 @@
-﻿@inject Nop.Services.Html.INopHtmlHelper htmlHelper
+﻿@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
 @model NewsItemModel
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    NopHtml.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
     //meta
-    Html.AddMetaDescriptionParts(Model.MetaDescription);
-    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    NopHtml.AddMetaDescriptionParts(Model.MetaDescription);
+    NopHtml.AddMetaKeywordParts(Model.MetaKeywords);
     //page class
-    Html.AppendPageCssClassParts("html-news-item-page");
+    NopHtml.AppendPageCssClassParts("html-news-item-page");
 }
 <div class="page news-item-page">
     <div class="page-title">
@@ -116,7 +116,7 @@
                                         <strong class="comment-text">@comment.CommentTitle</strong>
                                     </div>
                                     <div class="comment-body">
-                                        <p class="comment-text">@Html.Raw(htmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
+                                        <p class="comment-text">@Html.Raw(htmlFormatter.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
                                     </div>
                                 </div>
                                 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsItemPageInsideComment, additionalData = comment })

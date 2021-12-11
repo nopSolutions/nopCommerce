@@ -29,6 +29,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public int MaximumRewardPointsToUsePerOrder { get; set; }
         public bool MaximumRewardPointsToUsePerOrder_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate")]
+        public decimal MaximumRedeemedRate { get; set; }
+        public bool MaximumRedeemedRate_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PointsForRegistration")]
         public int PointsForRegistration { get; set; }
         public bool PointsForRegistration_OverrideForStore { get; set; }

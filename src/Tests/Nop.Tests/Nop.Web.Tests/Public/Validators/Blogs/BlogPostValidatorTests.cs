@@ -20,16 +20,16 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Blogs
         public void ShouldHaveErrorWhenCommentIsNullOrEmpty()
         {
             var model = new BlogPostModel { AddNewComment = { CommentText = null } };
-            _validator.ShouldHaveValidationErrorFor(x => x.AddNewComment.CommentText, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AddNewComment.CommentText);
             model.AddNewComment.CommentText = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.AddNewComment.CommentText, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AddNewComment.CommentText);
         }
 
         [Test]
         public void ShouldNotHaveErrorWhenCommentIsSpecified()
         {
             var model = new BlogPostModel { AddNewComment = { CommentText = "some comment" } };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.AddNewComment.CommentText, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.AddNewComment.CommentText);
         }
     }
 }

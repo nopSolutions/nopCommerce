@@ -20,6 +20,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Infrastructure
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddHttpClient<OnboardingHttpClient>().WithProxy();
+            services.AddScoped<ServiceManager>();
         }
 
         /// <summary>
@@ -33,6 +34,6 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Infrastructure
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order => 101;
+        public int Order => 3000;
     }
 }

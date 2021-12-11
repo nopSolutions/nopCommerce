@@ -32,6 +32,7 @@ using Nop.Services.ScheduleTasks;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using WebMarkupMin.AspNetCore6;
+using WebOptimizer;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {
@@ -207,6 +208,30 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //whether to use compression (gzip by default)
             if (EngineContext.Current.Resolve<CommonSettings>().UseResponseCompression)
                 application.UseResponseCompression();
+        }
+
+        /// <summary>
+        /// Adds WebOptimizer to the <see cref="IApplicationBuilder"/> request execution pipeline
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopWebOptimizer(this IApplicationBuilder application)
+        {
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+            var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
+
+            application.UseWebOptimizer(webHostEnvironment, new[]
+            {
+                new FileProviderOptions
+                {
+                    RequestPath =  new PathString("/Plugins"),
+                    FileProvider = new PhysicalFileProvider(fileProvider.MapPath(@"Plugins"))
+                },
+                new FileProviderOptions
+                {
+                    RequestPath =  new PathString("/Themes"),
+                    FileProvider = new PhysicalFileProvider(fileProvider.MapPath(@"Themes"))
+                }
+            });
         }
 
         /// <summary>

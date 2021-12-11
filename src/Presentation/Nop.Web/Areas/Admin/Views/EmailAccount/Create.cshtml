@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.EmailAccounts.AddNew").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Email accounts");
+    NopHtml.SetActiveMenuItemSystemName("Email accounts");
 }
 
 <form asp-controller="EmailAccount" asp-action="Create" method="post">

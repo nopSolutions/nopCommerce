@@ -279,6 +279,8 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 if (!IsConfigured(settings))
                     throw new NopException("Plugin not configured");
 
+                var components = new List<string>() { "buttons" };
+
                 var parameters = new Dictionary<string, string>
                 {
                     ["client-id"] = settings.ClientId,
@@ -287,7 +289,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                     ["commit"] = (settings.PaymentType == Domain.PaymentType.Capture).ToString().ToLowerInvariant(),
                     ["vault"] = false.ToString().ToLowerInvariant(),
                     ["debug"] = false.ToString().ToLowerInvariant(),
-                    ["components"] = "buttons",
+                    ["components"] = "",
                     //["buyer-country"] = null, //available in the sandbox only
                     //["locale"] = null, //PayPal auto detects this
                 };
@@ -296,7 +298,10 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 if (!string.IsNullOrEmpty(settings.EnabledFunding))
                     parameters["enable-funding"] = settings.EnabledFunding;
                 if (widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore) || widgetZone.Equals(PublicWidgetZones.ProductDetailsTop))
-                    parameters["components"] = "buttons,funding-eligibility";
+                    components.Add("funding-eligibility");
+                if (settings.DisplayPayLaterMessages)
+                    components.Add("messages");
+                parameters["components"] = string.Join(",", components);
                 var scriptUrl = QueryHelpers.AddQueryString(PayPalCommerceDefaults.ServiceScriptUrl, parameters);
 
                 var pageType = widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore)
@@ -423,14 +428,12 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 }
 
                 //set order items
-                var itemTotal = decimal.Zero;
                 purchaseUnit.Items = await shoppingCart.SelectAwait(async item =>
                 {
                     var product = await _productService.GetProductByIdAsync(item.ProductId);
 
                     var (unitPrice, _, _) = await _shoppingCartService.GetUnitPriceAsync(item, true);
                     var (itemPrice, _) = await _taxService.GetProductPriceAsync(product, unitPrice, false, customer);
-                    itemTotal += itemPrice * item.Quantity;
                     return new Item
                     {
                         Name = CommonHelper.EnsureMaximumLength(product.Name, 127),
@@ -452,7 +455,6 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                     await foreach (var attributeValue in values)
                     {
                         var (attributePrice, _) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, false, customer);
-                        itemTotal += attributePrice;
                         purchaseUnit.Items.Add(new Item
                         {
                             Name = CommonHelper.EnsureMaximumLength(attribute.Name, 127),
@@ -464,8 +466,17 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 }
 
                 //set totals
-                itemTotal = Math.Round(itemTotal, 2);
+                //there may be a problem with a mismatch of amounts since ItemTotal should equal sum of (unit amount * quantity) across all items
+                //but PayPal forcibly rounds all amounts to two decimal, so the more items, the higher the chance of rounding errors
+                //we obviously cannot change the order total, so slightly adjust other totals to match all requirements
+                var itemTotal = Math.Round(purchaseUnit.Items.Sum(item =>
+                    decimal.Parse(item.UnitAmount.Value, NumberStyles.Any, CultureInfo.InvariantCulture) * int.Parse(item.Quantity)), 2);
                 var discountTotal = Math.Round(itemTotal + taxTotal + shippingTotal - orderTotal, 2);
+                if (discountTotal < decimal.Zero || discountTotal < settings.MinDiscountAmount)
+                {
+                    taxTotal -= discountTotal;
+                    discountTotal = decimal.Zero;
+                }
                 purchaseUnit.AmountWithBreakdown = new AmountWithBreakdown
                 {
                     CurrencyCode = currency,

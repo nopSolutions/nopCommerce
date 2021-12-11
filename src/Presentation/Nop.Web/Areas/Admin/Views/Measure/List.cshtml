@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Shipping.Measures").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Measures");
+    NopHtml.SetActiveMenuItemSystemName("Measures");
     
     const string hideDimensionsBlockAttributeName = "MeasuresPage.HideDimensionsBlock";
     var customer = await workContext.GetCurrentCustomerAsync();

@@ -360,3 +360,22 @@ $(document).ready(function () {
     reloadAllDataTables();
   });
 });
+
+/**
+ * @param {string} masterCheckbox Master checkbox selector
+ * @param {string} childCheckbox Child checkbox selector
+ */
+function prepareTableCheckboxes(masterCheckbox, childCheckbox) {
+  //Handling the event of clicking on the master checkbox
+  $(masterCheckbox).click(function () {
+    $(childCheckbox).prop('checked', $(this).prop('checked'));
+  });
+
+  //Handling the event of clicking on a child checkbox
+  $(childCheckbox).change(function () {
+    $(masterCheckbox).prop('checked', $(childCheckbox + ':not(:checked)').length === 0 ? true : false);
+  });
+
+  //Determining the state of the master checkbox by the state of its children
+  $(masterCheckbox).prop('checked', $(childCheckbox).length == $(childCheckbox + ':checked').length && $(childCheckbox).length > 0);
+}

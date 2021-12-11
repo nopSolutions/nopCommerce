@@ -5,9 +5,9 @@ using System.Text.RegularExpressions;
 namespace Nop.Services.Html
 {
     /// <summary>
-    /// Represents a HTML helper
+    /// Represents the HTML formatter implementation
     /// </summary>
-    public partial class NopHtmlHelper : INopHtmlHelper
+    public partial class HtmlFormatter : IHtmlFormatter
     {
         #region Fields
 
@@ -17,7 +17,7 @@ namespace Nop.Services.Html
 
         #region Ctor
 
-        public NopHtmlHelper(IBBCodeHelper bbCodeHelper)
+        public HtmlFormatter(IBBCodeHelper bbCodeHelper)
         {
             _bbCodeHelper = bbCodeHelper;
         }

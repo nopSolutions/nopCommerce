@@ -1,12 +1,11 @@
 ﻿@model BlogPostModel
 
-@{
-    //resources for product tags input
-    Html.AppendCssFileParts("~/lib_npm/jquery-tageditor/jquery.tag-editor.css");
-    Html.AppendScriptParts("~/lib_npm/jquery-tageditor/jquery.tag-editor.min.js");
-    Html.AppendScriptParts("~/lib_npm/jquery-tageditor/jquery.caret.min.js");
-}
-<script>
+@* resources for product tags input *@
+<link rel="stylesheet" href="~/lib_npm/jquery-tageditor/jquery.tag-editor.css" />
+<script src="~/lib_npm/jquery-tageditor/jquery.caret.min.js"></script>
+<script src="~/lib_npm/jquery-tageditor/jquery.tag-editor.min.js"></script>
+
+<script asp-location="Footer">
     //tags
     $(document).ready(function() {
         @Html.Raw(Model.InitialBlogTags)

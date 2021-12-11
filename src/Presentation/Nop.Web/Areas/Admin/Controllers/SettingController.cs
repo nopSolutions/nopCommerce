@@ -48,6 +48,7 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
@@ -214,7 +215,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.InstallationConfigModel.ToConfig(_appSettings.Get<InstallationConfig>()),
                     model.PluginConfigModel.ToConfig(_appSettings.Get<PluginConfig>()),
                     model.CommonConfigModel.ToConfig(_appSettings.Get<CommonConfig>()),
-                    model.DataConfigModel.ToConfig(_appSettings.Get<DataConfig>())
+                    model.DataConfigModel.ToConfig(_appSettings.Get<DataConfig>()),
+                    model.WebOptimizerConfigModel.ToConfig(_appSettings.Get<WebOptimizerConfig>())
                 };
 
                 await _eventPublisher.PublishAsync(new AppSettingsSavingEvent(configurations));
@@ -861,6 +863,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.ExchangeRate, model.ExchangeRate_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.MinimumRewardPointsToUse, model.MinimumRewardPointsToUse_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.MaximumRewardPointsToUsePerOrder, model.MaximumRewardPointsToUsePerOrder_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.MaximumRedeemedRate, model.MaximumRedeemedRate_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.PointsForRegistration, model.PointsForRegistration_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.RegistrationPointsValidity, model.RegistrationPointsValidity_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.PointsForPurchases_Amount, model.PointsForPurchases_OverrideForStore, storeScope, false);
@@ -1414,10 +1417,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = await _settingModelFactory.PrepareGeneralCommonSettingsModelAsync();
 
-            //notify admin that CSS bundling is not allowed in virtual directories
-            if (model.MinificationSettings.EnableCssBundling && HttpContext.Request.PathBase.HasValue)
-                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning"));
-
             //show configuration tour
             if (showtour)
             {
@@ -1477,8 +1476,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //minification
                 commonSettings.EnableHtmlMinification = model.MinificationSettings.EnableHtmlMinification;
-                commonSettings.EnableJsBundling = model.MinificationSettings.EnableJsBundling;
-                commonSettings.EnableCssBundling = model.MinificationSettings.EnableCssBundling;
                 //use response compression
                 commonSettings.UseResponseCompression = model.MinificationSettings.UseResponseCompression;
 
@@ -1506,8 +1503,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(sitemapSettings, x => x.SitemapIncludeNews, model.SitemapSettings.SitemapIncludeNews_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(sitemapSettings, x => x.SitemapIncludeTopics, model.SitemapSettings.SitemapIncludeTopics_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.EnableHtmlMinification, model.MinificationSettings.EnableHtmlMinification_OverrideForStore, storeScope, false);
-                await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.EnableJsBundling, model.MinificationSettings.EnableJsBundling_OverrideForStore, storeScope, false);
-                await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.EnableCssBundling, model.MinificationSettings.EnableCssBundling_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.UseResponseCompression, model.MinificationSettings.UseResponseCompression_OverrideForStore, storeScope, false);
 
                 //now clear settings cache

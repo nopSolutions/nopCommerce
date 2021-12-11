@@ -11,6 +11,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -45,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
         private readonly IEncryptionService _encryptionService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IExportManager _exportManager;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
@@ -78,6 +80,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
             IEncryptionService encryptionService,
+            IEventPublisher eventPublisher,
             IExportManager exportManager,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
@@ -107,6 +110,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _dateTimeHelper = dateTimeHelper;
             _downloadService = downloadService;
             _encryptionService = encryptionService;
+            _eventPublisher = eventPublisher;
             _exportManager = exportManager;
             _giftCardService = giftCardService;
             _localizationService = localizationService;
@@ -207,9 +211,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = await _orderModelFactory.PrepareOrderSearchModelAsync(new OrderSearchModel
             {
-                OrderStatusIds = orderStatuses ?? new List<int>(),
-                PaymentStatusIds = paymentStatuses ?? new List<int>(),
-                ShippingStatusIds = shippingStatuses ?? new List<int>()
+                OrderStatusIds = orderStatuses,
+                PaymentStatusIds = paymentStatuses,
+                ShippingStatusIds = shippingStatuses
             });
 
             return View(model);
@@ -2096,10 +2100,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                     CreatedOnUtc = DateTime.UtcNow
                 });
 
-                if (model.CanShip)
+                await _eventPublisher.PublishAsync(new ShipmentCreatedEvent(shipment));
+
+                var canShip = !order.PickupInStore && model.CanShip;
+                if (canShip)
                     await _orderProcessingService.ShipAsync(shipment, true);
 
-                if (model.CanShip && model.CanDeliver)
+                var canMarkAsReadyForPickup = order.PickupInStore && model.CanMarkAsReadyForPickup;
+                if (canMarkAsReadyForPickup)
+                    await _orderProcessingService.ReadyForPickupAsync(shipment, true);
+
+                if ((canShip || canMarkAsReadyForPickup) && model.CanDeliver)
                     await _orderProcessingService.DeliverAsync(shipment, true);
 
                 await LogEditOrderAsync(order.Id);
@@ -2291,6 +2302,68 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("setasreadyforpickup")]
+        public virtual async Task<IActionResult> SetAsReadyForPickup(int id)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //try to get a shipment with the specified id
+            var shipment = await _shipmentService.GetShipmentByIdAsync(id);
+            if (shipment == null)
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
+                return RedirectToAction("List");
+
+            try
+            {
+                await _orderProcessingService.ReadyForPickupAsync(shipment, true);
+                await LogEditOrderAsync(shipment.OrderId);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+            catch (Exception exc)
+            {
+                //error
+                await _notificationService.ErrorNotificationAsync(exc);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+        }
+
+        [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("savereadyforpickupdate")]
+        public virtual async Task<IActionResult> EditReadyForPickupDate(ShipmentModel model)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //try to get a shipment with the specified id
+            var shipment = await _shipmentService.GetShipmentByIdAsync(model.Id);
+            if (shipment == null)
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
+                return RedirectToAction("List");
+
+            try
+            {
+                if (!model.ReadyForPickupDateUtc.HasValue)
+                    throw new Exception("Enter ready for pickup date");
+
+                shipment.ReadyForPickupDateUtc = model.ReadyForPickupDateUtc;
+                await _shipmentService.UpdateShipmentAsync(shipment);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+            catch (Exception exc)
+            {
+                await _notificationService.ErrorNotificationAsync(exc);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+        }
+
+        [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("setasdelivered")]
         public virtual async Task<IActionResult> SetAsDelivered(int id)
         {
@@ -2412,6 +2485,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 shippingCity: model.City,
                 trackingNumber: model.TrackingNumber,
                 loadNotShipped: model.LoadNotShipped,
+                loadNotReadyForPickup: model.LoadNotReadyForPickup,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue);
 
@@ -2501,6 +2575,38 @@ namespace Nop.Web.Areas.Admin.Controllers
                 try
                 {
                     await _orderProcessingService.ShipAsync(shipment, true);
+                }
+                catch
+                {
+                    //ignore any exception
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> SetAsReadyForPickupSelected(ICollection<int> selectedIds)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
+
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+
+            //a vendor should have access only to his products
+            if (await _workContext.GetCurrentVendorAsync() != null)
+            {
+                shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
+            }
+
+            foreach (var shipment in shipments)
+            {
+                try
+                {
+                    await _orderProcessingService.ReadyForPickupAsync(shipment, true);
                 }
                 catch
                 {

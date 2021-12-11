@@ -6,6 +6,19 @@
 {
     <div id="paypal-button-container"></div>
 
+    <div class="paypal-paylater"
+        data-pp-message
+        data-pp-layout="text"
+        data-pp-placement="payment"
+        data-pp-amount="@Model.OrderTotal">
+    </div>
+
+    <style type="text/css">
+        .paypal-paylater {
+          padding: 0 195px;
+        }
+    </style>
+
     <script asp-location="Footer">
         $(document).ready(function () {
             $('.payment-info-next-step-button').hide();
@@ -48,5 +61,5 @@
 
 @if (orderSettings.OnePageCheckoutEnabled)
 {
-    @Html.NopInlineScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
 }

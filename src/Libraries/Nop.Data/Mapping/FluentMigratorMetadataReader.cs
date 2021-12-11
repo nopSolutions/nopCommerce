@@ -7,7 +7,6 @@ using LinqToDB.Mapping;
 using LinqToDB.Metadata;
 using LinqToDB.SqlQuery;
 using Nop.Core;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Data.Mapping
 {

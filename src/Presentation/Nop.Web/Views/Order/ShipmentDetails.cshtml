@@ -3,9 +3,9 @@
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.ShipmentDetails").Text);
+    NopHtml.AddTitleParts(T("PageTitle.ShipmentDetails").Text);
     //page class
-    Html.AppendPageCssClassParts("html-shipment-details-page");
+    NopHtml.AppendPageCssClassParts("html-shipment-details-page");
 }
 <div class="page shipment-details-page">
     <div class="page-title">
@@ -22,17 +22,34 @@
                         <li class="shipping-method">
                             @T("Order.Shipments.ShippingMethod"): @Model.Order.ShippingMethod
                         </li>
-                        <li class="shipped-date">
-                            @T("Order.Shipments.ShippedDate"):
-                            @if (Model.ShippedDate.HasValue)
-                            {
-                                @Model.ShippedDate.Value.ToString("D")
-                            }
-                            else
-                            {
-                                @T("Order.Shipments.ShippedDate.NotYet")
-                            }
-                        </li>
+                        @if (Model.Order.PickupInStore)
+                        {
+                            <li class="ready-for-pickup-date">
+                                @T("Order.Shipments.ReadyForPickupDate"):
+                                @if (Model.ReadyForPickupDate.HasValue)
+                                {
+                                    @Model.ReadyForPickupDate.Value.ToString("D")
+                                }
+                                else
+                                {
+                                    @T("Order.Shipments.ReadyForPickupDate.NotYet")
+                                }
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="shipped-date">
+                                @T("Order.Shipments.ShippedDate"):
+                                @if (Model.ShippedDate.HasValue)
+                                {
+                                    @Model.ShippedDate.Value.ToString("D")
+                                }
+                                else
+                                {
+                                    @T("Order.Shipments.ShippedDate.NotYet")
+                                }
+                            </li>
+                        }
                         <li class="delivery-date">
                             @T("Order.Shipments.DeliveryDate"):
                             @if (Model.DeliveryDate.HasValue)

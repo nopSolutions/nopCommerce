@@ -34,10 +34,10 @@
     <Value>Định dạng chuỗi kết nối SQL không đúng</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Quốc gia</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Chọn quốc gia của bạn…</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Tạo cơ sở dữ liệu nếu không tồn tại</Value>
@@ -46,7 +46,7 @@
     <Value>Tạo dữ liệu mẫu</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>Tùy chỉnh đối chiếu</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Sở dữ liệu</Value>
@@ -103,13 +103,13 @@
     <Value>Bấm để khởi động lại quá trinh cài đặt (xóa tất cả các giá trị bộ nhớ tạm)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>Khởi động lại...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Server name</Value>
+    <Value>Tên máy chủ</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Server name is required</Value>
+    <Value>Yêu cầu tên máy chủ</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Cài đặt không thành công: {0}</Value>

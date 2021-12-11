@@ -475,7 +475,7 @@
     <Value>Log in</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.AlreadyLogin">
-      <Value>You are already logged in as {0}. You may log in to another account.</Value>
+    <Value>You are already logged in as {0}. You may log in to another account.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.CheckoutAsGuest">
     <Value>Checkout as Guest</Value>
@@ -4596,6 +4596,45 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly.Hint">
     <Value>Enable this setting to load an assembly into the load-from context, bypassing some security checks.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer">
+    <Value>Bundling &amp; minimization</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.CacheDirectory">
+    <Value>Cache directory</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.CacheDirectory.Hint">
+    <Value>Path of the directory where assets will be stored if disk cache is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.CssBundleSuffix">
+    <Value>Suffix of style bundle files</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.CssBundleSuffix.Hint">
+    <Value>Enter the key that will be put to the end of the bundle name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling">
+    <Value>CSS bundling and minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling.Hint">
+    <Value>Enable to combine (bundle) multiple CSS files into a single file. Do not enable if you're running nopCommerce in IIS virtual directory. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.EnableDiskCache">
+    <Value>Enable disk cache</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.EnableDiskCache.Hint">
+    <Value>Check to store assets on disk.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling">
+    <Value>JavaScript bundling and minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling.Hint">
+    <Value>Enable to combine (bundle) multiple JavaScript files into a single file. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.JavaScriptBundleSuffix">
+    <Value>Suffix of javascript bundle files</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.JavaScriptBundleSuffix.Hint">
+    <Value>Enter the key that will be put to the end of the bundle name.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Authentication">
     <Value>Authentication</Value>
   </LocaleResource>
@@ -7347,26 +7386,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning.Hint">
     <Value>Make the site EU cookie law compliant. When enabled, new customers will see an appropriate warning box.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling">
-    <Value>CSS bundling and minification</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint">
-    <Value>Enable to combine (bundle) multiple CSS files into a single file. Do not enable if you're running nopCommerce in IIS virtual directory. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning">
-    <Value>CSS bundling is not allowed in virtual directories</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification">
     <Value>HTML minification</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification.Hint">
     <Value>Allows you to minify HTML pages as well as compress them, thereby increasing the download speed. Please note that after applying this setting, you need to restart the application.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling">
-    <Value>JavaScript bundling and minification</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint">
-    <Value>Enable to combine (bundle) multiple JavaScript files into a single file. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey">
     <Value>Encryption private key</Value>
@@ -8417,6 +8441,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2">
     <Value>1 reward point =</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate">
+    <Value>Maximum redeemed rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate.Hint">
+    <Value>Limit the maximum order total that could be paid by reward points (in percent). For example, if set to 0.6, then only 60% of order total could be paid using reward points, but not more than the 'Maximum reward points to use per order'. Set to 0 if you do not want to use this setting.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder">
     <Value>Maximum reward points to use per order</Value>
@@ -10336,10 +10366,13 @@
     <Value>This message template is used to send "email a friend" message.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ShipmentDelivered.CustomerNotification">
-    <Value><![CDATA[This message template is used to notify a customer that the shipping status of the certain order is set to delivered. You can set up this option in Configuration - Settings - Shipping settings by ticking the checkbox <strong>Display shipment events (customers)</strong>.]]></Value>
+    <Value>This message template is used to notify a customer that the shipment of the certain order is delivered.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ShipmentReadyForPickup.CustomerNotification">
+    <Value>This message template is used to notify a customer that the shipment of the certain order is ready for pickup.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ShipmentSent.CustomerNotification">
-    <Value><![CDATA[This message template is used to notify a customer that the shipping status of the certain order is sent. You can set up this option in Configuration - Settings - Shipping settings by ticking the checkbox <strong>Display shipment events (customers)</strong>.]]></Value>
+    <Value>This message template is used to notify a customer that the shipment of the certain order is sent.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.VendorAccountApply.StoreOwnerNotification">
     <Value><![CDATA[This message template is used to notify a store owner that new user has applied for vendor account. You can allow customers to apply for vendor account in Configuration - Setting - Vendor settings by ticking the checkbox <strong>Allow customers to apply for vendor account</strong>.]]></Value>
@@ -10431,17 +10464,17 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Subject.Required">
     <Value>Subject is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore">
-    <Value>Store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore.Hint">
-    <Value>Search by a specific store.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords">
     <Value>Search keywords</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint">
     <Value>Search message template(s) by specific keywords.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test">
     <Value>Test template</Value>
@@ -12391,7 +12424,7 @@
     <Value>Community forums</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Help.SolutionPartners">
-     <Value>Solution partners</Value>
+    <Value>Solution partners</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Help.SupportServices">
     <Value>Premium support services</Value>
@@ -13173,6 +13206,12 @@
   <LocaleResource Name="Admin.Orders.Shipments.CanDeliver.Hint">
     <Value>Check to apply current date to delivery.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CanMarkAsReadyForPickup">
+    <Value>Ready for pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CanMarkAsReadyForPickup.Hint">
+    <Value>Check to apply current date to shipment.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.CanShip">
     <Value>Shipped</Value>
   </LocaleResource>
@@ -13184,6 +13223,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.CustomOrderNumber.Hint">
     <Value>The order associated to this shipment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.DateNotAvailable">
+    <Value>-</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Deleted">
     <Value>The shipment has been deleted successfully.</Value>
@@ -13242,6 +13284,12 @@
   <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotDelivered.Hint">
     <Value>Load only undelivered shipments</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotReadyForPickup">
+    <Value>Load not ready for pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotReadyForPickup.Hint">
+    <Value>Load only not ready for pickup shipments.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotShipped">
     <Value>Load not shipped</Value>
   </LocaleResource>
@@ -13284,6 +13332,9 @@
   <LocaleResource Name="Admin.Orders.Shipments.NoShipmentsSelected">
     <Value>No shipments selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PickupInStore">
+    <Value>Pickup from store</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip">
     <Value>Print packaging slip</Value>
   </LocaleResource>
@@ -13311,8 +13362,14 @@
   <LocaleResource Name="Admin.Orders.Shipments.Products.QtyOrdered">
     <Value>Qty ordered</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.QtyReadyForPickup">
+    <Value>Qty ready for pickup</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.QtyShipped">
     <Value>Qty shipped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.QtyToPickup">
+    <Value>Qty to pickup</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.QtyToShip">
     <Value>Qty to ship</Value>
@@ -13337,6 +13394,24 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough">
     <Value>[Reserved - Planned] quantity value of some products are less than specified quantity to be shipped. Are you sure?</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ReadyForPickupDate">
+    <Value>Date ready for pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ReadyForPickupDate.Button">
+    <Value>Set as ready for pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ReadyForPickupDate.EnterUtc">
+    <Value>Date and time should be entered in Coordinated Universal Time (UTC)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ReadyForPickupDate.Hint">
+    <Value>The date this shipment was ready for pickup.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ReadyForPickupDate.NotYet">
+    <Value>Not yet</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ReadyForPickupSelected">
+    <Value>Set as ready for pickup (selected)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents">
     <Value>Shipment status events</Value>
@@ -14418,6 +14493,12 @@
   <LocaleResource Name="Admin.ReturnRequests.Fields.Quantity.Hint">
     <Value>Entered quantity.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Quantity.MustBeEqualOrGreaterThanReturnedQuantityField">
+    <Value>The quantity must be equal or greater than the quantity to be returned to stock: {0}.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Quantity.Required">
+    <Value>The quantity is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.ReasonForReturn">
     <Value>Reason for return</Value>
   </LocaleResource>
@@ -14435,6 +14516,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.RequestedAction.Required">
     <Value>Requested action is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity">
+    <Value>Quantity returned to stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity.CannotBeLessThanQuantityAlreadyReturned">
+    <Value>The quantity to be returned to stock cannot be less than quantity already returned: {0}.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity.Hint">
+    <Value>The quantity already returned to stock.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeEqualOrGreaterThanZero">
+    <Value>The quantity to be returned to stock must be equal or greater than zero.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeLessOrEqualQuantityField">
+    <Value>The quantity to be returned to stock must be less or equal the quantity field: {0}.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.StaffNotes">
     <Value>Staff notes</Value>
@@ -14465,6 +14561,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.OrderItemDeleted">
     <Value>Order item is deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.QuantityReturnedToStock">
+    <Value>{0} item(s) have been successfully returned to the stock.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.SearchCustomNumber">
     <Value>ID</Value>
@@ -15390,6 +15489,9 @@
   <LocaleResource Name="Admin.System.Templates.Manufacturer.ViewPath.Required">
     <Value>View path is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.NotDeleteOnlyOne">
+      <Value>It is forbidden to delete a template if it is the only one.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Product">
     <Value>Product templates</Value>
   </LocaleResource>
@@ -16168,7 +16270,7 @@
     <Value>Continue</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.UseRewardPoints">
-    <Value>Use my reward points, {0} reward points ({1}) available for this order</Value>
+    <Value>Use my reward points, {0} of {1} reward points ({2}) available for this order</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.YourOrderHasBeenSuccessfullyProcessed">
     <Value>Your order has been successfully processed!</Value>
@@ -16875,17 +16977,17 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Tax.VatNumberStatus.Valid">
     <Value>Valid</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Data.DataProviderType.Unknown">
-    <Value>Unknown</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Data.DataProviderType.SqlServer">
-    <Value>Microsoft SQL Server</Value>
-  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Data.DataProviderType.MySql">
     <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Data.DataProviderType.PostgreSQL">
     <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Data.DataProviderType.SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Data.DataProviderType.Unknown">
+    <Value>Unknown</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Services.Orders.GroupByOptions.Day">
     <Value>Day</Value>
@@ -17642,6 +17744,12 @@
   </LocaleResource>
   <LocaleResource Name="Order.Shipments.Product(s).SKU">
     <Value>SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.ReadyForPickupDate">
+    <Value>Date ready for pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.ReadyForPickupDate.NotYet">
+    <Value>Not yet</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Shipments.ShippedDate">
     <Value>Date shipped</Value>

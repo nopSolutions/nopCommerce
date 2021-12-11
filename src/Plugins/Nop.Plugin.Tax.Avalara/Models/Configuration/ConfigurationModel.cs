@@ -74,6 +74,9 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
         public int TaxOriginAddressTypeId { get; set; }
         public IList<SelectListItem> TaxOriginAddressTypes { get; set; }
 
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.UseTaxRateTables")]
+        public bool UseTaxRateTables { get; set; }
+
         [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly")]
         public bool GetTaxRateByAddressOnly { get; set; }
 

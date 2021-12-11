@@ -39,7 +39,7 @@
       var self = this;
       this.params.jqXHR = $.ajax({
         cache: false,
-        url: urlBuilder.addBaseUrl(this.settings.fetchUrl).build(),
+        url: urlBuilder.addBasePath(this.settings.fetchUrl).build(),
         type: 'GET',
         success: function (response) {
           $('.products-wrapper').html(response);
@@ -69,15 +69,15 @@
   }
 }
 
-function createProductsURLBuilder(baseUrl) {
+function createProductsURLBuilder(basePath) {
   return {
     params: {
-      baseUrl: baseUrl,
+      basePath: basePath,
       query: {}
     },
 
-    addBaseUrl: function (url) {
-      this.params.baseUrl = url;
+    addBasePath: function (url) {
+      this.params.basePath = url;
       return this;
     },
 
@@ -88,7 +88,7 @@ function createProductsURLBuilder(baseUrl) {
 
     build: function () {
       var query = $.param(this.params.query);
-      var url = this.params.baseUrl;
+      var url = this.params.basePath;
 
       return url.indexOf('?') !== -1
         ? url + '&' + query

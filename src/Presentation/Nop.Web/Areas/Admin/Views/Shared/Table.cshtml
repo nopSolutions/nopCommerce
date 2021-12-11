@@ -2,10 +2,6 @@
 
 @using System.Net;
 
-@{
-    Html.AppendScriptParts("~/js/admin.table.js");
-}
-
 @functions
 {
     string GetUrl(DataUrl dataUrl)
@@ -31,6 +27,9 @@
         }
     }
 }
+
+<script asp-exclude-from-bundle="true" src="~/js/admin.table.js" asp-location="Footer"></script>
+
 <table class="table table-bordered table-hover table-striped dataTable" width="100%" id="@Model.Name">
     @if (Model.FooterColumns > 0)
     {
@@ -55,7 +54,7 @@
     GetAllModels(Model, listOfTables);
 }
 
-<script>
+<script asp-location="Footer">
     $(document).ready(function () {
         $('#@Model.Name').DataTable({
             @await Html.PartialAsync("_Table.Definition", Model)
@@ -106,7 +105,7 @@
     {
         var tableName = ReplaceName(curModel.Name);
         <text>
-        <script>
+        <script asp-location="Footer">
             function table_deletedata_@(tableName)(dataId) {
                 if (confirm('@T("Admin.Common.DeleteConfirmation")')) {
                     var postData = {
@@ -177,7 +176,7 @@
                     'Editable': @column.Editable.ToString().ToLowerInvariant(),
                     'Type': '@column.EditType.ToString().ToLowerInvariant()'
                 }
-                columnData_ @(tableName).push(obj);
+                columnData_@(tableName).push(obj);
                 </text>
             }
 
@@ -366,7 +365,7 @@
                 footerHtml = string.Concat("<tfoot><tr>", footerHtml, "</tr></tfoot>");
             }
             <text>
-            <script>
+            <script asp-location="Footer">
                 function getchild_@(tableName)(d) {
                     return '<table id="child' + d.@(curModel.PrimaryKeyColumn) + '_@(tableName)' + '" class="table table-bordered table-hover dataTable" width="100%">@(Html.Raw(footerHtml))</table>';
                 }

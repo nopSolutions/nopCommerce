@@ -332,6 +332,9 @@ namespace Nop.Services.Configuration
         {
             var settings = Activator.CreateInstance(type);
 
+            if (!DataSettingsManager.IsDatabaseInstalled())
+                return settings as ISettings;
+
             foreach (var prop in type.GetProperties())
             {
                 // get properties we can read and write to

@@ -96,6 +96,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 ValidateAddress = _avalaraTaxSettings.ValidateAddress,
                 TaxOriginAddressTypeId = (int)_avalaraTaxSettings.TaxOriginAddressType,
                 EnableLogging = _avalaraTaxSettings.EnableLogging,
+                UseTaxRateTables = _avalaraTaxSettings.UseTaxRateTables,
                 GetTaxRateByAddressOnly = _avalaraTaxSettings.GetTaxRateByAddressOnly,
                 EnableCertificates = _avalaraTaxSettings.EnableCertificates,
                 AutoValidateCertificate = _avalaraTaxSettings.AutoValidateCertificate,
@@ -179,6 +180,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             _avalaraTaxSettings.ValidateAddress = model.ValidateAddress;
             _avalaraTaxSettings.TaxOriginAddressType = (TaxOriginAddressType)model.TaxOriginAddressTypeId;
             _avalaraTaxSettings.EnableLogging = model.EnableLogging;
+            _avalaraTaxSettings.UseTaxRateTables = model.UseTaxRateTables;
             _avalaraTaxSettings.GetTaxRateByAddressOnly = model.GetTaxRateByAddressOnly;
             _avalaraTaxSettings.EnableCertificates = model.EnableCertificates;
             _avalaraTaxSettings.AutoValidateCertificate = model.AutoValidateCertificate;
@@ -285,11 +287,11 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (transaction?.totalTax != null)
             {
                 //display tax rates by jurisdictions
-                testTaxResult = $"Total tax rate: {transaction.totalTax:0.00}% {Environment.NewLine}";
+                testTaxResult = $"Total tax rate: {transaction.totalTax:0.000}% {Environment.NewLine}";
                 if (transaction.summary?.Any() ?? false)
                 {
                     testTaxResult = transaction.summary.Aggregate(testTaxResult, (resultString, rate) =>
-                        $"{resultString}Jurisdiction: {rate?.jurisName}, Tax rate: {(rate?.rate ?? 0) * 100:0.00}% {Environment.NewLine}");
+                        $"{resultString}Jurisdiction: {rate?.jurisName}, Tax rate: {(rate?.rate ?? 0) * 100:0.000}% {Environment.NewLine}");
                 }
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TestTax.Success"));
             }

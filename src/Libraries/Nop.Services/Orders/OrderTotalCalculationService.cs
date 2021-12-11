@@ -677,15 +677,23 @@ namespace Nop.Services.Orders
             if (!useRewardPoints.Value)
                 return (redeemedRewardPoints, redeemedRewardPointsAmount);
 
-            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
-            rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
-
-            if (!CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
+            if (orderTotal <= decimal.Zero)
                 return (redeemedRewardPoints, redeemedRewardPointsAmount);
+
+            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
+
+            if (_rewardPointsSettings.MaximumRewardPointsToUsePerOrder > 0 && rewardPointsBalance > _rewardPointsSettings.MaximumRewardPointsToUsePerOrder)
+                rewardPointsBalance = _rewardPointsSettings.MaximumRewardPointsToUsePerOrder;
 
             var rewardPointsBalanceAmount = await ConvertRewardPointsToAmountAsync(rewardPointsBalance);
 
-            if (orderTotal <= decimal.Zero)
+            if (_rewardPointsSettings.MaximumRedeemedRate > 0 && _rewardPointsSettings.MaximumRedeemedRate < rewardPointsBalanceAmount / orderTotal)
+            {
+                rewardPointsBalance = ConvertAmountToRewardPoints(orderTotal * _rewardPointsSettings.MaximumRedeemedRate);
+                rewardPointsBalanceAmount = await ConvertRewardPointsToAmountAsync(rewardPointsBalance);
+            }
+
+            if (!CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 return (redeemedRewardPoints, redeemedRewardPointsAmount);
 
             if (orderTotal > rewardPointsBalanceAmount)

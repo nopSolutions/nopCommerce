@@ -249,6 +249,16 @@
                             </div>
                             <div class="form-group row advanced-setting">
                                 <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="DisplayPayLaterMessages_OverrideForStore" asp-input="DisplayPayLaterMessages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="DisplayPayLaterMessages" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="DisplayPayLaterMessages" />
+                                    <span asp-validation-for="DisplayPayLaterMessages"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row advanced-setting">
+                                <div class="col-md-3">
                                     <nop-override-store-checkbox asp-for="DisplayLogoInHeaderLinks_OverrideForStore" asp-input="DisplayLogoInHeaderLinks" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                     <nop-label asp-for="DisplayLogoInHeaderLinks" />
                                 </div>
