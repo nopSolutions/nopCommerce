@@ -91,8 +91,8 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="addDefaultTitle">A value indicating whether to insert a default title</param>
         /// <param name="part">Title part</param>
-        /// <returns>Generated string</returns>
-        public virtual string GenerateTitle(bool addDefaultTitle = true, string part = "")
+        /// <returns>Generated HTML string</returns>
+        public virtual IHtmlContent GenerateTitle(bool addDefaultTitle = true, string part = "")
         {
             AppendTitleParts(part);
 
@@ -129,7 +129,7 @@ namespace Nop.Web.Framework.UI
                 //store name only
                 result = _seoSettings.DefaultTitle;
             }
-            return _htmlEncoder.Encode(result);
+            return new HtmlString(_htmlEncoder.Encode(result));
         }
 
         /// <summary>
@@ -160,15 +160,15 @@ namespace Nop.Web.Framework.UI
         /// Generate all description parts
         /// </summary>
         /// <param name="part">Meta description part</param>
-        /// <returns>Generated string</returns>
-        public virtual string GenerateMetaDescription(string part = "")
+        /// <returns>Generated HTML string</returns>
+        public virtual IHtmlContent GenerateMetaDescription(string part = "")
         {
             AppendMetaDescriptionParts(part);
 
             var metaDescription = string.Join(", ", _metaDescriptionParts.AsEnumerable().Reverse().ToArray());
             var result = !string.IsNullOrEmpty(metaDescription) ? metaDescription : _seoSettings.DefaultMetaDescription;
 
-            return _htmlEncoder.Encode(result);
+            return new HtmlString(_htmlEncoder.Encode(result));
         }
 
         /// <summary>
@@ -199,15 +199,15 @@ namespace Nop.Web.Framework.UI
         /// Generate all keyword parts
         /// </summary>
         /// <param name="part">Meta keyword part</param>
-        /// <returns>Generated string</returns>
-        public virtual string GenerateMetaKeywords(string part = "")
+        /// <returns>Generated HTML string</returns>
+        public virtual IHtmlContent GenerateMetaKeywords(string part = "")
         {
             AppendMetaKeywordParts(part);
 
             var metaKeyword = string.Join(", ", _metaKeywordParts.AsEnumerable().Reverse().ToArray());
             var result = !string.IsNullOrEmpty(metaKeyword) ? metaKeyword : _seoSettings.DefaultMetaKeywords;
 
-            return _htmlEncoder.Encode(result);
+            return new HtmlString(_htmlEncoder.Encode(result));
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace Nop.Web.Framework.UI
         /// Generate all script parts
         /// </summary>
         /// <param name="location">A location of the script element</param>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateScripts(ResourceLocation location)
         {
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
@@ -332,7 +332,7 @@ namespace Nop.Web.Framework.UI
         /// Generate all inline script parts
         /// </summary>
         /// <param name="location">A location of the script element</param>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateInlineScripts(ResourceLocation location)
         {
             if (!_inlineScriptParts.ContainsKey(location) || _inlineScriptParts[location] == null)
@@ -402,7 +402,7 @@ namespace Nop.Web.Framework.UI
         /// Generate all CSS parts
         /// </summary>
         /// <param name="location">A location of the script element</param>
-        /// <returns>Generated HTML</returns>
+        /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateCssFiles(ResourceLocation location)
         {
             if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
@@ -461,7 +461,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all canonical URL parts
         /// </summary>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateCanonicalUrls()
         {
             var result = new StringBuilder();
@@ -500,7 +500,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all custom elements
         /// </summary>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateHeadCustom()
         {
             //use only distinct rows

@@ -24,8 +24,8 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="addDefaultTitle">A value indicating whether to insert a default title</param>
         /// <param name="part">Title part</param>
-        /// <returns>Generated string</returns>
-        string GenerateTitle(bool addDefaultTitle = true, string part = "");
+        /// <returns>Generated HTML string</returns>
+        IHtmlContent GenerateTitle(bool addDefaultTitle = true, string part = "");
 
         /// <summary>
         /// Add meta description element to the <![CDATA[<head>]]>
@@ -43,8 +43,8 @@ namespace Nop.Web.Framework.UI
         /// Generate all description parts
         /// </summary>
         /// <param name="part">Meta description part</param>
-        /// <returns>Generated string</returns>
-        string GenerateMetaDescription(string part = "");
+        /// <returns>Generated HTML string</returns>
+        IHtmlContent GenerateMetaDescription(string part = "");
 
         /// <summary>
         /// Add meta keyword element to the <![CDATA[<head>]]>
@@ -62,8 +62,8 @@ namespace Nop.Web.Framework.UI
         /// Generate all keyword parts
         /// </summary>
         /// <param name="part">Meta keyword part</param>
-        /// <returns>Generated string</returns>
-        string GenerateMetaKeywords(string part = "");
+        /// <returns>Generated HTML string</returns>
+        IHtmlContent GenerateMetaKeywords(string part = "");
 
         /// <summary>
         /// Add script element
@@ -87,7 +87,7 @@ namespace Nop.Web.Framework.UI
         /// Generate all script parts
         /// </summary>
         /// <param name="location">A location of the script element</param>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         IHtmlContent GenerateScripts(ResourceLocation location);
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Nop.Web.Framework.UI
         /// Generate all inline script parts
         /// </summary>
         /// <param name="location">A location of the script element</param>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         IHtmlContent GenerateInlineScripts(ResourceLocation location);
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Nop.Web.Framework.UI
         /// Generate all CSS parts
         /// </summary>
         /// <param name="location">A location of the script element</param>
-        /// <returns>Generated HTML</returns>
+        /// <returns>Generated HTML string</returns>
         IHtmlContent GenerateCssFiles(ResourceLocation location);
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all canonical URL parts
         /// </summary>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         IHtmlContent GenerateCanonicalUrls();
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all custom elements
         /// </summary>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         IHtmlContent GenerateHeadCustom();
 
         /// <summary>
