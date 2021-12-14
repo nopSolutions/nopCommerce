@@ -84,6 +84,20 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
+        /// Converted property value to Int32
+        /// </summary>
+        public int? IntValueNullable
+        {
+            get
+            {
+                if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out var rez))
+                    return null;
+
+                return rez;
+            }
+        }
+
+        /// <summary>
         /// Converted property value to boolean
         /// </summary>
         public bool BooleanValue

@@ -664,7 +664,10 @@ namespace Nop.Services.ExportImport
                 await _productAttributeService.UpdateProductAttributeMappingAsync(productAttributeMapping);
             }
 
-            var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(productAttributeValueId);
+            var pav = (await _productAttributeService.GetProductAttributeValuesAsync(productAttributeMapping.Id))
+                .FirstOrDefault(p => p.Id == productAttributeValueId);
+
+            //var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(productAttributeValueId);
 
             var attributeControlType = (AttributeControlType)attributeControlTypeId;
 
@@ -676,6 +679,17 @@ namespace Nop.Services.ExportImport
                     case AttributeControlType.FileUpload:
                     case AttributeControlType.MultilineTextbox:
                     case AttributeControlType.TextBox:
+                        if (productAttributeMapping.ValidationRulesAllowed())
+                        {
+                            productAttributeMapping.ValidationMinLength = productAttributeManager.GetProperty("ValidationMinLength")?.IntValueNullable;
+                            productAttributeMapping.ValidationMaxLength = productAttributeManager.GetProperty("ValidationMaxLength")?.IntValueNullable;
+                            productAttributeMapping.ValidationFileMaximumSize = productAttributeManager.GetProperty("ValidationFileMaximumSize")?.IntValueNullable;
+                            productAttributeMapping.ValidationFileAllowedExtensions = productAttributeManager.GetProperty("ValidationFileAllowedExtensions")?.StringValue;
+                            productAttributeMapping.DefaultValue = productAttributeManager.GetProperty("DefaultValue")?.StringValue;
+
+                            await _productAttributeService.UpdateProductAttributeMappingAsync(productAttributeMapping);
+                        }
+
                         return;
                 }
 
@@ -826,6 +840,11 @@ namespace Nop.Services.ExportImport
             {
                 new PropertyByName<ExportProductAttribute>("AttributeId"),
                 new PropertyByName<ExportProductAttribute>("AttributeName"),
+                new PropertyByName<ExportProductAttribute>("DefaultValue"),
+                new PropertyByName<ExportProductAttribute>("ValidationMinLength"),
+                new PropertyByName<ExportProductAttribute>("ValidationMaxLength"),
+                new PropertyByName<ExportProductAttribute>("ValidationFileAllowedExtensions"),
+                new PropertyByName<ExportProductAttribute>("ValidationFileMaximumSize"),
                 new PropertyByName<ExportProductAttribute>("AttributeTextPrompt"),
                 new PropertyByName<ExportProductAttribute>("AttributeIsRequired"),
                 new PropertyByName<ExportProductAttribute>("AttributeControlType"),

@@ -442,6 +442,11 @@ namespace Nop.Services.ExportImport
             {
                 new PropertyByName<ExportProductAttribute>("AttributeId", p => p.AttributeId),
                 new PropertyByName<ExportProductAttribute>("AttributeName", p => p.AttributeName),
+                new PropertyByName<ExportProductAttribute>("DefaultValue", p => p.DefaultValue),
+                new PropertyByName<ExportProductAttribute>("ValidationMinLength", p => p.ValidationMinLength),
+                new PropertyByName<ExportProductAttribute>("ValidationMaxLength", p => p.ValidationMaxLength),
+                new PropertyByName<ExportProductAttribute>("ValidationFileAllowedExtensions", p => p.ValidationFileAllowedExtensions),
+                new PropertyByName<ExportProductAttribute>("ValidationFileMaximumSize", p => p.ValidationFileMaximumSize),
                 new PropertyByName<ExportProductAttribute>("AttributeTextPrompt", p => p.AttributeTextPrompt),
                 new PropertyByName<ExportProductAttribute>("AttributeIsRequired", p => p.AttributeIsRequired),
                 new PropertyByName<ExportProductAttribute>("AttributeControlType", p => p.AttributeControlTypeId)
@@ -549,7 +554,9 @@ namespace Nop.Services.ExportImport
                 {
                     var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
 
-                    if (await _productAttributeService.GetProductAttributeValuesAsync(pam.Id) is IList<ProductAttributeValue> values)
+                    var values = await _productAttributeService.GetProductAttributeValuesAsync(pam.Id);
+
+                    if (values?.Any() ?? false)
                         return values.Select(pav =>
                             new ExportProductAttribute
                             {
@@ -576,28 +583,30 @@ namespace Nop.Services.ExportImport
                                 PictureId = pav.PictureId
                             });
 
+                    var attribute = new ExportProductAttribute
+                    {
+                        AttributeId = productAttribute.Id,
+                        AttributeName = productAttribute.Name,
+                        AttributeTextPrompt = pam.TextPrompt,
+                        AttributeIsRequired = pam.IsRequired,
+                        AttributeControlTypeId = pam.AttributeControlTypeId,
+                    };
+
+                    //validation rules
+                    if (!pam.ValidationRulesAllowed())
+                        return new List<ExportProductAttribute> {attribute};
+
+                    attribute.ValidationMinLength = pam.ValidationMinLength;
+                    attribute.ValidationMaxLength = pam.ValidationMaxLength;
+                    attribute.ValidationFileAllowedExtensions = pam.ValidationFileAllowedExtensions;
+                    attribute.ValidationFileMaximumSize = pam.ValidationFileMaximumSize;
+                    attribute.DefaultValue = pam.DefaultValue;
+
                     return new List<ExportProductAttribute>
                     {
-                        new ExportProductAttribute
-                        {
-                            AttributeId = productAttribute.Id,
-                            AttributeName = productAttribute.Name,
-                            AttributeTextPrompt = pam.TextPrompt,
-                            AttributeIsRequired = pam.IsRequired,
-                            AttributeControlTypeId = pam.AttributeControlTypeId
-                        }
+                        attribute
                     };
                 }).ToListAsync();
-
-            //attributes.AddRange(item.ProductAttributeMappings.Where(pam => !pam.ProductAttributeValues.Any()).Select(
-            //    pam => new ExportProductAttribute
-            //    {
-            //        AttributeId = pam.ProductAttribute.Id,
-            //        AttributeName = pam.ProductAttribute.Name,
-            //        AttributeTextPrompt = pam.TextPrompt,
-            //        AttributeIsRequired = pam.IsRequired,
-            //        AttributeControlTypeId = pam.AttributeControlTypeId
-            //    }));
 
             if (!attributes.Any())
                 return row;
