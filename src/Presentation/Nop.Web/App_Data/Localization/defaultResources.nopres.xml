@@ -10468,7 +10468,7 @@
     <Value>Search keywords</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint">
-    <Value>Search message template(s) by specific keywords.</Value>
+    <Value>Keywords to search by name, body, or subject.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore">
     <Value>Store</Value>

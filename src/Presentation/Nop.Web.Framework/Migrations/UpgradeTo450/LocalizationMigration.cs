@@ -45,7 +45,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             {
                 //#5696
                 ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords"] = "Search keywords",
-                ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint"] = "Search message template(s) by specific keywords.",
+                ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint"] = "Keywords to search by name, body, or subject.",
 
 				//New configurations to forward proxied headers
                 ["Admin.Configuration.AppSettings.Hosting.ForwardedForHeaderName"] = "The header used to retrieve the originating client IP",
