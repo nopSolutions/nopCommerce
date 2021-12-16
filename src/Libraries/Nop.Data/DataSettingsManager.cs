@@ -98,10 +98,11 @@ namespace Nop.Data
         /// Load data settings
         /// </summary>
         /// <param name="fileProvider">File provider</param>
+        /// <param name="reload">Force loading settings from disk</param>
         /// <returns>Data settings</returns>
-        public static DataConfig LoadSettings(INopFileProvider fileProvider = null)
+        public static DataConfig LoadSettings(INopFileProvider fileProvider = null, bool reload = false)
         {
-            if (Singleton<DataConfig>.Instance is not null)
+            if (!reload && Singleton<DataConfig>.Instance is not null)
                 return Singleton<DataConfig>.Instance;
 
             //backward compatibility
@@ -118,11 +119,13 @@ namespace Nop.Data
                 fileProvider.DeleteFile(filePath_json);
                 fileProvider.DeleteFile(filePath_txt);
 
-                SaveSettings(dataSettings, fileProvider);
+                AppSettingsHelper.SaveAppSettings(new List<IConfig> { dataSettings }, fileProvider);
                 Singleton<DataConfig>.Instance = dataSettings;
             }
             else
+            {
                 Singleton<DataConfig>.Instance = Singleton<AppSettings>.Instance.Get<DataConfig>();
+            }
 
             return Singleton<DataConfig>.Instance;
         }
@@ -134,8 +137,8 @@ namespace Nop.Data
         /// <param name="fileProvider">File provider</param>
         public static void SaveSettings(DataConfig dataSettings, INopFileProvider fileProvider)
         {
-            Singleton<DataConfig>.Instance = null;
             AppSettingsHelper.SaveAppSettings(new List<IConfig> { dataSettings }, fileProvider);
+            LoadSettings(fileProvider, reload: true);
         }
 
         /// <summary>
