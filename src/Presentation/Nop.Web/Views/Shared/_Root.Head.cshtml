@@ -21,7 +21,7 @@
     var displayMiniProfiler = appSettings.Get<CommonConfig>().MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
 
     //event
-    await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
+    await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
 }
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
@@ -36,8 +36,7 @@
     @*This is used so that themes can inject content into the header*@
     @await Html.PartialAsync("Head")
 
-    @NopHtml.GenerateCssFiles(ResourceLocation.Head)
-    <style-bundle /> @* bundle tag must be below other link tags *@
+    @NopHtml.GenerateCssFiles()
 
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
     @NopHtml.GenerateCanonicalUrls()
@@ -74,9 +73,6 @@
     <script src="~/js/public.countryselect.js"></script>
     <script src="~/js/public.ajaxcart.js"></script>
     <script src="~/js/public.common.js"></script>
-
-    <!-- FooterScripts  -->
-    <script-bundle />
 
     @NopHtml.GenerateScripts(ResourceLocation.Footer)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)

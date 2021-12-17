@@ -16,8 +16,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
             var rootDir = fileProvider.MapPath("~/");
-            
+
             var config = new WebOptimizerConfig {
+                EnableTagHelperBundling = false,
                 EnableCaching = true,
                 EnableDiskCache = true,
                 AllowEmptyBundle = true,

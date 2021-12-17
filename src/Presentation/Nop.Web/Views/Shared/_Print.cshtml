@@ -10,9 +10,7 @@
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <link href="~/Themes/@themeName/Content/css/print.css" rel="stylesheet" type="text/css" />
 
-    @NopHtml.GenerateCssFiles(ResourceLocation.Head)
-    <style-bundle /> @* bundle tag must be below other link tags *@
-    
+    @NopHtml.GenerateCssFiles()    
     @NopHtml.GenerateScripts(ResourceLocation.Head)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
 </head>
@@ -30,8 +28,6 @@
     {
         <script src="~/lib_npm/jquery-migrate/jquery-migrate.min.js"></script>
     }
-
-    <script-bundle />
 
     @NopHtml.GenerateScripts(ResourceLocation.Footer)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)

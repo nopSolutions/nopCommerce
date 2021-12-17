@@ -29,7 +29,7 @@
     var currentCustomer = await workContext.GetCurrentCustomerAsync();
 
     //event
-    await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
+    await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
 
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
@@ -213,9 +213,6 @@
             </div>
         </div>
     </div>
-
-    <!-- FooterScripts  -->
-    <script-bundle />
 
     @NopHtml.GenerateScripts(ResourceLocation.Footer)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)

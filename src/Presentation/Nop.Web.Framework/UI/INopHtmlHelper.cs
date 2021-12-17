@@ -71,8 +71,9 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool isAsync = false);
+        void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false);
 
         /// <summary>
         /// Append script element
@@ -80,8 +81,9 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool isAsync = false);
+        void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false);
 
         /// <summary>
         /// Generate all script parts
@@ -114,25 +116,24 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Add CSS element
         /// </summary>
-        /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        void AddCssFileParts(ResourceLocation location, string src, string debugSrc);
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this style sheet from bundling</param>
+        void AddCssFileParts(string src, string debugSrc, bool excludeFromBundle = false);
 
         /// <summary>
         /// Append CSS element
         /// </summary>
-        /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        void AppendCssFileParts(ResourceLocation location, string src, string debugSrc);
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this style sheet from bundling</param>
+        void AppendCssFileParts(string src, string debugSrc, bool excludeFromBundle = false);
 
         /// <summary>
         /// Generate all CSS parts
         /// </summary>
-        /// <param name="location">A location of the script element</param>
         /// <returns>Generated HTML string</returns>
-        IHtmlContent GenerateCssFiles(ResourceLocation location);
+        IHtmlContent GenerateCssFiles();
 
         /// <summary>
         /// Add canonical URL element to the <![CDATA[<head>]]>
@@ -213,5 +214,12 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <returns>System name</returns>
         string GetActiveMenuItemSystemName();
+
+        /// <summary>
+        /// Get the route name associated with the request rendering this page
+        /// </summary>
+        /// <param name="handleDefaultRoutes">A value indicating whether to build the name using engine information unless otherwise specified</param>
+        /// <returns>Route name</returns>
+        string GetRouteName(bool handleDefaultRoutes = false);
     }
 }
