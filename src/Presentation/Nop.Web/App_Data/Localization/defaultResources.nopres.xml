@@ -475,7 +475,7 @@
     <Value>Log in</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.AlreadyLogin">
-    <Value>You are already logged in as {0}. You may log in to another account.</Value>
+    <Value>You are already logged in as {0}. You may log in with another account.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.CheckoutAsGuest">
     <Value>Checkout as Guest</Value>
@@ -8623,7 +8623,7 @@
     <Value>Sort shipping methods by</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingSorting.Hint">
-    <Value>Select the field to sort the shipping by.</Value>
+    <Value>Select the field to sort the shipping methods by.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress">
     <Value>Ship to the same address</Value>
@@ -15490,7 +15490,7 @@
     <Value>View path is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.NotDeleteOnlyOne">
-      <Value>It is forbidden to delete a template if it is the only one.</Value>
+      <Value>It's not allowed to delete the only one template.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Product">
     <Value>Product templates</Value>

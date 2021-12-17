@@ -72,7 +72,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Admin.Common.Alert.NothingSelected"] = "Please select at least one record.",
 
                 //#5316
-                ["Account.Login.AlreadyLogin"] = "You are already logged in as {0}. You may log in to another account.",
+                ["Account.Login.AlreadyLogin"] = "You are already logged in as {0}. You may log in with another account.",
 
                 //#5511
                 ["Admin.Configuration.AppSettings.Data"] = "Data configuration",
@@ -144,7 +144,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
                 //#5204
                 ["Admin.Configuration.Settings.Shipping.ShippingSorting"] = "Sort shipping methods by",
-                ["Admin.Configuration.Settings.Shipping.ShippingSorting.Hint"] = "Select the field to sort the shipping by.",
+                ["Admin.Configuration.Settings.Shipping.ShippingSorting.Hint"] = "Select the field to sort shipping methods by.",
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position"] = "Position",
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost"] = "Shipping Cost",
                 //#5138
@@ -167,7 +167,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Checkout.UseRewardPoints"] = "Use my reward points, {0} of {1} reward points ({2}) available for this order",
 
                 //#6007
-                ["Admin.System.Templates.NotDeleteOnlyOne"] = "It is forbidden to delete a template if it is the only one."
+                ["Admin.System.Templates.NotDeleteOnlyOne"] = "It's not allowed to delete the only one template."
             }, languageId).Wait();
 
             // rename locales
