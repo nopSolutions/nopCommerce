@@ -159,19 +159,28 @@ namespace Nop.Services.Catalog
             {
                 case LowStockActivity.DisableBuyButton:
                 {
-                    var shouldDisableButtons = belowMinimumStock || shouldRepublishWhenBackInStock;
+                    if (belowMinimumStock)
+                    {
+                        product.DisableBuyButton = true;
+                        product.DisableWishlistButton = true;
+                    }
+                    else if (shouldRepublishWhenBackInStock)
+                    {
+                        product.DisableBuyButton = false;
+                        product.DisableWishlistButton = false;
+                    }
                     
-                    product.DisableBuyButton = shouldDisableButtons;
-                    product.DisableWishlistButton = shouldDisableButtons;
                     await UpdateProductAsync(product);
                     break;
                 }
 
                 case LowStockActivity.Unpublish:
                 {
-                    var shouldBePublished = !belowMinimumStock || shouldRepublishWhenBackInStock;
-                    
-                    product.Published = shouldBePublished;
+                    if (belowMinimumStock)
+                        product.Published = false;
+                    else if (shouldRepublishWhenBackInStock)
+                        product.Published = true;
+
                     await UpdateProductAsync(product);
                     break;
                 }
