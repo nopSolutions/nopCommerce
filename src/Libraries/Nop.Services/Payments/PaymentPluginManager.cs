@@ -86,7 +86,7 @@ namespace Nop.Services.Payments
         }
 
         /// <summary>
-        /// Get countries in which the passed payment method is now allowed
+        /// Get countries in which the passed payment method is not allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <returns>
@@ -104,7 +104,7 @@ namespace Nop.Services.Payments
         }
 
         /// <summary>
-        /// Save countries in which the passed payment method is now allowed
+        /// Save countries in which the passed payment method is not allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="countryIds">List of country identifiers</param>
