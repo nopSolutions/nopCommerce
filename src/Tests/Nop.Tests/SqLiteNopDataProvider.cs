@@ -20,7 +20,6 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.DataProviders;
 using Nop.Data.Mapping;
-using Nop.Data.Migrations;
 
 namespace Nop.Tests
 {

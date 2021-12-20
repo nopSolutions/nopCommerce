@@ -151,53 +151,5 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.Any().Should().BeTrue();
             model.Count.Should().Be(10);
         }
-
-        [Test]
-        [Ignore("not implemented yet")]
-        public void CanPrepareCustomerNavigationModel()
-        {
-        }
-
-        [Test]
-        [Ignore("not implemented yet")]
-        public void CanPrepareCustomerAddressListModel()
-        {
-        }
-
-        [Test]
-        [Ignore("not implemented yet")]
-        public void CanPrepareCustomerDownloadableProductsModel()
-        {
-        }
-
-        [Test]
-        [Ignore("not implemented yet")]
-        public void CanPrepareUserAgreementModel()
-        {
-        }
-
-        [Test]
-        [Ignore("not implemented yet")]
-        public void CanPrepareChangePasswordModel()
-        {
-        }
-
-        [Test]
-        [Ignore("not implemented yet")]
-        public void CanPrepareCustomerAvatarModel()
-        {
-        }
-
-        [Test]
-        [Ignore("not implemented yet")]
-        public void CanPrepareGdprToolsModel()
-        {
-        }
-
-        [Test]
-        [Ignore("not implemented yet")]
-        public void CanPrepareCheckGiftCardBalanceModel()
-        {
-        }
     }
 }
