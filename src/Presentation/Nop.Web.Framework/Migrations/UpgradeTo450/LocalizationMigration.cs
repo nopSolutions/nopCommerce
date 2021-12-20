@@ -167,7 +167,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Checkout.UseRewardPoints"] = "Use my reward points, {0} of {1} reward points ({2}) available for this order",
 
                 //#6007
-                ["Admin.System.Templates.NotDeleteOnlyOne"] = "It's not allowed to delete the only one template."
+                ["Admin.System.Templates.NotDeleteOnlyOne"] = "It's not allowed to delete the only one template.",
+
+                //#6034
+                ["Checkout.EditAddress"] = "Edit address"
             }, languageId).Wait();
 
             // rename locales

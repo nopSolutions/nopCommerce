@@ -54,7 +54,7 @@
                                 {
                                     <div class="address-item">
                                         <div class="address-list-page">
-                                            <button id="edit-button-@(item.Id)" type="button" class="button-2 edit-address-button" onclick="CheckoutBilling.editAddress('@(storeLocation)checkout/GetAddressById/', @(item.Id)); return false;">@T("Common.Edit")</button>
+                                            <button id="edit-button-@(item.Id)" type="button" class="button-2 edit-address-button" onclick="CheckoutBilling.editAddress('@(storeLocation)checkout/GetAddressById/', @(item.Id), '@T("Checkout.EditAddress")'); return false;">@T("Common.Edit")</button>
                                             <button id="delete-button-@(item.Id)" type="button" class="button-2 delete-address-button" onclick="CheckoutBilling.deleteEditAddress('@(storeLocation)checkout/DeleteEditAddress/', @(item.Id)); return false;">@T("Common.Delete")</button>
                                         </div>
                                         <ul class="address-box">

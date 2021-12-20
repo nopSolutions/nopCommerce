@@ -16119,6 +16119,9 @@
   <LocaleResource Name="Checkout.Disabled">
     <Value>Sorry, checkout process is temporary disabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.EditAddress">
+      <Value>Edit address</Value>
+  </LocaleResource>  
   <LocaleResource Name="Checkout.EnterBillingAddress">
     <Value>Enter billing address</Value>
   </LocaleResource>
