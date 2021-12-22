@@ -170,7 +170,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Admin.System.Templates.NotDeleteOnlyOne"] = "It's not allowed to delete the only one template.",
 
                 //#6034
-                ["Checkout.EditAddress"] = "Edit address"
+                ["Checkout.EditAddress"] = "Edit address",
+
+                //#6052
+                ["Account.Login.NewCustomerText"] = "By creating an account on our website, you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made."
             }, languageId).Wait();
 
             // rename locales

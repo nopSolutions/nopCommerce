@@ -508,7 +508,7 @@
     <Value>New Customer</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.NewCustomerText">
-    <Value>By creating an account on our website, you will be able to shop faster, be up to date on an orders status, and keep track of the orders you have previously made.</Value>
+    <Value>By creating an account on our website, you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.ReturningCustomer">
     <Value>Returning Customer</Value>
