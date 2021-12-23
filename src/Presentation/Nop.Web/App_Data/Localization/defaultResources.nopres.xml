@@ -18171,6 +18171,9 @@
   <LocaleResource Name="Permission.AccessAdminPanel">
     <Value>Access admin area</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.AccessProfiling">
+    <Value>Public store. Access MiniProfiler results</Value>
+  </LocaleResource>
   <LocaleResource Name="Permission.AccessWebService">
     <Value>Plugins. Access Web Service</Value>
   </LocaleResource>
@@ -18204,6 +18207,9 @@
   <LocaleResource Name="Permission.ManageAffiliates">
     <Value>Admin area. Manage Affiliates</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.ManageAppSettings">
+    <Value>Admin area. Manage App Setting</Value>
+  </LocaleResource>
   <LocaleResource Name="Permission.ManageAttributes">
     <Value>Admin area. Manage Attributes</Value>
   </LocaleResource>
@@ -18234,6 +18240,9 @@
   <LocaleResource Name="Permission.ManageEmailAccounts">
     <Value>Admin area. Manage Email Accounts</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.ManageExternalAuthenticationMethods">
+    <Value>Admin area. Manage External Authentication Methods</Value>
+  </LocaleResource>
   <LocaleResource Name="Permission.ManageForums">
     <Value>Admin area. Manage Forums</Value>
   </LocaleResource>
@@ -18254,6 +18263,9 @@
   </LocaleResource>
   <LocaleResource Name="Permission.ManageMessageTemplates">
     <Value>Admin area. Manage Message Templates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageMultifactorAuthenticationMethods">
+    <Value>Admin area. Manage Multifactor Authentication Methods</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.ManageNews">
     <Value>Admin area. Manage News</Value>
@@ -18320,6 +18332,9 @@
   </LocaleResource>
   <LocaleResource Name="Permission.PublicStoreAllowNavigation">
     <Value>Public store. Allow navigation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.SalesSummaryReport">
+    <Value>Admin area. Access sales summary report</Value>
   </LocaleResource>
   <LocaleResource Name="Polls.OnlyRegisteredUsersVote">
     <Value>Only registered users can vote.</Value>

@@ -173,7 +173,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Checkout.EditAddress"] = "Edit address",
 
                 //#6052
-                ["Account.Login.NewCustomerText"] = "By creating an account on our website, you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made."
+                ["Account.Login.NewCustomerText"] = "By creating an account on our website, you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made.",
+
+                ["Permission.SalesSummaryReport"] = "Admin area. Access sales summary report",
+                ["Permission.ManageAppSettings"] = "Admin area. Manage App Setting",
+                ["Permission.ManageExternalAuthenticationMethods"] = "Admin area. Manage External Authentication Methods",
+                ["Permission.ManageMultifactorAuthenticationMethods"] = "Admin area. Manage Multifactor Authentication Methods",
+                ["Permission.AccessProfiling"] = "Public store. Access MiniProfiler results"
             }, languageId).Wait();
 
             // rename locales
