@@ -127,7 +127,7 @@ namespace Nop.Services.Messages
         /// Gets all message templates
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
-        /// <param name="keywords">Keywords to search body or subject</param>
+        /// <param name="keywords">Keywords to search by name, body, or subject</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the message template list
@@ -145,7 +145,8 @@ namespace Nop.Services.Messages
             if (!string.IsNullOrWhiteSpace(keywords))
             {
                 messageTemplates = messageTemplates.Where(x => (x.Subject?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)
-                    || (x.Body?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)).ToList();
+                    || (x.Body?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)
+                    || (x.Name?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)).ToList();
             }
 
             return messageTemplates;

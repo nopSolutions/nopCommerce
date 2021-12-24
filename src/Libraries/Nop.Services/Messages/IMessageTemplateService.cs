@@ -55,7 +55,7 @@ namespace Nop.Services.Messages
         /// Gets all message templates
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
-        /// <param name="keywords">Keywords to search into  body or subject</param>
+        /// <param name="keywords">Keywords to search by name, body, or subject</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the message template list
