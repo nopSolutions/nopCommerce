@@ -151,19 +151,21 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ApplyLowStockActivityAsync(Product product, int totalStock)
         {
-            var stockDec = product.MinStockQuantity >= totalStock;
-            var stockInc = _catalogSettings.PublishBackProductWhenCancellingOrders && product.MinStockQuantity < totalStock;
+            var isMinimumStockReached = totalStock <= product.MinStockQuantity;
+
+            if (!isMinimumStockReached && !_catalogSettings.PublishBackProductWhenCancellingOrders)
+                return;
 
             switch (product.LowStockActivity)
             {
                 case LowStockActivity.DisableBuyButton:
-                    product.DisableBuyButton = stockDec && !stockInc;
-                    product.DisableWishlistButton = stockDec && !stockInc;
+                    product.DisableBuyButton = isMinimumStockReached;
+                    product.DisableWishlistButton = isMinimumStockReached;
                     await UpdateProductAsync(product);
                     break;
 
                 case LowStockActivity.Unpublish:
-                    product.Published = !stockDec && stockInc;
+                    product.Published = !isMinimumStockReached;
                     await UpdateProductAsync(product);
                     break;
 
