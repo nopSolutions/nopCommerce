@@ -1011,7 +1011,7 @@ namespace Nop.Services.Catalog
                 }
             }
             
-            return await productsQuery.OrderBy(orderBy).ToPagedListAsync(pageIndex, pageSize);
+            return await productsQuery.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy).ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
