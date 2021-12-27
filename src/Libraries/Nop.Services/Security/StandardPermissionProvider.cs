@@ -56,8 +56,8 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageMessageQueue = new() { Name = "Admin area. Manage Message Queue", SystemName = "ManageMessageQueue", Category = "Configuration" };
         public static readonly PermissionRecord ManageMaintenance = new() { Name = "Admin area. Manage Maintenance", SystemName = "ManageMaintenance", Category = "Configuration" };
         public static readonly PermissionRecord HtmlEditorManagePictures = new() { Name = "Admin area. HTML Editor. Manage pictures", SystemName = "HtmlEditor.ManagePictures", Category = "Configuration" };
-        /// <returns>A task that represents the asynchronous operation</returns>
         public static readonly PermissionRecord ManageScheduleTasks = new() { Name = "Admin area. Manage Schedule Tasks", SystemName = "ManageScheduleTasks", Category = "Configuration" };
+        public static readonly PermissionRecord ManageAppSettings = new() { Name = "Admin area. Manage App Settings", SystemName = "ManageAppSettings", Category = "Configuration" };
 
         //public store permissions
         public static readonly PermissionRecord DisplayPrices = new() { Name = "Public store. Display Prices", SystemName = "DisplayPrices", Category = "PublicStore" };
@@ -122,6 +122,7 @@ namespace Nop.Services.Security
                 ManageMaintenance,
                 HtmlEditorManagePictures,
                 ManageScheduleTasks,
+                ManageAppSettings,
                 DisplayPrices,
                 EnableShoppingCart,
                 EnableWishlist,
@@ -190,6 +191,7 @@ namespace Nop.Services.Security
                         ManageMaintenance,
                         HtmlEditorManagePictures,
                         ManageScheduleTasks,
+                        ManageAppSettings,
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
