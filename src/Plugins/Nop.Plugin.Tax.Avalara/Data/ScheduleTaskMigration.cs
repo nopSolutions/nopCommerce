@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using FluentMigrator;
+using Nop.Core.Domain.ScheduleTasks;
 using Nop.Data;
+using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -69,18 +71,25 @@ namespace Nop.Plugin.Tax.Avalara.Data
                 _avalaraTaxSettings.UseTaxRateTables = true;
             _settingService.SaveSettingAsync(_avalaraTaxSettings).Wait();
 
+            //in version 4.50 we added the LastEnabledUtc field to the ScheduleTask entity,
+            //we need to make sure that these changes are applied before inserting new task into the database
+            var scheduleTaskTableName = NameCompatibilityManager.GetTableName(typeof(ScheduleTask));
+
+            //add column if not exists
+            if (!Schema.Table(scheduleTaskTableName).Column(nameof(ScheduleTask.LastEnabledUtc)).Exists())
+                Alter.Table(scheduleTaskTableName)
+                    .AddColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime2().Nullable();
+
             //schedule task
-            if (_scheduleTaskService.GetTaskByTypeAsync(AvalaraTaxDefaults.DownloadTaxRatesTask.Type).Result is null)
+            Insert.IntoTable(scheduleTaskTableName).Row(new
             {
-                _scheduleTaskService.InsertTaskAsync(new()
-                {
-                    Enabled = true,
-                    LastEnabledUtc = DateTime.UtcNow,
-                    Seconds = AvalaraTaxDefaults.DownloadTaxRatesTask.Days * 24 * 60 * 60,
-                    Name = AvalaraTaxDefaults.DownloadTaxRatesTask.Name,
-                    Type = AvalaraTaxDefaults.DownloadTaxRatesTask.Type
-                }).Wait();
-            }
+                Enabled = true,
+                LastEnabledUtc = DateTime.UtcNow,
+                Seconds = AvalaraTaxDefaults.DownloadTaxRatesTask.Days * 24 * 60 * 60,
+                StopOnError = false,
+                Name = AvalaraTaxDefaults.DownloadTaxRatesTask.Name,
+                Type = AvalaraTaxDefaults.DownloadTaxRatesTask.Type
+            });
         }
 
         /// <summary>
