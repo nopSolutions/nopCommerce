@@ -57,11 +57,10 @@ else
     <link rel="stylesheet" href="~/css/admin/styles.css"/>
 }
 
-@NopHtml.GenerateCssFiles(ResourceLocation.Head)
-<style-bundle /> @* bundle tag must be below other link tags *@
+@NopHtml.GenerateCssFiles()
 
 @* scripts *@
-<script asp-exclude-from-bundle="true" src="~/lib_npm/jquery/jquery.min.js"></script>
+<script asp-location="None" src="~/lib_npm/jquery/jquery.min.js"></script>
 <script src="~/lib_npm/jquery-ui-dist/jquery-ui.min.js"></script>
 <script src="~/lib_npm/admin-lte/js/adminlte.min.js"></script>
 <script src="~/lib_npm/overlayscrollbars/js/jquery.overlayScrollbars.min.js"></script>

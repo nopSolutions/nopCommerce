@@ -19,9 +19,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            //compression
-            services.AddResponseCompression();
-
             //add options feature
             services.AddOptions();
 
@@ -54,9 +51,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //use response compression
-            application.UseNopResponseCompression();
-
             //check whether requested page is keep alive page
             application.UseKeepAlive();
 

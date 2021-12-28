@@ -18,6 +18,10 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            //compression
+            services.AddResponseCompression();
+
+            //middleware for bundling and minification of CSS and JavaScript files.
             services.AddNopWebOptimizer();
         }
 
@@ -27,6 +31,9 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
+            //use response compression before UseNopStaticFiles to support compress for it
+            application.UseNopResponseCompression();
+
             //WebOptimizer should be placed before configuring static files
             application.UseNopWebOptimizer();
 
