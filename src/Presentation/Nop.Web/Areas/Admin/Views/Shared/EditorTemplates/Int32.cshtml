@@ -6,13 +6,14 @@
     {
         postfix = ViewData["postfix"].ToString();
     }
+    var culture = CultureInfo.CurrentCulture.TextInfo.IsRightToLeft ? CultureInfo.InvariantCulture : CultureInfo.CurrentCulture;
 }
 <script>
     $(document).ready(function() {
         $("#@Html.IdForModel()").kendoNumericTextBox({
-            value: "@Model.ToString(CultureInfo.InvariantCulture)",
-            min: @int.MinValue.ToString(CultureInfo.InvariantCulture),
-            max: @int.MaxValue.ToString(CultureInfo.InvariantCulture),
+            value: "@Model.ToString(culture)",
+            min: @int.MinValue.ToString(culture),
+            max: @int.MaxValue.ToString(culture),
             decimals: 0,
             restrictDecimals: true,
             format: "# @postfix"
