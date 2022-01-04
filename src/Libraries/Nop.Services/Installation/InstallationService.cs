@@ -312,7 +312,7 @@ namespace Nop.Services.Installation
                     SslEnabled = _webHelper.IsCurrentConnectionSecured(),
                     Hosts = "yourstore.com,www.yourstore.com",
                     DisplayOrder = 1,
-                    //should we set some default company info?
+                    //should we set some default company info?  --yes
                     CompanyName = "Your company name",
                     CompanyAddress = "your company country, state, zip, street, etc",
                     CompanyPhoneNumber = "(123) 456-78901",
