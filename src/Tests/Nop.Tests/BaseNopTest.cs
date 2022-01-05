@@ -594,7 +594,6 @@ namespace Nop.Tests
 
             return flag;
         }
-
         #region Nested classes
 
         protected class NopTestUrlHelper : UrlHelperBase
@@ -613,14 +612,12 @@ namespace Nop.Tests
                 return string.Empty;
             }
         }
-
         protected class NopTestConventionSet : NopConventionSet
         {
             public NopTestConventionSet(INopDataProvider dataProvider) : base(dataProvider)
             {
             }
         }
-
         public partial class NopTestEngine : NopEngine
         {
             protected readonly IServiceProvider _internalServiceProvider;
@@ -774,11 +771,9 @@ namespace Nop.Tests
                         mutex.ReleaseMutex();
                     }
                 }
-
                 return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
             }
         }
-
         #endregion
     }
 }
