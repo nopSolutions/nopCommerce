@@ -15,31 +15,40 @@ namespace Nop.Services.Catalog
         /// Delete the review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteReviewTypeAsync(ReviewType reviewType);
 
         /// <summary>
         /// Get all review types
         /// </summary>
-        /// <returns>Review types</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the review types
+        /// </returns>
         Task<IList<ReviewType>> GetAllReviewTypesAsync();
 
         /// <summary>
         /// Get the review type 
         /// </summary>
         /// <param name="reviewTypeId">Review type identifier</param>
-        /// <returns>Review type</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the review type
+        /// </returns>
         Task<ReviewType> GetReviewTypeByIdAsync(int reviewTypeId);
 
         /// <summary>
         /// Insert the review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertReviewTypeAsync(ReviewType reviewType);
 
         /// <summary>
         /// Update the review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateReviewTypeAsync(ReviewType reviewType);
 
         #endregion
@@ -50,13 +59,17 @@ namespace Nop.Services.Catalog
         /// Get product review and review type mappings by product review identifier
         /// </summary>
         /// <param name="productReviewId">The product review identifier</param>
-        /// <returns>Product review and review type mapping collection</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review and review type mapping collection
+        /// </returns>
         Task<IList<ProductReviewReviewTypeMapping>> GetProductReviewReviewTypeMappingsByProductReviewIdAsync(int productReviewId);
 
         /// <summary>
         /// Inserts a product review and review type mapping
         /// </summary>
         /// <param name="productReviewReviewType">Product review and review type mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertProductReviewReviewTypeMappingsAsync(ProductReviewReviewTypeMapping productReviewReviewType);
 
         #endregion

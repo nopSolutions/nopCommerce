@@ -220,9 +220,9 @@
 
     function toggleTax() {
         if ($('#@Html.IdFor(model => model.IsTaxExempt)').is(':checked')) {
-            $('#pnlTaxCategory').hide();
+            $('#pnlTaxCategory').hideElement();
         } else {
-            $('#pnlTaxCategory').showField();
+            $('#pnlTaxCategory').showElement();
         }
     }
 
@@ -230,38 +230,38 @@
         var selectedAttributeControlTypeId = $("#@Html.IdFor(model => model.AttributeControlTypeId)").val();
         //validation
         if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
-            $('#pnlValidationMinLength').showField();
-            $('#pnlValidationMaxLength').showField();
-            $('#pnlValidationFileMaximumSize').hide();
-            $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValueLocalized').showField();
-            $('#pnlDefaultValue').showField();
+            $('#pnlValidationMinLength').showElement();
+            $('#pnlValidationMaxLength').showElement();
+            $('#pnlValidationFileMaximumSize').hideElement();
+            $('#pnlValidationFileAllowedExtensions').hideElement();
+            $('#pnlDefaultValueLocalized').showElement();
+            $('#pnlDefaultValue').showElement();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
-            $('#pnlValidationMinLength').showField();
-            $('#pnlValidationMaxLength').showField();
-            $('#pnlValidationFileMaximumSize').hide();
-            $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValueLocalized').showField();
-            $('#pnlDefaultValue').showField();
+            $('#pnlValidationMinLength').showElement();
+            $('#pnlValidationMaxLength').showElement();
+            $('#pnlValidationFileMaximumSize').hideElement();
+            $('#pnlValidationFileAllowedExtensions').hideElement();
+            $('#pnlDefaultValueLocalized').showElement();
+            $('#pnlDefaultValue').showElement();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
-            $('#pnlValidationMinLength').hide();
-            $('#pnlValidationMaxLength').hide();
-            $('#pnlValidationFileMaximumSize').showField();
-            $('#pnlValidationFileAllowedExtensions').showField();
-            $('#pnlDefaultValueLocalized').hide();
-            $('#pnlDefaultValue').hide();
+            $('#pnlValidationMinLength').hideElement();
+            $('#pnlValidationMaxLength').hideElement();
+            $('#pnlValidationFileMaximumSize').showElement();
+            $('#pnlValidationFileAllowedExtensions').showElement();
+            $('#pnlDefaultValueLocalized').hideElement();
+            $('#pnlDefaultValue').hideElement();
             $("#@Html.IdFor(model => model.DefaultValue)").val('');
             @for (var item = 0; item < Model.Locales.Count; item++)
             {
                 <text>$("#@Html.IdFor(model => model.Locales[item].DefaultValue)").val('');</text>
             }
         } else {
-            $('#pnlValidationMinLength').hide();
-            $('#pnlValidationMaxLength').hide();
-            $('#pnlValidationFileMaximumSize').hide();
-            $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValueLocalized').hide();
-            $('#pnlDefaultValue').hide();
+            $('#pnlValidationMinLength').hideElement();
+            $('#pnlValidationMaxLength').hideElement();
+            $('#pnlValidationFileMaximumSize').hideElement();
+            $('#pnlValidationFileAllowedExtensions').hideElement();
+            $('#pnlDefaultValueLocalized').hideElement();
+            $('#pnlDefaultValue').hideElement();
             $("#@Html.IdFor(model => model.DefaultValue)").val('');
             @for (var item = 0; item < Model.Locales.Count; item++)
             {
@@ -276,9 +276,9 @@
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
-            $('[data-card-name=checkout-attributes-values]').showField();
+            $('[data-card-name=checkout-attributes-values]').showElement();
         } else {
-            $('[data-card-name=checkout-attributes-values]').hide();
+            $('[data-card-name=checkout-attributes-values]').hideElement();
         }
     }
 </script>

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LinqToDB;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.StaticFiles;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
@@ -24,7 +24,6 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly INopDataProvider _dataProvider;
         private readonly IDownloadService _downloadService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
@@ -41,8 +40,7 @@ namespace Nop.Services.Media
 
         #region Ctor
 
-        public PictureService(INopDataProvider dataProvider,
-            IDownloadService downloadService,
+        public PictureService(IDownloadService downloadService,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IProductAttributeParser productAttributeParser,
@@ -54,7 +52,6 @@ namespace Nop.Services.Media
             IWebHelper webHelper,
             MediaSettings mediaSettings)
         {
-            _dataProvider = dataProvider;
             _downloadService = downloadService;
             _httpContextAccessor = httpContextAccessor;
             _fileProvider = fileProvider;
@@ -73,27 +70,14 @@ namespace Nop.Services.Media
         #region Utilities
 
         /// <summary>
-        /// Gets a data hash from database side
-        /// </summary>
-        /// <param name="binaryData">Array for a hashing function</param>
-        /// <param name="limit">Allowed limit input value</param>
-        /// <returns>Data hash</returns>
-        /// <remarks>
-        /// For SQL Server 2014 (12.x) and earlier, allowed input values are limited to 8000 bytes. 
-        /// https://docs.microsoft.com/en-us/sql/t-sql/functions/hashbytes-transact-sql
-        /// </remarks>
-        [Sql.Expression("CONVERT(VARCHAR(128), HASHBYTES('SHA2_512', SUBSTRING({0}, 0, {1})), 2)", ServerSideOnly = true, Configuration = ProviderName.SqlServer)]
-        [Sql.Expression("SHA2({0}, 512)", ServerSideOnly = true, Configuration = ProviderName.MySql)]
-        [Sql.Expression("encode(digest({0}, 'sha512'), 'hex')", ServerSideOnly = true, Configuration = ProviderName.PostgreSQL)]
-        public static string Hash(byte[] binaryData, int limit)
-            => throw new InvalidOperationException("This function should be used only in database code");
-
-        /// <summary>
         /// Loads a picture from file
         /// </summary>
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="mimeType">MIME type</param>
-        /// <returns>Picture binary</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture binary
+        /// </returns>
         protected virtual async Task<byte[]> LoadPictureFromFileAsync(int pictureId, string mimeType)
         {
             var lastPart = await GetFileExtensionFromMimeTypeAsync(mimeType);
@@ -109,6 +93,7 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SavePictureInFileAsync(int pictureId, byte[] pictureBinary, string mimeType)
         {
             var lastPart = await GetFileExtensionFromMimeTypeAsync(mimeType);
@@ -120,6 +105,7 @@ namespace Nop.Services.Media
         /// Delete a picture on file system
         /// </summary>
         /// <param name="picture">Picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task DeletePictureOnFileSystemAsync(Picture picture)
         {
             if (picture == null)
@@ -135,6 +121,7 @@ namespace Nop.Services.Media
         /// Delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task DeletePictureThumbsAsync(Picture picture)
         {
             var filter = $"{picture.Id:0000000}*.*";
@@ -150,7 +137,10 @@ namespace Nop.Services.Media
         /// Get picture (thumb) local path
         /// </summary>
         /// <param name="thumbFileName">Filename</param>
-        /// <returns>Local picture thumb path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the local picture thumb path
+        /// </returns>
         protected virtual Task<string> GetThumbLocalPathAsync(string thumbFileName)
         {
             var thumbsDirectoryPath = _fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath);
@@ -175,10 +165,13 @@ namespace Nop.Services.Media
         /// Get images path URL 
         /// </summary>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         protected virtual Task<string> GetImagesPathUrlAsync(string storeLocation = null)
         {
-            var pathBase = _httpContextAccessor.HttpContext.Request.PathBase.Value ?? string.Empty;
+            var pathBase = _httpContextAccessor.HttpContext.Request?.PathBase.Value ?? string.Empty;
             var imagesPathUrl = _mediaSettings.UseAbsoluteImagePath ? storeLocation : $"{pathBase}/";
             imagesPathUrl = string.IsNullOrEmpty(imagesPathUrl) ? _webHelper.GetStoreLocation() : imagesPathUrl;
             imagesPathUrl += "images/";
@@ -191,7 +184,10 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="thumbFileName">Filename</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
-        /// <returns>Local picture thumb path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the local picture thumb path
+        /// </returns>
         protected virtual async Task<string> GetThumbUrlAsync(string thumbFileName, string storeLocation = null)
         {
             var url = await GetImagesPathUrlAsync(storeLocation) + "thumbs/";
@@ -215,7 +211,10 @@ namespace Nop.Services.Media
         /// Get picture local path. Used when images stored on file system (not in the database)
         /// </summary>
         /// <param name="fileName">Filename</param>
-        /// <returns>Local picture path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the local picture path
+        /// </returns>
         protected virtual Task<string> GetPictureLocalPathAsync(string fileName)
         {
             return Task.FromResult(_fileProvider.GetAbsolutePath("images", fileName));
@@ -226,7 +225,10 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="picture">Picture</param>
         /// <param name="fromDb">Load from database; otherwise, from file system</param>
-        /// <returns>Picture binary</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture binary
+        /// </returns>
         protected virtual async Task<byte[]> LoadPictureBinaryAsync(Picture picture, bool fromDb)
         {
             if (picture == null)
@@ -244,7 +246,10 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         protected virtual Task<bool> GeneratedThumbExistsAsync(string thumbFilePath, string thumbFileName)
         {
             return Task.FromResult(_fileProvider.FileExists(thumbFilePath));
@@ -257,6 +262,7 @@ namespace Nop.Services.Media
         /// <param name="thumbFileName">Thumb file name</param>
         /// <param name="mimeType">MIME type</param>
         /// <param name="binary">Picture binary</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveThumbAsync(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
             //ensure \thumb directory exists
@@ -272,7 +278,10 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="picture">The picture object</param>
         /// <param name="binaryData">The picture binary data</param>
-        /// <returns>Picture binary</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture binary
+        /// </returns>
         protected virtual async Task<PictureBinary> UpdatePictureBinaryAsync(Picture picture, byte[] binaryData)
         {
             if (picture == null)
@@ -309,7 +318,7 @@ namespace Nop.Services.Media
             if (string.IsNullOrEmpty(mimeType))
                 return format;
 
-            var parts = mimeType.ToLower().Split('/');
+            var parts = mimeType.ToLowerInvariant().Split('/');
             var lastPart = parts[^1];
 
             switch (lastPart)
@@ -328,6 +337,21 @@ namespace Nop.Services.Media
             }
 
             return format;
+        }
+
+        /// <summary>
+        /// Gets the MIME type from the file name
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        protected virtual string GetMimeTypeFromFileName(string fileName)
+        {
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(fileName, out var contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+            return contentType;
         }
 
         /// <summary>
@@ -384,7 +408,10 @@ namespace Nop.Services.Media
         /// Returns the file extension from mime type.
         /// </summary>
         /// <param name="mimeType">Mime type</param>
-        /// <returns>File extension</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the file extension
+        /// </returns>
         public virtual Task<string> GetFileExtensionFromMimeTypeAsync(string mimeType)
         {
             if (mimeType == null)
@@ -414,7 +441,10 @@ namespace Nop.Services.Media
         /// Gets the loaded picture binary depending on picture storage settings
         /// </summary>
         /// <param name="picture">Picture</param>
-        /// <returns>Picture binary</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture binary
+        /// </returns>
         public virtual async Task<byte[]> LoadPictureBinaryAsync(Picture picture)
         {
             return await LoadPictureBinaryAsync(picture, await IsStoreInDbAsync());
@@ -424,7 +454,10 @@ namespace Nop.Services.Media
         /// Get picture SEO friendly name
         /// </summary>
         /// <param name="name">Name</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<string> GetPictureSeNameAsync(string name)
         {
             return await _urlRecordService.GetSeNameAsync(name, true, false);
@@ -436,7 +469,10 @@ namespace Nop.Services.Media
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
-        /// <returns>Picture URL</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture URL
+        /// </returns>
         public virtual async Task<string> GetDefaultPictureUrlAsync(int targetSize = 0,
             PictureType defaultPictureType = PictureType.Entity,
             string storeLocation = null)
@@ -472,7 +508,8 @@ namespace Nop.Services.Media
                     var codec = SKCodec.Create(filePath);
                     var format = codec.EncodedFormat;
                     var pictureBinary = ImageResize(image, format, targetSize);
-                    SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
+                    var mimeType = GetMimeTypeFromFileName(thumbFileName);
+                    SaveThumbAsync(thumbFilePath, thumbFileName, mimeType, pictureBinary).Wait();
                 }
                 finally
                 {
@@ -491,7 +528,10 @@ namespace Nop.Services.Media
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
-        /// <returns>Picture URL</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture URL
+        /// </returns>
         public virtual async Task<string> GetPictureUrlAsync(int pictureId,
             int targetSize = 0,
             bool showDefaultPicture = true,
@@ -510,7 +550,10 @@ namespace Nop.Services.Media
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
-        /// <returns>Picture URL</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture URL
+        /// </returns>
         public virtual async Task<(string Url, Picture Picture)> GetPictureUrlAsync(Picture picture,
             int targetSize = 0,
             bool showDefaultPicture = true,
@@ -564,7 +607,7 @@ namespace Nop.Services.Media
                 mutex.WaitOne();
                 try
                 {
-                    SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
+                    SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinary).Wait();
                 }
                 finally
                 {
@@ -604,7 +647,7 @@ namespace Nop.Services.Media
                         }
                     }
 
-                    SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
+                    SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinary).Wait();
                 }
                 finally
                 {
@@ -621,7 +664,10 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         public virtual async Task<string> GetThumbLocalPathAsync(Picture picture, int targetSize = 0, bool showDefaultPicture = true)
         {
             var (url, _) = await GetPictureUrlAsync(picture, targetSize, showDefaultPicture);
@@ -639,7 +685,10 @@ namespace Nop.Services.Media
         /// Gets a picture
         /// </summary>
         /// <param name="pictureId">Picture identifier</param>
-        /// <returns>Picture</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture
+        /// </returns>
         public virtual async Task<Picture> GetPictureByIdAsync(int pictureId)
         {
             return await _pictureRepository.GetByIdAsync(pictureId, cache => default);
@@ -649,6 +698,7 @@ namespace Nop.Services.Media
         /// Deletes a picture
         /// </summary>
         /// <param name="picture">Picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeletePictureAsync(Picture picture)
         {
             if (picture == null)
@@ -671,7 +721,10 @@ namespace Nop.Services.Media
         /// <param name="virtualPath">Virtual path</param>
         /// <param name="pageIndex">Current page</param>
         /// <param name="pageSize">Items on each page</param>
-        /// <returns>Paged list of pictures</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the paged list of pictures
+        /// </returns>
         public virtual async Task<IPagedList<Picture>> GetPicturesAsync(string virtualPath = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _pictureRepository.Table;
@@ -689,7 +742,10 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <param name="recordsToReturn">Number of records to return. 0 if you want to get all items</param>
-        /// <returns>Pictures</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the pictures
+        /// </returns>
         public virtual async Task<IList<Picture>> GetPicturesByProductIdAsync(int productId, int recordsToReturn = 0)
         {
             if (productId == 0)
@@ -719,7 +775,10 @@ namespace Nop.Services.Media
         /// <param name="titleAttribute">"title" attribute for "img" HTML element</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
-        /// <returns>Picture</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture
+        /// </returns>
         public virtual async Task<Picture> InsertPictureAsync(byte[] pictureBinary, string mimeType, string seoFilename,
             string altAttribute = null, string titleAttribute = null,
             bool isNew = true, bool validateBinary = true)
@@ -755,7 +814,10 @@ namespace Nop.Services.Media
         /// <param name="formFile">Form file</param>
         /// <param name="defaultFileName">File name which will be use if IFormFile.FileName not present</param>
         /// <param name="virtualPath">Virtual path</param>
-        /// <returns>Picture</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture
+        /// </returns>
         public virtual async Task<Picture> InsertPictureAsync(IFormFile formFile, string defaultFileName = "", string virtualPath = "")
         {
             var imgExt = new List<string>
@@ -848,7 +910,10 @@ namespace Nop.Services.Media
         /// <param name="titleAttribute">"title" attribute for "img" HTML element</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
-        /// <returns>Picture</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture
+        /// </returns>
         public virtual async Task<Picture> UpdatePictureAsync(int pictureId, byte[] pictureBinary, string mimeType,
             string seoFilename, string altAttribute = null, string titleAttribute = null,
             bool isNew = true, bool validateBinary = true)
@@ -888,7 +953,10 @@ namespace Nop.Services.Media
         /// Updates the picture
         /// </summary>
         /// <param name="picture">The picture to update</param>
-        /// <returns>Picture</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture
+        /// </returns>
         public virtual async Task<Picture> UpdatePictureAsync(Picture picture)
         {
             if (picture == null)
@@ -896,9 +964,8 @@ namespace Nop.Services.Media
 
             var seoFilename = CommonHelper.EnsureMaximumLength(picture.SeoFilename, 100);
 
-            //delete old thumbs if a picture has been changed
-            if (seoFilename != picture.SeoFilename)
-                await DeletePictureThumbsAsync(picture);
+            //delete old thumbs if exists
+            await DeletePictureThumbsAsync(picture);
 
             picture.SeoFilename = seoFilename;
 
@@ -915,7 +982,10 @@ namespace Nop.Services.Media
         /// Get product picture binary by picture identifier
         /// </summary>
         /// <param name="pictureId">The picture identifier</param>
-        /// <returns>Picture binary</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture binary
+        /// </returns>
         public virtual async Task<PictureBinary> GetPictureBinaryByPictureIdAsync(int pictureId)
         {
             return await _pictureBinaryRepository.Table
@@ -927,7 +997,10 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="pictureId">The picture identifier</param>
         /// <param name="seoFilename">The SEO filename</param>
-        /// <returns>Picture</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture
+        /// </returns>
         public virtual async Task<Picture> SetSeoFilenameAsync(int pictureId, string seoFilename)
         {
             var picture = await GetPictureByIdAsync(pictureId);
@@ -956,7 +1029,10 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
-        /// <returns>Picture binary or throws an exception</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture binary or throws an exception
+        /// </returns>
         public virtual Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType)
         {
             try
@@ -978,32 +1054,14 @@ namespace Nop.Services.Media
         }
 
         /// <summary>
-        /// Get pictures hashes
-        /// </summary>
-        /// <param name="picturesIds">Pictures Ids</param>
-        /// <returns></returns>
-        public async Task<IDictionary<int, string>> GetPicturesHashAsync(int[] picturesIds)
-        {
-            if (!picturesIds.Any())
-                return new Dictionary<int, string>();
-
-            var hashes = (await _dataProvider.GetTableAsync<PictureBinary>())
-                    .Where(p => picturesIds.Contains(p.PictureId))
-                    .Select(x => new
-                    {
-                        x.PictureId,
-                        Hash = Hash(x.BinaryData, _dataProvider.SupportedLengthOfBinaryHash)
-                    });
-
-            return await AsyncIQueryableExtensions.ToDictionaryAsync(hashes, p => p.PictureId, p => p.Hash);
-        }
-
-        /// <summary>
         /// Get product picture (for shopping cart and order details pages)
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes (in XML format)</param>
-        /// <returns>Picture</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture
+        /// </returns>
         public virtual async Task<Picture> GetProductPictureAsync(Product product, string attributesXml)
         {
             if (product == null)
@@ -1038,6 +1096,7 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets a value indicating whether the images should be stored in data base.
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<bool> IsStoreInDbAsync()
         {
             return await _settingService.GetSettingByKeyAsync("Media.Images.StoreInDB", true);
@@ -1047,6 +1106,7 @@ namespace Nop.Services.Media
         /// Sets a value indicating whether the images should be stored in data base
         /// </summary>
         /// <param name="isStoreInDb">A value indicating whether the images should be stored in data base</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetIsStoreInDbAsync(bool isStoreInDb)
         {
             //check whether it's a new value

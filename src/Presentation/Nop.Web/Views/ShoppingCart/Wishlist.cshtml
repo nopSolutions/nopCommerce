@@ -7,9 +7,9 @@
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Wishlist").Text);
+    NopHtml.AddTitleParts(T("PageTitle.Wishlist").Text);
     //page class
-    Html.AppendPageCssClassParts("html-wishlist-page");
+    NopHtml.AppendPageCssClassParts("html-wishlist-page");
 }
 <div class="page wishlist-page">
     <div class="page-title">
@@ -43,10 +43,6 @@
                     <div class="table-wrapper">
                         <table class="cart">
                             <colgroup>
-                                @if (Model.IsEditable)
-                                {
-                                    <col width="1" />
-                                }
                                 @if (Model.DisplayAddToCart)
                                 {
                                     <col width="1" />
@@ -63,15 +59,13 @@
                                 <col width="1" />
                                 <col width="1" />
                                 <col width="1" />
+                                @if (Model.IsEditable)
+                                {
+                                    <col width="1" />
+                                }
                             </colgroup>
                             <thead>
                                 <tr>
-                                    @if (Model.IsEditable)
-                                    {
-                                        <th class="remove-from-cart">
-                                            @T("ShoppingCart.Remove")
-                                        </th>
-                                    }
                                     @if (Model.DisplayAddToCart)
                                     {
                                         <th class="add-to-cart">
@@ -102,19 +96,18 @@
                                     <th class="subtotal">
                                         @T("ShoppingCart.ItemTotal")
                                     </th>
+                                    @if (Model.IsEditable)
+                                    {
+                                        <th class="remove-from-cart">
+                                            @T("ShoppingCart.Remove")
+                                        </th>
+                                    }
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model.Items)
                                 {
                                     <tr>
-                                        @if (Model.IsEditable)
-                                        {
-                                            <td class="remove-from-cart">
-                                                <label class="td-title">@T("ShoppingCart.Remove"):</label>
-                                                <input type="checkbox" name="removefromcart" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
-                                            </td>
-                                        }
                                         @if (Model.DisplayAddToCart)
                                         {
                                             <td class="add-to-cart">
@@ -169,7 +162,7 @@
                                                     <ul>
                                                         @foreach (var warning in item.Warnings)
                                                         {
-                                                            <li>@warning</li>
+                                                            <li>@Html.Raw(warning)</li>
                                                         }
                                                     </ul>
                                                 </div>
@@ -218,6 +211,13 @@
                                                 }
                                             }
                                         </td>
+                                        @if (Model.IsEditable)
+                                        {
+                                            <td class="remove-from-cart">
+                                                <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
+                                                <button type="button" name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true); $('#updatecart').click();"></button>
+                                            </td>
+                                        }
                                     </tr>
                                 }
                             </tbody>
@@ -235,7 +235,7 @@
                     <div class="buttons">
                         @if (Model.IsEditable)
                         {
-                            <button type="submit" name="updatecart" class="button-2 update-wishlist-button">@T("Wishlist.UpdateCart")</button>
+                            <button type="submit" name="updatecart" id="updatecart" class="button-2 update-wishlist-button">@T("Wishlist.UpdateCart")</button>
                         }
                         @if (Model.DisplayAddToCart)
                         {

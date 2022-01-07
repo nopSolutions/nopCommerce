@@ -20,7 +20,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged multi-factor authentication method list model
         /// </summary>
         /// <param name="searchModel">Multi-factor authentication method search model</param>
-        /// <returns>Multi-factor authentication method list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the multi-factor authentication method list model
+        /// </returns>
         Task<MultiFactorAuthenticationMethodListModel> PrepareMultiFactorAuthenticationMethodListModelAsync(
             MultiFactorAuthenticationMethodSearchModel searchModel);
     }

@@ -25,7 +25,6 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -45,7 +44,7 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        public OrderReportService(CatalogSettings catalogSettings,
+        public OrderReportService(
             CurrencySettings currencySettings,
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
@@ -61,7 +60,6 @@ namespace Nop.Services.Orders
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
             _currencyService = currencyService;
             _dateTimeHelper = dateTimeHelper;
@@ -176,7 +174,10 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IList<OrderByCountryReportLine>> GetCountryReportAsync(int storeId, OrderStatus? os,
             PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc)
         {
@@ -248,7 +249,10 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<OrderAverageReportLine> GetOrderAverageReportLineAsync(int storeId = 0,
             int vendorId = 0, int productId = 0, int warehouseId = 0, int billingCountryId = 0,
             int orderId = 0, string paymentMethodSystemName = null,
@@ -366,7 +370,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <param name="os">Order status</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<OrderAverageReportLineSummary> OrderAverageReportAsync(int storeId, OrderStatus os)
         {
             var item = new OrderAverageReportLineSummary
@@ -440,7 +447,10 @@ namespace Nop.Services.Orders
         /// <param name="groupBy">0 - group by day, 1 - group by week, 2 - group by total month</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IPagedList<SalesSummaryReportLine>> SalesSummaryReportAsync(
             int categoryId = 0,
             int productId = 0,
@@ -598,10 +608,10 @@ namespace Nop.Services.Orders
             foreach (var reportLine in report)
             {
                 var isCorrectDate =
-                    DateTime.TryParseExact(reportLine.Summary, "yyyy-MM-dd", null, DateTimeStyles.None, out var date) ||
-                    DateTime.TryParseExact(reportLine.Summary, "yyyy-M-d", null, DateTimeStyles.None, out date) ||
-                    DateTime.TryParseExact(reportLine.Summary, "yyyy-MM", null, DateTimeStyles.None, out date) ||
-                    DateTime.TryParseExact(reportLine.Summary, "yyyy-M", null, DateTimeStyles.None, out date);
+                    DateTime.TryParseExact(reportLine.Summary, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date) ||
+                    DateTime.TryParseExact(reportLine.Summary, "yyyy-M-d", CultureInfo.InvariantCulture, DateTimeStyles.None, out date) ||
+                    DateTime.TryParseExact(reportLine.Summary, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out date) ||
+                    DateTime.TryParseExact(reportLine.Summary, "yyyy-M", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
 
                 if (groupBy == GroupByOptions.Week)
                 {
@@ -652,7 +662,10 @@ namespace Nop.Services.Orders
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="orderBy">1 - order by quantity, 2 - order by total amount</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IPagedList<BestsellersReportLine>> BestSellersReportAsync(
             int categoryId = 0,
             int manufacturerId = 0,
@@ -709,7 +722,10 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<decimal> BestSellersReportTotalAmountAsync(
             int categoryId = 0,
             int manufacturerId = 0,
@@ -735,7 +751,10 @@ namespace Nop.Services.Orders
         /// <param name="recordsToReturn">Records to return</param>
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         public virtual async Task<int[]> GetAlsoPurchasedProductsIdsAsync(int storeId, int productId,
             int recordsToReturn = 5, bool visibleIndividuallyOnly = true, bool showHidden = false)
         {
@@ -792,7 +811,10 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         public virtual async Task<IPagedList<Product>> ProductsNeverSoldAsync(int vendorId = 0, int storeId = 0,
             int categoryId = 0, int manufacturerId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
@@ -868,7 +890,10 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<decimal> ProfitReportAsync(int storeId = 0, int vendorId = 0, int productId = 0,
             int warehouseId = 0, int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,

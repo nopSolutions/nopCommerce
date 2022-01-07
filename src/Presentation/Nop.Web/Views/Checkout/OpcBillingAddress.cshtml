@@ -1,7 +1,7 @@
 ﻿@model CheckoutBillingAddressModel
 
 <div class="checkout-data">
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressTop })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressTop, additionalData = Model })
     @if (Model.ShipToSameAddressAllowed)
     {
         <div class="section ship-to-same-address">
@@ -23,7 +23,7 @@
                 }
             <div>
                 <select name="billing_address_id" id="billing-address-select" class="address-select"
-                        title="" onchange="Billing.newAddress(!this.value)">
+                        title="" onchange="Billing.resetBillingForm();Billing.newAddress(!this.value)">
                     @foreach (var address in Model.ExistingAddresses)
                     {
                         var addressLine = "";
@@ -61,7 +61,7 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressMiddle })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressMiddle, additionalData = Model })
     <div class="section new-billing-address" id="billing-new-address-form">
         <div class="enter-address">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
@@ -72,5 +72,5 @@
             }
         </div>
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressBottom })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressBottom, additionalData = Model })
 </div>

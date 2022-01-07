@@ -6,12 +6,13 @@
 
 @{
     const string cardId = "configuration-steps-card";
+    var customer = await workContext.GetCurrentCustomerAsync();
 
     //hide value
-    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
 
     //close value
-    var closeCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+    var closeCard = await genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
 
     var defaultStoreId = (await storeService.GetAllStoresAsync()).FirstOrDefault()?.Id ?? 0;
 }
@@ -230,7 +231,7 @@
                     </div>
 
                     <div class="col-4">
-                        <a class="configuration-step-link copyright-step" href="@(OfficialSite.CopyrightRemovalKey)" target="_blank">
+                        <a class="configuration-step-link copyright-step" href="@(OfficialSite.CopyrightRemovalKey)@Utm.OnAdminConfigurationSteps" target="_blank">
                             <div class="row">
                                 <div class="col-12 col-xl-3">
                                     <div class="configuration-step-icon">

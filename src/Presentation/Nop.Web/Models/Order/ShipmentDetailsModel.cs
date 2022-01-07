@@ -15,6 +15,7 @@ namespace Nop.Web.Models.Order
         public string TrackingNumber { get; set; }
         public string TrackingNumberUrl { get; set; }
         public DateTime? ShippedDate { get; set; }
+        public DateTime? ReadyForPickupDate { get; set; }
         public DateTime? DeliveryDate { get; set; }
         public IList<ShipmentStatusEventModel> ShipmentStatusEvents { get; set; }
         public bool ShowSku { get; set; }
@@ -39,6 +40,7 @@ namespace Nop.Web.Models.Order
 
         public partial record ShipmentStatusEventModel : BaseNopModel
         {
+            public string Status { get; set; }
             public string EventName { get; set; }
             public string Location { get; set; }
             public string Country { get; set; }

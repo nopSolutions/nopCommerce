@@ -364,7 +364,10 @@ namespace Nop.Web.Framework.UI.Paging
         /// <summary>
         /// Is pager empty (only one page)?
         /// </summary>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
 	    public virtual async Task<bool> IsEmpty()
         {
             return string.IsNullOrEmpty(await GenerateHtmlStringAsync());
@@ -377,7 +380,10 @@ namespace Nop.Web.Framework.UI.Paging
         /// <summary>
         /// Generate HTML control
         /// </summary>
-        /// <returns>HTML control</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the hTML control
+        /// </returns>
         protected virtual async Task<string> GenerateHtmlStringAsync()
         {
             if (_model.TotalItems == 0)
@@ -488,7 +494,10 @@ namespace Nop.Web.Framework.UI.Paging
         /// <param name="pageNumber">Page number</param>
         /// <param name="text">Text</param>
         /// <param name="cssClass">CSS class</param>
-        /// <returns>Link</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the link
+        /// </returns>
 		protected virtual async Task<string> CreatePageLinkAsync(int pageNumber, string text, string cssClass)
         {
             var liBuilder = new TagBuilder("li");

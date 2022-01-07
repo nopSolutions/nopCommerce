@@ -44,6 +44,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle shopping cart item inserted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityInsertedEvent<ShoppingCartItem> eventMessage)
         {
             if (eventMessage?.Entity != null)
@@ -54,6 +55,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle order placed event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
         {
             if (eventMessage?.Order != null)
@@ -64,6 +66,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle product details model prepared event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
         {
             if (eventMessage?.Model is ProductDetailsModel productDetailsModel)
@@ -74,6 +77,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle page rendering event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(PageRenderingEvent eventMessage)
         {
             var routeName = eventMessage.GetRouteName() ?? string.Empty;
@@ -85,6 +89,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle product search event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(ProductSearchEvent eventMessage)
         {
             if (!string.IsNullOrEmpty(eventMessage?.SearchTerm))
@@ -95,6 +100,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle message token added event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(MessageTokensAddedEvent<Token> eventMessage)
         {
             if (eventMessage?.Message?.Name == MessageTemplateSystemNames.ContactUsMessage)
@@ -105,6 +111,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle customer registered event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(CustomerRegisteredEvent eventMessage)
         {
             if (eventMessage?.Customer != null)

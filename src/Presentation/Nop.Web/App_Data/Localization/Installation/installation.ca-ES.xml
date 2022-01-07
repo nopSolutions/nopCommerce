@@ -16,7 +16,7 @@
     <Value>El compte '{0}' no està configurat amb el permís Modificar a la carpeta '{1}'. Si us plau, configureu aquests permisos.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>El compte '{0}' no està configurat amb el permís Modificar a l'arxiu '{1}'. Si us plau, configureu aquests permisos.</Value>
+    <Value>El compte '{0}' no es concedeix amb el permís de modificació en el fitxer '{1}'. Si us plau, configureu aquests permisos.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
     <Value>Confirma la contrasenya</Value>
@@ -34,10 +34,10 @@
     <Value>Format de la cadena de connexió SQL incorrecte</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>País</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Seleccioneu el país</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Crear la base de dades si no existeix</Value>

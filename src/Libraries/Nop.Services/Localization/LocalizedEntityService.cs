@@ -45,7 +45,10 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
         /// <param name="localeKeyGroup">Locale key group</param>
-        /// <returns>Localized properties</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the localized properties
+        /// </returns>
         protected virtual async Task<IList<LocalizedProperty>> GetLocalizedPropertiesAsync(int entityId, string localeKeyGroup)
         {
             if (entityId == 0 || string.IsNullOrEmpty(localeKeyGroup))
@@ -65,7 +68,10 @@ namespace Nop.Services.Localization
         /// <summary>
         /// Gets all cached localized properties
         /// </summary>
-        /// <returns>Cached localized properties</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cached localized properties
+        /// </returns>
         protected virtual async Task<IList<LocalizedProperty>> GetAllLocalizedPropertiesAsync()
         {
             return await _localizedPropertyRepository.GetAllAsync(query =>
@@ -79,6 +85,7 @@ namespace Nop.Services.Localization
         /// Deletes a localized property
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task DeleteLocalizedPropertyAsync(LocalizedProperty localizedProperty)
         {
             await _localizedPropertyRepository.DeleteAsync(localizedProperty);
@@ -88,6 +95,7 @@ namespace Nop.Services.Localization
         /// Inserts a localized property
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InsertLocalizedPropertyAsync(LocalizedProperty localizedProperty)
         {
             await _localizedPropertyRepository.InsertAsync(localizedProperty);
@@ -97,6 +105,7 @@ namespace Nop.Services.Localization
         /// Updates the localized property
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalizedPropertyAsync(LocalizedProperty localizedProperty)
         {
             await _localizedPropertyRepository.UpdateAsync(localizedProperty);
@@ -113,7 +122,10 @@ namespace Nop.Services.Localization
         /// <param name="entityId">Entity identifier</param>
         /// <param name="localeKeyGroup">Locale key group</param>
         /// <param name="localeKey">Locale key</param>
-        /// <returns>Found localized value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the found localized value
+        /// </returns>
         public virtual async Task<string> GetLocalizedValueAsync(int languageId, int entityId, string localeKeyGroup, string localeKey)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertyCacheKey
@@ -149,6 +161,7 @@ namespace Nop.Services.Localization
         /// <param name="keySelector">Key selector</param>
         /// <param name="localeValue">Locale value</param>
         /// <param name="languageId">Language ID</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SaveLocalizedValueAsync<T>(T entity,
             Expression<Func<T, string>> keySelector,
             string localeValue,
@@ -166,6 +179,7 @@ namespace Nop.Services.Localization
         /// <param name="keySelector">Key selector</param>
         /// <param name="localeValue">Locale value</param>
         /// <param name="languageId">Language ID</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SaveLocalizedValueAsync<T, TPropType>(T entity,
             Expression<Func<T, TPropType>> keySelector,
             TPropType localeValue,

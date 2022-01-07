@@ -21,18 +21,23 @@ namespace Nop.Services.Catalog
         /// Delete a product
         /// </summary>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteProductAsync(Product product);
 
         /// <summary>
         /// Delete products
         /// </summary>
         /// <param name="products">Products</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteProductsAsync(IList<Product> products);
 
         /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         Task<IList<Product>> GetAllProductsDisplayedOnHomepageAsync();
 
         /// <summary>
@@ -40,7 +45,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
-        /// <returns>List of featured products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of featured products
+        /// </returns>
         Task<IList<Product>> GetCategoryFeaturedProductsAsync(int categoryId, int storeId = 0);
 
         /// <summary>
@@ -48,40 +56,54 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
-        /// <returns>List of featured products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of featured products
+        /// </returns>
         Task<IList<Product>> GetManufacturerFeaturedProductsAsync(int manufacturerId, int storeId = 0);
 
         /// <summary>
         /// Gets products which marked as new
         /// </summary>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
-        /// <returns>List of new products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of new products
+        /// </returns>
         Task<IList<Product>> GetProductsMarkedAsNewAsync(int storeId = 0);
 
         /// <summary>
         /// Gets product
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <returns>Product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product
+        /// </returns>
         Task<Product> GetProductByIdAsync(int productId);
 
         /// <summary>
         /// Gets products by identifier
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         Task<IList<Product>> GetProductsByIdsAsync(int[] productIds);
 
         /// <summary>
         /// Inserts a product
         /// </summary>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertProductAsync(Product product);
 
         /// <summary>
         /// Updates the product
         /// </summary>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateProductAsync(Product product);
 
         /// <summary>
@@ -89,7 +111,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <returns>Number of products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of products
+        /// </returns>
         Task<int> GetNumberOfProductsInCategoryAsync(IList<int> categoryIds = null, int storeId = 0);
 
         /// <summary>
@@ -122,7 +147,10 @@ namespace Nop.Services.Catalog
         /// true - load only "Published" products
         /// false - load only "Unpublished" products
         /// </param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         Task<IPagedList<Product>> SearchProductsAsync(
             int pageIndex = 0,
             int pageSize = int.MaxValue,
@@ -154,8 +182,11 @@ namespace Nop.Services.Catalog
         /// <param name="productAttributeId">Product attribute identifier</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Products</returns>
-        Task<IPagedList<Product>> GetProductsByProductAtributeIdAsync(int productAttributeId,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
+        Task<IPagedList<Product>> GetProductsByProductAttributeIdAsync(int productAttributeId,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -165,7 +196,10 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         Task<IList<Product>> GetAssociatedProductsAsync(int parentGroupedProductId,
             int storeId = 0, int vendorId = 0, bool showHidden = false);
 
@@ -173,6 +207,7 @@ namespace Nop.Services.Catalog
         /// Update product review totals
         /// </summary>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateProductReviewTotalsAsync(Product product);
 
         /// <summary>
@@ -183,7 +218,10 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         Task<IPagedList<Product>> GetLowStockProductsAsync(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
 
@@ -195,7 +233,10 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
-        /// <returns>Product combinations</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product combinations
+        /// </returns>
         Task<IPagedList<ProductAttributeCombination>> GetLowStockProductCombinationsAsync(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
 
@@ -203,7 +244,10 @@ namespace Nop.Services.Catalog
         /// Gets a product by SKU
         /// </summary>
         /// <param name="sku">SKU</param>
-        /// <returns>Product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product
+        /// </returns>
         Task<Product> GetProductBySkuAsync(string sku);
 
         /// <summary>
@@ -211,29 +255,36 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="skuArray">SKU array</param>
         /// <param name="vendorId">Vendor ID; 0 to load all records</param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         Task<IList<Product>> GetProductsBySkuAsync(string[] skuArray, int vendorId = 0);
 
         /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateHasTierPricesPropertyAsync(Product product);
 
         /// <summary>
         /// Update HasDiscountsApplied property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateHasDiscountsAppliedAsync(Product product);
 
         /// <summary>
         /// Gets number of products by vendor identifier
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
-        /// <returns>Number of products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of products
+        /// </returns>
         Task<int> GetNumberOfProductsByVendorIdAsync(int vendorId);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Parse "required product Ids" property
         /// </summary>
@@ -241,7 +292,6 @@ namespace Nop.Services.Catalog
         /// <returns>A list of required product IDs</returns>
         int[] ParseRequiredProductIds(Product product);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Get a value indicating whether a product is available now (availability dates)
         /// </summary>
@@ -250,7 +300,6 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         bool ProductIsAvailable(Product product, DateTime? dateTime = null);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Get a list of allowed quantities (parse 'AllowedQuantities' property)
         /// </summary>
@@ -270,10 +319,12 @@ namespace Nop.Services.Catalog
         /// Warehouse identifier. Used to limit result to certain warehouse.
         /// Used only with "multiple warehouses" enabled.
         /// </param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<int> GetTotalStockQuantityAsync(Product product, bool useReservedQuantity = true, int warehouseId = 0);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Get number of rental periods (price ratio)
         /// </summary>
@@ -288,37 +339,45 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Selected product attributes in XML format (if specified)</param>
-        /// <returns>The stock message</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the stock message
+        /// </returns>
         Task<string> FormatStockMessageAsync(Product product, string attributesXml);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats SKU
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>SKU</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sKU
+        /// </returns>
         Task<string> FormatSkuAsync(Product product, string attributesXml = null);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats manufacturer part number
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Manufacturer part number</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer part number
+        /// </returns>
         Task<string> FormatMpnAsync(Product product, string attributesXml = null);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats GTIN
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>GTIN</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gTIN
+        /// </returns>
         Task<string> FormatGtinAsync(Product product, string attributesXml = null);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats start/end date for rental product
         /// </summary>
@@ -332,27 +391,37 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="limitedToStoresIds">A list of store ids for mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateProductStoreMappingsAsync(Product product, IList<int> limitedToStoresIds);
 
         /// <summary>
         /// Gets the value whether the sequence contains downloadable products
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<bool> HasAnyDownloadableProductAsync(int[] productIds);
 
         /// <summary>
         /// Gets the value whether the sequence contains gift card products
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<bool> HasAnyGiftCardProductAsync(int[] productIds);
 
         /// <summary>
         /// Gets the value whether the sequence contains recurring products
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<bool> HasAnyRecurringProductAsync(int[] productIds);
 
         #endregion
@@ -366,6 +435,7 @@ namespace Nop.Services.Catalog
         /// <param name="quantityToChange">Quantity to increase or decrease</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="message">Message for the stock quantity history</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task AdjustInventoryAsync(Product product, int quantityToChange, string attributesXml = "", string message = "");
 
         /// <summary>
@@ -375,6 +445,7 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
         /// <param name="message">Message for the stock quantity history</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task BookReservedInventoryAsync(Product product, int warehouseId, int quantity, string message = "");
 
         /// <summary>
@@ -384,6 +455,7 @@ namespace Nop.Services.Catalog
         /// <param name="shipmentItem">Shipment item</param>
         /// <returns>Quantity reversed</returns>
         /// <param name="message">Message for the stock quantity history</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task<int> ReverseBookedInventoryAsync(Product product, ShipmentItem shipmentItem, string message = "");
 
         #endregion
@@ -394,6 +466,7 @@ namespace Nop.Services.Catalog
         /// Deletes a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteRelatedProductAsync(RelatedProduct relatedProduct);
 
         /// <summary>
@@ -401,29 +474,36 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Related products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the related products
+        /// </returns>
         Task<IList<RelatedProduct>> GetRelatedProductsByProductId1Async(int productId1, bool showHidden = false);
 
         /// <summary>
         /// Gets a related product
         /// </summary>
         /// <param name="relatedProductId">Related product identifier</param>
-        /// <returns>Related product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the related product
+        /// </returns>
         Task<RelatedProduct> GetRelatedProductByIdAsync(int relatedProductId);
 
         /// <summary>
         /// Inserts a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertRelatedProductAsync(RelatedProduct relatedProduct);
 
         /// <summary>
         /// Updates a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateRelatedProductAsync(RelatedProduct relatedProduct);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Finds a related product item by specified identifiers
         /// </summary>
@@ -441,6 +521,7 @@ namespace Nop.Services.Catalog
         /// Deletes a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteCrossSellProductAsync(CrossSellProduct crossSellProduct);
 
         /// <summary>
@@ -448,20 +529,27 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Cross-sell products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cross-sell products
+        /// </returns>
         Task<IList<CrossSellProduct>> GetCrossSellProductsByProductId1Async(int productId1, bool showHidden = false);
 
         /// <summary>
         /// Gets a cross-sell product
         /// </summary>
         /// <param name="crossSellProductId">Cross-sell product identifier</param>
-        /// <returns>Cross-sell product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cross-sell product
+        /// </returns>
         Task<CrossSellProduct> GetCrossSellProductByIdAsync(int crossSellProductId);
 
         /// <summary>
         /// Inserts a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertCrossSellProductAsync(CrossSellProduct crossSellProduct);
 
         /// <summary>
@@ -469,10 +557,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="numberOfProducts">Number of products to return</param>
-        /// <returns>Cross-sells</returns>
-        Task<IList<Product>> GetCrosssellProductsByShoppingCartAsync(IList<ShoppingCartItem> cart, int numberOfProducts);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cross-sells
+        /// </returns>
+        Task<IList<Product>> GetCrossSellProductsByShoppingCartAsync(IList<ShoppingCartItem> cart, int numberOfProducts);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Finds a cross-sell product item by specified identifiers
         /// </summary>
@@ -492,37 +582,45 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <param name="storeId">Store identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task<IList<TierPrice>> GetTierPricesAsync(Product product, Customer customer, int storeId);
 
         /// <summary>
         /// Gets a tier prices by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task<IList<TierPrice>> GetTierPricesByProductAsync(int productId);
 
         /// <summary>
         /// Deletes a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteTierPriceAsync(TierPrice tierPrice);
 
         /// <summary>
         /// Gets a tier price
         /// </summary>
         /// <param name="tierPriceId">Tier price identifier</param>
-        /// <returns>Tier price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ier price
+        /// </returns>
         Task<TierPrice> GetTierPriceByIdAsync(int tierPriceId);
 
         /// <summary>
         /// Inserts a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertTierPriceAsync(TierPrice tierPrice);
 
         /// <summary>
         /// Updates the tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateTierPriceAsync(TierPrice tierPrice);
 
         /// <summary>
@@ -532,7 +630,10 @@ namespace Nop.Services.Catalog
         /// <param name="customer">Customer</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="quantity">Quantity</param>
-        /// <returns>Tier price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ier price
+        /// </returns>
         Task<TierPrice> GetPreferredTierPriceAsync(Product product, Customer customer, int storeId, int quantity);
 
         #endregion
@@ -543,39 +644,51 @@ namespace Nop.Services.Catalog
         /// Deletes a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteProductPictureAsync(ProductPicture productPicture);
 
         /// <summary>
         /// Gets a product pictures by product identifier
         /// </summary>
         /// <param name="productId">The product identifier</param>
-        /// <returns>Product pictures</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product pictures
+        /// </returns>
         Task<IList<ProductPicture>> GetProductPicturesByProductIdAsync(int productId);
 
         /// <summary>
         /// Gets a product picture
         /// </summary>
         /// <param name="productPictureId">Product picture identifier</param>
-        /// <returns>Product picture</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product picture
+        /// </returns>
         Task<ProductPicture> GetProductPictureByIdAsync(int productPictureId);
 
         /// <summary>
         /// Inserts a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertProductPictureAsync(ProductPicture productPicture);
 
         /// <summary>
         /// Updates a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateProductPictureAsync(ProductPicture productPicture);
 
         /// <summary>
         /// Get the IDs of all product images 
         /// </summary>
         /// <param name="productsIds">Products IDs</param>
-        /// <returns>All picture identifiers grouped by product ID</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the all picture identifiers grouped by product ID
+        /// </returns>
         Task<IDictionary<int, int[]>> GetProductsImagesIdsAsync(int[] productsIds);
 
         /// <summary>
@@ -585,7 +698,10 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to load deleted products</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>List of products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of products
+        /// </returns>
         Task<IPagedList<Product>> GetProductsWithAppliedDiscountAsync(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
 
@@ -607,7 +723,10 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Reviews</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the reviews
+        /// </returns>
         Task<IPagedList<ProductReview>> GetAllProductReviewsAsync(int customerId = 0, bool? approved = null,
             DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = null, int storeId = 0, int productId = 0, int vendorId = 0, bool showHidden = false,
@@ -617,32 +736,41 @@ namespace Nop.Services.Catalog
         /// Gets product review
         /// </summary>
         /// <param name="productReviewId">Product review identifier</param>
-        /// <returns>Product review</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review
+        /// </returns>
         Task<ProductReview> GetProductReviewByIdAsync(int productReviewId);
 
         /// <summary>
         /// Get product reviews by identifiers
         /// </summary>
         /// <param name="productReviewIds">Product review identifiers</param>
-        /// <returns>Product reviews</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product reviews
+        /// </returns>
         Task<IList<ProductReview>> GetProductReviewsByIdsAsync(int[] productReviewIds);
 
         /// <summary>
         /// Inserts a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertProductReviewAsync(ProductReview productReview);
 
         /// <summary>
         /// Deletes a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteProductReviewAsync(ProductReview productReview);
 
         /// <summary>
         /// Deletes product reviews
         /// </summary>
         /// <param name="productReviews">Product reviews</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteProductReviewsAsync(IList<ProductReview> productReviews);
 
         /// <summary>
@@ -650,19 +778,24 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product reviews</param>
         /// <param name="helpfulness">Value indicating whether a review a helpful</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task SetProductReviewHelpfulnessAsync(ProductReview productReview, bool helpfulness);
 
         /// <summary>
         /// Updates a totals helpfulness count for product review
         /// </summary>
         /// <param name="productReview">Product review</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task UpdateProductReviewHelpfulnessTotalsAsync(ProductReview productReview);
 
         /// <summary>
         /// Updates a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateProductReviewAsync(ProductReview productReview);
 
         /// <summary>
@@ -670,7 +803,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Current product</param>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         Task<bool> CanAddReviewAsync(int productId, int storeId = 0);
 
         #endregion
@@ -681,31 +817,38 @@ namespace Nop.Services.Catalog
         /// Get a product warehouse-inventory records by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task<IList<ProductWarehouseInventory>> GetAllProductWarehouseInventoryRecordsAsync(int productId);
 
         /// <summary>
         /// Gets a warehouse by identifier
         /// </summary>
         /// <param name="warehouseId">Warehouse identifier</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<Warehouse> GetWarehousesByIdAsync(int warehouseId);
 
         /// <summary>
         /// Deletes a ProductWarehouseInventory
         /// </summary>
         /// <param name="pwi">ProductWarehouseInventory</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteProductWarehouseInventoryAsync(ProductWarehouseInventory pwi);
 
         /// <summary>
         /// Inserts a ProductWarehouseInventory
         /// </summary>
         /// <param name="pwi">ProductWarehouseInventory</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertProductWarehouseInventoryAsync(ProductWarehouseInventory pwi);
 
         /// <summary>
         /// Updates a record to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateProductWarehouseInventoryAsync(ProductWarehouseInventory pwi);
 
         #endregion
@@ -721,6 +864,7 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="message">Message</param>
         /// <param name="combinationId">Product attribute combination identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task AddStockQuantityHistoryEntryAsync(Product product, int quantityAdjustment, int stockQuantity,
             int warehouseId = 0, string message = "", int? combinationId = null);
 
@@ -732,7 +876,10 @@ namespace Nop.Services.Catalog
         /// <param name="combinationId">Product attribute combination identifier; pass 0 to load all entries</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>List of stock quantity change entries</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of stock quantity change entries
+        /// </returns>
         Task<IPagedList<StockQuantityHistory>> GetStockQuantityHistoryAsync(Product product, int warehouseId = 0, int combinationId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
@@ -744,12 +891,14 @@ namespace Nop.Services.Catalog
         /// Clean up product references for a specified discount
         /// </summary>
         /// <param name="discount">Discount</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task ClearDiscountProductMappingAsync(Discount discount);
 
         /// <summary>
         /// Get a discount-product mapping records by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task<IList<DiscountProductMapping>> GetAllDiscountsAppliedToProductAsync(int productId);
 
         /// <summary>
@@ -757,19 +906,24 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<DiscountProductMapping> GetDiscountAppliedToProductAsync(int productId, int discountId);
 
         /// <summary>
         /// Inserts a discount-product mapping record
         /// </summary>
         /// <param name="discountProductMapping">Discount-product mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertDiscountProductMappingAsync(DiscountProductMapping discountProductMapping);
 
         /// <summary>
         /// Deletes a discount-product mapping record
         /// </summary>
         /// <param name="discountProductMapping">Discount-product mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteDiscountProductMappingAsync(DiscountProductMapping discountProductMapping);
 
         #endregion

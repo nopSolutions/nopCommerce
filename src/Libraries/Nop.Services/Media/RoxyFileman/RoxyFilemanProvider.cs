@@ -50,7 +50,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (_physicalFileProvider.GetFileInfo(subpath).Exists || !pictureService.IsStoreInDbAsync().Result)
                 return _physicalFileProvider.GetFileInfo(subpath);
 
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>() as NopFileProvider;
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
             var roxyFilemanService = EngineContext.Current.Resolve<IRoxyFilemanService>();
             var virtualPath = fileProvider?.GetVirtualPath(fileProvider.GetDirectoryName(_physicalFileProvider.GetFileInfo(subpath).PhysicalPath));
             roxyFilemanService.FlushImagesOnDiskAsync(virtualPath).Wait();

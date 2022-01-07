@@ -13,14 +13,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare customer role search model
         /// </summary>
         /// <param name="searchModel">Customer role search model</param>
-        /// <returns>Customer role search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role search model
+        /// </returns>
         Task<CustomerRoleSearchModel> PrepareCustomerRoleSearchModelAsync(CustomerRoleSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged customer role list model
         /// </summary>
         /// <param name="searchModel">Customer role search model</param>
-        /// <returns>Customer role list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role list model
+        /// </returns>
         Task<CustomerRoleListModel> PrepareCustomerRoleListModelAsync(CustomerRoleSearchModel searchModel);
 
         /// <summary>
@@ -29,21 +35,30 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Customer role model</param>
         /// <param name="customerRole">Customer role</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Customer role model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role model
+        /// </returns>
         Task<CustomerRoleModel> PrepareCustomerRoleModelAsync(CustomerRoleModel model, CustomerRole customerRole, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare customer role product search model
         /// </summary>
         /// <param name="searchModel">Customer role product search model</param>
-        /// <returns>Customer role product search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role product search model
+        /// </returns>
         Task<CustomerRoleProductSearchModel> PrepareCustomerRoleProductSearchModelAsync(CustomerRoleProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged customer role product list model
         /// </summary>
         /// <param name="searchModel">Customer role product search model</param>
-        /// <returns>Customer role product list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role product list model
+        /// </returns>
         Task<CustomerRoleProductListModel> PrepareCustomerRoleProductListModelAsync(CustomerRoleProductSearchModel searchModel);
     }
 }

@@ -68,6 +68,7 @@ namespace Nop.Services.Orders
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
+        private readonly IReturnRequestService _returnRequestService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IShipmentService _shipmentService;
         private readonly IShippingService _shippingService;
@@ -116,6 +117,7 @@ namespace Nop.Services.Orders
             IProductAttributeFormatter productAttributeFormatter,
             IProductAttributeParser productAttributeParser,
             IProductService productService,
+            IReturnRequestService returnRequestService,
             IRewardPointService rewardPointService,
             IShipmentService shipmentService,
             IShippingService shippingService,
@@ -160,6 +162,7 @@ namespace Nop.Services.Orders
             _productAttributeFormatter = productAttributeFormatter;
             _productAttributeParser = productAttributeParser;
             _productService = productService;
+            _returnRequestService = returnRequestService;
             _rewardPointService = rewardPointService;
             _shipmentService = shipmentService;
             _shippingService = shippingService;
@@ -375,10 +378,68 @@ namespace Nop.Services.Orders
         #region Utilities
 
         /// <summary>
+        /// Books the inventory by specified shipment
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <param name="message">Message for the stock quantity history</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task BookReservedInventoryAsync(Shipment shipment, string message)
+        {
+            foreach (var item in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+            {
+                var product = await _orderService.GetProductByOrderItemIdAsync(item.OrderItemId);
+                if (product is null)
+                    continue;
+
+                await _productService.BookReservedInventoryAsync(product, item.WarehouseId, -item.Quantity, message);
+            }
+        }
+
+        /// <summary>
+        /// Reveres the booked inventory by specified order
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="message">Message for the stock quantity history</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task ReverseBookedInventoryAsync(Order order, string message)
+        {
+            foreach (var shipment in await _shipmentService.GetShipmentsByOrderIdAsync(order.Id))
+            {
+                foreach (var shipmentItem in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+                {
+                    var product = await _orderService.GetProductByOrderItemIdAsync(shipmentItem.OrderItemId);
+                    if (product is null)
+                        continue;
+
+                    await _productService.ReverseBookedInventoryAsync(product, shipmentItem, message);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the stock by specified order
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="message">Message for the stock quantity history</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task ReturnOrderStockAsync(Order order, string message)
+        {
+            foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
+            {
+                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                if (product is null)
+                    continue;
+
+                await _productService.AdjustInventoryAsync(product, orderItem.Quantity, orderItem.AttributesXml, message);
+            }
+        }
+
+        /// <summary>
         /// Add order note
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="note">Note text</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task AddOrderNoteAsync(Order order, string note)
         {
             await _orderService.InsertOrderNoteAsync(new OrderNote
@@ -394,7 +455,10 @@ namespace Nop.Services.Orders
         /// Prepare details to place an order. It also sets some properties to "processPaymentRequest"
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
-        /// <returns>Details</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the details
+        /// </returns>
         protected virtual async Task<PlaceOrderContainer> PreparePlaceOrderDetailsAsync(ProcessPaymentRequest processPaymentRequest)
         {
             var details = new PlaceOrderContainer
@@ -417,7 +481,8 @@ namespace Nop.Services.Orders
             //customer currency
             var currencyTmp = await _currencyService.GetCurrencyByIdAsync(
                 await _genericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.CurrencyIdAttribute, processPaymentRequest.StoreId));
-            var customerCurrency = currencyTmp != null && currencyTmp.Published ? currencyTmp : await _workContext.GetWorkingCurrencyAsync();
+            var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
+            var customerCurrency = currencyTmp != null && currencyTmp.Published ? currencyTmp : currentCurrency;
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
             details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
             details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
@@ -472,14 +537,14 @@ namespace Nop.Services.Orders
             //min totals validation
             if (!await ValidateMinOrderSubtotalAmountAsync(details.Cart))
             {
-                var minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderSubtotalAmount, await _workContext.GetWorkingCurrencyAsync());
+                var minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderSubtotalAmount, currentCurrency);
                 throw new NopException(string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderSubtotalAmount"),
                     await _priceFormatter.FormatPriceAsync(minOrderSubtotalAmount, true, false)));
             }
 
             if (!await ValidateMinOrderTotalAmountAsync(details.Cart))
             {
-                var minOrderTotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderTotalAmount, await _workContext.GetWorkingCurrencyAsync());
+                var minOrderTotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderTotalAmount, currentCurrency);
                 throw new NopException(string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderTotalAmount"),
                     await _priceFormatter.FormatPriceAsync(minOrderTotalAmount, true, false)));
             }
@@ -627,7 +692,10 @@ namespace Nop.Services.Orders
         /// Prepare details to place order based on the recurring payment.
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
-        /// <returns>Details</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the details
+        /// </returns>
         protected virtual async Task<PlaceOrderContainer> PrepareRecurringOrderDetailsAsync(ProcessPaymentRequest processPaymentRequest)
         {
             var details = new PlaceOrderContainer
@@ -751,7 +819,10 @@ namespace Nop.Services.Orders
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <param name="processPaymentResult">Process payment result</param>
         /// <param name="details">Details</param>
-        /// <returns>Order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order
+        /// </returns>
         protected virtual async Task<Order> SaveOrderDetailsAsync(ProcessPaymentRequest processPaymentRequest,
             ProcessPaymentResult processPaymentResult, PlaceOrderContainer details)
         {
@@ -850,6 +921,7 @@ namespace Nop.Services.Orders
         /// Send "order placed" notifications and save order notes
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SendNotificationsAndSaveNotesAsync(Order order)
         {
             //notes, messages
@@ -865,7 +937,7 @@ namespace Nop.Services.Orders
             var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
                 (await _pdfService.PrintOrderToPdfAsync(order)) : null;
             var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
-                "order.pdf" : null;
+                (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
             var orderPlacedCustomerNotificationQueuedEmailIds = await _workflowMessageService
                 .SendOrderPlacedCustomerNotificationAsync(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName);
             if (orderPlacedCustomerNotificationQueuedEmailIds.Any())
@@ -891,6 +963,7 @@ namespace Nop.Services.Orders
         /// Award (earn) reward points (for placing a new order)
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task AwardRewardPointsAsync(Order order)
         {
             if (order is null)
@@ -935,19 +1008,11 @@ namespace Nop.Services.Orders
         /// Reduce (cancel) reward points (previously awarded for placing an order)
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ReduceRewardPointsAsync(Order order)
         {
             if (order is null)
                 throw new ArgumentNullException(nameof(order));
-
-            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-
-            var totalForRewardPoints = _orderTotalCalculationService
-                .CalculateApplicableOrderTotalForRewardPoints(order.OrderShippingInclTax, order.OrderTotal);
-            var points = totalForRewardPoints > decimal.Zero ?
-                await _orderTotalCalculationService.CalculateRewardPointsAsync(customer, totalForRewardPoints) : 0;
-            if (points == 0)
-                return;
 
             //ensure that reward points were already earned for this order before
             if (!order.RewardPointsHistoryEntryId.HasValue)
@@ -955,16 +1020,21 @@ namespace Nop.Services.Orders
 
             //get appropriate history entry
             var rewardPointsHistoryEntry = await _rewardPointService.GetRewardPointsHistoryEntryByIdAsync(order.RewardPointsHistoryEntryId.Value);
-            if (rewardPointsHistoryEntry != null && rewardPointsHistoryEntry.CreatedOnUtc > DateTime.UtcNow)
+            if (rewardPointsHistoryEntry != null)
             {
-                //just delete the upcoming entry (points were not granted yet)
-                await _rewardPointService.DeleteRewardPointsHistoryEntryAsync(rewardPointsHistoryEntry);
-            }
-            else
-            {
-                //or reduce reward points if the entry already exists
-                await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, -points, order.StoreId,
-                    string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.ReducedForOrder"), order.CustomOrderNumber));
+                if (rewardPointsHistoryEntry.CreatedOnUtc > DateTime.UtcNow)
+                {
+                    //just delete the upcoming entry (points were not granted yet)
+                    await _rewardPointService.DeleteRewardPointsHistoryEntryAsync(rewardPointsHistoryEntry);
+                }
+                else
+                {
+                    var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+                    
+                    //or reduce reward points if the entry already exists
+                    await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, -rewardPointsHistoryEntry.Points, order.StoreId,
+                        string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.ReducedForOrder"), order.CustomOrderNumber));
+                }
             }
         }
 
@@ -972,6 +1042,7 @@ namespace Nop.Services.Orders
         /// Return back redeemed reward points to a customer (spent when placing an order)
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ReturnBackRedeemedRewardPointsAsync(Order order)
         {
             if (order == null)
@@ -980,10 +1051,21 @@ namespace Nop.Services.Orders
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
             //were some reward points spend on the order
-            foreach (var rewardPoints in await _rewardPointService.GetRewardPointsHistoryAsync(order.CustomerId, order.StoreId, orderGuid: order.OrderGuid))
-                //return back
-                await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, -rewardPoints.Points, order.StoreId,
-                    string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
+            var allRewardPoints = await _rewardPointService.GetRewardPointsHistoryAsync(order.CustomerId, order.StoreId, orderGuid: order.OrderGuid);
+            if (allRewardPoints?.Any() == true)
+            {
+                // Here we get the wrong balance of bonus points and return the wrong number of points to the buyer's account, 
+                // we need to wait one second, because when canceling an order, debiting and accruing bonuses takes less than one second, 
+                // this is because the RewardPointsHistory.CreatedOnUtc property is created / mapped with no fraction for the datetime type, 
+                // we should fix this in the next version.
+                // https://github.com/nopSolutions/nopCommerce/issues/5595
+                await Task.Delay(1000);
+
+                foreach (var rewardPoints in allRewardPoints)
+                    //return back
+                    await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, -rewardPoints.Points, order.StoreId,
+                        string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
+            }
         }
 
         /// <summary>
@@ -991,6 +1073,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="activate">A value indicating whether to activate gift cards; true - activate, false - deactivate</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SetActivatedValueForPurchasedGiftCardsAsync(Order order, bool activate)
         {
             var giftCards = await _giftCardService.GetAllGiftCardsAsync(order.Id, isGiftCardActivated: !activate);
@@ -1035,6 +1118,7 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         /// <param name="os">New order status</param>
         /// <param name="notifyCustomer">True to notify customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SetOrderStatusAsync(Order order, OrderStatus os, bool notifyCustomer)
         {
             if (order == null)
@@ -1059,7 +1143,7 @@ namespace Nop.Services.Orders
                 var orderCompletedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                     await _pdfService.PrintOrderToPdfAsync(order) : null;
                 var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
-                    "order.pdf" : null;
+                    (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
                 var orderCompletedCustomerNotificationQueuedEmailIds = await _workflowMessageService
                     .SendOrderCompletedCustomerNotificationAsync(order, order.CustomerLanguageId, orderCompletedAttachmentFilePath,
                     orderCompletedAttachmentFileName);
@@ -1097,6 +1181,7 @@ namespace Nop.Services.Orders
         /// Process order paid status
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ProcessOrderPaidAsync(Order order)
         {
             if (order == null)
@@ -1114,7 +1199,7 @@ namespace Nop.Services.Orders
                 var orderPaidAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
                     await _pdfService.PrintOrderToPdfAsync(order) : null;
                 var orderPaidAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
-                    "order.pdf" : null;
+                    (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
                 var orderPaidCustomerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderPaidCustomerNotificationAsync(order, order.CustomerLanguageId,
                     orderPaidAttachmentFilePath, orderPaidAttachmentFileName);
 
@@ -1152,6 +1237,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="add">A value indicating whether to add configured customer role; true - add, false - remove</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ProcessCustomerRolesWithPurchasedProductSpecifiedAsync(Order order, bool add)
         {
             if (order == null)
@@ -1215,7 +1301,10 @@ namespace Nop.Services.Orders
         /// Get a list of vendors in order (order items)
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Vendors</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendors
+        /// </returns>
         protected virtual async Task<IList<Vendor>> GetVendorsInOrderAsync(Order order)
         {
             var pIds = (await _orderService.GetOrderItemsAsync(order.Id)).Select(x => x.ProductId).ToArray();
@@ -1228,6 +1317,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CreateFirstRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest, Order order)
         {
             var rp = new RecurringPayment
@@ -1268,6 +1358,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="details">Place order container</param>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task MoveShoppingCartItemsToOrderItemsAsync(PlaceOrderContainer details, Order order)
         {
             foreach (var sc in details.Cart)
@@ -1277,18 +1368,12 @@ namespace Nop.Services.Orders
                 //prices
                 var scUnitPrice = (await _shoppingCartService.GetUnitPriceAsync(sc, true)).unitPrice;
                 var (scSubTotal, discountAmount, scDiscounts, _) = await _shoppingCartService.GetSubTotalAsync(sc, true);
-                var scUnitPriceInclTax =
-                    await _taxService.GetProductPriceAsync(product, scUnitPrice, true, details.Customer);
-                var scUnitPriceExclTax =
-                    await _taxService.GetProductPriceAsync(product, scUnitPrice, false, details.Customer);
-                var scSubTotalInclTax =
-                    await _taxService.GetProductPriceAsync(product, scSubTotal, true, details.Customer);
-                var scSubTotalExclTax =
-                    await _taxService.GetProductPriceAsync(product, scSubTotal, false, details.Customer);
-                var discountAmountInclTax =
-                    await _taxService.GetProductPriceAsync(product, discountAmount, true, details.Customer);
-                var discountAmountExclTax =
-                    await _taxService.GetProductPriceAsync(product, discountAmount, false, details.Customer);
+                var scUnitPriceInclTax = await _taxService.GetProductPriceAsync(product, scUnitPrice, true, details.Customer);
+                var scUnitPriceExclTax = await _taxService.GetProductPriceAsync(product, scUnitPrice, false, details.Customer);
+                var scSubTotalInclTax = await _taxService.GetProductPriceAsync(product, scSubTotal, true, details.Customer);
+                var scSubTotalExclTax = await _taxService.GetProductPriceAsync(product, scSubTotal, false, details.Customer);
+                var discountAmountInclTax = await _taxService.GetProductPriceAsync(product, discountAmount, true, details.Customer);
+                var discountAmountExclTax = await _taxService.GetProductPriceAsync(product, discountAmount, false, details.Customer);
                 foreach (var disc in scDiscounts)
                     if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
                         details.AppliedDiscounts.Add(disc);
@@ -1346,6 +1431,7 @@ namespace Nop.Services.Orders
         /// <param name="orderItem">Order item</param>
         /// <param name="unitPriceExclTax">Unit price exclude tax, it set as amount if not set specific amount and product.OverriddenGiftCardAmount isn't set to</param>
         /// <param name="amount">Amount</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task AddGiftCardsAsync(Product product, string attributesXml, int quantity, OrderItem orderItem, decimal? unitPriceExclTax = null, decimal? amount = null)
         {
             if (!product.IsGiftCard)
@@ -1378,7 +1464,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <param name="details">Place order container</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         protected virtual async Task<ProcessPaymentResult> GetProcessPaymentResultAsync(ProcessPaymentRequest processPaymentRequest, PlaceOrderContainer details)
         {
             //process payment
@@ -1421,6 +1510,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="details">Place order container</param>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveGiftCardUsageHistoryAsync(PlaceOrderContainer details, Order order)
         {
             if (details.AppliedGiftCards == null || !details.AppliedGiftCards.Any())
@@ -1441,6 +1531,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="details">PlaceOrderContainer</param>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveDiscountUsageHistoryAsync(PlaceOrderContainer details, Order order)
         {
             if (details.AppliedDiscounts == null || !details.AppliedDiscounts.Any())
@@ -1469,6 +1560,7 @@ namespace Nop.Services.Orders
         /// Checks order status
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CheckOrderStatusAsync(Order order)
         {
             if (order == null)
@@ -1528,7 +1620,10 @@ namespace Nop.Services.Orders
         /// Places an order
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
-        /// <returns>Place order result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the place order result
+        /// </returns>
         public virtual async Task<PlaceOrderResult> PlaceOrderAsync(ProcessPaymentRequest processPaymentRequest)
         {
             if (processPaymentRequest == null)
@@ -1609,6 +1704,7 @@ namespace Nop.Services.Orders
         /// Update order totals
         /// </summary>
         /// <param name="updateOrderParameters">Parameters for the updating order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateOrderTotalsAsync(UpdateOrderParameters updateOrderParameters)
         {
             if (!_orderSettings.AutoUpdateOrderTotalsOnEditingOrder)
@@ -1663,7 +1759,10 @@ namespace Nop.Services.Orders
                 await _addressService.InsertAddressAsync(pickupAddress);
 
                 updatedOrder.PickupAddressId = pickupAddress.Id;
-                updatedOrder.ShippingMethod = string.Format(await _localizationService.GetResourceAsync("Checkout.PickupPoints.Name"), updateOrderParameters.PickupPoint.Name);
+                var shippingMethod = !string.IsNullOrEmpty(updateOrderParameters.PickupPoint.Name) ?
+                    string.Format(await _localizationService.GetResourceAsync("Checkout.PickupPoints.Name"), updateOrderParameters.PickupPoint.Name) :
+                    await _localizationService.GetResourceAsync("Checkout.PickupPoints.NullName");
+                updatedOrder.ShippingMethod = shippingMethod;
                 updatedOrder.ShippingRateComputationMethodSystemName = updateOrderParameters.PickupPoint.ProviderSystemName;
             }
 
@@ -1719,6 +1818,7 @@ namespace Nop.Services.Orders
         /// Deletes an order
         /// </summary>
         /// <param name="order">The order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteOrderAsync(Order order)
         {
             if (order == null)
@@ -1742,27 +1842,10 @@ namespace Nop.Services.Orders
 
                 //Adjust inventory for already shipped shipments
                 //only products with "use multiple warehouses"
-                foreach (var shipment in await _shipmentService.GetShipmentsByOrderIdAsync(order.Id))
-                {
-                    foreach (var shipmentItem in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                    {
-                        var product = await _orderService.GetProductByOrderItemIdAsync(shipmentItem.OrderItemId);
-                        if (product == null)
-                            continue;
-
-                        await _productService.ReverseBookedInventoryAsync(product, shipmentItem,
-                            string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
-                    }
-                }
+                await ReverseBookedInventoryAsync(order, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
 
                 //Adjust inventory
-                foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
-                {
-                    var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
-
-                    await _productService.AdjustInventoryAsync(product, orderItem.Quantity, orderItem.AttributesXml,
-                        string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
-                }
+                await ReturnOrderStockAsync(order, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
             }
 
             //deactivate gift cards
@@ -1781,7 +1864,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="paymentResult">Process payment result (info about last payment for automatic recurring payments)</param>
-        /// <returns>Collection of errors</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of errors
+        /// </returns>
         public virtual async Task<IEnumerable<string>> ProcessNextRecurringPaymentAsync(RecurringPayment recurringPayment, ProcessPaymentResult paymentResult = null)
         {
             if (recurringPayment == null)
@@ -1976,6 +2062,7 @@ namespace Nop.Services.Orders
         /// Cancels a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IList<string>> CancelRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
@@ -2051,7 +2138,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customerToValidate">Customer</param>
         /// <param name="recurringPayment">Recurring Payment</param>
-        /// <returns>value indicating whether a customer can cancel recurring payment</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the value indicating whether a customer can cancel recurring payment
+        /// </returns>
         public virtual async Task<bool> CanCancelRecurringPaymentAsync(Customer customerToValidate, RecurringPayment recurringPayment)
         {
             if (recurringPayment is null)
@@ -2086,7 +2176,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="recurringPayment">Recurring Payment</param>
-        /// <returns>True if a customer can retry payment; otherwise false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if a customer can retry payment; otherwise false
+        /// </returns>
         public virtual async Task<bool> CanRetryLastRecurringPaymentAsync(Customer customer, RecurringPayment recurringPayment)
         {
             if (recurringPayment == null || customer == null)
@@ -2116,6 +2209,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="shipment">Shipment</param>
         /// <param name="notifyCustomer">True to notify customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ShipAsync(Shipment shipment, bool notifyCustomer)
         {
             if (shipment == null)
@@ -2125,6 +2219,9 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
+            if (order.PickupInStore)
+                throw new Exception("This shipment is can't be shipped. The order has been placed with 'pickup in store' shipping option.");
+
             if (shipment.ShippedDateUtc.HasValue)
                 throw new Exception("This shipment is already shipped");
 
@@ -2132,16 +2229,7 @@ namespace Nop.Services.Orders
             await _shipmentService.UpdateShipmentAsync(shipment);
 
             //process products with "Multiple warehouse" support enabled
-            foreach (var item in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-            {
-                var product = await _orderService.GetProductByOrderItemIdAsync(item.OrderItemId);
-
-                if (product is null)
-                    continue;
-
-                await _productService.BookReservedInventoryAsync(product, item.WarehouseId, -item.Quantity,
-                    string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Ship"), shipment.OrderId));
-            }
+            await BookReservedInventoryAsync(shipment, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Ship"), shipment.OrderId));
 
             //check whether we have more items to ship
             if (await _orderService.HasItemsToAddToShipmentAsync(order) || await _orderService.HasItemsToShipAsync(order))
@@ -2169,10 +2257,47 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Marks a shipment as ready for pickup
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <param name="notifyCustomer">True to notify customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task ReadyForPickupAsync(Shipment shipment, bool notifyCustomer)
+        {
+            if (shipment == null)
+                throw new ArgumentNullException(nameof(shipment));
+
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
+            if (order == null)
+                throw new Exception("Order cannot be loaded");
+
+            if (!order.PickupInStore)
+                throw new Exception("This shipment is can't be marked as 'ready for pickup'. The order has been placed without 'pickup in store' shipping option.");
+
+            if (shipment.ReadyForPickupDateUtc.HasValue)
+                throw new Exception("This shipment is already marked as 'ready for pickup'");
+
+            shipment.ReadyForPickupDateUtc = DateTime.UtcNow;
+            await _shipmentService.UpdateShipmentAsync(shipment);
+
+            await AddOrderNoteAsync(order, $"Shipment# {shipment.Id} has been ready for pickup");
+
+            if (notifyCustomer)
+            {
+                var queuedEmailIds = await _workflowMessageService.SendShipmentReadyForPickupNotificationAsync(shipment, order.CustomerLanguageId);
+                if (queuedEmailIds.Any())
+                    await AddOrderNoteAsync(order, $"\"Ready for pickup\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", queuedEmailIds)}.");
+            }
+
+            await _eventPublisher.PublishShipmentReadyForPickupAsync(shipment);
+        }
+
+        /// <summary>
         /// Marks a shipment as delivered
         /// </summary>
         /// <param name="shipment">Shipment</param>
         /// <param name="notifyCustomer">True to notify customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeliverAsync(Shipment shipment, bool notifyCustomer)
         {
             if (shipment == null)
@@ -2182,8 +2307,11 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            if (!shipment.ShippedDateUtc.HasValue)
+            if (!order.PickupInStore && !shipment.ShippedDateUtc.HasValue)
                 throw new Exception("This shipment is not shipped yet");
+
+            if (order.PickupInStore && !shipment.ReadyForPickupDateUtc.HasValue)
+                throw new Exception("This shipment is not yet ready for pickup");
 
             if (shipment.DeliveryDateUtc.HasValue)
                 throw new Exception("This shipment is already delivered");
@@ -2191,12 +2319,24 @@ namespace Nop.Services.Orders
             shipment.DeliveryDateUtc = DateTime.UtcNow;
             await _shipmentService.UpdateShipmentAsync(shipment);
 
-            if (!await _orderService.HasItemsToAddToShipmentAsync(order) && !await _orderService.HasItemsToShipAsync(order) && !await _orderService.HasItemsToDeliverAsync(order))
+            if (!await _orderService.HasItemsToAddToShipmentAsync(order) && 
+                   !await _orderService.HasItemsToShipAsync(order) && 
+                      !await _orderService.HasItemsToReadyForPickupAsync(order) && 
+                         !await _orderService.HasItemsToDeliverAsync(order))
+            {
                 order.ShippingStatusId = (int)ShippingStatus.Delivered;
-            await _orderService.UpdateOrderAsync(order);
+                await _orderService.UpdateOrderAsync(order);
+            }
 
             //add a note
             await AddOrderNoteAsync(order, $"Shipment# {shipment.Id} has been delivered");
+
+            if (order.PickupInStore)
+            {
+                // Shipment has been collected by customer.
+                // We must process products with "Multiple warehouse" support enabled.
+                await BookReservedInventoryAsync(shipment, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.ReadyForPickupByCustomer"), shipment.OrderId));
+            }
 
             if (notifyCustomer)
             {
@@ -2234,6 +2374,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="notifyCustomer">True to notify customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CancelOrderAsync(Order order, bool notifyCustomer)
         {
             if (order == null)
@@ -2262,27 +2403,10 @@ namespace Nop.Services.Orders
 
             //Adjust inventory for already shipped shipments
             //only products with "use multiple warehouses"
-            foreach (var shipment in await _shipmentService.GetShipmentsByOrderIdAsync(order.Id))
-            {
-                foreach (var shipmentItem in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                {
-                    var product = await _orderService.GetProductByOrderItemIdAsync(shipmentItem.OrderItemId);
+            await ReverseBookedInventoryAsync(order, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
 
-                    if (product is null)
-                        continue;
-
-                    await _productService.ReverseBookedInventoryAsync(product, shipmentItem,
-                        string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
-                }
-            }
             //Adjust inventory
-            foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
-            {
-                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
-
-                await _productService.AdjustInventoryAsync(product, orderItem.Quantity, orderItem.AttributesXml,
-                    string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
-            }
+            await ReturnOrderStockAsync(order, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
 
             await _eventPublisher.PublishAsync(new OrderCancelledEvent(order));
         }
@@ -2310,6 +2434,7 @@ namespace Nop.Services.Orders
         /// Marks order as authorized
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task MarkAsAuthorizedAsync(Order order)
         {
             if (order == null)
@@ -2331,7 +2456,10 @@ namespace Nop.Services.Orders
         /// Gets a value indicating whether capture from admin panel is allowed
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A value indicating whether capture from admin panel is allowed</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether capture from admin panel is allowed
+        /// </returns>
         public virtual async Task<bool> CanCaptureAsync(Order order)
         {
             if (order == null)
@@ -2352,7 +2480,10 @@ namespace Nop.Services.Orders
         /// Capture an order (from admin panel)
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A list of errors; empty list if no errors</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a list of errors; empty list if no errors
+        /// </returns>
         public virtual async Task<IList<string>> CaptureAsync(Order order)
         {
             if (order == null)
@@ -2443,6 +2574,7 @@ namespace Nop.Services.Orders
         /// Marks order as paid
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task MarkOrderAsPaidAsync(Order order)
         {
             if (order == null)
@@ -2468,7 +2600,10 @@ namespace Nop.Services.Orders
         /// Gets a value indicating whether refund from admin panel is allowed
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A value indicating whether refund from admin panel is allowed</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether refund from admin panel is allowed
+        /// </returns>
         public virtual async Task<bool> CanRefundAsync(Order order)
         {
             if (order == null)
@@ -2496,7 +2631,10 @@ namespace Nop.Services.Orders
         /// Refunds an order (from admin panel)
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A list of errors; empty list if no errors</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a list of errors; empty list if no errors
+        /// </returns>
         public virtual async Task<IList<string>> RefundAsync(Order order)
         {
             if (order == null)
@@ -2602,6 +2740,7 @@ namespace Nop.Services.Orders
         /// Refunds an order (offline)
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task RefundOfflineAsync(Order order)
         {
             if (order == null)
@@ -2645,7 +2784,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="amountToRefund">Amount to refund</param>
-        /// <returns>A value indicating whether refund from admin panel is allowed</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether refund from admin panel is allowed
+        /// </returns>
         public virtual async Task<bool> CanPartiallyRefundAsync(Order order, decimal amountToRefund)
         {
             if (order == null)
@@ -2678,7 +2820,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="amountToRefund">Amount to refund</param>
-        /// <returns>A list of errors; empty list if no errors</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a list of errors; empty list if no errors
+        /// </returns>
         public virtual async Task<IList<string>> PartiallyRefundAsync(Order order, decimal amountToRefund)
         {
             if (order == null)
@@ -2792,6 +2937,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="amountToRefund">Amount to refund</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PartiallyRefundOfflineAsync(Order order, decimal amountToRefund)
         {
             if (order == null)
@@ -2832,7 +2978,10 @@ namespace Nop.Services.Orders
         /// Gets a value indicating whether async Task from admin panel is allowed
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A value indicating whether async Task from admin panel is allowed</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether async Task from admin panel is allowed
+        /// </returns>
         public virtual async Task<bool> CanVoidAsync(Order order)
         {
             if (order == null)
@@ -2856,7 +3005,10 @@ namespace Nop.Services.Orders
         /// async Tasks order (from admin panel)
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>async Tasked order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the async Tasked order
+        /// </returns>
         public virtual async Task<IList<string>> VoidAsync(Order order)
         {
             if (order == null)
@@ -2943,6 +3095,7 @@ namespace Nop.Services.Orders
         /// async Tasks order (offline)
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task VoidOfflineAsync(Order order)
         {
             if (order == null)
@@ -2968,6 +3121,7 @@ namespace Nop.Services.Orders
         /// Place order items in current user shopping cart.
         /// </summary>
         /// <param name="order">The order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ReOrderAsync(Order order)
         {
             if (order == null)
@@ -2996,7 +3150,10 @@ namespace Nop.Services.Orders
         /// Check whether return request is allowed
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> IsReturnRequestAllowedAsync(Order order)
         {
             if (!_orderSettings.ReturnRequestsEnabled)
@@ -3010,23 +3167,28 @@ namespace Nop.Services.Orders
                 return false;
 
             //validate allowed number of days
-            if (_orderSettings.NumberOfDaysReturnRequestAvailable <= 0)
-                return (await _orderService.GetOrderItemsAsync(order.Id, false)).Any();
+            if (_orderSettings.NumberOfDaysReturnRequestAvailable > 0)
+            {
+                var daysPassed = (DateTime.UtcNow - order.CreatedOnUtc).TotalDays;
+                if (daysPassed >= _orderSettings.NumberOfDaysReturnRequestAvailable)
+                    return false;
+            }
 
-            var daysPassed = (DateTime.UtcNow - order.CreatedOnUtc).TotalDays;
-
-            if (daysPassed >= _orderSettings.NumberOfDaysReturnRequestAvailable)
+            var returnRequestAvailability = await _returnRequestService.GetReturnRequestAvailabilityAsync(order.Id);
+            if (returnRequestAvailability == null)
                 return false;
 
-            //ensure that we have at least one returnable product
-            return (await _orderService.GetOrderItemsAsync(order.Id, false)).Any();
+            return returnRequestAvailability.IsAllowed;
         }
 
         /// <summary>
         /// Validate minimum order sub-total amount
         /// </summary>
         /// <param name="cart">Shopping cart</param>
-        /// <returns>true - OK; false - minimum order sub-total amount is not reached</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - OK; false - minimum order sub-total amount is not reached
+        /// </returns>
         public virtual async Task<bool> ValidateMinOrderSubtotalAmountAsync(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
@@ -3049,7 +3211,10 @@ namespace Nop.Services.Orders
         /// Validate minimum order total amount
         /// </summary>
         /// <param name="cart">Shopping cart</param>
-        /// <returns>true - OK; false - minimum order total amount is not reached</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - OK; false - minimum order total amount is not reached
+        /// </returns>
         public virtual async Task<bool> ValidateMinOrderTotalAmountAsync(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
@@ -3071,7 +3236,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
-        /// <returns>true - OK; false - minimum order total amount is not reached</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - OK; false - minimum order total amount is not reached
+        /// </returns>
         public virtual async Task<bool> IsPaymentWorkflowRequiredAsync(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
         {
             if (cart == null)
@@ -3090,6 +3258,7 @@ namespace Nop.Services.Orders
         /// Gets the next payment date
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<DateTime?> GetNextPaymentDateAsync(RecurringPayment recurringPayment)
         {
             if (recurringPayment is null)
@@ -3130,6 +3299,7 @@ namespace Nop.Services.Orders
         /// Gets the cycles remaining
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<int> GetCyclesRemainingAsync(RecurringPayment recurringPayment)
         {
             if (recurringPayment is null)

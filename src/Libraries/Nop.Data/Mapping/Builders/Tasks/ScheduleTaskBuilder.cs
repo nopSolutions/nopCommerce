@@ -1,5 +1,5 @@
 ﻿using FluentMigrator.Builders.Create.Table;
-using Nop.Core.Domain.Tasks;
+using Nop.Core.Domain.ScheduleTasks;
 
 namespace Nop.Data.Mapping.Builders.Tasks
 {

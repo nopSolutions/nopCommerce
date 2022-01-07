@@ -57,7 +57,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            /// <returns>A task that on completion indicates the necessary filter actions have been executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckNotNullValidationAsync(ActionExecutingContext context)
             {
                 if (context == null)
@@ -70,7 +70,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
                 //whether the model state is invalid
@@ -121,7 +121,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">A context for action filters</param>
             /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
-            /// <returns>A task that on completion indicates the filter has executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
                 await CheckNotNullValidationAsync(context);

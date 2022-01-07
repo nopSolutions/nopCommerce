@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
@@ -21,8 +21,10 @@
     <None Remove="logo.png" />
     <None Remove="plugin.json" />
     <None Remove="Views\Checkout\AddressValidation.cshtml" />
+    <None Remove="Views\Checkout\AppliedCertificate.cshtml" />
     <None Remove="Views\Configuration\Configure.cshtml" />
     <None Remove="Views\Configuration\_Configuration.cshtml" />
+    <None Remove="Views\Customer\ExemptionCertificates.cshtml" />
     <None Remove="Views\EntityUseCode\EntityUseCode.cshtml" />
     <None Remove="Views\EntityUseCode\_EntityUseCodeField.cshtml" />
     <None Remove="Views\Log\List.cshtml" />
@@ -41,13 +43,22 @@
     <Content Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Checkout\AppliedCertificate.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\Checkout\AddressValidation.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\css\avalara.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Configuration\_Configuration.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Configuration\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Customer\ExemptionCertificates.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\EntityUseCode\EntityUseCode.cshtml">
@@ -80,7 +91,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalara.AvaTax" Version="20.9.0" />
+    <PackageReference Include="Avalara.AvaTax" Version="21.10.0" />
   </ItemGroup>
 
   <ItemGroup>

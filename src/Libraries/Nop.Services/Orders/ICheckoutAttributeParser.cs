@@ -13,7 +13,10 @@ namespace Nop.Services.Orders
         /// Gets selected checkout attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected checkout attributes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the selected checkout attributes
+        /// </returns>
         Task<IList<CheckoutAttribute>> ParseCheckoutAttributesAsync(string attributesXml);
 
         /// <summary>
@@ -45,7 +48,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="cart">Shopping cart items</param>
-        /// <returns>Updated attributes in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the updated attributes in XML format
+        /// </returns>
         Task<string> EnsureOnlyActiveAttributesAsync(string attributesXml, IList<ShoppingCartItem> cart);
 
         /// <summary>
@@ -53,7 +59,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attribute">Checkout attribute</param>
         /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<bool?> IsConditionMetAsync(CheckoutAttribute attribute, string selectedAttributesXml);
 
         /// <summary>

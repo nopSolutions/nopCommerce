@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.Common;
-using Nop.Data;
+using Nop.Data.Mapping;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Validators;
@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Common
 {
     public partial class AddressValidator : BaseNopValidator<AddressModel>
     {
-        public AddressValidator(AddressSettings addressSettings, ILocalizationService localizationService, INopDataProvider dataProvider)
+        public AddressValidator(AddressSettings addressSettings, ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
         {
             RuleFor(x => x.FirstName)
                 .NotEmpty()
@@ -68,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Validators.Common
                 .WithMessageAwait(localizationService.GetResourceAsync("Admin.Address.Fields.FaxNumber.Required"))
                 .When(x => addressSettings.FaxEnabled && x.FaxRequired);
 
-            SetDatabaseValidationRules<Address>(dataProvider);
+            SetDatabaseValidationRules<Address>(mappingEntityAccessor);
         }
     }
 }

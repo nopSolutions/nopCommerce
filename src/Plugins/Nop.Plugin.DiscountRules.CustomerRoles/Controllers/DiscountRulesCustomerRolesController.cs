@@ -129,7 +129,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                 return Ok(new { NewRequirementId = discountRequirement.Id });
             }
 
-            return BadRequest(new { Errors = GetErrorsFromModelState(ModelState) });
+            return Ok(new { Errors = GetErrorsFromModelState(ModelState) });
         }
 
         #endregion

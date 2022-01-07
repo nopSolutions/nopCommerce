@@ -40,15 +40,76 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
+        
+        #region Methods
 
-        #region Utilities
+        /// <summary>
+        /// Prepare payment methods model
+        /// </summary>
+        /// <param name="methodsModel">Payment methods model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment methods model
+        /// </returns>
+        public virtual async Task<PaymentMethodsModel> PreparePaymentMethodsModelAsync(PaymentMethodsModel methodsModel)
+        {
+            if (methodsModel == null)
+                throw new ArgumentNullException(nameof(methodsModel));
+
+            //prepare nested search models
+            await PreparePaymentMethodSearchModelAsync(methodsModel.PaymentsMethod);
+            await PreparePaymentMethodRestrictionModelAsync(methodsModel.PaymentMethodRestriction);
+
+            return methodsModel;
+        }
+
+        /// <summary>
+        /// Prepare paged payment method list model
+        /// </summary>
+        /// <param name="searchModel">Payment method search model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment method list model
+        /// </returns>
+        public virtual async Task<PaymentMethodListModel> PreparePaymentMethodListModelAsync(PaymentMethodSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get payment methods
+            var paymentMethods = (await _paymentPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
+
+            //prepare grid model
+            var model = await new PaymentMethodListModel().PrepareToGridAsync(searchModel, paymentMethods, () =>
+            {
+                return paymentMethods.SelectAwait(async method =>
+                {
+                    //fill in model values from the entity
+                    var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
+
+                    //fill in additional values (not existing in the entity)
+                    paymentMethodModel.IsActive = _paymentPluginManager.IsPluginActive(method);
+                    paymentMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
+
+                    paymentMethodModel.LogoUrl = await _paymentPluginManager.GetPluginLogoUrlAsync(method);
+                    paymentMethodModel.RecurringPaymentType = await _localizationService.GetLocalizedEnumAsync(method.RecurringPaymentType);
+
+                    return paymentMethodModel;
+                });
+            });
+
+            return model;
+        }
 
         /// <summary>
         /// Prepare payment method search model
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>
-        /// <returns>Payment method search model</returns>
-        protected virtual Task<PaymentMethodSearchModel> PreparePaymentMethodSearchModelAsync(PaymentMethodSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment method search model
+        /// </returns>
+        public virtual Task<PaymentMethodSearchModel> PreparePaymentMethodSearchModelAsync(PaymentMethodSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -63,8 +124,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare payment method restriction model
         /// </summary>
         /// <param name="model">Payment method restriction model</param>
-        /// <returns>Payment method restriction model</returns>
-        protected virtual async Task<PaymentMethodRestrictionModel> PreparePaymentMethodRestrictionModelAsync(PaymentMethodRestrictionModel model)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment method restriction model
+        /// </returns>
+        public virtual async Task<PaymentMethodRestrictionModel> PreparePaymentMethodRestrictionModelAsync(PaymentMethodRestrictionModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -94,62 +158,6 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.Restricted[method.PluginDescriptor.SystemName][country.Id] = restrictedCountries.Contains(country.Id);
                 }
             }
-
-            return model;
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Prepare payment methods model
-        /// </summary>
-        /// <param name="methodsModel">Payment methods model</param>
-        /// <returns>Payment methods model</returns>
-        public virtual async Task<PaymentMethodsModel> PreparePaymentMethodsModelAsync(PaymentMethodsModel methodsModel)
-        {
-            if (methodsModel == null)
-                throw new ArgumentNullException(nameof(methodsModel));
-
-            //prepare nested search models
-            await PreparePaymentMethodSearchModelAsync(methodsModel.PaymentsMethod);
-            await PreparePaymentMethodRestrictionModelAsync(methodsModel.PaymentMethodRestriction);
-
-            return methodsModel;
-        }
-
-        /// <summary>
-        /// Prepare paged payment method list model
-        /// </summary>
-        /// <param name="searchModel">Payment method search model</param>
-        /// <returns>Payment method list model</returns>
-        public virtual async Task<PaymentMethodListModel> PreparePaymentMethodListModelAsync(PaymentMethodSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //get payment methods
-            var paymentMethods = (await _paymentPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
-
-            //prepare grid model
-            var model = await new PaymentMethodListModel().PrepareToGridAsync(searchModel, paymentMethods, () =>
-            {
-                return paymentMethods.SelectAwait(async method =>
-                {
-                    //fill in model values from the entity
-                    var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
-
-                    //fill in additional values (not existing in the entity)
-                    paymentMethodModel.IsActive = _paymentPluginManager.IsPluginActive(method);
-                    paymentMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
-
-                    paymentMethodModel.LogoUrl = await _paymentPluginManager.GetPluginLogoUrlAsync(method);
-                    paymentMethodModel.RecurringPaymentType = await _localizationService.GetLocalizedEnumAsync(method.RecurringPaymentType);
-
-                    return paymentMethodModel;
-                });
-            });
 
             return model;
         }

@@ -16,7 +16,7 @@ namespace Nop.Services.Themes
     {
         #region Fields
 
-        private static readonly object _locker = new object();
+        private static readonly object _locker = new();
 
         private readonly INopFileProvider _fileProvider;
 
@@ -99,7 +99,10 @@ namespace Nop.Services.Themes
         /// <summary>
         /// Get all themes
         /// </summary>
-        /// <returns>List of the theme descriptor</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of the theme descriptor
+        /// </returns>
         public Task<IList<ThemeDescriptor>> GetThemesAsync()
         {
             return Task.FromResult<IList<ThemeDescriptor>>(_themeDescriptors.Values.ToList());
@@ -109,7 +112,10 @@ namespace Nop.Services.Themes
         /// Get a theme by the system name
         /// </summary>
         /// <param name="systemName">Theme system name</param>
-        /// <returns>Theme descriptor</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the me descriptor
+        /// </returns>
         public Task<ThemeDescriptor> GetThemeBySystemNameAsync(string systemName)
         {
             if (string.IsNullOrEmpty(systemName))
@@ -124,7 +130,10 @@ namespace Nop.Services.Themes
         /// Check whether the theme with specified system name exists
         /// </summary>
         /// <param name="systemName">Theme system name</param>
-        /// <returns>True if the theme exists; otherwise false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if the theme exists; otherwise false
+        /// </returns>
         public Task<bool> ThemeExistsAsync(string systemName)
         {
             if (string.IsNullOrEmpty(systemName))

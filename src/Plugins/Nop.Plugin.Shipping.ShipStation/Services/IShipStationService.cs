@@ -11,7 +11,10 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// Gets all rates
         /// </summary>
         /// <param name="shippingOptionRequest"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         Task<IList<ShipStationServiceRate>> GetAllRatesAsync(GetShippingOptionRequest shippingOptionRequest);
         
         /// <summary>
@@ -21,6 +24,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="carrier">Carrier</param>
         /// <param name="service">Service</param>
         /// <param name="trackingNumber">Tracking number</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task CreateOrUpdateShippingAsync(string orderNumber, string carrier, string service, string trackingNumber);
 
         /// <summary>
@@ -30,7 +34,10 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="endDate">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>XML view of orders</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the xML view of orders
+        /// </returns>
         Task<string> GetXmlOrdersAsync(DateTime? startDate, DateTime? endDate, int pageIndex, int pageSize);
 
         /// <summary>

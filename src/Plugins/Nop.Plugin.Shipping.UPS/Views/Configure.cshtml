@@ -17,16 +17,16 @@
         function togglePackingType() {
             var selectedPackingTypeId = $("#PackingType").val();
             if (selectedPackingTypeId == @((int)PackingType.PackByDimensions)) {
-                $('#pnlPassDimensions').showField();
-                $('#pnlPackingPackageVolume').hide();
+                $('#pnlPassDimensions').showElement();
+                $('#pnlPackingPackageVolume').hideElement();
             }
             else if (selectedPackingTypeId == @((int)PackingType.PackByOneItemPerPackage)) {
-                $('#pnlPassDimensions').hide();
-                $('#pnlPackingPackageVolume').hide();
+                $('#pnlPassDimensions').hideElement();
+                $('#pnlPackingPackageVolume').hideElement();
             }
             else if (selectedPackingTypeId == @((int)PackingType.PackByVolume)) {
-                $('#pnlPassDimensions').hide();
-                $('#pnlPackingPackageVolume').showField();
+                $('#pnlPassDimensions').hideElement();
+                $('#pnlPackingPackageVolume').showElement();
             }
         }
     </script>

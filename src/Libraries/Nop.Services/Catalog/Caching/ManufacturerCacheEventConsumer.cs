@@ -15,6 +15,7 @@ namespace Nop.Services.Catalog.Caching
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(Manufacturer entity, EntityEventType entityEventType)
         {
             await RemoveByPrefixAsync(NopDiscountDefaults.ManufacturerIdsPrefix);
@@ -24,6 +25,8 @@ namespace Nop.Services.Catalog.Caching
 
             if (entityEventType == EntityEventType.Delete)
                 await RemoveAsync(NopCatalogDefaults.SpecificationAttributeOptionsByManufacturerCacheKey, entity);
+
+            await RemoveAsync(NopDiscountDefaults.AppliedDiscountsCacheKey, nameof(Manufacturer), entity);
 
             await base.ClearCacheAsync(entity, entityEventType);
         }

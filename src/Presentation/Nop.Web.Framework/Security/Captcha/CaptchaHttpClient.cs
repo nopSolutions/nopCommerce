@@ -48,7 +48,10 @@ namespace Nop.Web.Framework.Security.Captcha
         /// Validate reCAPTCHA
         /// </summary>
         /// <param name="responseValue">Response value</param>
-        /// <returns>The asynchronous task whose result contains response from the reCAPTCHA service</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the asynchronous task whose result contains response from the reCAPTCHA service
+        /// </returns>
         public virtual async Task<CaptchaResponse> ValidateCaptchaAsync(string responseValue)
         {
             //prepare URL to request

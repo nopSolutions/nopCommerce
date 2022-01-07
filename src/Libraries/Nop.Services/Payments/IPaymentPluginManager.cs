@@ -16,8 +16,11 @@ namespace Nop.Services.Payments
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <param name="countryId">Filter by country; pass 0 to load all plugins</param>
-        /// <returns>List of active payment methods</returns>
-        Task<IList<IPaymentMethod>> LoadActivePluginsAsyncAsync(Customer customer = null, int storeId = 0, int countryId = 0);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of active payment methods
+        /// </returns>
+        Task<IList<IPaymentMethod>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0, int countryId = 0);
 
         /// <summary>
         /// Check whether the passed payment method is active
@@ -32,21 +35,28 @@ namespace Nop.Services.Payments
         /// <param name="systemName">System name of payment method to check</param>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<bool> IsPluginActiveAsync(string systemName, Customer customer = null, int storeId = 0);
 
         /// <summary>
-        /// Get countries in which the passed payment method is now allowed
+        /// Get countries in which the passed payment method is not allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
-        /// <returns>List of country identifiers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of country identifiers
+        /// </returns>
         Task<IList<int>> GetRestrictedCountryIdsAsync(IPaymentMethod paymentMethod);
 
         /// <summary>
-        /// Save countries in which the passed payment method is now allowed
+        /// Save countries in which the passed payment method is not allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="countryIds">List of country identifiers</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task SaveRestrictedCountriesAsync(IPaymentMethod paymentMethod, IList<int> countryIds);
     }
 }

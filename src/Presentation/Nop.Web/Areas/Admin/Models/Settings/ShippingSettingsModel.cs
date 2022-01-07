@@ -1,6 +1,7 @@
 ﻿using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -70,6 +71,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool EstimateShippingProductPageEnabled { get; set; }
         public bool EstimateShippingProductPageEnabled_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled")]
+        public bool EstimateShippingCityNameEnabled { get; set; }
+        public bool EstimateShippingCityNameEnabled_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToCustomers")]
         public bool DisplayShipmentEventsToCustomers { get; set; }
         public bool DisplayShipmentEventsToCustomers_OverrideForStore { get; set; }
@@ -89,6 +94,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions")]
         public bool ConsiderAssociatedProductsDimensions { get; set; }
         public bool ConsiderAssociatedProductsDimensions_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ShippingSorting")]
+        public int ShippingSorting { get; set; }
+        public bool ShippingSorting_OverrideForStore { get; set; }
+        public SelectList SortShippingValues { get; set; }
 
         public AddressModel ShippingOriginAddress { get; set; }
         public bool ShippingOriginAddress_OverrideForStore { get; set; }

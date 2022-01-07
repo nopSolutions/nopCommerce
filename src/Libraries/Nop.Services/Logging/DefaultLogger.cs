@@ -79,6 +79,7 @@ namespace Nop.Services.Logging
         /// Deletes a log item
         /// </summary>
         /// <param name="log">Log item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteLogAsync(Log log)
         {
             if (log == null)
@@ -91,6 +92,7 @@ namespace Nop.Services.Logging
         /// Deletes a log items
         /// </summary>
         /// <param name="logs">Log items</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteLogsAsync(IList<Log> logs)
         {
             await _logRepository.DeleteAsync(logs, false);
@@ -99,9 +101,14 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Clears a log
         /// </summary>
-        public virtual async Task ClearLogAsync()
+        /// <param name="olderThan">The date that sets the restriction on deleting records. Leave null to remove all records</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task ClearLogAsync(DateTime? olderThan = null)
         {
-            await _logRepository.TruncateAsync();
+            if(olderThan == null)
+                await _logRepository.TruncateAsync();
+            else
+                await _logRepository.DeleteAsync(p => p.CreatedOnUtc < olderThan.Value);
         }
 
         /// <summary>
@@ -113,7 +120,10 @@ namespace Nop.Services.Logging
         /// <param name="logLevel">Log level; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Log item items</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log item items
+        /// </returns>
         public virtual async Task<IPagedList<Log>> GetAllLogsAsync(DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = "", LogLevel? logLevel = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -144,7 +154,10 @@ namespace Nop.Services.Logging
         /// Gets a log item
         /// </summary>
         /// <param name="logId">Log item identifier</param>
-        /// <returns>Log item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log item
+        /// </returns>
         public virtual async Task<Log> GetLogByIdAsync(int logId)
         {
             return await _logRepository.GetByIdAsync(logId);
@@ -154,7 +167,10 @@ namespace Nop.Services.Logging
         /// Get log items by identifiers
         /// </summary>
         /// <param name="logIds">Log item identifiers</param>
-        /// <returns>Log items</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log items
+        /// </returns>
         public virtual async Task<IList<Log>> GetLogByIdsAsync(int[] logIds)
         {
             return await _logRepository.GetByIdsAsync(logIds);
@@ -167,7 +183,10 @@ namespace Nop.Services.Logging
         /// <param name="shortMessage">The short message</param>
         /// <param name="fullMessage">The full message</param>
         /// <param name="customer">The customer to associate log record with</param>
-        /// <returns>A log item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a log item
+        /// </returns>
         public virtual async Task<Log> InsertLogAsync(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
             //check ignore word/phrase list?
@@ -197,6 +216,7 @@ namespace Nop.Services.Logging
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InformationAsync(string message, Exception exception = null, Customer customer = null)
         {
             //don't log thread abort exception
@@ -213,6 +233,7 @@ namespace Nop.Services.Logging
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task WarningAsync(string message, Exception exception = null, Customer customer = null)
         {
             //don't log thread abort exception
@@ -229,6 +250,7 @@ namespace Nop.Services.Logging
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ErrorAsync(string message, Exception exception = null, Customer customer = null)
         {
             //don't log thread abort exception

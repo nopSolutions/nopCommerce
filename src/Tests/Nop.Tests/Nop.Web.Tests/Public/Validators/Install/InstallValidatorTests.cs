@@ -23,9 +23,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Install
             {
                 AdminEmail = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.AdminEmail, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AdminEmail);
             model.AdminEmail = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.AdminEmail, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AdminEmail);
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Install
             {
                 AdminEmail = "adminexample.com"
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.AdminEmail, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AdminEmail);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Install
             {
                 AdminEmail = "admin@example.com"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.AdminEmail, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.AdminEmail);
         }
 
         [Test]
@@ -57,11 +57,11 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Install
             };
             //we know that password should equal confirmation password
             model.ConfirmPassword = model.AdminPassword;
-            _validator.ShouldHaveValidationErrorFor(x => x.AdminPassword, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AdminPassword);
             model.AdminPassword = string.Empty;
             //we know that password should equal confirmation password
             model.ConfirmPassword = model.AdminPassword;
-            _validator.ShouldHaveValidationErrorFor(x => x.AdminPassword, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AdminPassword);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Install
             };
             //we know that password should equal confirmation password
             model.ConfirmPassword = model.AdminPassword;
-            _validator.ShouldNotHaveValidationErrorFor(x => x.AdminPassword, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.AdminPassword);
         }
 
         [Test]
@@ -83,9 +83,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Install
             {
                 ConfirmPassword = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.ConfirmPassword, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ConfirmPassword);
             model.ConfirmPassword = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.ConfirmPassword, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ConfirmPassword);
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Install
             {
                 ConfirmPassword = "some password"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.ConfirmPassword, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.ConfirmPassword);
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Install
                 AdminPassword = "some password",
                 ConfirmPassword = "another password"
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.AdminPassword, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AdminPassword);
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Install
                 AdminPassword = "some password",
                 ConfirmPassword = "some password"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.AdminPassword, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.AdminPassword);
         }
     }
 }

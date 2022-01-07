@@ -182,7 +182,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare discount search model
         /// </summary>
         /// <param name="searchModel">Discount search model</param>
-        /// <returns>Discount search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount search model
+        /// </returns>
         public virtual async Task<DiscountSearchModel> PrepareDiscountSearchModelAsync(DiscountSearchModel searchModel)
         {
             if (searchModel == null)
@@ -201,7 +204,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged discount list model
         /// </summary>
         /// <param name="searchModel">Discount search model</param>
-        /// <returns>Discount list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount list model
+        /// </returns>
         public virtual async Task<DiscountListModel> PrepareDiscountListModelAsync(DiscountSearchModel searchModel)
         {
             if (searchModel == null)
@@ -249,7 +255,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Discount model</param>
         /// <param name="discount">Discount</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Discount model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount model
+        /// </returns>
         public virtual async Task<DiscountModel> PrepareDiscountModelAsync(DiscountModel model, Discount discount, bool excludeProperties = false)
         {
             if (discount != null)
@@ -314,7 +323,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="requirements">Collection of discount requirements</param>
         /// <param name="discount">Discount</param>
         /// <param name="groupInteractionType">Interaction type within the group of requirements</param>
-        /// <returns>List of discount requirement rule models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of discount requirement rule models
+        /// </returns>
         public virtual async Task<IList<DiscountRequirementRuleModel>> PrepareDiscountRequirementRuleModelsAsync
             (ICollection<DiscountRequirement> requirements, Discount discount, RequirementGroupInteractionType groupInteractionType)
         {
@@ -336,7 +348,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     IsGroup = requirement.IsGroup,
                     RuleName = requirement.DiscountRequirementRuleSystemName,
                     IsLastInGroup = lastRequirement == null || lastRequirement.Id == requirement.Id,
-                    InteractionType = groupInteractionType.ToString().ToUpper()
+                    InteractionType = groupInteractionType.ToString().ToUpperInvariant()
                 };
 
                 var interactionType = requirement.InteractionType ?? RequirementGroupInteractionType.And;
@@ -370,7 +382,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Discount usage history search model</param>
         /// <param name="discount">Discount</param>
-        /// <returns>Discount usage history list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount usage history list model
+        /// </returns>
         public virtual async Task<DiscountUsageHistoryListModel> PrepareDiscountUsageHistoryListModelAsync(DiscountUsageHistorySearchModel searchModel,
             Discount discount)
         {
@@ -415,7 +430,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Discount product search model</param>
         /// <param name="discount">Discount</param>
-        /// <returns>Discount product list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount product list model
+        /// </returns>
         public virtual async Task<DiscountProductListModel> PrepareDiscountProductListModelAsync(DiscountProductSearchModel searchModel, Discount discount)
         {
             if (searchModel == null)
@@ -450,7 +468,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare product search model to add to the discount
         /// </summary>
         /// <param name="searchModel">Product search model to add to the discount</param>
-        /// <returns>Product search model to add to the discount</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product search model to add to the discount
+        /// </returns>
         public virtual async Task<AddProductToDiscountSearchModel> PrepareAddProductToDiscountSearchModelAsync(AddProductToDiscountSearchModel searchModel)
         {
             if (searchModel == null)
@@ -481,7 +502,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged product list model to add to the discount
         /// </summary>
         /// <param name="searchModel">Product search model to add to the discount</param>
-        /// <returns>Product list model to add to the discount</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product list model to add to the discount
+        /// </returns>
         public virtual async Task<AddProductToDiscountListModel> PrepareAddProductToDiscountListModelAsync(AddProductToDiscountSearchModel searchModel)
         {
             if (searchModel == null)
@@ -517,7 +541,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Discount category search model</param>
         /// <param name="discount">Discount</param>
-        /// <returns>Discount category list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount category list model
+        /// </returns>
         public virtual async Task<DiscountCategoryListModel> PrepareDiscountCategoryListModelAsync(DiscountCategorySearchModel searchModel, Discount discount)
         {
             if (searchModel == null)
@@ -553,7 +580,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare category search model to add to the discount
         /// </summary>
         /// <param name="searchModel">Category search model to add to the discount</param>
-        /// <returns>Category search model to add to the discount</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category search model to add to the discount
+        /// </returns>
         public virtual Task<AddCategoryToDiscountSearchModel> PrepareAddCategoryToDiscountSearchModelAsync(AddCategoryToDiscountSearchModel searchModel)
         {
             if (searchModel == null)
@@ -569,7 +599,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged category list model to add to the discount
         /// </summary>
         /// <param name="searchModel">Category search model to add to the discount</param>
-        /// <returns>Category list model to add to the discount</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category list model to add to the discount
+        /// </returns>
         public virtual async Task<AddCategoryToDiscountListModel> PrepareAddCategoryToDiscountListModelAsync(AddCategoryToDiscountSearchModel searchModel)
         {
             if (searchModel == null)
@@ -604,7 +637,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Discount manufacturer search model</param>
         /// <param name="discount">Discount</param>
-        /// <returns>Discount manufacturer list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount manufacturer list model
+        /// </returns>
         public virtual async Task<DiscountManufacturerListModel> PrepareDiscountManufacturerListModelAsync(DiscountManufacturerSearchModel searchModel,
             Discount discount)
         {
@@ -640,7 +676,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare manufacturer search model to add to the discount
         /// </summary>
         /// <param name="searchModel">Manufacturer search model to add to the discount</param>
-        /// <returns>Manufacturer search model to add to the discount</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer search model to add to the discount
+        /// </returns>
         public virtual Task<AddManufacturerToDiscountSearchModel> PrepareAddManufacturerToDiscountSearchModelAsync(AddManufacturerToDiscountSearchModel searchModel)
         {
             if (searchModel == null)
@@ -656,7 +695,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged manufacturer list model to add to the discount
         /// </summary>
         /// <param name="searchModel">Manufacturer search model to add to the discount</param>
-        /// <returns>Manufacturer list model to add to the discount</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer list model to add to the discount
+        /// </returns>
         public virtual async Task<AddManufacturerToDiscountListModel> PrepareAddManufacturerToDiscountListModelAsync(AddManufacturerToDiscountSearchModel searchModel)
         {
             if (searchModel == null)

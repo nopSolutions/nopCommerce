@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 
@@ -22,6 +21,7 @@ namespace Nop.Services.Catalog
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly IMeasureService _measureService;
+        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IWorkContext _workContext;
         private readonly TaxSettings _taxSettings;
 
@@ -33,6 +33,7 @@ namespace Nop.Services.Catalog
             ICurrencyService currencyService,
             ILocalizationService localizationService,
             IMeasureService measureService,
+            IPriceCalculationService priceCalculationService,
             IWorkContext workContext,
             TaxSettings taxSettings)
         {
@@ -40,6 +41,7 @@ namespace Nop.Services.Catalog
             _currencyService = currencyService;
             _localizationService = localizationService;
             _measureService = measureService;
+            _priceCalculationService = priceCalculationService;
             _workContext = workContext;
             _taxSettings = taxSettings;
         }
@@ -94,7 +96,10 @@ namespace Nop.Services.Catalog
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         protected virtual async Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax)
         {
@@ -110,7 +115,10 @@ namespace Nop.Services.Catalog
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         protected virtual async Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax)
         {
@@ -126,7 +134,10 @@ namespace Nop.Services.Catalog
         /// Formats the price
         /// </summary>
         /// <param name="price">Price</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatPriceAsync(decimal price)
         {
             return await FormatPriceAsync(price, true, await _workContext.GetWorkingCurrencyAsync());
@@ -138,7 +149,10 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatPriceAsync(decimal price, bool showCurrency, Currency targetCurrency)
         {
             var priceIncludesTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
@@ -151,7 +165,10 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatPriceAsync(decimal price, bool showCurrency, bool showTax)
         {
             var priceIncludesTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
@@ -166,7 +183,10 @@ namespace Nop.Services.Catalog
         /// <param name="currencyCode">Currency code</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <param name="languageId">Language</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatPriceAsync(decimal price, bool showCurrency,
             string currencyCode, bool showTax, int languageId)
         {
@@ -190,7 +210,10 @@ namespace Nop.Services.Catalog
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatOrderPriceAsync(decimal price,
             decimal currencyRate, string customerCurrencyCode, bool displayCustomerCurrency,
             Currency primaryStoreCurrency, int languageId, bool? priceIncludesTax = null, bool? showTax = null)
@@ -219,7 +242,10 @@ namespace Nop.Services.Catalog
         /// <param name="currencyCode">Currency code</param>
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatPriceAsync(decimal price, bool showCurrency,
             string currencyCode, int languageId, bool priceIncludesTax)
         {
@@ -239,7 +265,10 @@ namespace Nop.Services.Catalog
         /// <param name="targetCurrency">Target currency</param>
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatPriceAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax)
         {
@@ -256,13 +285,15 @@ namespace Nop.Services.Catalog
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatPriceAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax)
         {
             //we should round it no matter of "ShoppingCartSettings.RoundPricesDuringCalculation" setting
-            var priceCalculationService = EngineContext.Current.Resolve<IPriceCalculationService>();
-            price = await priceCalculationService.RoundPriceAsync(price, targetCurrency);
+            price = await _priceCalculationService.RoundPriceAsync(price, targetCurrency);
 
             var currencyString = GetCurrencyString(price, showCurrency, targetCurrency);
             if (!showTax)
@@ -291,7 +322,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="price">Price</param>
-        /// <returns>Rental product price with period</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rental product price with period
+        /// </returns>
         public virtual async Task<string> FormatRentalProductPeriodAsync(Product product, string price)
         {
             if (product == null)
@@ -318,7 +352,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency)
         {
             var priceIncludesTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
@@ -333,7 +370,10 @@ namespace Nop.Services.Catalog
         /// <param name="targetCurrency">Target currency</param>
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax)
         {
@@ -349,7 +389,10 @@ namespace Nop.Services.Catalog
         /// <param name="currencyCode">Currency code</param>
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency,
             string currencyCode, int languageId, bool priceIncludesTax)
         {
@@ -366,7 +409,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency)
         {
             var priceIncludesTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
@@ -383,7 +429,10 @@ namespace Nop.Services.Catalog
         /// <param name="targetCurrency">Target currency</param>
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax)
         {
@@ -399,7 +448,10 @@ namespace Nop.Services.Catalog
         /// <param name="currencyCode">Currency code</param>
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         public virtual async Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency,
             string currencyCode, int languageId, bool priceIncludesTax)
         {
@@ -428,7 +480,10 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
         /// <param name="totalWeight">Total weight of product (with attribute weight adjustment). Pass null if you want to use a default produce weight</param>
-        /// <returns>Base price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the base price
+        /// </returns>
         public virtual async Task<string> FormatBasePriceAsync(Product product, decimal? productPrice, decimal? totalWeight = null)
         {
             if (product == null)

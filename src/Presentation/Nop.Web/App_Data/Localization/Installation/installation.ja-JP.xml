@@ -34,10 +34,10 @@
     <Value>SQLServer用接続文字列の書式が間違っています</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>国</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>国を選択してください...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>データベースが存在しない場合、新たに作成</Value>

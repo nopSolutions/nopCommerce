@@ -13,14 +13,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare widget search model
         /// </summary>
         /// <param name="searchModel">Widget search model</param>
-        /// <returns>Widget search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget search model
+        /// </returns>
         Task<WidgetSearchModel> PrepareWidgetSearchModelAsync(WidgetSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged widget list model
         /// </summary>
         /// <param name="searchModel">Widget search model</param>
-        /// <returns>Widget list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget list model
+        /// </returns>
         Task<WidgetListModel> PrepareWidgetListModelAsync(WidgetSearchModel searchModel);
 
         /// <summary>
@@ -28,7 +34,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
-        /// <returns>List of render widget models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of render widget models
+        /// </returns>
         Task<IList<RenderWidgetModel>> PrepareRenderWidgetModelsAsync(string widgetZone, object additionalData = null);
     }
 }

@@ -8,7 +8,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -31,6 +30,7 @@ namespace Nop.Web.Factories
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -43,7 +43,8 @@ namespace Nop.Web.Factories
             ICountryService countryService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            IStateProvinceService stateProvinceService)
+            IStateProvinceService stateProvinceService,
+            IWorkContext workContext)
         {
             _addressSettings = addressSettings;
             _addressAttributeFormatter = addressAttributeFormatter;
@@ -53,6 +54,7 @@ namespace Nop.Web.Factories
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _stateProvinceService = stateProvinceService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -65,6 +67,7 @@ namespace Nop.Web.Factories
         /// <param name="model">Address model</param>
         /// <param name="address">Address entity</param>
         /// <param name="overrideAttributesXml">Overridden address attributes in XML format; pass null to use CustomAttributes of address entity</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareCustomAddressAttributesAsync(AddressModel model,
             Address address, string overrideAttributesXml = "")
         {
@@ -165,6 +168,7 @@ namespace Nop.Web.Factories
         /// <param name="prePopulateWithCustomerFields">Whether to populate model properties with the customer fields (used with the customer entity)</param>
         /// <param name="customer">Customer entity; required if prePopulateWithCustomerFields is true</param>
         /// <param name="overrideAttributesXml">Overridden address attributes in XML format; pass null to use CustomAttributes of the address entity</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareAddressModelAsync(AddressModel model,
             Address address, bool excludeProperties,
             AddressSettings addressSettings,
@@ -242,7 +246,7 @@ namespace Nop.Web.Factories
 
                 if (addressSettings.StateProvinceEnabled)
                 {
-                    var languageId = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Id;
+                    var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
                     var states = (await _stateProvinceService
                         .GetStateProvincesByCountryIdAsync(model.CountryId ?? 0, languageId))
                         .ToList();

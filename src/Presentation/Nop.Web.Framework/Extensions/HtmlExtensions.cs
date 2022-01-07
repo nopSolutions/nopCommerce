@@ -34,7 +34,10 @@ namespace Nop.Web.Framework.Extensions
         /// <param name="standardTemplate">Template for standard (default) values</param>
         /// <param name="ignoreIfSeveralStores">A value indicating whether to ignore localization if we have multiple stores</param>
         /// <param name="cssClass">CSS class for localizedTemplate</param>
-        /// <returns>Localized editor</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the localized editor
+        /// </returns>
         public static async Task<IHtmlContent> LocalizedEditorAsync<TModel, TLocalizedModelLocal>(this IHtmlHelper<TModel> helper,
             string name,
             Func<int, HelperResult> localizedTemplate,
@@ -238,7 +241,10 @@ namespace Nop.Web.Framework.Extensions
         /// </summary>
         /// <param name="helper">HTML helper</param>
         /// <param name="value">TexHint text</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public static async Task<IHtmlContent> HintAsync(this IHtmlHelper helper, string value)
         {
             //create tag builder
@@ -264,7 +270,10 @@ namespace Nop.Web.Framework.Extensions
         /// Convert IHtmlContent to string
         /// </summary>
         /// <param name="htmlContent">HTML content</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public static async Task<string> RenderHtmlContentAsync(this IHtmlContent htmlContent)
         {
             await using var writer = new StringWriter();

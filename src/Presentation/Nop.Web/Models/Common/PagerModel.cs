@@ -7,13 +7,7 @@ namespace Nop.Web.Models.Common
     public partial record PagerModel
     {
         #region Ctor
-
-        public PagerModel()
-            : this(EngineContext.Current.Resolve<ILocalizationService>())
-        {
-
-        }
-
+        
         public PagerModel(ILocalizationService localizationService)
         {
             _localizationService = localizationService;
@@ -176,6 +170,7 @@ namespace Nop.Web.Models.Common
         /// <summary>
         /// Gets the first button text
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetFirstButtonTextAsync()
         {
            return await _localizationService.GetResourceAsync("Pager.First");
@@ -184,6 +179,7 @@ namespace Nop.Web.Models.Common
         /// <summary>
         /// Gets the last button text
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetLastButtonTextAsync()
         {
             return await _localizationService.GetResourceAsync("Pager.Last");
@@ -192,6 +188,7 @@ namespace Nop.Web.Models.Common
         /// <summary>
         /// Gets the next button text
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetNextButtonTextAsync()
         {
             return await _localizationService.GetResourceAsync("Pager.Next");
@@ -200,6 +197,7 @@ namespace Nop.Web.Models.Common
         /// <summary>
         /// Gets the previous button text
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetPreviousButtonTextAsync()
         {
            return await _localizationService.GetResourceAsync("Pager.Previous");
@@ -208,6 +206,7 @@ namespace Nop.Web.Models.Common
         /// <summary>
         /// Gets or sets the current page text
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetCurrentPageTextAsync()
         {
             return await _localizationService.GetResourceAsync("Pager.CurrentPage");
@@ -304,7 +303,7 @@ namespace Nop.Web.Models.Common
     public partial record ForumSearchRouteValues : IRouteValues
     {
         public string searchterms { get; set; }
-        public string adv { get; set; }
+        public string advs { get; set; }
         public string forumId { get; set; }
         public string within { get; set; }
         public string limitDays { get; set; }

@@ -10,10 +10,10 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Html;
+using Nop.Core.Domain.Shipping;
 using Nop.Data;
-using Nop.Data.Extensions;
 using Nop.Services.Catalog;
+using Nop.Services.Html;
 using Nop.Services.Shipping;
 
 namespace Nop.Services.Orders
@@ -25,6 +25,7 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly IProductService _productService;
         private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Customer> _customerRepository;
@@ -41,7 +42,8 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        public OrderService(IProductService productService,
+        public OrderService(IHtmlFormatter htmlFormatter,
+            IProductService productService,
             IRepository<Address> addressRepository,
             IRepository<Customer> customerRepository,
             IRepository<Order> orderRepository,
@@ -53,6 +55,7 @@ namespace Nop.Services.Orders
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
             IShipmentService shipmentService)
         {
+            _htmlFormatter = htmlFormatter;
             _productService = productService;
             _addressRepository = addressRepository;
             _customerRepository = customerRepository;
@@ -71,94 +74,37 @@ namespace Nop.Services.Orders
         #region Utilities
 
         /// <summary>
-        /// Gets a total number of not yet shipped items (but added to shipments)
+        /// Gets the value indicating whether there are shipment items with a positive quantity in order shipments.
         /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of not yet shipped items (but added to shipments)</returns>
-        protected virtual async Task<int> GetTotalNumberOfNotYetShippedItemsAsync(OrderItem orderItem)
+        /// <param name="order">Order</param>
+        /// <param name="predicate">Predicate to filter shipments or null to check all shipments</param>
+        /// <returns>The <see cref="Task"/> containing the value indicating whether there are shipment items with a positive quantity in order shipments.</returns>
+        protected virtual async Task<bool> HasShipmentItemsAsync(Order order, Func<Shipment, bool> predicate = null)
         {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
-
-            var result = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
-            for (var i = 0; i < shipments.Count; i++)
+            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(order.Id);
+            if (shipments?.Any(shipment => predicate == null || predicate(shipment)) == true)
             {
-                var shipment = shipments[i];
-                if (shipment.ShippedDateUtc.HasValue)
-                    //already shipped
-                    continue;
-
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
-                if (si != null)
+                var orderItems = await GetOrderItemsAsync(order.Id, isShipEnabled: true);
+                if (orderItems?.Any() == true)
                 {
-                    result += si.Quantity;
+                    foreach (var shipment in shipments)
+                    {
+                        if (predicate?.Invoke(shipment) == false)
+                            continue;
+
+                        bool hasPositiveQuantity(ShipmentItem shipmentItem)
+                        {
+                            return orderItems.Any(orderItem => orderItem.Id == shipmentItem.OrderItemId && shipmentItem.Quantity > 0);
+                        }
+
+                        var shipmentItems = await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id);
+                        if (shipmentItems?.Any(hasPositiveQuantity) == true)
+                            return true;
+                    }
                 }
             }
 
-            return result;
-        }
-
-        /// <summary>
-        /// Gets a total number of already shipped items
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of already shipped items</returns>
-        protected virtual async Task<int> GetTotalNumberOfShippedItemsAsync(OrderItem orderItem)
-        {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
-
-            var result = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
-            for (var i = 0; i < shipments.Count; i++)
-            {
-                var shipment = shipments[i];
-                if (!shipment.ShippedDateUtc.HasValue)
-                    //not shipped yet
-                    continue;
-
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
-                if (si != null)
-                {
-                    result += si.Quantity;
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets a total number of already delivered items
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of already delivered items</returns>
-        protected virtual async Task<int> GetTotalNumberOfDeliveredItemsAsync(OrderItem orderItem)
-        {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
-
-            var result = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
-
-            for (var i = 0; i < shipments.Count; i++)
-            {
-                var shipment = shipments[i];
-                if (!shipment.DeliveryDateUtc.HasValue)
-                    //not delivered yet
-                    continue;
-
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
-                if (si != null)
-                {
-                    result += si.Quantity;
-                }
-            }
-
-            return result;
+            return false;
         }
 
         #endregion
@@ -171,7 +117,10 @@ namespace Nop.Services.Orders
         /// Gets an order
         /// </summary>
         /// <param name="orderId">The order identifier</param>
-        /// <returns>Order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order
+        /// </returns>
         public virtual async Task<Order> GetOrderByIdAsync(int orderId)
         {
             return await _orderRepository.GetByIdAsync(orderId,
@@ -182,7 +131,10 @@ namespace Nop.Services.Orders
         /// Gets an order
         /// </summary>
         /// <param name="customOrderNumber">The custom order number</param>
-        /// <returns>Order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order
+        /// </returns>
         public virtual async Task<Order> GetOrderByCustomOrderNumberAsync(string customOrderNumber)
         {
             if (string.IsNullOrEmpty(customOrderNumber))
@@ -196,7 +148,10 @@ namespace Nop.Services.Orders
         /// Gets an order by order item identifier
         /// </summary>
         /// <param name="orderItemId">The order item identifier</param>
-        /// <returns>Order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order
+        /// </returns>
         public virtual async Task<Order> GetOrderByOrderItemAsync(int orderItemId)
         {
             if (orderItemId == 0)
@@ -212,7 +167,10 @@ namespace Nop.Services.Orders
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
-        /// <returns>Order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order
+        /// </returns>
         public virtual async Task<IList<Order>> GetOrdersByIdsAsync(int[] orderIds) 
         {
             return await _orderRepository.GetByIdsAsync(orderIds, includeDeleted: false);
@@ -222,7 +180,10 @@ namespace Nop.Services.Orders
         /// Gets an order
         /// </summary>
         /// <param name="orderGuid">The order identifier</param>
-        /// <returns>Order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order
+        /// </returns>
         public virtual async Task<Order> GetOrderByGuidAsync(Guid orderGuid)
         {
             if (orderGuid == Guid.Empty)
@@ -240,6 +201,7 @@ namespace Nop.Services.Orders
         /// Deletes an order
         /// </summary>
         /// <param name="order">The order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteOrderAsync(Order order)
         {
             await _orderRepository.DeleteAsync(order);
@@ -268,7 +230,10 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
-        /// <returns>Orders</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the orders
+        /// </returns>
         public virtual async Task<IPagedList<Order>> SearchOrdersAsync(int storeId = 0,
             int vendorId = 0, int customerId = 0,
             int productId = 0, int affiliateId = 0, int warehouseId = 0,
@@ -298,10 +263,14 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.CustomerId == customerId);
 
             if (productId > 0)
+            {
                 query = from o in query
                     join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                     where oi.ProductId == productId
                     select o;
+
+                query = query.Distinct();
+            }
 
             if (warehouseId > 0)
             {
@@ -310,8 +279,9 @@ namespace Nop.Services.Orders
                 query = from o in query
                     join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                     join p in _productRepository.Table on oi.ProductId equals p.Id
-                    join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId
-                    where
+                    join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId into ps
+                    from pwi in ps.DefaultIfEmpty()
+                        where
                         //"Use multiple warehouses" enabled
                         //we search in each warehouse
                         (p.ManageInventoryMethodId == manageStockInventoryMethodId && p.UseMultipleWarehouses && pwi.WarehouseId == warehouseId) ||
@@ -319,6 +289,8 @@ namespace Nop.Services.Orders
                         //we use standard "warehouse" property
                         ((p.ManageInventoryMethodId != manageStockInventoryMethodId || !p.UseMultipleWarehouses) && p.WarehouseId == warehouseId)
                     select o;
+
+                query = query.Distinct();
             }
 
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
@@ -365,6 +337,7 @@ namespace Nop.Services.Orders
         /// Inserts an order
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertOrderAsync(Order order)
         {
             await _orderRepository.InsertAsync(order);
@@ -374,6 +347,7 @@ namespace Nop.Services.Orders
         /// Updates the order
         /// </summary>
         /// <param name="order">The order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateOrderAsync(Order order)
         {
             await _orderRepository.UpdateAsync(order);
@@ -425,7 +399,10 @@ namespace Nop.Services.Orders
         /// Gets a value indicating whether an order has items to be added to a shipment
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A value indicating whether an order has items to be added to a shipment</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether an order has items to be added to a shipment
+        /// </returns>
         public virtual async Task<bool> HasItemsToAddToShipmentAsync(Order order)
         {
             if (order == null)
@@ -448,47 +425,54 @@ namespace Nop.Services.Orders
         /// Gets a value indicating whether an order has items to ship
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A value indicating whether an order has items to ship</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether an order has items to ship
+        /// </returns>
         public virtual async Task<bool> HasItemsToShipAsync(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            foreach (var orderItem in await GetOrderItemsAsync(order.Id, isShipEnabled: true)) //we can ship only shippable products
-            {
-                var totalNumberOfNotYetShippedItems = await GetTotalNumberOfNotYetShippedItemsAsync(orderItem);
-                if (totalNumberOfNotYetShippedItems <= 0)
-                    continue;
+            if (order.PickupInStore)
+                return false;
 
-                //yes, we have at least one item to ship
-                return true;
-            }
+            return await HasShipmentItemsAsync(order, shipment => !shipment.ShippedDateUtc.HasValue);
+        }
 
-            return false;
+        /// <summary>
+        /// Gets a value indicating whether there are shipment items to mark as 'ready for pickup' in order shipments.
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether there are shipment items to mark as 'ready for pickup' in order shipments.
+        /// </returns>
+        public virtual async Task<bool> HasItemsToReadyForPickupAsync(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            if (!order.PickupInStore)
+                return false;
+
+            return await HasShipmentItemsAsync(order, shipment => !shipment.ReadyForPickupDateUtc.HasValue);
         }
 
         /// <summary>
         /// Gets a value indicating whether an order has items to deliver
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A value indicating whether an order has items to deliver</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether an order has items to deliver
+        /// </returns>
         public virtual async Task<bool> HasItemsToDeliverAsync(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            foreach (var orderItem in await GetOrderItemsAsync(order.Id, isShipEnabled: true)) //we can ship only shippable products
-            {
-                var totalNumberOfShippedItems = await GetTotalNumberOfShippedItemsAsync(orderItem);
-                var totalNumberOfDeliveredItems = await GetTotalNumberOfDeliveredItemsAsync(orderItem);
-                if (totalNumberOfShippedItems <= totalNumberOfDeliveredItems)
-                    continue;
-
-                //yes, we have at least one item to deliver
-                return true;
-            }
-
-            return false;
+            return await HasShipmentItemsAsync(order, shipment => (shipment.ShippedDateUtc.HasValue || shipment.ReadyForPickupDateUtc.HasValue) && !shipment.DeliveryDateUtc.HasValue);
         }
 
         #endregion
@@ -499,7 +483,10 @@ namespace Nop.Services.Orders
         /// Gets an order item
         /// </summary>
         /// <param name="orderItemId">Order item identifier</param>
-        /// <returns>Order item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order item
+        /// </returns>
         public virtual async Task<OrderItem> GetOrderItemByIdAsync(int orderItemId)
         {
             return await _orderItemRepository.GetByIdAsync(orderItemId,
@@ -510,7 +497,10 @@ namespace Nop.Services.Orders
         /// Gets a product of specify order item
         /// </summary>
         /// <param name="orderItemId">Order item identifier</param>
-        /// <returns>Product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product
+        /// </returns>
         public virtual async Task<Product> GetProductByOrderItemIdAsync(int orderItemId)
         {
             if (orderItemId == 0)
@@ -529,7 +519,10 @@ namespace Nop.Services.Orders
         /// <param name="isNotReturnable">Value indicating whether this product is returnable; pass null to ignore</param>
         /// <param name="isShipEnabled">Value indicating whether the entity is ship enabled; pass null to ignore</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IList<OrderItem>> GetOrderItemsAsync(int orderId, bool? isNotReturnable = null, bool? isShipEnabled = null, int vendorId = 0)
         {
             if (orderId == 0)
@@ -549,7 +542,10 @@ namespace Nop.Services.Orders
         /// Gets an item
         /// </summary>
         /// <param name="orderItemGuid">Order identifier</param>
-        /// <returns>Order item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order item
+        /// </returns>
         public virtual async Task<OrderItem> GetOrderItemByGuidAsync(Guid orderItemGuid)
         {
             if (orderItemGuid == Guid.Empty)
@@ -566,7 +562,10 @@ namespace Nop.Services.Orders
         /// Gets all downloadable order items
         /// </summary>
         /// <param name="customerId">Customer identifier; null to load all records</param>
-        /// <returns>Order items</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order items
+        /// </returns>
         public virtual async Task<IList<OrderItem>> GetDownloadableOrderItemsAsync(int customerId)
         {
             if (customerId == 0)
@@ -589,6 +588,7 @@ namespace Nop.Services.Orders
         /// Delete an order item
         /// </summary>
         /// <param name="orderItem">The order item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteOrderItemAsync(OrderItem orderItem)
         {
             await _orderItemRepository.DeleteAsync(orderItem);
@@ -598,8 +598,11 @@ namespace Nop.Services.Orders
         /// Gets a total number of items in all shipments
         /// </summary>
         /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of items in all shipments</returns>
-        public virtual async Task<int> GetTotalNumberOfItemsInAllShipmentAsync(OrderItem orderItem)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the otal number of items in all shipments
+        /// </returns>
+        public virtual async Task<int> GetTotalNumberOfItemsInAllShipmentsAsync(OrderItem orderItem)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
@@ -625,13 +628,16 @@ namespace Nop.Services.Orders
         /// Gets a total number of already items which can be added to new shipments
         /// </summary>
         /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of already delivered items which can be added to new shipments</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the otal number of already delivered items which can be added to new shipments
+        /// </returns>
         public virtual async Task<int> GetTotalNumberOfItemsCanBeAddedToShipmentAsync(OrderItem orderItem)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
 
-            var totalInShipments = await GetTotalNumberOfItemsInAllShipmentAsync(orderItem);
+            var totalInShipments = await GetTotalNumberOfItemsInAllShipmentsAsync(orderItem);
 
             var qtyOrdered = orderItem.Quantity;
             var qtyCanBeAddedToShipmentTotal = qtyOrdered - totalInShipments;
@@ -645,7 +651,10 @@ namespace Nop.Services.Orders
         /// Gets a value indicating whether download is allowed
         /// </summary>
         /// <param name="orderItem">Order item to check</param>
-        /// <returns>True if download is allowed; otherwise, false.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if download is allowed; otherwise, false.
+        /// </returns>
         public virtual async Task<bool> IsDownloadAllowedAsync(OrderItem orderItem)
         {
             if (orderItem is null)
@@ -714,7 +723,10 @@ namespace Nop.Services.Orders
         /// Gets a value indicating whether license download is allowed
         /// </summary>
         /// <param name="orderItem">Order item to check</param>
-        /// <returns>True if license download is allowed; otherwise, false.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if license download is allowed; otherwise, false.
+        /// </returns>
         public virtual async Task<bool> IsLicenseDownloadAllowedAsync(OrderItem orderItem)
         {
             if (orderItem == null)
@@ -729,6 +741,7 @@ namespace Nop.Services.Orders
         /// Inserts a order item
         /// </summary>
         /// <param name="orderItem">Order item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertOrderItemAsync(OrderItem orderItem)
         {
             await _orderItemRepository.InsertAsync(orderItem);
@@ -738,6 +751,7 @@ namespace Nop.Services.Orders
         /// Updates a order item
         /// </summary>
         /// <param name="orderItem">Order item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateOrderItemAsync(OrderItem orderItem)
         {
             await _orderItemRepository.UpdateAsync(orderItem);
@@ -751,7 +765,10 @@ namespace Nop.Services.Orders
         /// Gets an order note
         /// </summary>
         /// <param name="orderNoteId">The order note identifier</param>
-        /// <returns>Order note</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order note
+        /// </returns>
         public virtual async Task<OrderNote> GetOrderNoteByIdAsync(int orderNoteId)
         {
             return await _orderNoteRepository.GetByIdAsync(orderNoteId);
@@ -762,7 +779,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderId">Order identifier</param>
         /// <param name="displayToCustomer">Value indicating whether a customer can see a note; pass null to ignore</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IList<OrderNote>> GetOrderNotesByOrderIdAsync(int orderId, bool? displayToCustomer = null)
         {
             if (orderId == 0)
@@ -782,6 +802,7 @@ namespace Nop.Services.Orders
         /// Deletes an order note
         /// </summary>
         /// <param name="orderNote">The order note</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteOrderNoteAsync(OrderNote orderNote)
         {
             await _orderNoteRepository.DeleteAsync(orderNote);
@@ -802,7 +823,7 @@ namespace Nop.Services.Orders
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = _htmlFormatter.FormatText(text, false, true, false, false, false, false);
 
             return text;
         }
@@ -811,6 +832,7 @@ namespace Nop.Services.Orders
         /// Inserts an order note
         /// </summary>
         /// <param name="orderNote">The order note</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertOrderNoteAsync(OrderNote orderNote)
         {
             await _orderNoteRepository.InsertAsync(orderNote);
@@ -824,6 +846,7 @@ namespace Nop.Services.Orders
         /// Deletes a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             await _recurringPaymentRepository.DeleteAsync(recurringPayment);
@@ -833,7 +856,10 @@ namespace Nop.Services.Orders
         /// Gets a recurring payment
         /// </summary>
         /// <param name="recurringPaymentId">The recurring payment identifier</param>
-        /// <returns>Recurring payment</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the recurring payment
+        /// </returns>
         public virtual async Task<RecurringPayment> GetRecurringPaymentByIdAsync(int recurringPaymentId)
         {
             return await _recurringPaymentRepository.GetByIdAsync(recurringPaymentId, cache => default);
@@ -843,6 +869,7 @@ namespace Nop.Services.Orders
         /// Inserts a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             await _recurringPaymentRepository.InsertAsync(recurringPayment);
@@ -852,6 +879,7 @@ namespace Nop.Services.Orders
         /// Updates the recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             await _recurringPaymentRepository.UpdateAsync(recurringPayment);
@@ -867,7 +895,10 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Recurring payments</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the recurring payments
+        /// </returns>
         public virtual async Task<IPagedList<RecurringPayment>> SearchRecurringPaymentsAsync(int storeId = 0,
             int customerId = 0, int initialOrderId = 0, OrderStatus? initialOrderStatus = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
@@ -909,7 +940,10 @@ namespace Nop.Services.Orders
         /// Gets a recurring payment history
         /// </summary>
         /// <param name="recurringPayment">The recurring payment</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IList<RecurringPaymentHistory>> GetRecurringPaymentHistoryAsync(RecurringPayment recurringPayment)
         {
             if (recurringPayment is null)
@@ -924,6 +958,7 @@ namespace Nop.Services.Orders
         /// Inserts a recurring payment history entry
         /// </summary>
         /// <param name="recurringPaymentHistory">Recurring payment history entry</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertRecurringPaymentHistoryAsync(RecurringPaymentHistory recurringPaymentHistory)
         {
             await _recurringPaymentHistoryRepository.InsertAsync(recurringPaymentHistory);

@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
+using Nop.Services.Common;
 using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
-    [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Localization)]
-    [SkipMigrationOnInstall]
+    [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Localization, MigrationProcessType.Update)]
     public class LocalizationMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -159,7 +161,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Filtering.SpecificationFilter.Separator",
             }).Wait();
 
-            localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            var languageService = EngineContext.Current.Resolve<ILanguageService>();
+            var languages = languageService.GetAllLanguagesAsync(true).Result;
+            var languageId = languages
+                .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
+                .Select(lang => lang.Id).FirstOrDefault();
+            
+            localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)",
                 ["Admin.Configuration.AppSettings"] = "App settings",
@@ -172,7 +180,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime.Hint"] = "Set bundled files cache time (in minutes).",
                 ["Admin.Configuration.AppSettings.Hosting"] = "Hosting configuration",
                 ["Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps"] = "Use HTTP_CLUSTER_HTTPS",
-                ["Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps.Hint"] = "Enable this setting if your hosting uses a load balancer. It’ll be used to determine whether the current request is HTTPS.",
+                ["Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps.Hint"] = "Enable this setting if your hosting uses a load balancer. It'll be used to determine whether the current request is HTTPS.",
                 ["Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto"] = "Use HTTP_X_FORWARDED_PROTO",
                 ["Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto.Hint"] = "Enable this setting if you use a reverse proxy server (for example, if you host your site on Linux with Nginx/Apache and SSL).",
                 ["Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader"] = "Forwarded HTTP header",
@@ -201,14 +209,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup"] = "Clear plugin shadow directory on startup",
                 ["Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup.Hint"] = "Enable this setting to clear the plugin shadow directory (/Plugins/bin) on application startup.",
                 ["Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup"] = "Copy locked plugins to subdirectories on startup",
-                ["Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup.Hint"] = "Enable this setting to copy ’locked’ assemblies from the plugin shadow directory (/Plugins/bin) to temporary subdirectories on application startup.",
+                ["Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup.Hint"] = "Enable this setting to copy 'locked' assemblies from the plugin shadow directory (/Plugins/bin) to temporary subdirectories on application startup.",
                 ["Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly"] = "Use unsafe load assembly",
                 ["Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly.Hint"] = "Enable this setting to load an assembly into the load-from context, bypassing some security checks.",
                 ["Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy"] = "Use plugins shadow copy",
                 ["Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy.Hint"] = "Enable this setting to copy plugins to the shadow directory (/Plugins/bin) on application startup.",
                 ["Admin.Configuration.AppSettings.Common"] = "Common configuration",
                 ["Admin.Configuration.AppSettings.Common.DisplayFullErrorStack"] = "Display full error",
-                ["Admin.Configuration.AppSettings.Common.DisplayFullErrorStack.Hint"] = "Enable this setting to display the full error in production environment. It’s ignored (always enabled) in development environment.",
+                ["Admin.Configuration.AppSettings.Common.DisplayFullErrorStack.Hint"] = "Enable this setting to display the full error in production environment. It's ignored (always enabled) in development environment.",
                 ["Admin.Configuration.AppSettings.Common.MiniProfilerEnabled"] = "Enable MiniProfiler",
                 ["Admin.Configuration.AppSettings.Common.MiniProfilerEnabled.Hint"] = "Enable this setting to display the performance indicator by MiniProfiler. By default, the performance indicator can see only Administrators, to change this behavior set ACL rules in the admin area.",
                 ["Admin.Configuration.AppSettings.Common.UserAgentStringsPath"] = "User agent strings path",
@@ -217,9 +225,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.Common.CrawlerOnlyUserAgentStringsPath.Hint"] = "Specify a path to the file with crawler only user agent strings. Leave empty to always use full version of user agent strings file.",
                 ["Admin.Configuration.AppSettings.Common.UseSessionStateTempDataProvider"] = "Use session state for TempData",
                 ["Admin.Configuration.AppSettings.Common.UseSessionStateTempDataProvider.Hint"] = "Enable this setting to store TempData in the session state. By default the cookie-based TempData provider is used to store TempData in cookies.",
-                ["ActivityLog.AddNewSpecAttributeGroup"] = "Added a new specification attribute group (’{0}’)",
-                ["ActivityLog.EditSpecAttributeGroup"] = "Edited a specification attribute group (’{0}’)",
-                ["ActivityLog.DeleteSpecAttributeGroup"] = "Deleted a specification attribute group (’{0}’)",
+                ["ActivityLog.AddNewSpecAttributeGroup"] = "Added a new specification attribute group ('{0}')",
+                ["ActivityLog.EditSpecAttributeGroup"] = "Edited a specification attribute group ('{0}')",
+                ["ActivityLog.DeleteSpecAttributeGroup"] = "Deleted a specification attribute group ('{0}')",
                 ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.AddNew"] = "Add attribute",
                 ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.DeleteSelected"] = "Delete attributes (selected)",
                 ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SpecificationAttributeGroup"] = "Group",
@@ -259,7 +267,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Account.MultiFactorAuthentication.Settings"] = "Settings",
                 ["Account.MultiFactorAuthentication.Providers"] = "Authentication providers",
                 ["Account.MultiFactorAuthentication.Providers.NoActive"] = "No active providers",
-                ["Account.MultiFactorAuthentication.Description"] = "<p>To activate multi-factor authentication for your account, you need: </p></br><ol><li>1. Activate the ’Is enabled’ setting.</li><li>2. Choose one of the multi-factor authentication providers.</li><li>3. Save.</li><li>4. Configure the selected multi-factor authentication provider by following the instructions on the individual settings page of the selected provider.</li></ol></br><p> WARNING. After saving the selected provider, be sure to configure it, otherwise you will be denied access the next time you try to enter your account.</p>",
+                ["Account.MultiFactorAuthentication.Description"] = "<p>To activate multi-factor authentication for your account, you need: </p></br><ol><li>1. Activate the 'Is enabled' setting.</li><li>2. Choose one of the multi-factor authentication providers.</li><li>3. Save.</li><li>4. Configure the selected multi-factor authentication provider by following the instructions on the individual settings page of the selected provider.</li></ol></br><p> WARNING. After saving the selected provider, be sure to configure it, otherwise you will be denied access the next time you try to enter your account.</p>",
                 ["Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider"] = "Multi-factor authentication provider",
                 ["Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider.Hint"] = "Name of the multi-factor authentication provider to which the customer is associated.",
                 ["Admin.Customers.Customers.UnbindMFAProvider"] = "The customer has unbinded from the multifactor authentication provider successfully.",
@@ -423,7 +431,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ConfigurationSteps.Store.Url.Title"] = "Your store URL",
                 ["Admin.ConfigurationSteps.Store.Url.Text"] = "Enter your store URL in this field. For example, it could be http://www.yourstore.com/ or https://www.yourstore.com/mystore/ if you installed your store in a subdirectory.",
                 ["Admin.ConfigurationSteps.Store.Ssl.Title"] = "Enable SSL",
-                ["Admin.ConfigurationSteps.Store.Ssl.Text"] = "If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certification <a href=\"{0}\" target=\"_blank\">here</a>.",
+                ["Admin.ConfigurationSteps.Store.Ssl.Text"] = "If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certificates <a href=\"{0}\" target=\"_blank\">here</a>.",
                 ["Admin.ConfigurationSteps.TaxManual.Switch.Title"] = "“Fixed rate/By country” switch",
                 ["Admin.ConfigurationSteps.TaxManual.Switch.Text"] = "The “Fixed rate/By country” switch allows you to choose the type of tax rates you’d like to use in your store.",
                 ["Admin.ConfigurationSteps.TaxManual.Fixed.Title"] = "“Fixed rate” option",
@@ -474,9 +482,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Reports.SalesSummary.Manufacturer"] = "Manufacturer",
                 ["Admin.Reports.SalesSummary.Manufacturer.Hint"] = "Search in a specific manufacturer.",
                 ["Admin.Reports.SalesSummary.OrderStatus"] = "Order status",
-                ["Admin.Reports.SalesSummary.OrderStatus.Hint"] = "Search by a specific order status e.g.Complete.",
+                ["Admin.Reports.SalesSummary.OrderStatus.Hint"] = "Search by a specific order status e.g. Complete.",
                 ["Admin.Reports.SalesSummary.PaymentStatus"] = "Payment status",
-                ["Admin.Reports.SalesSummary.PaymentStatus.Hint"] = "Search by a specific payment status e.g.Paid.",
+                ["Admin.Reports.SalesSummary.PaymentStatus.Hint"] = "Search by a specific payment status e.g. Paid.",
                 ["Admin.Reports.SalesSummary.RunReport"] = "Run report",
                 ["Admin.Reports.SalesSummary.StartDate"] = "Start date",
                 ["Admin.Reports.SalesSummary.StartDate.Hint"] = "The start date for the search.",
@@ -500,11 +508,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist"] = "Plugin static file extensions blacklist",
                 ["Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist.Hint"] = "Specify the blacklist of static file extension for plugin directories.",
                 ["Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout"] = "Schedule task run timeout",
-                ["Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout.Hint"] = "The length of time, in milliseconds, before the running schedule task times out. Set null to use default value.",
+                ["Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout.Hint"] = "The length of time, in milliseconds, a running schedule task timeouts. Set null to use a default value.",
                 ["Admin.Configuration.AppSettings.Common.StaticFilesCacheControl"] = "Static files cache control",
                 ["Admin.Configuration.AppSettings.Common.StaticFilesCacheControl.Hint"] = "Specify a value of 'Cache - Control' header value for static content (in seconds).",
                 ["Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions"] = "Support previous nopCommerce versions",
-                ["Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint"] = "Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance).",
+                ["Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint"] = "Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance). In this case, old URLs (from previous nopCommerce versions) will redirect to new ones. Enable it only if you upgraded from one of the previous nopCommerce versions.",
                 ["Admin.Configuration.AppSettings.Description"] = "Configuration in ASP.NET Core is performed using a configuration provider from the external appsettings.json configuration file. These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"{0}\" target=\"_blank\">our documentation.</a>",
 
                 //#3015
@@ -569,7 +577,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Documentation.Reference.TaxManagement"] = "Learn more about <a target=\"_blank\" href=\"{0}\">tax management</a>",
 
                 //#3950
-                ["Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"] = "This attribute is already exists into combination: '{0}'.",
+                ["Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"] = "This attribute already exists in combination: '{0}'.",
 
                 //#4564
                 ["Admin.Common.Validation.NotEmpty"] = "Please provide a {0}",
@@ -596,7 +604,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.LanguagePackProgressMessage"] = "The localization pack downloaded when installing the store has been translated by {0}%. If you would like to contribute to localization, please visit our <a href=\"{1}\" target=\"_blank\">translations page.</a>",
 
                 //#5144
-                ["Admin.GiftCards.RecipientNotified"] = "The recipient has been notified successfully.",
+                ["Admin.GiftCards.RecipientNotified"] = "The recipient has been successfully notified.",
 
                 //#5319
                 ["Plugins.Tax.FixedOrByCountryStateZip.TaxCategoriesCanNotLoaded"] = "No tax categories can be loaded. You may manage tax categories by <a href='{0}'>this link</a>",
@@ -618,20 +626,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Catalog.Manufacturers.Fields.PriceRangeFiltering.Hint"] = "Check to enable the price range filtering.",
                 ["Admin.Vendors.Fields.PriceRangeFiltering"] = "Price range filtering",
                 ["Admin.Vendors.Fields.PriceRangeFiltering.Hint"] = "Check to enable the price range filtering.",
-                ["Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange"] = "Calculate price range automatically",
-                ["Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation.",
-                ["Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange"] = "Calculate price range automatically",
-                ["Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation.",
-                ["Admin.Vendors.Fields.AutomaticallyCalculatePriceRange"] = "Calculate price range automatically",
-                ["Admin.Vendors.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation.",
                 ["Admin.Configuration.Settings.Catalog.SearchPagePriceRangeFiltering"] = "Search page. Price range filtering",
                 ["Admin.Configuration.Settings.Catalog.SearchPagePriceRangeFiltering.Hint"] = "Check to enable the price range filtering on 'Search' page.",
-                ["Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange"] = "Search page. Calculate price range automatically",
-                ["Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation on 'Search' page.",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceRangeFiltering"] = "'Products by tag' page. Price range filtering",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceRangeFiltering.Hint"] = "Check to enable the price range filtering on 'Products by tag' page.",
-                ["Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange"] = "'Products by tag' page. Calculate price range automatically",
-                ["Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation on 'Products by tag' page.",
                 ["Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering"] = "Enable manufacturer filtering",
                 ["Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering.Hint"] = "Check to enable the manufacturer filtering on catalog pages.",
                 ["Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering"] = "Enable price range filtering",
@@ -680,12 +678,42 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
 
                 //#16 #2909
                 ["Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType"] = "Display type for attribute value when out of stock",
-                ["Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType.Hint"] = "Select the display type for attribute value when out of stock. Note that 'Allow only existing attribute combinations' should be activated on product.",
+                ["Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType.Hint"] = "Select the display type for attribute value when an attribute combination is out of stock. Please note that the 'Allow only existing attribute combinations'option should be enabled for a product.",
                 ["Products.ProductAttributes.DropdownList.DefaultItem"] = "Please select",
                 ["Products.ProductAttributes.NotAvailable"] = "Not available",
                 ["Enums.Nop.Core.Domain.Catalog.AttributeValueOutOfStockDisplayType.Disable"] = "Disable",
                 ["Enums.Nop.Core.Domain.Catalog.AttributeValueOutOfStockDisplayType.AlwaysDisplay"] = "Always display",
-            }).Wait();
+
+                ["Checkout.PickupPoints.NullName"] = "Pickup",
+
+                //#5400
+                ["Admin.ContentManagement.Forums.Forum.Fields.Name.Required"] = "Forum name is required.",
+
+                //#5475
+                ["Admin.Orders.Fields.ShippingMethod.Hint"] = "A chosen shipping method for this order. You can manage shipping methods from Configuration > Shipping > Shipping providers.",
+
+                //#5482
+                ["Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly"] = "Tax rates by address only",
+                ["Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly.Hint"] = "Determine whether to get tax rates by the address only. This may lead to not entirely accurate results (for example, when a customer is exempt to tax, or the product belongs to a tax category that has a specific rate), but it will significantly reduce the number of GetTax API calls. This applies only to tax rates in the catalog, on the checkout full information is always used in requests.",
+
+                //#5349
+                ["Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled"] = "Use a city name for estimate shipping",
+                ["Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled.Hint"] = "Check to allow customers to enter a city name instead of zip postal code.",
+                ["Shipping.EstimateShippingPopUp.City"] = "City",
+                ["Shipping.EstimateShipping.City.Required"] = "City is required",
+
+                //#5496
+                ["Admin.Catalog.Categories.Fields.ManuallyPriceRange"] = "Enter price range manually",
+                ["Admin.Catalog.Categories.Fields.ManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.",
+                ["Admin.Catalog.Manufacturers.Fields.ManuallyPriceRange"] = "Enter price range manually",
+                ["Admin.Catalog.Manufacturers.Fields.ManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.",
+                ["Admin.Vendors.Fields.ManuallyPriceRange"] = "Enter price range manually",
+                ["Admin.Vendors.Fields.ManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.",
+                ["Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange"] = "Search page. Enter price range manually",
+                ["Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Search' page (based on prices of available products). Set price range manually if you have complex discount rules.",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange"] = "'Products by tag' page. Enter price range manually",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Products by tag' page (based on prices of available products). Set price range manually if you have complex discount rules.",
+            }, languageId).Wait();
 
             // rename locales
             var localesToRename = new[]
@@ -734,11 +762,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 new { Name = "Nop.Web.Framework.Validators.MaxDecimal", NewName = "Admin.Common.Validation.Decimal.Max"},
 
                 //#5321
-                new { Name = "Common.Wait...", NewName = "Common.Wait"}
+                new { Name = "Common.Wait...", NewName = "Common.Wait"},
+
+                //#5429
+                new { Name = "Search.NoResultsText", NewName = "Catalog.Products.NoResult"},
+
             };
 
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
-            var languages = languageService.GetAllLanguagesAsync(true).Result;
             foreach (var lang in languages)
             {
                 foreach (var locale in localesToRename)

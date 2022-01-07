@@ -89,7 +89,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <summary>
         /// Prepare API client
         /// </summary>
-        /// <returns>API client</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the aPI client
+        /// </returns>
         private async Task<TClient> CreateApiClientAsync<TClient>(Func<Configuration, TClient> clientCtor) where TClient : IApiAccessor
         {
             //check whether plugin is configured to request services (validate API key)
@@ -114,7 +117,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Import contacts from passed stores to account
         /// </summary>
         /// <param name="storeIds">List of store identifiers</param>
-        /// <returns>List of messages</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of messages
+        /// </returns>
         private async Task<IList<(NotifyType Type, string Message)>> ImportContactsAsync(IList<int> storeIds)
         {
             var messages = new List<(NotifyType, string)>();
@@ -299,7 +305,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Export contacts from account to passed stores
         /// </summary>
         /// <param name="storeIds">List of store identifiers</param>
-        /// <returns>List of messages</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of messages
+        /// </returns>
         private async Task<IList<(NotifyType Type, string Message)>> ExportContactsAsync(IList<int> storeIds)
         {
             var messages = new List<(NotifyType, string)>();
@@ -358,7 +367,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// </summary>
         /// <param name="category">Category of attribute</param>
         /// <param name="attributes">Collection of attributes</param>
-        /// <returns>Errors if exist</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the errors if exist
+        /// </returns>
         private async Task<string> CreateAttibutesAsync(IList<(CategoryEnum Category, string Name, string Value, CreateAttribute.TypeEnum? Type)> attributes)
         {
             if (!attributes.Any())
@@ -399,7 +411,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// </summary>
         /// <param name="synchronizationTask">Whether it's a scheduled synchronization</param>
         /// <param name="storeId">Store identifier; pass 0 to synchronize contacts for all stores</param>
-        /// <returns>List of messages</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of messages
+        /// </returns>
         public async Task<IList<(NotifyType Type, string Message)>> SynchronizeAsync(bool synchronizationTask = true, int storeId = 0)
         {
             var messages = new List<(NotifyType, string)>();
@@ -437,6 +452,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Subscribe new contact
         /// </summary>
         /// <param name="subscription">Subscription</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task SubscribeAsync(NewsLetterSubscription subscription)
         {
             try
@@ -461,7 +477,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 //whether subscribed contact already in the list
                 var template = new { contacts = new[] { new { email = string.Empty } } };
                 var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
-                var alreadyExist = contactObjects?.contacts?.Any(contact => contact.email == subscription.Email.ToLower()) ?? false;
+                var alreadyExist = contactObjects?.contacts?.Any(contact => contact.email == subscription.Email.ToLowerInvariant()) ?? false;
 
                 //Add new contact
                 if (!alreadyExist)
@@ -589,6 +605,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Unsubscribe contact
         /// </summary>
         /// <param name="subscription">Subscription</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task UnsubscribeAsync(NewsLetterSubscription subscription)
         {
             try
@@ -625,6 +642,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Unsubscribe contact
         /// </summary>
         /// <param name="unsubscribeContact">Contact information</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task UnsubscribeWebhookAsync(string unsubscribeContact)
         {
             try
@@ -664,7 +682,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <summary>
         /// Create webhook to get notification about unsubscribed contacts
         /// </summary>
-        /// <returns>Webhook id</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the webhook id
+        /// </returns>
         public async Task<int> GetUnsubscribeWebHookIdAsync()
         {
             try
@@ -701,6 +722,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Update contact after completing order
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task UpdateContactAfterCompletingOrderAsync(Order order)
         {
             try
@@ -738,7 +760,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <summary>
         /// Get account information
         /// </summary>
-        /// <returns>Account info; whether marketing automation is enabled, errors if exist</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the account info; whether marketing automation is enabled, errors if exist
+        /// </returns>
         public async Task<(string Info, bool MarketingAutomationEnabled, string MAkey, string Errors)> GetAccountInfoAsync()
         {
             try
@@ -774,7 +799,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <summary>
         /// Get available lists to synchronize contacts
         /// </summary>
-        /// <returns>List of id-name pairs of lists; errors if exist</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of id-name pairs of lists; errors if exist
+        /// </returns>
         public async Task<(IList<(string Id, string Name)> Lists, string Errors)> GetListsAsync()
         {
             var availableLists = new List<(string Id, string Name)>();
@@ -812,7 +840,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <summary>
         /// Get available senders of transactional emails
         /// </summary>
-        /// <returns>List of id-name pairs of senders; errors if exist</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of id-name pairs of senders; errors if exist
+        /// </returns>
         public async Task<(IList<(string Id, string Name)> Lists, string Errors)> GetSendersAsync()
         {
             var availableSenders = new List<(string Id, string Name)>();
@@ -844,7 +875,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <summary>
         /// Get account language
         /// </summary>
-        /// <returns>SendinblueAccountLanguage</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sendinblueAccountLanguage
+        /// </returns>
         public async Task<SendinblueAccountLanguage> GetAccountLanguageAsync()
         {
             try
@@ -932,7 +966,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <summary>
         /// Check and create missing attributes in account
         /// </summary>
-        /// <returns>Errors if exist</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the errors if exist
+        /// </returns>
         public async Task<string> PrepareAttributesAsync()
         {
             try
@@ -993,7 +1030,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Move message template tokens to transactional attributes
         /// </summary>
         /// <param name="tokens">List of available message templates tokens</param>
-        /// <returns>Errors if exist</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the errors if exist
+        /// </returns>
         public async Task<string> PrepareTransactionalAttributesAsync(IList<string> tokens)
         {
             try
@@ -1038,7 +1078,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <summary>
         /// Check whether SMTP is enabled on account
         /// </summary>
-        /// <returns>Result of check; errors if exist</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result of check; errors if exist
+        /// </returns>
         public async Task<(bool Enabled, string Errors)> SmtpIsEnabledAsync()
         {
             try
@@ -1063,7 +1106,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// </summary>
         /// <param name="senderId">Sender identifier</param>
         /// <param name="smtpKey">SMTP key</param>
-        /// <returns>Email account identifier; errors if exist</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email account identifier; errors if exist
+        /// </returns>
         public async Task<(int Id, string Errors)> GetEmailAccountIdAsync(string senderId, string smtpKey)
         {
             try
@@ -1118,7 +1164,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <param name="templateId">Current email template id</param>
         /// <param name="message">Message template</param>
         /// <param name="emailAccount">Email account</param>
-        /// <returns>Email template identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email template identifier
+        /// </returns>
         public async Task<int?> GetTemplateIdAsync(int? templateId, MessageTemplate message, EmailAccount emailAccount)
         {
             try
@@ -1162,7 +1211,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Convert Sendinblue email template to queued email
         /// </summary>
         /// <param name="templateId">Email template identifier</param>
-        /// <returns>Queued email</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email
+        /// </returns>
         public async Task<QueuedEmail> GetQueuedEmailFromTemplateAsync(int templateId)
         {
             try
@@ -1209,6 +1261,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <param name="to">Phone number of the receiver</param>
         /// <param name="from">Name of sender</param>
         /// <param name="text">Text</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task SendSMSAsync(string to, string from, string text)
         {
             //whether SMS notifications enabled
@@ -1245,6 +1298,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <param name="listId">Contact list identifier</param>
         /// <param name="from">Name of sender</param>
         /// <param name="text">Text</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> SendSMSCampaignAsync(int listId, string from, string text)
         {
             try

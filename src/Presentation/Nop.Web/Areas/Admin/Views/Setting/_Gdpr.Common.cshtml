@@ -11,7 +11,7 @@
             <span asp-validation-for="GdprEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="GdprEnabled">
+    <nop-nested-setting asp-for="GdprEnabled" disable-auto-generation="true">
         <div class="form-group row advanced-setting" id="pnlLogPrivacyPolicyConsent">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="LogPrivacyPolicyConsent_OverrideForStore" asp-input="LogPrivacyPolicyConsent" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -53,17 +53,17 @@
 
     function toggleGdprEnabled() {
         if ($('#@Html.IdFor(model => model.GdprEnabled)').is(':checked')) {
-            $('#pnlLogPrivacyPolicyConsent').showField();
-            $('#pnlLogNewsletterConsent').showField();
-            $('#pnlLogUserProfileChanges').showField();
+            $('#pnlLogPrivacyPolicyConsent').showElement();
+            $('#pnlLogNewsletterConsent').showElement();
+            $('#pnlLogUserProfileChanges').showElement();
 
-            $('[data-card-name=gdprsettings-consents]').showField();
+            $('[data-card-name=gdprsettings-consents]').showElement();
             ensureDataTablesRendered();
         } else {
-            $('#pnlLogPrivacyPolicyConsent').hide();
-            $('#pnlLogNewsletterConsent').hide();
-            $('#pnlLogUserProfileChanges').hide();
-            $('[data-card-name=gdprsettings-consents]').hide();
+            $('#pnlLogPrivacyPolicyConsent').hideElement();
+            $('#pnlLogNewsletterConsent').hideElement();
+            $('#pnlLogUserProfileChanges').hideElement();
+            $('[data-card-name=gdprsettings-consents]').hideElement();
         }
     }
 </script>

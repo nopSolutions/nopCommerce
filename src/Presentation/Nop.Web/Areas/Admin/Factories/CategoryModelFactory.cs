@@ -107,7 +107,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare category search model
         /// </summary>
         /// <param name="searchModel">Category search model</param>
-        /// <returns>Category search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category search model
+        /// </returns>
         public virtual async Task<CategorySearchModel> PrepareCategorySearchModelAsync(CategorySearchModel searchModel)
         {
             if (searchModel == null)
@@ -145,7 +148,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged category list model
         /// </summary>
         /// <param name="searchModel">Category search model</param>
-        /// <returns>Category list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category list model
+        /// </returns>
         public virtual async Task<CategoryListModel> PrepareCategoryListModelAsync(CategorySearchModel searchModel)
         {
             if (searchModel == null)
@@ -182,10 +188,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Category model</param>
         /// <param name="category">Category</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Category model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category model
+        /// </returns>
         public virtual async Task<CategoryModel> PrepareCategoryModelAsync(CategoryModel model, Category category, bool excludeProperties = false)
         {
-            Action<CategoryLocalizedModel, int> localizedModelConfiguration = null;
+            Func<CategoryLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (category != null)
             {
@@ -220,6 +229,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.IncludeInTopMenu = true;
                 model.AllowCustomersToSelectPageSize = true;
                 model.PriceRangeFiltering = true;
+                model.ManuallyPriceRange = true;
                 model.PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
                 model.PriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
             }
@@ -255,7 +265,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Category product search model</param>
         /// <param name="category">Category</param>
-        /// <returns>Category product list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category product list model
+        /// </returns>
         public virtual async Task<CategoryProductListModel> PrepareCategoryProductListModelAsync(CategoryProductSearchModel searchModel, Category category)
         {
             if (searchModel == null)
@@ -291,7 +304,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare product search model to add to the category
         /// </summary>
         /// <param name="searchModel">Product search model to add to the category</param>
-        /// <returns>Product search model to add to the category</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product search model to add to the category
+        /// </returns>
         public virtual async Task<AddProductToCategorySearchModel> PrepareAddProductToCategorySearchModelAsync(AddProductToCategorySearchModel searchModel)
         {
             if (searchModel == null)
@@ -322,7 +338,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged product list model to add to the category
         /// </summary>
         /// <param name="searchModel">Product search model to add to the category</param>
-        /// <returns>Product list model to add to the category</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product list model to add to the category
+        /// </returns>
         public virtual async Task<AddProductToCategoryListModel> PrepareAddProductToCategoryListModelAsync(AddProductToCategorySearchModel searchModel)
         {
             if (searchModel == null)

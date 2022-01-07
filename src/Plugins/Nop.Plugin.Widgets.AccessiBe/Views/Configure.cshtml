@@ -20,14 +20,26 @@
                 </p>
                 <div class="form-group row">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="Script_OverrideForStore" asp-input="Script" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="Script" />
+                        <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Enabled" />
                     </div>
                     <div class="col-md-9">
-                        <nop-textarea asp-for="Script" asp-required="true" />
-                        <span asp-validation-for="Script"></span>
+                        <nop-editor asp-for="Enabled" />
+                        <span asp-validation-for="Enabled"></span>
                     </div>
                 </div>
+                <nop-nested-setting asp-for="Enabled">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="Script_OverrideForStore" asp-input="Script" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="Script" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-textarea asp-for="Script" asp-required="true" />
+                            <span asp-validation-for="Script"></span>
+                        </div>
+                    </div>
+                </nop-nested-setting>
                 <div class="form-group row">
                     <div class="col-md-9 offset-md-3">
                         <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />

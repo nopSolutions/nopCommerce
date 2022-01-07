@@ -4,18 +4,19 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Settings.Media").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Media settings");
+    NopHtml.SetActiveMenuItemSystemName("Media settings");
 }
 
 @{
     const string hideCommonBlockAttributeName = "MediaSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 
     const string hideProductBlockAttributeName = "MediaSettingsPage.HideProductBlock";
-    var hideProductBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideProductBlockAttributeName);
+    var hideProductBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductBlockAttributeName);
 
     const string hideOtherPagesBlockAttributeName = "MediaSettingsPage.HideOtherPagesBlock";
-    var hideOtherPagesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideOtherPagesBlockAttributeName);
+    var hideOtherPagesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideOtherPagesBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Media" method="post">
@@ -28,7 +29,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MediaSettingsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MediaSettingsButtons, additionalData = Model })
         </div>
     </div>
 

@@ -889,7 +889,12 @@ table .btn {
   border: none;
   height: 38px;
   padding-left: 23px;
+  padding-right: 0;
   background: #fff;
+}
+
+.k-numeric-wrap.k-state-default {
+  padding-left: 28px;
 }
 
 .k-picker-wrap.k-state-hover {
@@ -916,6 +921,9 @@ table .btn {
   height: 36px;
   width: 4.5em;
   padding-right: 1px;
+  left: 0;
+  right: unset;
+  box-sizing: content-box;
   -moz-box-sizing: content-box;
 }
 
@@ -931,6 +939,12 @@ table .btn {
   text-indent: 0.7em;
   color: #555;
   padding: 3px 0;
+}
+
+.k-numeric-wrap .k-input {
+  unicode-bidi: plaintext;
+  text-align: right;
+  padding-right: 25px;
 }
 
 .k-picker-wrap.k-state-focused.k-state-selected,
@@ -963,7 +977,7 @@ td.k-state-focused.k-state-selected {
 .k-picker-wrap.k-state-focused,
 .k-numeric-wrap.k-state-focused {
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255/25%);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
   border-radius: 0;
   border: 1px solid #80bdff;
 }
@@ -971,6 +985,10 @@ td.k-state-focused.k-state-selected {
 .k-picker-wrap.k-state-focused .k-input,
 .k-numeric-wrap.k-state-focused .k-input {
   border: none;
+}
+.k-numeric-wrap.k-state-focused .k-input {
+  border: none;
+  padding-right: 28px;
 }
 
 .k-numerictextbox .k-link {
@@ -1133,7 +1151,7 @@ td.k-state-focused.k-state-selected {
   border-color: #80bdff;
   border-width: 0;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255/25%);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
   border-radius: 0;
 }
 
@@ -1306,7 +1324,6 @@ input[type="text"].k-input {
 
 /* HEADER */
 .main-header {
-  max-height: 150px;
   border-bottom: none;
 }
 
@@ -1317,6 +1334,10 @@ input[type="text"].k-input {
 
 .brand-link .brand-image-xl {
   max-height: 45px;
+}
+
+.layout-fixed .brand-link {
+  width: auto;
 }
 
 .nav-sidebar .nav-link p {
@@ -1589,7 +1610,7 @@ div.dataTables_wrapper div.dataTables_processing .fa {
 
 .form-group input[type=checkbox]:focus {
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255/25%);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
   border-radius: 0;
   border: 1px solid #80bdff;
 }
@@ -1655,7 +1676,7 @@ div.dataTables_wrapper div.dataTables_processing .fa {
   max-width: 100%;
   border-radius: 0;
   border-color: #d2d6de;
-  height: 34px;
+  height: 38px;
 }
 
 .tag-editor {
@@ -2034,6 +2055,10 @@ span.grid-report-item.red {
 .parent-setting.opened + .nested-setting .form-group {
   margin-bottom: 0;
   position: relative;
+}
+
+.parent-setting.opened + .nested-setting .card .card-body .form-group {
+  padding-bottom: 5px;
 }
 
 .parent-setting.opened + .nested-setting .form-group > div[class^="col-md-"]:first-child {
@@ -2610,11 +2635,6 @@ div.dataTables_wrapper div.dataTables_paginate {
   /* COMMON */
   .modal-dialog {
     margin-top: 30px;
-  }
-
-  /* HEADER */
-  .main-header {
-    max-height: 200px;
   }
 
   /* FORM ELEMENTS */

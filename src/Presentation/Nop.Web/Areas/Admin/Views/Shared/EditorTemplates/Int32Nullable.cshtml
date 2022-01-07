@@ -1,5 +1,5 @@
 ﻿@model Int32?
-<input asp-for="@Model"/>
+<input asp-for="@Model" />
 @{
     var postfix = "";
     if (ViewData.ContainsKey("postfix") && ViewData["postfix"] != null)
@@ -10,8 +10,9 @@
 <script>
     $(document).ready(function() {
         $("#@Html.IdForModel()").kendoNumericTextBox({
-            min: @Html.Raw(int.MinValue),
-            max: @Html.Raw(int.MaxValue),
+            value: "@Model?.ToString(CultureInfo.InvariantCulture)",
+            min: @int.MinValue.ToString(CultureInfo.InvariantCulture),
+            max: @int.MaxValue.ToString(CultureInfo.InvariantCulture),
             decimals: 0,
             restrictDecimals: true,
             format: "# @postfix"

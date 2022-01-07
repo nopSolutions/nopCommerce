@@ -66,7 +66,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare return request search model
         /// </summary>
         /// <param name="searchModel">Return request search model</param>
-        /// <returns>Return request search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request search model
+        /// </returns>
         public virtual async Task<ReturnRequestSearchModel> PrepareReturnRequestSearchModelAsync(ReturnRequestSearchModel searchModel)
         {
             if (searchModel == null)
@@ -93,7 +96,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged return request list model
         /// </summary>
         /// <param name="searchModel">Return request search model</param>
-        /// <returns>Return request list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request list model
+        /// </returns>
         public virtual async Task<ReturnRequestListModel> PrepareReturnRequestListModelAsync(ReturnRequestSearchModel searchModel)
         {
             if (searchModel == null)
@@ -116,36 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new ReturnRequestListModel().PrepareToGridAsync(searchModel, returnRequests, () =>
             {
-                return returnRequests.SelectAwait(async returnRequest =>
-                {
-                    //fill in model values from the entity
-                    var returnRequestModel = returnRequest.ToModel<ReturnRequestModel>();
-
-                    var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
-
-                    //convert dates to the user time
-                    returnRequestModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
-
-                    //fill in additional values (not existing in the entity)
-                    returnRequestModel.CustomerInfo = (await _customerService.IsRegisteredAsync(customer))
-                        ? customer.Email
-                        : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
-                    returnRequestModel.ReturnRequestStatusStr = await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus);
-                    var orderItem = await _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
-                    if (orderItem == null)
-                        return returnRequestModel;
-
-                    var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
-                    var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
-
-                    returnRequestModel.ProductId = orderItem.ProductId;
-                    returnRequestModel.ProductName = product.Name;
-                    returnRequestModel.OrderId = order.Id;
-                    returnRequestModel.AttributeInfo = orderItem.AttributeDescription;
-                    returnRequestModel.CustomOrderNumber = order.CustomOrderNumber;
-
-                    return returnRequestModel;
-                });
+                return returnRequests.SelectAwait(async returnRequest => await PrepareReturnRequestModelAsync(null, returnRequest));
             });
 
             return model;
@@ -157,7 +134,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Return request model</param>
         /// <param name="returnRequest">Return request</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Return request model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request model
+        /// </returns>
         public virtual async Task<ReturnRequestModel> PrepareReturnRequestModelAsync(ReturnRequestModel model,
             ReturnRequest returnRequest, bool excludeProperties = false)
         {
@@ -165,13 +145,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in model values from the entity
-            model ??= new ReturnRequestModel
-            {
-                Id = returnRequest.Id,
-                CustomNumber = returnRequest.CustomNumber,
-                CustomerId = returnRequest.CustomerId,
-                Quantity = returnRequest.Quantity
-            };
+            model ??= returnRequest.ToModel<ReturnRequestModel>();
 
             var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
 
@@ -180,6 +154,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.CustomerInfo = await _customerService.IsRegisteredAsync(customer)
                 ? customer.Email : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
             model.UploadedFileGuid = (await _downloadService.GetDownloadByIdAsync(returnRequest.UploadedFileId))?.DownloadGuid ?? Guid.Empty;
+            model.ReturnRequestStatusStr = await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus);
             var orderItem = await _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
             if (orderItem != null)
             {
@@ -209,7 +184,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare return request reason search model
         /// </summary>
         /// <param name="searchModel">Return request reason search model</param>
-        /// <returns>Return request reason search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request reason search model
+        /// </returns>
         public virtual Task<ReturnRequestReasonSearchModel> PrepareReturnRequestReasonSearchModelAsync(ReturnRequestReasonSearchModel searchModel)
         {
             if (searchModel == null)
@@ -225,7 +203,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged return request reason list model
         /// </summary>
         /// <param name="searchModel">Return request reason search model</param>
-        /// <returns>Return request reason list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request reason list model
+        /// </returns>
         public virtual async Task<ReturnRequestReasonListModel> PrepareReturnRequestReasonListModelAsync(ReturnRequestReasonSearchModel searchModel)
         {
             if (searchModel == null)
@@ -249,11 +230,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Return request reason model</param>
         /// <param name="returnRequestReason">Return request reason</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Return request reason model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request reason model
+        /// </returns>
         public virtual async Task<ReturnRequestReasonModel> PrepareReturnRequestReasonModelAsync(ReturnRequestReasonModel model,
             ReturnRequestReason returnRequestReason, bool excludeProperties = false)
         {
-            Action<ReturnRequestReasonLocalizedModel, int> localizedModelConfiguration = null;
+            Func<ReturnRequestReasonLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (returnRequestReason != null)
             {
@@ -278,7 +262,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare return request action search model
         /// </summary>
         /// <param name="searchModel">Return request action search model</param>
-        /// <returns>Return request action search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request action search model
+        /// </returns>
         public virtual Task<ReturnRequestActionSearchModel> PrepareReturnRequestActionSearchModelAsync(ReturnRequestActionSearchModel searchModel)
         {
             if (searchModel == null)
@@ -294,7 +281,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged return request action list model
         /// </summary>
         /// <param name="searchModel">Return request action search model</param>
-        /// <returns>Return request action list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request action list model
+        /// </returns>
         public virtual async Task<ReturnRequestActionListModel> PrepareReturnRequestActionListModelAsync(ReturnRequestActionSearchModel searchModel)
         {
             if (searchModel == null)
@@ -318,11 +308,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Return request action model</param>
         /// <param name="returnRequestAction">Return request action</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Return request action model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request action model
+        /// </returns>
         public virtual async Task<ReturnRequestActionModel> PrepareReturnRequestActionModelAsync(ReturnRequestActionModel model,
             ReturnRequestAction returnRequestAction, bool excludeProperties = false)
         {
-            Action<ReturnRequestActionLocalizedModel, int> localizedModelConfiguration = null;
+            Func<ReturnRequestActionLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (returnRequestAction != null)
             {

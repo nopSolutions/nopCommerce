@@ -41,7 +41,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
         /// </summary>
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
-        /// <returns>View component result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view component result
+        /// </returns>
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             var trackingScript = string.Empty;
@@ -51,8 +54,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
                 return Content(trackingScript);
 
             //get customer email
-            var customerEmail = !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync())
-                ? (await _workContext.GetCurrentCustomerAsync()).Email?.Replace("'", "\\'")
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerEmail = !await _customerService.IsGuestAsync(customer)
+                ? customer.Email?.Replace("'", "\\'")
                 : string.Empty;
 
             //prepare tracking script

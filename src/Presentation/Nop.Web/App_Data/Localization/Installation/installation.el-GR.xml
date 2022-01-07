@@ -34,10 +34,10 @@
     <Value>Λάθος μορφή συμβολοσειράς SQL σύνδεσης</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Χώρα</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Επιλέξτε τη χώρα σας...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Δημιουργία βάσης δεδομένων, αν δεν υπάρχει</Value>

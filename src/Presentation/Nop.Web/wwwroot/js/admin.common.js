@@ -1,5 +1,13 @@
-$.fn.showField = function () {
-  this.css('display', 'flex');
+//this method is used to show an element by removing the appropriate hiding class
+//we don't use the jquery show/hide methods since they don't work with "display: flex" properly
+$.fn.showElement = function () {
+  this.removeClass('d-none');
+}
+
+//this method is used to hide an element by adding the appropriate hiding class
+//we don't use the jquery show/hide methods since they don't work with "display: flex" properly
+$.fn.hideElement = function () {
+  this.addClass('d-none');
 }
 
 function setLocation(url) {
@@ -311,6 +319,16 @@ function reloadAllDataTables(itemCount) {
   });
 }
 
+/**
+ * @param {string} alertId Unique identifier of alert
+ * @param {any} text Message text
+ */
+function showAlert(alertId, text)
+{
+    $('#' + alertId + '-info').text(text);
+    $('#' + alertId).click();
+}
+
 //scrolling and hidden DataTables issue workaround
 //More info - https://datatables.net/examples/api/tabs_and_scrolling.html
 $(document).ready(function () {
@@ -342,3 +360,22 @@ $(document).ready(function () {
     reloadAllDataTables();
   });
 });
+
+/**
+ * @param {string} masterCheckbox Master checkbox selector
+ * @param {string} childCheckbox Child checkbox selector
+ */
+function prepareTableCheckboxes(masterCheckbox, childCheckbox) {
+  //Handling the event of clicking on the master checkbox
+  $(masterCheckbox).click(function () {
+    $(childCheckbox).prop('checked', $(this).prop('checked'));
+  });
+
+  //Handling the event of clicking on a child checkbox
+  $(childCheckbox).change(function () {
+    $(masterCheckbox).prop('checked', $(childCheckbox + ':not(:checked)').length === 0 ? true : false);
+  });
+
+  //Determining the state of the master checkbox by the state of its children
+  $(masterCheckbox).prop('checked', $(childCheckbox).length == $(childCheckbox + ':checked').length && $(childCheckbox).length > 0);
+}

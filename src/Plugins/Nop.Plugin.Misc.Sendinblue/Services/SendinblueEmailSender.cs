@@ -54,6 +54,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachedDownloadId">Attachment download ID (another attachedment)</param>
         /// <param name="headers">Headers</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task SendEmailAsync(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
             string replyTo = null, string replyToName = null,
@@ -64,8 +65,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             //add store identifier in email headers
             if (emailAccount.Id == _sendinblueSettings.EmailAccountId)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
                 headers ??= new Dictionary<string, string>();
-                headers.Add(SendinblueDefaults.EmailCustomHeader, (await _storeContext.GetCurrentStoreAsync()).Id.ToString());
+                headers.Add(SendinblueDefaults.EmailCustomHeader, store.Id.ToString());
             }
 
             await base.SendEmailAsync(emailAccount, subject, body, fromAddress, fromName, toAddress, toName, replyTo, replyToName, bcc, cc, attachmentFilePath, attachmentFileName, attachedDownloadId, headers);

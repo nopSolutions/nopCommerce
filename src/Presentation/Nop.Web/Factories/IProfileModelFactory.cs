@@ -14,14 +14,20 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="page">Number of posts page; pass null to disable paging</param>
-        /// <returns>Profile index model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the profile index model
+        /// </returns>
         Task<ProfileIndexModel> PrepareProfileIndexModelAsync(Customer customer, int? page);
 
         /// <summary>
         /// Prepare the profile info model
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Profile info model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the profile info model
+        /// </returns>
         Task<ProfileInfoModel> PrepareProfileInfoModelAsync(Customer customer);
 
         /// <summary>
@@ -29,7 +35,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="page">Number of posts page</param>
-        /// <returns>Profile posts model</returns>  
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the profile posts model  
+        /// </returns>
         Task<ProfilePostsModel> PrepareProfilePostsModelAsync(Customer customer, int page);
     }
 }

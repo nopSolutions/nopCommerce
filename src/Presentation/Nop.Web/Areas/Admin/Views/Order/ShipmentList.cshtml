@@ -5,7 +5,7 @@
     ViewBag.PageTitle = T("Admin.Orders.Shipments.List").Text;
 
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Shipments");
+    NopHtml.SetActiveMenuItemSystemName("Shipments");
 }
 
 @{
@@ -41,15 +41,19 @@
                     </li>
                 </ul>
             </div>
-            <button type="button" id="ship-selected" class="btn btn-primary">
+            <button type="button" id="ship-selected" class="btn btn-primary" onclick="uploadSelectedShipments('@(Url.Action("SetAsShippedSelected", "Order"))', 'setAsShippedSelectedFailed');return false;">
                 <i class="fas fa-truck"></i>
                 @T("Admin.Orders.Shipments.ShipSelected")
             </button>
-            <button type="button" id="deliver-selected" class="btn btn-success">
+            <button type="button" id="ready-for-pickup-selected" class="btn btn-primary" onclick="uploadSelectedShipments('@(Url.Action("SetAsReadyForPickupSelected", "Order"))', 'setAsReadyForPickupSelectedFailed');return false;">
+                <i class="fas fa-cube"></i>
+                @T("Admin.Orders.Shipments.ReadyForPickupSelected")
+            </button>
+            <button type="button" id="deliver-selected" class="btn btn-success" onclick="uploadSelectedShipments('@(Url.Action("SetAsDeliveredSelected", "Order"))', 'setAsDeliveredSelectedFailed');return false;">
                 <i class="fas fa-check-square"></i>
                 @T("Admin.Orders.Shipments.DeliverySelected")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentListButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentListButtons, additionalData = Model })
         </div>
     </div>
     <section class="content">
@@ -150,6 +154,14 @@
                                                     <nop-editor asp-for="LoadNotShipped" />
                                                 </div>
                                             </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="LoadNotReadyForPickup" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="LoadNotReadyForPickup" />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -187,6 +199,7 @@
                                         new FilterParameter(nameof(Model.City)),
                                         new FilterParameter(nameof(Model.WarehouseId)),
                                         new FilterParameter(nameof(Model.LoadNotShipped), typeof(bool)),
+                                        new FilterParameter(nameof(Model.LoadNotReadyForPickup), typeof(bool)),
                                         new FilterParameter(nameof(Model.LoadNotDelivered),typeof(bool))
                                     },
                                     ColumnCollection = new List<ColumnProperty>
@@ -216,6 +229,13 @@
                                             Title = T("Admin.Orders.Shipments.CustomOrderNumber").Text,
                                             Width = "100"
                                         },
+                                        new ColumnProperty(nameof(ShipmentModel.PickupInStore))
+                                        {
+                                            Title = T("Admin.Orders.Shipments.PickupInStore").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.CenterAll,
+                                            Render = new RenderBoolean()
+                                        },
                                         new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
                                         {
                                             Title = T("Admin.Orders.Shipments.TrackingNumber").Text
@@ -228,6 +248,11 @@
                                         new ColumnProperty(nameof(ShipmentModel.ShippedDate))
                                         {
                                             Title = T("Admin.Orders.Shipments.ShippedDate").Text,
+                                            Width = "150"
+                                        },
+                                        new ColumnProperty(nameof(ShipmentModel.ReadyForPickupDate))
+                                        {
+                                            Title = T("Admin.Orders.Shipments.ReadyForPickupDate").Text,
                                             Width = "150"
                                         },
                                         new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
@@ -288,86 +313,53 @@
                             </div>
                         </div>
                         <script>
-                    $(document).ready(function() {
-                        //load states when changing a country dropdownlist
-                        $("#@Html.IdFor(model => model.CountryId)").change(function() {
-                            var selectedItem = $(this).val();
-                            var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
-                            $.ajax({
-                                cache: false,
-                                type: "GET",
-                                url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                                data: {
-                                    "countryId": selectedItem,
-                                    "addAsterisk": "true"
-                                },
-                                success: function (data, textStatus, jqXHR) {
-                                    ddlStates.html('');
-                                    $.each(data, function(id, option) {
-                                        ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                            $(document).ready(function() {
+                                //load states when changing a country dropdownlist
+                                $("#@Html.IdFor(model => model.CountryId)").change(function() {
+                                    var selectedItem = $(this).val();
+                                    var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
+                                    $.ajax({
+                                        cache: false,
+                                        type: "GET",
+                                        url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                                        data: {
+                                            "countryId": selectedItem,
+                                            "addAsterisk": "true"
+                                        },
+                                        success: function (data, textStatus, jqXHR) {
+                                            ddlStates.html('');
+                                            $.each(data, function(id, option) {
+                                                ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                                            });
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $("#statesAlert").click();
+                                        }
                                     });
-                                },
-                                error: function (jqXHR, textStatus, errorThrown) {
-                                    $("#statesAlert").click();
-                                }
+                                });
                             });
-                        });
 
-                        //"ship selected" button
-                        $('#ship-selected').click(function(e) {
-                            e.preventDefault();
-
-                            var postData = {
-                                selectedIds: selectedIds
-                            };
-                            addAntiForgeryToken(postData);
-
-                            $.ajax({
-                                cache: false,
-                                type: "POST",
-                                url: "@(Url.Action("SetAsShippedSelected", "Order"))",
-                                data: postData,
-                                traditional: true,
-                                error: function (jqXHR, textStatus, errorThrown) {
-                                    $('#setAsShippedSelectedFailed-info').text(errorThrown);
-                                    $("#setAsShippedSelectedFailed").click();
-                                },
-                                complete: function (jqXHR, textStatus) {
-                                    updateTable('#shipments-grid');
-                                }
-                            });
-                            return false;
-                        });
-
-                        //"deliver selected" button
-                        $('#deliver-selected').click(function(e) {
-                            e.preventDefault();
-
-                            var postData = {
-                                selectedIds: selectedIds
-                            };
-                            addAntiForgeryToken(postData);
-
-                            $.ajax({
-                                cache: false,
-                                type: "POST",
-                                url: "@(Url.Action("SetAsDeliveredSelected", "Order"))",
-                                data: postData,
-                                traditional: true,
-                                error: function (jqXHR, textStatus, errorThrown) {
-                                    $('#setAsDeliveredSelectedFailed-info').text(errorThrown);
-                                    $("#setAsDeliveredSelectedFailed").click();
-                                },
-                                complete: function (jqXHR, textStatus) {
-                                    updateTable('#shipments-grid');
-                                }
-                            });
-                            return false;
-                        });
-                    });
-
+                            function uploadSelectedShipments(url, alertId) {
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: url,
+                                    data: addAntiForgeryToken({ selectedIds }),
+                                    traditional: true,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        showAlert(alertId, errorThrown);
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
+                                        updateTable('#shipments-grid');
+                                    }
+                                });
+                            }
                         </script>
-
                     </div>
                 </div>
             </div>
@@ -376,7 +368,9 @@
 </form>
 <nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />
 <nop-alert asp-alert-id="setAsShippedSelectedFailed" />
+<nop-alert asp-alert-id="setAsReadyForPickupSelectedFailed" />
 <nop-alert asp-alert-id="setAsDeliveredSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
 
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
@@ -388,7 +382,7 @@
         $('#exportpackagingslips-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
-             if (!ids) {
+            if (!ids) {
                 $('#exportPackagingSlipsSelected-info').text("@T("Admin.Orders.Shipments.NoShipmentsSelected")");
                 $("#exportPackagingSlipsSelected").click();
             }

@@ -18,9 +18,9 @@
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
-            $('[data-card-name=vendorattribute-values]').showField();
+            $('[data-card-name=vendorattribute-values]').showElement();
         } else {
-            $('[data-card-name=vendorattribute-values]').hide();
+            $('[data-card-name=vendorattribute-values]').hideElement();
         }
     }
 </script>

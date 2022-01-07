@@ -1,12 +1,12 @@
 ﻿@model CheckoutShippingAddressModel
-@{
-    Context.Items["nop.IgnoreScriptTagLocation"] = true;
-}
 
 <div class="checkout-data">
     @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
     {
-        @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel)
+        @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel, new ViewDataDictionary(ViewData)
+                                {
+                                    { "scriptLocation", ResourceLocation.None }
+                                })
         <script>
             $(document).ready(function () {
                 $(document).unbind('checkout_toggle_pickup_in_store');
@@ -22,7 +22,7 @@
     @if (Model.PickupPointsModel == null || !Model.PickupPointsModel.PickupInStoreOnly)
     {
         <div class="shipping-addresses" id="shipping-addresses-form">
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressTop })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressTop, additionalData = Model })
             @if (Model.ExistingAddresses.Count > 0)
             {
                 <div class="section select-shipping-address">
@@ -73,7 +73,7 @@
                     </div>
                 </div>
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressMiddle })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressMiddle, additionalData = Model })
             <div class="section new-shipping-address" id="shipping-new-address-form">
                 <div class="enter-address">
                     <div asp-validation-summary="ModelOnly" class="message-error"></div>
@@ -84,7 +84,7 @@
                     }
                 </div>
             </div>
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressBottom })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressBottom, additionalData = Model })
         </div>
     }
 </div>

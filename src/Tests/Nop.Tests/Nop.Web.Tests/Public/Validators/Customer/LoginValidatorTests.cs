@@ -25,9 +25,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             {
                 Email = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Email);
             model.Email = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Email);
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             {
                 Email = "adminexample.com"
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Email);
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             {
                 Email = "admin@example.com"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Email, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Email);
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             {
                 Email = null
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Email, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Email);
         }
     }
 }

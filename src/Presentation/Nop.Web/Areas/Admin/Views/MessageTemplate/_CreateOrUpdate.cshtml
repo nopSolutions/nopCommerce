@@ -23,7 +23,7 @@
                             </div>
                             <div class="col-md-9">
                                 <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
-                                <div id="pnlAllowedTokens" style="display: none; white-space: pre-line">
+                                <div id="pnlAllowedTokens" class="d-none" style="white-space: pre-line">
                                     <div class="form-text-row">@Model.AllowedTokens</div>
                                 </div>
                             </div>
@@ -39,8 +39,8 @@
                         </div>
                         <script>
                         function toggleLoadedAllowedTokens() {
-                            $('#pnlAllowedTokens').toggle();
-                            if ($('#pnlAllowedTokens').css('display') == 'none') {
+                            $('#pnlAllowedTokens').toggleClass('d-none');
+                            if ($('#pnlAllowedTokens').hasClass('d-none')) {
                                 $('#allowedTokensShowHide').text('@T("Admin.Common.Show")');
                             } else {
                                 $('#allowedTokensShowHide').text('@T("Admin.Common.Hide")');
@@ -82,7 +82,7 @@
                                             <span asp-validation-for="@Model.Locales[item].Body"></span>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row advanced-setting">
                                         <div class="col-md-3">
                                             <nop-label asp-for="@Model.Locales[item].BccEmailAddresses" />
                                         </div>
@@ -91,7 +91,7 @@
                                             <span asp-validation-for="@Model.Locales[item].BccEmailAddresses"></span>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row advanced-setting">
                                         <div class="col-md-3">
                                             <nop-label asp-for="@Model.Locales[item].EmailAccountId" />
                                         </div>
@@ -155,7 +155,7 @@
                                             <span asp-validation-for="Body"></span>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row advanced-setting">
                                         <div class="col-md-3">
                                             <nop-label asp-for="BccEmailAddresses" />
                                         </div>
@@ -164,7 +164,7 @@
                                             <span asp-validation-for="BccEmailAddresses"></span>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row advanced-setting">
                                         <div class="col-md-3">
                                             <nop-label asp-for="EmailAccountId" />
                                         </div>
@@ -195,7 +195,7 @@
                                 <span asp-validation-for="IsActive"></span>
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row advanced-setting">
                             <div class="col-md-3">
                                 <nop-label asp-for="SendImmediately" />
                             </div>
@@ -204,7 +204,7 @@
                                 <span asp-validation-for="SendImmediately"></span>
                             </div>
                         </div>
-                        <div class="form-group row" id="pnl-send-after">
+                        <div class="form-group row advanced-setting" id="pnl-send-after">
                             <div class="col-md-3">
                                 <nop-label asp-for="DelayBeforeSend" />
                             </div>
@@ -221,7 +221,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row advanced-setting">
                             <div class="col-md-3">
                                 <nop-label asp-for="AttachedDownloadId" />
                             </div>
@@ -244,7 +244,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row advanced-setting">
                             <div class="col-md-3">
                                 <nop-label asp-for="SelectedStoreIds" />
                             </div>
@@ -295,17 +295,17 @@
 
                 function toggleHasAttachedDownload() {
                     if ($('#@Html.IdFor(model => model.HasAttachedDownload)').is(':checked')) {
-                        $('#pnlAttachedDownload').showField();
+                        $('#pnlAttachedDownload').showElement();
                     } else {
-                        $('#pnlAttachedDownload').hide();
+                        $('#pnlAttachedDownload').hideElement();
                     }
                 }
 
                 function sendImmediately() {
                     if ($('#@Html.IdFor(model => model.SendImmediately)').is(':checked'))
-                        $('#pnl-send-after').hide();
+                        $('#pnl-send-after').hideElement();
                     else
-                        $('#pnl-send-after').showField();
+                        $('#pnl-send-after').showElement();
                 }
             </script>
         </div>

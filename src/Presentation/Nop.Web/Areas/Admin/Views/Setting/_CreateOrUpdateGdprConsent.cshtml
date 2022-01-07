@@ -47,7 +47,7 @@
                         </div>
                         @if (Model.Locales.Count == 1)
                         {
-                            <nop-nested-setting asp-for="IsRequired">
+                            <nop-nested-setting asp-for="IsRequired" disable-auto-generation="true">
                                 <div id="pnlRequiredMessage">
                                     <div class="form-group row">
                                         <div class="col-md-3">
@@ -101,9 +101,9 @@
 
                         function toggleIsRequired() {
                             if ($('#@Html.IdFor(model => model.IsRequired)').is(':checked')) {
-                                $('#pnlRequiredMessage').showField();
+                                $('#pnlRequiredMessage').showElement();
                             } else {
-                                $('#pnlRequiredMessage').hide();
+                                $('#pnlRequiredMessage').hideElement();
                             }
                         }
                         </script>

@@ -34,10 +34,10 @@
     <Value>ખોટું SQL કનેક્શન સ્ટ્રિંગ ફોર્મેટ</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>દેશ</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>તમારા દેશને પસંદ કરો</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>ડેટાબેઝ બનાવો જો તે અસ્તિત્વમાં નથી</Value>
@@ -103,7 +103,7 @@
     <Value>ઇન્સ્ટોલેશન પ્રક્રિયાને ફરીથી પ્રારંભ કરવા માટે ક્લિક કરો (બધા કેશ્ડ મૂલ્યો સાફ કરો)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>ફરીથી પ્રારંભ કરી રહ્યું છે ...</Value>
+    <Value>ફરી શરૂ કરી રહ્યા છીએ</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
     <Value>સર્વર નામ</Value>

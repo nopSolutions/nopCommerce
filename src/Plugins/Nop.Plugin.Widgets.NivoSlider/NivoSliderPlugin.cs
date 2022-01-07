@@ -38,7 +38,10 @@ namespace Nop.Plugin.Widgets.NivoSlider
         /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>
-        /// <returns>Widget zones</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget zones
+        /// </returns>
         public Task<IList<string>> GetWidgetZonesAsync()
         {
             return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.HomepageTop });
@@ -65,6 +68,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         /// <summary>
         /// Install plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             //pictures
@@ -75,17 +79,17 @@ namespace Nop.Plugin.Widgets.NivoSlider
             {
                 Picture1Id = (await _pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "banner1.jpg")), MimeTypes.ImagePJpeg, "banner_1")).Id,
                 Text1 = "",
-                Link1 = _webHelper.GetStoreLocation(false),
+                Link1 = _webHelper.GetStoreLocation(),
                 Picture2Id = (await _pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "banner2.jpg")), MimeTypes.ImagePJpeg, "banner_2")).Id,
                 Text2 = "",
-                Link2 = _webHelper.GetStoreLocation(false)
+                Link2 = _webHelper.GetStoreLocation()
                 //Picture3Id = _pictureService.InsertPicture(File.ReadAllBytes(_fileProvider.Combine(sampleImagesPath,"banner3.jpg")), MimeTypes.ImagePJpeg, "banner_3").Id,
                 //Text3 = "",
-                //Link3 = _webHelper.GetStoreLocation(false),
+                //Link3 = _webHelper.GetStoreLocation(),
             };
             await _settingService.SaveSettingAsync(settings);
 
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.NivoSlider.Picture1"] = "Picture 1",
                 ["Plugins.Widgets.NivoSlider.Picture2"] = "Picture 2",
@@ -108,6 +112,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         /// <summary>
         /// Uninstall plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             //settings

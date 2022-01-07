@@ -77,11 +77,13 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             return text;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<bool> IsPluginEnabledAsync()
         {
             return await _widgetPluginManager.IsPluginActiveAsync("Widgets.GoogleAnalytics");
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task ProcessOrderEventAsync(Order order, bool add)
         {
             try
@@ -125,6 +127,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     var product = await _productService.GetProductByIdAsync(item.ProductId);
                     //get category
                     var category = (await _categoryService.GetCategoryByIdAsync((await _categoryService.GetProductCategoriesByProductIdAsync(product.Id)).FirstOrDefault()?.CategoryId ?? 0))?.Name;
+                    if (string.IsNullOrEmpty(category))
+                        category = "No category";
+
                     var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
                     var qty = item.Quantity;
                     if (!add)
@@ -156,6 +161,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// Handles the event
         /// </summary>
         /// <param name="eventMessage">The event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<Order> eventMessage)
         {
             //ensure the plugin is installed and active
@@ -193,6 +199,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// Handles the event
         /// </summary>
         /// <param name="eventMessage">The event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(OrderCancelledEvent eventMessage)
         {
             //ensure the plugin is installed and active
@@ -221,6 +228,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// Handles the event
         /// </summary>
         /// <param name="eventMessage">The event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(OrderPaidEvent eventMessage)
         {
             //ensure the plugin is installed and active

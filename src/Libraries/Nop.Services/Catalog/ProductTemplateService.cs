@@ -32,6 +32,7 @@ namespace Nop.Services.Catalog
         /// Delete product template
         /// </summary>
         /// <param name="productTemplate">Product template</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductTemplateAsync(ProductTemplate productTemplate)
         {
             await _productTemplateRepository.DeleteAsync(productTemplate);
@@ -40,7 +41,10 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all product templates
         /// </summary>
-        /// <returns>Product templates</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product templates
+        /// </returns>
         public virtual async Task<IList<ProductTemplate>> GetAllProductTemplatesAsync()
         {
             var templates = await _productTemplateRepository.GetAllAsync(query =>
@@ -57,7 +61,10 @@ namespace Nop.Services.Catalog
         /// Gets a product template
         /// </summary>
         /// <param name="productTemplateId">Product template identifier</param>
-        /// <returns>Product template</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product template
+        /// </returns>
         public virtual async Task<ProductTemplate> GetProductTemplateByIdAsync(int productTemplateId)
         {
             return await _productTemplateRepository.GetByIdAsync(productTemplateId, cache => default);
@@ -67,6 +74,7 @@ namespace Nop.Services.Catalog
         /// Inserts product template
         /// </summary>
         /// <param name="productTemplate">Product template</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductTemplateAsync(ProductTemplate productTemplate)
         {
             await _productTemplateRepository.InsertAsync(productTemplate);
@@ -76,6 +84,7 @@ namespace Nop.Services.Catalog
         /// Updates the product template
         /// </summary>
         /// <param name="productTemplate">Product template</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductTemplateAsync(ProductTemplate productTemplate)
         {
             await _productTemplateRepository.UpdateAsync(productTemplate);

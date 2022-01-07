@@ -66,13 +66,13 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
             /// <param name="context">Authorization filter context</param>
-            /// <returns>A task that on completion indicates the filter has executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckAccessPublicStoreAsync(AuthorizationFilterContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
                 //check whether this filter has been overridden for the Action
@@ -102,7 +102,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
             /// <param name="context">Authorization filter context</param>
-            /// <returns>A task that on completion indicates the filter has executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
             {
                 await CheckAccessPublicStoreAsync(context);

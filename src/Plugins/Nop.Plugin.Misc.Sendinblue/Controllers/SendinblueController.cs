@@ -92,6 +92,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         /// Prepare SendinblueModel
         /// </summary>
         /// <param name="model">Model</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task PrepareModelAsync(ConfigurationModel model)
         {
             //load settings for active store scope
@@ -114,11 +115,12 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             model.UseMarketingAutomation = sendinblueSettings.UseMarketingAutomation;
             model.TrackingScript = sendinblueSettings.TrackingScript;
 
-            model.HideGeneralBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), SendinblueDefaults.HideGeneralBlock);
-            model.HideSynchronizationBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), SendinblueDefaults.HideSynchronizationBlock);
-            model.HideTransactionalBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), SendinblueDefaults.HideTransactionalBlock);
-            model.HideSmsBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), SendinblueDefaults.HideSmsBlock);
-            model.HideMarketingAutomationBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), SendinblueDefaults.HideMarketingAutomationBlock);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            model.HideGeneralBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, SendinblueDefaults.HideGeneralBlock);
+            model.HideSynchronizationBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, SendinblueDefaults.HideSynchronizationBlock);
+            model.HideTransactionalBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, SendinblueDefaults.HideTransactionalBlock);
+            model.HideSmsBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, SendinblueDefaults.HideSmsBlock);
+            model.HideMarketingAutomationBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, SendinblueDefaults.HideMarketingAutomationBlock);
 
             //prepare nested search models
             model.MessageTemplateSearchModel.SetGridPageSize();
@@ -288,6 +290,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetSynchronizationInfo()
         {
             var res = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(SendinblueDefaults.SyncKeyCache), () => string.Empty);

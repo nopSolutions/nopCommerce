@@ -59,6 +59,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// Insert the configuration
         /// </summary>
         /// <param name="configuration">Configuration</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected async Task InsertConfigurationAsync(GoogleAuthenticatorRecord configuration)
         {
             if (configuration == null)
@@ -72,6 +73,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// Update the configuration
         /// </summary>
         /// <param name="configuration">Configuration</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected async Task UpdateConfigurationAsync(GoogleAuthenticatorRecord configuration)
         {
             if (configuration == null)
@@ -127,7 +129,10 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// <param name="email">Email</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Paged list of configurations</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the paged list of configurations
+        /// </returns>
         public async Task<IPagedList<GoogleAuthenticatorRecord>> GetPagedConfigurationsAsync(string email = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _repository.Table;
@@ -153,6 +158,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// </summary>
         /// <param name="customerEmail">Customer email</param>
         /// <param name="key">Secret key</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddGoogleAuthenticatorAccountAsync(string customerEmail, string key)
         {
             var account = new GoogleAuthenticatorRecord
@@ -169,6 +175,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// </summary>
         /// <param name="customerEmail">Customer email</param>
         /// <param name="key">Secret key</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task UpdateGoogleAuthenticatorAccountAsync(string customerEmail, string key)
         {
             var account = GetConfigurationByCustomerEmail(customerEmail);
@@ -183,12 +190,17 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// Generate a setup code for a Google Authenticator user to scan
         /// </summary>
         /// <param name="secretkey">Secret key</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         public async Task<SetupCode> GenerateSetupCode(string secretkey)
         {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             return TwoFactorAuthenticator.GenerateSetupCode(
                 _googleAuthenticatorSettings.BusinessPrefix, 
-                (await _workContext.GetCurrentCustomerAsync()).Email, 
+                customer.Email, 
                 secretkey, false, _googleAuthenticatorSettings.QRPixelsPerModule);
         }
 

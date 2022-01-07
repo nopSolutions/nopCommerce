@@ -18,7 +18,7 @@ namespace Nop.Services.Plugins
         private readonly ICustomerService _customerService;
         private readonly IPluginService _pluginService;
 
-        private readonly Dictionary<string, IList<TPlugin>> _plugins = new Dictionary<string, IList<TPlugin>>();
+        private readonly Dictionary<string, IList<TPlugin>> _plugins = new();
 
         #endregion
 
@@ -41,7 +41,10 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Customer</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="systemName">Plugin system name</param>
-        /// <returns>Key</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the key
+        /// </returns>
         protected virtual async Task<string> GetKeyAsync(Customer customer, int storeId, string systemName = null)
         {
             return $"{storeId}-{(customer != null ? string.Join(',', await _customerService.GetCustomerRoleIdsAsync(customer)) : null)}-{systemName}";
@@ -53,7 +56,10 @@ namespace Nop.Services.Plugins
         /// <param name="systemName">System name of primary active plugin</param>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Plugin</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the plugin
+        /// </returns>
         protected virtual async Task<TPlugin> LoadPrimaryPluginAsync(string systemName, Customer customer = null, int storeId = 0)
         {
             //try to get a plugin by system name or return the first loaded one (it's necessary to have a primary active plugin)
@@ -72,7 +78,10 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>List of plugins</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of plugins
+        /// </returns>
         public virtual async Task<IList<TPlugin>> LoadAllPluginsAsync(Customer customer = null, int storeId = 0)
         {
             //get plugins and put them into the dictionary to avoid further loading
@@ -89,7 +98,10 @@ namespace Nop.Services.Plugins
         /// <param name="systemName">System name</param>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Plugin</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the plugin
+        /// </returns>
         public virtual async Task<TPlugin> LoadPluginBySystemNameAsync(string systemName, Customer customer = null, int storeId = 0)
         {
             if (string.IsNullOrEmpty(systemName))
@@ -118,7 +130,10 @@ namespace Nop.Services.Plugins
         /// <param name="systemNames">System names of active plugins</param>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>List of active plugins</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of active plugins
+        /// </returns>
         public virtual async Task<IList<TPlugin>> LoadActivePluginsAsync(List<string> systemNames, Customer customer = null, int storeId = 0)
         {
             if (systemNames == null)
@@ -150,7 +165,10 @@ namespace Nop.Services.Plugins
         /// Get plugin logo URL
         /// </summary>
         /// <param name="plugin">Plugin</param>
-        /// <returns>Logo URL</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the logo URL
+        /// </returns>
         public virtual async Task<string> GetPluginLogoUrlAsync(TPlugin plugin)
         {
             return await _pluginService.GetPluginLogoUrlAsync(plugin.PluginDescriptor);

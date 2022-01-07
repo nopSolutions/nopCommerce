@@ -34,6 +34,7 @@ namespace Nop.Services.Messages
         /// Inserts an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertEmailAccountAsync(EmailAccount emailAccount)
         {
             if (emailAccount == null)
@@ -64,6 +65,7 @@ namespace Nop.Services.Messages
         /// Updates an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateEmailAccountAsync(EmailAccount emailAccount)
         {
             if (emailAccount == null)
@@ -94,6 +96,7 @@ namespace Nop.Services.Messages
         /// Deletes an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteEmailAccountAsync(EmailAccount emailAccount)
         {
             if (emailAccount == null)
@@ -109,7 +112,10 @@ namespace Nop.Services.Messages
         /// Gets an email account by identifier
         /// </summary>
         /// <param name="emailAccountId">The email account identifier</param>
-        /// <returns>Email account</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email account
+        /// </returns>
         public virtual async Task<EmailAccount> GetEmailAccountByIdAsync(int emailAccountId)
         {
             return await _emailAccountRepository.GetByIdAsync(emailAccountId, cache => default);
@@ -118,7 +124,10 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Gets all email accounts
         /// </summary>
-        /// <returns>Email accounts list</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email accounts list
+        /// </returns>
         public virtual async Task<IList<EmailAccount>> GetAllEmailAccountsAsync()
         {
             var emailAccounts = await _emailAccountRepository.GetAllAsync(query =>

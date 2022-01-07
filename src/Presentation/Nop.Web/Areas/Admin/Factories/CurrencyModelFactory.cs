@@ -59,6 +59,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Currency exchange rate provider model</param>
         /// <param name="prepareExchangeRates">Whether to prepare exchange rate models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareExchangeRateProviderModelAsync(CurrencyExchangeRateProviderModel model, bool prepareExchangeRates)
         {
             if (model == null)
@@ -85,6 +86,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare exchange rate models
         /// </summary>
         /// <param name="models">List of currency exchange rate model</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareExchangeRateModelsAsync(IList<CurrencyExchangeRateModel> models)
         {
             if (models == null)
@@ -115,7 +117,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Currency search model</param>
         /// <param name="prepareExchangeRates">Whether to prepare exchange rate models</param>
-        /// <returns>Currency search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currency search model
+        /// </returns>
         public virtual async Task<CurrencySearchModel> PrepareCurrencySearchModelAsync(CurrencySearchModel searchModel, bool prepareExchangeRates = false)
         {
             if (searchModel == null)
@@ -134,7 +139,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged currency list model
         /// </summary>
         /// <param name="searchModel">Currency search model</param>
-        /// <returns>Currency list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currency list model
+        /// </returns>
         public virtual async Task<CurrencyListModel> PrepareCurrencyListModelAsync(CurrencySearchModel searchModel)
         {
             if (searchModel == null)
@@ -168,10 +176,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Currency model</param>
         /// <param name="currency">Currency</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Currency model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currency model
+        /// </returns>
         public virtual async Task<CurrencyModel> PrepareCurrencyModelAsync(CurrencyModel model, Currency currency, bool excludeProperties = false)
         {
-            Action<CurrencyLocalizedModel, int> localizedModelConfiguration = null;
+            Func<CurrencyLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (currency != null)
             {

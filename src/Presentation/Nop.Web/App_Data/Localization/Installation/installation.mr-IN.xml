@@ -34,10 +34,10 @@
     <Value>चुकीचे एस क्यू एल कनेक्शन स्ट्रिंग स्वरूप</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>तुमचा देश निवडा</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>तुमचा देश निवडा</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>जर अस्तित्वात नसेल तर डेटाबेस तयार करा</Value>

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Topics;
 using Nop.Data;
 using Nop.Services.Customers;
@@ -20,7 +19,6 @@ namespace Nop.Services.Topics
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly ICustomerService _customerService;
         private readonly IRepository<Topic> _topicRepository;
@@ -32,7 +30,7 @@ namespace Nop.Services.Topics
 
         #region Ctor
 
-        public TopicService(CatalogSettings catalogSettings,
+        public TopicService(
             IAclService aclService,
             ICustomerService customerService,
             IRepository<Topic> topicRepository,
@@ -40,7 +38,6 @@ namespace Nop.Services.Topics
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            _catalogSettings = catalogSettings;
             _aclService = aclService;
             _customerService = customerService;
             _topicRepository = topicRepository;
@@ -57,6 +54,7 @@ namespace Nop.Services.Topics
         /// Deletes a topic
         /// </summary>
         /// <param name="topic">Topic</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteTopicAsync(Topic topic)
         {
             await _topicRepository.DeleteAsync(topic);
@@ -66,7 +64,10 @@ namespace Nop.Services.Topics
         /// Gets a topic
         /// </summary>
         /// <param name="topicId">The topic identifier</param>
-        /// <returns>Topic</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic
+        /// </returns>
         public virtual async Task<Topic> GetTopicByIdAsync(int topicId)
         {
             return await _topicRepository.GetByIdAsync(topicId, cache => default);
@@ -78,7 +79,10 @@ namespace Nop.Services.Topics
         /// <param name="systemName">The topic system name</param>
         /// <param name="storeId">Store identifier; pass 0 to ignore filtering by store and load the first one</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Topic</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic
+        /// </returns>
         public virtual async Task<Topic> GetTopicBySystemNameAsync(string systemName, int storeId = 0, bool showHidden = false)
         {
             if (string.IsNullOrEmpty(systemName))
@@ -118,7 +122,10 @@ namespace Nop.Services.Topics
         /// <param name="ignoreAcl">A value indicating whether to ignore ACL rules</param>
         /// <param name="showHidden">A value indicating whether to show hidden topics</param>
         /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
-        /// <returns>Topics</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opics
+        /// </returns>
         public virtual async Task<IList<Topic>> GetAllTopicsAsync(int storeId,
             bool ignoreAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
         {
@@ -157,7 +164,10 @@ namespace Nop.Services.Topics
         /// <param name="ignoreAcl">A value indicating whether to ignore ACL rules</param>
         /// <param name="showHidden">A value indicating whether to show hidden topics</param>
         /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
-        /// <returns>Topics</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opics
+        /// </returns>
         public virtual async Task<IList<Topic>> GetAllTopicsAsync(int storeId, string keywords,
             bool ignoreAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
         {
@@ -181,6 +191,7 @@ namespace Nop.Services.Topics
         /// Inserts a topic
         /// </summary>
         /// <param name="topic">Topic</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertTopicAsync(Topic topic)
         {
             await _topicRepository.InsertAsync(topic);
@@ -190,6 +201,7 @@ namespace Nop.Services.Topics
         /// Updates the topic
         /// </summary>
         /// <param name="topic">Topic</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateTopicAsync(Topic topic)
         {
             await _topicRepository.UpdateAsync(topic);

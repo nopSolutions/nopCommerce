@@ -32,6 +32,7 @@ namespace Nop.Services.Catalog
         /// Delete category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCategoryTemplateAsync(CategoryTemplate categoryTemplate)
         {
             await _categoryTemplateRepository.DeleteAsync(categoryTemplate);
@@ -40,7 +41,10 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all category templates
         /// </summary>
-        /// <returns>Category templates</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category templates
+        /// </returns>
         public virtual async Task<IList<CategoryTemplate>> GetAllCategoryTemplatesAsync()
         {
             var templates = await _categoryTemplateRepository.GetAllAsync(query =>
@@ -57,7 +61,10 @@ namespace Nop.Services.Catalog
         /// Gets a category template
         /// </summary>
         /// <param name="categoryTemplateId">Category template identifier</param>
-        /// <returns>Category template</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category template
+        /// </returns>
         public virtual async Task<CategoryTemplate> GetCategoryTemplateByIdAsync(int categoryTemplateId)
         {
             return await _categoryTemplateRepository.GetByIdAsync(categoryTemplateId, cache => default);
@@ -67,6 +74,7 @@ namespace Nop.Services.Catalog
         /// Inserts category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCategoryTemplateAsync(CategoryTemplate categoryTemplate)
         {
             await _categoryTemplateRepository.InsertAsync(categoryTemplate);
@@ -76,6 +84,7 @@ namespace Nop.Services.Catalog
         /// Updates the category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCategoryTemplateAsync(CategoryTemplate categoryTemplate)
         {
             await _categoryTemplateRepository.UpdateAsync(categoryTemplate);

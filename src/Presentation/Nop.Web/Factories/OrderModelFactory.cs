@@ -138,12 +138,17 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the customer order list model
         /// </summary>
-        /// <returns>Customer order list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer order list model
+        /// </returns>
         public virtual async Task<CustomerOrderListModel> PrepareCustomerOrderListModelAsync()
         {
             var model = new CustomerOrderListModel();
-            var orders = await _orderService.SearchOrdersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
-                customerId: (await _workContext.GetCurrentCustomerAsync()).Id);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var orders = await _orderService.SearchOrdersAsync(storeId: store.Id,
+                customerId: customer.Id);
             foreach (var order in orders)
             {
                 var orderModel = new CustomerOrderListModel.OrderDetailsModel
@@ -163,8 +168,8 @@ namespace Nop.Web.Factories
                 model.Orders.Add(orderModel);
             }
 
-            var recurringPayments = await _orderService.SearchRecurringPaymentsAsync((await _storeContext.GetCurrentStoreAsync()).Id,
-                (await _workContext.GetCurrentCustomerAsync()).Id);
+            var recurringPayments = await _orderService.SearchRecurringPaymentsAsync(store.Id,
+                customer.Id);
             foreach (var recurringPayment in recurringPayments)
             {
                 var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
@@ -179,8 +184,8 @@ namespace Nop.Web.Factories
                     CyclesRemaining = await _orderProcessingService.GetCyclesRemainingAsync(recurringPayment),
                     InitialOrderId = order.Id,
                     InitialOrderNumber = order.CustomOrderNumber,
-                    CanCancel = await _orderProcessingService.CanCancelRecurringPaymentAsync(await _workContext.GetCurrentCustomerAsync(), recurringPayment),
-                    CanRetryLastPayment = await _orderProcessingService.CanRetryLastRecurringPaymentAsync(await _workContext.GetCurrentCustomerAsync(), recurringPayment)
+                    CanCancel = await _orderProcessingService.CanCancelRecurringPaymentAsync(customer, recurringPayment),
+                    CanRetryLastPayment = await _orderProcessingService.CanRetryLastRecurringPaymentAsync(customer, recurringPayment)
                 };
 
                 model.RecurringOrders.Add(recurringPaymentModel);
@@ -193,7 +198,10 @@ namespace Nop.Web.Factories
         /// Prepare the order details model
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Order details model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order details model
+        /// </returns>
         public virtual async Task<OrderDetailsModel> PrepareOrderDetailsModelAsync(Order order)
         {
             if (order == null)
@@ -243,8 +251,8 @@ namespace Nop.Web.Factories
 
                 model.ShippingMethod = order.ShippingMethod;
 
-                //shipments (only already shipped)
-                var shipments = (await _shipmentService.GetShipmentsByOrderIdAsync(order.Id, true)).OrderBy(x => x.CreatedOnUtc).ToList();
+                //shipments (only already shipped or ready for pickup)
+                var shipments = (await _shipmentService.GetShipmentsByOrderIdAsync(order.Id, !order.PickupInStore, order.PickupInStore)).OrderBy(x => x.CreatedOnUtc).ToList();
                 foreach (var shipment in shipments)
                 {
                     var shipmentModel = new OrderDetailsModel.ShipmentBriefModel
@@ -254,6 +262,8 @@ namespace Nop.Web.Factories
                     };
                     if (shipment.ShippedDateUtc.HasValue)
                         shipmentModel.ShippedDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
+                    if (shipment.ReadyForPickupDateUtc.HasValue)
+                        shipmentModel.ReadyForPickupDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ReadyForPickupDateUtc.Value, DateTimeKind.Utc);
                     if (shipment.DeliveryDateUtc.HasValue)
                         shipmentModel.DeliveryDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
                     model.Shipments.Add(shipmentModel);
@@ -484,7 +494,10 @@ namespace Nop.Web.Factories
         /// Prepare the shipment details model
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        /// <returns>Shipment details model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment details model
+        /// </returns>
         public virtual async Task<ShipmentDetailsModel> PrepareShipmentDetailsModelAsync(Shipment shipment)
         {
             if (shipment == null)
@@ -500,6 +513,8 @@ namespace Nop.Web.Factories
             };
             if (shipment.ShippedDateUtc.HasValue)
                 model.ShippedDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
+            if (shipment.ReadyForPickupDateUtc.HasValue)
+                model.ReadyForPickupDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ReadyForPickupDateUtc.Value, DateTimeKind.Utc);
             if (shipment.DeliveryDateUtc.HasValue)
                 model.DeliveryDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
 
@@ -510,22 +525,25 @@ namespace Nop.Web.Factories
                 var shipmentTracker = await _shipmentService.GetShipmentTrackerAsync(shipment);
                 if (shipmentTracker != null)
                 {
-                    model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber);
+                    model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment);
                     if (_shippingSettings.DisplayShipmentEventsToCustomers)
                     {
-                        var shipmentEvents = await shipmentTracker.GetShipmentEventsAsync(shipment.TrackingNumber);
+                        var shipmentEvents = await shipmentTracker.GetShipmentEventsAsync(shipment.TrackingNumber, shipment);
                         if (shipmentEvents != null)
+                        {
                             foreach (var shipmentEvent in shipmentEvents)
                             {
                                 var shipmentStatusEventModel = new ShipmentDetailsModel.ShipmentStatusEventModel();
                                 var shipmentEventCountry = await _countryService.GetCountryByTwoLetterIsoCodeAsync(shipmentEvent.CountryCode);
                                 shipmentStatusEventModel.Country = shipmentEventCountry != null
                                     ? await _localizationService.GetLocalizedAsync(shipmentEventCountry, x => x.Name) : shipmentEvent.CountryCode;
+                                shipmentStatusEventModel.Status = shipmentEvent.Status;
                                 shipmentStatusEventModel.Date = shipmentEvent.Date;
                                 shipmentStatusEventModel.EventName = shipmentEvent.EventName;
                                 shipmentStatusEventModel.Location = shipmentEvent.Location;
                                 model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
                             }
+                        }
                     }
                 }
             }
@@ -574,7 +592,10 @@ namespace Nop.Web.Factories
         /// Prepare the customer reward points model
         /// </summary>
         /// <param name="page">Number of items page; pass null to load the first page</param>
-        /// <returns>Customer reward points model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer reward points model
+        /// </returns>
         public virtual async Task<CustomerRewardPointsModel> PrepareCustomerRewardPointsAsync(int? page)
         {
             //get reward points history
@@ -601,7 +622,7 @@ namespace Nop.Web.Factories
                     };
                 }).ToListAsync(),
 
-                PagerModel = new PagerModel
+                PagerModel = new PagerModel(_localizationService)
                 {
                     PageSize = rewardPoints.PageSize,
                     TotalRecords = rewardPoints.TotalCount,
@@ -614,16 +635,17 @@ namespace Nop.Web.Factories
             };
 
             //current amount/balance
-            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
             var rewardPointsAmountBase = await _orderTotalCalculationService.ConvertRewardPointsToAmountAsync(rewardPointsBalance);
-            var rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rewardPointsAmountBase, await _workContext.GetWorkingCurrencyAsync());
+            var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
+            var rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rewardPointsAmountBase, currentCurrency);
             model.RewardPointsBalance = rewardPointsBalance;
             model.RewardPointsAmount = await _priceFormatter.FormatPriceAsync(rewardPointsAmount, true, false);
 
             //minimum amount/balance
             var minimumRewardPointsBalance = _rewardPointsSettings.MinimumRewardPointsToUse;
             var minimumRewardPointsAmountBase = await _orderTotalCalculationService.ConvertRewardPointsToAmountAsync(minimumRewardPointsBalance);
-            var minimumRewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(minimumRewardPointsAmountBase, await _workContext.GetWorkingCurrencyAsync());
+            var minimumRewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(minimumRewardPointsAmountBase, currentCurrency);
             model.MinimumRewardPointsBalance = minimumRewardPointsBalance;
             model.MinimumRewardPointsAmount = await _priceFormatter.FormatPriceAsync(minimumRewardPointsAmount, true, false);
 

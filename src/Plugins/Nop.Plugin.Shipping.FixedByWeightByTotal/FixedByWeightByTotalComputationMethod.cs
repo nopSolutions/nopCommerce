@@ -62,7 +62,10 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         /// Get fixed rate
         /// </summary>
         /// <param name="shippingMethodId">Shipping method ID</param>
-        /// <returns>Rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rate
+        /// </returns>
         private async Task<decimal> GetRateAsync(int shippingMethodId)
         {
             return await _settingService.GetSettingByKeyAsync<decimal>(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethodId));
@@ -72,7 +75,10 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         /// Gets the transit days
         /// </summary>
         /// <param name="shippingMethodId">Shipping method ID</param>
-        /// <returns>Transit days</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ransit days
+        /// </returns>
         private async Task<int?> GetTransitDaysAsync(int shippingMethodId)
         {
             return await _settingService.GetSettingByKeyAsync<int?>(string.Format(FixedByWeightByTotalDefaults.TransitDaysSettingsKey, shippingMethodId));
@@ -114,7 +120,10 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         ///  Gets available shipping options
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
-        /// <returns>Represents a response of getting shipping rate options</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the represents a response of getting shipping rate options
+        /// </returns>
         public async Task<GetShippingOptionResponse> GetShippingOptionsAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
@@ -139,7 +148,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                     return response;
                 }
 
-                var storeId = getShippingOptionRequest.StoreId != 0 ? getShippingOptionRequest.StoreId : (await _storeContext.GetCurrentStoreAsync()).Id;
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var storeId = getShippingOptionRequest.StoreId != 0 ? getShippingOptionRequest.StoreId : store.Id;
                 var countryId = getShippingOptionRequest.ShippingAddress.CountryId ?? 0;
                 var stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId ?? 0;
                 var warehouseId = getShippingOptionRequest.WarehouseFrom?.Id ?? 0;
@@ -205,7 +215,10 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         /// Gets fixed shipping rate (if shipping rate computation method allows it and the rate can be calculated before checkout).
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
-        /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the fixed shipping rate; or null in case there's no fixed shipping rate
+        /// </returns>
         public async Task<decimal?> GetFixedRateAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
@@ -227,6 +240,18 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         }
 
         /// <summary>
+        /// Get associated shipment tracker
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment tracker
+        /// </returns>
+        public Task<IShipmentTracker> GetShipmentTrackerAsync()
+        {
+            return Task.FromResult<IShipmentTracker>(null);
+        }
+
+        /// <summary>
         /// Gets a configuration page URL
         /// </summary>
         public override string GetConfigurationPageUrl()
@@ -237,13 +262,14 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         /// <summary>
         /// Install plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             //settings
             await _settingService.SaveSettingAsync(new FixedByWeightByTotalSettings());
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Shipping.FixedByWeightByTotal.AddRecord"] = "Add record",
                 ["Plugins.Shipping.FixedByWeightByTotal.Fields.AdditionalFixedCost"] = "Additional fixed cost",
@@ -292,6 +318,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         /// <summary>
         /// Uninstall plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             //settings
@@ -309,19 +336,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
 
             await base.UninstallAsync();
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets a shipment tracker
-        /// </summary>
-        /// <remarks>
-        /// uncomment a line below to return a general shipment tracker (finds an appropriate tracker by tracking number)
-        /// return new GeneralShipmentTracker(EngineContext.Current.Resolve<ITypeFinder>());
-        /// </remarks>
-        public IShipmentTracker ShipmentTracker => null;
 
         #endregion
     }

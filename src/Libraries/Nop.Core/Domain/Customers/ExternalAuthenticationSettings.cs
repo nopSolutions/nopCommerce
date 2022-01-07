@@ -33,7 +33,7 @@ namespace Nop.Core.Domain.Customers
         public bool AllowCustomersToRemoveAssociations { get; set; }
 
         /// <summary>
-        /// Gets or sets system names of active payment methods
+        /// Gets or sets system names of active authentication methods
         /// </summary>
         public List<string> ActiveAuthenticationMethodSystemNames { get; set; }
     }

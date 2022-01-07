@@ -5,7 +5,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Customers.ActivityLogType").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Activity types");
+    NopHtml.SetActiveMenuItemSystemName("Activity types");
 }
 
 <form asp-controller="ActivityLog" asp-action="SaveTypes" method="post">
@@ -18,7 +18,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityTypesListButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityTypesListButtons, additionalData = Model })
         </div>
     </div>
     <section class="content">

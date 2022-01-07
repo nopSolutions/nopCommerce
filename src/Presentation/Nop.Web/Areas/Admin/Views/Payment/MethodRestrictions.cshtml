@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Payment.MethodRestrictions").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Payment restrictions");
+    NopHtml.SetActiveMenuItemSystemName("Payment restrictions");
 }
 
 <form asp-controller="Payment" asp-action="MethodRestrictions" method="post">
@@ -33,7 +33,7 @@
                                             <i class="far fa-save"></i>
                                             @T("Admin.Common.Save")
                                         </button>
-                                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentsListButtons })
+                                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentsListButtons, additionalData = Model })
                                     </div>
                                 </div>
 
@@ -53,9 +53,7 @@
                                     {
                                         var systemNameWithoutDot = pm.SystemName.Replace(".", "");
                                         <text>
-                                            $('#selectall-@(systemNameWithoutDot)').click(function () {
-                                                $('.restrict_@(systemNameWithoutDot)').attr('checked', $(this).is(':checked')).change();
-                                            });
+                                            prepareTableCheckboxes('#selectall-@(systemNameWithoutDot)', '.restrict_@(systemNameWithoutDot)');
                                         </text>
                                     }
                                 });

@@ -14,21 +14,30 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="usernameOrEmail">Username or email</param>
         /// <param name="password">Password</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<CustomerLoginResults> ValidateCustomerAsync(string usernameOrEmail, string password);
 
         /// <summary>
         /// Register customer
         /// </summary>
         /// <param name="request">Request</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<CustomerRegistrationResult> RegisterCustomerAsync(CustomerRegistrationRequest request);
 
         /// <summary>
         /// Change password
         /// </summary>
         /// <param name="request">Request</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<ChangePasswordResult> ChangePasswordAsync(ChangePasswordRequest request);
 
         /// <summary>
@@ -37,7 +46,10 @@ namespace Nop.Services.Customers
         /// <param name="customer">User to login</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <param name="isPersist">Is remember me</param>
-        /// <returns>Result of an authentication</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result of an authentication
+        /// </returns>
         Task<IActionResult> SignInCustomerAsync(Customer customer, string returnUrl, bool isPersist = false);
 
         /// <summary>
@@ -46,6 +58,7 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="newEmail">New email</param>
         /// <param name="requireValidation">Require validation of new email address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task SetEmailAsync(Customer customer, string newEmail, bool requireValidation);
 
         /// <summary>
@@ -53,6 +66,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="newUsername">New Username</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task SetUsernameAsync(Customer customer, string newUsername);
     }
 }

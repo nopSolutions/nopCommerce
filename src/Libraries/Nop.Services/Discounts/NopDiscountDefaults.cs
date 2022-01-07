@@ -21,7 +21,7 @@ namespace Nop.Services.Discounts
         /// <remarks>
         /// {0} : discount id
         /// </remarks>
-        public static CacheKey DiscountRequirementsByDiscountCacheKey => new CacheKey("Nop.discountrequirement.bydiscount.{0}");
+        public static CacheKey DiscountRequirementsByDiscountCacheKey => new("Nop.discountrequirement.bydiscount.{0}");
 
         /// <summary>
         /// Key for caching
@@ -31,7 +31,21 @@ namespace Nop.Services.Discounts
         /// {1} : coupon code
         /// {2} : discount name
         /// </remarks>
-        public static CacheKey DiscountAllCacheKey => new CacheKey("Nop.discount.all.{0}-{1}-{2}", NopEntityCacheDefaults<Discount>.AllPrefix);
+        public static CacheKey DiscountAllCacheKey => new("Nop.discount.all.{0}-{1}-{2}", NopEntityCacheDefaults<Discount>.AllPrefix);
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} - entity type
+        /// {1} - entity id
+        /// </remarks>
+        public static CacheKey AppliedDiscountsCacheKey => new("Nop.discount.applied.{0}-{1}", AppliedDiscountsCachePrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string AppliedDiscountsCachePrefix => "Nop.discount.applied.";
 
         /// <summary>
         /// Key for category IDs of a discount
@@ -41,7 +55,7 @@ namespace Nop.Services.Discounts
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
-        public static CacheKey CategoryIdsByDiscountCacheKey => new CacheKey("Nop.discount.categoryids.bydiscount.{0}-{1}-{2}", CategoryIdsByDiscountPrefix, CategoryIdsPrefix);
+        public static CacheKey CategoryIdsByDiscountCacheKey => new("Nop.discount.categoryids.bydiscount.{0}-{1}-{2}", CategoryIdsByDiscountPrefix, CategoryIdsPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -64,7 +78,7 @@ namespace Nop.Services.Discounts
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
-        public static CacheKey ManufacturerIdsByDiscountCacheKey => new CacheKey("Nop.discount.manufacturerids.bydiscount.{0}-{1}-{2}", ManufacturerIdsByDiscountPrefix, ManufacturerIdsPrefix);
+        public static CacheKey ManufacturerIdsByDiscountCacheKey => new("Nop.discount.manufacturerids.bydiscount.{0}-{1}-{2}", ManufacturerIdsByDiscountPrefix, ManufacturerIdsPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache

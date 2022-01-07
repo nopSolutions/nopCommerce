@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Customers.CustomerRoles").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Customer roles");
+    NopHtml.SetActiveMenuItemSystemName("Customer roles");
 }
 
 <div class="content-header clearfix">
@@ -16,7 +16,7 @@
             <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerRoleListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerRoleListButtons, additionalData = Model })
     </div>
 </div>
 

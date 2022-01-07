@@ -49,6 +49,7 @@ namespace Nop.Services.Localization
         /// Deletes a language
         /// </summary>
         /// <param name="language">Language</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteLanguageAsync(Language language)
         {
             if (language == null)
@@ -74,7 +75,10 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Languages</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the languages
+        /// </returns>
         public virtual async Task<IList<Language>> GetAllLanguagesAsync(bool showHidden = false, int storeId = 0)
         {
             //cacheable copy
@@ -107,7 +111,10 @@ namespace Nop.Services.Localization
         /// Gets a language
         /// </summary>
         /// <param name="languageId">Language identifier</param>
-        /// <returns>Language</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the language
+        /// </returns>
         public virtual async Task<Language> GetLanguageByIdAsync(int languageId)
         {
             return await _languageRepository.GetByIdAsync(languageId, cache => default);
@@ -117,6 +124,7 @@ namespace Nop.Services.Localization
         /// Inserts a language
         /// </summary>
         /// <param name="language">Language</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertLanguageAsync(Language language)
         {
             await _languageRepository.InsertAsync(language);
@@ -126,6 +134,7 @@ namespace Nop.Services.Localization
         /// Updates a language
         /// </summary>
         /// <param name="language">Language</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateLanguageAsync(Language language)
         {
             //update language

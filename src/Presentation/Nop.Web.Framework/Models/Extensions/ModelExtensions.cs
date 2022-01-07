@@ -29,7 +29,10 @@ namespace Nop.Web.Framework.Models.Extensions
         /// <typeparam name="T">Object type</typeparam>
         /// <param name="collection">Async-enumerable sequence of objects</param>
         /// <param name="pagingRequestModel">Paging request model</param>
-        /// <returns>Paged list</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the paged list
+        /// </returns>
         public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IAsyncEnumerable<T> collection, IPagingRequestModel pagingRequestModel)
         {
             var list = await collection.ToListAsync();
@@ -73,7 +76,10 @@ namespace Nop.Web.Framework.Models.Extensions
         /// <param name="searchModel">Search model</param>
         /// <param name="objectList">Paged list of objects</param>
         /// <param name="dataFillFunction">Function to populate model data</param>
-        /// <returns>List model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list model
+        /// </returns>
         public static async Task<TListModel> PrepareToGridAsync<TListModel, TModel, TObject>(this TListModel listModel,
             BaseSearchModel searchModel, IPagedList<TObject> objectList, Func<IAsyncEnumerable<TModel>> dataFillFunction)
             where TListModel : BasePagedListModel<TModel>

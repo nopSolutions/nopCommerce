@@ -20,7 +20,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <remarks>
         /// {0} : current store ID
         /// </remarks>
-        private readonly CacheKey _pickupPointAllKey = new CacheKey("Nop.pickuppoint.all-{0}", PICKUP_POINT_PATTERN_KEY);
+        private readonly CacheKey _pickupPointAllKey = new("Nop.pickuppoint.all-{0}", PICKUP_POINT_PATTERN_KEY);
         private const string PICKUP_POINT_PATTERN_KEY = "Nop.pickuppoint.";
 
         #endregion
@@ -56,7 +56,10 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Pickup points</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the pickup points
+        /// </returns>
         public virtual async Task<IPagedList<StorePickupPoint>> GetAllStorePickupPointsAsync(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var rez = await _storePickupPointRepository.GetAllAsync(query =>
@@ -75,7 +78,10 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// Gets a pickup point
         /// </summary>
         /// <param name="pickupPointId">Pickup point identifier</param>
-        /// <returns>Pickup point</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the pickup point
+        /// </returns>
         public virtual async Task<StorePickupPoint> GetStorePickupPointByIdAsync(int pickupPointId)
         {
             return await _storePickupPointRepository.GetByIdAsync(pickupPointId);
@@ -85,6 +91,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// Inserts a pickup point
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertStorePickupPointAsync(StorePickupPoint pickupPoint)
         {
             await _storePickupPointRepository.InsertAsync(pickupPoint, false);
@@ -95,6 +102,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// Updates the pickup point
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateStorePickupPointAsync(StorePickupPoint pickupPoint)
         {
             await _storePickupPointRepository.UpdateAsync(pickupPoint, false);
@@ -105,6 +113,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// Deletes a pickup point
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteStorePickupPointAsync(StorePickupPoint pickupPoint)
         {
             await _storePickupPointRepository.DeleteAsync(pickupPoint, false);

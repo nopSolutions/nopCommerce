@@ -77,6 +77,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         /// <param name="context">Contains information associated with the current HTML tag</param>
         /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
@@ -92,7 +93,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             if (string.IsNullOrEmpty(Action))
                 Action = "Delete";
 
-            var modelName = _htmlHelper.ViewData.ModelMetadata.ModelType.Name.ToLower();
+            var modelName = _htmlHelper.ViewData.ModelMetadata.ModelType.Name.ToLowerInvariant();
             if (!string.IsNullOrEmpty(Action))
                 modelName += "-" + Action;
             var modalId = await new HtmlString(modelName + "-delete-confirmation").RenderHtmlContentAsync();

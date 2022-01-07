@@ -11,47 +11,47 @@
         /// <summary>
         /// Type
         /// </summary>
-        public const string ApplicationForceDownload = "application/force-download";
+        public static string ApplicationForceDownload => "application/force-download";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ApplicationJson = "application/json";
+        public static string ApplicationJson => "application/json";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ApplicationManifestJson = "application/manifest+json";
+        public static string ApplicationManifestJson => "application/manifest+json";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ApplicationOctetStream = "application/octet-stream";
+        public static string ApplicationOctetStream => "application/octet-stream";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ApplicationPdf = "application/pdf";
+        public static string ApplicationPdf => "application/pdf";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ApplicationRssXml = "application/rss+xml";
+        public static string ApplicationRssXml => "application/rss+xml";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ApplicationXml = "application/xml";
+        public static string ApplicationXml => "application/xml";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ApplicationXWwwFormUrlencoded = "application/x-www-form-urlencoded";
+        public static string ApplicationXWwwFormUrlencoded => "application/x-www-form-urlencoded";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ApplicationXZipCo = "application/x-zip-co";
+        public static string ApplicationXZipCo => "application/x-zip-co";
 
         #endregion
 
@@ -60,37 +60,37 @@
         /// <summary>
         /// Type
         /// </summary>
-        public const string ImageBmp = "image/bmp";
+        public static string ImageBmp => "image/bmp";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ImageGif = "image/gif";
+        public static string ImageGif => "image/gif";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ImageJpeg = "image/jpeg";
+        public static string ImageJpeg => "image/jpeg";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ImagePJpeg = "image/pjpeg";
+        public static string ImagePJpeg => "image/pjpeg";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ImagePng = "image/png";
+        public static string ImagePng => "image/png";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ImageTiff = "image/tiff";
+        public static string ImageTiff => "image/tiff";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string ImageWebp = "image/webp";
+        public static string ImageWebp => "image/webp";
 
         #endregion
 
@@ -99,27 +99,27 @@
         /// <summary>
         /// Type
         /// </summary>
-        public const string TextCss = "text/css";
+        public static string TextCss => "text/css";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string TextCsv = "text/csv";
+        public static string TextCsv => "text/csv";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string TextJavascript = "text/javascript";
+        public static string TextJavascript => "text/javascript";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string TextPlain = "text/plain";
+        public static string TextPlain => "text/plain";
 
         /// <summary>
         /// Type
         /// </summary>
-        public const string TextXlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        public static string TextXlsx => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
         #endregion
     }

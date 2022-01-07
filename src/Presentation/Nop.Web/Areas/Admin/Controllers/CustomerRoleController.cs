@@ -255,7 +255,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Content("Cannot load a product");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && associatedProduct.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && associatedProduct.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             ViewBag.RefreshPage = true;

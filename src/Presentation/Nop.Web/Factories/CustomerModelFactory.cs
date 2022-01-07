@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -163,6 +164,7 @@ namespace Nop.Web.Factories
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<GdprConsentModel> PrepareGdprConsentModelAsync(GdprConsent consent, bool accepted)
         {
             if (consent == null)
@@ -179,103 +181,6 @@ namespace Nop.Web.Factories
             };
         }
 
-        /// <summary>
-        /// Prepare the custom customer attribute models
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="overrideAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
-        /// <returns>List of the customer attribute model</returns>
-        protected virtual async Task<IList<CustomerAttributeModel>> PrepareCustomCustomerAttributesAsync(Customer customer, string overrideAttributesXml = "")
-        {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            var result = new List<CustomerAttributeModel>();
-
-            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributesAsync();
-            foreach (var attribute in customerAttributes)
-            {
-                var attributeModel = new CustomerAttributeModel
-                {
-                    Id = attribute.Id,
-                    Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name),
-                    IsRequired = attribute.IsRequired,
-                    AttributeControlType = attribute.AttributeControlType,
-                };
-
-                if (attribute.ShouldHaveValues())
-                {
-                    //values
-                    var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
-                    foreach (var attributeValue in attributeValues)
-                    {
-                        var valueModel = new CustomerAttributeValueModel
-                        {
-                            Id = attributeValue.Id,
-                            Name = await _localizationService.GetLocalizedAsync(attributeValue, x => x.Name),
-                            IsPreSelected = attributeValue.IsPreSelected
-                        };
-                        attributeModel.Values.Add(valueModel);
-                    }
-                }
-
-                //set already selected attributes
-                var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
-                    overrideAttributesXml :
-                    await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
-                switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
-                    case AttributeControlType.RadioList:
-                    case AttributeControlType.Checkboxes:
-                        {
-                            if (!string.IsNullOrEmpty(selectedAttributesXml))
-                            {
-                                //clear default selection
-                                foreach (var item in attributeModel.Values)
-                                    item.IsPreSelected = false;
-
-                                //select new values
-                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesAsync(selectedAttributesXml);
-                                foreach (var attributeValue in selectedValues)
-                                    foreach (var item in attributeModel.Values)
-                                        if (attributeValue.Id == item.Id)
-                                            item.IsPreSelected = true;
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //do nothing
-                            //values are already pre-set
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                            if (!string.IsNullOrEmpty(selectedAttributesXml))
-                            {
-                                var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
-                                if (enteredText.Any())
-                                    attributeModel.DefaultValue = enteredText[0];
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.ImageSquares:
-                    case AttributeControlType.Datepicker:
-                    case AttributeControlType.FileUpload:
-                    default:
-                        //not supported attribute control types
-                        break;
-                }
-
-                result.Add(attributeModel);
-            }
-
-            return result;
-        }
-
         #endregion
 
         #region Methods
@@ -287,7 +192,10 @@ namespace Nop.Web.Factories
         /// <param name="customer">Customer</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
-        /// <returns>Customer info model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer info model
+        /// </returns>
         public virtual async Task<CustomerInfoModel> PrepareCustomerInfoModelAsync(CustomerInfoModel model, Customer customer,
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
         {
@@ -301,6 +209,7 @@ namespace Nop.Web.Factories
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == (await _dateTimeHelper.GetCurrentTimeZoneAsync()).Id) });
 
+            var store = await _storeContext.GetCurrentStoreAsync();
             if (!excludeProperties)
             {
                 model.VatNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
@@ -310,9 +219,11 @@ namespace Nop.Web.Factories
                 var dateOfBirth = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
                 if (dateOfBirth.HasValue)
                 {
-                    model.DateOfBirthDay = dateOfBirth.Value.Day;
-                    model.DateOfBirthMonth = dateOfBirth.Value.Month;
-                    model.DateOfBirthYear = dateOfBirth.Value.Year;
+                    var currentCalendar = CultureInfo.CurrentCulture.Calendar;
+
+                    model.DateOfBirthDay = currentCalendar.GetDayOfMonth(dateOfBirth.Value);
+                    model.DateOfBirthMonth = currentCalendar.GetMonth(dateOfBirth.Value);
+                    model.DateOfBirthYear = currentCalendar.GetYear(dateOfBirth.Value);
                 }
                 model.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
                 model.StreetAddress = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
@@ -326,7 +237,7 @@ namespace Nop.Web.Factories
                 model.Fax = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
 
                 //newsletter
-                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, (await _storeContext.GetCurrentStoreAsync()).Id);
+                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
                 model.Newsletter = newsletter != null && newsletter.Active;
 
                 model.Signature = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute);
@@ -343,11 +254,12 @@ namespace Nop.Web.Factories
             if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
                 model.EmailToRevalidate = customer.EmailToRevalidate;
 
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
-                foreach (var c in await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id))
+                foreach (var c in await _countryService.GetAllCountriesAsync(currentLanguage.Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
@@ -360,7 +272,7 @@ namespace Nop.Web.Factories
                 if (_customerSettings.StateProvinceEnabled)
                 {
                     //states
-                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, (await _workContext.GetWorkingLanguageAsync()).Id)).ToList();
+                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
                     if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
@@ -421,14 +333,15 @@ namespace Nop.Web.Factories
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
 
             //external authentication
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
             model.NumberOfExternalAuthenticationProviders = (await _authenticationPluginManager
-                .LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
+                .LoadActivePluginsAsync(currentCustomer, store.Id))
                 .Count;
             foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             {
                 var authMethod = await _authenticationPluginManager
-                    .LoadPluginBySystemNameAsync(record.ProviderSystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
+                    .LoadPluginBySystemNameAsync(record.ProviderSystemName, currentCustomer, store.Id);
                 if (!_authenticationPluginManager.IsPluginActive(authMethod))
                     continue;
 
@@ -438,7 +351,7 @@ namespace Nop.Web.Factories
                     Email = record.Email,
                     ExternalIdentifier = !string.IsNullOrEmpty(record.ExternalDisplayIdentifier)
                         ? record.ExternalDisplayIdentifier : record.ExternalIdentifier,
-                    AuthMethodName = await _localizationService.GetLocalizedFriendlyNameAsync(authMethod, (await _workContext.GetWorkingLanguageAsync()).Id)
+                    AuthMethodName = await _localizationService.GetLocalizedFriendlyNameAsync(authMethod, currentLanguage.Id)
                 });
             }
 
@@ -453,7 +366,7 @@ namespace Nop.Web.Factories
                 var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
                 foreach (var consent in consents)
                 {
-                    var accepted = await _gdprService.IsConsentAcceptedAsync(consent.Id, (await _workContext.GetCurrentCustomerAsync()).Id);
+                    var accepted = await _gdprService.IsConsentAcceptedAsync(consent.Id, currentCustomer.Id);
                     model.GdprConsents.Add(await PrepareGdprConsentModelAsync(consent, accepted.HasValue && accepted.Value));
                 }
             }
@@ -468,7 +381,10 @@ namespace Nop.Web.Factories
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <param name="setDefaultValues">Whether to populate model properties by default values</param>
-        /// <returns>Customer register model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer register model
+        /// </returns>
         public virtual async Task<RegisterModel> PrepareRegisterModelAsync(RegisterModel model, bool excludeProperties,
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false)
         {
@@ -526,8 +442,8 @@ namespace Nop.Web.Factories
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
-
-                foreach (var c in await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id))
+                var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+                foreach (var c in await _countryService.GetAllCountriesAsync(currentLanguage.Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
@@ -540,7 +456,7 @@ namespace Nop.Web.Factories
                 if (_customerSettings.StateProvinceEnabled)
                 {
                     //states
-                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, (await _workContext.GetWorkingLanguageAsync()).Id)).ToList();
+                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
                     if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
@@ -586,7 +502,10 @@ namespace Nop.Web.Factories
         /// Prepare the login model
         /// </summary>
         /// <param name="checkoutAsGuest">Whether to checkout as guest is enabled</param>
-        /// <returns>Login model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the login model
+        /// </returns>
         public virtual Task<LoginModel> PrepareLoginModelAsync(bool? checkoutAsGuest)
         {
             var model = new LoginModel
@@ -604,7 +523,10 @@ namespace Nop.Web.Factories
         /// Prepare the password recovery model
         /// </summary>
         /// <param name="model">Password recovery model</param>
-        /// <returns>Password recovery model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the password recovery model
+        /// </returns>
         public virtual Task<PasswordRecoveryModel> PreparePasswordRecoveryModelAsync(PasswordRecoveryModel model)
         {
             if (model == null)
@@ -620,7 +542,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="resultId">Value of UserRegistrationType enum</param>
         /// <param name="returnUrl">URL to redirect</param>
-        /// <returns>Register result model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the register result model
+        /// </returns>
         public virtual async Task<RegisterResultModel> PrepareRegisterResultModelAsync(int resultId, string returnUrl)
         {
             var resultText = (UserRegistrationType)resultId switch
@@ -645,7 +570,10 @@ namespace Nop.Web.Factories
         /// Prepare the customer navigation model
         /// </summary>
         /// <param name="selectedTabId">Identifier of the selected tab</param>
-        /// <returns>Customer navigation model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer navigation model
+        /// </returns>
         public virtual async Task<CustomerNavigationModel> PrepareCustomerNavigationModelAsync(int selectedTabId = 0)
         {
             var model = new CustomerNavigationModel();
@@ -654,7 +582,7 @@ namespace Nop.Web.Factories
             {
                 RouteName = "CustomerInfo",
                 Title = await _localizationService.GetResourceAsync("Account.CustomerInfo"),
-                Tab = CustomerNavigationEnum.Info,
+                Tab = (int)CustomerNavigationEnum.Info,
                 ItemClass = "customer-info"
             });
 
@@ -662,7 +590,7 @@ namespace Nop.Web.Factories
             {
                 RouteName = "CustomerAddresses",
                 Title = await _localizationService.GetResourceAsync("Account.CustomerAddresses"),
-                Tab = CustomerNavigationEnum.Addresses,
+                Tab = (int)CustomerNavigationEnum.Addresses,
                 ItemClass = "customer-addresses"
             });
 
@@ -670,19 +598,22 @@ namespace Nop.Web.Factories
             {
                 RouteName = "CustomerOrders",
                 Title = await _localizationService.GetResourceAsync("Account.CustomerOrders"),
-                Tab = CustomerNavigationEnum.Orders,
+                Tab = (int)CustomerNavigationEnum.Orders,
                 ItemClass = "customer-orders"
             });
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             if (_orderSettings.ReturnRequestsEnabled &&
-                (await _returnRequestService.SearchReturnRequestsAsync((await _storeContext.GetCurrentStoreAsync()).Id,
-                    (await _workContext.GetCurrentCustomerAsync()).Id, pageIndex: 0, pageSize: 1)).Any())
+                (await _returnRequestService.SearchReturnRequestsAsync(store.Id,
+                    customer.Id, pageIndex: 0, pageSize: 1)).Any())
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerReturnRequests",
                     Title = await _localizationService.GetResourceAsync("Account.CustomerReturnRequests"),
-                    Tab = CustomerNavigationEnum.ReturnRequests,
+                    Tab = (int)CustomerNavigationEnum.ReturnRequests,
                     ItemClass = "return-requests"
                 });
             }
@@ -693,7 +624,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerDownloadableProducts",
                     Title = await _localizationService.GetResourceAsync("Account.DownloadableProducts"),
-                    Tab = CustomerNavigationEnum.DownloadableProducts,
+                    Tab = (int)CustomerNavigationEnum.DownloadableProducts,
                     ItemClass = "downloadable-products"
                 });
             }
@@ -704,7 +635,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerBackInStockSubscriptions",
                     Title = await _localizationService.GetResourceAsync("Account.BackInStockSubscriptions"),
-                    Tab = CustomerNavigationEnum.BackInStockSubscriptions,
+                    Tab = (int)CustomerNavigationEnum.BackInStockSubscriptions,
                     ItemClass = "back-in-stock-subscriptions"
                 });
             }
@@ -715,7 +646,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerRewardPoints",
                     Title = await _localizationService.GetResourceAsync("Account.RewardPoints"),
-                    Tab = CustomerNavigationEnum.RewardPoints,
+                    Tab = (int)CustomerNavigationEnum.RewardPoints,
                     ItemClass = "reward-points"
                 });
             }
@@ -724,7 +655,7 @@ namespace Nop.Web.Factories
             {
                 RouteName = "CustomerChangePassword",
                 Title = await _localizationService.GetResourceAsync("Account.ChangePassword"),
-                Tab = CustomerNavigationEnum.ChangePassword,
+                Tab = (int)CustomerNavigationEnum.ChangePassword,
                 ItemClass = "change-password"
             });
 
@@ -734,7 +665,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerAvatar",
                     Title = await _localizationService.GetResourceAsync("Account.Avatar"),
-                    Tab = CustomerNavigationEnum.Avatar,
+                    Tab = (int)CustomerNavigationEnum.Avatar,
                     ItemClass = "customer-avatar"
                 });
             }
@@ -745,7 +676,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerForumSubscriptions",
                     Title = await _localizationService.GetResourceAsync("Account.ForumSubscriptions"),
-                    Tab = CustomerNavigationEnum.ForumSubscriptions,
+                    Tab = (int)CustomerNavigationEnum.ForumSubscriptions,
                     ItemClass = "forum-subscriptions"
                 });
             }
@@ -755,7 +686,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerProductReviews",
                     Title = await _localizationService.GetResourceAsync("Account.CustomerProductReviews"),
-                    Tab = CustomerNavigationEnum.ProductReviews,
+                    Tab = (int)CustomerNavigationEnum.ProductReviews,
                     ItemClass = "customer-reviews"
                 });
             }
@@ -765,7 +696,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CustomerVendorInfo",
                     Title = await _localizationService.GetResourceAsync("Account.VendorInfo"),
-                    Tab = CustomerNavigationEnum.VendorInfo,
+                    Tab = (int)CustomerNavigationEnum.VendorInfo,
                     ItemClass = "customer-vendor-info"
                 });
             }
@@ -775,7 +706,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "GdprTools",
                     Title = await _localizationService.GetResourceAsync("Account.Gdpr"),
-                    Tab = CustomerNavigationEnum.GdprTools,
+                    Tab = (int)CustomerNavigationEnum.GdprTools,
                     ItemClass = "customer-gdpr"
                 });
             }
@@ -786,7 +717,7 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "CheckGiftCardBalance",
                     Title = await _localizationService.GetResourceAsync("CheckGiftCardBalance"),
-                    Tab = CustomerNavigationEnum.CheckGiftCardBalance,
+                    Tab = (int)CustomerNavigationEnum.CheckGiftCardBalance,
                     ItemClass = "customer-check-gift-card-balance"
                 });
             }
@@ -797,12 +728,12 @@ namespace Nop.Web.Factories
                 {
                     RouteName = "MultiFactorAuthenticationSettings",
                     Title = await _localizationService.GetResourceAsync("PageTitle.MultiFactorAuthentication"),
-                    Tab = CustomerNavigationEnum.MultiFactorAuthentication,
+                    Tab = (int)CustomerNavigationEnum.MultiFactorAuthentication,
                     ItemClass = "customer-multiFactor-authentication"
                 });
             }
 
-            model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
+            model.SelectedTab = selectedTabId;
 
             return model;
         }
@@ -810,10 +741,15 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the customer address list model
         /// </summary>
-        /// <returns>Customer address list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer address list model
+        /// </returns>
         public virtual async Task<CustomerAddressListModel> PrepareCustomerAddressListModelAsync()
         {
-            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
                 //enabled for the current store
                 .WhereAwait(async a => a.CountryId == null || await _storeMappingService.AuthorizeAsync(await _countryService.GetCountryByAddressAsync(a)))
                 .ToListAsync();
@@ -835,11 +771,15 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the customer downloadable products model
         /// </summary>
-        /// <returns>Customer downloadable products model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer downloadable products model
+        /// </returns>
         public virtual async Task<CustomerDownloadableProductsModel> PrepareCustomerDownloadableProductsModelAsync()
         {
             var model = new CustomerDownloadableProductsModel();
-            var items = await _orderService.GetDownloadableOrderItemsAsync((await _workContext.GetCurrentCustomerAsync()).Id);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var items = await _orderService.GetDownloadableOrderItemsAsync(customer.Id);
             foreach (var item in items)
             {
                 var order = await _orderService.GetOrderByIdAsync(item.OrderId);
@@ -873,7 +813,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="orderItem">Order item</param>
         /// <param name="product">Product</param>
-        /// <returns>User agreement model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the user agreement model
+        /// </returns>
         public virtual Task<UserAgreementModel> PrepareUserAgreementModelAsync(OrderItem orderItem, Product product)
         {
             if (orderItem == null)
@@ -894,7 +837,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the change password model
         /// </summary>
-        /// <returns>Change password model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the change password model
+        /// </returns>
         public virtual Task<ChangePasswordModel> PrepareChangePasswordModelAsync()
         {
             var model = new ChangePasswordModel();
@@ -906,7 +852,10 @@ namespace Nop.Web.Factories
         /// Prepare the customer avatar model
         /// </summary>
         /// <param name="model">Customer avatar model</param>
-        /// <returns>Customer avatar model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer avatar model
+        /// </returns>
         public virtual async Task<CustomerAvatarModel> PrepareCustomerAvatarModelAsync(CustomerAvatarModel model)
         {
             if (model == null)
@@ -923,7 +872,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the GDPR tools model
         /// </summary>
-        /// <returns>GDPR tools model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR tools model
+        /// </returns>
         public virtual Task<GdprToolsModel> PrepareGdprToolsModelAsync()
         {
             var model = new GdprToolsModel();
@@ -934,7 +886,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the check gift card balance madel
         /// </summary>
-        /// <returns>Check gift card balance madel</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the check gift card balance madel
+        /// </returns>
         public virtual Task<CheckGiftCardBalanceModel> PrepareCheckGiftCardBalanceModelAsync()
         {
             var model = new CheckGiftCardBalanceModel();
@@ -946,7 +901,10 @@ namespace Nop.Web.Factories
         /// Prepare the multi-factor authentication model
         /// </summary>
         /// <param name="model">Multi-factor authentication model</param>
-        /// <returns>Multi-factor authentication model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the multi-factor authentication model
+        /// </returns>
         public virtual async Task<MultiFactorAuthenticationModel> PrepareMultiFactorAuthenticationModelAsync(MultiFactorAuthenticationModel model)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
@@ -954,7 +912,8 @@ namespace Nop.Web.Factories
             model.IsEnabled = !string.IsNullOrEmpty(
                 await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute));
 
-            var multiFactorAuthenticationProviders = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id)).ToList();
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var multiFactorAuthenticationProviders = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, store.Id)).ToList();
             foreach (var multiFactorAuthenticationProvider in multiFactorAuthenticationProviders)
             {
                 var providerModel = new MultiFactorAuthenticationProviderModel();
@@ -971,13 +930,17 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="providerModel">Multi-factor authentication provider model</param>
         /// <param name="sysName">Multi-factor authentication provider system name</param>
-        /// <returns>Multi-factor authentication model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the multi-factor authentication model
+        /// </returns>
         public virtual async Task<MultiFactorAuthenticationProviderModel> PrepareMultiFactorAuthenticationProviderModelAsync(MultiFactorAuthenticationProviderModel providerModel, string sysName, bool isLogin = false)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var selectedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+            var store = await _storeContext.GetCurrentStoreAsync();
 
-            var multiFactorAuthenticationProvider = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id))
+            var multiFactorAuthenticationProvider = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, store.Id))
                     .FirstOrDefault(provider => provider.PluginDescriptor.SystemName == sysName);
 
             if (multiFactorAuthenticationProvider != null)
@@ -991,6 +954,109 @@ namespace Nop.Web.Factories
             }
 
             return providerModel;
+        }
+
+        /// <summary>
+        /// Prepare the custom customer attribute models
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="overrideAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of the customer attribute model
+        /// </returns>
+        public virtual async Task<IList<CustomerAttributeModel>> PrepareCustomCustomerAttributesAsync(Customer customer, string overrideAttributesXml = "")
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var result = new List<CustomerAttributeModel>();
+
+            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributesAsync();
+            foreach (var attribute in customerAttributes)
+            {
+                var attributeModel = new CustomerAttributeModel
+                {
+                    Id = attribute.Id,
+                    Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name),
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType,
+                };
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        var valueModel = new CustomerAttributeValueModel
+                        {
+                            Id = attributeValue.Id,
+                            Name = await _localizationService.GetLocalizedAsync(attributeValue, x => x.Name),
+                            IsPreSelected = attributeValue.IsPreSelected
+                        };
+                        attributeModel.Values.Add(valueModel);
+                    }
+                }
+
+                //set already selected attributes
+                var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
+                    overrideAttributesXml :
+                    await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.Checkboxes:
+                        {
+                            if (!string.IsNullOrEmpty(selectedAttributesXml))
+                            {
+                                if (!_customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id).Any())
+                                    break;
+
+                                //clear default selection                                
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
+
+                                //select new values
+                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesAsync(selectedAttributesXml);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!string.IsNullOrEmpty(selectedAttributesXml))
+                            {
+                                var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.FileUpload:
+                    default:
+                        //not supported attribute control types
+                        break;
+                }
+
+                result.Add(attributeModel);
+            }
+
+            return result;
         }
 
         #endregion

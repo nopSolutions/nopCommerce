@@ -4,9 +4,12 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
 using Nop.Services.Blogs;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
+using Nop.Services.Helpers;
 using Nop.Web.Factories;
 using Nop.Web.Models.Blogs;
 using NUnit.Framework;
@@ -18,6 +21,8 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
     {
         private IBlogModelFactory _blogModelFactory;
         private IBlogService _blogService;
+        private ICustomerService _customerService;
+        private IDateTimeHelper _dateTimeHelper;
         private CustomerSettings _customerSettings;
         private CaptchaSettings _captchaSettings;
         private BlogSettings _blogSettings;
@@ -28,6 +33,8 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         {
             _blogModelFactory = GetService<IBlogModelFactory>();
             _blogService = GetService<IBlogService>();
+            _customerService = GetService<ICustomerService>();
+            _dateTimeHelper = GetService<IDateTimeHelper>();
             _customerSettings = GetService<CustomerSettings>();
             _captchaSettings = GetService<CaptchaSettings>();
             _blogSettings = GetService<BlogSettings>();
@@ -75,7 +82,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.MetaTitle.Should().Be(blogPost.MetaTitle);
             model.MetaDescription.Should().Be(blogPost.MetaDescription);
             model.MetaKeywords.Should().Be(blogPost.MetaKeywords);
-            model.SeName = model.Title.Replace(" ", "-").ToLower();
+            model.SeName = model.Title.Replace(" ", "-").ToLowerInvariant();
             model.Title.Should().Be(blogPost.Title);
             model.Body.Should().Be(blogPost.Body);
             model.BodyOverview.Should().Be(blogPost.BodyOverview);
@@ -98,7 +105,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.MetaTitle.Should().Be(blogPost.MetaTitle);
             model.MetaDescription.Should().Be(blogPost.MetaDescription);
             model.MetaKeywords.Should().Be(blogPost.MetaKeywords);
-            model.SeName = model.Title.Replace(" ", "-").ToLower();
+            model.SeName = model.Title.Replace(" ", "-").ToLowerInvariant();
             model.Title.Should().Be(blogPost.Title);
             model.Body.Should().Be(blogPost.Body);
             model.BodyOverview.Should().Be(blogPost.BodyOverview);
@@ -218,6 +225,61 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
 
             month.BlogPostCount.Should().Be(2);
             month.Month.Should().Be(date.Month);
+        }
+
+        [Test]
+        public void PrepareBlogPostCommentModelShouldRaiseExceptionIfBlogCommentIsNull()
+        {
+            Assert.Throws<AggregateException>(() =>
+                _blogModelFactory.PrepareBlogPostCommentModelAsync(null).Wait());
+        }
+
+        [Test]
+        public async Task PrepareBlogPostCommentCustomerAvatarUrlShouldNotBeNullIfAllowCustomersToUploadAvatarsIsTrue()
+        {
+            var blogComment = await _blogService.GetBlogCommentByIdAsync(1);
+            _customerSettings.AllowCustomersToUploadAvatars = true;
+            await _settingsService.SaveSettingAsync(_customerSettings);
+            var blogModelFactory = GetService<IBlogModelFactory>();
+            var model = await blogModelFactory.PrepareBlogPostCommentModelAsync(blogComment);
+            _customerSettings.AllowCustomersToUploadAvatars = false;
+            await _settingsService.SaveSettingAsync(_customerSettings);
+
+            model.CustomerAvatarUrl.Should().NotBeNullOrEmpty();
+            model.CustomerAvatarUrl.Should()
+                .Be($"http://{NopTestsDefaults.HostIpAddress}/images/thumbs/default-avatar_{GetService<MediaSettings>().AvatarPictureSize}.jpg");
+        }
+
+        [Test]
+        public async Task PrepareBlogPostCommentCustomerAllowViewingProfilesShouldBeDependOnSettings()
+        {
+            var blogComment = await _blogService.GetBlogCommentByIdAsync(1);
+            var model = await _blogModelFactory.PrepareBlogPostCommentModelAsync(blogComment);
+            model.AllowViewingProfiles.Should().BeFalse();
+            _customerSettings.AllowViewingProfiles = true;
+            await _settingsService.SaveSettingAsync(_customerSettings);
+            var blogModelFactory = GetService<IBlogModelFactory>();
+            model = await blogModelFactory.PrepareBlogPostCommentModelAsync(blogComment);
+            _customerSettings.AllowViewingProfiles = false;
+            await _settingsService.SaveSettingAsync(_customerSettings);
+            model.AllowViewingProfiles.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task CanPrepareBlogPostComment()
+        {
+            var blogComment = await _blogService.GetBlogCommentByIdAsync(1);
+            var model = await _blogModelFactory.PrepareBlogPostCommentModelAsync(blogComment);
+
+            var customer = await _customerService.GetCustomerByIdAsync(1);
+
+            model.Id.Should().Be(blogComment.Id);
+            model.CustomerId.Should().Be(blogComment.CustomerId);
+            model.CustomerName.Should().Be(await _customerService.FormatUsernameAsync(customer));
+            model.CommentText.Should().Be(blogComment.CommentText);
+            model.CreatedOn.Should().Be(await _dateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc));
+            model.AllowViewingProfiles.Should().BeFalse();
+            model.CustomerAvatarUrl.Should().BeNull();
         }
     }
 }

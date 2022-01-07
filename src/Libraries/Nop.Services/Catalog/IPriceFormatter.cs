@@ -13,7 +13,10 @@ namespace Nop.Services.Catalog
         /// Formats the price
         /// </summary>
         /// <param name="price">Price</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatPriceAsync(decimal price);
 
         /// <summary>
@@ -22,7 +25,10 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatPriceAsync(decimal price, bool showCurrency, Currency targetCurrency);
 
         /// <summary>
@@ -31,7 +37,10 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatPriceAsync(decimal price, bool showCurrency, bool showTax);
 
         /// <summary>
@@ -42,7 +51,10 @@ namespace Nop.Services.Catalog
         /// <param name="currencyCode">Currency code</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <param name="languageId">Language</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatPriceAsync(decimal price, bool showCurrency,
             string currencyCode, bool showTax, int languageId);
 
@@ -57,7 +69,10 @@ namespace Nop.Services.Catalog
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatOrderPriceAsync(decimal price, 
             decimal currencyRate, string customerCurrencyCode, bool displayCustomerCurrency,
             Currency primaryStoreCurrency, int languageId, bool? priceIncludesTax = null, bool? showTax = null);
@@ -70,7 +85,10 @@ namespace Nop.Services.Catalog
         /// <param name="currencyCode">Currency code</param>
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatPriceAsync(decimal price, bool showCurrency,
             string currencyCode, int languageId, bool priceIncludesTax);
 
@@ -82,7 +100,10 @@ namespace Nop.Services.Catalog
         /// <param name="targetCurrency">Target currency</param>
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatPriceAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax);
 
@@ -95,7 +116,10 @@ namespace Nop.Services.Catalog
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatPriceAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax);
 
@@ -104,7 +128,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="price">Price</param>
-        /// <returns>Rental product price with period</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rental product price with period
+        /// </returns>
         Task<string> FormatRentalProductPeriodAsync(Product product, string price);
 
         /// <summary>
@@ -112,7 +139,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency);
 
         /// <summary>
@@ -123,7 +153,10 @@ namespace Nop.Services.Catalog
         /// <param name="targetCurrency">Target currency</param>
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax);
 
@@ -135,7 +168,10 @@ namespace Nop.Services.Catalog
         /// <param name="currencyCode">Currency code</param>
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency,
             string currencyCode, int languageId, bool priceIncludesTax);
 
@@ -144,7 +180,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency);
 
         /// <summary>
@@ -155,7 +194,10 @@ namespace Nop.Services.Catalog
         /// <param name="targetCurrency">Target currency</param>
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax);
 
@@ -167,11 +209,13 @@ namespace Nop.Services.Catalog
         /// <param name="currencyCode">Currency code</param>
         /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price
+        /// </returns>
         Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency,
             string currencyCode, int languageId, bool priceIncludesTax);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats a tax rate
         /// </summary>
@@ -185,7 +229,10 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
         /// <param name="totalWeight">Total weight of product (with attribute weight adjustment). Pass null if you want to use a default produce weight</param>
-        /// <returns>Base price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the base price
+        /// </returns>
         Task<string> FormatBasePriceAsync(Product product, decimal? productPrice, decimal? totalWeight = null);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Nop.Core.Caching;
+﻿using System.Collections.Generic;
+using Nop.Core.Caching;
 
 namespace Nop.Services.Seo
 {
@@ -22,6 +23,40 @@ namespace Nop.Services.Seo
         /// "the specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters", 
         /// that's why we limit it to 200</remarks>
         public static int SearchEngineNameLength => 200;
+
+        /// <summary>
+        /// Gets a default list of slugs (sename) reserved for some other needs
+        /// </summary>
+        public static List<string> ReservedUrlRecordSlugs => new()
+        {
+            //routes that redirected customers to the specific actions
+            "admin",
+            "blog",
+            "boards",
+            "cart",
+            "checkout",
+            "clearcomparelist",
+            "compareproducts",
+            "contactus",
+            "emailwishlist",
+            "install",
+            "login",
+            "logout",
+            "multi-factor-verification",
+            "newproducts",
+            "news",
+            "onepagecheckout",
+            "page-not-found",
+            "passwordrecovery",
+            "privatemessages",
+            "profile",
+            "recentlyviewedproducts",
+            "register",
+            "search",
+            "sitemap",
+            "storeclosed",
+            "wishlist",
+        };
 
         #region Sitemap
 
@@ -47,7 +82,7 @@ namespace Nop.Services.Seo
         /// {1} : entity name
         /// {2} : language ID
         /// </remarks>
-        public static CacheKey UrlRecordCacheKey => new CacheKey("Nop.urlrecord.{0}-{1}-{2}");
+        public static CacheKey UrlRecordCacheKey => new("Nop.urlrecord.{0}-{1}-{2}");
 
         /// <summary>
         /// Gets a key for caching
@@ -55,7 +90,7 @@ namespace Nop.Services.Seo
         /// <remarks>
         /// {0} : slug
         /// </remarks>
-        public static CacheKey UrlRecordBySlugCacheKey => new CacheKey("Nop.urlrecord.byslug.{0}");
+        public static CacheKey UrlRecordBySlugCacheKey => new("Nop.urlrecord.byslug.{0}");
 
         #endregion
     }

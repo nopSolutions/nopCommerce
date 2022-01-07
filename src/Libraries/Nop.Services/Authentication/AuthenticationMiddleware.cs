@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -46,7 +45,7 @@ namespace Nop.Services.Authentication
         /// Invoke middleware actions
         /// </summary>
         /// <param name="context">HTTP context</param>
-        /// <returns>Task</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task InvokeAsync(HttpContext context)
         {
             context.Features.Set<IAuthenticationFeature>(new AuthenticationFeature
@@ -66,7 +65,7 @@ namespace Nop.Services.Authentication
                 }
                 catch (Exception ex)
                 {
-                    if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                    if (!DataSettingsManager.IsDatabaseInstalled())
                         continue;
 
                     var externalAuthenticationSettings =

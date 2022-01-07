@@ -15,7 +15,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="page">Number of items page; pass null to disable paging</param>
         /// <param name="tab">Tab name</param>
-        /// <returns>Private message index model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the private message index model
+        /// </returns>
         Task<PrivateMessageIndexModel> PreparePrivateMessageIndexModelAsync(int? page, string tab);
 
         /// <summary>
@@ -23,7 +26,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="page">Number of items page</param>
         /// <param name="tab">Tab name</param>
-        /// <returns>Private message list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the private message list model
+        /// </returns>
         Task<PrivateMessageListModel> PrepareInboxModelAsync(int page, string tab);
 
         /// <summary>
@@ -31,7 +37,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="page">Number of items page</param>
         /// <param name="tab">Tab name</param>
-        /// <returns>Private message list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the private message list model
+        /// </returns>
         Task<PrivateMessageListModel> PrepareSentModelAsync(int page, string tab);
 
         /// <summary>
@@ -39,7 +48,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="customerTo">Customer, recipient of the message</param>
         /// <param name="replyToPM">Private message, pass if reply to a previous message is need</param>
-        /// <returns>Send private message model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the send private message model
+        /// </returns>
         Task<SendPrivateMessageModel> PrepareSendPrivateMessageModelAsync(Customer customerTo,
             PrivateMessage replyToPM);
 
@@ -47,7 +59,10 @@ namespace Nop.Web.Factories
         /// Prepare the private message model
         /// </summary>
         /// <param name="pm">Private message</param>
-        /// <returns>Private message model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the private message model
+        /// </returns>
         Task<PrivateMessageModel> PreparePrivateMessageModelAsync(PrivateMessage pm);
     }
 }

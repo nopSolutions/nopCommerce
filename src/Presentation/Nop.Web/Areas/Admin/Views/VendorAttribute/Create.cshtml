@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Vendors.VendorAttributes.AddNew").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Vendor and user settings");
+    NopHtml.SetActiveMenuItemSystemName("Vendor and user settings");
 }
 
 <form asp-controller="VendorAttribute" asp-action="Create" method="post" id="vendorattribute-form">
@@ -25,7 +25,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AdminVendorAttributeDetailsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AdminVendorAttributeDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

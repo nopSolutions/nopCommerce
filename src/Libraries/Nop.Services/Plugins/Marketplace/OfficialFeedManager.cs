@@ -52,7 +52,10 @@ namespace Nop.Services.Plugins.Marketplace
         /// <summary>
         /// Get available categories of marketplace extensions
         /// </summary>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IList<OfficialFeedCategory>> GetCategoriesAsync()
         {
             //load XML
@@ -78,7 +81,10 @@ namespace Nop.Services.Plugins.Marketplace
         /// <summary>
         /// Get available versions of marketplace extensions
         /// </summary>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IList<OfficialFeedVersion>> GetVersionsAsync()
         {
             //load XML
@@ -109,7 +115,10 @@ namespace Nop.Services.Plugins.Marketplace
         /// <param name="searchTerm">Search term</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Plugins</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the plugins
+        /// </returns>
         public virtual async Task<IPagedList<OfficialFeedPlugin>> GetAllPluginsAsync(int categoryId = 0,
             int versionId = 0, int price = 0, string searchTerm = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -136,7 +145,7 @@ namespace Nop.Services.Plugins.Marketplace
                 Price = GetElementValue(node, @"price")
             }).ToList();
 
-            int.TryParse(GetElementValue(xml.SelectNodes(@"//totalRecords")?[0], @"value"), out var totalRecords);
+            _ = int.TryParse(GetElementValue(xml.SelectNodes(@"//totalRecords")?[0], @"value"), out var totalRecords);
 
             return new PagedList<OfficialFeedPlugin>(list, pageIndex, pageSize, totalRecords);
         }

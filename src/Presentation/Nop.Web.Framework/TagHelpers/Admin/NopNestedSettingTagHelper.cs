@@ -17,6 +17,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         #region Constants
 
         private const string FOR_ATTRIBUTE_NAME = "asp-for";
+        private const string IS_CONDITION_INVERT = "is-condition-invert";
+        private const string DISABLE_AUTOGENERATION = "disable-auto-generation";
 
         #endregion
 
@@ -29,6 +31,18 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
         public ModelExpression For { get; set; }
+
+        /// <summary>
+        /// Is condition inverted
+        /// </summary>
+        [HtmlAttributeName(IS_CONDITION_INVERT)]
+        public bool IsConditionInvert { get; set; }
+
+        /// <summary>
+        /// Disable auto-generation js script
+        /// </summary>
+        [HtmlAttributeName(DISABLE_AUTOGENERATION)]
+        public bool DisableAutoGeneration { get; set; }
 
         /// <summary>
         /// ViewContext
@@ -55,6 +69,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         /// <param name="context">Contains information associated with the current HTML tag</param>
         /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
@@ -80,10 +95,33 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //use javascript
             var script = new TagBuilder("script");
+
+            var isNot = IsConditionInvert ? "!" : "";
+
             script.InnerHtml.AppendHtml(
                 "$(document).ready(function () {" +
-                    $"initNestedSetting('{parentSettingName}', '{parentSettingId}', '{nestedSettingId}');" +
-                "});");
+                    $"initNestedSetting('{parentSettingName}', '{parentSettingId}', '{nestedSettingId}');"
+            );
+
+            if (!DisableAutoGeneration)
+                script.InnerHtml.AppendHtml(
+                    $"$('#{parentSettingName}').click(toggle_{parentSettingName});" +
+                    $"toggle_{parentSettingName}();"
+                );
+
+            script.InnerHtml.AppendHtml("});");
+
+            if (!DisableAutoGeneration)
+                script.InnerHtml.AppendHtml(
+                    $"function toggle_{parentSettingName}() " + "{" +
+                        $"if ({isNot}$('#{parentSettingName}').is(':checked')) " + "{" +
+                            $"$('#{nestedSettingId}').showElement();" +
+                        "} else {" +
+                            $"$('#{nestedSettingId}').hideElement();" +
+                        "}" +
+                    "}"
+                );
+
             var scriptTag = await script.RenderHtmlContentAsync();
             output.PreContent.SetHtmlContent(scriptTag);
         }

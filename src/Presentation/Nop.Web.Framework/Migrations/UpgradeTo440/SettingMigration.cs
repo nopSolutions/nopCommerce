@@ -11,11 +11,11 @@ using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
+using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
-    [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Settings)]
-    [SkipMigrationOnInstall]
+    [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -57,13 +57,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                     setting.Name == "securitysettings.pluginstaticfileextensionsBlacklist")
                 .Wait();
 
+            //#5384
             var seoSettings = settingService.LoadSettingAsync<SeoSettings>().Result;
-            var newUrlRecord = "products";
-            if (!seoSettings.ReservedUrlRecordSlugs.Contains(newUrlRecord))
+            foreach (var slug in NopSeoDefaults.ReservedUrlRecordSlugs)
             {
-                seoSettings.ReservedUrlRecordSlugs.Add(newUrlRecord);
-                settingService.SaveSettingAsync(seoSettings).Wait();
+                if (!seoSettings.ReservedUrlRecordSlugs.Contains(slug))
+                    seoSettings.ReservedUrlRecordSlugs.Add(slug);
             }
+            settingService.SaveSettingAsync(seoSettings).Wait();
 
             //#3015
             if (!settingService.SettingExistsAsync(seoSettings, settings => settings.HomepageTitle).Result)
@@ -132,9 +133,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 settingService.SaveSettingAsync(catalogSettings).Wait();
             }
 
-            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPageAutomaticallyCalculatePriceRange).Result)
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPageManuallyPriceRange).Result)
             {
-                catalogSettings.SearchPageAutomaticallyCalculatePriceRange = true;
+                catalogSettings.SearchPageManuallyPriceRange = false;
                 settingService.SaveSettingAsync(catalogSettings).Wait();
             }
 
@@ -156,9 +157,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 settingService.SaveSettingAsync(catalogSettings).Wait();
             }
 
-            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductsByTagAutomaticallyCalculatePriceRange).Result)
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductsByTagManuallyPriceRange).Result)
             {
-                catalogSettings.ProductsByTagAutomaticallyCalculatePriceRange = true;
+                catalogSettings.ProductsByTagManuallyPriceRange = false;
                 settingService.SaveSettingAsync(catalogSettings).Wait();
             }
 
@@ -175,6 +176,17 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             {
                 catalogSettings.AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay;
                 settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            //#5482
+            settingService.SetSettingAsync("avalarataxsettings.gettaxratebyaddressonly", true).Wait();
+            settingService.SetSettingAsync("avalarataxsettings.taxratebyaddresscachetime", 480).Wait();
+
+            //#5349
+            if (!settingService.SettingExistsAsync(shippingSettings, settings => settings.EstimateShippingCityNameEnabled).Result)
+            {
+                shippingSettings.EstimateShippingCityNameEnabled = false;
+                settingService.SaveSettingAsync(shippingSettings).Wait();
             }
         }
 

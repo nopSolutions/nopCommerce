@@ -1,12 +1,12 @@
 ﻿@model CheckoutShippingMethodModel
-@{
-    Context.Items["nop.IgnoreScriptTagLocation"] = true;
-}
 
 <div class="checkout-data">
     @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
     {
-        @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel)
+        @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel, new ViewDataDictionary(ViewData)
+                                {
+                                    { "scriptLocation", ResourceLocation.None }
+                                })
         <script>
             $(document).ready(function () {
                 $(document).unbind('checkout_toggle_pickup_in_store');
@@ -22,7 +22,7 @@
     @if (Model.PickupPointsModel == null || !Model.PickupPointsModel.PickupInStoreOnly)
     {
         <div class="section shipping-method" id="shipping-methods-form">
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodTop })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodTop, additionalData = Model })
             @if (Model.Warnings.Count == 0)
             {
                 <ul class="method-list">
@@ -61,7 +61,7 @@
                     </ul>
                 </div>
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodBottom })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodBottom, additionalData = Model })
         </div>
     }
 </div>

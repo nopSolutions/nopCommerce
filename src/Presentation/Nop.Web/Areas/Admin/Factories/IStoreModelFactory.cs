@@ -13,14 +13,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare store search model
         /// </summary>
         /// <param name="searchModel">Store search model</param>
-        /// <returns>Store search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store search model
+        /// </returns>
         Task<StoreSearchModel> PrepareStoreSearchModelAsync(StoreSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged store list model
         /// </summary>
         /// <param name="searchModel">Store search model</param>
-        /// <returns>Store list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store list model
+        /// </returns>
         Task<StoreListModel> PrepareStoreListModelAsync(StoreSearchModel searchModel);
 
         /// <summary>
@@ -29,7 +35,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Store model</param>
         /// <param name="store">Store</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Store model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store model
+        /// </returns>
         Task<StoreModel> PrepareStoreModelAsync(StoreModel model, Store store, bool excludeProperties = false);
     }
 }

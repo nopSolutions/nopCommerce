@@ -192,6 +192,53 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
+        /// Prepares the shipment model
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <param name="model">Predefined shipment model if any</param>
+        /// <returns>The <see cref="Task"/> containing the <see cref="ShipmentModel"/></returns>
+        protected virtual async Task<ShipmentModel> PrepareShipmentModelAsync(Shipment shipment, ShipmentModel model = null)
+        {
+            //fill in model values from the entity
+            var shipmentModel = model ?? shipment.ToModel<ShipmentModel>();
+
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
+
+            shipmentModel.PickupInStore = order.PickupInStore;
+            shipmentModel.CustomOrderNumber = order.CustomOrderNumber;
+
+            //convert dates to the user time
+            if (order.PickupInStore)
+            {
+                shipmentModel.ShippedDate = await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DateNotAvailable");
+                shipmentModel.ReadyForPickupDate = shipment.ReadyForPickupDateUtc.HasValue
+                    ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ReadyForPickupDateUtc.Value, DateTimeKind.Utc)).ToString()
+                    : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.ReadyForPickupDate.NotYet");
+            }
+            else
+            {
+                shipmentModel.ReadyForPickupDate = await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DateNotAvailable");
+                shipmentModel.ShippedDate = shipment.ShippedDateUtc.HasValue
+                    ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc)).ToString()
+                    : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.ShippedDate.NotYet");
+            }
+
+            shipmentModel.DeliveryDate = shipment.DeliveryDateUtc.HasValue
+                ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc)).ToString()
+                : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DeliveryDate.NotYet");
+
+            //fill in additional values (not existing in the entity)
+            shipmentModel.CanShip = !order.PickupInStore && !shipment.ShippedDateUtc.HasValue;
+            shipmentModel.CanMarkAsReadyForPickup = order.PickupInStore && !shipment.ReadyForPickupDateUtc.HasValue;
+            shipmentModel.CanDeliver = (shipment.ShippedDateUtc.HasValue || shipment.ReadyForPickupDateUtc.HasValue) && !shipment.DeliveryDateUtc.HasValue;
+
+            if (shipment.TotalWeight.HasValue)
+                shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{(await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name}]";
+
+            return shipmentModel;
+        }
+
+        /// <summary>
         /// Set some address fields as required
         /// </summary>
         /// <param name="model">Address model</param>
@@ -215,6 +262,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of order item models</param>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareOrderItemModelsAsync(IList<OrderItemModel> models, Order order)
         {
             if (models == null)
@@ -226,7 +274,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
 
             //get order items
-            var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0);
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: vendor?.Id ?? 0);
 
             foreach (var orderItem in orderItems)
             {
@@ -327,6 +376,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of return request brief models</param>
         /// <param name="orderItem">Order item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareReturnRequestBriefModelsAsync(IList<OrderItemModel.ReturnRequestBriefModel> models, OrderItem orderItem)
         {
             if (models == null)
@@ -351,6 +401,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Order model</param>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareOrderModelTotalsAsync(OrderModel model, Order order)
         {
             if (model == null)
@@ -502,6 +553,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Order model</param>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareOrderModelPaymentInfoAsync(OrderModel model, Order order)
         {
             if (model == null)
@@ -581,6 +633,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Order model</param>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareOrderModelShippingInfoAsync(OrderModel model, Order order)
         {
             if (model == null)
@@ -631,6 +684,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="models">List of product attribute models</param>
         /// <param name="order">Order</param>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareProductAttributeModelsAsync(IList<AddProductToOrderModel.ProductAttributeModel> models, Order order, Product product)
         {
             if (models == null)
@@ -711,6 +765,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Shipment item model</param>
         /// <param name="orderItem">Order item</param>
         /// <param name="product">Product item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareShipmentItemModelAsync(ShipmentItemModel model, OrderItem orderItem, Product product)
         {
             if (model == null)
@@ -733,7 +788,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AttributeInfo = orderItem.AttributeDescription;
             model.ShipSeparately = product.ShipSeparately;
             model.QuantityOrdered = orderItem.Quantity;
-            model.QuantityInAllShipments = await _orderService.GetTotalNumberOfItemsInAllShipmentAsync(orderItem);
+            model.QuantityInAllShipments = await _orderService.GetTotalNumberOfItemsInAllShipmentsAsync(orderItem);
             model.QuantityToAdd = await _orderService.GetTotalNumberOfItemsCanBeAddedToShipmentAsync(orderItem);
 
             var baseWeight = (await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name;
@@ -758,13 +813,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of shipment status event models</param>
         /// <param name="shipment">Shipment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareShipmentStatusEventModelsAsync(IList<ShipmentStatusEventModel> models, Shipment shipment)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
             var shipmentTracker = await _shipmentService.GetShipmentTrackerAsync(shipment);
-            var shipmentEvents = await shipmentTracker.GetShipmentEventsAsync(shipment.TrackingNumber);
+            var shipmentEvents = await shipmentTracker?.GetShipmentEventsAsync(shipment.TrackingNumber, shipment);
             if (shipmentEvents == null)
                 return;
 
@@ -772,6 +828,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 var shipmentStatusEventModel = new ShipmentStatusEventModel
                 {
+                    Status = shipmentEvent.Status,
                     Date = shipmentEvent.Date,
                     EventName = shipmentEvent.EventName,
                     Location = shipmentEvent.Location
@@ -854,7 +911,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare order search model
         /// </summary>
         /// <param name="searchModel">Order search model</param>
-        /// <returns>Order search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order search model
+        /// </returns>
         public virtual async Task<OrderSearchModel> PrepareOrderSearchModelAsync(OrderSearchModel searchModel)
         {
             if (searchModel == null)
@@ -934,7 +994,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged order list model
         /// </summary>
         /// <param name="searchModel">Order search model</param>
-        /// <returns>Order list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order list model
+        /// </returns>
         public virtual async Task<OrderListModel> PrepareOrderListModelAsync(OrderSearchModel searchModel)
         {
             if (searchModel == null)
@@ -944,14 +1007,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
             var paymentStatusIds = (searchModel.PaymentStatusIds?.Contains(0) ?? true) ? null : searchModel.PaymentStatusIds.ToList();
             var shippingStatusIds = (searchModel.ShippingStatusIds?.Contains(0) ?? true) ? null : searchModel.ShippingStatusIds.ToList();
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.VendorId = currentVendor.Id;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId);
-            var filterByProductId = product != null && (await _workContext.GetCurrentVendorAsync() == null || product.VendorId == (await _workContext.GetCurrentVendorAsync()).Id)
+            var filterByProductId = product != null && (currentVendor == null || product.VendorId == currentVendor.Id)
                 ? searchModel.ProductId : 0;
 
             //get orders
@@ -1014,24 +1078,31 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare order aggregator model
         /// </summary>
         /// <param name="searchModel">Order search model</param>
-        /// <returns>Order aggregator model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order aggregator model
+        /// </returns>
         public virtual async Task<OrderAggreratorModel> PrepareOrderAggregatorModelAsync(OrderSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            if (!_orderSettings.DisplayOrderSummary)
+                return null;
+
             //get parameters to filter orders
             var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
             var paymentStatusIds = (searchModel.PaymentStatusIds?.Contains(0) ?? true) ? null : searchModel.PaymentStatusIds.ToList();
             var shippingStatusIds = (searchModel.ShippingStatusIds?.Contains(0) ?? true) ? null : searchModel.ShippingStatusIds.ToList();
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.VendorId = currentVendor.Id;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId);
-            var filterByProductId = product != null && (await _workContext.GetCurrentVendorAsync() == null || product.VendorId == (await _workContext.GetCurrentVendorAsync()).Id)
+            var filterByProductId = product != null && (currentVendor == null || product.VendorId == currentVendor.Id)
                 ? searchModel.ProductId : 0;
 
             //prepare additional model data
@@ -1091,7 +1162,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Order model</param>
         /// <param name="order">Order</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Order model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order model
+        /// </returns>
         public virtual async Task<OrderModel> PrepareOrderModelAsync(OrderModel model, Order order, bool excludeProperties = false)
         {
             if (order != null)
@@ -1155,7 +1229,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Upload license model</param>
         /// <param name="order">Order</param>
         /// <param name="orderItem">Order item</param>
-        /// <returns>Upload license model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the upload license model
+        /// </returns>
         public virtual Task<UploadLicenseModel> PrepareUploadLicenseModelAsync(UploadLicenseModel model, Order order, OrderItem orderItem)
         {
             if (model == null)
@@ -1179,7 +1256,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product search model to add to the order</param>
         /// <param name="order">Order</param>
-        /// <returns>Product search model to add to the order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product search model to add to the order
+        /// </returns>
         public virtual async Task<AddProductToOrderSearchModel> PrepareAddProductToOrderSearchModelAsync(AddProductToOrderSearchModel searchModel, Order order)
         {
             if (searchModel == null)
@@ -1210,7 +1290,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product search model to add to the order</param>
         /// <param name="order">Order</param>
-        /// <returns>Product search model to add to the order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product search model to add to the order
+        /// </returns>
         public virtual async Task<AddProductToOrderListModel> PrepareAddProductToOrderListModelAsync(AddProductToOrderSearchModel searchModel, Order order)
         {
             if (searchModel == null)
@@ -1247,7 +1330,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Product model to add to the order</param>
         /// <param name="order">Order</param>
         /// <param name="product">Product</param>
-        /// <returns>Product model to add to the order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product model to add to the order
+        /// </returns>
         public virtual async Task<AddProductToOrderModel> PrepareAddProductToOrderModelAsync(AddProductToOrderModel model, Order order, Product product)
         {
             if (model == null)
@@ -1296,7 +1382,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Order address model</param>
         /// <param name="order">Order</param>
         /// <param name="address">Address</param>
-        /// <returns>Order address model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order address model
+        /// </returns>
         public virtual async Task<OrderAddressModel> PrepareOrderAddressModelAsync(OrderAddressModel model, Order order, Address address)
         {
             if (model == null)
@@ -1322,7 +1411,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare shipment search model
         /// </summary>
         /// <param name="searchModel">Shipment search model</param>
-        /// <returns>Shipment search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment search model
+        /// </returns>
         public virtual async Task<ShipmentSearchModel> PrepareShipmentSearchModelAsync(ShipmentSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1350,14 +1442,18 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged shipment list model
         /// </summary>
         /// <param name="searchModel">Shipment search model</param>
-        /// <returns>Shipment list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment list model
+        /// </returns>
         public virtual async Task<ShipmentListModel> PrepareShipmentListModelAsync(ShipmentSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get parameters to filter shipments
-            var vendorId = (await _workContext.GetCurrentVendorAsync())?.Id ?? 0;
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            var vendorId = vendor?.Id ?? 0;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
@@ -1372,6 +1468,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.City,
                 searchModel.TrackingNumber,
                 searchModel.LoadNotShipped,
+                searchModel.LoadNotReadyForPickup,
                 searchModel.LoadNotDelivered,
                 0,
                 startDateValue,
@@ -1383,32 +1480,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new ShipmentListModel().PrepareToGridAsync(searchModel, shipments, () =>
             {
                 //fill in model values from the entity
-                return shipments.SelectAwait(async shipment =>
-                {
-                    //fill in model values from the entity
-                    var shipmentModel = shipment.ToModel<ShipmentModel>();
-
-                    //convert dates to the user time
-                    shipmentModel.ShippedDate = shipment.ShippedDateUtc.HasValue
-                        ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc)).ToString()
-                        : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.ShippedDate.NotYet");
-                    shipmentModel.DeliveryDate = shipment.DeliveryDateUtc.HasValue
-                        ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc)).ToString()
-                        : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DeliveryDate.NotYet");
-
-                    //fill in additional values (not existing in the entity)
-                    shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
-                    shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
-
-                    var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-
-                    shipmentModel.CustomOrderNumber = order.CustomOrderNumber;
-
-                    if (shipment.TotalWeight.HasValue)
-                        shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{(await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name}]";
-
-                    return shipmentModel;
-                });
+                return shipments.SelectAwait(async shipment => await PrepareShipmentModelAsync(shipment));
             });
 
             return model;
@@ -1421,32 +1493,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="shipment">Shipment</param>
         /// <param name="order">Order</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Shipment model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment model
+        /// </returns>
         public virtual async Task<ShipmentModel> PrepareShipmentModelAsync(ShipmentModel model, Shipment shipment, Order order,
             bool excludeProperties = false)
         {
             if (shipment != null)
             {
                 //fill in model values from the entity
-                model ??= shipment.ToModel<ShipmentModel>();
-
-                model.CanShip = !shipment.ShippedDateUtc.HasValue;
-                model.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
-
-                var shipmentOrder = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-
-                model.CustomOrderNumber = shipmentOrder.CustomOrderNumber;
-
-                model.ShippedDate = shipment.ShippedDateUtc.HasValue
-                    ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc)).ToString()
-                    : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.ShippedDate.NotYet");
-                model.DeliveryDate = shipment.DeliveryDateUtc.HasValue
-                    ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc)).ToString()
-                    : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DeliveryDate.NotYet");
-
-                if (shipment.TotalWeight.HasValue)
-                    model.TotalWeight =
-                        $"{shipment.TotalWeight:F2} [{(await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name}]";
+                model = await PrepareShipmentModelAsync(shipment, model);
 
                 //prepare shipment items
                 foreach (var item in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
@@ -1476,7 +1533,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var shipmentTracker = await _shipmentService.GetShipmentTrackerAsync(shipment);
                     if (shipmentTracker != null)
                     {
-                        model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber);
+                        model.TrackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment);
                         if (_shippingSettings.DisplayShipmentEventsToStoreOwner)
                             await PrepareShipmentStatusEventModelsAsync(model.ShipmentStatusEvents, shipment);
                     }
@@ -1487,9 +1544,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             model.OrderId = order.Id;
+            model.PickupInStore = order.PickupInStore;
             model.CustomOrderNumber = order.CustomOrderNumber;
 
-            var orderItems = (await _orderService.GetOrderItemsAsync(order.Id, isShipEnabled: true, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0)).ToList();
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            var orderItems = (await _orderService.GetOrderItemsAsync(order.Id, isShipEnabled: true, vendorId: vendor?.Id ?? 0)).ToList();
 
             foreach (var orderItem in orderItems)
             {
@@ -1550,7 +1609,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Order shipment search model</param>
         /// <param name="order">Order</param>
-        /// <returns>Order shipment list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order shipment list model
+        /// </returns>
         public virtual async Task<OrderShipmentListModel> PrepareOrderShipmentListModelAsync(OrderShipmentSearchModel searchModel, Order order)
         {
             if (searchModel == null)
@@ -1559,11 +1621,12 @@ namespace Nop.Web.Areas.Admin.Factories
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
+            var vendor = await _workContext.GetCurrentVendorAsync();
             //get shipments
             var shipments = (await _shipmentService.GetAllShipmentsAsync(
                 orderId: order.Id,
                 //a vendor should have access only to his products
-                vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0))
+                vendorId: vendor?.Id ?? 0))
                 .OrderBy(shipment => shipment.CreatedOnUtc)
                 .ToList();
 
@@ -1573,32 +1636,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new OrderShipmentListModel().PrepareToGridAsync(searchModel, pagedShipments, () =>
             {
                 //fill in model values from the entity
-                return pagedShipments.SelectAwait(async shipment =>
-                {
-                    //fill in model values from the entity
-                    var shipmentModel = shipment.ToModel<ShipmentModel>();
-
-                    //convert dates to the user time
-                    shipmentModel.ShippedDate = shipment.ShippedDateUtc.HasValue
-                        ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc)).ToString()
-                        : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.ShippedDate.NotYet");
-                    shipmentModel.DeliveryDate = shipment.DeliveryDateUtc.HasValue
-                        ? (await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc)).ToString()
-                        : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DeliveryDate.NotYet");
-
-                    //fill in additional values (not existing in the entity)
-                    shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
-                    shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
-
-                    shipmentModel.CustomOrderNumber = order.CustomOrderNumber;
-
-                    var baseWeight = (await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name;
-
-                    if (shipment.TotalWeight.HasValue)
-                        shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{baseWeight}]";
-
-                    return shipmentModel;
-                });
+                return pagedShipments.SelectAwait(async shipment => await PrepareShipmentModelAsync(shipment));
             });
 
             return model;
@@ -1609,7 +1647,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Shipment item search model</param>
         /// <param name="shipment">Shipment</param>
-        /// <returns>Shipment item list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment item list model
+        /// </returns>
         public virtual async Task<ShipmentItemListModel> PrepareShipmentItemListModelAsync(ShipmentItemSearchModel searchModel, Shipment shipment)
         {
             if (searchModel == null)
@@ -1668,7 +1709,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Order note search model</param>
         /// <param name="order">Order</param>
-        /// <returns>Order note list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order note list model
+        /// </returns>
         public virtual async Task<OrderNoteListModel> PrepareOrderNoteListModelAsync(OrderNoteSearchModel searchModel, Order order)
         {
             if (searchModel == null)
@@ -1708,7 +1752,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare bestseller brief search model
         /// </summary>
         /// <param name="searchModel">Bestseller brief search model</param>
-        /// <returns>Bestseller brief search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the bestseller brief search model
+        /// </returns>
         public virtual Task<BestsellerBriefSearchModel> PrepareBestsellerBriefSearchModelAsync(BestsellerBriefSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1724,15 +1771,19 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged bestseller brief list model
         /// </summary>
         /// <param name="searchModel">Bestseller brief search model</param>
-        /// <returns>Bestseller brief list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the bestseller brief list model
+        /// </returns>
         public virtual async Task<BestsellerBriefListModel> PrepareBestsellerBriefListModelAsync(BestsellerBriefSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            var vendor = await _workContext.GetCurrentVendorAsync();
             //get bestsellers
             var bestsellers = await _orderReportService.BestSellersReportAsync(showHidden: true,
-                vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0,
+                vendorId: vendor?.Id ?? 0,
                 orderBy: searchModel.OrderBy,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -1764,7 +1815,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare order average line summary report list model
         /// </summary>
         /// <param name="searchModel">Order average line summary report search model</param>
-        /// <returns>Order average line summary report list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order average line summary report list model
+        /// </returns>
         public virtual async Task<OrderAverageReportListModel> PrepareOrderAverageReportListModelAsync(OrderAverageReportSearchModel searchModel)
         {
             //get report
@@ -1800,7 +1854,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare incomplete order report list model
         /// </summary>
         /// <param name="searchModel">Incomplete order report search model</param>
-        /// <returns>Incomplete order report list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the incomplete order report list model
+        /// </returns>
         public virtual async Task<OrderIncompleteReportListModel> PrepareOrderIncompleteReportListModelAsync(OrderIncompleteReportSearchModel searchModel)
         {
             var orderIncompleteReportModels = new List<OrderIncompleteReportModel>();

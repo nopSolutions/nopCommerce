@@ -74,7 +74,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare measure search model
         /// </summary>
         /// <param name="searchModel">Measure search model</param>
-        /// <returns>Measure search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the measure search model
+        /// </returns>
         public virtual Task<MeasureSearchModel> PrepareMeasureSearchModelAsync(MeasureSearchModel searchModel)
         {
             if (searchModel == null)
@@ -91,7 +94,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged measure dimension list model
         /// </summary>
         /// <param name="searchModel">Measure dimension search model</param>
-        /// <returns>Measure dimension list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the measure dimension list model
+        /// </returns>
         public virtual async Task<MeasureDimensionListModel> PrepareMeasureDimensionListModelAsync(MeasureDimensionSearchModel searchModel)
         {
             if (searchModel == null)
@@ -122,7 +128,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged measure weight list model
         /// </summary>
         /// <param name="searchModel">Measure weight search model</param>
-        /// <returns>Measure weight list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the measure weight list model
+        /// </returns>
         public virtual async Task<MeasureWeightListModel> PrepareMeasureWeightListModelAsync(MeasureWeightSearchModel searchModel)
         {
             if (searchModel == null)

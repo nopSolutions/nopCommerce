@@ -34,10 +34,10 @@
     <Value>سلسلة الاتصال الخاصة بـSQL غير صحيحة</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>الدولة</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>حدد بلدك</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>قم بإنشاء قاعدة البيانات إذا لم تكن موجودة</Value>

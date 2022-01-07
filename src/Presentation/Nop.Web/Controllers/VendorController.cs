@@ -12,6 +12,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
@@ -24,6 +25,7 @@ using Nop.Web.Models.Vendors;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class VendorController : BasePublicController
     {
         #region Fields
@@ -32,6 +34,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerService _customerService;
         private readonly IDownloadService _downloadService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
         private readonly IUrlRecordService _urlRecordService;
@@ -52,6 +55,7 @@ namespace Nop.Web.Controllers
             ICustomerService customerService,
             IDownloadService downloadService,
             IGenericAttributeService genericAttributeService,
+            IHtmlFormatter htmlFormatter,
             ILocalizationService localizationService,
             IPictureService pictureService,
             IUrlRecordService urlRecordService,
@@ -68,6 +72,7 @@ namespace Nop.Web.Controllers
             _customerService = customerService;
             _downloadService = downloadService;
             _genericAttributeService = genericAttributeService;
+            _htmlFormatter = htmlFormatter;
             _localizationService = localizationService;
             _pictureService = pictureService;
             _urlRecordService = urlRecordService;
@@ -190,17 +195,17 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ApplyVendor")]
-        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile, IFormCollection form)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("Homepage");
 
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
-            if (await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
+            if (await _customerService.IsAdminAsync(customer))
                 ModelState.AddModelError("", await _localizationService.GetResourceAsync("Vendors.ApplyAccount.IsAdmin"));
 
             //validate CAPTCHA
@@ -235,7 +240,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+                var description = _htmlFormatter.FormatText(model.Description, false, false, true, false, false, false);
                 //disabled by default
                 var vendor = new Vendor
                 {
@@ -256,8 +261,8 @@ namespace Nop.Web.Controllers
                 //associate to the current customer
                 //but a store owner will have to manually add this customer role to "Vendors" role
                 //if he wants to grant access to admin area
-                (await _workContext.GetCurrentCustomerAsync()).VendorId = vendor.Id;
-                await _customerService.UpdateCustomerAsync(await _workContext.GetCurrentCustomerAsync());
+                customer.VendorId = vendor.Id;
+                await _customerService.UpdateCustomerAsync(customer);
 
                 //update picture seo file name
                 await UpdatePictureSeoNamesAsync(vendor);
@@ -266,7 +271,7 @@ namespace Nop.Web.Controllers
                 await _genericAttributeService.SaveAttributeAsync(vendor, NopVendorDefaults.VendorAttributes, vendorAttributesXml);
 
                 //notify store owner here (email)
-                await _workflowMessageService.SendNewVendorAccountApplyStoreOwnerNotificationAsync(await _workContext.GetCurrentCustomerAsync(),
+                await _workflowMessageService.SendNewVendorAccountApplyStoreOwnerNotificationAsync(customer,
                     vendor, _localizationSettings.DefaultAdminLanguageId);
 
                 model.DisableFormInput = true;
@@ -293,14 +298,14 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Info")]
-        [AutoValidateAntiforgeryToken]
         [FormValueRequired("save-info-button")]
         public virtual async Task<IActionResult> Info(VendorInfoModel model, IFormFile uploadedFile, IFormCollection form)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
-            if (await _workContext.GetCurrentVendorAsync() == null || !_vendorSettings.AllowVendorsToEditInfo)
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            if (vendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
 
             Picture picture = null;
@@ -319,7 +324,6 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            var vendor = await _workContext.GetCurrentVendorAsync();
             var prevPicture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
 
             //vendor attributes
@@ -329,7 +333,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+                var description = _htmlFormatter.FormatText(model.Description, false, false, true, false, false, false);
 
                 vendor.Name = model.Name;
                 vendor.Email = model.Email;
@@ -364,17 +368,16 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Info")]
-        [AutoValidateAntiforgeryToken]
         [FormValueRequired("remove-picture")]
         public virtual async Task<IActionResult> RemovePicture()
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
-            if (await _workContext.GetCurrentVendorAsync() == null || !_vendorSettings.AllowVendorsToEditInfo)
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            if (vendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
 
-            var vendor = await _workContext.GetCurrentVendorAsync();
             var picture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
 
             if (picture != null)

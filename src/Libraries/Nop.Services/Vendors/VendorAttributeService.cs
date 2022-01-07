@@ -40,7 +40,10 @@ namespace Nop.Services.Vendors
         /// <summary>
         /// Gets all vendor attributes
         /// </summary>
-        /// <returns>Vendor attributes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attributes
+        /// </returns>
         public virtual async Task<IList<VendorAttribute>> GetAllVendorAttributesAsync()
         {
             return await _vendorAttributeRepository.GetAllAsync(
@@ -52,7 +55,10 @@ namespace Nop.Services.Vendors
         /// Gets a vendor attribute 
         /// </summary>
         /// <param name="vendorAttributeId">Vendor attribute identifier</param>
-        /// <returns>Vendor attribute</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attribute
+        /// </returns>
         public virtual async Task<VendorAttribute> GetVendorAttributeByIdAsync(int vendorAttributeId)
         {
             return await _vendorAttributeRepository.GetByIdAsync(vendorAttributeId, cache => default);
@@ -62,6 +68,7 @@ namespace Nop.Services.Vendors
         /// Inserts a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertVendorAttributeAsync(VendorAttribute vendorAttribute)
         {
             await _vendorAttributeRepository.InsertAsync(vendorAttribute);
@@ -71,6 +78,7 @@ namespace Nop.Services.Vendors
         /// Updates a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateVendorAttributeAsync(VendorAttribute vendorAttribute)
         {
             await _vendorAttributeRepository.UpdateAsync(vendorAttribute);
@@ -80,6 +88,7 @@ namespace Nop.Services.Vendors
         /// Deletes a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteVendorAttributeAsync(VendorAttribute vendorAttribute)
         {
             await _vendorAttributeRepository.DeleteAsync(vendorAttribute);
@@ -93,7 +102,10 @@ namespace Nop.Services.Vendors
         /// Gets vendor attribute values by vendor attribute identifier
         /// </summary>
         /// <param name="vendorAttributeId">The vendor attribute identifier</param>
-        /// <returns>Vendor attribute values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attribute values
+        /// </returns>
         public virtual async Task<IList<VendorAttributeValue>> GetVendorAttributeValuesAsync(int vendorAttributeId)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributeValuesByAttributeCacheKey, vendorAttributeId);
@@ -110,7 +122,10 @@ namespace Nop.Services.Vendors
         /// Gets a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValueId">Vendor attribute value identifier</param>
-        /// <returns>Vendor attribute value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attribute value
+        /// </returns>
         public virtual async Task<VendorAttributeValue> GetVendorAttributeValueByIdAsync(int vendorAttributeValueId)
         {
             return await _vendorAttributeValueRepository.GetByIdAsync(vendorAttributeValueId, cache => default);
@@ -120,6 +135,7 @@ namespace Nop.Services.Vendors
         /// Inserts a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue)
         {
             await _vendorAttributeValueRepository.InsertAsync(vendorAttributeValue);
@@ -129,6 +145,7 @@ namespace Nop.Services.Vendors
         /// Updates the vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue)
         {
             await _vendorAttributeValueRepository.UpdateAsync(vendorAttributeValue);
@@ -138,6 +155,7 @@ namespace Nop.Services.Vendors
         /// Deletes a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue)
         {
             await _vendorAttributeValueRepository.DeleteAsync(vendorAttributeValue);

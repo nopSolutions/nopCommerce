@@ -34,7 +34,10 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="keyword">Search term keyword</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>Search term</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the search term
+        /// </returns>
         public virtual async Task<SearchTerm> GetSearchTermByKeywordAsync(string keyword, int storeId)
         {
             if (string.IsNullOrEmpty(keyword))
@@ -54,7 +57,10 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>A list search term report lines</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a list search term report lines
+        /// </returns>
         public virtual async Task<IPagedList<SearchTermReportLine>> GetStatsAsync(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = (from st in _searchTermRepository.Table
@@ -80,6 +86,7 @@ namespace Nop.Services.Common
         /// Inserts a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertSearchTermAsync(SearchTerm searchTerm)
         {
             await _searchTermRepository.InsertAsync(searchTerm);
@@ -89,6 +96,7 @@ namespace Nop.Services.Common
         /// Updates the search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateSearchTermAsync(SearchTerm searchTerm)
         {
             await _searchTermRepository.UpdateAsync(searchTerm);

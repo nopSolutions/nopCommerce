@@ -1,8 +1,6 @@
 ﻿@model DiscountModel
-@{
-    Html.AddScriptParts("~/lib_npm/jsrender/jsrender.min.js");
-}
 
+<script src="~/lib_npm/jsrender/jsrender.min.js" asp-location="Head"></script>
 <div class="card-body">
     <div class="cards-group">
         @if (Model.Id > 0)
@@ -35,19 +33,19 @@
                 if (ruleSystemName) {
                     var groupsElement = $("#@Html.IdFor(model => model.RequirementGroupId)");
                     if (groupsElement.find('option').length > 1) {
-                        $("#pnlGroup").showField();
+                        $("#pnlGroup").showElement();
                     }
                     else {
-                        $("#pnlGroup").hide();
+                        $("#pnlGroup").hideElement();
                     }
                     if (ruleSystemName == 'AddGroup') {
-                        $("#pnlAddNewGroup").showField();
-                        $("#pnlGroupName").showField();
+                        $("#pnlAddNewGroup").showElement();
+                        $("#pnlGroupName").showElement();
                         $('#addrequirementplaceholder').html('');
                     }
                     else {
-                        $("#pnlAddNewGroup").hide();
-                        $("#pnlGroupName").hide();
+                        $("#pnlAddNewGroup").hideElement();
+                        $("#pnlGroupName").hideElement();
                         $.ajax({
                             cache: false,
                             url: "@(Url.Action("GetDiscountRequirementConfigurationUrl", "Discount"))",
@@ -64,9 +62,9 @@
                         });
                     }
                 } else {
-                    $("#pnlGroupName").hide();
-                    $("#pnlGroup").hide();
-                    $("#pnlAddNewGroup").hide();
+                    $("#pnlGroupName").hideElement();
+                    $("#pnlGroup").hideElement();
+                    $("#pnlAddNewGroup").hideElement();
                     $('#addrequirementplaceholder').html('');
                 }
             };
@@ -113,10 +111,10 @@
                         });
                         var ruleSystemName = $("#@Html.IdFor(model => model.AddDiscountRequirement)").val();
                         if (ruleSystemName && groupsElement.find('option').length > 1) {
-                            $("#pnlGroup").showField();
+                            $("#pnlGroup").showElement();
                         }
                         else {
-                            $("#pnlGroup").hide();
+                            $("#pnlGroup").hideElement();
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
@@ -249,7 +247,7 @@
                             <span asp-validation-for="AddDiscountRequirement"></span>
                         </div>
                     </div>
-                    <div class="form-group row" id="pnlGroup" style="display: none">
+                    <div class="form-group row d-none" id="pnlGroup">
                         <div class="col-md-3">
                             <nop-label asp-for="RequirementGroupId" />
                         </div>
@@ -259,7 +257,7 @@
                         </div>
                     </div>
                     <div id="addrequirementplaceholder"></div>
-                    <div class="form-group row" id="pnlGroupName" style="display: none">
+                    <div class="form-group row d-none" id="pnlGroupName">
                         <div class="col-md-3">
                             <nop-label asp-for="GroupName" />
                         </div>
@@ -268,7 +266,7 @@
                             <span asp-validation-for="GroupName"></span>
                         </div>
                     </div>
-                    <div class="form-group row" id="pnlAddNewGroup" style="display: none">
+                    <div class="form-group row d-none" id="pnlAddNewGroup">
                         <div class="col-md-9 offset-md-3">
                             <button type="button" id="saverequirement" class="btn btn-primary" onclick="addNewGroup()">@T("Admin.Common.Save")</button>
                         </div>

@@ -16,19 +16,26 @@ namespace Nop.Services.Logging
         /// Updates an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateActivityTypeAsync(ActivityLogType activityLogType);
 
         /// <summary>
         /// Gets all activity log type items
         /// </summary>
-        /// <returns>Activity log type items</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log type items
+        /// </returns>
         Task<IList<ActivityLogType>> GetAllActivityTypesAsync();
 
         /// <summary>
         /// Gets an activity log type item
         /// </summary>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
-        /// <returns>Activity log type item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log type item
+        /// </returns>
         Task<ActivityLogType> GetActivityTypeByIdAsync(int activityLogTypeId);
 
         /// <summary>
@@ -37,7 +44,10 @@ namespace Nop.Services.Logging
         /// <param name="systemKeyword">System keyword</param>
         /// <param name="comment">Comment</param>
         /// <param name="entity">Entity</param>
-        /// <returns>Activity log item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log item
+        /// </returns>
         Task<ActivityLog> InsertActivityAsync(string systemKeyword, string comment, BaseEntity entity = null);
 
         /// <summary>
@@ -47,13 +57,17 @@ namespace Nop.Services.Logging
         /// <param name="systemKeyword">System keyword</param>
         /// <param name="comment">Comment</param>
         /// <param name="entity">Entity</param>
-        /// <returns>Activity log item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log item
+        /// </returns>
         Task<ActivityLog> InsertActivityAsync(Customer customer, string systemKeyword, string comment, BaseEntity entity = null);
 
         /// <summary>
         /// Deletes an activity log item
         /// </summary>
         /// <param name="activityLog">Activity log</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteActivityAsync(ActivityLog activityLog);
 
         /// <summary>
@@ -68,7 +82,10 @@ namespace Nop.Services.Logging
         /// <param name="entityId">Entity identifier; pass null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Activity log items</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log items
+        /// </returns>
         Task<IPagedList<ActivityLog>> GetAllActivitiesAsync(DateTime? createdOnFrom = null, DateTime? createdOnTo = null,
             int? customerId = null, int? activityLogTypeId = null, string ipAddress = null, string entityName = null, int? entityId = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
@@ -77,12 +94,16 @@ namespace Nop.Services.Logging
         /// Gets an activity log item
         /// </summary>
         /// <param name="activityLogId">Activity log identifier</param>
-        /// <returns>Activity log item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log item
+        /// </returns>
         Task<ActivityLog> GetActivityByIdAsync(int activityLogId);
 
         /// <summary>
         /// Clears activity log
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task ClearAllActivitiesAsync();
     }
 }

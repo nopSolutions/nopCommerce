@@ -32,6 +32,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Infrastructure.Cache
         /// Handle discount requirement deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<DiscountRequirement> eventMessage)
         {
             var discountRequirement = eventMessage?.Entity;

@@ -74,7 +74,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare topic search model
         /// </summary>
         /// <param name="searchModel">Topic search model</param>
-        /// <returns>Topic search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic search model
+        /// </returns>
         public virtual async Task<TopicSearchModel> PrepareTopicSearchModelAsync(TopicSearchModel searchModel)
         {
             if (searchModel == null)
@@ -95,7 +98,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged topic list model
         /// </summary>
         /// <param name="searchModel">Topic search model</param>
-        /// <returns>Topic list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic list model
+        /// </returns>
         public virtual async Task<TopicListModel> PrepareTopicListModelAsync(TopicSearchModel searchModel)
         {
             if (searchModel == null)
@@ -140,10 +146,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Topic model</param>
         /// <param name="topic">Topic</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Topic model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic model
+        /// </returns>
         public virtual async Task<TopicModel> PrepareTopicModelAsync(TopicModel model, Topic topic, bool excludeProperties = false)
         {
-            Action<TopicLocalizedModel, int> localizedModelConfiguration = null;
+            Func<TopicLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (topic != null)
             {

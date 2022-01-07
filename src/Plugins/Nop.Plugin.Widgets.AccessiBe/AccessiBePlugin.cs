@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -9,6 +10,7 @@ using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Widgets.AccessiBe
@@ -24,8 +26,8 @@ namespace Nop.Plugin.Widgets.AccessiBe
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
+        private readonly IStoreService _storeService;
         private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly WidgetSettings _widgetSettings;
 
 
         #endregion
@@ -36,15 +38,15 @@ namespace Nop.Plugin.Widgets.AccessiBe
             IActionContextAccessor actionContextAccessor,
             ILocalizationService localizationService,
             ISettingService settingService,
-            IUrlHelperFactory urlHelperFactory,
-            WidgetSettings widgetSettings)
+            IStoreService storeService,
+            IUrlHelperFactory urlHelperFactory)
         {
             _accessiBeSettings = accessiBeSettings;
             _actionContextAccessor = actionContextAccessor;
             _localizationService = localizationService;
             _settingService = settingService;
+            _storeService = storeService;
             _urlHelperFactory = urlHelperFactory;
-            _widgetSettings = widgetSettings;
         }
 
         #endregion
@@ -62,7 +64,10 @@ namespace Nop.Plugin.Widgets.AccessiBe
         /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>
-        /// <returns>Widget zones</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget zones
+        /// </returns>
         public Task<IList<string>> GetWidgetZonesAsync()
         {
             return Task.FromResult<IList<string>>(new List<string> { _accessiBeSettings.WidgetZone });
@@ -84,6 +89,7 @@ namespace Nop.Plugin.Widgets.AccessiBe
         /// <summary>
         /// Install plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             await _settingService.SaveSettingAsync(new AccessiBeSettings
@@ -91,8 +97,10 @@ namespace Nop.Plugin.Widgets.AccessiBe
                 WidgetZone = PublicWidgetZones.HeadHtmlTag
             });
 
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
+                ["Plugins.Widgets.AccessiBe.Fields.Enabled"] = "Enable",
+                ["Plugins.Widgets.AccessiBe.Fields.Enabled.Hint"] = "Check to activate this widget.",
                 ["Plugins.Widgets.AccessiBe.Fields.Script"] = "Installation script",
                 ["Plugins.Widgets.AccessiBe.Fields.Script.Hint"] = "Find your unique installation script on the Installation tab in your account and then copy it into this field.",
                 ["Plugins.Widgets.AccessiBe.Fields.Script.Required"] = "Installation script is required",
@@ -104,11 +112,19 @@ namespace Nop.Plugin.Widgets.AccessiBe
         /// <summary>
         /// Uninstall plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
-            _widgetSettings.ActiveWidgetSystemNames.Remove(AccessiBeDefaults.SystemName);
-            await _settingService.SaveSettingAsync(_widgetSettings);
             await _settingService.DeleteSettingAsync<AccessiBeSettings>();
+
+            var stores = await _storeService.GetAllStoresAsync();
+            var storeIds = new List<int> { 0 }.Union(stores.Select(store => store.Id));
+            foreach (var storeId in storeIds)
+            {
+                var widgetSettings = await _settingService.LoadSettingAsync<WidgetSettings>(storeId);
+                widgetSettings.ActiveWidgetSystemNames.Remove(AccessiBeDefaults.SystemName);
+                await _settingService.SaveSettingAsync(widgetSettings);
+            }
 
             await _localizationService.DeleteLocaleResourcesAsync("Plugins.Widgets.AccessiBe");
 

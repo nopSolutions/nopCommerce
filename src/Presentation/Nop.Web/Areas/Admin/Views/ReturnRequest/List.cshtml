@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.ReturnRequests").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Return requests");
+    NopHtml.SetActiveMenuItemSystemName("Return requests");
 }
 
 @{
@@ -18,7 +18,7 @@
     </h1>
     <div class="float-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestListButtons, additionalData = Model })
     </div>
 </div>
 <section class="content">
@@ -123,6 +123,11 @@
                                 Title = T("Admin.ReturnRequests.Fields.Quantity").Text,
                                 Width = "100"
                             },
+                            new ColumnProperty(nameof(ReturnRequestModel.ReturnedQuantity))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.ReturnedQuantity").Text,
+                                Width = "100"
+                            },
                             new ColumnProperty(nameof(ReturnRequestModel.CustomerId))
                             {
                                 Title = T("Admin.ReturnRequests.Fields.Customer").Text,
@@ -157,7 +162,7 @@
                         }
                     })
 
-                    <script>
+                    <script asp-location="Footer">
                         function renderColumnProductName(data, type, row, meta) {
                             if (row.ProductId > 0) {
                                 var textRenderer = $.fn.dataTable.render.text().display;

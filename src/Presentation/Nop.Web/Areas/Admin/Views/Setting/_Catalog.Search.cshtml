@@ -22,7 +22,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ProductSearchAutoCompleteEnabled">
-        <div class="form-group row advanced-setting" id="pnlProductSearchAutoCompleteNumberOfProducts">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ProductSearchAutoCompleteNumberOfProducts_OverrideForStore" asp-input="ProductSearchAutoCompleteNumberOfProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ProductSearchAutoCompleteNumberOfProducts" />
@@ -32,7 +32,7 @@
                 <span asp-validation-for="ProductSearchAutoCompleteNumberOfProducts"></span>
             </div>
         </div>
-        <div class="form-group row advanced-setting" id="pnlShowLinkToAllResultInSearchAutoComplete">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ShowLinkToAllResultInSearchAutoComplete_OverrideForStore" asp-input="ShowLinkToAllResultInSearchAutoComplete" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ShowLinkToAllResultInSearchAutoComplete" />
@@ -42,7 +42,7 @@
                 <span asp-validation-for="ShowLinkToAllResultInSearchAutoComplete"></span>
             </div>
         </div>
-        <div class="form-group row advanced-setting" id="pnlShowProductImagesInSearchAutoComplete">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ShowProductImagesInSearchAutoComplete_OverrideForStore" asp-input="ShowProductImagesInSearchAutoComplete" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ShowProductImagesInSearchAutoComplete" />
@@ -73,7 +73,7 @@
             <span asp-validation-for="SearchPageAllowCustomersToSelectPageSize"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="SearchPageAllowCustomersToSelectPageSize">
+    <nop-nested-setting asp-for="SearchPageAllowCustomersToSelectPageSize" disable-auto-generation="true">
         <div class="form-group row advanced-setting" id="pnlSearchPageProductsPerPage">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="SearchPageProductsPerPage_OverrideForStore" asp-input="SearchPageProductsPerPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -97,6 +97,7 @@
     </nop-nested-setting>
     <div class="form-group row advanced-setting">
         <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="SearchPagePriceRangeFiltering_OverrideForStore" asp-input="SearchPagePriceRangeFiltering" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SearchPagePriceRangeFiltering" />
         </div>
         <div class="col-md-9">
@@ -105,93 +106,54 @@
         </div>
     </div>
     <nop-nested-setting asp-for="SearchPagePriceRangeFiltering">
-        <div class="form-group row advanced-setting parent-setting-reversed" id="pnlSearchPageAutomaticallyCalculatePriceRange">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
-                <nop-label asp-for="SearchPageAutomaticallyCalculatePriceRange" />
+                <nop-override-store-checkbox asp-for="SearchPageManuallyPriceRange_OverrideForStore" asp-input="SearchPageManuallyPriceRange" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="SearchPageManuallyPriceRange" />
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="SearchPageAutomaticallyCalculatePriceRange" />
-                <span asp-validation-for="SearchPageAutomaticallyCalculatePriceRange"></span>
+                <nop-editor asp-for="SearchPageManuallyPriceRange" />
+                <span asp-validation-for="SearchPageManuallyPriceRange"></span>
             </div>
         </div>
-        <div class="form-group row advanced-setting" id="pnlSearchPagePriceRangeFrom">
-            <div class="col-md-3">
-                <nop-label asp-for="SearchPagePriceFrom"/>
+        <nop-nested-setting asp-for="SearchPageManuallyPriceRange">
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="SearchPagePriceFrom_OverrideForStore" asp-input="SearchPagePriceFrom" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="SearchPagePriceFrom" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="SearchPagePriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="SearchPagePriceFrom"></span>
+                </div>
             </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="SearchPagePriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
-                <span asp-validation-for="SearchPagePriceFrom"></span>
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="SearchPagePriceTo_OverrideForStore" asp-input="SearchPagePriceTo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="SearchPagePriceTo" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="SearchPagePriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="SearchPagePriceTo"></span>
+                </div>
             </div>
-        </div>
-        <div class="form-group row advanced-setting" id="pnlSearchPagePriceRangeTo">
-            <div class="col-md-3">
-                <nop-label asp-for="SearchPagePriceTo"/>
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="SearchPagePriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
-                <span asp-validation-for="SearchPagePriceTo"></span>
-            </div>
-        </div>
+        </nop-nested-setting>
     </nop-nested-setting>
 </div>
 <script>
     $(document).ready(function () {
         $("#@Html.IdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
-        $("#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
-        $("#@Html.IdFor(model => model.SearchPagePriceRangeFiltering)").click(toggleSearchPageAutomaticallyCalculatePriceRange);
-        $("#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)").click(toggleSearchPagePriceRange);
 
         toggleSearchPagePageSize();
-        toggleProductSearchAutoComplete();
-        toggleSearchPagePriceRange();
-        toggleSearchPageAutomaticallyCalculatePriceRange();
     });
 
     function toggleSearchPagePageSize() {
         if ($('#@Html.IdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
-            $('#pnlSearchPageProductsPerPage').hide();
-            $('#pnlSearchPagePageSizeOptions').showField();
+            $('#pnlSearchPageProductsPerPage').hideElement();
+            $('#pnlSearchPagePageSizeOptions').showElement();
         } else {
-            $('#pnlSearchPageProductsPerPage').showField();
-            $('#pnlSearchPagePageSizeOptions').hide();
-        }
-    }
-
-    function toggleProductSearchAutoComplete() {
-        if ($('#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
-            $('#pnlProductSearchAutoCompleteNumberOfProducts').showField();
-            $('#pnlShowProductImagesInSearchAutoComplete').showField();
-            $('#pnlShowLinkToAllResultInSearchAutoComplete').showField();
-        } else {
-            $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
-            $('#pnlShowProductImagesInSearchAutoComplete').hide();
-            $('#pnlShowLinkToAllResultInSearchAutoComplete').hide();
-        }
-    }
-
-    function toggleSearchPagePriceRange() {
-        if ($('#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)').is(':checked')) {
-            $('#pnlSearchPagePriceRangeFrom').hide();
-            $('#pnlSearchPagePriceRangeTo').hide();
-            $('#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)').closest('.parent-setting-reversed').addClass('parent-setting-ticked');
-        } else {
-            $('#pnlSearchPagePriceRangeFrom').showField();
-            $('#pnlSearchPagePriceRangeTo').showField();
-            $('#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)').closest('.parent-setting-reversed').removeClass('parent-setting-ticked');
-        }
-    }
-
-    function toggleSearchPageAutomaticallyCalculatePriceRange() {
-        if ($('#@Html.IdFor(model => model.SearchPagePriceRangeFiltering)').is(':checked')) {
-            if (!$('#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)').is(':checked')) {
-                $('#pnlSearchPagePriceRangeFrom').showField();
-                $('#pnlSearchPagePriceRangeTo').showField();
-            }
-            $('#pnlSearchPageAutomaticallyCalculatePriceRange').showField();
-        } else {
-            $('#pnlSearchPagePriceRangeFrom').hide();
-            $('#pnlSearchPagePriceRangeTo').hide();
-            $('#pnlSearchPageAutomaticallyCalculatePriceRange').hide();
+            $('#pnlSearchPageProductsPerPage').showElement();
+            $('#pnlSearchPagePageSizeOptions').hideElement();
         }
     }
 

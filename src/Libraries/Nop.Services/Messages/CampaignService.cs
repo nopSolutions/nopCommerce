@@ -53,6 +53,7 @@ namespace Nop.Services.Messages
         /// Inserts a campaign
         /// </summary>
         /// <param name="campaign">Campaign</param>        
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCampaignAsync(Campaign campaign)
         {
             await _campaignRepository.InsertAsync(campaign);
@@ -62,6 +63,7 @@ namespace Nop.Services.Messages
         /// Updates a campaign
         /// </summary>
         /// <param name="campaign">Campaign</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCampaignAsync(Campaign campaign)
         {
             await _campaignRepository.UpdateAsync(campaign);
@@ -71,6 +73,7 @@ namespace Nop.Services.Messages
         /// Deleted a queued email
         /// </summary>
         /// <param name="campaign">Campaign</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCampaignAsync(Campaign campaign)
         {
             await _campaignRepository.DeleteAsync(campaign);
@@ -80,7 +83,10 @@ namespace Nop.Services.Messages
         /// Gets a campaign by identifier
         /// </summary>
         /// <param name="campaignId">Campaign identifier</param>
-        /// <returns>Campaign</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the campaign
+        /// </returns>
         public virtual async Task<Campaign> GetCampaignByIdAsync(int campaignId)
         {
             return await _campaignRepository.GetByIdAsync(campaignId, cache => default);
@@ -90,7 +96,10 @@ namespace Nop.Services.Messages
         /// Gets all campaigns
         /// </summary>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <returns>Campaigns</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the campaigns
+        /// </returns>
         public virtual async Task<IList<Campaign>> GetAllCampaignsAsync(int storeId = 0)
         {
             var campaigns = await _campaignRepository.GetAllAsync(query =>
@@ -112,7 +121,10 @@ namespace Nop.Services.Messages
         /// <param name="campaign">Campaign</param>
         /// <param name="emailAccount">Email account</param>
         /// <param name="subscriptions">Subscriptions</param>
-        /// <returns>Total emails sent</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the otal emails sent
+        /// </returns>
         public virtual async Task<int> SendCampaignAsync(Campaign campaign, EmailAccount emailAccount,
             IEnumerable<NewsLetterSubscription> subscriptions)
         {
@@ -165,6 +177,7 @@ namespace Nop.Services.Messages
         /// <param name="campaign">Campaign</param>
         /// <param name="emailAccount">Email account</param>
         /// <param name="email">Email</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SendCampaignAsync(Campaign campaign, EmailAccount emailAccount, string email)
         {
             if (campaign == null)

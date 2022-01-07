@@ -74,17 +74,19 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
         /// <summary>
         /// Install the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
             //settings
             await _settingService.SaveSettingAsync(new GoogleAuthenticatorSettings
             {
-                BusinessPrefix = (await _storeContext.GetCurrentStoreAsync()).Name,
+                BusinessPrefix = store.Name,
                 QRPixelsPerModule = GoogleAuthenticatorDefaults.DefaultQRPixelsPerModule
             });
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 //admin config 
                 ["Plugins.MultiFactorAuth.GoogleAuthenticator.BusinessPrefix"] = "Business prefix",
@@ -122,6 +124,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             //settings
@@ -136,6 +139,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
         /// <summary>
         /// Gets a multi-factor authentication method description that will be displayed on customer info pages in the public store
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetDescriptionAsync()
         {
             return await _localizationService

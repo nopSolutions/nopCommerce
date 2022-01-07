@@ -46,6 +46,7 @@ namespace Nop.Services.Orders
         /// Deletes a checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCheckoutAttributeAsync(CheckoutAttribute checkoutAttribute)
         {
             await _checkoutAttributeRepository.DeleteAsync(checkoutAttribute);
@@ -55,6 +56,7 @@ namespace Nop.Services.Orders
         /// Deletes checkout attributes
         /// </summary>
         /// <param name="checkoutAttributes">Checkout attributes</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCheckoutAttributesAsync(IList<CheckoutAttribute> checkoutAttributes)
         {
             if (checkoutAttributes == null)
@@ -69,7 +71,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <param name="excludeShippableAttributes">A value indicating whether we should exclude shippable attributes</param>
-        /// <returns>Checkout attributes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the checkout attributes
+        /// </returns>
         public virtual async Task<IList<CheckoutAttribute>> GetAllCheckoutAttributesAsync(int storeId = 0, bool excludeShippableAttributes = false)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopOrderDefaults.CheckoutAttributesAllCacheKey, storeId, excludeShippableAttributes);
@@ -99,7 +104,10 @@ namespace Nop.Services.Orders
         /// Gets a checkout attribute 
         /// </summary>
         /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
-        /// <returns>Checkout attribute</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the checkout attribute
+        /// </returns>
         public virtual async Task<CheckoutAttribute> GetCheckoutAttributeByIdAsync(int checkoutAttributeId)
         {
             return await _checkoutAttributeRepository.GetByIdAsync(checkoutAttributeId, cache => default);
@@ -109,7 +117,10 @@ namespace Nop.Services.Orders
         /// Gets checkout attributes 
         /// </summary>
         /// <param name="checkoutAttributeIds">Checkout attribute identifiers</param>
-        /// <returns>Checkout attributes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the checkout attributes
+        /// </returns>
         public virtual async Task<IList<CheckoutAttribute>> GetCheckoutAttributeByIdsAsync(int[] checkoutAttributeIds)
         {
             return await _checkoutAttributeRepository.GetByIdsAsync(checkoutAttributeIds);
@@ -119,6 +130,7 @@ namespace Nop.Services.Orders
         /// Inserts a checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCheckoutAttributeAsync(CheckoutAttribute checkoutAttribute)
         {
             await _checkoutAttributeRepository.InsertAsync(checkoutAttribute);
@@ -128,6 +140,7 @@ namespace Nop.Services.Orders
         /// Updates the checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCheckoutAttributeAsync(CheckoutAttribute checkoutAttribute)
         {
             await _checkoutAttributeRepository.UpdateAsync(checkoutAttribute);
@@ -141,6 +154,7 @@ namespace Nop.Services.Orders
         /// Deletes a checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCheckoutAttributeValueAsync(CheckoutAttributeValue checkoutAttributeValue)
         {
             await _checkoutAttributeValueRepository.DeleteAsync(checkoutAttributeValue);
@@ -150,7 +164,10 @@ namespace Nop.Services.Orders
         /// Gets checkout attribute values by checkout attribute identifier
         /// </summary>
         /// <param name="checkoutAttributeId">The checkout attribute identifier</param>
-        /// <returns>Checkout attribute values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the checkout attribute values
+        /// </returns>
         public virtual async Task<IList<CheckoutAttributeValue>> GetCheckoutAttributeValuesAsync(int checkoutAttributeId)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopOrderDefaults.CheckoutAttributeValuesAllCacheKey, checkoutAttributeId);
@@ -169,7 +186,10 @@ namespace Nop.Services.Orders
         /// Gets a checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValueId">Checkout attribute value identifier</param>
-        /// <returns>Checkout attribute value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the checkout attribute value
+        /// </returns>
         public virtual async Task<CheckoutAttributeValue> GetCheckoutAttributeValueByIdAsync(int checkoutAttributeValueId)
         {
             return await _checkoutAttributeValueRepository.GetByIdAsync(checkoutAttributeValueId, cache => default);
@@ -179,6 +199,7 @@ namespace Nop.Services.Orders
         /// Inserts a checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCheckoutAttributeValueAsync(CheckoutAttributeValue checkoutAttributeValue)
         {
             await _checkoutAttributeValueRepository.InsertAsync(checkoutAttributeValue);
@@ -188,6 +209,7 @@ namespace Nop.Services.Orders
         /// Updates the checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCheckoutAttributeValueAsync(CheckoutAttributeValue checkoutAttributeValue)
         {
             await _checkoutAttributeValueRepository.UpdateAsync(checkoutAttributeValue);

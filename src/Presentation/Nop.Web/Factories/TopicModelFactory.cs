@@ -56,7 +56,10 @@ namespace Nop.Web.Factories
         /// Prepare the topic model
         /// </summary>
         /// <param name="topic">Topic</param>
-        /// <returns>Topic model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic model
+        /// </returns>
         protected virtual async Task<TopicModel> PrepareTopicModelAsync(Topic topic)
         {
             if (topic == null)
@@ -89,7 +92,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="topicId">Topic identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Topic model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic model
+        /// </returns>
         public virtual async Task<TopicModel> PrepareTopicModelByIdAsync(int topicId, bool showHidden = false)
         {
             var topic = await _topicService.GetTopicByIdAsync(topicId);
@@ -115,11 +121,15 @@ namespace Nop.Web.Factories
         /// Get the topic model by topic system name
         /// </summary>
         /// <param name="systemName">Topic system name</param>
-        /// <returns>Topic model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic model
+        /// </returns>
         public virtual async Task<TopicModel> PrepareTopicModelBySystemNameAsync(string systemName)
         {
             //load by store
-            var topic = await _topicService.GetTopicBySystemNameAsync(systemName, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var topic = await _topicService.GetTopicBySystemNameAsync(systemName, store.Id);
             if (topic == null)
                 return null;
 
@@ -130,7 +140,10 @@ namespace Nop.Web.Factories
         /// Get topic template view path
         /// </summary>
         /// <param name="topicTemplateId">Topic template identifier</param>
-        /// <returns>View path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view path
+        /// </returns>
         public virtual async Task<string> PrepareTemplateViewPathAsync(int topicTemplateId)
         {
             var template = await _topicTemplateService.GetTopicTemplateByIdAsync(topicTemplateId) ??

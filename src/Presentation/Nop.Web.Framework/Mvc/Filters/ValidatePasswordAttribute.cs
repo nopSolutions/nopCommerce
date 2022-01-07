@@ -35,6 +35,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Fields
 
             private readonly ICustomerService _customerService;
+            private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
 
             #endregion
@@ -42,9 +43,11 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Ctor
 
             public ValidatePasswordFilter(ICustomerService customerService,
+                IWebHelper webHelper,
                 IWorkContext workContext)
             {
                 _customerService = customerService;
+                _webHelper = webHelper;
                 _workContext = workContext;
             }
 
@@ -56,7 +59,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            /// <returns>A task that on completion indicates the necessary filter actions have been executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             private async Task ValidatePasswordAsync(ActionExecutingContext context)
             {
                 if (context == null)
@@ -65,7 +68,11 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context.HttpContext.Request == null)
                     return;
 
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                //ignore AJAX requests
+                if (_webHelper.IsAjaxRequest(context.HttpContext.Request))
+                    return;
+
+                if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
                 //get action and controller names
@@ -83,11 +90,12 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //check password expiration
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                if (!await _customerService.PasswordIsExpiredAsync(customer))
+                if (!await _customerService.IsPasswordExpiredAsync(customer))
                     return;
 
+                var returnUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
                 //redirect to ChangePassword page if expires
-                context.Result = new RedirectToRouteResult("CustomerChangePassword", null);
+                context.Result = new RedirectToRouteResult("CustomerChangePassword", new { returnUrl = returnUrl });
             }
 
             #endregion
@@ -99,7 +107,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">A context for action filters</param>
             /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
-            /// <returns>A task that on completion indicates the filter has executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
                 await ValidatePasswordAsync(context);

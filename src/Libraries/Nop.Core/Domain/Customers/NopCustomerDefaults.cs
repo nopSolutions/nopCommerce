@@ -211,11 +211,6 @@
         public static string LanguageIdAttribute => "LanguageId";
 
         /// <summary>
-        /// Gets a name of generic attribute to store the value of 'LanguageAutomaticallyDetected'
-        /// </summary>
-        public static string LanguageAutomaticallyDetectedAttribute => "LanguageAutomaticallyDetected";
-
-        /// <summary>
         /// Gets a name of generic attribute to store the value of 'SelectedPaymentMethod'
         /// </summary>
         public static string SelectedPaymentMethodAttribute => "SelectedPaymentMethod";

@@ -32,6 +32,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure.Cache
         /// Handle shipping method deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<ShippingMethod> eventMessage)
         {
             var shippingMethod = eventMessage?.Entity;

@@ -148,21 +148,24 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="totalStock">Total stock</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ApplyLowStockActivityAsync(Product product, int totalStock)
         {
-            var stockDec = product.MinStockQuantity >= totalStock;
-            var stockInc = _catalogSettings.PublishBackProductWhenCancellingOrders && product.MinStockQuantity < totalStock;
+            var isMinimumStockReached = totalStock <= product.MinStockQuantity;
 
+            if (!isMinimumStockReached && !_catalogSettings.PublishBackProductWhenCancellingOrders)
+                return;
+            
             switch (product.LowStockActivity)
             {
                 case LowStockActivity.DisableBuyButton:
-                    product.DisableBuyButton = stockDec && !stockInc;
-                    product.DisableWishlistButton = stockDec && !stockInc;
+                    product.DisableBuyButton = isMinimumStockReached;
+                    product.DisableWishlistButton = isMinimumStockReached;
                     await UpdateProductAsync(product);
                     break;
 
                 case LowStockActivity.Unpublish:
-                    product.Published = !stockDec && stockInc;
+                    product.Published = !isMinimumStockReached;
                     await UpdateProductAsync(product);
                     break;
 
@@ -176,7 +179,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>SKU, Manufacturer part number, GTIN</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sKU, Manufacturer part number, GTIN
+        /// </returns>
         protected virtual async Task<(string sku, string manufacturerPartNumber, string gtin)> GetSkuMpnGtinAsync(Product product, string attributesXml)
         {
             if (product == null)
@@ -211,12 +217,15 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get stock message
+        /// Get stock message for a product with attributes
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Message</returns>
-        protected virtual async Task<string> GeStockMessageAsync(Product product, string attributesXml)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the message
+        /// </returns>
+        protected virtual async Task<string> GetStockMessageForAttributesAsync(Product product, string attributesXml)
         {
             if (!product.DisplayStockAvailability)
                 return string.Empty;
@@ -257,6 +266,28 @@ namespace Nop.Services.Catalog
                 //no combination configured
                 if (product.AllowAddingOnlyExistingAttributeCombinations)
                 {
+                    var allIds = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id)).Where(pa => pa.IsRequired).Select(pa => pa.Id).ToList();
+                    var exIds = (await _productAttributeParser.ParseProductAttributeMappingsAsync(attributesXml)).Select(pa => pa.Id).ToList();
+
+                    var selectedIds = allIds.Intersect(exIds).ToList();
+
+                    if (selectedIds.Count() != allIds.Count)
+                        if (_catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.AlwaysDisplay)
+                            return await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
+                        else
+                        {
+                            var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
+
+                            combinations = combinations.Where(p => p.StockQuantity >= 0 || p.AllowOutOfStockOrders).ToList();
+
+                            var attributes = await combinations.SelectAwait(async c => await _productAttributeParser.ParseProductAttributeMappingsAsync(c.AttributesXml)).ToListAsync();
+
+                            var flag = attributes.SelectMany(a => a).Any(a => selectedIds.Contains(a.Id));
+
+                            if (flag)
+                                return await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
+                        }
+
                     var productAvailabilityRange = await
                         _dateRangeService.GetProductAvailabilityRangeByIdAsync(product.ProductAvailabilityRangeId);
                     stockMessage = productAvailabilityRange == null
@@ -266,8 +297,7 @@ namespace Nop.Services.Catalog
                 }
                 else
                 {
-                    stockMessage = !(await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
-                        .Any(pam => pam.IsRequired) ? await _localizationService.GetResourceAsync("Products.Availability.InStock") : await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
+                    stockMessage = await _localizationService.GetResourceAsync("Products.Availability.InStock");
                 }
             }
 
@@ -278,13 +308,16 @@ namespace Nop.Services.Catalog
         /// Get stock message
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="stockMessage">Message</param>
-        /// <returns>Message</returns>
-        protected virtual async Task<string> GetStockMessageAsync(Product product, string stockMessage)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the message
+        /// </returns>
+        protected virtual async Task<string> GetStockMessageAsync(Product product)
         {
             if (!product.DisplayStockAvailability)
                 return string.Empty;
 
+            var stockMessage = string.Empty;
             var stockQuantity = await GetTotalStockQuantityAsync(product);
             if (stockQuantity > 0)
             {
@@ -328,6 +361,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity, must be negative</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ReserveInventoryAsync(Product product, int quantity)
         {
             if (product == null)
@@ -371,6 +405,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity, must be positive</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UnblockReservedInventoryAsync(Product product, int quantity)
         {
             if (product == null)
@@ -413,7 +448,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productIds">The first product identifiers</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Cross-sell products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cross-sell products
+        /// </returns>
         protected virtual async Task<IList<CrossSellProduct>> GetCrossSellProductsByProductIdsAsync(int[] productIds, bool showHidden = false)
         {
             if (productIds == null || productIds.Length == 0)
@@ -435,7 +473,10 @@ namespace Nop.Services.Catalog
         /// Gets ratio of useful and not useful product reviews 
         /// </summary>
         /// <param name="productReview">Product review</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         protected virtual async Task<(int usefulCount, int notUsefulCount)> GetHelpfulnessCountsAsync(ProductReview productReview)
         {
             if (productReview is null)
@@ -451,6 +492,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product review helpfulness record
         /// </summary>
         /// <param name="productReviewHelpfulness">Product review helpfulness record</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InsertProductReviewHelpfulnessAsync(ProductReviewHelpfulness productReviewHelpfulness)
         {
             await _productReviewHelpfulnessRepository.InsertAsync(productReviewHelpfulness);
@@ -466,6 +508,7 @@ namespace Nop.Services.Catalog
         /// Delete a product
         /// </summary>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductAsync(Product product)
         {
             await _productRepository.DeleteAsync(product);
@@ -475,6 +518,7 @@ namespace Nop.Services.Catalog
         /// Delete products
         /// </summary>
         /// <param name="products">Products</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductsAsync(IList<Product> products)
         {
             await _productRepository.DeleteAsync(products);
@@ -483,7 +527,10 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         public virtual async Task<IList<Product>> GetAllProductsDisplayedOnHomepageAsync()
         {
             var products = await _productRepository.GetAllAsync(query =>
@@ -503,7 +550,10 @@ namespace Nop.Services.Catalog
         /// Gets product
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <returns>Product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product
+        /// </returns>
         public virtual async Task<Product> GetProductByIdAsync(int productId)
         {
             return await _productRepository.GetByIdAsync(productId, cache => default);
@@ -513,7 +563,10 @@ namespace Nop.Services.Catalog
         /// Get products by identifiers
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         public virtual async Task<IList<Product>> GetProductsByIdsAsync(int[] productIds)
         {
             return await _productRepository.GetByIdsAsync(productIds, cache => default, false);
@@ -523,6 +576,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product
         /// </summary>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductAsync(Product product)
         {
             await _productRepository.InsertAsync(product);
@@ -532,6 +586,7 @@ namespace Nop.Services.Catalog
         /// Updates the product
         /// </summary>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductAsync(Product product)
         {
             await _productRepository.UpdateAsync(product);
@@ -542,7 +597,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
-        /// <returns>List of featured products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of featured products
+        /// </returns>
         public virtual async Task<IList<Product>> GetCategoryFeaturedProductsAsync(int categoryId, int storeId = 0)
         {
             IList<Product> featuredProducts = new List<Product>();
@@ -584,7 +642,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
-        /// <returns>List of featured products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of featured products
+        /// </returns>
         public virtual async Task<IList<Product>> GetManufacturerFeaturedProductsAsync(int manufacturerId, int storeId = 0)
         {
             IList<Product> featuredProducts = new List<Product>();
@@ -625,7 +686,10 @@ namespace Nop.Services.Catalog
         /// Gets products which marked as new
         /// </summary>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
-        /// <returns>List of new products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of new products
+        /// </returns>
         public virtual async Task<IList<Product>> GetProductsMarkedAsNewAsync(int storeId = 0)
         {
             return await _productRepository.GetAllAsync(async query =>
@@ -639,11 +703,12 @@ namespace Nop.Services.Catalog
 
                 query = from p in query
                         where p.Published && p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
-                        LinqToDB.Sql.Between(DateTime.UtcNow, p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue, p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
+                            DateTime.UtcNow >= (p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue) &&
+                            DateTime.UtcNow <= (p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
+                        orderby p.CreatedOnUtc descending
                         select p;
 
-                return query.Take(_catalogSettings.NewProductsNumber)
-                    .OrderBy(ProductSortingEnum.CreatedOn);
+                return query.Take(_catalogSettings.NewProductsNumber);
             });
         }
 
@@ -652,7 +717,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <returns>Number of products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of products
+        /// </returns>
         public virtual async Task<int> GetNumberOfProductsInCategoryAsync(IList<int> categoryIds = null, int storeId = 0)
         {
             //validate "categoryIds" parameter
@@ -715,7 +783,10 @@ namespace Nop.Services.Catalog
         /// true - load only "Published" products
         /// false - load only "Unpublished" products
         /// </param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         public virtual async Task<IPagedList<Product>> SearchProductsAsync(
             int pageIndex = 0,
             int pageSize = int.MaxValue,
@@ -765,16 +836,20 @@ namespace Nop.Services.Catalog
             productsQuery =
                 from p in productsQuery
                 where !p.Deleted &&
+                    (!visibleIndividuallyOnly || p.VisibleIndividually) &&
                     (vendorId == 0 || p.VendorId == vendorId) &&
                     (
                         warehouseId == 0 ||
                         (
                             !p.UseMultipleWarehouses ? p.WarehouseId == warehouseId :
-                                _productWarehouseInventoryRepository.Table.Any(pwi => pwi.Id == warehouseId && pwi.ProductId == p.Id)
+                                _productWarehouseInventoryRepository.Table.Any(pwi => pwi.WarehouseId == warehouseId && pwi.ProductId == p.Id)
                         )
                     ) &&
                     (productType == null || p.ProductTypeId == (int)productType) &&
-                    (showHidden == false || LinqToDB.Sql.Between(DateTime.UtcNow, p.AvailableStartDateTimeUtc ?? DateTime.MinValue, p.AvailableEndDateTimeUtc ?? DateTime.MaxValue)) &&
+                    (showHidden ||
+                            DateTime.UtcNow >= (p.AvailableStartDateTimeUtc ?? DateTime.MinValue) &&
+                            DateTime.UtcNow <= (p.AvailableEndDateTimeUtc ?? DateTime.MaxValue)
+                    ) &&
                     (priceMin == null || p.Price >= priceMin) &&
                     (priceMax == null || p.Price <= priceMax)
                 select p;
@@ -784,7 +859,7 @@ namespace Nop.Services.Catalog
                 var langs = await _languageService.GetAllLanguagesAsync(showHidden: true);
 
                 //Set a flag which will to points need to search in localized properties. If showHidden doesn't set to true should be at least two published languages.
-                var searchLocalizedValue = languageId > 0 && langs.Count() >= 2 && (showHidden || langs.Count(l => l.Published) >= 2);
+                var searchLocalizedValue = languageId > 0 && langs.Count >= 2 && (showHidden || langs.Count(l => l.Published) >= 2);
 
                 IQueryable<int> productsByKeywords;
 
@@ -841,7 +916,7 @@ namespace Nop.Services.Catalog
                                                 lp.LocaleKey == nameof(ProductTag.Name) &&
                                                 lp.LocaleValue.Contains(keywords)
                                 where
-                                    (lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId) && (checkName || checkShortDesc) ||
+                                    lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId && (checkName || checkShortDesc) ||
                                     checkProductTags
 
                                 select lp.EntityId);
@@ -849,7 +924,7 @@ namespace Nop.Services.Catalog
 
                 productsQuery =
                     from p in productsQuery
-                    from pbk in LinqToDB.LinqExtensions.InnerJoin(productsByKeywords, pbk => pbk == p.Id)
+                    join pbk in productsByKeywords on p.Id equals pbk
                     select p;
             }
 
@@ -864,11 +939,16 @@ namespace Nop.Services.Catalog
                         from pc in _productCategoryRepository.Table
                         where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
                             categoryIds.Contains(pc.CategoryId)
-                        select pc;
+                        group pc by pc.ProductId into pc
+                        select new { 
+                            ProductId = pc.Key,
+                            DisplayOrder = pc.First().DisplayOrder
+                        };
 
                     productsQuery =
                         from p in productsQuery
-                        where productCategoryQuery.Any(pc => pc.ProductId == p.Id)
+                        join pc in productCategoryQuery on p.Id equals pc.ProductId
+                        orderby pc.DisplayOrder, p.Name
                         select p;
                 }
             }
@@ -884,11 +964,16 @@ namespace Nop.Services.Catalog
                         from pm in _productManufacturerRepository.Table
                         where (!excludeFeaturedProducts || !pm.IsFeaturedProduct) &&
                             manufacturerIds.Contains(pm.ManufacturerId)
-                        select pm;
+                        group pm by pm.ProductId into pm
+                        select new { 
+                            ProductId = pm.Key,
+                            DisplayOrder = pm.First().DisplayOrder
+                        };
 
                     productsQuery =
                         from p in productsQuery
-                        where productManufacturerQuery.Any(pm => pm.ProductId == p.Id)
+                        join pm in productManufacturerQuery on p.Id equals pm.ProductId
+                        orderby pm.DisplayOrder, p.Name
                         select p;
                 }
             }
@@ -926,7 +1011,7 @@ namespace Nop.Services.Catalog
                 }
             }
             
-            return await productsQuery.OrderBy(orderBy).ToPagedListAsync(pageIndex, pageSize);
+            return await productsQuery.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy).ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -935,8 +1020,11 @@ namespace Nop.Services.Catalog
         /// <param name="productAttributeId">Product attribute identifier</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Products</returns>
-        public virtual async Task<IPagedList<Product>> GetProductsByProductAtributeIdAsync(int productAttributeId,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
+        public virtual async Task<IPagedList<Product>> GetProductsByProductAttributeIdAsync(int productAttributeId,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from p in _productRepository.Table
@@ -957,7 +1045,10 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         public virtual async Task<IList<Product>> GetAssociatedProductsAsync(int parentGroupedProductId,
             int storeId = 0, int vendorId = 0, bool showHidden = false)
         {
@@ -998,6 +1089,7 @@ namespace Nop.Services.Catalog
         /// Update product review totals
         /// </summary>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductReviewTotalsAsync(Product product)
         {
             if (product == null)
@@ -1038,7 +1130,10 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         public virtual async Task<IPagedList<Product>> GetLowStockProductsAsync(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
@@ -1079,7 +1174,10 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
-        /// <returns>Product combinations</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product combinations
+        /// </returns>
         public virtual async Task<IPagedList<ProductAttributeCombination>> GetLowStockProductCombinationsAsync(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
@@ -1108,7 +1206,10 @@ namespace Nop.Services.Catalog
         /// Gets a product by SKU
         /// </summary>
         /// <param name="sku">SKU</param>
-        /// <returns>Product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product
+        /// </returns>
         public virtual async Task<Product> GetProductBySkuAsync(string sku)
         {
             if (string.IsNullOrEmpty(sku))
@@ -1131,7 +1232,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="skuArray">SKU array</param>
         /// <param name="vendorId">Vendor ID; 0 to load all records</param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         public async Task<IList<Product>> GetProductsBySkuAsync(string[] skuArray, int vendorId = 0)
         {
             if (skuArray == null)
@@ -1150,6 +1254,7 @@ namespace Nop.Services.Catalog
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateHasTierPricesPropertyAsync(Product product)
         {
             if (product == null)
@@ -1163,6 +1268,7 @@ namespace Nop.Services.Catalog
         /// Update HasDiscountsApplied property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateHasDiscountsAppliedAsync(Product product)
         {
             if (product == null)
@@ -1176,7 +1282,10 @@ namespace Nop.Services.Catalog
         /// Gets number of products by vendor identifier
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
-        /// <returns>Number of products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of products
+        /// </returns>
         public async Task<int> GetNumberOfProductsByVendorIdAsync(int vendorId)
         {
             if (vendorId == 0)
@@ -1267,7 +1376,10 @@ namespace Nop.Services.Catalog
         /// Warehouse identifier. Used to limit result to certain warehouse.
         /// Used only with "multiple warehouses" enabled.
         /// </param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<int> GetTotalStockQuantityAsync(Product product, bool useReservedQuantity = true, int warehouseId = 0)
         {
             if (product == null)
@@ -1362,7 +1474,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Selected product attributes in XML format (if specified)</param>
-        /// <returns>The stock message</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the stock message
+        /// </returns>
         public virtual async Task<string> FormatStockMessageAsync(Product product, string attributesXml)
         {
             if (product == null)
@@ -1373,10 +1488,10 @@ namespace Nop.Services.Catalog
             switch (product.ManageInventoryMethod)
             {
                 case ManageInventoryMethod.ManageStock:
-                    stockMessage = await GetStockMessageAsync(product, stockMessage);
+                    stockMessage = await GetStockMessageAsync(product);
                     break;
                 case ManageInventoryMethod.ManageStockByAttributes:
-                    stockMessage = await GeStockMessageAsync(product, attributesXml);
+                    stockMessage = await GetStockMessageForAttributesAsync(product, attributesXml);
                     break;
             }
 
@@ -1388,7 +1503,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>SKU</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sKU
+        /// </returns>
         public virtual async Task<string> FormatSkuAsync(Product product, string attributesXml = null)
         {
             if (product == null)
@@ -1404,7 +1522,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Manufacturer part number</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer part number
+        /// </returns>
         public virtual async Task<string> FormatMpnAsync(Product product, string attributesXml = null)
         {
             if (product == null)
@@ -1420,7 +1541,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>GTIN</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gTIN
+        /// </returns>
         public virtual async Task<string> FormatGtinAsync(Product product, string attributesXml = null)
         {
             if (product == null)
@@ -1453,6 +1577,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="limitedToStoresIds">A list of store ids for mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductStoreMappingsAsync(Product product, IList<int> limitedToStoresIds)
         {
             product.LimitedToStores = limitedToStoresIds.Any();
@@ -1481,7 +1606,10 @@ namespace Nop.Services.Catalog
         /// Gets the value whether the sequence contains downloadable products
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> HasAnyDownloadableProductAsync(int[] productIds)
         {
             return await _productRepository.Table
@@ -1492,7 +1620,10 @@ namespace Nop.Services.Catalog
         /// Gets the value whether the sequence contains gift card products
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> HasAnyGiftCardProductAsync(int[] productIds)
         {
             return await _productRepository.Table
@@ -1503,7 +1634,10 @@ namespace Nop.Services.Catalog
         /// Gets the value whether the sequence contains recurring products
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> HasAnyRecurringProductAsync(int[] productIds)
         {
             return await _productRepository.Table
@@ -1521,6 +1655,7 @@ namespace Nop.Services.Catalog
         /// <param name="quantityToChange">Quantity to increase or decrease</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="message">Message for the stock quantity history</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AdjustInventoryAsync(Product product, int quantityToChange, string attributesXml = "", string message = "")
         {
             if (product == null)
@@ -1558,6 +1693,7 @@ namespace Nop.Services.Catalog
                 //send email notification
                 if (quantityToChange < 0 && totalStock < product.NotifyAdminForQuantityBelow)
                 {
+                    //do not inject IWorkflowMessageService via constructor because it'll cause circular references
                     var workflowMessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
                     await workflowMessageService.SendQuantityBelowStoreOwnerNotificationAsync(product, _localizationSettings.DefaultAdminLanguageId);
                 }
@@ -1586,6 +1722,7 @@ namespace Nop.Services.Catalog
                     //send email notification
                     if (quantityToChange < 0 && combination.StockQuantity < combination.NotifyAdminForQuantityBelow)
                     {
+                        //do not inject IWorkflowMessageService via constructor because it'll cause circular references
                         var workflowMessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
                         await workflowMessageService.SendQuantityBelowStoreOwnerNotificationAsync(combination, _localizationSettings.DefaultAdminLanguageId);
                     }
@@ -1615,6 +1752,7 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
         /// <param name="message">Message for the stock quantity history</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task BookReservedInventoryAsync(Product product, int warehouseId, int quantity, string message = "")
         {
             if (product == null)
@@ -1648,7 +1786,10 @@ namespace Nop.Services.Catalog
         /// <param name="product">product</param>
         /// <param name="shipmentItem">Shipment item</param>
         /// <param name="message">Message for the stock quantity history</param>
-        /// <returns>Quantity reversed</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the quantity reversed
+        /// </returns>
         public virtual async Task<int> ReverseBookedInventoryAsync(Product product, ShipmentItem shipmentItem, string message = "")
         {
             if (product == null)
@@ -1694,6 +1835,7 @@ namespace Nop.Services.Catalog
         /// Deletes a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteRelatedProductAsync(RelatedProduct relatedProduct)
         {
             await _relatedProductRepository.DeleteAsync(relatedProduct);
@@ -1704,7 +1846,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Related products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the related products
+        /// </returns>
         public virtual async Task<IList<RelatedProduct>> GetRelatedProductsByProductId1Async(int productId, bool showHidden = false)
         {
             var query = from rp in _relatedProductRepository.Table
@@ -1724,7 +1869,10 @@ namespace Nop.Services.Catalog
         /// Gets a related product
         /// </summary>
         /// <param name="relatedProductId">Related product identifier</param>
-        /// <returns>Related product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the related product
+        /// </returns>
         public virtual async Task<RelatedProduct> GetRelatedProductByIdAsync(int relatedProductId)
         {
             return await _relatedProductRepository.GetByIdAsync(relatedProductId, cache => default);
@@ -1734,6 +1882,7 @@ namespace Nop.Services.Catalog
         /// Inserts a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertRelatedProductAsync(RelatedProduct relatedProduct)
         {
             await _relatedProductRepository.InsertAsync(relatedProduct);
@@ -1743,6 +1892,7 @@ namespace Nop.Services.Catalog
         /// Updates a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateRelatedProductAsync(RelatedProduct relatedProduct)
         {
             await _relatedProductRepository.UpdateAsync(relatedProduct);
@@ -1771,6 +1921,7 @@ namespace Nop.Services.Catalog
         /// Deletes a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCrossSellProductAsync(CrossSellProduct crossSellProduct)
         {
             await _crossSellProductRepository.DeleteAsync(crossSellProduct);
@@ -1781,7 +1932,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Cross-sell products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cross-sell products
+        /// </returns>
         public virtual async Task<IList<CrossSellProduct>> GetCrossSellProductsByProductId1Async(int productId1, bool showHidden = false)
         {
             return await GetCrossSellProductsByProductIdsAsync(new[] { productId1 }, showHidden);
@@ -1791,7 +1945,10 @@ namespace Nop.Services.Catalog
         /// Gets a cross-sell product
         /// </summary>
         /// <param name="crossSellProductId">Cross-sell product identifier</param>
-        /// <returns>Cross-sell product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cross-sell product
+        /// </returns>
         public virtual async Task<CrossSellProduct> GetCrossSellProductByIdAsync(int crossSellProductId)
         {
             return await _crossSellProductRepository.GetByIdAsync(crossSellProductId, cache => default);
@@ -1801,6 +1958,7 @@ namespace Nop.Services.Catalog
         /// Inserts a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCrossSellProductAsync(CrossSellProduct crossSellProduct)
         {
             await _crossSellProductRepository.InsertAsync(crossSellProduct);
@@ -1811,8 +1969,11 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="numberOfProducts">Number of products to return</param>
-        /// <returns>Cross-sells</returns>
-        public virtual async Task<IList<Product>> GetCrosssellProductsByShoppingCartAsync(IList<ShoppingCartItem> cart, int numberOfProducts)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cross-sells
+        /// </returns>
+        public virtual async Task<IList<Product>> GetCrossSellProductsByShoppingCartAsync(IList<ShoppingCartItem> cart, int numberOfProducts)
         {
             var result = new List<Product>();
 
@@ -1878,6 +2039,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <param name="storeId">Store identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IList<TierPrice>> GetTierPricesAsync(Product product, Customer customer, int storeId)
         {
             if (product is null)
@@ -1903,6 +2065,7 @@ namespace Nop.Services.Catalog
         /// Gets a tier prices by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IList<TierPrice>> GetTierPricesByProductAsync(int productId)
         {
             var query = _tierPriceRepository.Table.Where(tp => tp.ProductId == productId);
@@ -1914,6 +2077,7 @@ namespace Nop.Services.Catalog
         /// Deletes a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteTierPriceAsync(TierPrice tierPrice)
         {
             await _tierPriceRepository.DeleteAsync(tierPrice);
@@ -1923,7 +2087,10 @@ namespace Nop.Services.Catalog
         /// Gets a tier price
         /// </summary>
         /// <param name="tierPriceId">Tier price identifier</param>
-        /// <returns>Tier price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ier price
+        /// </returns>
         public virtual async Task<TierPrice> GetTierPriceByIdAsync(int tierPriceId)
         {
             return await _tierPriceRepository.GetByIdAsync(tierPriceId, cache => default);
@@ -1933,6 +2100,7 @@ namespace Nop.Services.Catalog
         /// Inserts a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertTierPriceAsync(TierPrice tierPrice)
         {
             await _tierPriceRepository.InsertAsync(tierPrice);
@@ -1942,6 +2110,7 @@ namespace Nop.Services.Catalog
         /// Updates the tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateTierPriceAsync(TierPrice tierPrice)
         {
             await _tierPriceRepository.UpdateAsync(tierPrice);
@@ -1954,7 +2123,10 @@ namespace Nop.Services.Catalog
         /// <param name="customer">Customer</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="quantity">Quantity</param>
-        /// <returns>Tier price</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ier price
+        /// </returns>
         public virtual async Task<TierPrice> GetPreferredTierPriceAsync(Product product, Customer customer, int storeId, int quantity)
         {
             if (product is null)
@@ -1978,6 +2150,7 @@ namespace Nop.Services.Catalog
         /// Deletes a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductPictureAsync(ProductPicture productPicture)
         {
             await _productPictureRepository.DeleteAsync(productPicture);
@@ -1987,7 +2160,10 @@ namespace Nop.Services.Catalog
         /// Gets a product pictures by product identifier
         /// </summary>
         /// <param name="productId">The product identifier</param>
-        /// <returns>Product pictures</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product pictures
+        /// </returns>
         public virtual async Task<IList<ProductPicture>> GetProductPicturesByProductIdAsync(int productId)
         {
             var query = from pp in _productPictureRepository.Table
@@ -2004,7 +2180,10 @@ namespace Nop.Services.Catalog
         /// Gets a product picture
         /// </summary>
         /// <param name="productPictureId">Product picture identifier</param>
-        /// <returns>Product picture</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product picture
+        /// </returns>
         public virtual async Task<ProductPicture> GetProductPictureByIdAsync(int productPictureId)
         {
             return await _productPictureRepository.GetByIdAsync(productPictureId, cache => default);
@@ -2014,6 +2193,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductPictureAsync(ProductPicture productPicture)
         {
             await _productPictureRepository.InsertAsync(productPicture);
@@ -2023,6 +2203,7 @@ namespace Nop.Services.Catalog
         /// Updates a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductPictureAsync(ProductPicture productPicture)
         {
             await _productPictureRepository.UpdateAsync(productPicture);
@@ -2032,7 +2213,10 @@ namespace Nop.Services.Catalog
         /// Get the IDs of all product images 
         /// </summary>
         /// <param name="productsIds">Products IDs</param>
-        /// <returns>All picture identifiers grouped by product ID</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the all picture identifiers grouped by product ID
+        /// </returns>
         public async Task<IDictionary<int, int[]>> GetProductsImagesIdsAsync(int[] productsIds)
         {
             var productPictures = await _productPictureRepository.Table
@@ -2049,7 +2233,10 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to load deleted products</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>List of products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of products
+        /// </returns>
         public virtual async Task<IPagedList<Product>> GetProductsWithAppliedDiscountAsync(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -2081,13 +2268,16 @@ namespace Nop.Services.Catalog
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
-        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <param name="storeId">The store identifier, where a review has been created; pass 0 to load all records</param>
         /// <param name="productId">The product identifier; pass 0 to load all records</param>
         /// <param name="vendorId">The vendor identifier (limit to products of this vendor); pass 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Reviews</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the reviews
+        /// </returns>
         public virtual async Task<IPagedList<ProductReview>> GetAllProductReviewsAsync(int customerId = 0, bool? approved = null,
             DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = null, int storeId = 0, int productId = 0, int vendorId = 0, bool showHidden = false,
@@ -2119,7 +2309,7 @@ namespace Nop.Services.Catalog
                     query = query.Where(pr => toUtc.Value >= pr.CreatedOnUtc);
                 if (!string.IsNullOrEmpty(message))
                     query = query.Where(pr => pr.Title.Contains(message) || pr.ReviewText.Contains(message));
-                if (storeId > 0 && (showHidden || _catalogSettings.ShowProductReviewsPerStore))
+                if (storeId > 0)
                     query = query.Where(pr => pr.StoreId == storeId);
                 if (productId > 0)
                     query = query.Where(pr => pr.ProductId == productId);
@@ -2146,7 +2336,10 @@ namespace Nop.Services.Catalog
         /// Gets product review
         /// </summary>
         /// <param name="productReviewId">Product review identifier</param>
-        /// <returns>Product review</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review
+        /// </returns>
         public virtual async Task<ProductReview> GetProductReviewByIdAsync(int productReviewId)
         {
             return await _productReviewRepository.GetByIdAsync(productReviewId, cache => default);
@@ -2156,7 +2349,10 @@ namespace Nop.Services.Catalog
         /// Get product reviews by identifiers
         /// </summary>
         /// <param name="productReviewIds">Product review identifiers</param>
-        /// <returns>Product reviews</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product reviews
+        /// </returns>
         public virtual async Task<IList<ProductReview>> GetProductReviewsByIdsAsync(int[] productReviewIds)
         {
             return await _productReviewRepository.GetByIdsAsync(productReviewIds);
@@ -2166,6 +2362,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductReviewAsync(ProductReview productReview)
         {
             await _productReviewRepository.InsertAsync(productReview);
@@ -2175,6 +2372,7 @@ namespace Nop.Services.Catalog
         /// Deletes a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductReviewAsync(ProductReview productReview)
         {
             await _productReviewRepository.DeleteAsync(productReview);
@@ -2184,6 +2382,7 @@ namespace Nop.Services.Catalog
         /// Deletes product reviews
         /// </summary>
         /// <param name="productReviews">Product reviews</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductReviewsAsync(IList<ProductReview> productReviews)
         {
             await _productReviewRepository.DeleteAsync(productReviews);
@@ -2194,13 +2393,15 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         /// <param name="helpfulness">Value indicating whether a review a helpful</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetProductReviewHelpfulnessAsync(ProductReview productReview, bool helpfulness)
         {
             if (productReview is null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            var prh = await _productReviewHelpfulnessRepository.Table
-                .SingleOrDefaultAwaitAsync(async h => h.ProductReviewId == productReview.Id && h.CustomerId == (await _workContext.GetCurrentCustomerAsync()).Id);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var prh = _productReviewHelpfulnessRepository.Table
+                .SingleOrDefault(h => h.ProductReviewId == productReview.Id && h.CustomerId == customer.Id);
 
             if (prh is null)
             {
@@ -2208,7 +2409,7 @@ namespace Nop.Services.Catalog
                 prh = new ProductReviewHelpfulness
                 {
                     ProductReviewId = productReview.Id,
-                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                    CustomerId = customer.Id,
                     WasHelpful = helpfulness,
                 };
 
@@ -2227,6 +2428,7 @@ namespace Nop.Services.Catalog
         /// Updates a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductReviewAsync(ProductReview productReview)
         {
             await _productReviewRepository.UpdateAsync(productReview);
@@ -2236,7 +2438,10 @@ namespace Nop.Services.Catalog
         /// Updates a totals helpfulness count for product review
         /// </summary>
         /// <param name="productReview">Product review</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task UpdateProductReviewHelpfulnessTotalsAsync(ProductReview productReview)
         {
             if (productReview is null)
@@ -2252,11 +2457,16 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Current product</param>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         public virtual async Task<bool> CanAddReviewAsync(int productId, int storeId = 0)
         {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             if (_catalogSettings.OneReviewPerProductFromCustomer)
-                return (await GetAllProductReviewsAsync(customerId: (await _workContext.GetCurrentCustomerAsync()).Id, productId: productId, storeId: storeId)).TotalCount == 0;
+                return (await GetAllProductReviewsAsync(customerId: customer.Id, productId: productId, storeId: storeId)).TotalCount == 0;
 
             return true;
         }
@@ -2269,6 +2479,7 @@ namespace Nop.Services.Catalog
         /// Get a product warehouse-inventory records by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IList<ProductWarehouseInventory>> GetAllProductWarehouseInventoryRecordsAsync(int productId)
         {
             return await _productWarehouseInventoryRepository.GetAllAsync(query => query.Where(pwi => pwi.ProductId == productId));
@@ -2278,7 +2489,10 @@ namespace Nop.Services.Catalog
         /// Gets a warehouse by identifier
         /// </summary>
         /// <param name="warehouseId">Warehouse identifier</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<Warehouse> GetWarehousesByIdAsync(int warehouseId)
         {
             return await _warehouseRepository.GetByIdAsync(warehouseId, cache => default);
@@ -2288,6 +2502,7 @@ namespace Nop.Services.Catalog
         /// Deletes a record to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductWarehouseInventoryAsync(ProductWarehouseInventory pwi)
         {
             await _productWarehouseInventoryRepository.DeleteAsync(pwi);
@@ -2297,6 +2512,7 @@ namespace Nop.Services.Catalog
         /// Inserts a record to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductWarehouseInventoryAsync(ProductWarehouseInventory pwi)
         {
             await _productWarehouseInventoryRepository.InsertAsync(pwi);
@@ -2306,6 +2522,7 @@ namespace Nop.Services.Catalog
         /// Updates a record to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductWarehouseInventoryAsync(ProductWarehouseInventory pwi)
         {
             await _productWarehouseInventoryRepository.UpdateAsync(pwi);
@@ -2315,6 +2532,7 @@ namespace Nop.Services.Catalog
         /// Updates a records to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwis">Records to manage product inventory per warehouse</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductWarehouseInventoryAsync(IList<ProductWarehouseInventory> pwis)
         {
             await _productWarehouseInventoryRepository.UpdateAsync(pwis);
@@ -2333,6 +2551,7 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="message">Message</param>
         /// <param name="combinationId">Product attribute combination identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddStockQuantityHistoryEntryAsync(Product product, int quantityAdjustment, int stockQuantity,
             int warehouseId = 0, string message = "", int? combinationId = null)
         {
@@ -2364,7 +2583,10 @@ namespace Nop.Services.Catalog
         /// <param name="combinationId">Product attribute combination identifier; pass 0 to load all entries</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>List of stock quantity change entries</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of stock quantity change entries
+        /// </returns>
         public virtual async Task<IPagedList<StockQuantityHistory>> GetStockQuantityHistoryAsync(Product product, int warehouseId = 0, int combinationId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -2392,6 +2614,7 @@ namespace Nop.Services.Catalog
         /// Clean up product references for a specified discount
         /// </summary>
         /// <param name="discount">Discount</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ClearDiscountProductMappingAsync(Discount discount)
         {
             if (discount is null)
@@ -2416,6 +2639,7 @@ namespace Nop.Services.Catalog
         /// Get a discount-product mapping records by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IList<DiscountProductMapping>> GetAllDiscountsAppliedToProductAsync(int productId)
         {
             return await _discountProductMappingRepository.GetAllAsync(query => query.Where(dcm => dcm.EntityId == productId));
@@ -2426,7 +2650,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<DiscountProductMapping> GetDiscountAppliedToProductAsync(int productId, int discountId)
         {
             return await _discountProductMappingRepository.Table
@@ -2437,6 +2664,7 @@ namespace Nop.Services.Catalog
         /// Inserts a discount-product mapping record
         /// </summary>
         /// <param name="discountProductMapping">Discount-product mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertDiscountProductMappingAsync(DiscountProductMapping discountProductMapping)
         {
             await _discountProductMappingRepository.InsertAsync(discountProductMapping);
@@ -2446,6 +2674,7 @@ namespace Nop.Services.Catalog
         /// Deletes a discount-product mapping record
         /// </summary>
         /// <param name="discountProductMapping">Discount-product mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteDiscountProductMappingAsync(DiscountProductMapping discountProductMapping)
         {
             await _discountProductMappingRepository.DeleteAsync(discountProductMapping);

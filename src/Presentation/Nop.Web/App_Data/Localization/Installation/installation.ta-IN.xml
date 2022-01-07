@@ -34,10 +34,10 @@
     <Value>தவறான SQL தரவுத்தள இணைப்பு வடிவம்</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>நாடு</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>உங்கள் நாட்டினைத் தேர்ந்தெடுங்கள்</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>தரவுத்தளம் இல்லாவிட்டால் அதை உருவாக்கவும்</Value>

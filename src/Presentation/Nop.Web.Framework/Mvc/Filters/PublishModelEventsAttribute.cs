@@ -46,7 +46,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// Represents filter that publish ModelReceived event before the action executes, after model binding is complete
         /// and publish ModelPrepared event after the action executes, before the action result
         /// </summary>
-        private class PublishModelEventsFilter : IAsyncActionFilter
+        private class PublishModelEventsFilter : IAsyncActionFilter, IAsyncResultFilter
         {
             #region Fields
 
@@ -69,22 +69,12 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Utilities
 
             /// <summary>
-            /// Called asynchronously before the action, after model binding is complete.
+            /// Whether to ignore this filter
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            /// <returns>A task that on completion indicates the necessary filter actions have been executed</returns>
-            private async Task PublishModelReceivedEventAsync(ActionExecutingContext context)
+            /// <returns>Result</returns>
+            protected virtual bool IgnoreFilter(FilterContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
-
-                if (context.HttpContext.Request == null)
-                    return;
-
-                //only in POST requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
-                    return;
-
                 //check whether this filter has been overridden for the Action
                 var actionFilter = context.ActionDescriptor.FilterDescriptors
                     .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
@@ -92,8 +82,42 @@ namespace Nop.Web.Framework.Mvc.Filters
                     .OfType<PublishModelEventsAttribute>()
                     .FirstOrDefault();
 
-                //whether to ignore this filter
-                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
+                return actionFilter?.IgnoreFilter ?? _ignoreFilter;
+            }
+
+            /// <summary>
+            /// Publish model prepared event
+            /// </summary>
+            /// <param name="model">Model</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            protected virtual async Task PublishModelPreparedEventAsync(object model)
+            {
+                //we publish the ModelPrepared event for all models as the BaseNopModel, 
+                //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
+                if (model is BaseNopModel nopModel)
+                    await _eventPublisher.ModelPreparedAsync(nopModel);
+
+                //we publish the ModelPrepared event for collection as the IEnumerable<BaseNopModel>, 
+                //so you need to implement IConsumer<ModelPrepared<IEnumerable<BaseNopModel>>> interface to handle this event
+                if (model is IEnumerable<BaseNopModel> nopModelCollection)
+                    await _eventPublisher.ModelPreparedAsync(nopModelCollection);
+            }
+
+            /// <summary>
+            /// Called asynchronously before the action, after model binding is complete.
+            /// </summary>
+            /// <param name="context">A context for action filters</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private async Task PublishModelReceivedEventAsync(ActionExecutingContext context)
+            {
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
+                //only in POST requests
+                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                if (IgnoreFilter(context))
                     return;
 
                 //model received event
@@ -109,43 +133,18 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            /// <returns>A task that on completion indicates the necessary filter actions have been executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             private async Task PublishModelPreparedEventAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
-                if (context.HttpContext.Request == null)
-                    return;
-
-                //check whether this filter has been overridden for the Action
-                var actionFilter = context.ActionDescriptor.FilterDescriptors
-                    .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
-                    .Select(filterDescriptor => filterDescriptor.Filter)
-                    .OfType<PublishModelEventsAttribute>()
-                    .FirstOrDefault();
-
-                //whether to ignore this filter
-                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
+                if (IgnoreFilter(context))
                     return;
 
                 //model prepared event
                 if (context.Controller is Controller controller)
-                {
-                    if (controller.ViewData.Model is BaseNopModel model)
-                    {
-                        //we publish the ModelPrepared event for all models as the BaseNopModel, 
-                        //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
-                        await _eventPublisher.ModelPreparedAsync(model);
-                    }
-
-                    if (controller.ViewData.Model is IEnumerable<BaseNopModel> modelCollection)
-                    {
-                        //we publish the ModelPrepared event for collection as the IEnumerable<BaseNopModel>, 
-                        //so you need to implement IConsumer<ModelPrepared<IEnumerable<BaseNopModel>>> interface to handle this event
-                        await _eventPublisher.ModelPreparedAsync(modelCollection);
-                    }
-                }
+                    await PublishModelPreparedEventAsync(controller.ViewData.Model);
             }
 
             #endregion
@@ -157,13 +156,32 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">A context for action filters</param>
             /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
-            /// <returns>A task that on completion indicates the filter has executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
                 await PublishModelReceivedEventAsync(context);
                 if (context.Result == null)
                     await next();
                 await PublishModelPreparedEventAsync(context);
+            }
+
+            /// <summary>Called asynchronously before the action result.</summary>
+            /// <param name="context">A context for action filters</param>
+            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+            {
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
+                if (IgnoreFilter(context))
+                    return;
+
+                //model prepared event
+                if (context.Result is JsonResult result)
+                    await PublishModelPreparedEventAsync(result.Value);
+
+                await next();
             }
 
             #endregion

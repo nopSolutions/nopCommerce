@@ -15,20 +15,27 @@ namespace Nop.Services.Directory
         /// Deletes currency
         /// </summary>
         /// <param name="currency">Currency</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteCurrencyAsync(Currency currency);
 
         /// <summary>
         /// Gets a currency
         /// </summary>
         /// <param name="currencyId">Currency identifier</param>
-        /// <returns>Currency</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currency
+        /// </returns>
         Task<Currency> GetCurrencyByIdAsync(int currencyId);
 
         /// <summary>
         /// Gets a currency by code
         /// </summary>
         /// <param name="currencyCode">Currency code</param>
-        /// <returns>Currency</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currency
+        /// </returns>
         Task<Currency> GetCurrencyByCodeAsync(string currencyCode);
 
         /// <summary>
@@ -36,19 +43,24 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Currencies</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currencies
+        /// </returns>
         Task<IList<Currency>> GetAllCurrenciesAsync(bool showHidden = false, int storeId = 0);
 
         /// <summary>
         /// Inserts a currency
         /// </summary>
         /// <param name="currency">Currency</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertCurrencyAsync(Currency currency);
 
         /// <summary>
         /// Updates the currency
         /// </summary>
         /// <param name="currency">Currency</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateCurrencyAsync(Currency currency);
 
         #endregion
@@ -59,10 +71,12 @@ namespace Nop.Services.Directory
         /// Gets live rates regarding the passed currency
         /// </summary>
         /// <param name="currencyCode">Currency code; pass null to use primary exchange rate currency</param>
-        /// <returns>Exchange rates</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the exchange rates
+        /// </returns>
         Task<IList<ExchangeRate>> GetCurrencyLiveRatesAsync(string currencyCode = null);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Converts currency
         /// </summary>
@@ -76,7 +90,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="amount">Amount</param>
         /// <param name="sourceCurrencyCode">Source currency code</param>
-        /// <returns>Converted value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
         Task<decimal> ConvertToPrimaryStoreCurrencyAsync(decimal amount, Currency sourceCurrencyCode);
 
         /// <summary>
@@ -84,8 +101,45 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="amount">Amount</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
-        /// <returns>Converted value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
         Task<decimal> ConvertFromPrimaryStoreCurrencyAsync(decimal amount, Currency targetCurrencyCode);
+        
+        /// <summary>
+        /// Converts currency
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <param name="sourceCurrencyCode">Source currency code</param>
+        /// <param name="targetCurrencyCode">Target currency code</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
+        Task<decimal> ConvertCurrencyAsync(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode);
+
+        /// <summary>
+        /// Converts to primary exchange rate currency 
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <param name="sourceCurrencyCode">Source currency code</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
+        Task<decimal> ConvertToPrimaryExchangeRateCurrencyAsync(decimal amount, Currency sourceCurrencyCode);
+
+        /// <summary>
+        /// Converts from primary exchange rate currency
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <param name="targetCurrencyCode">Target currency code</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
+        Task<decimal> ConvertFromPrimaryExchangeRateCurrencyAsync(decimal amount, Currency targetCurrencyCode);
 
         #endregion
     }

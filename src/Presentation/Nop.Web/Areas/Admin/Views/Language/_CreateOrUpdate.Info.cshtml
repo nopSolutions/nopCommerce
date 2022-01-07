@@ -26,6 +26,13 @@
             }
             <nop-select asp-for="LanguageCulture" asp-items="@cultures" />
             <span asp-validation-for="LanguageCulture"></span>
+            <script>
+                $(document).ready(function() {
+                    $('#@Html.IdFor(model => model.LanguageCulture)').on('input change', function () {
+                        warningValidation('@Url.Action("LanguageCultureWarning")', '@Html.NameFor(model => model.LanguageCulture)', { currentCulture: '@(Model.LanguageCulture)', changedCulture: $(this).val() });
+                    });
+                });
+            </script>
         </div>
     </div>
     <div class="form-group row">

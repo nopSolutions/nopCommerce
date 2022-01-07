@@ -23,18 +23,22 @@ namespace Nop.Services.Logging
         /// Deletes a log item
         /// </summary>
         /// <param name="log">Log item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteLogAsync(Log log);
 
         /// <summary>
         /// Deletes a log items
         /// </summary>
         /// <param name="logs">Log items</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteLogsAsync(IList<Log> logs);
 
         /// <summary>
         /// Clears a log
         /// </summary>
-        Task ClearLogAsync();
+        /// <param name="olderThan">The date that sets the restriction on deleting records. Leave null to remove all records</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task ClearLogAsync(DateTime? olderThan = null);
 
         /// <summary>
         /// Gets all log items
@@ -45,7 +49,10 @@ namespace Nop.Services.Logging
         /// <param name="logLevel">Log level; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Log item items</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log item items
+        /// </returns>
         Task<IPagedList<Log>> GetAllLogsAsync(DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = "", LogLevel? logLevel = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
@@ -54,14 +61,20 @@ namespace Nop.Services.Logging
         /// Gets a log item
         /// </summary>
         /// <param name="logId">Log item identifier</param>
-        /// <returns>Log item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log item
+        /// </returns>
         Task<Log> GetLogByIdAsync(int logId);
 
         /// <summary>
         /// Get log items by identifiers
         /// </summary>
         /// <param name="logIds">Log item identifiers</param>
-        /// <returns>Log items</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log items
+        /// </returns>
         Task<IList<Log>> GetLogByIdsAsync(int[] logIds);
 
         /// <summary>
@@ -71,7 +84,10 @@ namespace Nop.Services.Logging
         /// <param name="shortMessage">The short message</param>
         /// <param name="fullMessage">The full message</param>
         /// <param name="customer">The customer to associate log record with</param>
-        /// <returns>A log item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a log item
+        /// </returns>
         Task<Log> InsertLogAsync(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
 
         /// <summary>
@@ -80,6 +96,7 @@ namespace Nop.Services.Logging
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InformationAsync(string message, Exception exception = null, Customer customer = null);
 
         /// <summary>
@@ -88,6 +105,7 @@ namespace Nop.Services.Logging
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task WarningAsync(string message, Exception exception = null, Customer customer = null);
 
         /// <summary>
@@ -96,6 +114,7 @@ namespace Nop.Services.Logging
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task ErrorAsync(string message, Exception exception = null, Customer customer = null);
     }
 }

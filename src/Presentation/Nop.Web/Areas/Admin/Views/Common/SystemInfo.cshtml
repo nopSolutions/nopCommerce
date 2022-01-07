@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.System.SystemInfo").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("System information");
+    NopHtml.SetActiveMenuItemSystemName("System information");
 }
 
 <div class="content-header clearfix">
@@ -13,14 +13,14 @@
     </h1>
     <div class="float-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SystemInfoButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SystemInfoButtons, additionalData = Model })
     </div>
 </div>
 
 <script>
     function toggleLoadedAssemblies() {
-        $('#pnlLoadedAssemblies').toggle();
-        if ($('#pnlLoadedAssemblies').css('display') == 'none') {
+        $('#pnlLoadedAssemblies').toggleClass('d-none');
+        if ($('#pnlLoadedAssemblies').hasClass('d-none')) {
             $('#loadedAssembliesShowHide').text('@T("Admin.Common.Show")');
         }
         else {
@@ -29,8 +29,8 @@
     }
 
     function toggleLoadedHeaders() {
-        $('#pnlHeaders').toggle();
-        if ($('#pnlHeaders').css('display') == 'none') {
+        $('#pnlHeaders').toggleClass('d-none');
+        if ($('#pnlHeaders').hasClass('d-none')) {
             $('#headersShowHide').text('@T("Admin.Common.Show")');
         }
         else {
@@ -43,7 +43,7 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="cards-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SystemInfoTop })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SystemInfoTop, additionalData = Model })
                 <div class="card card-default">
                     <div class="card-body">
                         <div class="form-group row">
@@ -124,7 +124,7 @@
                             </div>
                             <div class="col-md-9">
                                 <a id="headersShowHide" href="javascript:toggleLoadedHeaders();">@T("Admin.Common.Show")</a>
-                                <div id="pnlHeaders" style="display: none; word-break: break-all">
+                                <div id="pnlHeaders" class="d-none" style="word-break: break-all">
                                     <ul>
                                         @foreach (var header in Model.Headers)
                                         {
@@ -142,7 +142,7 @@
                             </div>
                             <div class="col-md-9">
                                 <a id="loadedAssembliesShowHide" href="javascript:toggleLoadedAssemblies();">@T("Admin.Common.Show")</a>
-                                <div id="pnlLoadedAssemblies" style="display: none">
+                                <div id="pnlLoadedAssemblies" class="d-none">
                                     <ul>
                                         @foreach (var assembly in Model.LoadedAssemblies)
                                         {
@@ -194,7 +194,7 @@
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SystemInfoBottom })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SystemInfoBottom, additionalData = Model })
             </div>
         </div>
     </div>

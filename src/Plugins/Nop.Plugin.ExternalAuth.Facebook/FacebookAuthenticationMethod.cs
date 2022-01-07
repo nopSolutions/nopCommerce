@@ -56,13 +56,14 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         /// <summary>
         /// Install the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             //settings
             await _settingService.SaveSettingAsync(new FacebookExternalAuthSettings());
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.ExternalAuth.Facebook.ClientKeyIdentifier"] = "App ID/API Key",
                 ["Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint"] = "Enter your app ID/API key here. You can find it on your FaceBook application page.",
@@ -77,6 +78,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             //settings

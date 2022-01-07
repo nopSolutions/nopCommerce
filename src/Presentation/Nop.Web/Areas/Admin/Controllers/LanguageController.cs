@@ -84,7 +84,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
-                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
+                    if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
                         await _storeMappingService.InsertStoreMappingAsync(language, store.Id);
                 }
                 else
@@ -159,6 +159,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await SaveStoreMappingsAsync(language, model);
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Added"));
+                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.NeedRestart"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -265,7 +266,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //notification
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Deleted"));
-
+            _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.NeedRestart"));
+        
             return RedirectToAction("List");
         }
 
@@ -287,6 +289,21 @@ namespace Nop.Web.Areas.Admin.Controllers
             }).ToList();
 
             return Json(availableFlagFileNames);
+        }
+
+        //action displaying notification (warning) to a store owner that changed culture
+        public virtual async Task<IActionResult> LanguageCultureWarning(string currentCulture, string changedCulture)
+        {
+            if (currentCulture != changedCulture)
+            {
+                return Json(new
+                {
+                    Result = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.CLDR.Warning"), 
+                        Url.Action("GeneralCommon", "Setting"))
+                });
+            }
+
+            return Json(new { Result = string.Empty });
         }
 
         #endregion

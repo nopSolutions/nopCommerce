@@ -361,16 +361,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
-            {
-                var specificationAttributes = await _specificationAttributeService.GetSpecificationAttributeByIdsAsync(selectedIds.ToArray());
-                await _specificationAttributeService.DeleteSpecificationAttributesAsync(specificationAttributes);
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
 
-                foreach (var specificationAttribute in specificationAttributes)
-                {
-                    await _customerActivityService.InsertActivityAsync("DeleteSpecAttribute",
-                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name), specificationAttribute);
-                }
+            var specificationAttributes = await _specificationAttributeService.GetSpecificationAttributeByIdsAsync(selectedIds.ToArray());
+            await _specificationAttributeService.DeleteSpecificationAttributesAsync(specificationAttributes);
+
+            foreach (var specificationAttribute in specificationAttributes)
+            {
+                await _customerActivityService.InsertActivityAsync("DeleteSpecAttribute",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name), specificationAttribute);
             }
 
             return Json(new { Result = true });

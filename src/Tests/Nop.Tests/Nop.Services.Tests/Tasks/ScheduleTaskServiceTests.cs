@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
-using Nop.Core.Domain.Tasks;
-using Nop.Services.Tasks;
+using Nop.Core.Domain.ScheduleTasks;
+using Nop.Services.ScheduleTasks;
 using NUnit.Framework;
 
 namespace Nop.Tests.Nop.Services.Tests.Tasks

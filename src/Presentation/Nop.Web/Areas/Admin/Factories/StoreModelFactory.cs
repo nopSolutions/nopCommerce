@@ -46,7 +46,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare store search model
         /// </summary>
         /// <param name="searchModel">Store search model</param>
-        /// <returns>Store search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store search model
+        /// </returns>
         public virtual Task<StoreSearchModel> PrepareStoreSearchModelAsync(StoreSearchModel searchModel)
         {
             if (searchModel == null)
@@ -62,7 +65,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged store list model
         /// </summary>
         /// <param name="searchModel">Store search model</param>
-        /// <returns>Store list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store list model
+        /// </returns>
         public virtual async Task<StoreListModel> PrepareStoreListModelAsync(StoreSearchModel searchModel)
         {
             if (searchModel == null)
@@ -87,10 +93,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Store model</param>
         /// <param name="store">Store</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Store model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store model
+        /// </returns>
         public virtual async Task<StoreModel> PrepareStoreModelAsync(StoreModel model, Store store, bool excludeProperties = false)
         {
-            Action<StoreLocalizedModel, int> localizedModelConfiguration = null;
+            Func<StoreLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (store != null)
             {

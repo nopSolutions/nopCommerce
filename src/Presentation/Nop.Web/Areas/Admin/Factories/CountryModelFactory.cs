@@ -75,7 +75,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare country search model
         /// </summary>
         /// <param name="searchModel">Country search model</param>
-        /// <returns>Country search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the country search model
+        /// </returns>
         public virtual Task<CountrySearchModel> PrepareCountrySearchModelAsync(CountrySearchModel searchModel)
         {
             if (searchModel == null)
@@ -91,7 +94,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged country list model
         /// </summary>
         /// <param name="searchModel">Country search model</param>
-        /// <returns>Country list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the country list model
+        /// </returns>
         public virtual async Task<CountryListModel> PrepareCountryListModelAsync(CountrySearchModel searchModel)
         {
             if (searchModel == null)
@@ -123,10 +129,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Country model</param>
         /// <param name="country">Country</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Country model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the country model
+        /// </returns>
         public virtual async Task<CountryModel> PrepareCountryModelAsync(CountryModel model, Country country, bool excludeProperties = false)
         {
-            Action<CountryLocalizedModel, int> localizedModelConfiguration = null;
+            Func<CountryLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (country != null)
             {
@@ -170,7 +179,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">State and province search model</param>
         /// <param name="country">Country</param>
-        /// <returns>State and province list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the state and province list model
+        /// </returns>
         public virtual async Task<StateProvinceListModel> PrepareStateProvinceListModelAsync(StateProvinceSearchModel searchModel, Country country)
         {
             if (searchModel == null)
@@ -199,11 +211,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="country">Country</param>
         /// <param name="state">State or province</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>State and province model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the state and province model
+        /// </returns>
         public virtual async Task<StateProvinceModel> PrepareStateProvinceModelAsync(StateProvinceModel model,
             Country country, StateProvince state, bool excludeProperties = false)
         {
-            Action<StateProvinceLocalizedModel, int> localizedModelConfiguration = null;
+            Func<StateProvinceLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (state != null)
             {

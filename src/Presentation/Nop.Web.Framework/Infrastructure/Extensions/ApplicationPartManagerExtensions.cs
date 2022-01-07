@@ -24,8 +24,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
         private static readonly INopFileProvider _fileProvider;
         private static readonly List<string> _baseAppLibraries;
-        private static readonly Dictionary<string, PluginLoadedAssemblyInfo> _loadedAssemblies = new Dictionary<string, PluginLoadedAssemblyInfo>();
-        private static readonly ReaderWriterLockSlim _locker = new ReaderWriterLockSlim();
+        private static readonly Dictionary<string, PluginLoadedAssemblyInfo> _loadedAssemblies = new();
+        private static readonly ReaderWriterLockSlim _locker = new();
 
         #endregion
 
@@ -175,11 +175,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="applicationPartManager">Application part manager</param>
         /// <param name="assemblyFile">Path to the plugin assembly file</param>
         /// <param name="shadowCopyDirectory">Path to the shadow copy directory</param>
-        /// <param name="appSettings">App settings</param>
+        /// <param name="pluginConfig">Plugin config</param>
         /// <param name="fileProvider">Nop file provider</param>
         /// <returns>Assembly</returns>
         private static Assembly PerformFileDeploy(this ApplicationPartManager applicationPartManager,
-            string assemblyFile, string shadowCopyDirectory, AppSettings appSettings, INopFileProvider fileProvider)
+            string assemblyFile, string shadowCopyDirectory, PluginConfig pluginConfig, INopFileProvider fileProvider)
         {
             //ensure for proper directory structure
             if (string.IsNullOrEmpty(assemblyFile) || string.IsNullOrEmpty(fileProvider.GetParentDirectory(assemblyFile)))
@@ -188,9 +188,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             }
 
             //whether to copy plugins assemblies to the bin directory, if not load assembly from the original file
-            if (!appSettings.PluginConfig.UsePluginsShadowCopy)
+            if (!pluginConfig.UsePluginsShadowCopy)
             {
-                var assembly = AddApplicationParts(applicationPartManager, assemblyFile, appSettings.PluginConfig.UseUnsafeLoadAssembly);
+                var assembly = AddApplicationParts(applicationPartManager, assemblyFile, pluginConfig.UseUnsafeLoadAssembly);
 
                 // delete the .deps file
                 if (assemblyFile.EndsWith(".dll"))
@@ -209,12 +209,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             try
             {
                 //and load assembly from the shadow copy
-                shadowCopiedAssembly = AddApplicationParts(applicationPartManager, shadowCopiedFile, appSettings.PluginConfig.UseUnsafeLoadAssembly);
+                shadowCopiedAssembly = AddApplicationParts(applicationPartManager, shadowCopiedFile, pluginConfig.UseUnsafeLoadAssembly);
             }
             catch (UnauthorizedAccessException)
             {
                 //suppress exceptions for "locked" assemblies, try load them from another directory
-                if (!appSettings.PluginConfig.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
+                if (!pluginConfig.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
                     !shadowCopyDirectory.Equals(fileProvider.MapPath(NopPluginDefaults.ShadowCopyPath)))
                 {
                     throw;
@@ -223,7 +223,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             catch (FileLoadException)
             {
                 //suppress exceptions for "locked" assemblies, try load them from another directory
-                if (!appSettings.PluginConfig.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
+                if (!pluginConfig.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
                     !shadowCopyDirectory.Equals(fileProvider.MapPath(NopPluginDefaults.ShadowCopyPath)))
                 {
                     throw;
@@ -237,7 +237,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var reserveDirectory = fileProvider.Combine(fileProvider.MapPath(NopPluginDefaults.ShadowCopyPath),
                 $"{NopPluginDefaults.ReserveShadowCopyPathName}{DateTime.Now.ToFileTimeUtc()}");
 
-            return PerformFileDeploy(applicationPartManager, assemblyFile, reserveDirectory, appSettings, fileProvider);
+            return PerformFileDeploy(applicationPartManager, assemblyFile, reserveDirectory, pluginConfig, fileProvider);
         }
 
         /// <summary>
@@ -356,14 +356,14 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// Initialize plugins system
         /// </summary>
         /// <param name="applicationPartManager">Application part manager</param>
-        /// <param name="appSettings">App settings</param>
-        public static void InitializePlugins(this ApplicationPartManager applicationPartManager, AppSettings appSettings)
+        /// <param name="pluginConfig">Plugin config</param>
+        public static void InitializePlugins(this ApplicationPartManager applicationPartManager, PluginConfig pluginConfig)
         {
             if (applicationPartManager == null)
                 throw new ArgumentNullException(nameof(applicationPartManager));
 
-            if (appSettings == null)
-                throw new ArgumentNullException(nameof(appSettings));
+            if (pluginConfig == null)
+                throw new ArgumentNullException(nameof(pluginConfig));
 
             PluginsInfo = new PluginsInfo(_fileProvider);
             PluginsInfo.LoadPluginInfoAsync().Wait();
@@ -387,7 +387,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     var binFiles = _fileProvider.GetFiles(shadowCopyDirectory, "*", false);
 
                     //whether to clear shadow copied files
-                    if (appSettings.PluginConfig.ClearPluginShadowDirectoryOnStartup)
+                    if (pluginConfig.ClearPluginShadowDirectoryOnStartup)
                     {
                         //skip placeholder files
                         var placeholderFileNames = new List<string> { "placeholder.txt", "index.htm" };
@@ -500,7 +500,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             if (needToDeploy)
                             {
                                 //try to deploy main plugin assembly 
-                                pluginDescriptor.ReferencedAssembly = applicationPartManager.PerformFileDeploy(mainPluginFile, shadowCopyDirectory, appSettings, _fileProvider);
+                                pluginDescriptor.ReferencedAssembly = applicationPartManager.PerformFileDeploy(mainPluginFile, shadowCopyDirectory, pluginConfig, _fileProvider);
 
                                 //and then deploy all other referenced assemblies
                                 var filesToDeploy = pluginFiles.Where(file =>
@@ -508,7 +508,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                                     !IsAlreadyLoaded(file, pluginName)).ToList();
                                 foreach (var file in filesToDeploy)
                                 {
-                                    applicationPartManager.PerformFileDeploy(file, shadowCopyDirectory, appSettings, _fileProvider);
+                                    applicationPartManager.PerformFileDeploy(file, shadowCopyDirectory, pluginConfig, _fileProvider);
                                 }
 
                                 //determine a plugin type (only one plugin per assembly is allowed)

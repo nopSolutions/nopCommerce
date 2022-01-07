@@ -36,7 +36,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Exchange rate provider</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the exchange rate provider
+        /// </returns>
         public virtual async Task<IExchangeRateProvider> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0)
         {
             return await LoadPrimaryPluginAsync(_currencySettings.ActiveExchangeRateProviderSystemName, customer, storeId);

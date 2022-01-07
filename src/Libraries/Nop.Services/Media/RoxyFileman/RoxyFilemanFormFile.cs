@@ -55,6 +55,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="target">The stream to copy the file contents to.</param>
         /// <param name="cancellationToken"></param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public Task CopyToAsync(Stream target, CancellationToken cancellationToken = new CancellationToken())
         {
             throw new NotImplementedException();

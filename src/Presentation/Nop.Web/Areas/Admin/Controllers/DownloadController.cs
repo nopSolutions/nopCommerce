@@ -64,8 +64,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        //do not validate request token (XSRF)
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> SaveDownloadUrl(string downloadUrl)
         {
             //don't allow to save empty download object

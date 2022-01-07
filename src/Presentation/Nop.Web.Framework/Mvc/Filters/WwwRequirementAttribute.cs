@@ -84,8 +84,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
             /// <param name="context">Authorization filter context</param>
-            /// <returns>A task that on completion indicates the filter has executed</returns>
-            private async Task CheckWwwRequirementAsync(AuthorizationFilterContext context)
+            private void CheckWwwRequirement(AuthorizationFilterContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -94,7 +93,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
                 //ignore this rule for localhost
@@ -130,9 +129,11 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
             /// <param name="context">Authorization filter context</param>
-            public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public Task OnAuthorizationAsync(AuthorizationFilterContext context)
             {
-                await CheckWwwRequirementAsync(context);
+                CheckWwwRequirement(context);
+                return Task.CompletedTask;
             }
 
             #endregion

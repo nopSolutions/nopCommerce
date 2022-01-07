@@ -14,6 +14,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Address model</param>
         /// <param name="address">Address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task PrepareAddressModelAsync(AddressModel model, Address address = null);
     }
 }

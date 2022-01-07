@@ -191,9 +191,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public decimal SearchPagePriceTo { get; set; }
         public bool SearchPagePriceTo_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange")]
-        public bool SearchPageAutomaticallyCalculatePriceRange { get; set; }
-        public bool SearchPageAutomaticallyCalculatePriceRange_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange")]
+        public bool SearchPageManuallyPriceRange { get; set; }
+        public bool SearchPageManuallyPriceRange_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled")]
         public bool ProductSearchAutoCompleteEnabled { get; set; }
@@ -255,9 +255,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public decimal ProductsByTagPriceTo { get; set; }
         public bool ProductsByTagPriceTo_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange")]
-        public bool ProductsByTagAutomaticallyCalculatePriceRange { get; set; }
-        public bool ProductsByTagAutomaticallyCalculatePriceRange_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange")]
+        public bool ProductsByTagManuallyPriceRange { get; set; }
+        public bool ProductsByTagManuallyPriceRange_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IncludeShortDescriptionInCompareProducts")]
         public bool IncludeShortDescriptionInCompareProducts { get; set; }
@@ -371,6 +371,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool EnablePriceRangeFiltering { get; set; }
         public bool EnablePriceRangeFiltering_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering")]
+        public bool EnableSpecificationAttributeFiltering { get; set; }
+        public bool EnableSpecificationAttributeFiltering_OverrideForStore { get; set; }
+        
         public string PrimaryStoreCurrencyCode { get; set; }
 
         #endregion

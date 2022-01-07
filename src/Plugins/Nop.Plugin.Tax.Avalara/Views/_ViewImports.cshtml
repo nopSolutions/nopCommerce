@@ -1,25 +1,26 @@
 ﻿@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
-@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
-@inject IWorkContext workContext
+
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Nop.Web.Framework
 
+@inject AvalaraTaxSettings avalaraTaxSettings
+@inject INopHtmlHelper NopHtml
+
+@using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Mvc.ViewFeatures
 @using Microsoft.AspNetCore.Routing
 @using Nop.Core
-@using Nop.Core.Domain.Common
 @using Nop.Core.Infrastructure
 @using Nop.Plugin.Tax.Avalara
 @using Nop.Plugin.Tax.Avalara.Models
 @using Nop.Plugin.Tax.Avalara.Models.Checkout
 @using Nop.Plugin.Tax.Avalara.Models.Configuration
+@using Nop.Plugin.Tax.Avalara.Models.Customer
 @using Nop.Plugin.Tax.Avalara.Models.EntityUseCode
 @using Nop.Plugin.Tax.Avalara.Models.Log
 @using Nop.Plugin.Tax.Avalara.Models.Tax
-@using Nop.Services.Events
 @using Nop.Web.Extensions
 @using Nop.Web.Framework
-@using Nop.Web.Framework.Events
 @using Nop.Web.Framework.Extensions
 @using Nop.Web.Framework.Infrastructure
 @using Nop.Web.Framework.Models

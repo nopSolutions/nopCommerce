@@ -34,10 +34,10 @@
     <Value>Feil format for SQL-tilkoblingsstreng</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Land</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Velg ditt land</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Opprett database hvis den ikke eksisterer</Value>

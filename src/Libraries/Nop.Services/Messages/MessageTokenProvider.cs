@@ -27,7 +27,6 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
-using Nop.Core.Html;
 using Nop.Core.Infrastructure;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
@@ -36,6 +35,7 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.News;
 using Nop.Services.Orders;
@@ -68,6 +68,7 @@ namespace Nop.Services.Messages
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGiftCardService _giftCardService;
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly INewsService _newsService;
@@ -110,6 +111,7 @@ namespace Nop.Services.Messages
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             IGiftCardService giftCardService,
+            IHtmlFormatter htmlFormatter,
             ILanguageService languageService,
             ILocalizationService localizationService,
             INewsService newsService,
@@ -146,6 +148,7 @@ namespace Nop.Services.Messages
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _giftCardService = giftCardService;
+            _htmlFormatter = htmlFormatter;
             _languageService = languageService;
             _localizationService = localizationService;
             _newsService = newsService;
@@ -260,7 +263,10 @@ namespace Nop.Services.Messages
                     "%Order.CreatedOn%",
                     "%Order.OrderURLForCustomer%",
                     "%Order.PickupInStore%",
-                    "%Order.OrderId%"
+                    "%Order.OrderId%",
+                    "%Order.IsCompletelyShipped%",
+                    "%Order.IsCompletelyReadyForPickup%",
+                    "%Order.IsCompletelyDelivered%"
                 });
 
                 //shipment tokens
@@ -463,7 +469,10 @@ namespace Nop.Services.Messages
         /// <param name="order">Order</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="vendorId">Vendor identifier (used to limit products by vendor</param>
-        /// <returns>HTML table of products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the hTML table of products
+        /// </returns>
         protected virtual async Task<string> ProductListToHtmlTableAsync(Order order, int languageId, int vendorId)
         {
             var language = await _languageService.GetLanguageByIdAsync(languageId);
@@ -604,6 +613,7 @@ namespace Nop.Services.Messages
         /// <param name="order">Order</param>
         /// <param name="language">Language</param>
         /// <param name="sb">StringBuilder</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task WriteTotalsAsync(Order order, Language language, StringBuilder sb)
         {
             //subtotal
@@ -795,7 +805,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Language identifier</param>
-        /// <returns>HTML table of products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the hTML table of products
+        /// </returns>
         protected virtual async Task<string> ProductListToHtmlTableAsync(Shipment shipment, int languageId)
         {
             var sb = new StringBuilder();
@@ -875,7 +888,10 @@ namespace Nop.Services.Messages
         /// <param name="storeId">Store identifier; Pass 0 to load URL of the current store</param>
         /// <param name="routeName">The name of the route that is used to generate URL</param>
         /// <param name="routeValues">An object that contains route values</param>
-        /// <returns>Generated URL</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the generated URL
+        /// </returns>
         protected virtual async Task<string> RouteUrlAsync(int storeId = 0, string routeName = null, object routeValues = null)
         {
             //try to get a store by the passed identifier
@@ -895,7 +911,7 @@ namespace Nop.Services.Messages
             url.StartsWithSegments(pathBase, out url);
 
             //compose the result
-            return Uri.EscapeUriString(WebUtility.UrlDecode($"{store.Url.TrimEnd('/')}{url}"));
+            return new Uri(WebUtility.UrlDecode($"{store.Url.TrimEnd('/')}{url}"), UriKind.Absolute).AbsoluteUri;
         }
 
         #endregion
@@ -908,6 +924,7 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="store">Store</param>
         /// <param name="emailAccount">Email account</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddStoreTokensAsync(IList<Token> tokens, Store store, EmailAccount emailAccount)
         {
             if (emailAccount == null)
@@ -936,6 +953,7 @@ namespace Nop.Services.Messages
         /// <param name="order"></param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="vendorId">Vendor identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddOrderTokensAsync(IList<Token> tokens, Order order, int languageId, int vendorId = 0)
         {
             //lambda expression for choosing correct order address
@@ -981,6 +999,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingZipPostalCode", (await orderAddress(order))?.ZipPostalCode ?? string.Empty));
             tokens.Add(new Token("Order.ShippingCountry", await _countryService.GetCountryByAddressAsync(await orderAddress(order)) is Country orderCountry ? await _localizationService.GetLocalizedAsync(orderCountry, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingCustomAttributes", await _addressAttributeFormatter.FormatAttributesAsync((await orderAddress(order))?.CustomAttributes ?? string.Empty), true));
+            tokens.Add(new Token("Order.IsCompletelyShipped", !order.PickupInStore && order.ShippingStatus == ShippingStatus.Shipped));
+            tokens.Add(new Token("Order.IsCompletelyReadyForPickup", order.PickupInStore && !await _orderService.HasItemsToAddToShipmentAsync(order) && !await _orderService.HasItemsToReadyForPickupAsync(order)));
+            tokens.Add(new Token("Order.IsCompletelyDelivered", order.ShippingStatus == ShippingStatus.Delivered));
 
             var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(order.PaymentMethodSystemName);
             var paymentMethodName = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, (await _workContext.GetWorkingLanguageAsync()).Id) : order.PaymentMethodSystemName;
@@ -1026,6 +1047,7 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="order">Order</param>
         /// <param name="refundedAmount">Refunded amount of order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddOrderRefundedTokensAsync(IList<Token> tokens, Order order, decimal refundedAmount)
         {
             //should we convert it to customer currency?
@@ -1048,6 +1070,7 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="shipment">Shipment item</param>
         /// <param name="languageId">Language identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddShipmentTokensAsync(IList<Token> tokens, Shipment shipment, int languageId)
         {
             tokens.Add(new Token("Shipment.ShipmentNumber", shipment.Id));
@@ -1055,10 +1078,9 @@ namespace Nop.Services.Messages
             var trackingNumberUrl = string.Empty;
             if (!string.IsNullOrEmpty(shipment.TrackingNumber))
             {
-                var shipmentService = EngineContext.Current.Resolve<IShipmentService>();
-                var shipmentTracker = await shipmentService.GetShipmentTrackerAsync(shipment);
+                var shipmentTracker = await _shipmentService.GetShipmentTrackerAsync(shipment);
                 if (shipmentTracker != null)
-                    trackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber);
+                    trackingNumberUrl = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment);
             }
 
             tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));
@@ -1076,6 +1098,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="orderNote">Order note</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddOrderNoteTokensAsync(IList<Token> tokens, OrderNote orderNote)
         {
             var order = await _orderService.GetOrderByIdAsync(orderNote.OrderId);
@@ -1093,6 +1116,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="recurringPayment">Recurring payment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddRecurringPaymentTokensAsync(IList<Token> tokens, RecurringPayment recurringPayment)
         {
             tokens.Add(new Token("RecurringPayment.ID", recurringPayment.Id));
@@ -1111,19 +1135,21 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
-        public virtual async Task AddReturnRequestTokensAsync(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem)
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task AddReturnRequestTokensAsync(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem, int languageId)
         {
             var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
             tokens.Add(new Token("ReturnRequest.CustomNumber", returnRequest.CustomNumber));
             tokens.Add(new Token("ReturnRequest.OrderId", orderItem.OrderId));
             tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity));
-            tokens.Add(new Token("ReturnRequest.Product.Name", product.Name));
+            tokens.Add(new Token("ReturnRequest.Product.Name", await _localizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
             tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
             tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
-            tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
-            tokens.Add(new Token("ReturnRequest.StaffNotes", HtmlHelper.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
-            tokens.Add(new Token("ReturnRequest.Status", await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus)));
+            tokens.Add(new Token("ReturnRequest.CustomerComment", _htmlFormatter.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
+            tokens.Add(new Token("ReturnRequest.StaffNotes", _htmlFormatter.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
+            tokens.Add(new Token("ReturnRequest.Status", await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus, languageId)));
 
             //event notification
             await _eventPublisher.EntityTokensAddedAsync(returnRequest, tokens);
@@ -1134,6 +1160,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="giftCard">Gift card</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddGiftCardTokensAsync(IList<Token> tokens, GiftCard giftCard)
         {
             tokens.Add(new Token("GiftCard.SenderName", giftCard.SenderName));
@@ -1144,7 +1171,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("GiftCard.CouponCode", giftCard.GiftCardCouponCode));
 
             var giftCardMessage = !string.IsNullOrWhiteSpace(giftCard.Message) ?
-                HtmlHelper.FormatText(giftCard.Message, false, true, false, false, false, false) : string.Empty;
+                _htmlFormatter.FormatText(giftCard.Message, false, true, false, false, false, false) : string.Empty;
 
             tokens.Add(new Token("GiftCard.Message", giftCardMessage, true));
 
@@ -1157,6 +1184,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="customerId">Customer identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddCustomerTokensAsync(IList<Token> tokens, int customerId)
         {
             if (customerId <= 0)
@@ -1172,6 +1200,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddCustomerTokensAsync(IList<Token> tokens, Customer customer)
         {
             tokens.Add(new Token("Customer.Email", customer.Email));
@@ -1204,6 +1233,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="vendor">Vendor</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddVendorTokensAsync(IList<Token> tokens, Vendor vendor)
         {
             tokens.Add(new Token("Vendor.Name", vendor.Name));
@@ -1221,6 +1251,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="subscription">Newsletter subscription</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddNewsLetterSubscriptionTokensAsync(IList<Token> tokens, NewsLetterSubscription subscription)
         {
             tokens.Add(new Token("NewsLetterSubscription.Email", subscription.Email));
@@ -1240,6 +1271,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="productReview">Product review</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddProductReviewTokensAsync(IList<Token> tokens, ProductReview productReview)
         {
             tokens.Add(new Token("ProductReview.ProductName", (await _productService.GetProductByIdAsync(productReview.ProductId))?.Name));
@@ -1257,6 +1289,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="blogComment">Blog post comment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddBlogCommentTokensAsync(IList<Token> tokens, BlogComment blogComment)
         {
             var blogPost = await _blogService.GetBlogPostByIdAsync(blogComment.BlogPostId);
@@ -1272,6 +1305,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="newsComment">News comment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddNewsCommentTokensAsync(IList<Token> tokens, NewsComment newsComment)
         {
             var newsItem = await _newsService.GetNewsByIdAsync(newsComment.NewsItemId);
@@ -1288,6 +1322,7 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="product">Product</param>
         /// <param name="languageId">Language identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddProductTokensAsync(IList<Token> tokens, Product product, int languageId)
         {
             tokens.Add(new Token("Product.ID", product.Id));
@@ -1309,6 +1344,7 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="combination">Product attribute combination</param>
         /// <param name="languageId">Language identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddAttributeCombinationTokensAsync(IList<Token> tokens, ProductAttributeCombination combination, int languageId)
         {
             //attributes
@@ -1338,6 +1374,7 @@ namespace Nop.Services.Messages
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
         /// <param name="appendedPostIdentifierAnchor">Forum post identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddForumTopicTokensAsync(IList<Token> tokens, ForumTopic forumTopic,
             int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null)
         {
@@ -1365,6 +1402,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="forumPost">Forum post</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddForumPostTokensAsync(IList<Token> tokens, ForumPost forumPost)
         {
             //attributes
@@ -1386,6 +1424,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="forum">Forum</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddForumTokensAsync(IList<Token> tokens, Forum forum)
         {
             //attributes
@@ -1406,6 +1445,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="privateMessage">Private message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddPrivateMessageTokensAsync(IList<Token> tokens, PrivateMessage privateMessage)
         {
             //attributes
@@ -1425,6 +1465,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="subscription">BackInStock subscription</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddBackInStockTokensAsync(IList<Token> tokens, BackInStockSubscription subscription)
         {
             var product = await _productService.GetProductByIdAsync(subscription.ProductId);
@@ -1440,7 +1481,10 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Get collection of allowed (supported) message tokens for campaigns
         /// </summary>
-        /// <returns>Collection of allowed (supported) message tokens for campaigns</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of allowed (supported) message tokens for campaigns
+        /// </returns>
         public virtual async Task<IEnumerable<string>> GetListOfCampaignAllowedTokensAsync()
         {
             var additionalTokens = new CampaignAdditionalTokensAddedEvent();
@@ -1456,7 +1500,10 @@ namespace Nop.Services.Messages
         /// Get collection of allowed (supported) message tokens
         /// </summary>
         /// <param name="tokenGroups">Collection of token groups; pass null to get all available tokens</param>
-        /// <returns>Collection of allowed message tokens</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of allowed message tokens
+        /// </returns>
         public virtual async Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IEnumerable<string> tokenGroups = null)
         {
             var additionalTokens = new AdditionalTokensAddedEvent();
@@ -1498,6 +1545,7 @@ namespace Nop.Services.Messages
                 MessageTemplateSystemNames.OrderCancelledCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
                 MessageTemplateSystemNames.ShipmentSentCustomerNotification or 
+                MessageTemplateSystemNames.ShipmentReadyForPickupCustomerNotification or 
                 MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ShipmentTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
                 MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification or 

@@ -75,7 +75,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="page">Number of posts page; pass null to disable paging</param>
-        /// <returns>Profile index model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the profile index model
+        /// </returns>
         public virtual async Task<ProfileIndexModel> PrepareProfileIndexModelAsync(Customer customer, int? page)
         {
             if (customer == null)
@@ -108,7 +111,10 @@ namespace Nop.Web.Factories
         /// Prepare the profile info model
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Profile info model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the profile info model
+        /// </returns>
         public virtual async Task<ProfileInfoModel> PrepareProfileInfoModelAsync(Customer customer)
         {
             if (customer == null)
@@ -202,7 +208,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="page">Number of posts page</param>
-        /// <returns>Profile posts model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the profile posts model
+        /// </returns>
         public virtual async Task<ProfilePostsModel> PrepareProfilePostsModelAsync(Customer customer, int page)
         {
             if (customer == null)
@@ -221,7 +230,7 @@ namespace Nop.Web.Factories
 
             foreach (var forumPost in list)
             {
-                var posted = string.Empty;
+                string posted;
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
                 {
                     var languageCode = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
@@ -245,7 +254,7 @@ namespace Nop.Web.Factories
                 });
             }
 
-            var pagerModel = new PagerModel
+            var pagerModel = new PagerModel(_localizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

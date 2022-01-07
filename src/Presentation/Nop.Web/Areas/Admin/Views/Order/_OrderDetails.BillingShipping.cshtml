@@ -371,17 +371,17 @@
 
                                 function toggleEditShippingMethod(editmode) {
                                     if (editmode) {
-                                        $('#lblShippingMethod').hide();
-                                        $('#divShippingMethod').showField();
-                                        $('#btnEditShippingMethod').hide();
-                                        $('#btnSaveShippingMethod').showField();
-                                        $('#btnCancelShippingMethod').showField();
+                                        $('#lblShippingMethod').hideElement();
+                                        $('#divShippingMethod').showElement();
+                                        $('#btnEditShippingMethod').hideElement();
+                                        $('#btnSaveShippingMethod').showElement();
+                                        $('#btnCancelShippingMethod').showElement();
                                     } else {
-                                        $('#lblShippingMethod').show();
-                                        $('#divShippingMethod').hide();
-                                        $('#btnEditShippingMethod').show();
-                                        $('#btnSaveShippingMethod').hide();
-                                        $('#btnCancelShippingMethod').hide();
+                                        $('#lblShippingMethod').showElement();
+                                        $('#divShippingMethod').hideElement();
+                                        $('#btnEditShippingMethod').showElement();
+                                        $('#btnSaveShippingMethod').hideElement();
+                                        $('#btnCancelShippingMethod').hideElement();
                                     }
                                 }
                             </script>
@@ -470,11 +470,19 @@
                             Title = T("Admin.Orders.Shipments.TotalWeight").Text,
                             Width = "100"
                         },
-                        new ColumnProperty(nameof(ShipmentModel.ShippedDate))
-                        {
-                            Title = T("Admin.Orders.Shipments.ShippedDate").Text,
-                            Width = "100"
-                        },
+                        (
+                            Model.PickupInStore 
+                                ? new ColumnProperty(nameof(ShipmentModel.ReadyForPickupDate))
+                                {
+                                    Title = T("Admin.Orders.Shipments.ReadyForPickupDate").Text,
+                                    Width = "100"
+                                }
+                                : new ColumnProperty(nameof(ShipmentModel.ShippedDate))
+                                {
+                                    Title = T("Admin.Orders.Shipments.ShippedDate").Text,
+                                    Width = "100"
+                                } 
+                        ),
                         new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
                         {
                             Title = T("Admin.Orders.Shipments.DeliveryDate").Text,

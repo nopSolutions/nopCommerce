@@ -14,7 +14,7 @@
     {
         url = Model.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(Model.Url) : Model.Url;
     }
-    var isActive = Model.ContainsSystemName(Html.GetActiveMenuItemSystemName());
+    var isActive = Model.ContainsSystemName(NopHtml.GetActiveMenuItemSystemName());
 }
 @if (!string.IsNullOrEmpty(url))
 {

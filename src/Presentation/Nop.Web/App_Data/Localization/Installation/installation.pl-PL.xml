@@ -13,10 +13,10 @@
     <Value>Wprowadź hasło administratora</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>Konto '{0}' nie posiada uprawnień do modyfikacji folderu '{1}'. Proszę zmienić uprawnienia.</Value>
+    <Value>'{0}' konto nie posiada uprawnień do modyfikacji folderu '{1}'. Proszę zmienić uprawnienia.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>Konto '{0}' nie posiada uprawnień do modyfikacji pliku '{1}'. Proszę zmienić uprawnienia.</Value>
+    <Value>'{0}' konto nie posiada uprawnień do modyfikacji pliku '{1}'. Proszę zmienić uprawnienia.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
     <Value>Potwierdź hasło</Value>
@@ -28,10 +28,10 @@
     <Value>Połączenie - Connection string</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>Connection string SQL jest wymagany</Value>
+    <Value>Połączenie SQL connection string jest wymagane</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>SQL Connection String jest błędny</Value>
+    <Value>Błędny format SQL connection string </Value>
   </LocaleResource>
   <LocaleResource Name="Country">
     <Value>Country</Value>
@@ -40,7 +40,7 @@
     <Value>Select your country...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>Utwórz bazę jeśli nie ustnieje</Value>
+    <Value>Czy utworzyć bazę jeśli nie istnieje</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
     <Value>Załaduj przykładowe dane</Value>
@@ -61,10 +61,10 @@
     <Value>Nazwa bazy danych</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>Baza danych nie istnieje lub nie masz uprawnień aby się z nią połączyć</Value>
+    <Value>Baza danych nie istnieje lub nie masz uprawnień aby się do niej podłączyć</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>Wybierz dostawcę danych</Value>
+    <Value>Wybierz dostawcę danych </Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
     <Value>Jeżeli potrzebujesz więcej informacji na temat korzystania z nopCommerce, zobacz</Value>
@@ -79,10 +79,10 @@
     <Value>Instalacja</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>Trwa instalacja nopCommerce...</Value>
+    <Value>Instalacja nopCommerce...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>Użyj zintegrowanego uwierzytelniania Windows</Value>
+    <Value>Użyj zintegrowane uwierzytelniania Windows</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
     <Value>MySQL</Value>
@@ -94,13 +94,13 @@
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>Wprowadź pełny connection string (zaawansowane)</Value>
+    <Value>Wprowadź raw connection string (zaawansowane)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
     <Value>Restart instalacji</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>Kliknij, aby ponownie uruchomić proces instalacji (usuwa wszystkie zachowane w pamięci wartości)</Value>
+    <Value>Kliknij, aby ponownie uruchomić proces instalacji</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
     <Value>Restartowanie...</Value>
@@ -133,7 +133,7 @@
     <Value>Informacje o sklepie</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>Instalacja nopCommerce</Value>
+    <Value>nopCommerce instalacja</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>Aby ukończyć kreatora należy znać kilka informacji na temat serwera bazy danych ("Connection string - ciąg połączenia"). Proszę skontaktować się z usługodawcą hostingu w razie potrzeby. Jeżeli instalujesz na komputerze lokalnym lub serwerze mogą być potrzebne informacje od administratora systemu.</Value>

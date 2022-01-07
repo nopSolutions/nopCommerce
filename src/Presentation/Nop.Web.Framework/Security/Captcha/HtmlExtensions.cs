@@ -22,10 +22,13 @@ namespace Nop.Web.Framework.Security.Captcha
         /// Get the reCAPTCHA language
         /// </summary>
         /// <param name="captchaSettings">Captcha settings</param>
-        /// <returns>Language code</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the language code
+        /// </returns>
         private static async Task<string> GetReCaptchaLanguageAsync(CaptchaSettings captchaSettings)
         {
-            var language = (captchaSettings.ReCaptchaDefaultLanguage ?? string.Empty).ToLower();
+            var language = (captchaSettings.ReCaptchaDefaultLanguage ?? string.Empty).ToLowerInvariant();
             if (captchaSettings.AutomaticallyChooseLanguage)
             {
                 //this list got from this site: https://developers.google.com/recaptcha/docs/language
@@ -37,7 +40,7 @@ namespace Nop.Web.Framework.Security.Captcha
 
                 var currentLanguage = await workContext.GetWorkingLanguageAsync();
                 var twoLetterIsoCode = currentLanguage != null
-                    ? languageService.GetTwoLetterIsoLanguageName(currentLanguage).ToLower()
+                    ? languageService.GetTwoLetterIsoLanguageName(currentLanguage).ToLowerInvariant()
                     : string.Empty;
 
                 language = supportedLanguageCodes.Contains(twoLetterIsoCode) ? twoLetterIsoCode : language;
@@ -77,14 +80,17 @@ namespace Nop.Web.Framework.Security.Captcha
         /// </summary>
         /// <param name="helper">HTML helper</param>
         /// <param name="captchaSettings">Captcha settings</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public static async Task<IHtmlContent> GenerateCheckBoxReCaptchaV2Async(this IHtmlHelper helper, CaptchaSettings captchaSettings)
         {
             //prepare language
             var language = await GetReCaptchaLanguageAsync(captchaSettings);
 
             //prepare theme
-            var theme = (captchaSettings.ReCaptchaTheme ?? string.Empty).ToLower();
+            var theme = (captchaSettings.ReCaptchaTheme ?? string.Empty).ToLowerInvariant();
             theme = theme switch
             {
                 "blackglass" or "dark" => "dark",
@@ -116,7 +122,10 @@ namespace Nop.Web.Framework.Security.Captcha
         /// </summary>
         /// <param name="helper">HTML helper</param>
         /// <param name="captchaSettings">Captcha settings</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public static async Task<IHtmlContent> GenerateReCaptchaV3Async(this IHtmlHelper helper, CaptchaSettings captchaSettings)
         {
             //prepare language

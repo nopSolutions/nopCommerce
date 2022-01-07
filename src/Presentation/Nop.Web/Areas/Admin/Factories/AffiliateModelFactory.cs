@@ -75,7 +75,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated order search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the affiliated order search model
+        /// </returns>
         protected virtual async Task<AffiliatedOrderSearchModel> PrepareAffiliatedOrderSearchModelAsync(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
         {
             if (searchModel == null)
@@ -127,7 +130,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare affiliate search model
         /// </summary>
         /// <param name="searchModel">Affiliate search model</param>
-        /// <returns>Affiliate search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the affiliate search model
+        /// </returns>
         public virtual Task<AffiliateSearchModel> PrepareAffiliateSearchModelAsync(AffiliateSearchModel searchModel)
         {
             if (searchModel == null)
@@ -143,7 +149,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged affiliate list model
         /// </summary>
         /// <param name="searchModel">Affiliate search model</param>
-        /// <returns>Affiliate list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the affiliate list model
+        /// </returns>
         public virtual async Task<AffiliateListModel> PrepareAffiliateListModelAsync(AffiliateSearchModel searchModel)
         {
             if (searchModel == null)
@@ -184,7 +193,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Affiliate model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Affiliate model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the affiliate model
+        /// </returns>
         public virtual async Task<AffiliateModel> PrepareAffiliateModelAsync(AffiliateModel model, Affiliate affiliate, bool excludeProperties = false)
         {
             //fill in model values from the entity
@@ -229,7 +241,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated order list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the affiliated order list model
+        /// </returns>
         public virtual async Task<AffiliatedOrderListModel> PrepareAffiliatedOrderListModelAsync(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
         {
             if (searchModel == null)
@@ -284,7 +299,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated customer list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the affiliated customer list model
+        /// </returns>
         public virtual async Task<AffiliatedCustomerListModel> PrepareAffiliatedCustomerListModelAsync(AffiliatedCustomerSearchModel searchModel,
             Affiliate affiliate)
         {

@@ -21,7 +21,10 @@ namespace Nop.Services.Plugins
         /// <param name="friendlyName">Filter by plugin friendly name; pass null to load all records</param>
         /// <param name="author">Filter by plugin author; pass null to load all records</param>
         /// <param name="dependsOnSystemName">System name of the plugin to define dependencies</param>
-        /// <returns>Plugin descriptors</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the plugin descriptors
+        /// </returns>
         Task<IList<PluginDescriptor>> GetPluginDescriptorsAsync<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
             Customer customer = null, int storeId = 0, string group = null, string dependsOnSystemName = "", string friendlyName = null, string author = null) where TPlugin : class, IPlugin;
 
@@ -34,7 +37,10 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by  customer; pass null to load all records</param>
         /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
-        /// <returns>>Plugin descriptor</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the >Plugin descriptor
+        /// </returns>
         Task<PluginDescriptor> GetPluginDescriptorBySystemNameAsync<TPlugin>(string systemName,
             LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
             Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin;
@@ -47,7 +53,10 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by  customer; pass null to load all records</param>
         /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
-        /// <returns>Plugins</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the plugins
+        /// </returns>
         Task<IList<TPlugin>> GetPluginsAsync<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
             Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin;
 
@@ -62,7 +71,10 @@ namespace Nop.Services.Plugins
         /// Get plugin logo URL
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor</param>
-        /// <returns>Logo URL</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the logo URL
+        /// </returns>
         Task<string> GetPluginLogoUrlAsync(PluginDescriptor pluginDescriptor);
 
         /// <summary>
@@ -71,18 +83,21 @@ namespace Nop.Services.Plugins
         /// <param name="systemName">Plugin system name</param>
         /// <param name="customer">Customer</param>
         /// <param name="checkDependencies">Specifies whether to check plugin dependencies</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task PreparePluginToInstallAsync(string systemName, Customer customer = null, bool checkDependencies = true);
 
         /// <summary>
         /// Prepare plugin to the uninstallation
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task PreparePluginToUninstallAsync(string systemName);
 
         /// <summary>
         /// Prepare plugin to the removing
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task PreparePluginToDeleteAsync(string systemName);
 
         /// <summary>
@@ -98,21 +113,25 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Install plugins
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InstallPluginsAsync();
 
         /// <summary>
         /// Uninstall plugins
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UninstallPluginsAsync();
 
         /// <summary>
         /// Delete plugins
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeletePluginsAsync();
 
         /// <summary>
         /// Update plugins
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdatePluginsAsync();
 
         /// <summary>

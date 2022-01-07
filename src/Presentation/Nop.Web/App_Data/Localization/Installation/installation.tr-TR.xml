@@ -34,10 +34,10 @@
     <Value>Hatalı SQL bağlantı cümleciği (connection string) biçimi</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Ülke</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Ülkenizi seçin</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Veritabanı yok ise oluştur</Value>

@@ -4,21 +4,22 @@
     //page title
     ViewBag.PageTitle = T("Admin.Orders.EditOrderDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Orders");
+    NopHtml.SetActiveMenuItemSystemName("Orders");
 }
 
 @{
     const string hideInfoBlockAttributeName = "OrderPage.HideInfoBlock";
-    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
 
     const string hideBillingAndShippingBlockAttributeName = "OrderPage.HideBillingAndShippingBlock";
-    var hideBillingAndShippingBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideBillingAndShippingBlockAttributeName);
+    var hideBillingAndShippingBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideBillingAndShippingBlockAttributeName);
 
     const string hideProductsBlockAttributeName = "OrderPage.HideProductsBlock";
-    var hideProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideProductsBlockAttributeName);
+    var hideProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductsBlockAttributeName);
 
     const string hideNotesBlockAttributeName = "OrderPage.HideNotesBlock";
-    var hideNotesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideNotesBlockAttributeName);
+    var hideNotesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideNotesBlockAttributeName);
 }
 
     <form asp-controller="Order" asp-action="Edit" method="post" id="order-form">

@@ -86,6 +86,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of vendor associated customer models</param>
         /// <param name="vendor">Vendor</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareAssociatedCustomerModelsAsync(IList<VendorAssociatedCustomerModel> models, Vendor vendor)
         {
             if (models == null)
@@ -110,6 +111,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of vendor attribute models</param>
         /// <param name="vendor">Vendor</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareVendorAttributeModelsAsync(IList<VendorModel.VendorAttributeModel> models, Vendor vendor)
         {
             if (models == null)
@@ -229,7 +231,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare vendor search model
         /// </summary>
         /// <param name="searchModel">Vendor search model</param>
-        /// <returns>Vendor search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor search model
+        /// </returns>
         public virtual Task<VendorSearchModel> PrepareVendorSearchModelAsync(VendorSearchModel searchModel)
         {
             if (searchModel == null)
@@ -245,7 +250,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged vendor list model
         /// </summary>
         /// <param name="searchModel">Vendor search model</param>
-        /// <returns>Vendor list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor list model
+        /// </returns>
         public virtual async Task<VendorListModel> PrepareVendorListModelAsync(VendorSearchModel searchModel)
         {
             if (searchModel == null)
@@ -280,10 +288,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Vendor model</param>
         /// <param name="vendor">Vendor</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Vendor model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor model
+        /// </returns>
         public virtual async Task<VendorModel> PrepareVendorModelAsync(VendorModel model, Vendor vendor, bool excludeProperties = false)
         {
-            Action<VendorLocalizedModel, int> localizedModelConfiguration = null;
+            Func<VendorLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (vendor != null)
             {
@@ -320,6 +331,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.AllowCustomersToSelectPageSize = true;
                 model.PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions;
                 model.PriceRangeFiltering = true;
+                model.ManuallyPriceRange = true;
                 model.PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
                 model.PriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
             }
@@ -347,7 +359,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Vendor note search model</param>
         /// <param name="vendor">Vendor</param>
-        /// <returns>Vendor note list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor note list model
+        /// </returns>
         public virtual async Task<VendorNoteListModel> PrepareVendorNoteListModelAsync(VendorNoteSearchModel searchModel, Vendor vendor)
         {
             if (searchModel == null)

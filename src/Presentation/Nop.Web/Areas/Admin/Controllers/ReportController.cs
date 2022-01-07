@@ -45,7 +45,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> SalesSummaryList(SalesSummarySearchModel searchModel)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.SalesSummaryReport))
                 return await AccessDeniedDataTablesJson();
 
             //prepare model

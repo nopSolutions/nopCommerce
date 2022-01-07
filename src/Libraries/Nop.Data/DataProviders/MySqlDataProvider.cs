@@ -23,6 +23,7 @@ namespace Nop.Data.DataProviders
 
         //it's quite fast hash (to cheaply distinguish between objects)
         private const string HASH_ALGORITHM = "SHA1";
+        private static readonly Lazy<IDataProvider> _dataProvider = new(() => new MySqlDataProvider(ProviderName.MySql), true);
 
         #endregion
 
@@ -31,9 +32,9 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Creates the database connection
         /// </summary>
-        protected override async Task<DataConnection> CreateDataConnectionAsync()
+        protected override DataConnection CreateDataConnection()
         {
-            var dataContext = await CreateDataConnectionAsync(LinqToDbDataProvider);
+            var dataContext = CreateDataConnection(LinqToDbDataProvider);
 
             dataContext.MappingSchema.SetDataType(typeof(Guid), new SqlDataType(DataType.NChar, typeof(Guid), 36));
             dataContext.MappingSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
@@ -41,7 +42,7 @@ namespace Nop.Data.DataProviders
             return dataContext;
         }
 
-        protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
+        protected static MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             return new MySqlConnectionStringBuilder(GetCurrentConnectionString());
         }
@@ -58,7 +59,7 @@ namespace Nop.Data.DataProviders
         protected override DbConnection GetInternalDbConnection(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentException(nameof(connectionString));
+                throw new ArgumentNullException(nameof(connectionString));
 
             return new MySqlConnection(connectionString);
         }
@@ -117,12 +118,15 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
-        /// <returns>Returns true if the database exists.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the returns true if the database exists.
+        /// </returns>
         public async Task<bool> DatabaseExistsAsync()
         {
             try
             {
-                await using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+                await using var connection = GetInternalDbConnection(GetCurrentConnectionString());
 
                 //just try to connect
                 await connection.OpenAsync();
@@ -154,30 +158,24 @@ namespace Nop.Data.DataProviders
                 return false;
             }
         }
-
-        /// <summary>
-        /// Initialize database
-        /// </summary>
-        public void InitializeDatabase()
-        {
-            var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
-        }
-
+        
         /// <summary>
         /// Get the current identity value
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>Integer identity; null if cannot get the result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the integer identity; null if cannot get the result
+        /// </returns>
         public virtual async Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
         {
-            using var currentConnection = await CreateDataConnectionAsync();
-            var tableName = GetEntityDescriptor<TEntity>().TableName;
+            using var currentConnection = CreateDataConnection();
+            var tableName = GetEntityDescriptor(typeof(TEntity)).EntityName;
             var databaseName = currentConnection.Connection.Database;
 
             //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
             //with DataContext we could be used KeepConnectionAlive option
-            await using var dbConnection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+            await using var dbConnection = GetInternalDbConnection(GetCurrentConnectionString());
 
             dbConnection.StateChange += (sender, e) =>
             {
@@ -189,7 +187,7 @@ namespace Nop.Data.DataProviders
                     var connection = (IDbConnection)sender;
                     using var internalCommand = connection.CreateCommand();
                     internalCommand.Connection = connection;
-                    internalCommand.CommandText = $"SET @@SESSION.information_schema_stats_expiry = 0;";
+                    internalCommand.CommandText = "SET @@SESSION.information_schema_stats_expiry = 0;";
                     internalCommand.ExecuteNonQuery();
                 }
                 //ignoring for older than 8.0 versions MySQL (#1193 Unknown system variable)
@@ -212,14 +210,15 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="ident">Identity value</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity
         {
             var currentIdent = await GetTableIdentAsync<TEntity>();
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            using var currentConnection = await CreateDataConnectionAsync();
-            var tableName = GetEntityDescriptor<TEntity>().TableName;
+            using var currentConnection = CreateDataConnection();
+            var tableName = GetEntityDescriptor(typeof(TEntity)).EntityName;
 
             await currentConnection.ExecuteAsync($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
         }
@@ -227,6 +226,7 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Creates a backup of the database
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual Task BackupDatabaseAsync(string fileName)
         {
             throw new DataException("This database provider does not support backup");
@@ -236,6 +236,7 @@ namespace Nop.Data.DataProviders
         /// Restores the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual Task RestoreDatabaseAsync(string backupFileName)
         {
             throw new DataException("This database provider does not support backup");
@@ -244,9 +245,10 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Re-index database tables
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ReIndexTablesAsync()
         {
-            using var currentConnection = await CreateDataConnectionAsync();
+            using var currentConnection = CreateDataConnection();
             var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
 
             if (tables.Count > 0)
@@ -270,7 +272,7 @@ namespace Nop.Data.DataProviders
             {
                 Server = nopConnectionString.ServerName,
                 //Cast DatabaseName to lowercase to avoid case-sensitivity problems
-                Database = nopConnectionString.DatabaseName.ToLower(),
+                Database = nopConnectionString.DatabaseName.ToLowerInvariant(),
                 AllowUserVariables = true,
                 UserID = nopConnectionString.Username,
                 Password = nopConnectionString.Password,
@@ -313,7 +315,7 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// MySql data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => new MySqlDataProvider(ProviderName.MySql);
+        protected override IDataProvider LinqToDbDataProvider => _dataProvider.Value;
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

@@ -40,7 +40,10 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all review types
         /// </summary>
-        /// <returns>Review types</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the review types
+        /// </returns>
         public virtual async Task<IList<ReviewType>> GetAllReviewTypesAsync()
         {
             return await _reviewTypeRepository.GetAllAsync(
@@ -52,7 +55,10 @@ namespace Nop.Services.Catalog
         /// Gets a review type 
         /// </summary>
         /// <param name="reviewTypeId">Review type identifier</param>
-        /// <returns>Review type</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the review type
+        /// </returns>
         public virtual async Task<ReviewType> GetReviewTypeByIdAsync(int reviewTypeId)
         {
             return await _reviewTypeRepository.GetByIdAsync(reviewTypeId, cache => default);
@@ -62,6 +68,7 @@ namespace Nop.Services.Catalog
         /// Inserts a review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertReviewTypeAsync(ReviewType reviewType)
         {
             await _reviewTypeRepository.InsertAsync(reviewType);
@@ -71,6 +78,7 @@ namespace Nop.Services.Catalog
         /// Updates a review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateReviewTypeAsync(ReviewType reviewType)
         {
             await _reviewTypeRepository.UpdateAsync(reviewType);
@@ -80,6 +88,7 @@ namespace Nop.Services.Catalog
         /// Delete review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteReviewTypeAsync(ReviewType reviewType)
         {
             await _reviewTypeRepository.DeleteAsync(reviewType);
@@ -93,7 +102,10 @@ namespace Nop.Services.Catalog
         /// Gets product review and review type mappings by product review identifier
         /// </summary>
         /// <param name="productReviewId">The product review identifier</param>
-        /// <returns>Product review and review type mapping collection</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review and review type mapping collection
+        /// </returns>
         public async Task<IList<ProductReviewReviewTypeMapping>> GetProductReviewReviewTypeMappingsByProductReviewIdAsync(
             int productReviewId)
         {
@@ -113,6 +125,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product review and review type mapping
         /// </summary>
         /// <param name="productReviewReviewType">Product review and review type mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductReviewReviewTypeMappingsAsync(ProductReviewReviewTypeMapping productReviewReviewType)
         {
             await _productReviewReviewTypeMappingRepository.InsertAsync(productReviewReviewType);

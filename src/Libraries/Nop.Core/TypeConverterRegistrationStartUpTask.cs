@@ -15,6 +15,7 @@ namespace Nop.Core
         /// <summary>
         /// Executes a task
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public Task ExecuteAsync()
         {
             //lists

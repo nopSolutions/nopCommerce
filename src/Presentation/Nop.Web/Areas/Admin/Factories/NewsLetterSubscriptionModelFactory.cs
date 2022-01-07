@@ -55,7 +55,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare newsletter subscription search model
         /// </summary>
         /// <param name="searchModel">Newsletter subscription search model</param>
-        /// <returns>Newsletter subscription search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsletter subscription search model
+        /// </returns>
         public virtual async Task<NewsletterSubscriptionSearchModel> PrepareNewsletterSubscriptionSearchModelAsync(NewsletterSubscriptionSearchModel searchModel)
         {
             if (searchModel == null)
@@ -96,7 +99,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged newsletter subscription list model
         /// </summary>
         /// <param name="searchModel">Newsletter subscription search model</param>
-        /// <returns>Newsletter subscription list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsletter subscription list model
+        /// </returns>
         public virtual async Task<NewsletterSubscriptionListModel> PrepareNewsletterSubscriptionListModelAsync(NewsletterSubscriptionSearchModel searchModel)
         {
             if (searchModel == null)

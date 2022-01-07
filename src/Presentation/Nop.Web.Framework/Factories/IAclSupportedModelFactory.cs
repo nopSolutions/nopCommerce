@@ -15,6 +15,7 @@ namespace Nop.Web.Framework.Factories
         /// </summary>
         /// <typeparam name="TModel">ACL supported model type</typeparam>
         /// <param name="model">Model</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task PrepareModelCustomerRolesAsync<TModel>(TModel model) where TModel : IAclSupportedModel;
 
         /// <summary>
@@ -25,6 +26,7 @@ namespace Nop.Web.Framework.Factories
         /// <param name="model">Model</param>
         /// <param name="entity">Entity</param>
         /// <param name="ignoreAclMappings">Whether to ignore existing ACL mappings</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task PrepareModelCustomerRolesAsync<TModel, TEntity>(TModel model, TEntity entity, bool ignoreAclMappings)
             where TModel : IAclSupportedModel where TEntity : BaseEntity, IAclSupported;
     }

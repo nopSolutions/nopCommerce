@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Reports.SalesSummary").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Sales summary");
+    NopHtml.SetActiveMenuItemSystemName("Sales summary");
 }
 
 @{
@@ -121,7 +121,7 @@
                                                         $('#@Html.IdFor(model => model.ProductId)').val(ui.item.productid);
                                                         $('#search-product-friendly-name').text(ui.item.label);
 
-                                                        $('#search-product-clear').showField();
+                                                        $('#search-product-clear').show();
                                                         return false;
                                                     }
                                                 });

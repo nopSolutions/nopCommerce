@@ -15,61 +15,61 @@
 
         function toggleChangeOrderStatus(editmode) {
             if (editmode) {
-                $('#pnlChangeOrderStatus').show();
-                $('#btnChangeOrderStatus').hide();
+                $('#pnlChangeOrderStatus').showElement();
+                $('#btnChangeOrderStatus').hideElement();
             } else {
-                $('#pnlChangeOrderStatus').hide();
-                $('#btnChangeOrderStatus').show();
+                $('#pnlChangeOrderStatus').hideElement();
+                $('#btnChangeOrderStatus').showElement();
             }
         }
 
         function toggleOrderTotals(editmode) {
             if (editmode) {
-                $('#trEditOrderTotals').show();
-                $('#btnEditOrderTotals').hide();
-                $('#btnSaveOrderTotals').show();
-                $('#btnCancelOrderTotals').show();
+                $('#trEditOrderTotals').showElement();
+                $('#btnEditOrderTotals').hideElement();
+                $('#btnSaveOrderTotals').showElement();
+                $('#btnCancelOrderTotals').showElement();
             } else {
-                $('#trEditOrderTotals').hide();
-                $('#btnEditOrderTotals').show();
-                $('#btnSaveOrderTotals').hide();
-                $('#btnCancelOrderTotals').hide();
+                $('#trEditOrderTotals').hideElement();
+                $('#btnEditOrderTotals').showElement();
+                $('#btnSaveOrderTotals').hideElement();
+                $('#btnCancelOrderTotals').hideElement();
             }
         }
 
         function toggleCC(editmode) {
             if (editmode) {
-                $('#lblCardType').hide();
-                $('#@Html.IdFor(model => model.CardType)').showField();
-                $('#lblCardName').hide();
-                $('#@Html.IdFor(model => model.CardName)').showField();
-                $('#lblCardNumber').hide();
-                $('#@Html.IdFor(model => model.CardNumber)').showField();
-                $('#lblCardCvv2').hide();
-                $('#@Html.IdFor(model => model.CardCvv2)').showField();
-                $('#lblCardExpirationMonth').hide();
-                $('#@Html.IdFor(model => model.CardExpirationMonth)').showField();
-                $('#lblCardExpirationYear').hide();
-                $('#@Html.IdFor(model => model.CardExpirationYear)').showField();
-                $('#btnEditCC').hide();
-                $('#btnSaveCC').showField();
-                $('#btnCancelCC').showField();
+                $('#lblCardType').hideElement();
+                $('#@Html.IdFor(model => model.CardType)').showElement();
+                $('#lblCardName').hideElement();
+                $('#@Html.IdFor(model => model.CardName)').showElement();
+                $('#lblCardNumber').hideElement();
+                $('#@Html.IdFor(model => model.CardNumber)').showElement();
+                $('#lblCardCvv2').hideElement();
+                $('#@Html.IdFor(model => model.CardCvv2)').showElement();
+                $('#lblCardExpirationMonth').hideElement();
+                $('#@Html.IdFor(model => model.CardExpirationMonth)').showElement();
+                $('#lblCardExpirationYear').hideElement();
+                $('#@Html.IdFor(model => model.CardExpirationYear)').showElement();
+                $('#btnEditCC').hideElement();
+                $('#btnSaveCC').showElement();
+                $('#btnCancelCC').showElement();
             } else {
-                $('#lblCardType').showField();
-                $('#@Html.IdFor(model => model.CardType)').hide();
-                $('#lblCardName').showField();
-                $('#@Html.IdFor(model => model.CardName)').hide();
-                $('#lblCardNumber').showField();
-                $('#@Html.IdFor(model => model.CardNumber)').hide();
-                $('#lblCardCvv2').showField();
-                $('#@Html.IdFor(model => model.CardCvv2)').hide();
-                $('#lblCardExpirationMonth').showField();
-                $('#@Html.IdFor(model => model.CardExpirationMonth)').hide();
-                $('#lblCardExpirationYear').showField();
-                $('#@Html.IdFor(model => model.CardExpirationYear)').hide();
-                $('#btnEditCC').showField();
-                $('#btnSaveCC').hide();
-                $('#btnCancelCC').hide();
+                $('#lblCardType').showElement();
+                $('#@Html.IdFor(model => model.CardType)').hideElement();
+                $('#lblCardName').showElement();
+                $('#@Html.IdFor(model => model.CardName)').hideElement();
+                $('#lblCardNumber').showElement();
+                $('#@Html.IdFor(model => model.CardNumber)').hideElement();
+                $('#lblCardCvv2').showElement();
+                $('#@Html.IdFor(model => model.CardCvv2)').hideElement();
+                $('#lblCardExpirationMonth').showElement();
+                $('#@Html.IdFor(model => model.CardExpirationMonth)').hideElement();
+                $('#lblCardExpirationYear').showElement();
+                $('#@Html.IdFor(model => model.CardExpirationYear)').hideElement();
+                $('#btnEditCC').showElement();
+                $('#btnSaveCC').hideElement();
+                $('#btnCancelCC').hideElement();
             }
         }
     </script>
