@@ -244,7 +244,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         }
 
         /// <summary>
-        /// Handle order async Tasked event
+        /// Handle order voided event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
         /// <returns>A task that represents the asynchronous operation</returns>
@@ -257,7 +257,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return;
 
-            //async Task tax transaction
+            //void tax transaction
             await _avalaraTaxManager.VoidTaxTransactionAsync(eventMessage.Order);
         }
 
@@ -275,7 +275,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return;
 
-            //async Task tax transaction
+            //void tax transaction
             await _avalaraTaxManager.VoidTaxTransactionAsync(eventMessage.Order);
         }
 
