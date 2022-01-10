@@ -84,7 +84,7 @@ namespace Nop.Services.Catalog
             if (!product.HasDiscountsApplied) 
                 return allowedDiscounts;
 
-            //we use this property ("HasDiscountsApplied") for performance optimization to async Task unnecessary database calls
+            //we use this property ("HasDiscountsApplied") for performance optimization to avoid unnecessary database calls
             foreach (var discount in await _discountService.GetAppliedDiscountsAsync(product))
                 if (discount.DiscountType == DiscountType.AssignedToSkus &&
                     (await _discountService.ValidateDiscountAsync(discount, customer)).IsValid)

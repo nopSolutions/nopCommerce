@@ -2975,12 +2975,12 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Gets a value indicating whether async Task from admin panel is allowed
+        /// Gets a value indicating whether void from admin panel is allowed
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains a value indicating whether async Task from admin panel is allowed
+        /// The task result contains a value indicating whether void from admin panel is allowed
         /// </returns>
         public virtual async Task<bool> CanVoidAsync(Order order)
         {
@@ -3002,12 +3002,12 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// async Tasks order (from admin panel)
+        /// Voids order (from admin panel)
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the async Tasked order
+        /// The task result contains the voided orders
         /// </returns>
         public virtual async Task<IList<string>> VoidAsync(Order order)
         {
@@ -3015,7 +3015,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(order));
 
             if (!await CanVoidAsync(order))
-                throw new NopException("Cannot do async Task for order.");
+                throw new NopException("Cannot do void for order.");
 
             var request = new VoidPaymentRequest();
             VoidPaymentResult result = null;
@@ -3031,7 +3031,7 @@ namespace Nop.Services.Orders
                     await _orderService.UpdateOrderAsync(order);
 
                     //add a note
-                    await AddOrderNoteAsync(order, "Order has been async Tasked");
+                    await AddOrderNoteAsync(order, "Order has been voided");
 
                     //check order status
                     await CheckOrderStatusAsync(order);
@@ -3060,19 +3060,19 @@ namespace Nop.Services.Orders
                 return result.Errors;
 
             //add a note
-            await AddOrderNoteAsync(order, $"Unable to async Tasking order. {error}");
+            await AddOrderNoteAsync(order, $"Unable to voiding order. {error}");
 
             //log it
-            var logError = $"Error async Tasking order #{order.Id}. Error: {error}";
+            var logError = $"Error voiding order #{order.Id}. Error: {error}";
             await _logger.InsertLogAsync(LogLevel.Error, logError, logError);
             return result.Errors;
         }
 
         /// <summary>
-        /// Gets a value indicating whether order can be marked as async Tasked
+        /// Gets a value indicating whether order can be marked as voided
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A value indicating whether order can be marked as async Tasked</returns>
+        /// <returns>A value indicating whether order can be marked as voided</returns>
         public virtual bool CanVoidOffline(Order order)
         {
             if (order == null)
@@ -3092,7 +3092,7 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// async Tasks order (offline)
+        /// Void order (offline)
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A task that represents the asynchronous operation</returns>
@@ -3102,13 +3102,13 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(order));
 
             if (!CanVoidOffline(order))
-                throw new NopException("You can't async Task this order");
+                throw new NopException("You can't void this order");
 
             order.PaymentStatusId = (int)PaymentStatus.Voided;
             await _orderService.UpdateOrderAsync(order);
 
             //add a note
-            await AddOrderNoteAsync(order, "Order has been marked as async Tasked");
+            await AddOrderNoteAsync(order, "Order has been marked as voided");
 
             //check order status
             await CheckOrderStatusAsync(order);
