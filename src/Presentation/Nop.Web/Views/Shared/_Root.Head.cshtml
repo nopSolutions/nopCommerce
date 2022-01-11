@@ -12,6 +12,23 @@
 
 @{
 
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
+    //when jQuery migrate script logging is active you will see the log in the browser console
+    if (commonSettings.JqueryMigrateScriptLoggingActive)
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.js");
+    }
+    else
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.min.js");
+    }
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation/jquery.validate.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery/jquery.min.js");
+
     //custom tag(s);
     if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
     {
@@ -54,25 +71,6 @@
 </head>
 <body>
     @RenderBody()
-
-    <script src="~/lib_npm/jquery/jquery.min.js"></script>
-    @* when jQuery migrate script logging is active you will see the log in the browser console *@
-    @if (commonSettings.JqueryMigrateScriptLoggingActive)
-    {
-        <script src="~/lib_npm/jquery-migrate/jquery-migrate.js"></script>
-    }
-    else
-    {
-        <script src="~/lib_npm/jquery-migrate/jquery-migrate.min.js"></script>
-    }
-    <script src="~/lib_npm/jquery-ui-dist/jquery-ui.min.js"></script>
-    <script src="~/lib_npm/jquery-validation/jquery.validate.min.js"></script>
-    <script src="~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
-
-    <script src="~/js/public.countryselect.js"></script>
-    <script src="~/js/public.ajaxcart.js"></script>
-    <script src="~/js/public.common.js"></script>
 
     @NopHtml.GenerateScripts(ResourceLocation.Footer)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
