@@ -295,16 +295,17 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (string.IsNullOrEmpty(debugSrc))
-                debugSrc = src;
+            if (!string.IsNullOrEmpty(debugSrc) && _webHostEnvironment.IsDevelopment())
+                src = debugSrc;
+
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             _scriptParts[location].Add(new ScriptReferenceMeta
             {
                 ExcludeFromBundle = excludeFromBundle,
                 IsAsync = isAsync,
-                IsLocal = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).IsLocalUrl(src),
-                Src = src,
-                DebugSrc = debugSrc
+                IsLocal = urlHelper.IsLocalUrl(src),
+                Src = urlHelper.Content(src)
             });
         }
 
@@ -324,16 +325,17 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (string.IsNullOrEmpty(debugSrc))
-                debugSrc = src;
+            if (!string.IsNullOrEmpty(debugSrc) && _webHostEnvironment.IsDevelopment())
+                src = debugSrc;
+
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             _scriptParts[location].Insert(0, new ScriptReferenceMeta
             {
                 ExcludeFromBundle = excludeFromBundle,
                 IsAsync = isAsync,
-                IsLocal = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).IsLocalUrl(src),
-                Src = src,
-                DebugSrc = debugSrc
+                IsLocal = urlHelper.IsLocalUrl(src),
+                Src = urlHelper.Content(src)
             });
         }
 
@@ -350,8 +352,6 @@ namespace Nop.Web.Framework.UI
             if (!_scriptParts.Any())
                 return HtmlString.Empty;
 
-            var debugModel = _webHostEnvironment.IsDevelopment();
-
             var result = new StringBuilder();
             var woConfig = _appSettings.Get<WebOptimizerConfig>();
             if (woConfig.EnableJavaScriptBundling && _scriptParts[location].Any(item => !item.ExcludeFromBundle))
@@ -360,7 +360,7 @@ namespace Nop.Web.Framework.UI
 
                 var sources = _scriptParts[location]
                     .Where(item => !item.ExcludeFromBundle && item.IsLocal)
-                    .Select(item => debugModel ? item.DebugSrc : item.Src)
+                    .Select(item => item.Src)
                     .Distinct().ToArray();
 
                 var bundleAsset = GetOrCreateBundle(bundleKey, _assetPipeline.AddJavaScriptBundle, sources);
@@ -376,16 +376,14 @@ namespace Nop.Web.Framework.UI
 
             foreach (var item in scripts)
             {
-                var src = debugModel ? item.DebugSrc : item.Src;
-
                 if (!item.IsLocal)
                 {
-                    result.AppendFormat("<script type=\"{0}\" src=\"{1}\"></script>", MimeTypes.TextJavascript, src);
+                    result.AppendFormat("<script type=\"{0}\" src=\"{1}\"></script>", MimeTypes.TextJavascript, item.Src);
                     result.Append(Environment.NewLine);
                     continue;
                 }
 
-                var asset = GetOrCreateBundle(src, _assetPipeline.AddJavaScriptBundle);
+                var asset = GetOrCreateBundle(item.Src, _assetPipeline.AddJavaScriptBundle);
 
                 result.AppendFormat("<script type=\"{0}\" src=\"{1}?v={2}\"></script>",
                     MimeTypes.TextJavascript, asset.Route, asset.GenerateCacheKey(_actionContextAccessor.ActionContext.HttpContext));
@@ -461,20 +459,21 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this style sheet from bundling</param>
-        public virtual void AddCssFileParts(string src, string debugSrc, bool excludeFromBundle = false)
+        public virtual void AddCssFileParts(string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (string.IsNullOrEmpty(debugSrc))
-                debugSrc = src;
+            if (!string.IsNullOrEmpty(debugSrc) && _webHostEnvironment.IsDevelopment())
+                src = debugSrc;
+
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             _cssParts.Add(new CssReferenceMeta
             {
                 ExcludeFromBundle = excludeFromBundle,
-                IsLocal = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).IsLocalUrl(src),
-                Src = src,
-                DebugSrc = debugSrc
+                IsLocal = urlHelper.IsLocalUrl(src),
+                Src = urlHelper.Content(src)
             });
         }
 
@@ -484,20 +483,21 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this style sheet from bundling</param>
-        public virtual void AppendCssFileParts(string src, string debugSrc, bool excludeFromBundle = false)
+        public virtual void AppendCssFileParts(string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (string.IsNullOrEmpty(debugSrc))
-                debugSrc = src;
+            if (!string.IsNullOrEmpty(debugSrc) && _webHostEnvironment.IsDevelopment())
+                src = debugSrc;
+
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             _cssParts.Insert(0, new CssReferenceMeta
             {
                 ExcludeFromBundle = excludeFromBundle,
-                IsLocal = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).IsLocalUrl(src),
-                Src = src,
-                DebugSrc = debugSrc
+                IsLocal = urlHelper.IsLocalUrl(src),
+                Src = urlHelper.Content(src)
             });
         }
 
@@ -529,7 +529,7 @@ namespace Nop.Web.Framework.UI
                     .Where(item => !item.ExcludeFromBundle && item.IsLocal)
                     .Distinct()
                     //remove the application path from the generated URL if exists
-                    .Select(item => debugModel ? item.DebugSrc : item.Src).ToArray();
+                    .Select(item => item.Src).ToArray();
 
                 var bundleAsset = GetOrCreateBundle(bundleKey, (bundleKey, assetFiles) =>
                 {
@@ -552,16 +552,14 @@ namespace Nop.Web.Framework.UI
 
             foreach (var item in styles)
             {
-                var src = debugModel ? item.DebugSrc : item.Src;
-
                 if (!item.IsLocal)
                 {
-                    result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}\" />", MimeTypes.TextCss, src);
+                    result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}\" />", MimeTypes.TextCss, item.Src);
                     result.Append(Environment.NewLine);
                     continue;
                 }
 
-                var asset = GetOrCreateBundle(src, (bundleKey, assetFiles) =>
+                var asset = GetOrCreateBundle(item.Src, (bundleKey, assetFiles) =>
                 {
                     return _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextCss}; charset=UTF-8", assetFiles)
                         .EnforceFileExtensions(".css")
@@ -801,7 +799,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// JS file meta data
         /// </summary>
-        private record struct ScriptReferenceMeta
+        private record ScriptReferenceMeta
         {
             /// <summary>
             /// A value indicating whether to exclude the script from bundling
@@ -822,17 +820,12 @@ namespace Nop.Web.Framework.UI
             /// Src for production
             /// </summary>
             public string Src { get; set; }
-
-            /// <summary>
-            /// Src for debugging
-            /// </summary>
-            public string DebugSrc { get; set; }
         }
 
         /// <summary>
         /// CSS file meta data
         /// </summary>
-        private record struct CssReferenceMeta
+        private record CssReferenceMeta
         {
             /// <summary>
             /// A value indicating whether to exclude the script from bundling
@@ -843,11 +836,6 @@ namespace Nop.Web.Framework.UI
             /// Src for production
             /// </summary>
             public string Src { get; set; }
-
-            /// <summary>
-            /// Src for debugging
-            /// </summary>
-            public string DebugSrc { get; set; }
 
             /// <summary>
             /// A value indicating whether the Src is local

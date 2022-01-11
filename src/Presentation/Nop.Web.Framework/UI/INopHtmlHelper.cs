@@ -119,7 +119,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this style sheet from bundling</param>
-        void AddCssFileParts(string src, string debugSrc, bool excludeFromBundle = false);
+        void AddCssFileParts(string src, string debugSrc = "", bool excludeFromBundle = false);
 
         /// <summary>
         /// Append CSS element
@@ -127,7 +127,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this style sheet from bundling</param>
-        void AppendCssFileParts(string src, string debugSrc, bool excludeFromBundle = false);
+        void AppendCssFileParts(string src, string debugSrc = "", bool excludeFromBundle = false);
 
         /// <summary>
         /// Generate all CSS parts
