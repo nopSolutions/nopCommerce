@@ -40,6 +40,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         private readonly AppSettings _appSettings;
         private readonly IAssetPipeline _assetPipeline;
         private readonly INopHtmlHelper _nopHtmlHelper;
+        private readonly IWebHelper _webHelper;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         #endregion
@@ -51,11 +52,13 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             IAssetPipeline assetPipeline,
             INopHtmlHelper nopHtmlHelper,
             IUrlHelperFactory urlHelperFactory,
+            IWebHelper webHelper,
             IWebHostEnvironment webHostEnvironment) : base(urlHelperFactory, htmlEncoder)
         {
             _appSettings = appSettings;
             _assetPipeline = assetPipeline ?? throw new ArgumentNullException(nameof(assetPipeline));
             _nopHtmlHelper = nopHtmlHelper;
+            _webHelper = webHelper;
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -133,6 +136,9 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
             if (output == null)
                 throw new ArgumentNullException(nameof(output));
+
+            if (_webHelper.IsAjaxRequest(ViewContext.HttpContext?.Request))
+                return;
 
             var config = _appSettings.Get<WebOptimizerConfig>();
 
