@@ -11,7 +11,7 @@ namespace Nop.Tests.Nop.Services.Tests.Themes
         private IThemeProvider _themeProvider;
 
         [OneTimeSetUp]
-        public async Task OneTimeSetUp()
+        public void OneTimeSetUp()
         {
             _themeProvider = GetService<IThemeProvider>();
         }

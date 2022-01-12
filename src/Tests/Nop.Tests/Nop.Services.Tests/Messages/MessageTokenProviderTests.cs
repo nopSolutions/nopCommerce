@@ -13,7 +13,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         private IMessageTemplateService _messageTemplateService;
 
         [OneTimeSetUp]
-        public async Task OneTimeSetUp()
+        public void OneTimeSetUp()
         {
             _messageTemplateService = GetService<IMessageTemplateService>();
         }

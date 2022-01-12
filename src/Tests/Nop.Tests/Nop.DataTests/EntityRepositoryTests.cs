@@ -19,7 +19,7 @@ namespace Nop.Tests.Nop.DataTests
         private CacheKey _cacheKey;
 
         [OneTimeSetUp]
-        public async Task SetUp()
+        public void SetUp()
         {
             _cacheManager = GetService<IStaticCacheManager>();
             _cacheKey = new CacheKey("EntityRepositoryTestsCacheKey");

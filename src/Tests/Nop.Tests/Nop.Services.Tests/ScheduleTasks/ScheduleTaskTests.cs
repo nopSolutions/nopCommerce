@@ -12,7 +12,7 @@ namespace Nop.Tests.Nop.Services.Tests.ScheduleTasks
         private IStaticCacheManager _staticCacheManager;
 
         [OneTimeSetUp]
-        public async Task SetUp()
+        public void SetUp()
         {
             _staticCacheManager = GetService<IStaticCacheManager>();
         }
