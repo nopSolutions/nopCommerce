@@ -214,9 +214,6 @@
         </div>
     </div>
 
-    @NopHtml.GenerateScripts(ResourceLocation.Footer)
-    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
-
     <script>
         var AdminLTEOptions = {
             boxWidgetOptions: {
@@ -247,5 +244,8 @@
             $('[data-toggle="tooltip"]').tooltip({ placement: 'bottom' });
         });
     </script>
+
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
 </body>
 </html>

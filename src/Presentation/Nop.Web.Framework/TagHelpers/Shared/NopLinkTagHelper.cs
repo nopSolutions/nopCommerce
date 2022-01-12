@@ -40,26 +40,6 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
         #endregion
 
-        #region Utils
-
-        private void ProcessSrcAttribute(TagHelperContext context, TagHelperOutput output)
-        {
-            // Pass through attribute that is also a well-known HTML attribute.
-            if (Href != null)
-                output.CopyHtmlAttribute(HREF_ATTRIBUTE_NAME, context);
-
-            // If there's no "src" attribute in output.Attributes this will noop.
-            ProcessUrlAttribute(HREF_ATTRIBUTE_NAME, output);
-
-            // Retrieve the TagHelperOutput variation of the "href" attribute in case other TagHelpers in the
-            // pipeline have touched the value. If the value is already encoded this ScriptTagHelper may
-            // not function properly.
-            if (output.Attributes[HREF_ATTRIBUTE_NAME]?.Value is string hrefAttribute)
-                Href = hrefAttribute;
-        }
-
-        #endregion
-
         #region Methods
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -69,11 +49,6 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
             if (output == null)
                 throw new ArgumentNullException(nameof(output));
-
-            output.Attributes.SetAttribute("type", MimeTypes.TextCss);
-            output.TagMode = TagMode.SelfClosing;
-
-            ProcessSrcAttribute(context, output);
 
             _nopHtmlHelper.AddCssFileParts(Href, string.Empty, ExcludeFromBundle);
 

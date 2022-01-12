@@ -32,14 +32,14 @@
         </div>
     </div>
 
-    @NopHtml.GenerateScripts(ResourceLocation.Footer)
-    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
-
     <script>
         $(document).ready(function () {
             //enable tooltips
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
+
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)    
 </body>
 </html>

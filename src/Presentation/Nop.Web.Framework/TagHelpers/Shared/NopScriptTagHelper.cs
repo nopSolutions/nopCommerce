@@ -140,30 +140,22 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             if (_webHelper.IsAjaxRequest(ViewContext.HttpContext?.Request))
                 return;
 
-            var config = _appSettings.Get<WebOptimizerConfig>();
-
             output.TagMode = TagMode.StartTagAndEndTag;
 
             if (!output.Attributes.ContainsName("type")) // we don't touch other types e.g. text/template
                 output.Attributes.SetAttribute("type", MimeTypes.TextJavascript);
 
-            ProcessSrcAttribute(context, output);
-
             if (Location == ResourceLocation.Auto)
             {
                 // move script to the footer bundle when bundling is enabled
-                Location = config.EnableJavaScriptBundling ? ResourceLocation.Footer : ResourceLocation.None;
+                Location = _appSettings.Get<WebOptimizerConfig>().EnableJavaScriptBundling ? ResourceLocation.Footer : ResourceLocation.None;
             }
 
             if (Location == ResourceLocation.None)
             {
-                if (string.IsNullOrEmpty(Src))
+                if (!string.IsNullOrEmpty(Src))
                 {
-                    output.SuppressOutput();
-                    output.Content.SetHtmlContent(await BuildInlineScriptTagAsync(output));
-                }
-                else
-                {
+                    ProcessSrcAttribute(context, output);
                     ProcessAsset(output);
                 }
 

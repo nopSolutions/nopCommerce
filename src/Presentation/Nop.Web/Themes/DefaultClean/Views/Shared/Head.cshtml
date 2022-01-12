@@ -7,11 +7,11 @@
     Layout ="";
     var themeName = await themeContext.GetWorkingThemeNameAsync();
     var supportRtl = await Html.ShouldUseRtlThemeAsync();
-    var href = $"~/Themes/{themeName}/Content/css/styles{(supportRtl ? ".rtl" : "")}.css";
+
+    //add main CSS file
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles{(supportRtl ? ".rtl" : "")}.css");
+
+    //add jQuery UI css file
+    NopHtml.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
+
 }
-
-@* add main CSS file *@
-<link rel="stylesheet" href="@href" />
-
-@* add jQuery UI css file *@
-<link rel="stylesheet" href="~/lib_npm/jquery-ui-dist/jquery-ui.min.css" />
