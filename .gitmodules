@@ -4,3 +4,6 @@
 [submodule "src/Plugins/NopBrasil.Plugin.Shipping.Correios"]
 	path = src/Plugins/NopBrasil.Plugin.Shipping.Correios
 	url = https://DataplaceDevs@dev.azure.com/DataplaceDevs/Nop/_git/NopBrasil.Plugin.Shipping.Correios.git
+[submodule "src/Plugins/Nop.Plugin.Api"]
+	path = src/Plugins/Nop.Plugin.Api
+	url = https://github.com/DataplaceDevs/api-for-nopcommerce.git
