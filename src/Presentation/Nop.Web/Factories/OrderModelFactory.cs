@@ -307,7 +307,7 @@ namespace Nop.Web.Factories
                 if (orderSubTotalDiscountInclTaxInCustomerCurrency > decimal.Zero)
                 {
                     model.OrderSubTotalDiscount = await _priceFormatter.FormatPriceAsync(-orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
-                    model.OrderSubTotalDiscountValue = -orderSubTotalDiscountInclTaxInCustomerCurrency;
+                    model.OrderSubTotalDiscountValue = orderSubTotalDiscountInclTaxInCustomerCurrency;
                 }
             }
             else
@@ -323,7 +323,7 @@ namespace Nop.Web.Factories
                 if (orderSubTotalDiscountExclTaxInCustomerCurrency > decimal.Zero)
                 {
                     model.OrderSubTotalDiscount = await _priceFormatter.FormatPriceAsync(-orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
-                    model.OrderSubTotalDiscountValue = -orderSubTotalDiscountExclTaxInCustomerCurrency;
+                    model.OrderSubTotalDiscountValue = orderSubTotalDiscountExclTaxInCustomerCurrency;
                 }
             }
 
@@ -404,7 +404,7 @@ namespace Nop.Web.Factories
             if (orderDiscountInCustomerCurrency > decimal.Zero)
             {
                 model.OrderTotalDiscount = await _priceFormatter.FormatPriceAsync(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false, languageId);
-                model.OrderTotalDiscountValue = -orderDiscountInCustomerCurrency;
+                model.OrderTotalDiscountValue = orderDiscountInCustomerCurrency;
             }
             
             //gift cards
