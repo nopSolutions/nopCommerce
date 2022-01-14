@@ -171,6 +171,7 @@
                                 </li>
                             }
                         }
+                        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsBillingAddress, additionalData = Model })
                     </ul>
                 </div>
                 @if (!string.IsNullOrEmpty(Model.PaymentMethod))
@@ -312,6 +313,7 @@
                                         @Html.Raw(Model.ShippingAddress.FormattedCustomAddressAttributes)
                                     </li>
                                 }
+                                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsShippingAddress, additionalData = Model })
                             }
                             else
                             {
