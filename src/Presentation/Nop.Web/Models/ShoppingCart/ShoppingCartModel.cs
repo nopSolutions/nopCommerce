@@ -19,7 +19,7 @@ namespace Nop.Web.Models.ShoppingCart
             CheckoutAttributes = new List<CheckoutAttributeModel>();
             OrderReviewData = new OrderReviewDataModel();
 
-            ButtonPaymentMethodViewComponents = new List<Type>();
+            ButtonPaymentMethodViewComponentTypes = new List<Type>();
         }
 
         public bool OnePageCheckoutEnabled { get; set; }
@@ -41,7 +41,7 @@ namespace Nop.Web.Models.ShoppingCart
         public GiftCardBoxModel GiftCardBox { get; set; }
         public OrderReviewDataModel OrderReviewData { get; set; }
 
-        public IList<Type> ButtonPaymentMethodViewComponents { get; set; }
+        public IList<Type> ButtonPaymentMethodViewComponentTypes { get; set; }
 
         public bool HideCheckoutButton { get; set; }
         public bool ShowVendorName { get; set; }

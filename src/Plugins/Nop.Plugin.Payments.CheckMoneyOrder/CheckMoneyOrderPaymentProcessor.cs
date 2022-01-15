@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Payments.CheckMoneyOrder.Components;
@@ -225,10 +226,10 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store ("payment info" checkout step)
+        /// Gets the <see cref="Type"/> of the <see cref="ViewComponent"/> for displaying plugin in public store ("payment info" checkout step)
         /// </summary>
-        /// <returns>View component name</returns>
-        public Type GetPublicViewComponent() => typeof(CheckMoneyOrderViewComponent);
+        /// <returns>The <see cref="Type"/> of the <see cref="ViewComponent"/>.</returns>
+        public Type GetPublicViewComponentType() => typeof(CheckMoneyOrderViewComponent);
 
         /// <summary>
         /// Install the plugin

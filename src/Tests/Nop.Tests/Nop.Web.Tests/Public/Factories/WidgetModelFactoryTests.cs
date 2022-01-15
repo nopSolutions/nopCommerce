@@ -49,7 +49,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             args.Should().NotBeNull();
             args.Count.Should().Be(2);
             args["widgetZone"].Should().Be("test widget zone");
-            model.WidgetViewComponent.Should().Be(typeof(TestWidgetPlugin));
+            model.WidgetViewComponentType.Should().Be(typeof(TestWidgetPlugin));
         }
     }
 }

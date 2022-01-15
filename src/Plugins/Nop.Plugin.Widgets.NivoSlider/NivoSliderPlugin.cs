@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Widgets.NivoSlider.Components;
@@ -58,11 +59,11 @@ namespace Nop.Plugin.Widgets.NivoSlider
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying widget
+        /// Gets the view component for displaying widget
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
-        /// <returns>View component name</returns>
-        public Type GetWidgetViewComponent(string widgetZone) => typeof(WidgetsNivoSliderViewComponent);
+        /// <returns>The <see cref="Type"/> of the <see cref="ViewComponent"/>.</returns>
+        public Type GetWidgetViewComponentType(string widgetZone) => typeof(WidgetsNivoSliderViewComponent);
 
         /// <summary>
         /// Install plugin

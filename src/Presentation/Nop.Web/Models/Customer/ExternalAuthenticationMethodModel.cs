@@ -5,6 +5,6 @@ namespace Nop.Web.Models.Customer
 {
     public partial record ExternalAuthenticationMethodModel : BaseNopModel
     {
-        public Type ViewComponent { get; set; }
+        public Type ViewComponentType { get; set; }
     }
 }

@@ -137,11 +137,11 @@ namespace Nop.Plugin.Shipping.EasyPost
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying widget
+        /// Gets the view component for displaying widget
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
-        /// <returns>View component name</returns>
-        public Type GetWidgetViewComponent(string widgetZone)
+        /// <returns>The <see cref="Type"/> of the <see cref="ViewComponent"/>.</returns>
+        public Type GetWidgetViewComponentType(string widgetZone)
         {
             if (widgetZone.Equals(AdminWidgetZones.ProductDetailsBlock))
                 return typeof(ProductDetailsViewComponent);

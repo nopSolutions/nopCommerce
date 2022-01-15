@@ -330,7 +330,7 @@
                     </div>
                     <div class="addon-buttons">
                         @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
-                        @foreach (var pm in Model.ButtonPaymentMethodViewComponents)
+                        @foreach (var pm in Model.ButtonPaymentMethodViewComponentTypes)
                         {
                             @await Component.InvokeAsync(pm)
                         }

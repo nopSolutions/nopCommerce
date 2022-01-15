@@ -15,6 +15,6 @@ namespace Nop.Web.Models.Customer
 
         public string Description { get; set; }
 
-        public Type ViewComponent { get; set; }
+        public Type ViewComponentType { get; set; }
     }
 }

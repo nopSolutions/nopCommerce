@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Authentication.MultiFactor
@@ -17,16 +18,16 @@ namespace Nop.Services.Authentication.MultiFactor
         MultiFactorAuthenticationType Type { get; }
 
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store
+        /// Gets the <see cref="Type"/> of the <see cref="ViewComponent"/> for displaying plugin in public store
         /// </summary>
-        /// <returns>View component name</returns>
-        Type GetPublicViewComponent();
+        /// <returns>The <see cref="Type"/> of the <see cref="ViewComponent"/>.</returns>
+        Type GetPublicViewComponentType();
 
         /// <summary>
-        /// Gets a name of a view component for displaying verification page
+        /// Gets the <see cref="Type"/> of the <see cref="ViewComponent"/> for displaying verification page
         /// </summary>
-        /// <returns>View component name</returns>
-        Type GetVerificationViewComponent();
+        /// <returns>The <see cref="Type"/> of the <see cref="ViewComponent"/>.</returns>
+        Type GetVerificationViewComponentType();
 
         /// <summary>
         /// Gets a multi-factor authentication method description that will be displayed on customer info pages in the public store

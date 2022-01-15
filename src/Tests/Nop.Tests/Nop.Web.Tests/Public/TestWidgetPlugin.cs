@@ -14,6 +14,6 @@ namespace Nop.Tests.Nop.Web.Tests.Public
             return Task.FromResult<IList<string>>(new List<string>{ "test widget zone" });
         }
 
-        public Type GetWidgetViewComponent(string widgetZone) => typeof(TestWidgetPlugin);
+        public Type GetWidgetViewComponentType(string widgetZone) => typeof(TestWidgetPlugin);
     }
 }

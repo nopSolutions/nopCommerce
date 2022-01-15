@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Plugins;
 
@@ -132,10 +133,10 @@ namespace Nop.Services.Payments
         Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form);
 
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store ("payment info" checkout step)
+        /// Gets the <see cref="Type"/> of the <see cref="ViewComponent"/> for displaying plugin in public store ("payment info" checkout step)
         /// </summary>
-        /// <returns>View component name</returns>
-        Type GetPublicViewComponent();
+        /// <returns>The <see cref="Type"/> of the <see cref="ViewComponent"/>.</returns>
+        Type GetPublicViewComponentType();
 
         /// <summary>
         /// Gets a payment method description that will be displayed on checkout pages in the public store

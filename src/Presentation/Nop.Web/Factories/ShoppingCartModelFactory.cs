@@ -934,11 +934,11 @@ namespace Nop.Web.Factories
                 if (await _shoppingCartService.ShoppingCartIsRecurringAsync(cart) && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
 
-                var viewComponent = pm.GetPublicViewComponent();
-                model.ButtonPaymentMethodViewComponents.Add(viewComponent);
+                var viewComponent = pm.GetPublicViewComponentType();
+                model.ButtonPaymentMethodViewComponentTypes.Add(viewComponent);
             }
             //hide "Checkout" button if we have only "Button" payment methods
-            model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodViewComponents.Any();
+            model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodViewComponentTypes.Any();
 
             //order review data
             if (prepareAndDisplayOrderReviewData)

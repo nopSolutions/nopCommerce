@@ -373,9 +373,9 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         }
 
         /// <summary>
-        /// Gets a view component for displaying plugin in public store ("payment info" checkout step)
+        /// Gets the <see cref="Type"/> of the <see cref="ViewComponent"/> for displaying plugin in public store ("payment info" checkout step)
         /// </summary>
-        public Type GetPublicViewComponent() => typeof(PaymentInfoViewComponent);
+        public Type GetPublicViewComponentType() => typeof(PaymentInfoViewComponent);
 
         /// <summary>
         /// Gets widget zones where this widget should be rendered
@@ -400,11 +400,11 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying widget
+        /// Gets the view component for displaying widget
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
-        /// <returns>View component name</returns>
-        public Type GetWidgetViewComponent(string widgetZone)
+        /// <returns>The <see cref="Type"/> of the <see cref="ViewComponent"/>.</returns>
+        public Type GetWidgetViewComponentType(string widgetZone)
         {
             if (widgetZone == null)
                 throw new ArgumentNullException(nameof(widgetZone));

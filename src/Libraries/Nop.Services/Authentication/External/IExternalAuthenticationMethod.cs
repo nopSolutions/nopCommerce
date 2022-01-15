@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Authentication.External
@@ -9,9 +10,9 @@ namespace Nop.Services.Authentication.External
     public partial interface IExternalAuthenticationMethod : IPlugin
     {
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store
+        /// Gets the <see cref="Type"/> of the <see cref="ViewComponent"/> for displaying plugin in public store
         /// </summary>
-        /// <returns>View component name</returns>
-        Type GetPublicViewComponent();
+        /// <returns>The <see cref="Type"/> of the <see cref="ViewComponent"/>.</returns>
+        Type GetPublicViewComponentType();
     }
 }

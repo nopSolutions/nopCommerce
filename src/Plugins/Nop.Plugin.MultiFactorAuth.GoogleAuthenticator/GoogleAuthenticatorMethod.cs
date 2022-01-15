@@ -56,16 +56,16 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store
+        /// Gets the <see cref="Type"/> of the <see cref="ViewComponent"/> for displaying plugin in public store
         /// </summary>
-        /// <returns>View component name</returns>
-        public Type GetPublicViewComponent() => typeof(GAAuthenticationViewComponent);
+        /// <returns>The <see cref="Type"/> of the <see cref="ViewComponent"/>.</returns>
+        public Type GetPublicViewComponentType() => typeof(GAAuthenticationViewComponent);
 
         /// <summary>
-        /// Gets a name of a view component for displaying verification page
+        /// Gets the <see cref="Type"/> of the <see cref="ViewComponent"/> for displaying verification page
         /// </summary>
-        /// <returns>View component name</returns>
-        public Type GetVerificationViewComponent() => typeof(GAVerificationViewComponent);
+        /// <returns>The <see cref="Type"/> of the <see cref="ViewComponent"/>.</returns>
+        public Type GetVerificationViewComponentType() => typeof(GAVerificationViewComponent);
 
         /// <summary>
         /// Install the plugin
