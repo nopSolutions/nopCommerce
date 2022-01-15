@@ -8,7 +8,9 @@ using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Widgets.What3words.Components
 {
-    [ViewComponent(Name = What3wordsDefaults.ORDER_ADMIN_VIEW_COMPONENT_NAME)]
+    /// <summary>
+    /// Represents the view component to display widget in admin panel (order details)
+    /// </summary>
     public class What3wordsOrderAdminViewComponent : NopViewComponent
     {
         #region Fields

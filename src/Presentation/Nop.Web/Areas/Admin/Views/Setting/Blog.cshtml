@@ -27,22 +27,22 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogSettingsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.BlogSettingsButtons, additionalData = Model })
         </div>
     </div>
 
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
-                @await Component.InvokeAsync("StoreScopeConfiguration")
-                @await Component.InvokeAsync("SettingMode")
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
                 <div asp-validation-summary="All"></div>
 
                 <nop-cards id="blogsettings-cards">
                     <nop-card asp-name="blogsettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.Blog.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Blog.Common", Model)</nop-card>
                     <nop-card asp-name="blogsettings-comments" asp-icon="far fa-comments" asp-title="@T("Admin.Configuration.Settings.Blog.BlockTitle.BlogComments")" asp-hide-block-attribute-name="@hideCommentsBlockAttributeName" asp-hide="@hideCommentsBlock" asp-advanced="false">@await Html.PartialAsync("_Blog.Comments", Model)</nop-card>
 
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogDetailsBlock, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.BlogDetailsBlock, additionalData = Model })
                 </nop-cards>
             </div>
         </div>

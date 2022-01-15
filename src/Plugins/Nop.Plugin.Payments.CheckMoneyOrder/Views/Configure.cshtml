@@ -3,8 +3,9 @@
     Layout = "_ConfigurePlugin";
 }
 @using Nop.Plugin.Payments.CheckMoneyOrder.Models
+@using Nop.Web.Areas.Admin.Components
 
-@await Component.InvokeAsync("StoreScopeConfiguration")
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 <form asp-controller="PaymentCheckMoneyOrder" asp-action="Configure" method="post">
     <div class="cards-group">
         <div class="card card-default">

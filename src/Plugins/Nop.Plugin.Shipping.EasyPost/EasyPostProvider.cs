@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Cms;
+using Nop.Plugin.Shipping.EasyPost.Components;
 using Nop.Plugin.Shipping.EasyPost.Services;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
@@ -140,16 +141,16 @@ namespace Nop.Plugin.Shipping.EasyPost
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
         /// <returns>View component name</returns>
-        public string GetWidgetViewComponentName(string widgetZone)
+        public Type GetWidgetViewComponent(string widgetZone)
         {
             if (widgetZone.Equals(AdminWidgetZones.ProductDetailsBlock))
-                return EasyPostDefaults.PRODUCT_DETAILS_VIEW_COMPONENT_NAME;
+                return typeof(ProductDetailsViewComponent);
 
             if (widgetZone.Equals(AdminWidgetZones.OrderShipmentDetailsButtons))
-                return EasyPostDefaults.SHIPMENT_DETAILS_VIEW_COMPONENT_NAME;
+                return typeof(ShipmentDetailsViewComponent);
 
             if (widgetZone.Equals(PublicWidgetZones.OpCheckoutShippingMethodTop))
-                return EasyPostDefaults.SHIPPING_METHODS_VIEW_COMPONENT_NAME;
+                return typeof(ShippingMethodsViewComponent);
 
             return null;
         }

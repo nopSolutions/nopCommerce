@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.ScheduleTasks;
+using Nop.Plugin.Misc.Sendinblue.Components;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -79,10 +80,7 @@ namespace Nop.Plugin.Misc.Sendinblue
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
         /// <returns>View component name</returns>
-        public string GetWidgetViewComponentName(string widgetZone)
-        {
-            return SendinblueDefaults.TRACKING_VIEW_COMPONENT_NAME;
-        }
+        public Type GetWidgetViewComponent(string widgetZone) => typeof(WidgetsSendinblueViewComponent);
 
         /// <summary>
         /// Gets a configuration page URL

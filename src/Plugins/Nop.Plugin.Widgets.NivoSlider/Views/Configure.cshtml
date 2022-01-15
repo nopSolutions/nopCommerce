@@ -1,10 +1,11 @@
-﻿@model Nop.Plugin.Widgets.NivoSlider.Models.ConfigurationModel
+﻿@using Nop.Web.Areas.Admin.Components
+@model Nop.Plugin.Widgets.NivoSlider.Models.ConfigurationModel
 
 @{
     Layout = "_ConfigurePlugin";
 }
 
-@await Component.InvokeAsync("StoreScopeConfiguration")
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 <form asp-controller="WidgetsNivoSlider" asp-action="Configure" method="post">
     <section class="content">
         <div class="container-fluid">

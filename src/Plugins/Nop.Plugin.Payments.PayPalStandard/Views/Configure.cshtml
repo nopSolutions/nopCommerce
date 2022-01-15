@@ -1,16 +1,17 @@
-﻿@model Nop.Plugin.Payments.PayPalStandard.Models.ConfigurationModel
+﻿@using Nop.Web.Areas.Admin.Components
+@model Nop.Plugin.Payments.PayPalStandard.Models.ConfigurationModel
 @inject Nop.Core.IWebHelper webHelper
 @{
     Layout = "_ConfigurePlugin";
 }
 
-@await Component.InvokeAsync("StoreScopeConfiguration")
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
 <script>
-	$(document).ready(function () {
+    $(document).ready(function () {
         $("#@Html.IdFor(model => model.PassProductNamesAndTotals)").click(togglePassProductNamesAndTotals);
-	    togglePassProductNamesAndTotals();
-	});
+        togglePassProductNamesAndTotals();
+    });
 
     function togglePassProductNamesAndTotals() {
         warningValidation('@Url.Action("RoundingWarning", "PaymentPayPalStandard")', '@Html.NameFor(model => model.PassProductNamesAndTotals)',

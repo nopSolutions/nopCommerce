@@ -26,7 +26,7 @@
         </h1>
         <div class="float-right">
             &nbsp;
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderUploadLicenseButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderUploadLicenseButtons, additionalData = Model })
         </div>
     </div>
 

@@ -1,3 +1,4 @@
+﻿using System;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Authentication.External
@@ -11,6 +12,6 @@ namespace Nop.Services.Authentication.External
         /// Gets a name of a view component for displaying plugin in public store
         /// </summary>
         /// <returns>View component name</returns>
-        string GetPublicViewComponentName();
+        Type GetPublicViewComponent();
     }
 }

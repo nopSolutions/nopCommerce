@@ -15,7 +15,6 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components
     /// <summary>
     /// Represents the view component to add script to pages
     /// </summary>
-    [ViewComponent(Name = PayPalCommerceDefaults.SCRIPT_VIEW_COMPONENT_NAME)]
     public class ScriptViewComponent : NopViewComponent
     {
         #region Fields

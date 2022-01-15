@@ -10,7 +10,9 @@ using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Plugin.Widgets.What3words.Components
 {
-    [ViewComponent(Name = What3wordsDefaults.ORDER_PUBLIC_VIEW_COMPONENT_NAME)]
+    /// <summary>
+    /// Represents the view component to display widget in public store (order summary)
+    /// </summary>
     public class What3wordsOrderPublicViewComponent : NopViewComponent
     {
         #region Fields

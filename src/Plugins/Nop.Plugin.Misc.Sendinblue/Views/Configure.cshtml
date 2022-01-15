@@ -2,6 +2,7 @@
 
 @using Nop.Plugin.Misc.Sendinblue
 @using Nop.Plugin.Misc.Sendinblue.Models
+@using Nop.Web.Areas.Admin.Components
 
 @{
     Layout = "_ConfigurePlugin";
@@ -9,7 +10,7 @@
 
 <link rel="stylesheet" href="~/Plugins/Misc.Sendinblue/Content/styles.css" />
 
-@await Component.InvokeAsync("StoreScopeConfiguration")
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
 <form asp-controller="Sendinblue" asp-action="Configure" method="post">
     <nop-cards id="sendinblue-cards">

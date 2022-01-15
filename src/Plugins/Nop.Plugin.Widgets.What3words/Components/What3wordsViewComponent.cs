@@ -9,7 +9,9 @@ using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Widgets.What3words.Components
 {
-    [ViewComponent(Name = What3wordsDefaults.VIEW_COMPONENT_NAME)]
+    /// <summary>
+    /// Represents the view component to display widget in public store
+    /// </summary>
     public class What3wordsViewComponent : NopViewComponent
     {
         #region Fields

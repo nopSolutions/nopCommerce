@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Cms;
+using Nop.Plugin.Widgets.What3words.Components;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -82,7 +83,7 @@ namespace Nop.Plugin.Widgets.What3words
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
         /// <returns>View component name</returns>
-        public string GetWidgetViewComponentName(string widgetZone)
+        public Type GetWidgetViewComponent(string widgetZone)
         {
             if (widgetZone is null)
                 throw new ArgumentNullException(nameof(widgetZone));
@@ -92,16 +93,16 @@ namespace Nop.Plugin.Widgets.What3words
                 widgetZone.Equals(PublicWidgetZones.OrderDetailsBillingAddress) ||
                 widgetZone.Equals(PublicWidgetZones.OrderDetailsShippingAddress))
             {
-                return What3wordsDefaults.ORDER_PUBLIC_VIEW_COMPONENT_NAME;
+                return typeof(What3wordsOrderPublicViewComponent);
             }
 
             if (widgetZone.Equals(AdminWidgetZones.OrderBillingAddressDetailsBottom) ||
                 widgetZone.Equals(AdminWidgetZones.OrderShippingAddressDetailsBottom))
             {
-                return What3wordsDefaults.ORDER_ADMIN_VIEW_COMPONENT_NAME;
+                return typeof(What3wordsOrderAdminViewComponent);
             }
 
-            return What3wordsDefaults.VIEW_COMPONENT_NAME;
+            return typeof(What3wordsViewComponent);
         }
 
         /// <summary>

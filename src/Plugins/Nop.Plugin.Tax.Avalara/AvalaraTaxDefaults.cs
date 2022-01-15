@@ -133,27 +133,7 @@ namespace Nop.Plugin.Tax.Avalara
         /// </summary>
         public static (string Name, string Type, int Days) DownloadTaxRatesTask =>
             ($"Download tax rates ({SystemName})", "Nop.Plugin.Tax.Avalara.Services.DownloadTaxRatesTask", 7);
-
-        /// <summary>
-        /// Gets the name of the view component to display entity use code field
-        /// </summary>
-        public const string ENTITY_USE_CODE_VIEW_COMPONENT_NAME = "AvalaraEntityUseCode";
-
-        /// <summary>
-        /// Gets the name of the view component to display export items button
-        /// </summary>
-        public const string EXPORT_ITEMS_VIEW_COMPONENT_NAME = "AvalaraExportItems";
-
-        /// <summary>
-        /// Gets the name of the view component to validate entered address
-        /// </summary>
-        public const string ADDRESS_VALIDATION_VIEW_COMPONENT_NAME = "AvalaraAddressValidation";
-
-        /// <summary>
-        /// Gets the name of the view component to display applied certificate
-        /// </summary>
-        public const string APPLIED_CERTIFICATE_VIEW_COMPONENT_NAME = "AvalaraAppliedCertificate";
-
+        
         /// <summary>
         /// Gets the generic attribute name to hide general settings block on the plugin configuration page
         /// </summary>

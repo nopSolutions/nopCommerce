@@ -1,4 +1,5 @@
-﻿@model ConfigurationModel
+﻿@using Nop.Web.Areas.Admin.Components
+@model ConfigurationModel
 
 <div class="card-body">
     <div class="card card-default no-margin">
@@ -210,7 +211,7 @@
                                 </script>
                             </div>
                             <div class="col-md-8">
-                                @await Component.InvokeAsync("AclDisabledWarning")
+                                @await Component.InvokeAsync(typeof(AclDisabledWarningViewComponent))
                             </div>
                         </div>
                     </div>

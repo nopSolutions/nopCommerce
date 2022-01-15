@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Services.Plugins;
 
@@ -28,6 +29,6 @@ namespace Nop.Services.Cms
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
         /// <returns>View component name</returns>
-        string GetWidgetViewComponentName(string widgetZone);
+        Type GetWidgetViewComponent(string widgetZone);
     }
 }

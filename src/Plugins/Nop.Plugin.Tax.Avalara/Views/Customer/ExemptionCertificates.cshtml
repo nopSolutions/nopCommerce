@@ -1,4 +1,5 @@
-﻿@model TaxExemptionModel
+﻿@using Nop.Web.Components
+@model TaxExemptionModel
 
 @{
     Layout = "_ColumnsTwo";
@@ -16,7 +17,7 @@
 
 @section left
 {
-    @(await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = AvalaraTaxDefaults.ExemptionCertificatesMenuTab }))
+    @(await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = AvalaraTaxDefaults.ExemptionCertificatesMenuTab }))
 }
 
 <script asp-location="Footer">

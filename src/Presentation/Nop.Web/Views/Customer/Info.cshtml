@@ -13,7 +13,7 @@
 
 @section left
     {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.Info })
 }
 
 <div class="page account-page customer-info-page">

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Cms;
+using Nop.Plugin.Widgets.FacebookPixel.Components;
 using Nop.Plugin.Widgets.FacebookPixel.Services;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
@@ -80,12 +81,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
         /// <returns>View component name</returns>
-        public string GetWidgetViewComponentName(string widgetZone)
+        public Type GetWidgetViewComponent(string widgetZone)
         {
             if (widgetZone == null)
                 throw new ArgumentNullException(nameof(widgetZone));
 
-            return FacebookPixelDefaults.VIEW_COMPONENT;
+            return typeof(FacebookPixelViewComponent);
         }
 
         /// <summary>

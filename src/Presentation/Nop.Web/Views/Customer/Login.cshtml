@@ -39,7 +39,7 @@
                         <strong>@T("Account.Login.CheckoutAsGuestOrRegister")</strong>
                     </div>
                     <div class="text">
-                        @await Component.InvokeAsync("TopicBlock", new { systemName = "CheckoutAsGuestOrRegister" })
+                        @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "CheckoutAsGuestOrRegister" })
                     </div>
                     <div class="buttons">
                         <button type="button" class="button-1 checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'">@T("Account.Login.CheckoutAsGuest")</button>
@@ -108,8 +108,8 @@
             </div>
         </div>
         <div class="external-authentication">
-            @await Component.InvokeAsync("ExternalMethods", "ExternalAuthentication")
+            @await Component.InvokeAsync(typeof(ExternalMethodsViewComponent), "ExternalAuthentication")
         </div>
-        @await Component.InvokeAsync("TopicBlock", new { systemName = "LoginRegistrationInfo" })
+        @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "LoginRegistrationInfo" })
     </div>
 </div>

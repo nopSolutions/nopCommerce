@@ -14,6 +14,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Http.Extensions;
+using Nop.Plugin.Payments.PayPalCommerce.Components;
 using Nop.Plugin.Payments.PayPalCommerce.Domain;
 using Nop.Plugin.Payments.PayPalCommerce.Models;
 using Nop.Plugin.Payments.PayPalCommerce.Services;
@@ -374,10 +375,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// <summary>
         /// Gets a view component for displaying plugin in public store ("payment info" checkout step)
         /// </summary>
-        public string GetPublicViewComponentName()
-        {
-            return PayPalCommerceDefaults.PAYMENT_INFO_VIEW_COMPONENT_NAME;
-        }
+        public Type GetPublicViewComponent() => typeof(PaymentInfoViewComponent);
 
         /// <summary>
         /// Gets widget zones where this widget should be rendered
@@ -406,7 +404,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
         /// <returns>View component name</returns>
-        public string GetWidgetViewComponentName(string widgetZone)
+        public Type GetWidgetViewComponent(string widgetZone)
         {
             if (widgetZone == null)
                 throw new ArgumentNullException(nameof(widgetZone));
@@ -416,16 +414,16 @@ namespace Nop.Plugin.Payments.PayPalCommerce
                 widgetZone.Equals(PublicWidgetZones.ProductDetailsTop) ||
                 widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore))
             {
-                return PayPalCommerceDefaults.SCRIPT_VIEW_COMPONENT_NAME;
+                return typeof(ScriptViewComponent);
             }
 
             if (widgetZone.Equals(PublicWidgetZones.ProductDetailsAddInfo) || widgetZone.Equals(PublicWidgetZones.OrderSummaryContentAfter))
-                return PayPalCommerceDefaults.BUTTONS_VIEW_COMPONENT_NAME;
+                return typeof(ButtonsViewComponent);
 
             if (widgetZone.Equals(PublicWidgetZones.HeaderLinksBefore) || widgetZone.Equals(PublicWidgetZones.Footer))
-                return PayPalCommerceDefaults.LOGO_VIEW_COMPONENT_NAME;
+                return typeof(LogoViewComponent);
 
-            return string.Empty;
+            return null;
         }
 
         /// <summary>

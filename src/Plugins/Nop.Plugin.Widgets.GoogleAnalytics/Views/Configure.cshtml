@@ -1,9 +1,10 @@
-﻿@model Nop.Plugin.Widgets.GoogleAnalytics.Models.ConfigurationModel
+﻿@using Nop.Web.Areas.Admin.Components
+@model Nop.Plugin.Widgets.GoogleAnalytics.Models.ConfigurationModel
 @{
     Layout = "_ConfigurePlugin";
 }
 
-@await Component.InvokeAsync("StoreScopeConfiguration")
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
 <form asp-controller="WidgetsGoogleAnalytics" asp-action="Configure" method="post">
     <div class="cards-group">

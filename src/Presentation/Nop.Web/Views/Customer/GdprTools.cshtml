@@ -9,7 +9,7 @@
 }
 @section left
     {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.GdprTools })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.GdprTools })
 }
 
 <div class="page account-page gdpr-tools-page">

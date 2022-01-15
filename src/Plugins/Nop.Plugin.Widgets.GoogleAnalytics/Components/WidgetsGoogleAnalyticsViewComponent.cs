@@ -18,7 +18,6 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 {
-    [ViewComponent(Name = "WidgetsGoogleAnalytics")]
     public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
     {
         #region Fields

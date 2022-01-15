@@ -1,10 +1,11 @@
-﻿@model ConfigurationModel
+﻿@using Nop.Web.Areas.Admin.Components
+@model ConfigurationModel
 
 @{
     Layout = "_ConfigurePlugin";
 }
 
-@await Component.InvokeAsync("StoreScopeConfiguration")
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
 <form asp-controller="AccessiBe" asp-action="Configure" method="post">
     <div class="cards-group">

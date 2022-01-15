@@ -64,7 +64,7 @@
                 </ul>
 
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerListButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerListButtons, additionalData = Model })
         </div>
     </div>
 

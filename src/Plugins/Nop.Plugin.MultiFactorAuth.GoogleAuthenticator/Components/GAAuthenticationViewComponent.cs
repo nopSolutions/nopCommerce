@@ -9,7 +9,6 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Components
     /// <summary>
     /// Represents view component for setting GoogleAuthenticator
     /// </summary>
-    [ViewComponent(Name = GoogleAuthenticatorDefaults.VIEW_COMPONENT_NAME)]
     public class GAAuthenticationViewComponent : NopViewComponent
     {
         #region Fields
