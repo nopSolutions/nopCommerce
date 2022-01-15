@@ -3,7 +3,7 @@
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutPaymentInfoTop, additionalData = Model })
     <div class="section payment-info">
         <div class="info">
-            @await Component.InvokeAsync(Model.PaymentViewComponent)
+            @await Component.InvokeAsync(Model.PaymentViewComponentType)
         </div>
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
     </div>
