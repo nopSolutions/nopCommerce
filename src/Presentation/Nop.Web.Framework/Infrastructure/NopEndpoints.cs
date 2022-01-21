@@ -7,9 +7,9 @@ using Nop.Web.Framework.Infrastructure.Extensions;
 namespace Nop.Web.Framework.Infrastructure
 {
     /// <summary>
-    /// Represents object for the configuring authentication middleware on application startup
+    /// Represents object for the configuring endpoints on application startup
     /// </summary>
-    public class AuthenticationStartup : INopStartup
+    public class NopEndpoints : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware
@@ -18,11 +18,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            //add data protection
-            services.AddNopDataProtection();
-
-            //add authentication
-            services.AddNopAuthentication();
         }
 
         /// <summary>
@@ -31,13 +26,13 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //configure authentication
-            application.UseNopAuthentication();
+            //Endpoints routing
+            application.UseNopEndpoints();
         }
 
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order => 500; //These middleware are placed between UseRouting and UseEndpoints
+        public int Order => 900; //authentication should be loaded before MVC
     }
 }
