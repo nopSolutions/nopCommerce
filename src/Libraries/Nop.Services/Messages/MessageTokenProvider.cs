@@ -1506,7 +1506,10 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IEnumerable<string> tokenGroups = null)
         {
-            var additionalTokens = new AdditionalTokensAddedEvent();
+            var additionalTokens = new AdditionalTokensAddedEvent
+            {
+                TokenGroups = tokenGroups
+            };
             await _eventPublisher.PublishAsync(additionalTokens);
 
             var allowedTokens = AllowedTokens.Where(x => tokenGroups == null || tokenGroups.Contains(x.Key))
