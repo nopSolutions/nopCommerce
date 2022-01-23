@@ -259,6 +259,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.GiftCards.RecipientNotified"));
+
+                return RedirectToAction("Edit", new { id = giftCard.Id });
             }
             catch (Exception exc)
             {
