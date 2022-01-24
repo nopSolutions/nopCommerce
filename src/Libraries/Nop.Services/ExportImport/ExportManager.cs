@@ -1587,11 +1587,28 @@ namespace Nop.Services.ExportImport
         {
             //a vendor should have access only to part of order information
             var ignore = await _workContext.GetCurrentVendorAsync() != null;
-
+            
             //lambda expressions for choosing correct order address
             async Task<Address> orderAddress(Order o) => await _addressService.GetAddressByIdAsync((o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) ?? 0);
             async Task<Address> orderBillingAddress(Order o) => await _addressService.GetAddressByIdAsync(o.BillingAddressId);
 
+            async Task<string> orderCustomerFirstName(Order o) =>
+                await _genericAttributeService.GetAttributeAsync<string>(
+                    (await _customerService.GetCustomerByIdAsync(o.CustomerId)),
+                    NopCustomerDefaults.FirstNameAttribute);
+            async Task<string> orderCustomerLastName(Order o) =>
+                await _genericAttributeService.GetAttributeAsync<string>(
+                    (await _customerService.GetCustomerByIdAsync(o.CustomerId)),
+                    NopCustomerDefaults.LastNameAttribute);
+
+            async Task<string> orderDeliveryDate(Order o) =>
+                (await _dateTimeHelper.ConvertToUserTimeAsync(o.ScheduleDate, DateTimeKind.Utc))
+                .ToString();
+            async Task<string> orderCreatedDate(Order o) =>
+                (await _dateTimeHelper.ConvertToUserTimeAsync(o.CreatedOnUtc, DateTimeKind.Utc))
+                .ToString();
+            
+            
             //property array
             var properties = new[]
             {
@@ -1599,6 +1616,8 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("StoreId", p => p.StoreId),
                 new PropertyByName<Order>("OrderGuid", p => p.OrderGuid, ignore),
                 new PropertyByName<Order>("CustomerId", p => p.CustomerId, ignore),
+                new PropertyByName<Order>("CustomerFirstName", async p => await orderCustomerFirstName(p)),
+                new PropertyByName<Order>("CustomerLastName", async p => await orderCustomerLastName(p)),
                 new PropertyByName<Order>("OrderStatusId", p => p.OrderStatusId, ignore),
                 new PropertyByName<Order>("PaymentStatusId", p => p.PaymentStatusId),
                 new PropertyByName<Order>("ShippingStatusId", p => p.ShippingStatusId, ignore),
@@ -1617,14 +1636,15 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("OrderDiscount", p => p.OrderDiscount, ignore),
                 new PropertyByName<Order>("CurrencyRate", p => p.CurrencyRate),
                 new PropertyByName<Order>("CustomerCurrencyCode", p => p.CustomerCurrencyCode),
-                new PropertyByName<Order>("AffiliateId", p => p.AffiliateId, ignore),
+                //new PropertyByName<Order>("AffiliateId", p => p.AffiliateId, ignore),
                 new PropertyByName<Order>("PaymentMethodSystemName", p => p.PaymentMethodSystemName, ignore),
-                new PropertyByName<Order>("ShippingPickupInStore", p => p.PickupInStore, ignore),
-                new PropertyByName<Order>("ShippingMethod", p => p.ShippingMethod),
+                //new PropertyByName<Order>("ShippingPickupInStore", p => p.PickupInStore, ignore),
+                //new PropertyByName<Order>("ShippingMethod", p => p.ShippingMethod),
                 new PropertyByName<Order>("ShippingRateComputationMethodSystemName", p => p.ShippingRateComputationMethodSystemName, ignore),
-                new PropertyByName<Order>("CustomValuesXml", p => p.CustomValuesXml, ignore),
-                new PropertyByName<Order>("VatNumber", p => p.VatNumber, ignore),
-                new PropertyByName<Order>("CreatedOnUtc", p => p.CreatedOnUtc.ToOADate()),
+                //new PropertyByName<Order>("CustomValuesXml", p => p.CustomValuesXml, ignore),
+                //new PropertyByName<Order>("VatNumber", p => p.VatNumber, ignore),
+                new PropertyByName<Order>("CreatedOnUtc", async p => await orderCreatedDate(p)),
+                new PropertyByName<Order>("DeliveryDate", async p => await orderDeliveryDate(p)),
                 //new PropertyByName<Order>("BillingFirstName", async p => (await orderBillingAddress(p))?.FirstName ?? string.Empty),
                 //new PropertyByName<Order>("BillingLastName", async p => (await orderBillingAddress(p))?.LastName ?? string.Empty),
                 //new PropertyByName<Order>("BillingEmail", async p => (await orderBillingAddress(p))?.Email ?? string.Empty),
@@ -1638,19 +1658,20 @@ namespace Nop.Services.ExportImport
                 //new PropertyByName<Order>("BillingZipPostalCode", async p => (await orderBillingAddress(p))?.ZipPostalCode ?? string.Empty),
                 //new PropertyByName<Order>("BillingPhoneNumber", async p => (await orderBillingAddress(p))?.PhoneNumber ?? string.Empty),
                 //new PropertyByName<Order>("BillingFaxNumber", async p => (await orderBillingAddress(p))?.FaxNumber ?? string.Empty),
-                new PropertyByName<Order>("ShippingFirstName", async p => (await orderAddress(p))?.FirstName ?? string.Empty),
-                new PropertyByName<Order>("ShippingLastName", async p => (await orderAddress(p))?.LastName ?? string.Empty),
-                new PropertyByName<Order>("ShippingEmail", async p => (await orderAddress(p))?.Email ?? string.Empty),
-                new PropertyByName<Order>("ShippingCompany", async p => (await orderAddress(p))?.Company ?? string.Empty),
-                new PropertyByName<Order>("ShippingCountry", async p => (await _countryService.GetCountryByAddressAsync(await orderAddress(p)))?.Name ?? string.Empty),
-                new PropertyByName<Order>("ShippingStateProvince", async p => (await _stateProvinceService.GetStateProvinceByAddressAsync(await orderAddress(p)))?.Name ?? string.Empty),
-                new PropertyByName<Order>("ShippingCounty", async p => (await orderAddress(p))?.County ?? string.Empty),
+                
+                //new PropertyByName<Order>("ShippingFirstName", async p => (await orderAddress(p))?.FirstName ?? string.Empty),
+                //new PropertyByName<Order>("ShippingLastName", async p => (await orderAddress(p))?.LastName ?? string.Empty),
+                //new PropertyByName<Order>("ShippingEmail", async p => (await orderAddress(p))?.Email ?? string.Empty),
+                //new PropertyByName<Order>("ShippingCompany", async p => (await orderAddress(p))?.Company ?? string.Empty),
+                //new PropertyByName<Order>("ShippingCountry", async p => (await _countryService.GetCountryByAddressAsync(await orderAddress(p)))?.Name ?? string.Empty),
+                //new PropertyByName<Order>("ShippingStateProvince", async p => (await _stateProvinceService.GetStateProvinceByAddressAsync(await orderAddress(p)))?.Name ?? string.Empty),
+                //new PropertyByName<Order>("ShippingCounty", async p => (await orderAddress(p))?.County ?? string.Empty),
                 new PropertyByName<Order>("ShippingCity", async p => (await orderAddress(p))?.City ?? string.Empty),
                 new PropertyByName<Order>("ShippingAddress1", async p => (await orderAddress(p))?.Address1 ?? string.Empty),
                 new PropertyByName<Order>("ShippingAddress2", async p => (await orderAddress(p))?.Address2 ?? string.Empty),
                 new PropertyByName<Order>("ShippingZipPostalCode", async p => (await orderAddress(p))?.ZipPostalCode ?? string.Empty),
                 new PropertyByName<Order>("ShippingPhoneNumber", async p => (await orderAddress(p))?.PhoneNumber ?? string.Empty),
-                new PropertyByName<Order>("ShippingFaxNumber", async p => (await orderAddress(p))?.FaxNumber ?? string.Empty)
+                //new PropertyByName<Order>("ShippingFaxNumber", async p => (await orderAddress(p))?.FaxNumber ?? string.Empty)
             };
 
             return _orderSettings.ExportWithProducts

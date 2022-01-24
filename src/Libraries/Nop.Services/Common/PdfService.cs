@@ -22,6 +22,7 @@ using Nop.Core.Html;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -72,6 +73,8 @@ namespace Nop.Services.Common
         private readonly PdfSettings _pdfSettings;
         private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
+        private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
 
         #endregion
 
@@ -107,7 +110,9 @@ namespace Nop.Services.Common
             MeasureSettings measureSettings,
             PdfSettings pdfSettings,
             TaxSettings taxSettings,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings, 
+            ICustomerService customerService, 
+            IGenericAttributeService genericAttributeService)
         {
             _addressSettings = addressSettings;
             _addressService = addressService;
@@ -140,6 +145,8 @@ namespace Nop.Services.Common
             _pdfSettings = pdfSettings;
             _taxSettings = taxSettings;
             _vendorSettings = vendorSettings;
+            _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
         }
 
         #endregion
@@ -1032,9 +1039,6 @@ namespace Nop.Services.Common
                     shippingAddressPdf.AddCell(new Paragraph(" "));
                 }
 
-                shippingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.ShippingMethod", indent, lang, font, order.ShippingMethod));
-                shippingAddressPdf.AddCell(new Paragraph());
-
                 addressTable.AddCell(shippingAddressPdf);
             }
             else
@@ -1153,7 +1157,18 @@ namespace Nop.Services.Common
             //logo
             var logoPicture = await _pictureService.GetPictureByIdAsync(pdfSettingsByStore.LogoPictureId);
             var logoExists = logoPicture != null;
-
+            
+            //customer info
+            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            var customerFirstName =
+                await _genericAttributeService.GetAttributeAsync<string>(
+                    customer,
+                    NopCustomerDefaults.FirstNameAttribute);
+            var customerLastName = 
+                await _genericAttributeService.GetAttributeAsync<string>(
+                    customer,
+                    NopCustomerDefaults.LastNameAttribute);
+            
             //header
             var headerTable = new PdfPTable(logoExists ? 2 : 1)
             {
@@ -1173,6 +1188,10 @@ namespace Nop.Services.Common
             cellHeader.Phrase.Add(new Phrase(anchor));
             cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
             cellHeader.Phrase.Add(await GetParagraphAsync("PDFInvoice.OrderDate", lang, font, (await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc)).ToString("D", new CultureInfo(lang.LanguageCulture))));
+            cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
+            cellHeader.Phrase.Add(await GetParagraphAsync("PDFInvoice.Name", lang, font, string.Join(' ', customerFirstName, customerLastName)));
+            cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
+            cellHeader.Phrase.Add(await GetParagraphAsync("PDFInvoice.DeliveryDate", lang, font, (await _dateTimeHelper.ConvertToUserTimeAsync(order.ScheduleDate, DateTimeKind.Utc)).ToString(new CultureInfo(lang.LanguageCulture))));
             cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
             cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
             cellHeader.HorizontalAlignment = Element.ALIGN_LEFT;

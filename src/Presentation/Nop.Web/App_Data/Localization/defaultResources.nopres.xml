@@ -18039,6 +18039,9 @@
   <LocaleResource Name="PDFInvoice.Name">
     <Value>Name: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="PDFInvoice.DeliveryDate">
+    <Value>Delivery Date: {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="PDFInvoice.Order#">
     <Value>Order# {0}</Value>
   </LocaleResource>

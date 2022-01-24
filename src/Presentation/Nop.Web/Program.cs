@@ -7,7 +7,7 @@ using Nop.Services.Configuration;
 
 namespace Nop.Web
 {
-    public class Program
+    public static class Program
     {
         /// <returns>A task that represents the asynchronous operation</returns>
         public static async Task Main(string[] args)
