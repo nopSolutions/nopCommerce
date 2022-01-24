@@ -21,8 +21,15 @@ function clear_fontawesome(cb) {
   })
 };
 
+function clear_tinyMceLangs(cb) {
+  return del(targetPath + 'tinymce-langs').then(() => {
+    cb()
+  })
+};
+
 exports.Execute = gulp.series(
   clear_folders,
   clear_files,
-  clear_fontawesome
+  clear_fontawesome,
+  clear_tinyMceLangs
   );

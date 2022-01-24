@@ -5,7 +5,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.ProductReviews").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Product reviews");
+    NopHtml.SetActiveMenuItemSystemName("Product reviews");
 }
 
 @{
@@ -36,7 +36,7 @@
             </button>
             <nop-action-confirmation asp-button-id="delete-selected" />
         }
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductReviewListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductReviewListButtons, additionalData = Model })
     </div>
 </div>
 
@@ -259,10 +259,14 @@
                                     data: postData,
                                     traditional: true,
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        $('#approveSelectedFailed-info').text(errorThrown);
-                                        $("#approveSelectedFailed").click();
+                                        showAlert('approveSelectedFailed', errorThrown);
                                     },
                                     complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
                                         updateTable('#productreviews-grid');
                                     }
                                 });
@@ -285,10 +289,14 @@
                                     data: postData,
                                     traditional: true,
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        $('#disapproveSelectedFailed-info').text(errorThrown);
-                                        $("#disapproveSelectedFailed").click();
+                                        showAlert('disapproveSelectedFailed', errorThrown);
                                     },
                                     complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
                                         updateTable('#productreviews-grid');
                                     }
                                 });
@@ -307,10 +315,14 @@
                                     url: "@(Url.Action("DeleteSelected", "ProductReview"))",
                                     data: postData,
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        $('#deleteSelectedFailed-info').text(errorThrown);
-                                        $("#deleteSelectedFailed").click();
+                                        showAlert('deleteSelectedFailed', errorThrown);
                                     },
                                     complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
                                         updateTable('#productreviews-grid');
                                     }
                                 });
@@ -328,3 +340,4 @@
 <nop-alert asp-alert-id="approveSelectedFailed" />
 <nop-alert asp-alert-id="disapproveSelectedFailed" />
 <nop-alert asp-alert-id="deleteSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />

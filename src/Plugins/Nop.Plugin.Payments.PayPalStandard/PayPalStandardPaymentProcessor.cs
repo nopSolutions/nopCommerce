@@ -41,7 +41,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IProductService _productService;
         private readonly ISettingService _settingService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -64,7 +64,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
             IOrderService orderService,
-            IPaymentService paymentService,
+            IOrderTotalCalculationService orderTotalCalculationService,
             IProductService productService,
             ISettingService settingService,
             IStateProvinceService stateProvinceService,
@@ -83,7 +83,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             _httpContextAccessor = httpContextAccessor;
             _localizationService = localizationService;
             _orderService = orderService;
-            _paymentService = paymentService;
+            _orderTotalCalculationService = orderTotalCalculationService;
             _productService = productService;
             _settingService = settingService;
             _stateProvinceService = stateProvinceService;
@@ -429,7 +429,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// </returns>
         public async Task<decimal> GetAdditionalHandlingFeeAsync(IList<ShoppingCartItem> cart)
         {
-            return await _paymentService.CalculateAdditionalFeeAsync(cart,
+            return await _orderTotalCalculationService.CalculatePaymentAdditionalFeeAsync(cart,
                 _payPalStandardPaymentSettings.AdditionalFee, _payPalStandardPaymentSettings.AdditionalFeePercentage);
         }
 
@@ -575,7 +575,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             });
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Payments.PayPalStandard.Fields.AdditionalFee"] = "Additional fee",
                 ["Plugins.Payments.PayPalStandard.Fields.AdditionalFee.Hint"] = "Enter additional fee to charge your customers.",

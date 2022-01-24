@@ -47,7 +47,7 @@ namespace Nop.Services.Configuration
         /// </returns>
         protected virtual async Task<IDictionary<string, IList<Setting>>> GetAllSettingsDictionaryAsync()
         {
-            return await _staticCacheManager.GetAsync(NopConfigurationDefaults.SettingsAllAsDictionaryCacheKey, async () =>
+            return await _staticCacheManager.GetAsync(NopSettingsDefaults.SettingsAllAsDictionaryCacheKey, async () =>
             {
                 var settings = await GetAllSettingsAsync();
 
@@ -331,6 +331,9 @@ namespace Nop.Services.Configuration
         public virtual async Task<ISettings> LoadSettingAsync(Type type, int storeId = 0)
         {
             var settings = Activator.CreateInstance(type);
+
+            if (!DataSettingsManager.IsDatabaseInstalled())
+                return settings as ISettings;
 
             foreach (var prop in type.GetProperties())
             {

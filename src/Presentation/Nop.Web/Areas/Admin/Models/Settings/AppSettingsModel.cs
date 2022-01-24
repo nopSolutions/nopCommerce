@@ -1,6 +1,4 @@
-﻿using Azure.Storage.Blobs.Models;
-using Nop.Core.Configuration;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
@@ -14,6 +12,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public AppSettingsModel()
         {
+            DataConfigModel = new DataConfigModel();
             CacheConfigModel = new CacheConfigModel();
             DistributedCacheConfigModel = new DistributedCacheConfigModel();
             HostingConfigModel = new HostingConfigModel();
@@ -21,6 +20,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             InstallationConfigModel = new InstallationConfigModel();
             PluginConfigModel = new PluginConfigModel();
             CommonConfigModel = new CommonConfigModel();
+            WebOptimizerConfigModel = new WebOptimizerConfigModel();
             EnvironmentVariables = new List<string>();
         }
 
@@ -28,10 +28,12 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         #region Properties
 
+        public DataConfigModel DataConfigModel { get; set; }
+
         public CacheConfigModel CacheConfigModel { get; set; }
 
         public HostingConfigModel HostingConfigModel { get; set; }
-        
+
         public DistributedCacheConfigModel DistributedCacheConfigModel { get; set; }
 
         public AzureBlobConfigModel AzureBlobConfigModel { get; set; }
@@ -41,6 +43,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public PluginConfigModel PluginConfigModel { get; set; }
 
         public CommonConfigModel CommonConfigModel { get; set; }
+
+        public WebOptimizerConfigModel WebOptimizerConfigModel { get; set; }
 
         public List<string> EnvironmentVariables { get; set; }
 

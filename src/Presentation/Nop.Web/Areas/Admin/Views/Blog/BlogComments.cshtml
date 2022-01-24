@@ -6,7 +6,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.ContentManagement.Blog.Comments").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Blog comments");
+    NopHtml.SetActiveMenuItemSystemName("Blog comments");
 }
 
 @{
@@ -32,7 +32,7 @@
             @T("Admin.ContentManagement.Blog.Comments.DeleteSelected")
         </button>
         <nop-action-confirmation asp-button-id="delete-selected" />
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogCommentListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogCommentListButtons, additionalData = Model })
     </div>
 </div>
 
@@ -199,10 +199,14 @@
                                     url: "@(Url.Action("DeleteSelectedComments", "Blog"))",
                                     data: postData,
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        $('#deleteSelectedCommentsFailed-info').text(errorThrown);
-                                        $("#deleteSelectedCommentsFailed").click();
+                                        showAlert('deleteSelectedCommentsFailed', errorThrown);
                                     },
                                     complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
                                         updateTable('#comments-grid');
                                     }
                                 });
@@ -226,10 +230,14 @@
                                         data: postData,
                                         traditional: true,
                                         error: function (jqXHR, textStatus, errorThrown) {
-                                            $('#approveSelectedFailed-info').text(errorThrown);
-                                            $("#approveSelectedFailed").click();
+                                            showAlert('approveSelectedFailed', errorThrown);
                                         },
                                         complete: function (jqXHR, textStatus) {
+                                            if (jqXHR.status === 204)
+                                            {
+                                                showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                return;
+                                            }
                                             updateTable('#comments-grid');
                                         }
                                     });
@@ -252,10 +260,14 @@
                                         data: postData,
                                         traditional: true,
                                         error: function (jqXHR, textStatus, errorThrown) {
-                                            $('#disapproveSelectedFailed-info').text(errorThrown);
-                                            $("#disapproveSelectedFailed").click();
+                                            showAlert('disapproveSelectedFailed', errorThrown);
                                         },
                                         complete: function (jqXHR, textStatus) {
+                                            if (jqXHR.status === 204)
+                                            {
+                                                showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                return;
+                                            }
                                             updateTable('#comments-grid');
                                         }
                                     });
@@ -273,3 +285,4 @@
 <nop-alert asp-alert-id="deleteSelectedCommentsFailed" />
 <nop-alert asp-alert-id="approveSelectedFailed" />
 <nop-alert asp-alert-id="disapproveSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />

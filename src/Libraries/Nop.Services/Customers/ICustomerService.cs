@@ -553,7 +553,7 @@ namespace Nop.Services.Customers
         /// A task that represents the asynchronous operation
         /// The task result contains the rue if password is expired; otherwise false
         /// </returns>
-        Task<bool> PasswordIsExpiredAsync(Customer customer);
+        Task<bool> IsPasswordExpiredAsync(Customer customer);
 
         #endregion
 

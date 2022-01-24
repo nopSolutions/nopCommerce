@@ -93,8 +93,9 @@ namespace Nop.Services.Discounts
                 else
                 {
                     //or try to get validation result for the requirement
+                    var store = await _storeContext.GetCurrentStoreAsync();
                     var requirementRulePlugin = await _discountPluginManager
-                        .LoadPluginBySystemNameAsync(requirement.DiscountRequirementRuleSystemName, customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+                        .LoadPluginBySystemNameAsync(requirement.DiscountRequirementRuleSystemName, customer, store.Id);
                     if (requirementRulePlugin == null)
                         continue;
 
@@ -102,7 +103,7 @@ namespace Nop.Services.Discounts
                     {
                         DiscountRequirementId = requirement.Id,
                         Customer = customer,
-                        Store = await _storeContext.GetCurrentStoreAsync()
+                        Store = store
                     });
 
                     //add validation error
@@ -526,10 +527,12 @@ namespace Nop.Services.Discounts
             if (discount.DiscountType == DiscountType.AssignedToOrderSubTotal ||
                 discount.DiscountType == DiscountType.AssignedToOrderTotal)
             {
-                //TODO: try to move into constructor
+                var store = await _storeContext.GetCurrentStoreAsync();
+
+                //do not inject IShoppingCartService via constructor because it'll cause circular references
                 var shoppingCartService = EngineContext.Current.Resolve<IShoppingCartService>();
                 var cart = await shoppingCartService.GetShoppingCartAsync(customer,
-                    ShoppingCartType.ShoppingCart, storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                    ShoppingCartType.ShoppingCart, storeId: store.Id);
 
                 var cartProductIds = cart.Select(ci => ci.ProductId).ToArray();
                 

@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.RecurringPayments").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Recurring payments");
+    NopHtml.SetActiveMenuItemSystemName("Recurring payments");
 }
 
 <div class="content-header clearfix">
@@ -13,7 +13,7 @@
     </h1>
     <div class="float-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReccuringPaymentListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReccuringPaymentListButtons, additionalData = Model })
     </div>
 </div>
 
@@ -94,11 +94,11 @@
                                 }
                             })
 
-                            <script>
-                        function renderColumnCustomerInfo(data, type, row, meta) {
-                            var textRenderer = $.fn.dataTable.render.text().display;
-                            return '<a href="@Url.Content("~/Admin/Customer/Edit/")' + row.CustomerId + '">' + textRenderer(row.CustomerEmail) + '</a>';
-                        }
+                            <script asp-location="Footer">
+                                function renderColumnCustomerInfo(data, type, row, meta) {
+                                    var textRenderer = $.fn.dataTable.render.text().display;
+                                    return '<a href="@Url.Content("~/Admin/Customer/Edit/")' + row.CustomerId + '">' + textRenderer(row.CustomerEmail) + '</a>';
+                                }
                             </script>
                         </div>
                     </div>

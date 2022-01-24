@@ -19,9 +19,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            //compression
-            services.AddResponseCompression();
-
             //add options feature
             services.AddOptions();
 
@@ -36,9 +33,6 @@ namespace Nop.Web.Framework.Infrastructure
 
             //add anti-forgery
             services.AddAntiForgery();
-
-            //add localization
-            services.AddLocalization();
 
             //add theme support
             services.AddThemes();
@@ -57,12 +51,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //use response compression
-            application.UseNopResponseCompression();
-
-            //use static files feature
-            application.UseNopStaticFiles();
-
             //check whether requested page is keep alive page
             application.UseKeepAlive();
 

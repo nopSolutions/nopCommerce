@@ -70,7 +70,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<EmailAccount> GetEmailAccountAsync(int emailAccountId)
         {
             return await _emailAccountService.GetEmailAccountByIdAsync(emailAccountId)
@@ -232,8 +231,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 var emailAccount = await GetEmailAccountAsync(model.EmailAccountId);
+                var store = await _storeContext.GetCurrentStoreAsync();
                 var subscription = await _newsLetterSubscriptionService
-                    .GetNewsLetterSubscriptionByEmailAndStoreIdAsync(model.TestEmail, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    .GetNewsLetterSubscriptionByEmailAndStoreIdAsync(model.TestEmail, store.Id);
                 if (subscription != null)
                 {
                     //there's a subscription. let's use it

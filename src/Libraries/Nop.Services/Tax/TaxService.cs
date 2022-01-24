@@ -195,13 +195,14 @@ namespace Nop.Services.Tax
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
+            var store = await _storeContext.GetCurrentStoreAsync();
             var taxRateRequest = new TaxRateRequest
             {
                 Customer = customer,
                 Product = product,
                 Price = price,
                 TaxCategoryId = taxCategoryId > 0 ? taxCategoryId : product?.TaxCategoryId ?? 0,
-                CurrentStoreId = (await _storeContext.GetCurrentStoreAsync()).Id
+                CurrentStoreId = store.Id
             };
 
             var basedOn = _taxSettings.TaxBasedOn;
@@ -227,7 +228,7 @@ namespace Nop.Services.Tax
             if (!overriddenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickupInStore)
             {
                 var pickupPoint = await _genericAttributeService.GetAttributeAsync<PickupPoint>(customer,
-                    NopCustomerDefaults.SelectedPickupPointAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    NopCustomerDefaults.SelectedPickupPointAttribute, store.Id);
                 if (pickupPoint != null)
                 {
                     taxRateRequest.Address = await LoadPickupPointTaxAddressAsync(pickupPoint);
@@ -296,7 +297,8 @@ namespace Nop.Services.Tax
             var taxRate = decimal.Zero;
 
             //active tax provider
-            var activeTaxProvider = await _taxPluginManager.LoadPrimaryPluginAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var activeTaxProvider = await _taxPluginManager.LoadPrimaryPluginAsync(customer, store.Id);
             if (activeTaxProvider == null)
                 return (taxRate, true);
 
@@ -385,7 +387,7 @@ namespace Nop.Services.Tax
                 twoLetterIsoCode = string.Empty;
             if (!string.IsNullOrEmpty(twoLetterIsoCode))
                 //The service returns INVALID_INPUT for country codes that are not uppercase.
-                twoLetterIsoCode = twoLetterIsoCode.ToUpper();
+                twoLetterIsoCode = twoLetterIsoCode.ToUpperInvariant();
 
             string name;
             string address;
@@ -412,35 +414,6 @@ namespace Nop.Services.Tax
 
                 return (VatNumberStatus.Unknown, name, address, exception);
             }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether a product is tax exempt
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains a value indicating whether a product is tax exempt
-        /// </returns>
-        protected virtual async Task<bool> IsTaxExemptAsync(Product product, Customer customer)
-        {
-            if (customer != null)
-            {
-                if (customer.IsTaxExempt)
-                    return true;
-
-                if ((await _customerService.GetCustomerRolesAsync(customer)).Any(cr => cr.TaxExempt))
-                    return true;
-            }
-
-            if (product == null)
-                return false;
-
-            if (product.IsTaxExempt)
-                return true;
-
-            return false;
         }
 
         /// <summary>
@@ -606,6 +579,35 @@ namespace Nop.Services.Tax
             //    price = decimal.Zero;
 
             return (price, taxRate);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether a product is tax exempt
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether a product is tax exempt
+        /// </returns>
+        public virtual async Task<bool> IsTaxExemptAsync(Product product, Customer customer)
+        {
+            if (customer != null)
+            {
+                if (customer.IsTaxExempt)
+                    return true;
+
+                if ((await _customerService.GetCustomerRolesAsync(customer)).Any(cr => cr.TaxExempt))
+                    return true;
+            }
+
+            if (product == null)
+                return false;
+
+            if (product.IsTaxExempt)
+                return true;
+
+            return false;
         }
 
         #endregion
@@ -813,7 +815,8 @@ namespace Nop.Services.Tax
         public virtual async Task<TaxTotalResult> GetTaxTotalAsync(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true)
         {
             var customer = await _customerService.GetShoppingCartCustomerAsync(cart);
-            var activeTaxProvider = await _taxPluginManager.LoadPrimaryPluginAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var activeTaxProvider = await _taxPluginManager.LoadPrimaryPluginAsync(customer, store.Id);
             if (activeTaxProvider == null)
                 return null;
 
@@ -822,7 +825,7 @@ namespace Nop.Services.Tax
             {
                 ShoppingCart = cart,
                 Customer = customer,
-                StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                StoreId = store.Id,
                 UsePaymentMethodAdditionalFee = usePaymentMethodAdditionalFee
             };
             var taxTotalResult = await activeTaxProvider.GetTaxTotalAsync(taxTotalRequest);

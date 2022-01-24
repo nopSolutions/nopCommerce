@@ -42,7 +42,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ShowCategoryProductNumber">
-        <div class="form-group row" id="pnlShowCategoryProductNumberIncludingSubcategories">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ShowCategoryProductNumberIncludingSubcategories_OverrideForStore" asp-input="ShowCategoryProductNumberIncludingSubcategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ShowCategoryProductNumberIncludingSubcategories" />
@@ -101,6 +101,16 @@
         <div class="col-md-9">
             <nop-editor asp-for="EnablePriceRangeFiltering" />
             <span asp-validation-for="EnablePriceRangeFiltering"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EnableSpecificationAttributeFiltering_OverrideForStore" asp-input="EnableSpecificationAttributeFiltering" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EnableSpecificationAttributeFiltering" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EnableSpecificationAttributeFiltering" />
+            <span asp-validation-for="EnableSpecificationAttributeFiltering"></span>
         </div>
     </div>
 </div>

@@ -20,32 +20,32 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Catalog
         public void ShouldHaveErrorWhenTitleIsNullOrEmpty()
         {
             var model = new ProductReviewsModel { AddProductReview = { Title = null } };
-            _validator.ShouldHaveValidationErrorFor(x => x.AddProductReview.Title, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AddProductReview.Title);
             model.AddProductReview.Title = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.AddProductReview.Title, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AddProductReview.Title);
         }
 
         [Test]
         public void ShouldNotHaveErrorWhenTitleIsSpecified()
         {
             var model = new ProductReviewsModel { AddProductReview = { Title = "some comment" } };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.AddProductReview.Title, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.AddProductReview.Title);
         }
 
         [Test]
         public void ShouldHaveErrorWhenReviewTextIsNullOrEmpty()
         {
             var model = new ProductReviewsModel { AddProductReview = { ReviewText = null } };
-            _validator.ShouldHaveValidationErrorFor(x => x.AddProductReview.ReviewText, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AddProductReview.ReviewText);
             model.AddProductReview.ReviewText = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.AddProductReview.ReviewText, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AddProductReview.ReviewText);
         }
 
         [Test]
         public void ShouldNotHaveErrorWhenReviewTextIsSpecified()
         {
             var model = new ProductReviewsModel { AddProductReview = { ReviewText = "some comment" } };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.AddProductReview.ReviewText, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.AddProductReview.ReviewText);
         }
     }
 }

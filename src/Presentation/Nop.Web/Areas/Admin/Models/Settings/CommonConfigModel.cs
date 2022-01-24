@@ -37,6 +37,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist")]
         public string PluginStaticFileExtensionsBlacklist { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.ServeUnknownFileTypes")]
+        public bool ServeUnknownFileTypes { get; set; }
+
         #endregion
     }
 }

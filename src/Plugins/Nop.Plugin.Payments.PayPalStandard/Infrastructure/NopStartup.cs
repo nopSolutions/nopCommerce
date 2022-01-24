@@ -34,6 +34,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Infrastructure
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order => 101;
+        public int Order => 3000;
     }
 }

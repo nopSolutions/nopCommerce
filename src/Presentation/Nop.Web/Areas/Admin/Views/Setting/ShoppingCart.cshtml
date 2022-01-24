@@ -4,18 +4,19 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Settings.ShoppingCart").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Shopping cart settings");
+    NopHtml.SetActiveMenuItemSystemName("Shopping cart settings");
 }
 
 @{
     const string hideCommonBlockAttributeName = "ShoppingCartSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 
     const string hideMiniShoppingCartBlockAttributeName = "ShoppingCartSettingsPage.HideMiniShoppingCartBlock";
-    var hideMiniShoppingCartBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideMiniShoppingCartBlockAttributeName);
+    var hideMiniShoppingCartBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideMiniShoppingCartBlockAttributeName);
 
     const string hideWishlistBlockAttributeName = "ShoppingCartSettingsPage.HideWishlistBlock";
-    var hideWishlistBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideWishlistBlockAttributeName);
+    var hideWishlistBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideWishlistBlockAttributeName);
 }
 
 
@@ -29,7 +30,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShoppingCartSettingsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShoppingCartSettingsButtons, additionalData = Model })
         </div>
     </div>
 

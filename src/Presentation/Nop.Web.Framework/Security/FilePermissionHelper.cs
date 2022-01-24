@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Configuration;
 using Nop.Services.Plugins;
 
 namespace Nop.Web.Framework.Security
@@ -29,10 +29,10 @@ namespace Nop.Web.Framework.Security
             //write permissions
             var writePermissions = new[] { 2, 3, 6, 7 };
 
-            if (checkRead & readPermissions.Contains(userFilePermission))
+            if (checkRead && readPermissions.Contains(userFilePermission))
                 return true;
 
-            return (checkWrite || checkModify || checkDelete) & writePermissions.Contains(userFilePermission);
+            return (checkWrite || checkModify || checkDelete) && writePermissions.Contains(userFilePermission);
         }
 
         [SupportedOSPlatform("windows")]
@@ -87,6 +87,7 @@ namespace Nop.Web.Framework.Security
         /// <summary>
         /// Check permissions
         /// </summary>
+        /// <param name="fileProvider">File provider</param>
         /// <param name="path">Path</param>
         /// <param name="checkRead">Check read</param>
         /// <param name="checkWrite">Check write</param>
@@ -94,14 +95,12 @@ namespace Nop.Web.Framework.Security
         /// <param name="checkDelete">Check delete</param>
         /// <returns>Result</returns>
         [SupportedOSPlatform("windows")]
-        private static bool CheckPermissionsInWindows(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
+        private static bool CheckPermissionsInWindows(INopFileProvider fileProvider, string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
         {
             var permissionsAreGranted = true;
 
             try
             {
-                var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-
                 if (!(fileProvider.FileExists(path) || fileProvider.DirectoryExists(path)))
                 {
                     return true;
@@ -181,8 +180,8 @@ namespace Nop.Web.Framework.Security
         {
             //MacOSX file permission check differs slightly from linux
             var arguments = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                ? $"-c \"stat -f '%A %u %g' {path}\""
-                : $"-c \"stat -c '%a %u %g' {path}\"";
+                ? $"-c \"stat -f '%A %u %g' '{path}'\""
+                : $"-c \"stat -c '%a %u %g' '{path}'\"";
 
             try
             {
@@ -228,13 +227,14 @@ namespace Nop.Web.Framework.Security
         /// <summary>
         /// Check permissions
         /// </summary>
+        /// <param name="fileProvider">File provider</param>
         /// <param name="path">Path</param>
         /// <param name="checkRead">Check read</param>
         /// <param name="checkWrite">Check write</param>
         /// <param name="checkModify">Check modify</param>
         /// <param name="checkDelete">Check delete</param>
         /// <returns>Result</returns>
-        public static bool CheckPermissions(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
+        public static bool CheckPermissions(this INopFileProvider fileProvider, string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
         {
             var result = false;
 
@@ -242,7 +242,7 @@ namespace Nop.Web.Framework.Security
             {
                 case PlatformID.Win32NT:
                     if (OperatingSystem.IsWindows())
-                        result = CheckPermissionsInWindows(path, checkRead, checkWrite, checkModify, checkDelete);
+                        result = CheckPermissionsInWindows(fileProvider, path, checkRead, checkWrite, checkModify, checkDelete);
                     break;
                 case PlatformID.Unix:
                     result = CheckPermissionsInUnix(path, checkRead, checkWrite, checkModify, checkDelete);
@@ -256,10 +256,8 @@ namespace Nop.Web.Framework.Security
         /// Gets a list of directories (physical paths) which require write permission
         /// </summary>
         /// <returns>Result</returns>
-        public static IEnumerable<string> GetDirectoriesWrite()
+        public static IEnumerable<string> GetDirectoriesWrite(this INopFileProvider fileProvider)
         {
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-
             var rootDir = fileProvider.MapPath("~/");
 
             var dirsToCheck = new List<string>
@@ -285,10 +283,8 @@ namespace Nop.Web.Framework.Security
         /// Gets a list of files (physical paths) which require write permission
         /// </summary>
         /// <returns>Result</returns>
-        public static IEnumerable<string> GetFilesWrite()
+        public static IEnumerable<string> GetFilesWrite(this INopFileProvider fileProvider)
         {
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-
             return new List<string>
             {
                 fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath),

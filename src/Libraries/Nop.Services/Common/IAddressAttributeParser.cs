@@ -30,7 +30,6 @@ namespace Nop.Services.Common
         /// </returns>
         Task<IList<AddressAttributeValue>> ParseAddressAttributeValuesAsync(string attributesXml);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Gets selected address attribute value
         /// </summary>
@@ -39,7 +38,6 @@ namespace Nop.Services.Common
         /// <returns>Address attribute value</returns>
         IList<string> ParseValues(string attributesXml, int addressAttributeId);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Adds an attribute
         /// </summary>

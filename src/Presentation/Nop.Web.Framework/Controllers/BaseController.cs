@@ -5,10 +5,11 @@ using System.Net;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Buffers;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
@@ -44,39 +45,19 @@ namespace Nop.Web.Framework.Controllers
         /// </returns>
         protected virtual async Task<string> RenderViewComponentToStringAsync(string componentName, object arguments = null)
         {
-            //original implementation: https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/Internal/ViewComponentResultExecutor.cs
-            //we customized it to allow running from controllers
+            var helper = new DefaultViewComponentHelper(
+                EngineContext.Current.Resolve<IViewComponentDescriptorCollectionProvider>(),
+                HtmlEncoder.Default,
+                EngineContext.Current.Resolve<IViewComponentSelector>(),
+                EngineContext.Current.Resolve<IViewComponentInvokerFactory>(),
+                EngineContext.Current.Resolve<IViewBufferScope>());
 
-            if (string.IsNullOrEmpty(componentName))
-                throw new ArgumentNullException(nameof(componentName));
-
-            if (EngineContext.Current.Resolve<IActionContextAccessor>() is not IActionContextAccessor actionContextAccessor)
-                throw new Exception("IActionContextAccessor cannot be resolved");
-
-            var context = actionContextAccessor.ActionContext;
-
-            var viewComponentResult = ViewComponent(componentName, arguments);
-
-            var viewData = ViewData;
-            if (viewData == null)
-                throw new NotImplementedException();
-
-            var tempData = TempData;
-            if (tempData == null)
-                throw new NotImplementedException();
-
-            await using var writer = new StringWriter();
-            var viewContext = new ViewContext(context, NullView.Instance, viewData, tempData, writer, new HtmlHelperOptions());
-
-            // IViewComponentHelper is stateful, we want to make sure to retrieve it every time we need it.
-            var viewComponentHelper = EngineContext.Current.Resolve<IViewComponentHelper>();
-            (viewComponentHelper as IViewContextAware)?.Contextualize(viewContext);
-
-            var result = viewComponentResult.ViewComponentType == null ?
-                await viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments) :
-                await viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentType, viewComponentResult.Arguments);
-
+            using var writer = new StringWriter();
+            var context = new ViewContext(ControllerContext, NullView.Instance, ViewData, TempData, writer, new HtmlHelperOptions());
+            helper.Contextualize(context);
+            var result = await helper.InvokeAsync(componentName, arguments);
             result.WriteTo(writer, HtmlEncoder.Default);
+            await writer.FlushAsync();
             return writer.ToString();
         }
         
@@ -155,9 +136,9 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="editPageUrl">Edit page URL</param>
         protected virtual void DisplayEditLink(string editPageUrl)
         {
-            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            var nopHtmlHelper = EngineContext.Current.Resolve<INopHtmlHelper>();
 
-            pageHeadBuilder.AddEditPageUrl(editPageUrl);
+            nopHtmlHelper.AddEditPageUrl(editPageUrl);
         }
 
         #endregion
@@ -170,7 +151,6 @@ namespace Nop.Web.Framework.Controllers
         /// <typeparam name="TLocalizedModelLocal">Localizable model</typeparam>
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task AddLocalesAsync<TLocalizedModelLocal>(ILanguageService languageService,
             IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
@@ -184,7 +164,6 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
         /// <param name="configure">Configure action</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task AddLocalesAsync<TLocalizedModelLocal>(ILanguageService languageService,
             IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, int> configure) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
@@ -308,31 +287,6 @@ namespace Nop.Web.Framework.Controllers
             {
                 ViewData[dataKey] = tabName;
             }
-        }
-
-        #endregion
-
-        #region DataTables
-
-        /// <summary>
-        /// Creates an object that serializes the specified object to JSON
-        /// Used to serialize data for DataTables
-        /// </summary>
-        /// <typeparam name="T">Model type</typeparam>
-        /// <param name="model">The model to serialize.</param>
-        /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
-        /// <remarks>
-        /// See also https://datatables.net/manual/server-side#Returned-data
-        /// </remarks>
-        public JsonResult Json<T>(BasePagedListModel<T> model) where T : BaseNopModel
-        {
-            return Json(new
-            {
-                draw = model.Draw,
-                recordsTotal = model.RecordsTotal,
-                recordsFiltered = model.RecordsFiltered,
-                model.Data
-            });
         }
 
         #endregion

@@ -93,7 +93,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             if (string.IsNullOrEmpty(Action))
                 Action = "Delete";
 
-            var modelName = _htmlHelper.ViewData.ModelMetadata.ModelType.Name.ToLower();
+            var modelName = _htmlHelper.ViewData.ModelMetadata.ModelType.Name.ToLowerInvariant();
             if (!string.IsNullOrEmpty(Action))
                 modelName += "-" + Action;
             var modalId = await new HtmlString(modelName + "-delete-confirmation").RenderHtmlContentAsync();

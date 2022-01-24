@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using Nop.Core.Infrastructure;
 
@@ -66,7 +65,7 @@ namespace Nop.Core
 
             email = email.Trim();
 
-           return _emailRegex.IsMatch(email);
+            return _emailRegex.IsMatch(email);
         }
 
         /// <summary>
@@ -117,7 +116,7 @@ namespace Nop.Core
             if (string.IsNullOrEmpty(str))
                 return str;
 
-            if (str.Length <= maxLength) 
+            if (str.Length <= maxLength)
                 return str;
 
             var pLen = postfix?.Length ?? 0;
@@ -183,7 +182,7 @@ namespace Nop.Core
             var comparer = EqualityComparer<T>.Default;
             return !a1.Where((t, i) => !comparer.Equals(t, a2[i])).Any();
         }
-        
+
         /// <summary>
         /// Sets a property on an object to a value.
         /// </summary>
@@ -192,8 +191,10 @@ namespace Nop.Core
         /// <param name="value">The value to set the property to.</param>
         public static void SetProperty(object instance, string propertyName, object value)
         {
-            if (instance == null) throw new ArgumentNullException(nameof(instance));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
+            if (propertyName == null)
+                throw new ArgumentNullException(nameof(propertyName));
 
             var instanceType = instance.GetType();
             var pi = instanceType.GetProperty(propertyName);
@@ -226,7 +227,7 @@ namespace Nop.Core
         /// <returns>The converted value.</returns>
         public static object To(object value, Type destinationType, CultureInfo culture)
         {
-            if (value == null) 
+            if (value == null)
                 return null;
 
             var sourceType = value.GetType();
@@ -267,10 +268,11 @@ namespace Nop.Core
         /// <returns>Converted string</returns>
         public static string ConvertEnum(string str)
         {
-            if (string.IsNullOrEmpty(str)) return string.Empty;
+            if (string.IsNullOrEmpty(str))
+                return string.Empty;
             var result = string.Empty;
             foreach (var c in str)
-                if (c.ToString() != c.ToString().ToLower())
+                if (c.ToString() != c.ToString().ToLowerInvariant())
                     result += " " + c.ToString();
                 else
                     result += c.ToString();
@@ -294,6 +296,27 @@ namespace Nop.Core
             if (startDate > endDate.AddYears(-age))
                 age--;
             return age;
+        }
+
+        /// <summary>
+        /// Get DateTime to the specified year, month, and day using the conventions of the current thread culture
+        /// </summary>
+        /// <param name="year">The year</param>
+        /// <param name="month">The month</param>
+        /// <param name="day">The day</param>
+        /// <returns>An instance of the Nullable<System.DateTime></returns>
+        public static DateTime? ParseDate(int? year, int? month, int? day)
+        {
+            if (!year.HasValue || !month.HasValue || !day.HasValue)
+                return null;
+
+            DateTime? date = null;
+            try
+            {
+                date = new DateTime(year.Value, month.Value, day.Value, CultureInfo.CurrentCulture.Calendar);
+            }
+            catch { }
+            return date;
         }
 
         #endregion

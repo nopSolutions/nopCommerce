@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -445,7 +446,9 @@ namespace Nop.Plugin.Payments.PayPalCommerce
                 StyleLabel = "paypal",
                 DisplayButtonsOnProductDetails = true,
                 DisplayButtonsOnShoppingCart = true,
-                RequestTimeout = PayPalCommerceDefaults.RequestTimeout
+                DisplayPayLaterMessages = false,
+                RequestTimeout = PayPalCommerceDefaults.RequestTimeout,
+                MinDiscountAmount = 0.5M
             });
 
             if (!_paymentSettings.ActivePaymentMethodSystemNames.Contains(PayPalCommerceDefaults.SystemName))
@@ -461,7 +464,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce
             }
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Payments.PayPalCommerce.Domain.PaymentType.Authorize"] = "Authorize",
                 ["Enums.Nop.Plugin.Payments.PayPalCommerce.Domain.PaymentType.Capture"] = "Capture",
@@ -479,6 +482,8 @@ namespace Nop.Plugin.Payments.PayPalCommerce
                 ["Plugins.Payments.PayPalCommerce.Fields.DisplayLogoInFooter.Hint"] = "Determine whether to display PayPal logo in the footer. These logos and banners are a great way to let your buyers know that you choose PayPal to securely process their payments.",
                 ["Plugins.Payments.PayPalCommerce.Fields.DisplayLogoInHeaderLinks"] = "Display logo in header links",
                 ["Plugins.Payments.PayPalCommerce.Fields.DisplayLogoInHeaderLinks.Hint"] = "Determine whether to display PayPal logo in header links. These logos and banners are a great way to let your buyers know that you choose PayPal to securely process their payments.",
+                ["Plugins.Payments.PayPalCommerce.Fields.DisplayPayLaterMessages"] = "Display Pay Later messages",
+                ["Plugins.Payments.PayPalCommerce.Fields.DisplayPayLaterMessages.Hint"] = "Determine whether to display Pay Later messages. This message displays how much the customer pays in four payments. The message will be shown next to the PayPal buttons.",
                 ["Plugins.Payments.PayPalCommerce.Fields.Email"] = "Email",
                 ["Plugins.Payments.PayPalCommerce.Fields.Email.Hint"] = "Enter your email to get access to PayPal payments.",
                 ["Plugins.Payments.PayPalCommerce.Fields.LogoInFooter"] = "Logo source code",
@@ -552,6 +557,28 @@ namespace Nop.Plugin.Payments.PayPalCommerce
             await _localizationService.DeleteLocaleResourcesAsync("Plugins.Payments.PayPalCommerce");
 
             await base.UninstallAsync();
+        }
+
+        /// <summary>
+        /// Update plugin
+        /// </summary>
+        /// <param name="currentVersion">Current version of plugin</param>
+        /// <param name="targetVersion">New version of plugin</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task UpdateAsync(string currentVersion, string targetVersion)
+        {
+            var current = decimal.TryParse(currentVersion, NumberStyles.Any, CultureInfo.InvariantCulture, out var value) ? value : 1.00M;
+
+            //new setting added in 1.09
+            if (current < 1.09M)
+            {
+                var settings = await _settingService.LoadSettingAsync<PayPalCommerceSettings>();
+                if (!await _settingService.SettingExistsAsync(settings, setting => setting.MinDiscountAmount))
+                {
+                    settings.MinDiscountAmount = 0.5M;
+                    await _settingService.SaveSettingAsync(settings);
+                }
+            }
         }
 
         /// <summary>

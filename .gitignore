@@ -169,7 +169,7 @@ glob:*.user
 *.patch
 *.hg
 src/Presentation/Nop.Web/.config/*
-src/Presentation/Nop.Web/App_Data/browscap.crawlersonly.xml
+src/Presentation/Nop.Web/App_Data/browscap.xml
 src/Presentation/Nop.Web/App_Data/installedPlugins.json
 src/Presentation/Nop.Web/App_Data/plugins.json
 src/Presentation/Nop.Web/App_Data/dataSettings.json
@@ -183,6 +183,8 @@ src/Presentation/Nop.Web/Plugins/*
 !src/Presentation/Nop.Web/Plugins/bin
 src/Presentation/Nop.Web/Plugins/bin/*
 !src/Presentation/Nop.Web/Plugins/bin/placeholder.txt
+src/Presentation/Nop.Web/wwwroot/.well-known/*
+!src/Presentation/Nop.Web/wwwroot/.well-known/Index.htm
 src/Presentation/Nop.Web/wwwroot/bundles/*
 !src/Presentation/Nop.Web/wwwroot/bundles/Index.htm
 src/Presentation/Nop.Web/wwwroot/db_backups/*.bak
@@ -197,3 +199,4 @@ src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/*
 !src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/en/*
 !src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/main.zip
 src/packages/*
+src/Tests/Nop.Tests/Connections.resx

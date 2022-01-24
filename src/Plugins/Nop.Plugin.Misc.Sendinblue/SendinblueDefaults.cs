@@ -31,7 +31,7 @@ namespace Nop.Plugin.Misc.Sendinblue
         /// <summary>
         /// Gets a URL to edit message template on Sendinblue account
         /// </summary>
-        public static string EditMessageTemplateUrl = "https://my.sendinblue.com/camp/template/{0}/message-setup?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_campaign=module_link";
+        public static string EditMessageTemplateUrl = "https://my.sendinblue.com/camp/template/{0}/message-setup?tap_a=30591-fb13f0&tap_s=840216-5153c7";
 
         /// <summary>
         /// Gets a name of the route to the import contacts callback
@@ -316,7 +316,7 @@ namespace Nop.Plugin.Misc.Sendinblue
         /// <summary>
         /// Gets a key of cache synchronization
         /// </summary>
-        public static CacheKey SyncKeyCache => new CacheKey("PLUGINS_MISC_SENDINBLUE_SYNCINFO");
+        public static CacheKey SyncKeyCache => new("PLUGINS_MISC_SENDINBLUE_SYNCINFO");
 
         /// <summary>
         /// Gets a key of notification message

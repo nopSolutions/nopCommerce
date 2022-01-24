@@ -17,7 +17,7 @@ namespace Nop.Web.Framework.Validators
         /// <returns>Result</returns>
         public static IRuleBuilderOptions<TModel, string> IsCreditCard<TModel>(this IRuleBuilder<TModel, string> ruleBuilder)
         {
-            return ruleBuilder.SetValidator(new CreditCardPropertyValidator());
+            return ruleBuilder.SetValidator(new CreditCardPropertyValidator<TModel, string>());
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Nop.Web.Framework.Validators
         /// <returns>Result</returns>
         public static IRuleBuilderOptions<TModel, decimal> IsDecimal<TModel>(this IRuleBuilder<TModel, decimal> ruleBuilder, decimal maxValue)
         {
-            return ruleBuilder.SetValidator(new DecimalPropertyValidator(maxValue));
+            return ruleBuilder.SetValidator(new DecimalPropertyValidator<TModel, decimal>(maxValue));
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Nop.Web.Framework.Validators
         public static IRuleBuilderOptions<TModel, string> IsUsername<TModel>(this IRuleBuilder<TModel, string> ruleBuilder,
             CustomerSettings customerSettings)
         {
-            return ruleBuilder.SetValidator(new UsernamePropertyValidator(customerSettings));
+            return ruleBuilder.SetValidator(new UsernamePropertyValidator<TModel, string>(customerSettings));
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Nop.Web.Framework.Validators
         public static IRuleBuilderOptions<TModel, string> IsPhoneNumber<TModel>(this IRuleBuilder<TModel, string> ruleBuilder,
             CustomerSettings customerSettings)
         {
-            return ruleBuilder.SetValidator(new PhoneNumberPropertyValidator(customerSettings));
+            return ruleBuilder.SetValidator(new PhoneNumberPropertyValidator<TModel, string>(customerSettings));
         }
 
         /// <summary>

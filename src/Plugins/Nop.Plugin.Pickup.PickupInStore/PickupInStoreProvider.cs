@@ -51,15 +51,6 @@ namespace Nop.Plugin.Pickup.PickupInStore
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Gets a shipment tracker
-        /// </summary>
-        public IShipmentTracker ShipmentTracker => null;
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -73,8 +64,9 @@ namespace Nop.Plugin.Pickup.PickupInStore
         public async Task<GetPickupPointsResponse> GetPickupPointsAsync(Address address)
         {
             var result = new GetPickupPointsResponse();
+            var store = await _storeContext.GetCurrentStoreAsync();
 
-            foreach (var point in await _storePickupPointService.GetAllStorePickupPointsAsync((await _storeContext.GetCurrentStoreAsync()).Id))
+            foreach (var point in await _storePickupPointService.GetAllStorePickupPointsAsync(store.Id))
             {
                 var pointAddress = await _addressService.GetAddressByIdAsync(point.AddressId);
                 if (pointAddress == null)
@@ -105,6 +97,18 @@ namespace Nop.Plugin.Pickup.PickupInStore
                 result.AddError(await _localizationService.GetResourceAsync("Plugins.Pickup.PickupInStore.NoPickupPoints"));
 
             return result;
+        }
+
+        /// <summary>
+        /// Get associated shipment tracker
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment tracker
+        /// </returns>
+        public Task<IShipmentTracker> GetShipmentTrackerAsync()
+        {
+            return Task.FromResult<IShipmentTracker>(null);
         }
 
         /// <summary>
@@ -146,7 +150,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
             await _storePickupPointService.InsertStorePickupPointAsync(pickupPoint);
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Pickup.PickupInStore.AddNew"] = "Add a new pickup point",
                 ["Plugins.Pickup.PickupInStore.Fields.Description"] = "Description",

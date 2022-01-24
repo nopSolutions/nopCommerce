@@ -1,4 +1,4 @@
-﻿using Nop.Services.Tasks;
+﻿using Nop.Services.ScheduleTasks;
 
 namespace Nop.Services.Common
 {

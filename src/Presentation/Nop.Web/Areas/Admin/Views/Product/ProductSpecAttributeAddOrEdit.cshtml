@@ -4,7 +4,12 @@
 @using Nop.Services
 
 @{
-    Html.SetActiveMenuItemSystemName("Products");
+    NopHtml.SetActiveMenuItemSystemName("Products");
+
+    if(Model.SpecificationId == 0)
+        ViewBag.PageTitle = T("Admin.Catalog.Products.SpecificationAttributes.AddNew").Text;
+    else
+        ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.EditAttributeDetails").Text;
 }
 
 <form asp-controller="Product" asp-action="ProductSpecAttrUpdate" id="spec-form" method="post">
@@ -80,7 +85,7 @@
                                 <div class="col-md-9">
                                     @if (Model.SpecificationId != 0)
                                     {
-                                        <nop-editor asp-for="AttributeTypeName" asp-disabled="true" />
+                                        <nop-editor asp-for="AttributeTypeName" html-attributes="@(new { disabled = true })" />
                                     }
                                     else
                                     {
@@ -96,7 +101,7 @@
                                 <div class="col-md-9">
                                     @if (Model.SpecificationId != 0)
                                     {
-                                        <nop-editor asp-for="AttributeName" asp-disabled="true" />
+                                        <nop-editor asp-for="AttributeName" html-attributes="@(new { disabled = true })" />
                                     }
                                     else
                                     {
@@ -252,8 +257,14 @@
                                     <nop-label asp-for="AllowFiltering" />
                                 </div>
                                 <div class="col-md-9">
-                                    <nop-editor asp-disabled="@(Model.AttributeTypeId != (int) SpecificationAttributeType.Option)"
-                                                asp-for="AllowFiltering" />
+                                    @if(Model.AttributeTypeId != (int)SpecificationAttributeType.Option)
+                                    {
+                                        <nop-editor asp-for="AllowFiltering" html-attributes="@(new { disabled = "true" })" />
+                                    }
+                                    else
+                                    {
+                                        <nop-editor asp-for="AllowFiltering" />
+                                    }
                                     <span asp-validation-for="AllowFiltering"></span>
                                 </div>
                             </div>

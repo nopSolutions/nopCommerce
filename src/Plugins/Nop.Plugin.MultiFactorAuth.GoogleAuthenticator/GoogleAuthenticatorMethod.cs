@@ -77,15 +77,16 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
             //settings
             await _settingService.SaveSettingAsync(new GoogleAuthenticatorSettings
             {
-                BusinessPrefix = (await _storeContext.GetCurrentStoreAsync()).Name,
+                BusinessPrefix = store.Name,
                 QRPixelsPerModule = GoogleAuthenticatorDefaults.DefaultQRPixelsPerModule
             });
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 //admin config 
                 ["Plugins.MultiFactorAuth.GoogleAuthenticator.BusinessPrefix"] = "Business prefix",

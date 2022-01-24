@@ -30,7 +30,7 @@
         </div>
         <div class="poll-vote-error" id="block-poll-vote-error-@(Model.Id)" style="display:none">
         </div>
-        
+        <nop-antiforgery-token />
         <script asp-location="Footer">
             $(document).ready(function () {
                 $('#vote-poll-@(Model.Id)').on('click', function () {
@@ -41,13 +41,17 @@
                     else {
                         var voteProgress = $("#poll-voting-progress-@(Model.Id)");
                         voteProgress.show();
+
+                        var postData = {
+                          "pollAnswerId": pollAnswerId
+                        };
+                        addAntiForgeryToken(postData);
+
                         $.ajax({
                             cache: false,
                             type: "POST",
                             url: "@(Url.RouteUrl("PollVote"))",
-                            data: {
-                                "pollAnswerId": pollAnswerId
-                            },
+                            data: postData,
                             success: function (data, textStatus, jqXHR) {
                                 if (data.error) {
                                     $("#block-poll-vote-error-@(Model.Id)").html(data.error);

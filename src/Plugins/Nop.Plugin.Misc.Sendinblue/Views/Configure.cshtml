@@ -5,8 +5,9 @@
 
 @{
     Layout = "_ConfigurePlugin";
-    Html.AddCssFileParts("~/Plugins/Misc.Sendinblue/Content/styles.css", excludeFromBundle: true);
 }
+
+<link rel="stylesheet" href="~/Plugins/Misc.Sendinblue/Content/styles.css" />
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
 
@@ -70,12 +71,12 @@
                                 </div>
                                 <div class="form-group row">
                                     <div>
-                                        <a href="https://app.sendinblue.com/account/login/?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_campaign=module_link" class="btn btn-primary" target="_blank">Create Free Account</a>
+                                        <a href="https://www.sendinblue.com/?tap_a=30591-fb13f0&tap_s=840216-5153c7" class="btn btn-primary" target="_blank">Create Free Account</a>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <h2>Step 2. Connect your store to Sendinblue </h2>
-                                    <p>Copy your API v3 key from your Sendinblue account on <a href="https://account.sendinblue.com/advanced/api/?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_campaign=module_link" target="_blank">SMTP & API</a> page, then paste it in the field below and save.</p>
+                                    <p>Copy your API v3 key from your Sendinblue account on <a href="https://account.sendinblue.com/advanced/api/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">SMTP & API</a> page, then paste it in the field below and save.</p>
                                     <div class="apikey">
                                         <input class="form-control text-box single-line" id="ApiKey" name="ApiKey" type="text" value="" placeholder="xkeysib-xxxxxxxxxxx">
                                         <span asp-validation-for="ApiKey"></span>
@@ -90,13 +91,13 @@
                                     <p>Take a look at our tutorials:</p>
                                     <ul class="list">
                                         <li>
-                                            <a href="https://help.sendinblue.com/hc/en-us/articles/360004172879/?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_campaign=module_link" target="_blank">nopCommerce - 1. Set up the plugin</a>
+                                            <a href="https://help.sendinblue.com/hc/en-us/articles/360004172879/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">nopCommerce - 1. Set up the plugin</a>
                                         </li>
                                         <li>
-                                            <a href="https://help.sendinblue.com/hc/en-us/articles/360004172899/?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_campaign=module_link" target="_blank">nopCommerce - 2. Recover abandoned carts</a>
+                                            <a href="https://help.sendinblue.com/hc/en-us/articles/360004172899/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">nopCommerce - 2. Recover abandoned carts</a>
                                         </li>
                                         <li>
-                                            <a href="https://help.sendinblue.com/hc/en-us/articles/360004172939/?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_campaign=module_link" target="_blank">nopCommerce - 3. Send an order confirmation email</a>
+                                            <a href="https://help.sendinblue.com/hc/en-us/articles/360004172939/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">nopCommerce - 3. Send an order confirmation email</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -132,7 +133,7 @@
                         }).data("kendoProgressBar");
                         $("#progressBar").hide();
 
-                        if (@((ViewData["synchronizationStart"] != null && (bool)ViewData["synchronizationStart"]).ToString().ToLower())) {
+                        if (@((ViewData["synchronizationStart"] != null && (bool)ViewData["synchronizationStart"]).ToString().ToLowerInvariant())) {
                             $("#progressBar").show();
                             refresh();
                         }
@@ -164,7 +165,7 @@
                             </p>
                             <div class="form-group row">
                                 <div class="col-md-9 offset-md-3">
-                                    <a href="https://my.sendinblue.com/lists/?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_campaign=module_link" class="btn btn-primary" target="_blank">Create a list</a>
+                                    <a href="https://my.sendinblue.com/lists/?tap_a=30591-fb13f0&tap_s=840216-5153c7" class="btn btn-primary" target="_blank">Create a list</a>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -209,7 +210,7 @@
                         <div class="card-body">
                             <p>
                                 Sendinblue SMTP is the transactional email service of Sendinblue. When it is enabled, all transactional emails (e.g. account creation emails, order confirmation emails, recovery password emails, etc) of your store will be sent from your Sendinblue account.<br />
-                                Copy your SMTP key from your Sendinblue account on <a href="https://account.sendinblue.com/advanced/api/?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_campaign=module_link" target="_blank">SMTP & API</a> page > SMTP tab, then paste it in the field below and save.
+                                Copy your SMTP key from your Sendinblue account on <a href="https://account.sendinblue.com/advanced/api/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">SMTP & API</a> page > SMTP tab, then paste it in the field below and save.
                             </p>
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -315,7 +316,7 @@
                     <div class="card card-default">
                         <div class="card-body">
                             <p>
-                                You can send personalized SMS notifications to your customers or the store owner. Simply make sure that you have SMS credits (estimate how many SMS credits you need with this <a href="https://www.sendinblue.com/pricing?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_campaign=module_link" target="_blank">calculator</a> - the cost of an SMS depends on the recipient’s country) and that sending transactional SMS is enabled on your Sendinblue account.
+                                You can send personalized SMS notifications to your customers or the store owner. Simply make sure that you have SMS credits (estimate how many SMS credits you need with this <a href="https://www.sendinblue.com/pricing?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">calculator</a> - the cost of an SMS depends on the recipient’s country) and that sending transactional SMS is enabled on your Sendinblue account.
                             </p>
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -542,7 +543,7 @@
                             @if (Model.MarketingAutomationDisabled)
                             {
                                 <p>
-                                    Your Marketing Automation platform is disabled, to activate it, go to this <a href="https://automation.sendinblue.com/?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_campaign=module_link" target="_blank">page</a> and click on the TRY AUTOMATION FOR FREE button.
+                                    Your Marketing Automation platform is disabled, to activate it, go to this <a href="https://automation.sendinblue.com/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">page</a> and click on the TRY AUTOMATION FOR FREE button.
                                 </p>
                             }
                             else

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
 using Nop.Core.Domain.Customers;
-using Nop.Data;
+using Nop.Data.Mapping;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -17,7 +17,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
         public CustomerValidator(CustomerSettings customerSettings,
             ICustomerService customerService,
             ILocalizationService localizationService,
-            INopDataProvider dataProvider,
+            IMappingEntityAccessor mappingEntityAccessor,
             IStateProvinceService stateProvinceService)
         {
             //ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
@@ -121,10 +121,9 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
 
-            SetDatabaseValidationRules<Customer>(dataProvider);
+            SetDatabaseValidationRules<Customer>(mappingEntityAccessor);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<bool> IsRegisteredCustomerRoleCheckedAsync(CustomerModel model, ICustomerService customerService)
         {
             var allCustomerRoles = await customerService.GetAllCustomerRolesAsync(true);

@@ -6,21 +6,22 @@
     //page title
     ViewBag.PageTitle = T("Admin.System.Templates").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Templates");
+    NopHtml.SetActiveMenuItemSystemName("Templates");
 }
 
 @{
     const string hideCategoryBlockAttributeName = "Templates.HideCategoryBlock";
-    var hideCategoryBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCategoryBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCategoryBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCategoryBlockAttributeName);
 
     const string hideManufacturerBlockAttributeName = "Templates.HideManufacturerBlock";
-    var hideManufacturerBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideManufacturerBlockAttributeName);
+    var hideManufacturerBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideManufacturerBlockAttributeName);
 
     const string hideProductBlockAttributeName = "Templates.HideProductBlock";
-    var hideProductBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideProductBlockAttributeName);
+    var hideProductBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductBlockAttributeName);
 
     const string hideTopicBlockAttributeName = "Templates.HideTopicBlock";
-    var hideTopicBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideTopicBlockAttributeName);
+    var hideTopicBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTopicBlockAttributeName);
 }
 
 <section class="content">

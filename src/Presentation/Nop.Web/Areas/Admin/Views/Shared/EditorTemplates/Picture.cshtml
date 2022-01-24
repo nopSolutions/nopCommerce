@@ -6,10 +6,6 @@
 @using Nop.Web.Framework.UI;
 
 @{
-    //register CSS and JS
-    Html.AddCssFileParts("~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css");
-    Html.AddScriptParts("~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js");
-
     //other variables
     var random = CommonHelper.GenerateRandomInteger();
     var clientId = "picture" + random;
@@ -17,6 +13,10 @@
 
     const int pictureSize = 100;
 }
+
+@* register CSS and JS *@
+<link rel="stylesheet" href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" />
+<script asp-exclude-from-bundle="true" src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js" asp-location="Footer"></script>
 
 <div id="@(clientId + "value")">
     <input type="hidden" asp-for="@Model" />

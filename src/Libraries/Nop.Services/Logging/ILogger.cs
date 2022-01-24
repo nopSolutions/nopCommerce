@@ -36,8 +36,9 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Clears a log
         /// </summary>
+        /// <param name="olderThan">The date that sets the restriction on deleting records. Leave null to remove all records</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task ClearLogAsync();
+        Task ClearLogAsync(DateTime? olderThan = null);
 
         /// <summary>
         /// Gets all log items

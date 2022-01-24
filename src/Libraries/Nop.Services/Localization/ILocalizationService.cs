@@ -219,7 +219,7 @@ namespace Nop.Services.Localization
         /// <param name="resources">Resource name-value pairs</param>
         /// <param name="languageId">Language identifier; pass null to add the passed resources for all languages</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task AddLocaleResourceAsync(IDictionary<string, string> resources, int? languageId = null);
+        Task AddOrUpdateLocaleResourceAsync(IDictionary<string, string> resources, int? languageId = null);
 
         /// <summary>
         /// Delete a locale resource

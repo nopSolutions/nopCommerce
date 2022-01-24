@@ -16,20 +16,110 @@ namespace Nop.Web.Framework.Menu
     /// <summary>
     /// XML sitemap
     /// </summary>
-    public class XmlSiteMap
+    public class XmlSiteMap : IXmlSiteMap
     {
+        #region Fields
+
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IPermissionService _permissionService;
+
+        #endregion
+
+        #region Ctor
+
         /// <summary>
         /// Ctor
         /// </summary>
-        public XmlSiteMap()
+        public XmlSiteMap(ILocalizationService localizationService,
+            INopFileProvider fileProvider,
+            IPermissionService permissionService)
         {
+            _localizationService = localizationService;
+            _fileProvider = fileProvider;
+            _permissionService = permissionService;
             RootNode = new SiteMapNode();
         }
 
-        /// <summary>
-        /// Root node
-        /// </summary>
-        public SiteMapNode RootNode { get; set; }
+        #endregion
+
+        #region Utilities
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task IterateAsync(SiteMapNode siteMapNode, XmlNode xmlNode)
+        {
+            await PopulateNodeAsync(siteMapNode, xmlNode);
+
+            foreach (XmlNode xmlChildNode in xmlNode.ChildNodes)
+                if (xmlChildNode.LocalName.Equals("siteMapNode", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var siteMapChildNode = new SiteMapNode();
+                    siteMapNode.ChildNodes.Add(siteMapChildNode);
+
+                    await IterateAsync(siteMapChildNode, xmlChildNode);
+                }
+        }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PopulateNodeAsync(SiteMapNode siteMapNode, XmlNode xmlNode)
+        {
+            //system name
+            siteMapNode.SystemName = GetStringValueFromAttribute(xmlNode, "SystemName");
+
+            //title
+            var nopResource = GetStringValueFromAttribute(xmlNode, "nopResource");
+            siteMapNode.Title = await _localizationService.GetResourceAsync(nopResource);
+
+            //routes, url
+            var controllerName = GetStringValueFromAttribute(xmlNode, "controller");
+            var actionName = GetStringValueFromAttribute(xmlNode, "action");
+            var url = GetStringValueFromAttribute(xmlNode, "url");
+            if (!string.IsNullOrEmpty(controllerName) && !string.IsNullOrEmpty(actionName))
+            {
+                siteMapNode.ControllerName = controllerName;
+                siteMapNode.ActionName = actionName;
+
+                //apply admin area as described here - https://www.nopcommerce.com/boards/topic/20478/broken-menus-in-admin-area-whilst-trying-to-make-a-plugin-admin-page
+                siteMapNode.RouteValues = new RouteValueDictionary { { "area", AreaNames.Admin } };
+            }
+            else if (!string.IsNullOrEmpty(url)) 
+                siteMapNode.Url = url;
+
+            //image URL
+            siteMapNode.IconClass = GetStringValueFromAttribute(xmlNode, "IconClass");
+
+            //permission name
+            var permissionNames = GetStringValueFromAttribute(xmlNode, "PermissionNames");
+            if (!string.IsNullOrEmpty(permissionNames))
+                siteMapNode.Visible = await permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .AnyAwaitAsync(async permissionName => await _permissionService.AuthorizeAsync(permissionName.Trim()));
+            else
+                siteMapNode.Visible = true;
+
+            // Open URL in new tab
+            var openUrlInNewTabValue = GetStringValueFromAttribute(xmlNode, "OpenUrlInNewTab");
+            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out var booleanResult)) 
+                siteMapNode.OpenUrlInNewTab = booleanResult;
+        }
+
+        private static string GetStringValueFromAttribute(XmlNode node, string attributeName)
+        {
+            string value = null;
+
+            if (node.Attributes != null && node.Attributes.Count > 0)
+            {
+                var attribute = node.Attributes[attributeName];
+
+                if (attribute != null) 
+                    value = attribute.Value;
+            }
+
+            return value;
+        }
+
+        #endregion
+        
+        #region Methods
 
         /// <summary>
         /// Load sitemap
@@ -38,10 +128,8 @@ namespace Nop.Web.Framework.Menu
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task LoadFromAsync(string physicalPath)
         {
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-
-            var filePath = fileProvider.MapPath(physicalPath);
-            var content = await fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
+            var filePath = _fileProvider.MapPath(physicalPath);
+            var content = await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
 
             if (!string.IsNullOrEmpty(content))
             {
@@ -67,90 +155,15 @@ namespace Nop.Web.Framework.Menu
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
-        private static async Task IterateAsync(SiteMapNode siteMapNode, XmlNode xmlNode)
-        {
-            await PopulateNodeAsync(siteMapNode, xmlNode);
+        #endregion
 
-            foreach (XmlNode xmlChildNode in xmlNode.ChildNodes)
-            {
-                if (xmlChildNode.LocalName.Equals("siteMapNode", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var siteMapChildNode = new SiteMapNode();
-                    siteMapNode.ChildNodes.Add(siteMapChildNode);
+        #region Properties
 
-                    await IterateAsync(siteMapChildNode, xmlChildNode);
-                }
-            }
-        }
+        /// <summary>
+        /// Root node
+        /// </summary>
+        public SiteMapNode RootNode { get; set; }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
-        private static async Task PopulateNodeAsync(SiteMapNode siteMapNode, XmlNode xmlNode)
-        {
-            //system name
-            siteMapNode.SystemName = GetStringValueFromAttribute(xmlNode, "SystemName");
-
-            //title
-            var nopResource = GetStringValueFromAttribute(xmlNode, "nopResource");
-            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            siteMapNode.Title = await localizationService.GetResourceAsync(nopResource);
-
-            //routes, url
-            var controllerName = GetStringValueFromAttribute(xmlNode, "controller");
-            var actionName = GetStringValueFromAttribute(xmlNode, "action");
-            var url = GetStringValueFromAttribute(xmlNode, "url");
-            if (!string.IsNullOrEmpty(controllerName) && !string.IsNullOrEmpty(actionName))
-            {
-                siteMapNode.ControllerName = controllerName;
-                siteMapNode.ActionName = actionName;
-
-                //apply admin area as described here - https://www.nopcommerce.com/boards/topic/20478/broken-menus-in-admin-area-whilst-trying-to-make-a-plugin-admin-page
-                siteMapNode.RouteValues = new RouteValueDictionary { { "area", AreaNames.Admin } };
-            }
-            else if (!string.IsNullOrEmpty(url))
-            {
-                siteMapNode.Url = url;
-            }
-
-            //image URL
-            siteMapNode.IconClass = GetStringValueFromAttribute(xmlNode, "IconClass");
-
-            //permission name
-            var permissionNames = GetStringValueFromAttribute(xmlNode, "PermissionNames");
-            if (!string.IsNullOrEmpty(permissionNames))
-            {
-                var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-                siteMapNode.Visible = await permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .AnyAwaitAsync(async permissionName => await permissionService.AuthorizeAsync(permissionName.Trim()));
-            }
-            else
-            {
-                siteMapNode.Visible = true;
-            }
-
-            // Open URL in new tab
-            var openUrlInNewTabValue = GetStringValueFromAttribute(xmlNode, "OpenUrlInNewTab");
-            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out var booleanResult))
-            {
-                siteMapNode.OpenUrlInNewTab = booleanResult;
-            }
-        }
-
-        private static string GetStringValueFromAttribute(XmlNode node, string attributeName)
-        {
-            string value = null;
-
-            if (node.Attributes != null && node.Attributes.Count > 0)
-            {
-                var attribute = node.Attributes[attributeName];
-
-                if (attribute != null)
-                {
-                    value = attribute.Value;
-                }
-            }
-
-            return value;
-        }
+        #endregion
     }
 }

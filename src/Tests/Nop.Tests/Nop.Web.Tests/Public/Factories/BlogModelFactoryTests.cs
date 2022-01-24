@@ -82,7 +82,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.MetaTitle.Should().Be(blogPost.MetaTitle);
             model.MetaDescription.Should().Be(blogPost.MetaDescription);
             model.MetaKeywords.Should().Be(blogPost.MetaKeywords);
-            model.SeName = model.Title.Replace(" ", "-").ToLower();
+            model.SeName = model.Title.Replace(" ", "-").ToLowerInvariant();
             model.Title.Should().Be(blogPost.Title);
             model.Body.Should().Be(blogPost.Body);
             model.BodyOverview.Should().Be(blogPost.BodyOverview);
@@ -105,7 +105,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.MetaTitle.Should().Be(blogPost.MetaTitle);
             model.MetaDescription.Should().Be(blogPost.MetaDescription);
             model.MetaKeywords.Should().Be(blogPost.MetaKeywords);
-            model.SeName = model.Title.Replace(" ", "-").ToLower();
+            model.SeName = model.Title.Replace(" ", "-").ToLowerInvariant();
             model.Title.Should().Be(blogPost.Title);
             model.Body.Should().Be(blogPost.Body);
             model.BodyOverview.Should().Be(blogPost.BodyOverview);

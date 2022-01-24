@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Countries").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Countries");
+    NopHtml.SetActiveMenuItemSystemName("Countries");
 }
 
 
@@ -33,7 +33,7 @@
             <i class="fas fa-upload"></i>
             @T("Admin.Configuration.Countries.ImportFromCsv")
         </button>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryListButtons, additionalData = Model })
     </div>
 </div>
 
@@ -149,11 +149,15 @@
                                     data: postData,
                                     traditional: true,
                                     complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
                                         updateTable('#countries-grid');
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        $('#publishSelectedFailed-info').text(errorThrown);
-                                        $("#publishSelectedFailed").click();
+                                        showAlert('publishSelectedFailed', errorThrown);
                                     }
                                 });
                                 return false;
@@ -175,10 +179,14 @@
                                     data: postData,
                                     traditional: true,
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        $('#unpublishSelectedFailed-info').text(errorThrown);
-                                        $("#unpublishSelectedFailed").click();
+                                        showAlert('unpublishSelectedFailed', errorThrown);
                                     },
                                     complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
                                         updateTable('#countries-grid');
                                     }
                                 });
@@ -194,6 +202,7 @@
 </section>
 <nop-alert asp-alert-id="publishSelectedFailed" />
 <nop-alert asp-alert-id="unpublishSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
 
 @*import states form*@
 <div id="importcsv-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importcsv-window-title">

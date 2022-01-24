@@ -4,8 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Transactions;
-using LinqToDB;
-using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
@@ -150,7 +148,7 @@ namespace Nop.Data
 
             return await _staticCacheManager.GetAsync(cacheKey, getEntityAsync);
         }
-        
+
         /// <summary>
         /// Get entity entries by identifiers
         /// </summary>
@@ -169,7 +167,7 @@ namespace Nop.Data
             async Task<IList<TEntity>> getByIdsAsync()
             {
                 var query = AddDeletedFilter(Table, includeDeleted);
-                
+
                 //get entries
                 var entries = await query.Where(entry => ids.Contains(entry.Id)).ToListAsync();
 
@@ -177,7 +175,7 @@ namespace Nop.Data
                 var sortedEntries = new List<TEntity>();
                 foreach (var id in ids)
                 {
-                    var sortedEntry = entries.FirstOrDefault(entry => entry.Id == id);
+                    var sortedEntry = entries.Find(entry => entry.Id == id);
                     if (sortedEntry != null)
                         sortedEntries.Add(sortedEntry);
                 }
@@ -377,7 +375,6 @@ namespace Nop.Data
         /// <summary>
         /// Loads the original copy of the entity
         /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>
         /// A task that represents the asynchronous operation
@@ -385,7 +382,7 @@ namespace Nop.Data
         /// </returns>
         public virtual async Task<TEntity> LoadOriginalCopyAsync(TEntity entity)
         {
-            return await (await _dataProvider.GetTableAsync<TEntity>())
+            return await _dataProvider.GetTable<TEntity>()
                 .FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(entity.Id));
         }
 
@@ -418,7 +415,7 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            if (!entities.Any())
+            if (entities.Count == 0)
                 return;
 
             await _dataProvider.UpdateEntitiesAsync(entities);
@@ -473,14 +470,20 @@ namespace Nop.Data
             if (entities.OfType<ISoftDeletedEntity>().Any())
             {
                 foreach (var entity in entities)
+                {
                     if (entity is ISoftDeletedEntity softDeletedEntity)
                     {
                         softDeletedEntity.Deleted = true;
                         await _dataProvider.UpdateEntityAsync(entity);
                     }
+                }
             }
             else
+            {
+                using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
                 await _dataProvider.BulkDeleteEntitiesAsync(entities);
+                transaction.Complete();
+            }
 
             //event notification
             if (!publishEvent)
@@ -503,21 +506,11 @@ namespace Nop.Data
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            return await _dataProvider.BulkDeleteEntitiesAsync(predicate);
-        }
+            using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            var countDeletedRecords = await _dataProvider.BulkDeleteEntitiesAsync(predicate);
+            transaction.Complete();
 
-        /// <summary>
-        /// Executes SQL using System.Data.CommandType.StoredProcedure command type and returns results as collection of values of specified type
-        /// </summary>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the entity entries
-        /// </returns>
-        public virtual async Task<IList<TEntity>> EntityFromSqlAsync(string procedureName, params DataParameter[] parameters)
-        {
-            return await _dataProvider.QueryProcAsync<TEntity>(procedureName, parameters?.ToArray());
+            return countDeletedRecords;
         }
 
         /// <summary>
@@ -527,7 +520,7 @@ namespace Nop.Data
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task TruncateAsync(bool resetIdentity = false)
         {
-            await (await _dataProvider.GetTableAsync<TEntity>()).TruncateAsync(resetIdentity);
+            await _dataProvider.TruncateAsync<TEntity>(resetIdentity);
         }
 
         #endregion
@@ -538,7 +531,7 @@ namespace Nop.Data
         /// Gets a table
         /// </summary>
         public virtual IQueryable<TEntity> Table => _dataProvider.GetTable<TEntity>();
-        
+
         #endregion
     }
 }

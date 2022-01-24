@@ -180,7 +180,7 @@ namespace Nop.Services.Common
         /// <remarks>
         /// {0} : address attribute ID
         /// </remarks>
-        public static CacheKey AddressAttributeValuesByAttributeCacheKey => new CacheKey("Nop.addressattributevalue.byattribute.{0}");
+        public static CacheKey AddressAttributeValuesByAttributeCacheKey => new("Nop.addressattributevalue.byattribute.{0}");
 
         #endregion
 
@@ -193,7 +193,7 @@ namespace Nop.Services.Common
         /// {0} : entity ID
         /// {1} : key group
         /// </remarks>
-        public static CacheKey GenericAttributeCacheKey => new CacheKey("Nop.genericattribute.{0}-{1}");
+        public static CacheKey GenericAttributeCacheKey => new("Nop.genericattribute.{0}-{1}");
 
         #endregion
 

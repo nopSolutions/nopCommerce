@@ -164,8 +164,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 var trackEvent = new TrackEvent(customer.Email, string.Empty);
 
                 //get current customer's shopping cart
+                var store = await _storeContext.GetCurrentStoreAsync();
                 var cart = await _shoppingCartService
-                    .GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    .GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
                 if (cart.Any())
                 {
@@ -217,7 +218,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     //prepare cart data
                     var cartData = new
                     {
-                        affiliation = (await _storeContext.GetCurrentStoreAsync()).Name,
+                        affiliation = store.Name,
                         subtotal = cartSubtotal,
                         shipping = cartShipping ?? decimal.Zero,
                         total_before_tax = cartSubtotal + cartShipping ?? decimal.Zero,
@@ -357,11 +358,13 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     zipcode = billingAddress?.ZipPostalCode
                 };
 
+                var store = await _storeContext.GetCurrentStoreAsync();
+
                 //prepare cart data
                 var cartData = new
                 {
                     id = order.Id,
-                    affiliation = customer.AffiliateId > 0 ? customer.AffiliateId.ToString() : (await _storeContext.GetCurrentStoreAsync()).Name,
+                    affiliation = customer.AffiliateId > 0 ? customer.AffiliateId.ToString() : store.Name,
                     date = order.PaidDateUtc?.ToString("yyyy-MM-dd"),
                     subtotal = order.OrderSubtotalInclTax,
                     shipping = order.OrderShippingInclTax,

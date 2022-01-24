@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
+﻿using Nop.Web.Framework.UI;
 
 namespace Nop.Web.Framework.Events
 {
@@ -16,7 +14,7 @@ namespace Nop.Web.Framework.Events
         /// </summary>
         /// <param name="helper">HTML Helper</param>
         /// <param name="overriddenRouteName">Overridden route name</param>
-        public PageRenderingEvent(IHtmlHelper helper, string overriddenRouteName = null)
+        public PageRenderingEvent(INopHtmlHelper helper, string overriddenRouteName = null)
         {
             Helper = helper;
             OverriddenRouteName = overriddenRouteName;
@@ -29,7 +27,7 @@ namespace Nop.Web.Framework.Events
         /// <summary>
         /// Gets HTML helper
         /// </summary>
-        public IHtmlHelper Helper { get; private set; }
+        public INopHtmlHelper Helper { get; private set; }
 
         /// <summary>
         /// Gets overridden route name
@@ -43,8 +41,9 @@ namespace Nop.Web.Framework.Events
         /// <summary>
         /// Get the route name associated with the request rendering this page
         /// </summary>
+        /// <param name="handleDefaultRoutes">A value indicating whether to build the name using engine information unless otherwise specified</param>
         /// <returns>Route name</returns>
-        public string GetRouteName()
+        public string GetRouteName(bool handleDefaultRoutes = false)
         {
             //if an overridden route name is specified, then use it
             //we use it to specify a custom route name when some custom page uses a custom route. But we still need this event to be invoked
@@ -52,9 +51,7 @@ namespace Nop.Web.Framework.Events
                 return OverriddenRouteName;
 
             //or try to get a registered endpoint route name
-            var endpointFeature = Helper.ViewContext.HttpContext.Features.Get<IEndpointFeature>();
-            var routeNameMetadata = endpointFeature.Endpoint.Metadata.GetMetadata<RouteNameMetadata>();
-            return routeNameMetadata.RouteName;
+            return Helper.GetRouteName(handleDefaultRoutes);
         }
 
         #endregion

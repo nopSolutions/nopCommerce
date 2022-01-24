@@ -61,9 +61,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> Index()
         {
             //display a warning to a store owner if there are some error
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
-
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
+            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
 
             if ((hideCard || closeCard) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
             {
@@ -79,12 +79,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //progress of localozation 
-            var progress = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetWorkingLanguageAsync(), NopCommonDefaults.LanguagePackProgressAttribute);
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+            var progress = await _genericAttributeService.GetAttributeAsync<string>(currentLanguage, NopCommonDefaults.LanguagePackProgressAttribute);
             if (!string.IsNullOrEmpty(progress))
             {
                 var locale = await _localizationService.GetResourceAsync("Admin.Configuration.LanguagePackProgressMessage");
                 _notificationService.SuccessNotification(string.Format(locale, progress, NopLinksDefaults.OfficialSite.Translations), false);
-                await _genericAttributeService.SaveAttributeAsync(await _workContext.GetWorkingLanguageAsync(), NopCommonDefaults.LanguagePackProgressAttribute, string.Empty);
+                await _genericAttributeService.SaveAttributeAsync(currentLanguage, NopCommonDefaults.LanguagePackProgressAttribute, string.Empty);
             }
 
             //prepare model

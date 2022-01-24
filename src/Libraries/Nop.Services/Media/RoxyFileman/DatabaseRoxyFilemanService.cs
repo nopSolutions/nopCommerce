@@ -116,7 +116,7 @@ namespace Nop.Services.Media.RoxyFileman
         }
 
         /// <summary>
-        /// Сopy the directory with the embedded files and directories
+        /// Copy the directory with the embedded files and directories
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="destinationPath">Path to the destination directory</param>
@@ -277,7 +277,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (string.IsNullOrEmpty(mimeType))
                 return format;
 
-            var parts = mimeType.ToLower().Split('/');
+            var parts = mimeType.ToLowerInvariant().Split('/');
             var lastPart = parts[^1];
 
             switch (lastPart)
@@ -314,6 +314,16 @@ namespace Nop.Services.Media.RoxyFileman
 
             //save picture to folder if its not exists
             await SavePictureByVirtualPathAsync(picture, maxWidth > maxHeight ? maxWidth : maxHeight);
+        }
+
+        /// <summary>
+        /// Checks if a file is an image
+        /// </summary>
+        /// <param name="filePath">File path to check</param>
+        /// <returns>True, if a file is an image. False, in other case</returns>
+        protected virtual bool IsImage(string filePath)
+        {
+            return GetFileType($".{filePath.Split('.').Last()}") == "image";
         }
 
         #endregion
@@ -413,6 +423,13 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
+            if (!IsImage(sourcePath))
+            {
+                await base.CopyFileAsync(sourcePath, destinationPath);
+
+                return;
+            }
+
             var filePath = _fileProvider.GetAbsolutePath(sourcePath.Split('/'));
             var picture = await GetPictureByFileAsync(filePath);
 
@@ -433,11 +450,18 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task DeleteFileAsync(string sourcePath)
         {
+            if (!IsImage(sourcePath))
+            {
+                await base.DeleteFileAsync(sourcePath);
+
+                return;
+            }
+
             var filePath = _fileProvider.GetAbsolutePath(sourcePath.Split('/'));
             var picture = await GetPictureByFileAsync(filePath);
 
             if (picture == null)
-                throw new Exception(await GetLanguageResourceAsync("E_DeletеFile"));
+                throw new Exception(await GetLanguageResourceAsync("E_DeleteFile"));
 
             await _pictureService.DeletePictureAsync(picture);
 
@@ -453,6 +477,9 @@ namespace Nop.Services.Media.RoxyFileman
         public override async Task MoveFileAsync(string sourcePath, string destinationPath)
         {
             await base.MoveFileAsync(sourcePath, destinationPath);
+
+            if (!IsImage(sourcePath)) 
+                return;
 
             var filePath = _fileProvider.GetAbsolutePath(sourcePath.Split('/'));
             var picture = await GetPictureByFileAsync(filePath);
@@ -472,6 +499,13 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task RenameFileAsync(string sourcePath, string newName)
         {
+            if (!IsImage(sourcePath))
+            {
+                await base.RenameFileAsync(sourcePath, newName);
+
+                return;
+            }
+                
             var filePath = _fileProvider.GetAbsolutePath(_fileProvider.GetVirtualPath(sourcePath));
             var picture = await GetPictureByFileAsync(filePath);
 
@@ -510,16 +544,12 @@ namespace Nop.Services.Media.RoxyFileman
                         var uniqueFileName = GetUniqueFileName(fullPath, _fileProvider.GetFileName(fileName));
                         var destinationFile = _fileProvider.Combine(fullPath, uniqueFileName);
 
-                        //A warning (SCS0018 - Path Traversal) from the "Security Code Scan" analyzer may appear at this point. 
-                        //In this case, it is not relevant. The input is not supplied by user.
-                        if (GetFileType(new FileInfo(uniqueFileName).Extension) != "image")
+                        if (IsImage(uniqueFileName))
+                            await _pictureService.InsertPictureAsync(formFile, virtualPath: await GetVirtualPathAsync(directoryPath));
+                        else
                         {
                             await using var stream = new FileStream(destinationFile, FileMode.OpenOrCreate);
                             await formFile.CopyToAsync(stream);
-                        }
-                        else
-                        {
-                            await _pictureService.InsertPictureAsync(formFile, virtualPath: await GetVirtualPathAsync(directoryPath));
                         }
                     }
                     else
@@ -560,8 +590,8 @@ namespace Nop.Services.Media.RoxyFileman
 
             var pageIndex = 0;
             const int pageSize = 400;
-            int.TryParse(await GetSettingAsync("MAX_IMAGE_WIDTH"), out var width);
-            int.TryParse(await GetSettingAsync("MAX_IMAGE_HEIGHT"), out var height);
+            _ = int.TryParse(await GetSettingAsync("MAX_IMAGE_WIDTH"), out var width);
+            _ = int.TryParse(await GetSettingAsync("MAX_IMAGE_HEIGHT"), out var height);
 
             try
             {
@@ -599,8 +629,8 @@ namespace Nop.Services.Media.RoxyFileman
 
             foreach (var picture in await _pictureService.GetPicturesAsync(_fileProvider.GetVirtualPath(directoryPath)))
             {
-                int.TryParse(await GetSettingAsync("MAX_IMAGE_WIDTH"), out var width);
-                int.TryParse(await GetSettingAsync("MAX_IMAGE_HEIGHT"), out var height);
+                _ = int.TryParse(await GetSettingAsync("MAX_IMAGE_WIDTH"), out var width);
+                _ = int.TryParse(await GetSettingAsync("MAX_IMAGE_HEIGHT"), out var height);
 
                 await FlushImagesAsync(picture, width, height);
             }

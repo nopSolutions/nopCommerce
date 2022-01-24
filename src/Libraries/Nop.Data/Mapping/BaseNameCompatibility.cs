@@ -15,7 +15,7 @@ namespace Nop.Data.Mapping
     /// </summary>
     public partial class BaseNameCompatibility : INameCompatibility
     {
-        public Dictionary<Type, string> TableNames => new Dictionary<Type, string>
+        public Dictionary<Type, string> TableNames => new()
         {
             { typeof(ProductAttributeMapping), "Product_ProductAttribute_Mapping" },
             { typeof(ProductProductTagMapping), "Product_ProductTag_Mapping" },
@@ -41,7 +41,7 @@ namespace Nop.Data.Mapping
             { typeof(NewsItem), "News" }
         };
 
-        public Dictionary<(Type, string), string> ColumnName => new Dictionary<(Type, string), string>
+        public Dictionary<(Type, string), string> ColumnName => new()
         {
             { (typeof(Customer), "BillingAddressId"), "BillingAddress_Id" },
             { (typeof(Customer), "ShippingAddressId"), "ShippingAddress_Id" },

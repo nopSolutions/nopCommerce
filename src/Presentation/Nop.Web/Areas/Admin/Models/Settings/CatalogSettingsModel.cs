@@ -371,6 +371,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool EnablePriceRangeFiltering { get; set; }
         public bool EnablePriceRangeFiltering_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering")]
+        public bool EnableSpecificationAttributeFiltering { get; set; }
+        public bool EnableSpecificationAttributeFiltering_OverrideForStore { get; set; }
+        
         public string PrimaryStoreCurrencyCode { get; set; }
 
         #endregion

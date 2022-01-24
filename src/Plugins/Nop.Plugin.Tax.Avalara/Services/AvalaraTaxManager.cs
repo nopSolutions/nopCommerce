@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Avalara.AvaTax.RestClient;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -13,6 +15,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Plugin.Tax.Avalara.Domain;
 using Nop.Services.Catalog;
@@ -46,6 +49,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly IGeoLookupService _geoLookupService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
+        private readonly INopFileProvider _fileProvider;
         private readonly IOrderService _orderService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPaymentService _paymentService;
@@ -85,6 +89,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             IGeoLookupService geoLookupService,
             ILocalizationService localizationService,
             ILogger logger,
+            INopFileProvider fileProvider,
             IOrderService orderService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IPaymentService paymentService,
@@ -117,6 +122,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _geoLookupService = geoLookupService;
             _localizationService = localizationService;
             _logger = logger;
+            _fileProvider = fileProvider;
             _orderService = orderService;
             _orderTotalCalculationService = orderTotalCalculationService;
             _paymentService = paymentService;
@@ -183,6 +189,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (args is not AvaTaxCallEventArgs avaTaxCallEventArgs)
                 return;
 
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             //log request results
             await _taxTransactionLogService.InsertTaxTransactionLogAsync(new TaxTransactionLog
             {
@@ -190,7 +198,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 Url = avaTaxCallEventArgs.RequestUri.ToString(),
                 RequestMessage = avaTaxCallEventArgs.RequestBody,
                 ResponseMessage = avaTaxCallEventArgs.ResponseString,
-                CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                CustomerId = customer.Id,
                 CreatedDateUtc = DateTime.UtcNow
             });
         }
@@ -321,6 +329,40 @@ namespace Nop.Plugin.Tax.Avalara.Services
         }
 
         /// <summary>
+        /// Prepare order addresses
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="order">Order</param>
+        /// <param name="storeId">Store id</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task PrepareOrderAddressesAsync(Customer customer, Order order, int storeId)
+        {
+            order.BillingAddressId = customer.BillingAddressId ?? 0;
+            order.ShippingAddressId = customer.ShippingAddressId;
+            if (_shippingSettings.AllowPickupInStore)
+            {
+                var pickupPoint = await _genericAttributeService
+                    .GetAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, storeId);
+                if (pickupPoint != null)
+                {
+                    var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(pickupPoint.CountryCode);
+                    var state = await _stateProvinceService.GetStateProvinceByAbbreviationAsync(pickupPoint.StateAbbreviation, country?.Id);
+                    var pickupAddress = new Address
+                    {
+                        Address1 = pickupPoint.Address,
+                        City = pickupPoint.City,
+                        CountryId = country?.Id,
+                        StateProvinceId = state?.Id,
+                        ZipPostalCode = pickupPoint.ZipPostalCode,
+                        CreatedOnUtc = DateTime.UtcNow,
+                    };
+                    await _addressService.InsertAddressAsync(pickupAddress);
+                    order.PickupAddressId = pickupAddress.Id;
+                }
+            }
+        }
+
+        /// <summary>
         /// Get a tax address of the passed order
         /// </summary>
         /// <param name="order">Order</param>
@@ -395,7 +437,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private async Task<List<LineItemModel>> GetItemLinesAsync(Order order, IList<OrderItem> orderItems)
         {
             //get purchased products details
-            var items = await CreateLinesForOrderItems(order, orderItems);
+            var items = await CreateLinesForOrderItemsAsync(order, orderItems);
 
             //set payment method additional fee as the separate item line
             if (order.PaymentMethodAdditionalFeeExclTax > decimal.Zero)
@@ -407,7 +449,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
 
             //set checkout attributes as the separate item lines
             if (!string.IsNullOrEmpty(order.CheckoutAttributesXml))
-                items.AddRange(await CreateLinesForCheckoutAttributes(order));
+                items.AddRange(await CreateLinesForCheckoutAttributesAsync(order));
 
             return items;
         }
@@ -421,7 +463,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the collection of item lines
         /// </returns>
-        private async Task<List<LineItemModel>> CreateLinesForOrderItems(Order order, IList<OrderItem> orderItems)
+        private async Task<List<LineItemModel>> CreateLinesForOrderItemsAsync(Order order, IList<OrderItem> orderItems)
         {
             return await orderItems.SelectAwait(async orderItem =>
             {
@@ -570,7 +612,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the collection of item lines
         /// </returns>
-        private async Task<IEnumerable<LineItemModel>> CreateLinesForCheckoutAttributes(Order order)
+        private async Task<IEnumerable<LineItemModel>> CreateLinesForCheckoutAttributesAsync(Order order)
         {
             //get checkout attributes values
             var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(order.CheckoutAttributesXml);
@@ -647,6 +689,109 @@ namespace Nop.Plugin.Tax.Avalara.Services
             }
 
             return model;
+        }
+
+        /// <summary>
+        /// Get tax rates from the file
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the tax rates list
+        /// </returns>
+        private async Task<List<TaxRate>> GetTaxRatesFromFileAsync()
+        {
+            //try to create file if doesn't exist
+            var filePath = _fileProvider.MapPath(AvalaraTaxDefaults.TaxRatesFilePath);
+            if (!_fileProvider.FileExists(filePath))
+                await DownloadTaxRatesAsync();
+
+            if (!_fileProvider.FileExists(filePath))
+                throw new NopException($"File {AvalaraTaxDefaults.TaxRatesFilePath} not found");
+
+            //get file lines
+            var text = await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
+            if (string.IsNullOrEmpty(text))
+                throw new NopException($"File {AvalaraTaxDefaults.TaxRatesFilePath} is empty");
+
+            var lines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+            if (!lines.Any() || lines[0].Split(',').Length < 14)
+                throw new NopException($"Unsupported file {AvalaraTaxDefaults.TaxRatesFilePath} structure");
+
+            //prepare tax rates
+            var taxRates = lines.Skip(1).Select(line =>
+            {
+                try
+                {
+                    var values = line.Split(',', StringSplitOptions.TrimEntries);
+                    return new TaxRate
+                    {
+                        Zip = values[0], //ZIP_CODE
+                        State = values[1], //STATE_ABBREV
+                        County = values[2], //COUNTY_NAME
+                        City = values[3], //CITY_NAME
+                        StateTax = decimal.Parse(values[4], NumberStyles.Any, CultureInfo.InvariantCulture), //STATE_SALES_TAX
+                        CountyTax = decimal.Parse(values[6], NumberStyles.Any, CultureInfo.InvariantCulture), //COUNTY_SALES_TAX
+                        CityTax = decimal.Parse(values[8], NumberStyles.Any, CultureInfo.InvariantCulture), //CITY_SALES_TAX
+                        TotalTax = decimal.Parse(values[10], NumberStyles.Any, CultureInfo.InvariantCulture), //TOTAL_SALES_TAX
+                        ShippingTaxable = string.Equals(values[11], "y", StringComparison.InvariantCultureIgnoreCase), //TAX_SHIPPING_ALONE
+                        ShippingAndHadlingTaxable = string.Equals(values[12], "y", StringComparison.InvariantCultureIgnoreCase) //TAX_SHIPPING_AND_HANDLING_TOGETHER
+                    };
+                }
+                catch
+                {
+                    return null;
+                }
+            }).Where(taxRate => taxRate is not null).ToList();
+
+            return taxRates;
+        }
+
+        #endregion
+
+        #region Certificates
+
+        /// <summary>
+        /// Create or update the passed customer for the company
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="companyId">Selected company id</param>
+        /// <param name="customerExists">Whether the customer is already created</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer details
+        /// </returns>
+        private async Task<CustomerModel> CreateOrUpdateCustomerAsync(Customer customer, int companyId, bool customerExists)
+        {
+            var defaultAddress = new Address
+            {
+                Address1 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute),
+                Address2 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute),
+                City = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute),
+                ZipPostalCode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute),
+                StateProvinceId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute),
+                CountryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute)
+            };
+            var address = await MapAddressAsync(defaultAddress);
+            var model = new CustomerModel
+            {
+                companyId = companyId,
+                customerCode = customer.Id.ToString(),
+                alternateId = customer.CustomerGuid.ToString().ToLowerInvariant(),
+                name = await _customerService.GetCustomerFullNameAsync(customer),
+                emailAddress = customer.Email,
+                line1 = address.line1,
+                line2 = address.line2,
+                city = address.city,
+                postalCode = address.postalCode,
+                country = address.country,
+                region = address.region
+            };
+
+            var customerDetails = customerExists
+                ? await ServiceClient.UpdateCustomerAsync(companyId, customer.Id.ToString(), model)
+                : (await ServiceClient.CreateCustomersAsync(companyId, new List<CustomerModel> { model }))?.FirstOrDefault();
+
+            return customerDetails;
         }
 
         #endregion
@@ -903,7 +1048,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                     ?? throw new NopException("Failed to retrieve company");
 
                 //get existing items
-                var items = await ServiceClient.ListItemsByCompanyAsync(selectedCompany.id, null, null, null, null, null)
+                var items = await ServiceClient.ListItemsByCompanyAsync(selectedCompany.id, null, null, null, null, null, null)
                     ?? throw new NopException("No response from the service");
 
                 //return the paginated and filtered list
@@ -1011,8 +1156,26 @@ namespace Nop.Plugin.Tax.Avalara.Services
         {
             return await HandleFunctionAsync(async () =>
             {
+                if (_avalaraTaxSettings.UseTaxRateTables)
+                {
+                    var taxRates = await GetTaxRatesFromFileAsync();
+                    var taxRate = taxRates.FirstOrDefault(record => record.Zip == address.ZipPostalCode);
+                    if (taxRate?.TotalTax is null)
+                        throw new NopException($"No rate found for zip code {address.ZipPostalCode}");
+
+                    var summary = new List<TransactionSummary>();
+                    if (!string.IsNullOrEmpty(taxRate.State))
+                        summary.Add(new() { jurisName = taxRate.State, rate = taxRate.StateTax });
+                    if (!string.IsNullOrEmpty(taxRate.County))
+                        summary.Add(new() { jurisName = taxRate.County, rate = taxRate.CountyTax });
+                    if (!string.IsNullOrEmpty(taxRate.City))
+                        summary.Add(new() { jurisName = taxRate.City, rate = taxRate.CityTax });
+                    return new TransactionModel { totalTax = taxRate.TotalTax * 100, summary = summary };
+                }
+
+                var customer = await _workContext.GetCurrentCustomerAsync();
                 //create tax transaction for a simplified item and without saving 
-                var model = await PrepareTransactionModelAsync(address, (await _workContext.GetCurrentCustomerAsync()).Id.ToString(), DocumentType.SalesOrder);
+                var model = await PrepareTransactionModelAsync(address, customer.Id.ToString(), DocumentType.SalesOrder);
                 model.lines = new List<LineItemModel> { new LineItemModel { amount = 100, quantity = 1 } };
                 return CreateTransaction(model);
             });
@@ -1028,6 +1191,18 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// </returns>
         public async Task<decimal?> GetTaxRateAsync(TaxRateRequest taxRateRequest)
         {
+            if (_avalaraTaxSettings.UseTaxRateTables)
+            {
+                var key = _staticCacheManager
+                    .PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxRateByZipCacheKey, taxRateRequest.Address.ZipPostalCode);
+                return await _staticCacheManager.GetAsync(key, async () => await HandleFunctionAsync(async () =>
+                {
+                    var taxRates = await GetTaxRatesFromFileAsync();
+                    var taxRate = taxRates.FirstOrDefault(record => record.Zip == taxRateRequest.Address.ZipPostalCode);
+                    return taxRate?.TotalTax * 100;
+                }));
+            }
+
             //prepare cache key
             var address = await _addressService.GetAddressByIdAsync(taxRateRequest.Address.Id);
             var customer = taxRateRequest.Customer ?? await _workContext.GetCurrentCustomerAsync();
@@ -1096,29 +1271,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 var order = new Order { CustomerId = customer.Id };
 
                 //addresses
-                order.BillingAddressId = customer.BillingAddressId ?? 0;
-                order.ShippingAddressId = customer.ShippingAddressId;
-                if (_shippingSettings.AllowPickupInStore)
-                {
-                    var pickupPoint = await _genericAttributeService
-                        .GetAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, taxTotalRequest.StoreId);
-                    if (pickupPoint != null)
-                    {
-                        var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(pickupPoint.CountryCode);
-                        var state = await _stateProvinceService.GetStateProvinceByAbbreviationAsync(pickupPoint.StateAbbreviation, country?.Id);
-                        var pickupAddress = new Address
-                        {
-                            Address1 = pickupPoint.Address,
-                            City = pickupPoint.City,
-                            CountryId = country?.Id,
-                            StateProvinceId = state?.Id,
-                            ZipPostalCode = pickupPoint.ZipPostalCode,
-                            CreatedOnUtc = DateTime.UtcNow,
-                        };
-                        await _addressService.InsertAddressAsync(pickupAddress);
-                        order.PickupAddressId = pickupAddress.Id;
-                    }
-                }
+                await PrepareOrderAddressesAsync(customer, order, taxTotalRequest.StoreId);
 
                 //checkout attributes
                 order.CheckoutAttributesXml = await _genericAttributeService
@@ -1279,6 +1432,261 @@ namespace Nop.Plugin.Tax.Avalara.Services
             });
         }
 
+        /// <summary>
+        /// Download a file listing tax rates by postal code
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task DownloadTaxRatesAsync()
+        {
+            await HandleFunctionAsync(async () =>
+            {
+                var file = ServiceClient.DownloadTaxRatesByZipCode(DateTime.UtcNow, null)
+                    ?? throw new NopException("No response from the service");
+
+                var filePath = _fileProvider.MapPath(AvalaraTaxDefaults.TaxRatesFilePath);
+                await _fileProvider.WriteAllBytesAsync(filePath, file.Data);
+
+                return true;
+            });
+        }
+
+        #endregion
+
+        #region Certificates
+
+        /// <summary>
+        /// Checks whether the company is configured to use exemption certificates
+        /// </summary>
+        /// <param name="request">Whether to request the certificate setup</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result of check
+        /// </returns>
+        public async Task<bool?> GetCertificateSetupStatusAsync(bool request = false)
+        {
+            return await HandleFunctionAsync<bool?>(async () =>
+            {
+                if (_avalaraTaxSettings.CompanyId is null)
+                    throw new NopException("Company not selected");
+
+                var provisionStatus = request
+                    ? await ServiceClient.RequestCertificateSetupAsync(_avalaraTaxSettings.CompanyId.Value)
+                    : await ServiceClient.GetCertificateSetupAsync(_avalaraTaxSettings.CompanyId.Value)
+                    ?? throw new NopException("Failed to get certificate setup status");
+
+                if (provisionStatus.status == CertCaptureProvisionStatus.NotProvisioned)
+                    return default;
+
+                return provisionStatus.status == CertCaptureProvisionStatus.Provisioned;
+            });
+        }
+
+        /// <summary>
+        /// Create a new authorization token to launch the certificates services
+        /// </summary>
+        /// <param name="customer">Customer for which token is creating</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the generated token
+        /// </returns>
+        public async Task<string> CreateTokenAsync(Customer customer)
+        {
+            return await HandleFunctionAsync(async () =>
+            {
+                if (_avalaraTaxSettings.CompanyId is null)
+                    throw new NopException("Company not selected");
+
+                //no need to log the error if the customer is not created yet
+                var customerExists = false;
+                try
+                {
+                    customerExists = await ServiceClient
+                        .GetCustomerAsync(_avalaraTaxSettings.CompanyId.Value, customer.Id.ToString(), null) is not null;
+                }
+                catch { }
+                if (!customerExists)
+                    await CreateOrUpdateCustomerAsync(customer, _avalaraTaxSettings.CompanyId.Value, customerExists);
+
+                var model = new CreateECommerceTokenInputModel { customerNumber = customer.Id.ToString() };
+                return (await ServiceClient.CreateECommerceTokenAsync(_avalaraTaxSettings.CompanyId.Value, model))?.token
+                    ?? throw new NopException("Failed to get token");
+            });
+        }
+
+        /// <summary>
+        /// Get the certificate exposure zones defined by the company
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of exposure zones
+        /// </returns>
+        public async Task<List<ExposureZoneModel>> GetExposureZonesAsync()
+        {
+            return await HandleFunctionAsync(async () =>
+            {
+                var result = await ServiceClient.ListCertificateExposureZonesAsync(null, null, null, null)
+                    ?? throw new NopException("Failed to get exposure zones");
+
+                return result.value;
+            });
+        }
+
+        /// <summary>
+        /// Create or update the passed customer for the company
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer details
+        /// </returns>
+        public async Task<CustomerModel> CreateOrUpdateCustomerAsync(Customer customer)
+        {
+            return await HandleFunctionAsync(async () =>
+            {
+                if (_avalaraTaxSettings.CompanyId is null)
+                    throw new NopException("Company not selected");
+
+                //no need to log the error if the customer is not created yet
+                var customerExists = false;
+                try
+                {
+                    customerExists = await ServiceClient
+                        .GetCustomerAsync(_avalaraTaxSettings.CompanyId.Value, customer.Id.ToString(), null) is not null;
+                }
+                catch { }
+
+                return await CreateOrUpdateCustomerAsync(customer, _avalaraTaxSettings.CompanyId.Value, customerExists)
+                    ?? throw new NopException("Failed to update customer details");
+            });
+        }
+
+        /// <summary>
+        /// Delete a customer with the passed identifier
+        /// </summary>
+        /// <param name="customerId">Customer id</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer details
+        /// </returns>
+        public async Task<CustomerModel> DeleteCustomerAsync(int customerId)
+        {
+            return await HandleFunctionAsync(async () =>
+            {
+                if (_avalaraTaxSettings.CompanyId is null)
+                    throw new NopException("Company not selected");
+
+                return await ServiceClient.DeleteCustomerAsync(_avalaraTaxSettings.CompanyId.Value, customerId.ToString())
+                    ?? throw new NopException("Failed to delete customer");
+            });
+        }
+
+        /// <summary>
+        /// Get valid certificates linked to a customer in a particular country and region
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Current store id</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of certificates
+        /// </returns>
+        public async Task<CertificateModel> GetValidCertificatesAsync(Customer customer, int storeId)
+        {
+            return await HandleFunctionAsync(async () =>
+            {
+                if (_avalaraTaxSettings.CompanyId is null)
+                    throw new NopException("Company not selected");
+
+                //create dummy order to get selected address
+                var order = new Order { CustomerId = customer.Id };
+                await PrepareOrderAddressesAsync(customer, order, storeId);
+                var address = await GetTaxAddressAsync(order);
+                var shipTo = await MapAddressAsync(address);
+
+                //check exemption status
+                var exemptionStatus = await ServiceClient
+                    .ListValidCertificatesForCustomerAsync(_avalaraTaxSettings.CompanyId.Value, customer.Id.ToString(), shipTo.country, shipTo.region)
+                    ?? throw new NopException("Failed to get customer's certificates");
+
+                var exempt = string.Equals(exemptionStatus.status, "Exempt", StringComparison.InvariantCultureIgnoreCase);
+                return exempt ? exemptionStatus.certificate : null;
+            });
+        }
+
+        /// <summary>
+        /// Get all certificates linked to a customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of certificates
+        /// </returns>
+        public async Task<List<CertificateModel>> GetCustomerCertificatesAsync(Customer customer)
+        {
+            return await HandleFunctionAsync(async () =>
+            {
+                if (_avalaraTaxSettings.CompanyId is null)
+                    throw new NopException("Company not selected");
+
+                var certificates = await ServiceClient
+                    .ListCertificatesForCustomerAsync(_avalaraTaxSettings.CompanyId.Value, customer.Id.ToString(), null, null, null, null, null)
+                    ?? throw new NopException("Failed to get customer's certificates");
+
+                return certificates.value;
+            });
+        }
+
+        /// <summary>
+        /// Download a PDF file for the certificate
+        /// </summary>
+        /// <param name="certificateId">The unique ID number of the certificate</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the file details
+        /// </returns>
+        public async Task<FileResult> DownloadCertificateAsync(int certificateId)
+        {
+            return await HandleFunctionAsync(() =>
+            {
+                if (_avalaraTaxSettings.CompanyId is null)
+                    throw new NopException("Company not selected");
+
+                var file = ServiceClient
+                    .DownloadCertificateImage(_avalaraTaxSettings.CompanyId.Value, certificateId, null, CertificatePreviewType.Pdf)
+                    ?? throw new NopException("Failed to download certificate");
+
+                return Task.FromResult(file);
+            });
+        }
+
+        /// <summary>
+        /// Get an existing invitation to upload certificates on the external website
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the URL to redirect customer
+        /// </returns>
+        public async Task<string> GetInvitationAsync(Customer customer)
+        {
+            return await HandleFunctionAsync(async () =>
+            {
+                if (_avalaraTaxSettings.CompanyId is null)
+                    throw new NopException("Company not selected");
+
+                //create invitation for customer
+                var invitationModel = new List<CreateCertExpressInvitationModel>
+                {
+                    new CreateCertExpressInvitationModel  { deliveryMethod = CertificateRequestDeliveryMethod.Download }
+                };
+                var invitation = (await ServiceClient
+                    .CreateCertExpressInvitationAsync(_avalaraTaxSettings.CompanyId.Value, customer.Id.ToString(), invitationModel))
+                    ?.FirstOrDefault()?.invitation
+                    ?? throw new NopException("Failed to get invitation");
+
+                return invitation.requestLink;
+            });
+        }
+
         #endregion
 
         /// <summary>
@@ -1291,7 +1699,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         }
 
         // Protected implementation of Dispose pattern.
-        protected virtual void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             if (_disposed)
                 return;

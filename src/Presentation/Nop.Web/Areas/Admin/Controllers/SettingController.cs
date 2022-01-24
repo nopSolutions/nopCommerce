@@ -25,8 +25,10 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Configuration;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -46,6 +48,7 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
@@ -63,6 +66,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly INopDataProvider _dataProvider;
         private readonly IEncryptionService _encryptionService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGdprService _gdprService;
         private readonly ILocalizedEntityService _localizedEntityService;
@@ -92,6 +96,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerService customerService,
             INopDataProvider dataProvider,
             IEncryptionService encryptionService,
+            IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             IGdprService gdprService,
             ILocalizedEntityService localizedEntityService,
@@ -117,6 +122,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerService = customerService;
             _dataProvider = dataProvider;
             _encryptionService = encryptionService;
+            _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _gdprService = gdprService;
             _localizedEntityService = localizedEntityService;
@@ -141,7 +147,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateGdprConsentLocalesAsync(GdprConsent gdprConsent, GdprConsentModel model)
         {
             foreach (var localized in model.Locales)
@@ -184,7 +189,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> AppSettings()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAppSettings))
                 return AccessDeniedView();
 
             //prepare model
@@ -196,21 +201,27 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AppSettings(AppSettingsModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAppSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
-                var appSettings = _appSettings;
-                appSettings.CacheConfig = model.CacheConfigModel.ToConfig(appSettings.CacheConfig);
-                appSettings.HostingConfig = model.HostingConfigModel.ToConfig(appSettings.HostingConfig);
-                appSettings.DistributedCacheConfig =
-                    model.DistributedCacheConfigModel.ToConfig(appSettings.DistributedCacheConfig);
-                appSettings.AzureBlobConfig = model.AzureBlobConfigModel.ToConfig(appSettings.AzureBlobConfig);
-                appSettings.InstallationConfig = model.InstallationConfigModel.ToConfig(appSettings.InstallationConfig);
-                appSettings.PluginConfig = model.PluginConfigModel.ToConfig(appSettings.PluginConfig);
-                appSettings.CommonConfig = model.CommonConfigModel.ToConfig(appSettings.CommonConfig);
-                await AppSettingsHelper.SaveAppSettingsAsync(appSettings, _fileProvider);
+                var configurations = new List<IConfig>
+                {
+                    model.CacheConfigModel.ToConfig(_appSettings.Get<CacheConfig>()),
+                    model.HostingConfigModel.ToConfig(_appSettings.Get<HostingConfig>()),
+                    model.DistributedCacheConfigModel.ToConfig(_appSettings.Get<DistributedCacheConfig>()),
+                    model.AzureBlobConfigModel.ToConfig(_appSettings.Get<AzureBlobConfig>()),
+                    model.InstallationConfigModel.ToConfig(_appSettings.Get<InstallationConfig>()),
+                    model.PluginConfigModel.ToConfig(_appSettings.Get<PluginConfig>()),
+                    model.CommonConfigModel.ToConfig(_appSettings.Get<CommonConfig>()),
+                    model.DataConfigModel.ToConfig(_appSettings.Get<DataConfig>()),
+                    model.WebOptimizerConfigModel.ToConfig(_appSettings.Get<WebOptimizerConfig>())
+                };
+
+                await _eventPublisher.PublishAsync(new AppSettingsSavingEvent(configurations));
+
+                AppSettingsHelper.SaveAppSettings(configurations, _fileProvider);
 
                 await _customerActivityService.InsertActivityAsync("EditSettings",
                     await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
@@ -509,6 +520,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.HideShippingTotal, model.HideShippingTotal_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.BypassShippingMethodSelectionIfOnlyOne, model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.ConsiderAssociatedProductsDimensions, model.ConsiderAssociatedProductsDimensions_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.ShippingSorting, model.ShippingSorting_OverrideForStore, storeScope, false);
 
                 if (model.ShippingOriginAddress_OverrideForStore || storeScope == 0)
                 {
@@ -753,6 +765,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.UseAjaxCatalogProductsLoading, model.UseAjaxCatalogProductsLoading_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.EnableManufacturerFiltering, model.EnableManufacturerFiltering_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.EnablePriceRangeFiltering, model.EnablePriceRangeFiltering_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.EnableSpecificationAttributeFiltering, model.EnableSpecificationAttributeFiltering_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.AttributeValueOutOfStockDisplayType, model.AttributeValueOutOfStockDisplayType_OverrideForStore, storeScope, false);
 
                 //now settings not overridable per store
@@ -850,6 +863,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.ExchangeRate, model.ExchangeRate_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.MinimumRewardPointsToUse, model.MinimumRewardPointsToUse_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.MaximumRewardPointsToUsePerOrder, model.MaximumRewardPointsToUsePerOrder_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.MaximumRedeemedRate, model.MaximumRedeemedRate_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.PointsForRegistration, model.PointsForRegistration_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.RegistrationPointsValidity, model.RegistrationPointsValidity_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(rewardPointsSettings, x => x.PointsForPurchases_Amount, model.PointsForPurchases_OverrideForStore, storeScope, false);
@@ -1403,16 +1417,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = await _settingModelFactory.PrepareGeneralCommonSettingsModelAsync();
 
-            //notify admin that CSS bundling is not allowed in virtual directories
-            if (model.MinificationSettings.EnableCssBundling && HttpContext.Request.PathBase.HasValue)
-                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning"));
-
             //show configuration tour
             if (showtour)
             {
-                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
-
-                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
 
                 if (!hideCard && !closeCard)
                     ViewBag.ShowTour = true;
@@ -1466,8 +1476,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //minification
                 commonSettings.EnableHtmlMinification = model.MinificationSettings.EnableHtmlMinification;
-                commonSettings.EnableJsBundling = model.MinificationSettings.EnableJsBundling;
-                commonSettings.EnableCssBundling = model.MinificationSettings.EnableCssBundling;
                 //use response compression
                 commonSettings.UseResponseCompression = model.MinificationSettings.UseResponseCompression;
 
@@ -1495,8 +1503,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(sitemapSettings, x => x.SitemapIncludeNews, model.SitemapSettings.SitemapIncludeNews_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(sitemapSettings, x => x.SitemapIncludeTopics, model.SitemapSettings.SitemapIncludeTopics_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.EnableHtmlMinification, model.MinificationSettings.EnableHtmlMinification_OverrideForStore, storeScope, false);
-                await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.EnableJsBundling, model.MinificationSettings.EnableJsBundling_OverrideForStore, storeScope, false);
-                await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.EnableCssBundling, model.MinificationSettings.EnableCssBundling_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.UseResponseCompression, model.MinificationSettings.UseResponseCompression_OverrideForStore, storeScope, false);
 
                 //now clear settings cache
@@ -1999,7 +2005,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public async Task<IActionResult> DistributedCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
         {
             //LoadAllLocaleRecordsOnStartup is set and distributed cache is used, so display warning
-            if (_appSettings.DistributedCacheConfig.Enabled && _appSettings.DistributedCacheConfig.DistributedCacheType != DistributedCacheType.Memory && loadAllLocaleRecordsOnStartup)
+            if (_appSettings.Get<DistributedCacheConfig>().Enabled && _appSettings.Get<DistributedCacheConfig>().DistributedCacheType != DistributedCacheType.Memory && loadAllLocaleRecordsOnStartup)
             {
                 return Json(new
                 {
@@ -2021,6 +2027,25 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     Result = await _localizationService
                         .GetResourceAsync("Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning")
+                });
+            }
+
+            return Json(new { Result = string.Empty });
+        }
+
+        //Action that displays a notification (warning) to the store owner about the need to restart the application after changing the setting
+        public async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning(bool seoFriendlyUrlsForLanguagesEnabled)
+        {
+            //load settings for a chosen store scope
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var localizationSettings = await _settingService.LoadSettingAsync<LocalizationSettings>(storeScope);
+
+            if (seoFriendlyUrlsForLanguagesEnabled != localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            {
+                return Json(new
+                {
+                    Result = await _localizationService
+                        .GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning")
                 });
             }
 

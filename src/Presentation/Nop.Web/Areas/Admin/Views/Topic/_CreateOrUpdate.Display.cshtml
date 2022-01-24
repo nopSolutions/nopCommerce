@@ -65,12 +65,12 @@
         </div>
     </div>
     <nop-nested-setting asp-for="IsPasswordProtected">
-        <div class="form-group row advanced-setting" id="pnlPasswordEnabled">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-label asp-for="Password" />
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="Password" autocomplete="off"/>
+                <nop-editor asp-for="Password" html-attributes="@(new { autocomplete = "off" })"/>
                 <span asp-validation-for="Password"></span>
             </div>
         </div>
@@ -184,18 +184,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.IsPasswordProtected)").click(togglePassword);
-        togglePassword();
-    });
-
-    function togglePassword() {
-        if ($('#@Html.IdFor(model => model.IsPasswordProtected)').is(':checked')) {
-            $('#pnlPasswordEnabled').showElement();
-        } else {
-            $('#pnlPasswordEnabled').hideElement();
-        }
-    }
-</script>

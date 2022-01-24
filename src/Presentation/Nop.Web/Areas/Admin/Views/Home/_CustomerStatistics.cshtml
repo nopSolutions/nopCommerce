@@ -2,12 +2,13 @@
 @inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
-    Html.AppendScriptParts("~/lib_npm/chart.js/Chart.min.js");
-
     const string prefix = "customer-statistics";
     const string hideCardAttributeName = "Reports.HideCustomerStatisticsCard";
     var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
 }
+
+<script src="~/lib_npm/chart.js/Chart.min.js" asp-location="Head"></script>
+
 <div class="card card-primary card-outline @if (hideCard){<text>collapsed-card</text>}" id="@(prefix)-card">
     <div class="card-header with-border">
         <h3 class="card-title">

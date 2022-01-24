@@ -34,7 +34,10 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Quantity")]
         public int Quantity { get; set; }
-        
+
+        [NopResourceDisplayName("Admin.ReturnRequests.Fields.ReturnedQuantity")]
+        public int ReturnedQuantity { get; set; }
+
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.ReasonForReturn")]
         public string ReasonForReturn { get; set; }
         

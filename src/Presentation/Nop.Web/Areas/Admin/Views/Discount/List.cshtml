@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Promotions.Discounts").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Discounts");
+    NopHtml.SetActiveMenuItemSystemName("Discounts");
 }
 
 @{
@@ -22,7 +22,7 @@
             <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountListButtons, additionalData = Model })
     </div>
 </div>
 

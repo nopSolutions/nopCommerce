@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.System.Log").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Log");
+    NopHtml.SetActiveMenuItemSystemName("Log");
 }
 
 @{
@@ -28,7 +28,7 @@
                 @T("Admin.System.Log.ClearLog")
             </button>
             <nop-action-confirmation asp-button-id="clearall" asp-action="ClearAll" />
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LogListButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LogListButtons, additionalData = Model })
         </div>
     </div>
 
@@ -171,10 +171,14 @@
                                             data: postData,
                                             traditional: true,
                                             error: function (jqXHR, textStatus, errorThrown) {
-                                                $('#deleteSelectedFailed-info').text(errorThrown);
-                                                $("#deleteSelectedFailed").click();
+                                                showAlert('deleteSelectedFailed', errorThrown);
                                             },
                                             complete: function (jqXHR, textStatus) {
+                                                if (jqXHR.status === 204)
+                                                {
+                                                    showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                    return;
+                                                }
                                                 updateTable('#log-grid');
                                             }
                                         });
@@ -191,3 +195,4 @@
     </section>
 </form>
 <nop-alert asp-alert-id="deleteSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />

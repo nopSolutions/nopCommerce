@@ -10,7 +10,7 @@
             <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="AllowCustomersToSelectPageSize">
+    <nop-nested-setting asp-for="AllowCustomersToSelectPageSize" disable-auto-generation="true">
         <div class="form-group row advanced-setting" id="pnlPageSize">
             <div class="col-md-3">
                 <nop-label asp-for="PageSize" />
@@ -40,7 +40,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="PriceRangeFiltering">
-        <div class="form-group row advanced-setting" id="pnlManuallyPriceRange">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-label asp-for="ManuallyPriceRange" />
             </div>
@@ -86,11 +86,8 @@
 <script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
-        $("#@Html.IdFor(model => model.PriceRangeFiltering)").click(togglePriceRangeFiltering);
-        $("#@Html.IdFor(model => model.ManuallyPriceRange)").click(togglePriceRangeFiltering);
 
         togglePageSize();
-        togglePriceRangeFiltering();
     });
 
     function togglePageSize() {
@@ -100,21 +97,6 @@
         } else {
             $('#pnlPageSize').showElement();
             $('#pnlPageSizeOptions').hideElement();
-        }
-    }
-
-    function togglePriceRangeFiltering() {
-        if ($('#@Html.IdFor(model => model.PriceRangeFiltering)').is(':checked')) {
-            $('#pnlManuallyPriceRange').showElement();
-
-            if ($('#@Html.IdFor(model => model.ManuallyPriceRange)').is(':checked')) {
-                $('#pnlPriceRange').showElement();
-            } else {
-                $('#pnlPriceRange').hideElement();
-            }
-        } else {
-            $('#pnlPriceRange').hideElement();
-            $('#pnlManuallyPriceRange').hideElement();
         }
     }
 </script>

@@ -6,8 +6,8 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Html;
 using Nop.Services.Directory;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Tax;
@@ -23,6 +23,7 @@ namespace Nop.Services.Catalog
 
         private readonly ICurrencyService _currencyService;
         private readonly IDownloadService _downloadService;
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILocalizationService _localizationService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
@@ -39,6 +40,7 @@ namespace Nop.Services.Catalog
 
         public ProductAttributeFormatter(ICurrencyService currencyService,
             IDownloadService downloadService,
+            IHtmlFormatter htmlFormatter,
             ILocalizationService localizationService,
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
@@ -51,6 +53,7 @@ namespace Nop.Services.Catalog
         {
             _currencyService = currencyService;
             _downloadService = downloadService;
+            _htmlFormatter = htmlFormatter;
             _localizationService = localizationService;
             _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
@@ -103,14 +106,14 @@ namespace Nop.Services.Catalog
             bool allowHyperlinks = true)
         {
             var result = new StringBuilder();
-
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             //attributes
             if (renderProductAttributes)
             {
                 foreach (var attribute in await _productAttributeParser.ParseProductAttributeMappingsAsync(attributesXml))
                 {
                     var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId);
-                    var attributeName = await _localizationService.GetLocalizedAsync(productAttribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id);
+                    var attributeName = await _localizationService.GetLocalizedAsync(productAttribute, a => a.Name, currentLanguage.Id);
 
                     //attributes without values
                     if (!attribute.ShouldHaveValues())
@@ -125,12 +128,12 @@ namespace Nop.Services.Catalog
                                     attributeName = WebUtility.HtmlEncode(attributeName);
 
                                 //we never encode multiline textbox input
-                                formattedAttribute = $"{attributeName}: {HtmlHelper.FormatText(value, false, true, false, false, false, false)}";
+                                formattedAttribute = $"{attributeName}: {_htmlFormatter.FormatText(value, false, true, false, false, false, false)}";
                             }
                             else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                             {
                                 //file upload
-                                Guid.TryParse(value, out var downloadGuid);
+                                _ = Guid.TryParse(value, out var downloadGuid);
                                 var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                                 if (download != null)
                                 {
@@ -173,7 +176,7 @@ namespace Nop.Services.Catalog
                     {
                         foreach (var attributeValue in await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml, attribute.Id))
                         {
-                            var formattedAttribute = $"{attributeName}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id)}";
+                            var formattedAttribute = $"{attributeName}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
 
                             if (renderPrices)
                             {

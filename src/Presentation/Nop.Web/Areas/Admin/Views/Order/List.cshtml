@@ -7,7 +7,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Orders").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Orders");
+    NopHtml.SetActiveMenuItemSystemName("Orders");
 }
 
 @{
@@ -78,7 +78,7 @@
                     </li>
                 </ul>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderListButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderListButtons, additionalData = Model })
         </div>
     </div>
     <section class="content">

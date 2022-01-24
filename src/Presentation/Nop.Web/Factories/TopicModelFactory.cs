@@ -128,7 +128,8 @@ namespace Nop.Web.Factories
         public virtual async Task<TopicModel> PrepareTopicModelBySystemNameAsync(string systemName)
         {
             //load by store
-            var topic = await _topicService.GetTopicBySystemNameAsync(systemName, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var topic = await _topicService.GetTopicBySystemNameAsync(systemName, store.Id);
             if (topic == null)
                 return null;
 
