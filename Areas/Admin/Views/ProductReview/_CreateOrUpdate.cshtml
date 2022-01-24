@@ -1,4 +1,5 @@
 @model ProductReviewModel
+@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -60,7 +61,7 @@
                             <div class="col-md-9">
                                 @if (Model.IsLoggedInAsVendor)
                                 {
-                                    @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(Model.ReviewText, false, true, false, false, false, false))
+                                    @Html.Raw(htmlFormatter.FormatText(Model.ReviewText, false, true, false, false, false, false))
                                 }
                                 else
                                 {

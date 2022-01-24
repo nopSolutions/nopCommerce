@@ -1,7 +1,16 @@
-﻿@{
-    var errors = ExternalAuthorizerHelper.RetrieveErrorsToDisplay();
+﻿@using Nop.Core.Http.Extensions
+@using Nop.Services.Authentication
+
+@{
+
+    var session = Context.Session;
+
+    var errors = session.Get<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey);
+
+    if (errors != null)
+        session.Remove(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey);
 }
-@using Nop.Services.Authentication.External
+
 @if (errors != null && errors.Count > 0)
 {
     <div class="external-auth-errors">

@@ -7,16 +7,12 @@
 @{
     Layout = "_ColumnsOne";
 
-    //scripts
-    Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.accordion.js");
-    Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.onepagecheckout.js");
-
     var storeLocation = webHelper.GetStoreLocation();
 
     //title
-    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+    NopHtml.AddTitleParts(T("PageTitle.Checkout").Text);
     //page class
-    Html.AppendPageCssClassParts("html-checkout-page");
+    NopHtml.AppendPageCssClassParts("html-checkout-page");
 }
 @{
     //step numbers
@@ -41,12 +37,16 @@
         confirmOrderStepNumber--;
     }
 }
+
+<script src="~/js/public.accordion.js" asp-location="Footer"></script>
+<script src="~/js/public.onepagecheckout.js" asp-location="Footer"></script>
+
 <div class="page checkout-page">
     <div class="page-title">
         <h1>@T("Checkout")</h1>
     </div>
     <div class="page-body checkout-data">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpcContentBefore })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpcContentBefore, additionalData = Model })
         <ol class="opc" id="checkout-steps">
             <li id="opc-billing" class="tab-section allow">
                 <div class="step-title">
@@ -54,7 +54,7 @@
                     <h2 class="title">@T("Checkout.BillingAddress")</h2>
                 </div>
                 <div id="checkout-step-billing" class="step a-item" style="display: none;">
-                    <form id="co-billing-form" action="">
+                    <form id="co-billing-form" action="" method="post">
                         <div id="checkout-billing-load">
                             @await Html.PartialAsync("OpcBillingAddress", Model.BillingAddress)
                             @*billing address content will be loaded here*@
@@ -89,7 +89,7 @@
                         <h2 class="title">@T("Checkout.ShippingAddress")</h2>
                     </div>
                     <div id="checkout-step-shipping" class="step a-item" style="display: none;">
-                        <form action="" id="co-shipping-form">
+                        <form action="" id="co-shipping-form" method="post">
                             <div id="checkout-shipping-load">
                                 @*shipping address content will be loaded here*@
                             </div>
@@ -118,7 +118,7 @@
                         <h2 class="title">@T("Checkout.ShippingMethod")</h2>
                     </div>
                     <div id="checkout-step-shipping-method" class="step a-item" style="display: none;">
-                        <form id="co-shipping-method-form" action="">
+                        <form id="co-shipping-method-form" action="" method="post">
                             <div id="checkout-shipping-method-load">
                                 @*shipping methods content will be loaded here*@
                             </div>
@@ -146,7 +146,7 @@
                     <h2 class="title">@T("Checkout.PaymentMethod")</h2>
                 </div>
                 <div id="checkout-step-payment-method" class="step a-item" style="display: none;">
-                    <form action="" id="co-payment-method-form">
+                    <form action="" id="co-payment-method-form" method="post">
                         <div id="checkout-payment-method-load">
                             @*payment methods content will be loaded here*@ Payment is not required
                         </div>
@@ -173,7 +173,7 @@
                     <h2 class="title">@T("Checkout.PaymentInfo")</h2>
                 </div>
                 <div id="checkout-step-payment-info" class="step a-item" style="display: none;">
-                    <form action="" id="co-payment-info-form">
+                    <form action="" id="co-payment-info-form" method="post">
                         <div id="checkout-payment-info-load">
                             @*payment info content will be loaded here*@ Payment is not required
                         </div>
@@ -206,13 +206,13 @@
                         <p class="back-link">
                             <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a>
                         </p>
-                        <button type="button" class="button-1 confirm-order-next-step-button" onclick="ConfirmOrder.save()">@T("Common.Confirm")</button>
+                        <button type="button" class="button-1 confirm-order-next-step-button" onclick="ConfirmOrder.save()">@T("Checkout.ConfirmButton")</button>
                         <span class="please-wait" id="confirm-order-please-wait" style="display: none;">@T("Checkout.SubmittingOrder")</span>
                     </div>
                 </div>
             </li>
         </ol>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpcContentAfter })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpcContentAfter, additionalData = Model })
     </div>
     <script asp-location="Footer">
         Accordion.init('checkout-steps', '.step-title', true);

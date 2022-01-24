@@ -12,7 +12,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ShowShareButton">
-        <div class="form-group row advanced-setting" id="pnlPageShareCode">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="PageShareCode_OverrideForStore" asp-input="PageShareCode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="PageShareCode" />
@@ -34,7 +34,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="EmailAFriendEnabled">
-        <div class="form-group row advanced-setting" id="pnlAllowAnonymousUsersToEmailAFriend">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="AllowAnonymousUsersToEmailAFriend_OverrideForStore" asp-input="AllowAnonymousUsersToEmailAFriend" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="AllowAnonymousUsersToEmailAFriend" />
@@ -45,18 +45,4 @@
             </div>
         </div>
     </nop-nested-setting>
-    <script>
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.ShowShareButton)").click(togglePageShareCode);
-            togglePageShareCode();
-        });
-
-        function togglePageShareCode() {
-            if ($('#@Html.IdFor(model => model.ShowShareButton)').is(':checked')) {
-                $('#pnlPageShareCode').showElement();
-            } else {
-                $('#pnlPageShareCode').hideElement();
-            }
-        }
-    </script>
 </div>

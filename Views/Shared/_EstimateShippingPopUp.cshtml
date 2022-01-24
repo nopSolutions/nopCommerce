@@ -1,9 +1,8 @@
 ﻿@model EstimateShippingModel
-@{
-    Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.estimateshipping.popup.js");
-    Html.AddScriptParts(ResourceLocation.Footer, "~/lib_npm/magnific-popup/jquery.magnific-popup.min.js");
-    Html.AddCssFileParts("~/lib_npm/magnific-popup/magnific-popup.css");
-}
+
+<link rel="stylesheet" href="~/lib_npm/magnific-popup/magnific-popup.css" />
+<script asp-exclude-from-bundle="true" src="~/js/public.estimateshipping.popup.js" asp-location="Footer"></script>
+<script asp-exclude-from-bundle="true" src="~/lib_npm/magnific-popup/jquery.magnific-popup.min.js" asp-location="Footer"></script>
 
 <div class="ship-to-title">
     <strong>@T("Shipping.EstimateShippingPopUp.ShipToTitle")</strong>

@@ -4,19 +4,20 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Settings.Vendor").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Vendor settings");
+    NopHtml.SetActiveMenuItemSystemName("Vendor settings");
 }
 
 
 @{
     const string hideCommonBlockAttributeName = "VendorSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 
     const string hideCatalogBlockAttributeName = "VendorSettingsPage.HideCatalogBlock";
-    var hideCatalogBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCatalogBlockAttributeName);
+    var hideCatalogBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCatalogBlockAttributeName);
 
     const string hideVendorAttributeBlockAttributeName = "VendorSettingsPage.HideVendorAttributeBlock";
-    var hideVendorAttributeBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideVendorAttributeBlockAttributeName);
+    var hideVendorAttributeBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideVendorAttributeBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Vendor" method="post">
@@ -29,7 +30,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsButtons, additionalData = Model })
         </div>
     </div>
 

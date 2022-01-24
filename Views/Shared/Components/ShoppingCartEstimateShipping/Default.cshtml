@@ -21,7 +21,7 @@
             countryEl: '#@Html.IdFor(model => model.CountryId)',
             stateProvinceEl: '#@Html.IdFor(model => model.StateProvinceId)',
             zipPostalCodeEl: '#@Html.IdFor(model => model.ZipPostalCode)',
-            useCity: @Model.UseCity.ToString().ToLower(),
+            useCity: @Model.UseCity.ToString().ToLowerInvariant(),
             cityEl: '#@Html.IdFor(model => model.City)',
             requestDelay: @Model.RequestDelay,
             localizedData: {
@@ -54,7 +54,7 @@
 
                     $.ajax({
                         cache: false,
-                        url: '@Html.Raw(Url.Action("selectshippingoption", "shoppingcart"))' + (params ? '?$' + params : ''),
+                        url: '@Html.Raw(Url.Action("selectshippingoption", "shoppingcart"))' + (params ? '?' + params : ''),
                         data: $('#shopping-cart-form').serialize(),
                         type: 'POST',
                         beforeSend: function () {

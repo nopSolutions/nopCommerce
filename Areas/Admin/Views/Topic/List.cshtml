@@ -8,7 +8,7 @@
     //tour step
     ViewBag.TourStep = TourStep.TopicList;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Topics");
+    NopHtml.SetActiveMenuItemSystemName("Topics");
 
     string editQueryString = string.Empty;
     var showTour = ViewBag.ShowTour ?? false;
@@ -32,7 +32,7 @@
             <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TopicListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TopicListButtons, additionalData = Model })
     </div>
 </div>
 

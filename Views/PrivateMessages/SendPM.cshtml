@@ -3,10 +3,10 @@
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.SendPM").Text);
+    NopHtml.AddTitleParts(T("PageTitle.SendPM").Text);
     //page class
-    Html.AppendPageCssClassParts("html-private-messages");
-    Html.AppendPageCssClassParts("html-private-message-send-page");
+    NopHtml.AppendPageCssClassParts("html-private-messages");
+    NopHtml.AppendPageCssClassParts("html-private-message-send-page");
 }
 <form asp-route="SendPM" method="post">
     <div asp-validation-summary="ModelOnly" class="message-error"></div>

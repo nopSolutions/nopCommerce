@@ -1,5 +1,5 @@
 ﻿@model DataTablesModel
-@using System.Globalization
+
 @using System.Net;
 
 @functions
@@ -9,8 +9,8 @@
         return !string.IsNullOrEmpty(dataUrl?.ActionName) && !string.IsNullOrEmpty(dataUrl.ControllerName)
             ? Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues)
             : !string.IsNullOrEmpty(dataUrl.Url)
-            ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
-            : string.Empty;
+                ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
+                : string.Empty;
     }
 
     string ReplaceName(string str)
@@ -72,29 +72,29 @@
 @if (Model.Processing)
 {
     <text>
-    processing: @Model.Processing.ToString().ToLower(),
+    processing: @Model.Processing.ToString().ToLowerInvariant(),
     </text>
 }
 @if (Model.ServerSide)
 {
     <text>
-    serverSide: @Model.ServerSide.ToString().ToLower(),
+    serverSide: @Model.ServerSide.ToString().ToLowerInvariant(),
     </text>
 }
 @if (!string.IsNullOrEmpty(Model.RowIdBasedOnField))
 {
     <text>
-        rowId: function (item) {
-        var rowId = '';
-        if (item.hasOwnProperty('@(Model.RowIdBasedOnField)'))
-        {
-            if(item.@(Model.RowIdBasedOnField)){
-                var val = item.@(Model.RowIdBasedOnField).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-                rowId = 'row_' + val;
-            } else return;
-        }
-        return rowId;
-        },
+    rowId: function (item) {
+    var rowId = '';
+    if (item.hasOwnProperty('@(Model.RowIdBasedOnField)'))
+    {
+        if(item.@(Model.RowIdBasedOnField)){
+            var val = item.@(Model.RowIdBasedOnField).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+            rowId = 'row_' + val;
+        } else return;
+    }
+    return rowId;
+    },
     </text>
 }
 @if (Model.Data != null)
@@ -105,13 +105,11 @@
 }
 else
 {
-    
-
     <text>
     ajax:
     {
         url: "@Html.Raw(GetUrl(Model.UrlRead))",
-        type: "@WebRequestMethods.Http.Post",
+        type: "POST",
         dataType: "json",
         dataSrc: "Data",
         beforeSend: function() {
@@ -184,45 +182,45 @@ else
     </text>
 }
 scrollX: true,
-info: @Model.Info.ToString().ToLower(),
-paging: @Model.Paging.ToString().ToLower(),
+info: @Model.Info.ToString().ToLowerInvariant(),
+paging: @Model.Paging.ToString().ToLowerInvariant(),
 pagingType: '@Model.PagingType',
 language: @await Html.PartialAsync("_GridLocalization"),
 pageLength: @Model.Length,
 @if (!string.IsNullOrEmpty(Model.LengthMenu))
 {
     <text>
-        lengthMenu: [@Model.LengthMenu],
+    lengthMenu: [@Model.LengthMenu],
     </text>
 }
 else
 {
     <text>
-        lengthChange: false,
+    lengthChange: false,
     </text>
 }
-ordering: @Model.Ordering.ToString().ToLower(),
+ordering: @Model.Ordering.ToString().ToLowerInvariant(),
 @if (Model.RefreshButton)
 {
     <text>
-        buttons: [{
-            name: 'refresh',
-            text: '<i class="fas fa-sync-alt" style="padding-left: 5px"></i>',
-            action: function () {
-                @if (Model.ServerSide)
-                {
-                    <text>
-                    updateTable('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLower());
-                    </text>
-                }
-                else
-                {
-                    <text>
-                    updateTableSrc('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLower());
-                    </text>
-                }
+    buttons: [{
+        name: 'refresh',
+        text: '<i class="fas fa-sync-alt" style="padding-left: 5px"></i>',
+        action: function() {
+            @if (Model.ServerSide)
+            {
+                <text>
+                updateTable('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLowerInvariant());
+                </text>
             }
-        }],
+            else
+            {
+                <text>
+                updateTableSrc('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLowerInvariant());
+                </text>
+            }
+        }
+    }],
     </text>
 }
 dom: '@JavaScriptEncoder.Default.Encode(dom)',
@@ -257,12 +255,12 @@ columns: [
                 }
             }
             width: '@column.Width',
-            visible: @column.Visible.ToString().ToLower(),
-            searchable: @column.Searchable.ToString().ToLower(),
+            visible: @column.Visible.ToString().ToLowerInvariant(),
+            searchable: @column.Searchable.ToString().ToLowerInvariant(),
             @if (column.AutoWidth)
             {
                 <text>
-                autoWidth: @column.AutoWidth.ToString().ToLower(),
+                autoWidth: @column.AutoWidth.ToString().ToLowerInvariant(),
                 </text>
             }
             @if (!string.IsNullOrEmpty(column.ClassName))
@@ -282,8 +280,8 @@ columns: [
             @if (column.Encode && column.Render == null)
             {
                 <text>
-                render: function (data, type, row, meta) {                    
-                    return escapeHtml(data)
+                render: function (data, type, row, meta) {
+                    return escapeHtml(data);
                 },
                 </text>
             }
@@ -324,16 +322,16 @@ columns: [
                     break;
                     case RenderButtonsInlineEdit button:
                     <text>
-                        render: function (data, type, row, meta) {
-                            var origData = data;
-                            var modData = data;
-                            if (typeof data == 'string'){
-                                modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
-                            }
-                            return '<a href="#" class="@button.ClassName" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit")</a>' +
-                            '<a href="#" class="@button.ClassName" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="confirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fas fa-check"></i>@T("Admin.Common.Update")</a>' +
-                            '<a href="#" class="@button.ClassName" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');updateTableWidth(\'' + '#@Model.Name' + '\');return false;"><i class="fas fa-ban"></i>@T("Admin.Common.Cancel")</a>';
-                        },                         
+                    render: function (data, type, row, meta) {
+                        var origData = data;
+                        var modData = data;
+                        if (typeof data == 'string') {
+                            modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+                        }
+                        return '<a href="#" class="@button.ClassName" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit")</a>' +
+                        '<a href="#" class="@button.ClassName" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="confirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fas fa-check"></i>@T("Admin.Common.Update")</a>' +
+                        '<a href="#" class="@button.ClassName" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');updateTableWidth(\'' + '#@Model.Name' + '\');return false;"><i class="fas fa-ban"></i>@T("Admin.Common.Cancel")</a>';
+                    },                         
                     </text>
                     break;
                 case RenderButtonEdit buttonEdit:
@@ -363,7 +361,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@buttonCustom.ClassName" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ');">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
+                            return '<a class="@buttonCustom.ClassName" onclick="@buttonCustom.OnClickFunctionName' + '(\'' + data + '\');">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
                         },
                         </text>
                     }

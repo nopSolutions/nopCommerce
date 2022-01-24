@@ -10,9 +10,9 @@
     Layout = isRegisterCustomer ? "_ColumnsTwo" : "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.MultiFactorAuthentication").Text);
+    NopHtml.AddTitleParts(T("PageTitle.MultiFactorAuthentication").Text);
     //page class
-    Html.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-account-page");
 }
 
 @if (isRegisterCustomer)

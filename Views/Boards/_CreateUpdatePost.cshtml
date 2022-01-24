@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Forums;
 @{
     //page class
-    Html.AppendPageCssClassParts("html-forum-edit-page");
+    NopHtml.AppendPageCssClassParts("html-forum-edit-page");
 }
 
 @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })

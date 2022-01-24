@@ -6,7 +6,7 @@
     this.form = form;
   },
 
-  editAddress: function(url, addressId) {
+  editAddress: function(url, addressId, titleText) {
     CheckoutBilling.resetBillingForm();
 
     var prefix = 'BillingNewAddress_';
@@ -37,7 +37,7 @@
         $('#billingaddress-next-button').hide();
         $('#billingaddress-save-button').show();
         $('#billingaddress-cancel-button').show();
-        $('#billingaddress-new-form .title-text').html('Edit address');
+        $('#billingaddress-new-form .title-text').html(titleText);
       },
       error: function(err) {
         alert(err);

@@ -1,0 +1,31 @@
+﻿@model string
+
+@if (!string.IsNullOrEmpty(Model) || avalaraTaxSettings.DisplayNoValidCertificatesMessage)
+{
+    <div class="exemption-certificates-wrap order-review-data">
+        <div class="exemption-certificates-info">
+            <div class="title">
+                <strong>@T("Plugins.Tax.Avalara.ExemptionCertificates.OrderReview")</strong>
+            </div>
+            <ul class="info-list">
+                <li class="exemption-certificate">
+                @if (!string.IsNullOrEmpty(Model))
+                {
+                    <span class="label">
+                        @T("Plugins.Tax.Avalara.ExemptionCertificates.OrderReview.Applied"):
+                    </span>
+                    <span class="value">
+                        @Model
+                    </span>
+                }
+                else if (avalaraTaxSettings.DisplayNoValidCertificatesMessage) 
+                {
+                    <span>
+                        @T("Plugins.Tax.Avalara.ExemptionCertificates.OrderReview.None", Url.RouteUrl(AvalaraTaxDefaults.ExemptionCertificatesRouteName))
+                    </span>
+                }
+                </li>
+            </ul>
+        </div>
+    </div>
+}

@@ -1,8 +1,6 @@
 ﻿@model PriceRangeFilterModel
 
-@{
-    Html.AddScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js");
-}
+<script asp-exclude-from-bundle="true" src="~/lib_npm/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js" asp-location="Footer"></script>
 
 <div class="product-filter price-range-filter">
     <div class="filter-title">

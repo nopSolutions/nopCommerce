@@ -64,7 +64,7 @@
                         <nop-label asp-for="Password" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="Password" asp-value="@Model.Password" />
+                        <nop-editor asp-for="Password" html-attributes="@(new { value = Model.Password })" />
                         <span asp-validation-for="Password"></span>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                         <span asp-validation-for="PassDimensions"></span>
                     </div>
                 </div>
-                <nop-nested-setting asp-for="PassDimensions">
+                <nop-nested-setting asp-for="PassDimensions"  disable-auto-generation="true">
                     <div class="form-group row" id="pnlPackingType">
                         <div class="col-md-3">
                             <nop-override-store-checkbox asp-for="PackingType_OverrideForStore" asp-input="PackingType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -89,7 +89,7 @@
                             <nop-select asp-for="PackingType" asp-items="Model.PackingTypeValues" />
                         </div>
                     </div>
-                <nop-nested-setting asp-for="PackingTypeValues">
+                <nop-nested-setting asp-for="PackingTypeValues" disable-auto-generation="true">
                     <div class="form-group row" id="pnlPackingPackageVolume">
                         <div class="col-md-3">
                             <nop-override-store-checkbox asp-for="PackingPackageVolume_OverrideForStore" asp-input="PackingPackageVolume" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -116,7 +116,7 @@
     </div>
 </form>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
 
         $("#PackingType").change(togglePackingType);

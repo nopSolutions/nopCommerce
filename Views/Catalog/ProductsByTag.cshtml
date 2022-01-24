@@ -6,15 +6,15 @@
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
+    NopHtml.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
     //page class
-    Html.AppendPageCssClassParts("html-product-tag-page");
+    NopHtml.AppendPageCssClassParts("html-product-tag-page");
 
     //canonical URL
     if (seoSettings.CanonicalUrlsEnabled)
     {
         var productsByTagUrl = Url.RouteUrl("ProductsByTag", new { SeName = Model.TagSeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
-        Html.AddCanonicalUrlParts(productsByTagUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
+        NopHtml.AddCanonicalUrlParts(productsByTagUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }
 

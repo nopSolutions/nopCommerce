@@ -3,10 +3,10 @@
         $(document).ready(function () {
             $('#export-avalara-selected').click(function (e) {
                 e.preventDefault();
-                var ids = selectedIds.join(",");
+                var ids = selectedIds.join(',');
                 if (!ids) {
-                    $('#export-avalara-selected-alert-info').text("@T("Admin.Products.NoProducts")");
-                    $("#export-avalara-selected-alert").click();
+                    $('#export-avalara-selected-alert-info').text('@T("Admin.Products.NoProducts")');
+                    $('#export-avalara-selected-alert').click();
                 }
                 else {
                     $('#export-avalara-selected-form #selectedIds').val(ids);

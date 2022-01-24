@@ -2820,6 +2820,10 @@ label, label + * {
   display: none;
 }
 
+.attribute-squares-padding {
+  padding: 0 5px 0 0;
+}
+
 .tooltip-container {
   position: absolute;
   width: 200px;

@@ -48,7 +48,14 @@
                                                             <nop-label asp-for="Description" />
                                                         </div>
                                                         <div class="col-md-9">
-                                                            <nop-editor asp-for="Description" asp-required="true" asp-template="RichEditor" />
+                                                            <div class="input-group-append input-group-required">
+                                                                <div class="input-group">
+                                                                    <nop-editor asp-for="Description" asp-template="RichEditor" />
+                                                                </div>
+                                                                <div class="input-group-btn">
+                                                                    <nop-required />
+                                                                </div>
+                                                            </div>
                                                             <span asp-validation-for="Description"></span>
                                                         </div>
                                                     </div>

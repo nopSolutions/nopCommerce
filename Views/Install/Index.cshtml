@@ -8,8 +8,8 @@
 <head>
     <title>@ILS.GetResource("Title")</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-    <link rel="shortcut icon" href="/icons/icons_0/favicon.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic" />
+    <link rel="shortcut icon" href="/icons/icons_0/favicon.ico" />
     @if (ILS.GetCurrentLanguage().IsRightToLeft)
     {
         <link href="@Url.Content("~/lib_npm/@laylazi/bootstrap-rtl/css/bootstrap-rtl.min.css")" type="text/css" rel="stylesheet" />
@@ -175,7 +175,7 @@
                                         @ILS.GetResource("Country")
                                     </label>
                                     <div class="col-sm-8">
-                                        <nop-select asp-for="Country" asp-items="Model.AvailableCountries" />
+                                        <select asp-for="Country" asp-items="Model.AvailableCountries" class="form-control"></select>
                                     </div>
                                 </div>
                             }
@@ -205,7 +205,7 @@
                                     @ILS.GetResource("Database")
                                 </label>
                                 <div class="col-sm-8">
-                                    <nop-select asp-for="DataProvider" asp-items="Model.AvailableDataProviders" />
+                                    <select asp-for="DataProvider" asp-items="Model.AvailableDataProviders" class="form-control"></select>
                                 </div>
                             </div>
                             <div class="form-group row">

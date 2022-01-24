@@ -1,11 +1,14 @@
 ﻿@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
 
 @inject IGenericAttributeService genericAttributeService
+@inject INopHtmlHelper NopHtml 
 @inject IWorkContext workContext
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Nop.Web.Framework
 
+@using System.Globalization;
+@using System.Net;
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Mvc.ViewFeatures
 @using Microsoft.AspNetCore.Routing

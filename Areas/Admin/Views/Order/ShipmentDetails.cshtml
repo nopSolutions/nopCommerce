@@ -5,7 +5,7 @@
     ViewBag.PageTitle = T("Admin.Orders.Shipments.ViewDetails").Text;
 
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Shipments");
+    NopHtml.SetActiveMenuItemSystemName("Shipments");
 }
 
 
@@ -13,6 +13,7 @@
     <script>
         $(document).ready(function() {
             toggleShippedDate(false);
+            toggleReadyForPickupDate(false);
             toggleDeliveryDate(false);
         });
 
@@ -29,6 +30,22 @@
                 $('#btnEditShippedDate').showElement();
                 $('#btnSaveShippedDate').hideElement();
                 $('#btnCancelShippedDate').hideElement();
+            }
+        }
+
+        function toggleReadyForPickupDate(editmode) {
+            if (editmode) {
+                $('#lblReadyForPickupDate').hideElement();
+                $('#divReadyForPickupDate').showElement();
+                $('#btnEditReadyForPickupDate').hideElement();
+                $('#btnSaveReadyForPickupDate').showElement();
+                $('#btnCancelReadyForPickupDate').showElement();
+            } else {
+                $('#lblReadyForPickupDate').showElement();
+                $('#divReadyForPickupDate').hideElement();
+                $('#btnEditReadyForPickupDate').showElement();
+                $('#btnSaveReadyForPickupDate').hideElement();
+                $('#btnCancelReadyForPickupDate').hideElement();
             }
         }
 
@@ -100,7 +117,7 @@
                                     </div>
                                     @if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
                                     {
-                                    <a href="@Model.TrackingNumberUrl" target="_blank" class="margin-l-10">@T("Admin.Orders.Shipments.TrackingNumber.ViewOnline")</a>
+                                        <a href="@Model.TrackingNumberUrl" target="_blank" class="margin-l-10">@T("Admin.Orders.Shipments.TrackingNumber.ViewOnline")</a>
                                     }
                                 </div>
                             </div>
@@ -127,48 +144,96 @@
                                     <div class="form-text-row">@Model.TotalWeight</div>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <nop-label asp-for="ShippedDate" />
-                                </div>
-                                <div class="col-md-9">
-                                    <div class="input-group input-group-short">
-                                        <div id="lblShippedDate" class="input-group-text">
-                                            @Model.ShippedDate
-                                        </div>
-                                        @if (Model.ShippedDateUtc.HasValue)
-                                        {
-                                        <div id="divShippedDate" style="display: inline-block;" class="col-md-9">
-                                            <nop-editor asp-for="ShippedDateUtc" />
-                                            @T("Admin.Orders.Shipments.ShippedDate.EnterUtc")&nbsp;&nbsp;
-                                        </div>
-                                        }
-                                    <div class="input-group-append col-md-3">
-                                        @if (Model.CanShip)
-                                        {
-                                            <button type="submit" name="setasshipped" id="setasshipped" class="btn btn-info btn-flat">
-                                                @T("Admin.Orders.Shipments.ShippedDate.Button")
-                                            </button>
-                                        }
-                                        @if (Model.ShippedDateUtc.HasValue)
-                                        {
-                                            <button type="submit" onclick="toggleShippedDate(true);return false;" id="btnEditShippedDate" class="btn btn-primary">
-                                                @T("Admin.Common.Edit")
-                                            </button>
-
-                                            <button type="submit" id="btnSaveShippedDate" name="saveshippeddate" class="btn btn-primary">
-                                                @T("Admin.Common.Save")
-                                            </button>
-                                             <nop-action-confirmation asp-button-id="btnSaveShippedDate" />
-
-                                            <button type="submit" onclick="toggleShippedDate(false);return false;" id="btnCancelShippedDate" class="btn btn-success">
-                                                @T("Admin.Common.Cancel")
-                                            </button>                                           
-                                        }
+                            @if (Model.PickupInStore)
+                            {
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="ReadyForPickupDate" />
                                     </div>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-group-short">
+                                            <div id="lblReadyForPickupDate" class="input-group-text">
+                                                @Model.ReadyForPickupDate
+                                            </div>
+                                            @if (Model.ReadyForPickupDateUtc.HasValue)
+                                            {
+                                                <div id="divReadyForPickupDate" style="display: inline-block;" class="col-md-9">
+                                                    <nop-editor asp-for="ReadyForPickupDateUtc" />
+                                                    @T("Admin.Orders.Shipments.ReadyForPickupDate.EnterUtc")&nbsp;&nbsp;
+                                                </div>
+                                            }
+                                            <div class="input-group-append col-md-3">
+                                                @if (Model.CanMarkAsReadyForPickup)
+                                                {
+                                                    <button type="submit" name="setasreadyforpickup" id="setasreadyforpickup" class="btn btn-info btn-flat">
+                                                        @T("Admin.Orders.Shipments.ReadyForPickupDate.Button")
+                                                    </button>
+                                                }
+                                                @if (Model.ReadyForPickupDateUtc.HasValue)
+                                                {
+                                                    <button type="submit" onclick="toggleReadyForPickupDate(true);return false;" id="btnEditReadyForPickupDate" class="btn btn-primary">
+                                                        @T("Admin.Common.Edit")
+                                                    </button>
+
+                                                    <button type="submit" id="btnSaveReadyForPickupDate" name="savereadyforpickupdate" class="btn btn-primary">
+                                                        @T("Admin.Common.Save")
+                                                    </button>
+                                                    <nop-action-confirmation asp-button-id="btnSaveReadyForPickupDate" />
+
+                                                    <button type="submit" onclick="toggleReadyForPickupDate(false);return false;" id="btnCancelReadyForPickupDate" class="btn btn-success">
+                                                        @T("Admin.Common.Cancel")
+                                                    </button>
+                                                }
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
+                            else
+                            {
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="ShippedDate" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-group-short">
+                                            <div id="lblShippedDate" class="input-group-text">
+                                                @Model.ShippedDate
+                                            </div>
+                                            @if (Model.ShippedDateUtc.HasValue)
+                                            {
+                                                <div id="divShippedDate" style="display: inline-block;" class="col-md-9">
+                                                    <nop-editor asp-for="ShippedDateUtc" />
+                                                    @T("Admin.Orders.Shipments.ShippedDate.EnterUtc")&nbsp;&nbsp;
+                                                </div>
+                                            }
+                                            <div class="input-group-append col-md-3">
+                                                @if (Model.CanShip)
+                                                {
+                                                    <button type="submit" name="setasshipped" id="setasshipped" class="btn btn-info btn-flat">
+                                                        @T("Admin.Orders.Shipments.ShippedDate.Button")
+                                                    </button>
+                                                }
+                                                @if (Model.ShippedDateUtc.HasValue)
+                                                {
+                                                    <button type="submit" onclick="toggleShippedDate(true);return false;" id="btnEditShippedDate" class="btn btn-primary">
+                                                        @T("Admin.Common.Edit")
+                                                    </button>
+
+                                                    <button type="submit" id="btnSaveShippedDate" name="saveshippeddate" class="btn btn-primary">
+                                                        @T("Admin.Common.Save")
+                                                    </button>
+                                                    <nop-action-confirmation asp-button-id="btnSaveShippedDate" />
+
+                                                    <button type="submit" onclick="toggleShippedDate(false);return false;" id="btnCancelShippedDate" class="btn btn-success">
+                                                        @T("Admin.Common.Cancel")
+                                                    </button>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <nop-label asp-for="DeliveryDate" />
@@ -181,35 +246,35 @@
                                         </div>
                                         @if (Model.DeliveryDateUtc.HasValue)
                                         {
-                                        <div id="divDeliveryDate" style="display: inline-block;" class="col-md-9">
-                                            <nop-editor asp-for="DeliveryDateUtc" />
-                                            @T("Admin.Orders.Shipments.DeliveryDate.EnterUtc")&nbsp;&nbsp;
+                                            <div id="divDeliveryDate" style="display: inline-block;" class="col-md-9">
+                                                <nop-editor asp-for="DeliveryDateUtc" />
+                                                @T("Admin.Orders.Shipments.DeliveryDate.EnterUtc")&nbsp;&nbsp;
+                                            </div>
+                                        }
+                                        <div class="input-group-append col-md-3">
+                                            @if (Model.CanDeliver)
+                                            {
+                                                <button type="submit" name="setasdelivered" id="setasdelivered" class="btn btn-info btn-flat">
+                                                    @T("Admin.Orders.Shipments.DeliveryDate.Button")
+                                                </button>
+                                            }
+                                            @if (Model.DeliveryDateUtc.HasValue)
+                                            {
+
+                                                <button type="submit" onclick="toggleDeliveryDate(true);return false;" id="btnEditDeliveryDate" class="btn btn-primary">
+                                                    @T("Admin.Common.Edit")
+                                                </button>
+
+                                                <button type="submit" id="btnSaveDeliveryDate" name="savedeliverydate" class="btn btn-primary">
+                                                    @T("Admin.Common.Save")
+                                                </button>
+                                                <nop-action-confirmation asp-button-id="btnSaveDeliveryDate" />
+
+                                                <button type="submit" onclick="toggleDeliveryDate(false);return false;" id="btnCancelDeliveryDate" class="btn btn-success">
+                                                    @T("Admin.Common.Cancel")
+                                                </button>
+                                            }
                                         </div>
-                                        }
-                                    <div class="input-group-append col-md-3">
-                                        @if (Model.CanDeliver)
-                                        {
-                                            <button type="submit" name="setasdelivered" id="setasdelivered" class="btn btn-info btn-flat">
-                                                @T("Admin.Orders.Shipments.DeliveryDate.Button")
-                                            </button>
-                                        }
-                                        @if (Model.DeliveryDateUtc.HasValue)
-                                        {
-
-                                            <button type="submit" onclick="toggleDeliveryDate(true);return false;" id="btnEditDeliveryDate" class="btn btn-primary">
-                                                @T("Admin.Common.Edit")
-                                            </button>
-
-                                            <button type="submit" id="btnSaveDeliveryDate" name="savedeliverydate" class="btn btn-primary">
-                                                @T("Admin.Common.Save")
-                                            </button>
-                                            <nop-action-confirmation asp-button-id="btnSaveDeliveryDate" />
-
-                                            <button type="submit" onclick="toggleDeliveryDate(false);return false;" id="btnCancelDeliveryDate" class="btn btn-success">
-                                                @T("Admin.Common.Cancel")
-                                            </button>                                            
-                                        }
-                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -239,9 +304,18 @@
                                         <th>
                                             @T("Admin.Orders.Shipments.Products.ItemDimensions")
                                         </th>
-                                        <th>
-                                            @T("Admin.Orders.Shipments.Products.QtyShipped")
-                                        </th>
+                                        @if (Model.PickupInStore)
+                                        {
+                                            <th>
+                                                @T("Admin.Orders.Shipments.Products.QtyReadyForPickup")
+                                            </th>
+                                        }
+                                        else
+                                        {
+                                            <th>
+                                                @T("Admin.Orders.Shipments.Products.QtyShipped")
+                                            </th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>

@@ -7,9 +7,9 @@
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Wishlist").Text);
+    NopHtml.AddTitleParts(T("PageTitle.Wishlist").Text);
     //page class
-    Html.AppendPageCssClassParts("html-wishlist-page");
+    NopHtml.AppendPageCssClassParts("html-wishlist-page");
 }
 <div class="page wishlist-page">
     <div class="page-title">
@@ -162,7 +162,7 @@
                                                     <ul>
                                                         @foreach (var warning in item.Warnings)
                                                         {
-                                                            <li>@warning</li>
+                                                            <li>@Html.Raw(warning)</li>
                                                         }
                                                     </ul>
                                                 </div>
@@ -215,7 +215,7 @@
                                         {
                                             <td class="remove-from-cart">
                                                 <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
-                                                <button name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true);"></button>
+                                                <button type="button" name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true); $('#updatecart').click();"></button>
                                             </td>
                                         }
                                     </tr>
@@ -235,7 +235,7 @@
                     <div class="buttons">
                         @if (Model.IsEditable)
                         {
-                            <button type="submit" name="updatecart" class="button-2 update-wishlist-button">@T("Wishlist.UpdateCart")</button>
+                            <button type="submit" name="updatecart" id="updatecart" class="button-2 update-wishlist-button">@T("Wishlist.UpdateCart")</button>
                         }
                         @if (Model.DisplayAddToCart)
                         {

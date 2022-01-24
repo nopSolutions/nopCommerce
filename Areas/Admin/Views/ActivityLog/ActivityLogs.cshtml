@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Customers.ActivityLog").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Activity logs");
+    NopHtml.SetActiveMenuItemSystemName("Activity logs");
 }
 
 @{
@@ -23,7 +23,7 @@
                 @T("Admin.Customers.ActivityLog.Clear")
             </button>
             <nop-action-confirmation asp-button-id="clearall" />
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityLogListButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityLogListButtons, additionalData = Model })
         </form>
     </div>
 

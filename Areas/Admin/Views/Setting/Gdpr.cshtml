@@ -4,15 +4,16 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Settings.Gdpr").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("GDPR settings");
+    NopHtml.SetActiveMenuItemSystemName("GDPR settings");
 }
 
 @{
     const string hideCommonBlockAttributeName = "GdprSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 
     const string hideConsentsBlockAttributeName = "GdprSettingsPage.HideConsentsBlock";
-    var hideConsentsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideConsentsBlockAttributeName);
+    var hideConsentsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideConsentsBlockAttributeName);
 }
 
 
@@ -26,7 +27,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprSettingsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprSettingsButtons, additionalData = Model })
         </div>
     </div>
 

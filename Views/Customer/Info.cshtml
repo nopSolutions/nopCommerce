@@ -5,10 +5,10 @@
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Account").Text);
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
     //page class
-    Html.AppendPageCssClassParts("html-account-page");
-    Html.AppendPageCssClassParts("html-customer-info-page");
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-customer-info-page");
 }
 
 @section left
@@ -75,11 +75,10 @@
                             <nop-date-picker asp-day-name="@Html.NameFor(x => x.DateOfBirthDay)"
                                              asp-month-name="@Html.NameFor(x => x.DateOfBirthMonth)"
                                              asp-year-name="@Html.NameFor(x => x.DateOfBirthYear)"
-                                             asp-begin-year="@(DateTime.Now.Year - 110)"
-                                             asp-end-year="@(DateTime.Now.Year)"
-                                             asp-selected-day="@Model.DateOfBirthDay"
-                                             asp-selected-month="@Model.DateOfBirthMonth"
-                                             asp-selected-year="@Model.DateOfBirthYear" />
+                                             asp-begin-year="@(DateTime.Now.AddYears(-110))"
+                                             asp-end-year="@(DateTime.UtcNow)"
+                                             asp-selected-date="@Model.ParseDateOfBirth()" />
+
                             @if (Model.DateOfBirthRequired)
                             {
                                 <nop-required />

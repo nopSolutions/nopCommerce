@@ -2,7 +2,7 @@
 @{   
     Layout = "_ColumnsOne";
 
-    Html.AddTitleParts(T("Forum.PageTitle.PostEdit").Text);
+    NopHtml.AddTitleParts(T("Forum.PageTitle.PostEdit").Text);
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsPostEditBefore, additionalData = Model })
 <form asp-route="PostEdit" method="post">

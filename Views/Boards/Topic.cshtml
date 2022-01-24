@@ -1,11 +1,13 @@
-﻿@model ForumTopicPageModel
+﻿@using Nop.Services.Localization
+@model ForumTopicPageModel
+@inject ILocalizationService localizationService
 @{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(Model.Subject);
+    NopHtml.AddTitleParts(Model.Subject);
     //page class
-    Html.AppendPageCssClassParts("html-forum-topic-page");
+    NopHtml.AppendPageCssClassParts("html-forum-topic-page");
 }
 <div class="page forum-topic-page">
     @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
@@ -60,9 +62,12 @@
                 <script asp-location="Footer">
                     $(document).ready(function () {
                         $('#watch-topic-top').on('click', function () {
+                            var postData = {};
+                            addAntiForgeryToken(postData);
                             $.ajax({
                                 cache: false,
                                 type: "POST",
+                                data: postData,
                                 url: "@Url.RouteUrl("TopicWatch", new { id = Model.Id })",
                                 dataType: "json",
                                 success: function (data, textStatus, jqXHR) {
@@ -79,7 +84,7 @@
             }
         </div>
         @{
-            var pager = await Html.PagerAsync(new PagerModel
+            var pager = await Html.PagerAsync(new PagerModel(localizationService)
             {
                 PageSize = Model.PostsPageSize,
                 TotalRecords = Model.PostsTotalRecords,
