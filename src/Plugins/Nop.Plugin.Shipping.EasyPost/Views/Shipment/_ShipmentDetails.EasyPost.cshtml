@@ -3,8 +3,8 @@
 <script>
     $(document).ready(function () {
         $("#@Html.IdFor(model => model.UseCustomsInfo)").click(toggleUseCustomsInfo);
-        $(@Html.IdFor(model => model.ContentsType)).change(toggleUseCustomsInfo);
-        $(@Html.IdFor(model => model.RestrictionType)).change(toggleUseCustomsInfo);
+        $("#@Html.IdFor(model => model.ContentsType)").change(toggleUseCustomsInfo);
+        $("#@Html.IdFor(model => model.RestrictionType)").change(toggleUseCustomsInfo);
         toggleUseCustomsInfo();
 
         $("#@Html.IdFor(model => model.RegisteredMail)").click(toggleRegisteredMail);
