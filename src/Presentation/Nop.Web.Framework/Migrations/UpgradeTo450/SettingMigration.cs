@@ -35,7 +35,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             if (!settingService.SettingExistsAsync(commonSettings, settings => settings.ClearLogOlderThanDays).Result)
             {
                 commonSettings.ClearLogOlderThanDays = 0;
-                settingService.SaveSettingAsync(commonSettings).Wait();
+                settingService.SaveSettingAsync(commonSettings, settings => settings.ClearLogOlderThanDays).Wait();
             }
 
             //#5551
@@ -44,7 +44,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering).Result)
             {
                 catalogSettings.EnableSpecificationAttributeFiltering = true;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering).Wait();
             }
 
             //#5204
@@ -53,7 +53,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             if (!settingService.SettingExistsAsync(shippingSettings, settings => settings.ShippingSorting).Result)
             {
                 shippingSettings.ShippingSorting = ShippingSortingEnum.Position;
-                settingService.SaveSettingAsync(shippingSettings).Wait();
+                settingService.SaveSettingAsync(shippingSettings, settings => settings.ShippingSorting).Wait();
             }
 
             //#5698
@@ -61,7 +61,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             if (!settingService.SettingExistsAsync(orderSettings, settings => settings.DisplayOrderSummary).Result)
             {
                 orderSettings.DisplayOrderSummary = true;
-                settingService.SaveSettingAsync(orderSettings).Wait();
+                settingService.SaveSettingAsync(orderSettings, settings => settings.DisplayOrderSummary).Wait();
             }
         }
 
