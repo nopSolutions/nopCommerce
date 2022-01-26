@@ -13,7 +13,7 @@
         /// <summary>
         /// Gets or sets a value indicating whether to copy "locked" assemblies from /Plugins/bin directory to temporary subdirectories on application startup
         /// </summary>
-        public bool CopyLockedPluginAssembilesToSubdirectoriesOnStartup { get; private set; } = false;
+        public bool CopyLockedPluginAssembilesToSubdirectoriesOnStartup { get; private set; } = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether to load an assembly into the load-from context, bypassing some security checks.
