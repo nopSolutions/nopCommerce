@@ -56,11 +56,13 @@
 </script>
 
 <div class="card card-secondary card-outline">
-    <div class="card-header with-border clearfix">
+    <div> <!-- to avoid binding click trigger: .card.card-secondary > .card-header  --> 
+        <div class="card-header with-border clearfix">
         <div class="card-title">
             <i class="fas fa-truck"></i>
             @T("Plugins.Shipping.EasyPost.Shipment")
         </div>
+    </div>
     </div>
     <div class="card-body">
         <input asp-for="Id" type="hidden" />
