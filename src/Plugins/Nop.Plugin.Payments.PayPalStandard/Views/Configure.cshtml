@@ -1,5 +1,9 @@
-﻿@model Nop.Plugin.Payments.PayPalStandard.Models.ConfigurationModel
+﻿@using Nop.Services.Directory
+@using Nop.Core.Domain.Directory
+@model Nop.Plugin.Payments.PayPalStandard.Models.ConfigurationModel
 @inject Nop.Core.IWebHelper webHelper
+@inject ICurrencyService _currencyService
+@inject CurrencySettings _currencySettings
 @{
     Layout = "_ConfigurePlugin";
 }
@@ -7,10 +11,10 @@
 @await Component.InvokeAsync("StoreScopeConfiguration")
 
 <script>
-	$(document).ready(function () {
+    $(document).ready(function () {
         $("#@Html.IdFor(model => model.PassProductNamesAndTotals)").click(togglePassProductNamesAndTotals);
-	    togglePassProductNamesAndTotals();
-	});
+        togglePassProductNamesAndTotals();
+    });
 
     function togglePassProductNamesAndTotals() {
         warningValidation('@Url.Action("RoundingWarning", "PaymentPayPalStandard")', '@Html.NameFor(model => model.PassProductNamesAndTotals)',
@@ -65,12 +69,12 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="AdditionalFee_OverrideForStore" asp-input="AdditionalFee" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="AdditionalFee" />
+                        <nop-override-store-checkbox asp-for="AdditionalFeeFixed_OverrideForStore" asp-input="AdditionalFeeFixed" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AdditionalFeeFixed" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="AdditionalFee" />
-                        <span asp-validation-for="AdditionalFee"></span>
+                        <nop-editor asp-for="AdditionalFeeFixed" asp-postfix="@((await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode)" />
+                        <span asp-validation-for="AdditionalFeeFixed"></span>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -79,7 +83,7 @@
                         <nop-label asp-for="AdditionalFeePercentage" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="AdditionalFeePercentage" />
+                        <nop-editor asp-for="AdditionalFeePercentage" asp-postfix="\\%" />
                         <span asp-validation-for="AdditionalFeePercentage"></span>
                     </div>
                 </div>

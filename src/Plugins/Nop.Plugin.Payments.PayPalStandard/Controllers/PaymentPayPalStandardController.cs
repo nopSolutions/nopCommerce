@@ -95,7 +95,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 BusinessEmail = payPalStandardPaymentSettings.BusinessEmail,
                 PdtToken = payPalStandardPaymentSettings.PdtToken,
                 PassProductNamesAndTotals = payPalStandardPaymentSettings.PassProductNamesAndTotals,
-                AdditionalFee = payPalStandardPaymentSettings.AdditionalFee,
+                AdditionalFeeFixed = payPalStandardPaymentSettings.AdditionalFeeFixed,
                 AdditionalFeePercentage = payPalStandardPaymentSettings.AdditionalFeePercentage,
                 ActiveStoreScopeConfiguration = storeScope
             };
@@ -107,7 +107,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             model.BusinessEmail_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope);
             model.PdtToken_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.PdtToken, storeScope);
             model.PassProductNamesAndTotals_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
-            model.AdditionalFee_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope);
+            model.AdditionalFeeFixed_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.AdditionalFeeFixed, storeScope);
             model.AdditionalFeePercentage_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
 
             return View("~/Plugins/Payments.PayPalStandard/Views/Configure.cshtml", model);
@@ -133,7 +133,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             payPalStandardPaymentSettings.BusinessEmail = model.BusinessEmail;
             payPalStandardPaymentSettings.PdtToken = model.PdtToken;
             payPalStandardPaymentSettings.PassProductNamesAndTotals = model.PassProductNamesAndTotals;
-            payPalStandardPaymentSettings.AdditionalFee = model.AdditionalFee;
+            payPalStandardPaymentSettings.AdditionalFeeFixed = model.AdditionalFeeFixed;
             payPalStandardPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
 
             /* We do not clear cache after each setting update.
@@ -143,7 +143,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.BusinessEmail, model.BusinessEmail_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.PdtToken, model.PdtToken_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, model.PassProductNamesAndTotals_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.AdditionalFeeFixed, model.AdditionalFeeFixed_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
 
             //now clear settings cache

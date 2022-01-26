@@ -25,12 +25,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Models
         public bool PassProductNamesAndTotals { get; set; }
         public bool PassProductNamesAndTotals_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AdditionalFee")]
-        public decimal AdditionalFee { get; set; }
-        public bool AdditionalFee_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AdditionalFeeFixed")]
+        public decimal AdditionalFeeFixed { get; set; }
+        public bool AdditionalFeeFixed_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage")]
-        public bool AdditionalFeePercentage { get; set; }
+        public decimal AdditionalFeePercentage { get; set; }
         public bool AdditionalFeePercentage_OverrideForStore { get; set; }
     }
 }

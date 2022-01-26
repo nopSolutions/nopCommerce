@@ -1,4 +1,4 @@
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Plugin.Payments.PayPalStandard
 {
@@ -28,13 +28,13 @@ namespace Nop.Plugin.Payments.PayPalStandard
         public bool PassProductNamesAndTotals { get; set; }
 
         /// <summary>
-        /// Gets or sets an additional fee
+        /// Gets or sets an additional fixed fee
         /// </summary>
-        public decimal AdditionalFee { get; set; }
+        public decimal AdditionalFeeFixed { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to "additional fee" is specified as percentage. true - percentage, false - fixed value.
+        /// Gets or sets an additional fee by percentage
         /// </summary>
-        public bool AdditionalFeePercentage { get; set; }
+        public decimal AdditionalFeePercentage { get; set; }
     }
 }
