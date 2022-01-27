@@ -10,23 +10,19 @@
     content = content.Replace("</script>", "<\\/script>");
     card = Html.Raw(content);
 
-    <text>
-        <script>
-            $(document).ready(function () {
-                $('.fa-file-pdf').closest('.btn-info').before(`@button`);
-                $('#TrackingNumber').closest('.card-default').after(`@card`);
-            });
-        </script>
-    </text>
+    <script asp-location="None">
+        $(document).ready(function () {
+            $('.fa-file-pdf').closest('.btn-info').before(`@button`);
+            $('#TrackingNumber').closest('.card-default').after(`@card`);
+        });
+    </script>
 }
 else
 {
-    <text>
-        <nop-alert asp-alert-id="easypost-alert" asp-alert-message="@Model.Error" />
-        <script>
-            $(document).ready(function () {
-                $("#easypost-alert").click();
-            });
-        </script>
-    </text>
+    <nop-alert asp-alert-id="easypost-alert" asp-alert-message="@Model.Error" />
+    <script>
+        $(document).ready(function () {
+            $("#easypost-alert").click();
+        });
+    </script>
 }
