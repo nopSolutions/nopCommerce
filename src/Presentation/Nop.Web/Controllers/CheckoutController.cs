@@ -1752,6 +1752,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> OpcSavePaymentInfo(IFormCollection form)
         {
             try
