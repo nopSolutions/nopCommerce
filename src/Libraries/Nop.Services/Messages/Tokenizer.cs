@@ -37,7 +37,7 @@ namespace Nop.Services.Messages
         /// <param name="pattern">The string to be replaced</param>
         /// <param name="replacement">The string to replace all occurrences of pattern string</param>
         /// <returns>A string that is equivalent to the current string except that all instances of pattern are replaced with replacement string</returns>
-        protected string Replace(string original, string pattern, string replacement)
+        protected virtual string Replace(string original, string pattern, string replacement)
         {
             //for case sensitive comparison use base string.Replace() method
             var stringComparison = _messageTemplatesSettings.CaseInvariantReplacement ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
@@ -77,7 +77,7 @@ namespace Nop.Services.Messages
         /// <param name="htmlEncode">The value indicating whether tokens should be HTML encoded</param>
         /// <param name="stringWithQuotes">The value indicating whether string token values should be wrapped in quotes</param>
         /// <returns>Text with all token keys replaces by token value</returns>
-        protected string ReplaceTokens(string template, IEnumerable<Token> tokens, bool htmlEncode = false, bool stringWithQuotes = false)
+        protected virtual string ReplaceTokens(string template, IEnumerable<Token> tokens, bool htmlEncode = false, bool stringWithQuotes = false)
         {
             foreach (var token in tokens)
             {
@@ -105,7 +105,7 @@ namespace Nop.Services.Messages
         /// <param name="template">The template with token keys inside</param>
         /// <param name="tokens">The sequence of tokens to use</param>
         /// <returns>Text with all conditional statements replaces by appropriate values</returns>
-        protected string ReplaceConditionalStatements(string template, IEnumerable<Token> tokens)
+        protected virtual string ReplaceConditionalStatements(string template, IEnumerable<Token> tokens)
         {
             //define regex rules
             var regexFullConditionalSatement = new Regex(@"(?:(?'Group' %if)|(?'Condition-Group' endif%)|(?! (%if|endif%)).)*(?(Group)(?!))",

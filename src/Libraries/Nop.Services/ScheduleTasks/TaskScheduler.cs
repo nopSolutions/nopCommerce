@@ -52,7 +52,7 @@ namespace Nop.Services.ScheduleTasks
         /// <summary>
         /// Initializes the task manager
         /// </summary>
-        public async Task InitializeAsync()
+        public virtual async Task InitializeAsync()
         {
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
@@ -117,7 +117,7 @@ namespace Nop.Services.ScheduleTasks
         /// <summary>
         /// Starts the task scheduler
         /// </summary>
-        public void StartScheduler()
+        public virtual void StartScheduler()
         {
             foreach (var taskThread in _taskThreads)
                 taskThread.InitTimer();
@@ -126,7 +126,7 @@ namespace Nop.Services.ScheduleTasks
         /// <summary>
         /// Stops the task scheduler
         /// </summary>
-        public void StopScheduler()
+        public virtual void StopScheduler()
         {
             foreach (var taskThread in _taskThreads)
                 taskThread.Dispose();
@@ -170,7 +170,7 @@ namespace Nop.Services.ScheduleTasks
 
             #region Utilities
 
-            private async Task RunAsync()
+            protected virtual async Task RunAsync()
             {
                 if (Seconds <= 0)
                     return;
@@ -215,7 +215,7 @@ namespace Nop.Services.ScheduleTasks
                 IsRunning = false;
             }
 
-            private void TimerHandler(object state)
+            protected virtual void TimerHandler(object state)
             {
                 try
                 {
@@ -246,7 +246,7 @@ namespace Nop.Services.ScheduleTasks
             /// <summary>
             /// Disposes the instance
             /// </summary>
-            public void Dispose()
+            public virtual void Dispose()
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
@@ -268,7 +268,7 @@ namespace Nop.Services.ScheduleTasks
             /// <summary>
             /// Inits a timer
             /// </summary>
-            public void InitTimer()
+            public virtual void InitTimer()
             {
                 _timer ??= new Timer(TimerHandler, null, InitInterval, Interval);
             }

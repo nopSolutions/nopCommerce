@@ -436,7 +436,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<PropertyManager<ExportProductAttribute>> GetProductAttributeManagerAsync()
+        protected virtual async Task<PropertyManager<ExportProductAttribute>> GetProductAttributeManagerAsync()
         {
             var attributeProperties = new[]
             {
@@ -478,7 +478,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<PropertyManager<ExportSpecificationAttribute>> GetSpecificationAttributeManagerAsync()
+        protected virtual async Task<PropertyManager<ExportSpecificationAttribute>> GetSpecificationAttributeManagerAsync()
         {
             var attributeProperties = new[]
             {
@@ -501,7 +501,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<byte[]> ExportProductsToXlsxWithAttributesAsync(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
+        protected virtual async Task<byte[]> ExportProductsToXlsxWithAttributesAsync(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
         {
             var productAttributeManager = await GetProductAttributeManagerAsync();
             var specificationAttributeManager = await GetSpecificationAttributeManagerAsync();
@@ -547,7 +547,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute> attributeManager, IXLWorksheet worksheet, int row, IXLWorksheet faWorksheet)
+        protected virtual async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute> attributeManager, IXLWorksheet worksheet, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(item.Id))
                 .SelectManyAwait(async pam =>
@@ -628,7 +628,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, IXLWorksheet worksheet, int row, IXLWorksheet faWorksheet)
+        protected virtual async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, IXLWorksheet worksheet, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _specificationAttributeService
                 .GetProductSpecificationAttributesAsync(item.Id)).SelectAwait(
@@ -663,7 +663,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<byte[]> ExportOrderToXlsxWithProductsAsync(PropertyByName<Order>[] properties, IEnumerable<Order> itemsToExport)
+        protected virtual async Task<byte[]> ExportOrderToXlsxWithProductsAsync(PropertyByName<Order>[] properties, IEnumerable<Order> itemsToExport)
         {
             var orderItemProperties = new[]
             {
@@ -733,7 +733,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<object> GetCustomCustomerAttributesAsync(Customer customer)
+        protected virtual async Task<object> GetCustomCustomerAttributesAsync(Customer customer)
         {
             var selectedCustomerAttributes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
             

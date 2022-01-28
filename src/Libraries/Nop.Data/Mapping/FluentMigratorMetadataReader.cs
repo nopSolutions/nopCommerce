@@ -30,7 +30,7 @@ namespace Nop.Data.Mapping
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         protected T GetAttribute<T>(Type type, MemberInfo memberInfo) where T : Attribute
         {

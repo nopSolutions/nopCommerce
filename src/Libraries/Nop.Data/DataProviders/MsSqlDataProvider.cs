@@ -26,7 +26,7 @@ namespace Nop.Data.DataProviders
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
         {
@@ -34,10 +34,6 @@ namespace Nop.Data.DataProviders
 
             return new SqlConnectionStringBuilder(connectionString);
         }
-
-        #endregion
-
-        #region Utils
 
         /// <summary>
         /// Gets a connection to the database for a current data provider
@@ -61,7 +57,7 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <param name="collation">Collation</param>
         /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
-        public void CreateDatabase(string collation, int triesToConnect = 10)
+        public virtual void CreateDatabase(string collation, int triesToConnect = 10)
         {
             if (DatabaseExists())
                 return;
@@ -114,7 +110,7 @@ namespace Nop.Data.DataProviders
         /// A task that represents the asynchronous operation
         /// The task result contains the returns true if the database exists.
         /// </returns>
-        public async Task<bool> DatabaseExistsAsync()
+        public virtual async Task<bool> DatabaseExistsAsync()
         {
             try
             {
@@ -135,7 +131,7 @@ namespace Nop.Data.DataProviders
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <returns>Returns true if the database exists.</returns>
-        public bool DatabaseExists()
+        public virtual bool DatabaseExists()
         {
             try
             {

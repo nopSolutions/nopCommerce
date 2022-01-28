@@ -43,7 +43,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="download">Attachment download (another attachment)</param>
         /// <returns>A leaf-node MIME part that contains an attachment.</returns>
-        protected MimePart CreateMimeAttachment(Download download)
+        protected virtual MimePart CreateMimeAttachment(Download download)
         {
             if (download is null)
                 throw new ArgumentNullException(nameof(download));
@@ -62,7 +62,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains a leaf-node MIME part that contains an attachment.
         /// </returns>
-        protected async Task<MimePart> CreateMimeAttachmentAsync(string filePath, string attachmentFileName = null)
+        protected virtual async Task<MimePart> CreateMimeAttachmentAsync(string filePath, string attachmentFileName = null)
         {
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentNullException(nameof(filePath));
@@ -87,7 +87,7 @@ namespace Nop.Services.Messages
         /// <param name="mDate">Date and time that the specified file or directory was last written to</param>
         /// <param name="rDate">Date and time that the specified file or directory was last access to.</param>
         /// <returns>A leaf-node MIME part that contains an attachment.</returns>
-        protected MimePart CreateMimeAttachment(string attachmentFileName, byte[] binaryContent, DateTime cDate, DateTime mDate, DateTime rDate)
+        protected virtual MimePart CreateMimeAttachment(string attachmentFileName, byte[] binaryContent, DateTime cDate, DateTime mDate, DateTime rDate)
         {
             if (!ContentType.TryParse(MimeTypes.GetMimeType(attachmentFileName), out var mimeContentType))
                 mimeContentType = new ContentType("application", "octet-stream");

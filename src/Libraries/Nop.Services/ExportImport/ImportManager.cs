@@ -275,7 +275,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task LogPictureInsertErrorAsync(string picturePath, Exception ex)
+        protected virtual async Task LogPictureInsertErrorAsync(string picturePath, Exception ex)
         {
             var extension = _fileProvider.GetFileExtension(picturePath);
             var name = _fileProvider.GetFileNameWithoutExtension(picturePath);
@@ -736,7 +736,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task ImportSpecificationAttributeAsync(PropertyManager<ExportSpecificationAttribute> specificationAttributeManager, Product lastLoadedProduct)
+        protected virtual async Task ImportSpecificationAttributeAsync(PropertyManager<ExportSpecificationAttribute> specificationAttributeManager, Product lastLoadedProduct)
         {
             if (!_catalogSettings.ExportImportProductSpecificationAttributes || lastLoadedProduct == null || specificationAttributeManager.IsCaption)
                 return;
@@ -790,7 +790,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<string> DownloadFileAsync(string urlString, IList<string> downloadedFiles)
+        protected virtual async Task<string> DownloadFileAsync(string urlString, IList<string> downloadedFiles)
         {
             if (string.IsNullOrEmpty(urlString))
                 return string.Empty;
@@ -829,7 +829,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<ImportProductMetadata> PrepareImportProductDataAsync(IXLWorksheet worksheet)
+        protected virtual async Task<ImportProductMetadata> PrepareImportProductDataAsync(IXLWorksheet worksheet)
         {
             //the columns
             var properties = GetPropertiesByExcelCells<Product>(worksheet);
@@ -1105,7 +1105,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task ImportProductsFromSplitedXlsxAsync(IXLWorksheet worksheet, ImportProductMetadata metadata)
+        protected virtual async Task ImportProductsFromSplitedXlsxAsync(IXLWorksheet worksheet, ImportProductMetadata metadata)
         {
             foreach (var path in SplitProductFile(worksheet, metadata))
             {
@@ -1127,7 +1127,7 @@ namespace Nop.Services.ExportImport
             }
         }
 
-        private IList<string> SplitProductFile(IXLWorksheet worksheet, ImportProductMetadata metadata)
+        protected virtual IList<string> SplitProductFile(IXLWorksheet worksheet, ImportProductMetadata metadata)
         {
             var fileIndex = 1;
             var fileName = Guid.NewGuid().ToString();

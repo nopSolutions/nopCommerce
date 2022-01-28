@@ -9,7 +9,7 @@ namespace Nop.Data.Migrations
     /// </summary>
     public partial class NopMigrationAttribute : MigrationAttribute
     {
-        #region Utils
+        #region Utilities
 
         protected static long GetVersion(string dateTime)
         {

@@ -80,7 +80,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="other">The PluginDescriptor to compare with this instance</param>
         /// <returns>An integer that indicates whether this instance precedes, follows, or appears in the same position in the sort order as the specified parameter</returns>
-        public int CompareTo(PluginDescriptor other)
+        public virtual int CompareTo(PluginDescriptor other)
         {
             if (DisplayOrder != other.DisplayOrder)
                 return DisplayOrder.CompareTo(other.DisplayOrder);

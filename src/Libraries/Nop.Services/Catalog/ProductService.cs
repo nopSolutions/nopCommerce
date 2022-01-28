@@ -1236,7 +1236,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the products
         /// </returns>
-        public async Task<IList<Product>> GetProductsBySkuAsync(string[] skuArray, int vendorId = 0)
+        public virtual async Task<IList<Product>> GetProductsBySkuAsync(string[] skuArray, int vendorId = 0)
         {
             if (skuArray == null)
                 throw new ArgumentNullException(nameof(skuArray));
@@ -1286,7 +1286,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the number of products
         /// </returns>
-        public async Task<int> GetNumberOfProductsByVendorIdAsync(int vendorId)
+        public virtual async Task<int> GetNumberOfProductsByVendorIdAsync(int vendorId)
         {
             if (vendorId == 0)
                 return 0;
@@ -2217,7 +2217,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the all picture identifiers grouped by product ID
         /// </returns>
-        public async Task<IDictionary<int, int[]>> GetProductsImagesIdsAsync(int[] productsIds)
+        public virtual async Task<IDictionary<int, int[]>> GetProductsImagesIdsAsync(int[] productsIds)
         {
             var productPictures = await _productPictureRepository.Table
                 .Where(p => productsIds.Contains(p.ProductId))

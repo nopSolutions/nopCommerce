@@ -76,7 +76,7 @@ namespace Nop.Services.Discounts
         /// A task that represents the asynchronous operation
         /// The task result contains the rue if result is valid; otherwise false
         /// </returns>
-        protected async Task<bool> GetValidationResultAsync(IEnumerable<DiscountRequirement> requirements,
+        protected virtual async Task<bool> GetValidationResultAsync(IEnumerable<DiscountRequirement> requirements,
             RequirementGroupInteractionType groupInteractionType, Customer customer, List<string> errors)
         {
             var result = false;

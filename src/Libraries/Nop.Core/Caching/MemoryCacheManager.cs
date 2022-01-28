@@ -36,13 +36,13 @@ namespace Nop.Core.Caching
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare cache entry options for the passed key
         /// </summary>
         /// <param name="key">Cache key</param>
         /// <returns>Cache entry options</returns>
-        private MemoryCacheEntryOptions PrepareEntryOptions(CacheKey key)
+        protected virtual MemoryCacheEntryOptions PrepareEntryOptions(CacheKey key)
         {
             //set expiration time for the passed cache key
             var options = new MemoryCacheEntryOptions
@@ -66,7 +66,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="cacheKey">Cache key</param>
         /// <param name="cacheKeyParameters">Parameters to create cache key</param>
-        private void Remove(CacheKey cacheKey, params object[] cacheKeyParameters)
+        protected virtual void Remove(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
             cacheKey = PrepareKey(cacheKey, cacheKeyParameters);
             _memoryCache.Remove(cacheKey.Key);
@@ -77,7 +77,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
-        private void Set(CacheKey key, object data)
+        protected virtual void Set(CacheKey key, object data)
         {
             if ((key?.CacheTime ?? 0) <= 0 || data == null)
                 return;
@@ -95,7 +95,7 @@ namespace Nop.Core.Caching
         /// <param name="cacheKey">Cache key</param>
         /// <param name="cacheKeyParameters">Parameters to create cache key</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
+        public virtual Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
             Remove(cacheKey, cacheKeyParameters);
 
@@ -112,7 +112,7 @@ namespace Nop.Core.Caching
         /// A task that represents the asynchronous operation
         /// The task result contains the cached value associated with the specified key
         /// </returns>
-        public async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
+        public virtual async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
         {
             if ((key?.CacheTime ?? 0) <= 0)
                 return await acquire();
@@ -138,7 +138,7 @@ namespace Nop.Core.Caching
         /// A task that represents the asynchronous operation
         /// The task result contains the cached value associated with the specified key
         /// </returns>
-        public async Task<T> GetAsync<T>(CacheKey key, Func<T> acquire)
+        public virtual async Task<T> GetAsync<T>(CacheKey key, Func<T> acquire)
         {
             if ((key?.CacheTime ?? 0) <= 0)
                 return acquire();
@@ -164,7 +164,7 @@ namespace Nop.Core.Caching
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public T Get<T>(CacheKey key, Func<T> acquire)
+        public virtual T Get<T>(CacheKey key, Func<T> acquire)
         {
             if ((key?.CacheTime ?? 0) <= 0)
                 return acquire();
@@ -186,7 +186,7 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public Task SetAsync(CacheKey key, object data)
+        public virtual Task SetAsync(CacheKey key, object data)
         {
             Set(key, data);
 
@@ -200,7 +200,7 @@ namespace Nop.Core.Caching
         /// <param name="expirationTime">The time after which the lock will automatically be expired</param>
         /// <param name="action">Action to be performed with locking</param>
         /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
-        public bool PerformActionWithLock(string key, TimeSpan expirationTime, Action action)
+        public virtual bool PerformActionWithLock(string key, TimeSpan expirationTime, Action action)
         {
             //ensure that lock is acquired
             if (_memoryCache.TryGetValue(key, out _))
@@ -228,7 +228,7 @@ namespace Nop.Core.Caching
         /// <param name="prefix">Cache key prefix</param>
         /// <param name="prefixParameters">Parameters to create cache key prefix</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
+        public virtual Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
         {
             prefix = PrepareKeyPrefix(prefix, prefixParameters);
 
@@ -243,7 +243,7 @@ namespace Nop.Core.Caching
         /// Clear all cache data
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public Task ClearAsync()
+        public virtual Task ClearAsync()
         {
             _clearToken.Cancel();
             _clearToken.Dispose();
@@ -262,7 +262,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Dispose cache manager
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

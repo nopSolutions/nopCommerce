@@ -9377,7 +9377,7 @@ namespace Nop.Services.Installation
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task AddProductTagAsync(Product product, string tag)
+        protected virtual async Task AddProductTagAsync(Product product, string tag)
         {
             var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
 

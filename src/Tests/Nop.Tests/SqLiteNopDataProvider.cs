@@ -39,7 +39,7 @@ namespace Nop.Tests
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         private static void UpdateOutputParameters(DataConnection dataConnection, DataParameter[] dataParameters)
         {

@@ -41,8 +41,8 @@ namespace Nop.Data.Migrations
 
         #endregion
 
-        #region Utils
-        
+        #region Utilities
+
         /// <summary>
         /// Returns the instances for found types implementing FluentMigrator.IMigration
         /// </summary>

@@ -9,9 +9,17 @@ namespace Nop.Services.Html
     /// </summary>
     public partial class BBCodeHelper : IBBCodeHelper
     {
-        #region Filds
+        #region Fields
 
         private readonly CommonSettings _commonSettings;
+
+        private static readonly Regex regexBold = new(@"\[b\](.+?)\[/b\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex regexItalic = new(@"\[i\](.+?)\[/i\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex regexUnderLine = new(@"\[u\](.+?)\[/u\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex regexUrl1 = new(@"\[url\=([^\]]+)\]([^\]]+)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex regexUrl2 = new(@"\[url\](.+?)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex regexQuote = new(@"\[quote=(.+?)\](.+?)\[/quote\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex regexImg = new(@"\[img\](.+?)\[/img\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #endregion
 
@@ -21,18 +29,6 @@ namespace Nop.Services.Html
         {
             _commonSettings = commonSettings;
         }
-
-        #endregion
-
-        #region Fields
-
-        private static readonly Regex regexBold = new(@"\[b\](.+?)\[/b\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex regexItalic = new(@"\[i\](.+?)\[/i\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex regexUnderLine = new(@"\[u\](.+?)\[/u\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex regexUrl1 = new(@"\[url\=([^\]]+)\]([^\]]+)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex regexUrl2 = new(@"\[url\](.+?)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex regexQuote = new(@"\[quote=(.+?)\](.+?)\[/quote\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex regexImg = new(@"\[img\](.+?)\[/img\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #endregion
 

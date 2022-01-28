@@ -96,7 +96,7 @@ namespace Nop.Services.Customers
         /// <param name="customerPassword">Customer password</param>
         /// <param name="enteredPassword">The entered password</param>
         /// <returns>True if passwords match; otherwise false</returns>
-        protected bool PasswordsMatch(CustomerPassword customerPassword, string enteredPassword)
+        protected virtual bool PasswordsMatch(CustomerPassword customerPassword, string enteredPassword)
         {
             if (customerPassword == null || string.IsNullOrEmpty(enteredPassword))
                 return false;

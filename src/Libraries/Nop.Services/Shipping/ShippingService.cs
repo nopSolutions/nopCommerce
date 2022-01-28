@@ -104,7 +104,7 @@ namespace Nop.Services.Shipping
         /// A task that represents the asynchronous operation
         /// The task result contains the rue if there are multiple items; otherwise false
         /// </returns>
-        protected async Task<bool> AreMultipleItemsAsync(IList<GetShippingOptionRequest.PackageItem> items)
+        protected virtual async Task<bool> AreMultipleItemsAsync(IList<GetShippingOptionRequest.PackageItem> items)
         {
             //no items
             if (!items.Any())

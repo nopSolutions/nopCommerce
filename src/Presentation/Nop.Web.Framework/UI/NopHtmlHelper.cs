@@ -78,7 +78,7 @@ namespace Nop.Web.Framework.UI
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         private string GetAssetKey(string key, ResourceLocation location)
         {

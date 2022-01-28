@@ -81,7 +81,7 @@ namespace Nop.Services.Media
         /// Initialize cloud container
         /// </summary>
         /// <param name="appSettings">App settings</param>
-        protected void OneTimeInit(AppSettings appSettings)
+        protected virtual void OneTimeInit(AppSettings appSettings)
         {
             if (_isInitialized)
                 return;

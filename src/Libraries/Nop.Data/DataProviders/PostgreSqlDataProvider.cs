@@ -25,7 +25,7 @@ namespace Nop.Data.DataProviders
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Creates the database connection by the current data configuration
@@ -64,7 +64,7 @@ namespace Nop.Data.DataProviders
         /// <param name="dataConnection">A database connection object</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Returns the name of the sequence, or NULL if no sequence is associated with the column</returns>
-        private string GetSequenceName<TEntity>(DataConnection dataConnection) where TEntity : BaseEntity
+        protected virtual string GetSequenceName<TEntity>(DataConnection dataConnection) where TEntity : BaseEntity
         {
             if (dataConnection is null)
                 throw new ArgumentNullException(nameof(dataConnection));
@@ -93,7 +93,7 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <param name="collation"></param>
         /// <param name="triesToConnect"></param>
-        public void CreateDatabase(string collation, int triesToConnect = 10)
+        public virtual void CreateDatabase(string collation, int triesToConnect = 10)
         {
             if (DatabaseExists())
                 return;
@@ -155,7 +155,7 @@ namespace Nop.Data.DataProviders
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <returns>Returns true if the database exists.</returns>
-        public bool DatabaseExists()
+        public virtual bool DatabaseExists()
         {
             try
             {
@@ -179,7 +179,7 @@ namespace Nop.Data.DataProviders
         /// A task that represents the asynchronous operation
         /// The task result contains the returns true if the database exists.
         /// </returns>
-        public async Task<bool> DatabaseExistsAsync()
+        public virtual async Task<bool> DatabaseExistsAsync()
         {
             try
             {

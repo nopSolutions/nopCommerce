@@ -14,8 +14,14 @@ namespace Nop.Services.Helpers
     /// </summary>
     public class BrowscapXmlHelper
     {
+        #region Fields
+
         private readonly INopFileProvider _fileProvider;
         private Regex _crawlerUserAgentsRegexp;
+
+        #endregion
+
+        #region Ctor
 
         /// <summary>
         /// Ctor
@@ -30,21 +36,25 @@ namespace Nop.Services.Helpers
             Initialize(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
         }
 
-        private static bool IsBrowscapItemIsCrawler(XElement browscapItem)
+        #endregion
+
+        #region Utilities
+
+        protected static bool IsBrowscapItemIsCrawler(XElement browscapItem)
         {
             var el = browscapItem.Elements("item").FirstOrDefault(e => e.Attribute("name")?.Value == "Crawler");
 
             return el != null && el.Attribute("value")?.Value.ToLowerInvariant() == "true";
         }
 
-        private static string ToRegexp(string str)
+        protected static string ToRegexp(string str)
         {
             var sb = new StringBuilder(Regex.Escape(str));
             sb.Replace("&amp;", "&").Replace("\\?", ".").Replace("\\*", ".*?");
             return $"^{sb}$";
         }
 
-        private void Initialize(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
+        protected virtual void Initialize(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
         {
             List<XElement> crawlerItems = null;
             var comments = new XElement("comments");
@@ -105,7 +115,11 @@ namespace Nop.Services.Helpers
 
             root.Save(sw);
         }
-        
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Determines whether a user agent is a crawler
         /// </summary>
@@ -115,5 +129,7 @@ namespace Nop.Services.Helpers
         {
             return _crawlerUserAgentsRegexp.IsMatch(userAgent);
         }
+
+        #endregion
     }
 }

@@ -258,7 +258,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return attributesXml;
         }
 
-        private async Task<bool> SecondAdminAccountExistsAsync(Customer customer)
+        protected virtual async Task<bool> SecondAdminAccountExistsAsync(Customer customer)
         {
             var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: new[] { (await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.AdministratorsRoleName)).Id });
 

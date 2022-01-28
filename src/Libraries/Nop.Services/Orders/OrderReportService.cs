@@ -78,7 +78,7 @@ namespace Nop.Services.Orders
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Search order items
@@ -95,7 +95,7 @@ namespace Nop.Services.Orders
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result query</returns>
-        private IQueryable<OrderItem> SearchOrderItems(
+        protected virtual IQueryable<OrderItem> SearchOrderItems(
             int categoryId = 0,
             int manufacturerId = 0,
             int storeId = 0,

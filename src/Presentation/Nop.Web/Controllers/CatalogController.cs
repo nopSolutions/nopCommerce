@@ -375,7 +375,7 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
-        private async Task<bool> CheckCategoryAvailabilityAsync(Category category)
+        protected virtual async Task<bool> CheckCategoryAvailabilityAsync(Category category)
         {
             var isAvailable = true;
 
@@ -398,7 +398,7 @@ namespace Nop.Web.Controllers
             return isAvailable;
         }
 
-        private async Task<bool> CheckManufacturerAvailabilityAsync(Manufacturer manufacturer)
+        protected virtual async Task<bool> CheckManufacturerAvailabilityAsync(Manufacturer manufacturer)
         {
             var isAvailable = true;
 
@@ -421,7 +421,7 @@ namespace Nop.Web.Controllers
             return isAvailable;
         }
 
-        private Task<bool> CheckVendorAvailabilityAsync(Vendor vendor)
+        protected virtual Task<bool> CheckVendorAvailabilityAsync(Vendor vendor)
         {
             var isAvailable = true;
 

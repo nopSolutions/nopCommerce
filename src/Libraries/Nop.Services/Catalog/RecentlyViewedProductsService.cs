@@ -48,7 +48,7 @@ namespace Nop.Services.Catalog
         /// Gets a list of identifier of recently viewed products
         /// </summary>
         /// <returns>List of identifier</returns>
-        protected List<int> GetRecentlyViewedProductsIds()
+        protected virtual List<int> GetRecentlyViewedProductsIds()
         {
             return GetRecentlyViewedProductsIds(int.MaxValue);
         }
@@ -58,7 +58,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="number">Number of products to load</param>
         /// <returns>List of identifier</returns>
-        protected List<int> GetRecentlyViewedProductsIds(int number)
+        protected virtual List<int> GetRecentlyViewedProductsIds(int number)
         {
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext?.Request == null)

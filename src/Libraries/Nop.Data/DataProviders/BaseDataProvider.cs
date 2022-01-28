@@ -33,12 +33,12 @@ namespace Nop.Data.DataProviders
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Gets an additional mapping schema
         /// </summary>
-        private MappingSchema GetMappingSchema()
+        protected virtual MappingSchema GetMappingSchema()
         {
             if (Singleton<MappingSchema>.Instance is null)
             {

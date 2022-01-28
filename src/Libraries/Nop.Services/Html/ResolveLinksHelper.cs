@@ -26,7 +26,7 @@ namespace Nop.Services.Html
         /// <summary>
         /// Shortens any absolute URL to a specified maximum length
         /// </summary>
-        private static string ShortenUrl(string url, int max)
+        protected static string ShortenUrl(string url, int max)
         {
             if (url.Length <= max)
                 return url;

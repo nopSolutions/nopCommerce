@@ -22,7 +22,7 @@ namespace Nop.Data.Mapping
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         private static void Initialize()
         {

@@ -21,7 +21,7 @@ namespace Nop.Data.Migrations
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Configure processor

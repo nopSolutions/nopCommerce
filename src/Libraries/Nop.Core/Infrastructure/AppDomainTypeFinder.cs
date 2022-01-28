@@ -37,7 +37,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="addedAssemblyNames"></param>
         /// <param name="assemblies"></param>
-        private void AddAssembliesInAppDomain(List<string> addedAssemblyNames, List<Assembly> assemblies)
+        protected virtual void AddAssembliesInAppDomain(List<string> addedAssemblyNames, List<Assembly> assemblies)
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -252,7 +252,7 @@ namespace Nop.Core.Infrastructure
         /// <typeparam name="T">Type</typeparam>
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes</param>
         /// <returns>Result</returns>
-        public IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true)
+        public virtual IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true)
         {
             return FindClassesOfType(typeof(T), onlyConcreteClasses);
         }
@@ -264,7 +264,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes</param>
         /// <returns>Result</returns>
         /// <returns></returns>
-        public IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, bool onlyConcreteClasses = true)
+        public virtual IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, bool onlyConcreteClasses = true)
         {
             return FindClassesOfType(assignTypeFrom, GetAssemblies(), onlyConcreteClasses);
         }

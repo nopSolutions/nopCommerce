@@ -22,7 +22,7 @@ namespace Nop.Data.Extensions
     /// </summary>
     public static class FluentMigratorExtensions
     {
-        #region  Utils
+        #region  Utilities
 
         private static Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>> TypeMapping { get; } = new Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>>
         {

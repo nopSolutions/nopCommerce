@@ -2002,7 +2002,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         //action displaying notification (warning) to a store owner about a lot of traffic 
         //between the distributed cache server and the application when LoadAllLocaleRecordsOnStartup setting is set
-        public async Task<IActionResult> DistributedCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
+        public virtual async Task<IActionResult> DistributedCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
         {
             //LoadAllLocaleRecordsOnStartup is set and distributed cache is used, so display warning
             if (_appSettings.Get<DistributedCacheConfig>().Enabled && _appSettings.Get<DistributedCacheConfig>().DistributedCacheType != DistributedCacheType.Memory && loadAllLocaleRecordsOnStartup)
@@ -2018,7 +2018,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         //Action that displays a notification (warning) to the store owner about the absence of active authentication providers
-        public async Task<IActionResult> ForceMultifactorAuthenticationWarning(bool forceMultifactorAuthentication)
+        public virtual async Task<IActionResult> ForceMultifactorAuthenticationWarning(bool forceMultifactorAuthentication)
         {
             //ForceMultifactorAuthentication is set and the store haven't active Authentication provider , so display warning
             if (forceMultifactorAuthentication && !await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
@@ -2034,7 +2034,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         //Action that displays a notification (warning) to the store owner about the need to restart the application after changing the setting
-        public async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning(bool seoFriendlyUrlsForLanguagesEnabled)
+        public virtual async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning(bool seoFriendlyUrlsForLanguagesEnabled)
         {
             //load settings for a chosen store scope
             var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();

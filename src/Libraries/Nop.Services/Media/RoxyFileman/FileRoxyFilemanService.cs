@@ -305,7 +305,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="path">Path to the directory</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task DownloadDirectoryAsync(string path)
+        public virtual async Task DownloadDirectoryAsync(string path)
         {
             path = (await GetVirtualPathAsync(path)).TrimEnd('/');
             var fullPath = GetFullPath(path);

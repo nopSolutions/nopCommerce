@@ -64,7 +64,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         private static async Task<string> BuildInlineScriptTagAsync(TagHelperOutput output)
         {

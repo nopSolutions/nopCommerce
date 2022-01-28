@@ -521,7 +521,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        public async Task<DiscountManufacturerMapping> GetDiscountAppliedToManufacturerAsync(int manufacturerId, int discountId)
+        public async virtual Task<DiscountManufacturerMapping> GetDiscountAppliedToManufacturerAsync(int manufacturerId, int discountId)
         {
             return await _discountManufacturerMappingRepository.Table
                 .FirstOrDefaultAsync(dcm => dcm.EntityId == manufacturerId && dcm.DiscountId == discountId);
@@ -532,7 +532,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task InsertDiscountManufacturerMappingAsync(DiscountManufacturerMapping discountManufacturerMapping)
+        public async virtual Task InsertDiscountManufacturerMappingAsync(DiscountManufacturerMapping discountManufacturerMapping)
         {
             await _discountManufacturerMappingRepository.InsertAsync(discountManufacturerMapping);
         }
@@ -542,7 +542,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task DeleteDiscountManufacturerMappingAsync(DiscountManufacturerMapping discountManufacturerMapping)
+        public async virtual Task DeleteDiscountManufacturerMappingAsync(DiscountManufacturerMapping discountManufacturerMapping)
         {
             await _discountManufacturerMappingRepository.DeleteAsync(discountManufacturerMapping);
         }

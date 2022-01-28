@@ -25,7 +25,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="other">The PluginDescriptorBaseInfo to compare with this instance</param>
         /// <returns>An integer that indicates whether this instance precedes, follows, or appears in the same position in the sort order as the specified parameter</returns>
-        public int CompareTo(PluginDescriptorBaseInfo other)
+        public virtual int CompareTo(PluginDescriptorBaseInfo other)
         {
             return string.Compare(SystemName, other.SystemName, StringComparison.InvariantCultureIgnoreCase);
         }

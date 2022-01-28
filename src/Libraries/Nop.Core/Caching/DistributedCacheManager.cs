@@ -16,7 +16,7 @@ namespace Nop.Core.Caching
     /// <summary>
     /// Represents a distributed cache 
     /// </summary>
-    public partial class DistributedCacheManager: CacheKeyService, ILocker, IStaticCacheManager
+    public partial class DistributedCacheManager : CacheKeyService, ILocker, IStaticCacheManager
     {
         #region Fields
 
@@ -50,7 +50,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Cache key</param>
         /// <returns>Cache entry options</returns>
-        private DistributedCacheEntryOptions PrepareEntryOptions(CacheKey key)
+        protected virtual DistributedCacheEntryOptions PrepareEntryOptions(CacheKey key)
         {
             //set expiration time for the passed cache key
             var options = new DistributedCacheEntryOptions
@@ -70,7 +70,7 @@ namespace Nop.Core.Caching
         /// A task that represents the asynchronous operation
         /// The task result contains the flag which indicate is the key exists in the cache, cached item or default value
         /// </returns>
-        private async Task<(bool isSet, T item)> TryGetItemAsync<T>(CacheKey key)
+        protected virtual async Task<(bool isSet, T item)> TryGetItemAsync<T>(CacheKey key)
         {
             var json = await _distributedCache.GetStringAsync(key.Key);
 
@@ -89,7 +89,7 @@ namespace Nop.Core.Caching
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Cache key</param>
         /// <returns>Flag which indicate is the key exists in the cache, cached item or default value</returns>
-        private (bool isSet, T item) TryGetItem<T>(CacheKey key)
+        protected virtual (bool isSet, T item) TryGetItem<T>(CacheKey key)
         {
             var json = _distributedCache.GetString(key.Key);
 
@@ -107,7 +107,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
-        private void Set(CacheKey key, object data)
+        protected virtual void Set(CacheKey key, object data)
         {
             if ((key?.CacheTime ?? 0) <= 0 || data == null)
                 return;
@@ -127,7 +127,7 @@ namespace Nop.Core.Caching
         /// Performs application-defined tasks associated with freeing,
         /// releasing, or resetting unmanaged resources.
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
         }
 
@@ -141,7 +141,7 @@ namespace Nop.Core.Caching
         /// A task that represents the asynchronous operation
         /// The task result contains the cached value associated with the specified key
         /// </returns>
-        public async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
+        public virtual async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
         {
             //little performance workaround here:
             //we use "PerRequestCache" to cache a loaded object in memory for the current HTTP request.
@@ -175,7 +175,7 @@ namespace Nop.Core.Caching
         /// A task that represents the asynchronous operation
         /// The task result contains the cached value associated with the specified key
         /// </returns>
-        public async Task<T> GetAsync<T>(CacheKey key, Func<T> acquire)
+        public virtual async Task<T> GetAsync<T>(CacheKey key, Func<T> acquire)
         {
             //little performance workaround here:
             //we use "PerRequestCache" to cache a loaded object in memory for the current HTTP request.
@@ -206,7 +206,7 @@ namespace Nop.Core.Caching
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public T Get<T>(CacheKey key, Func<T> acquire)
+        public virtual T Get<T>(CacheKey key, Func<T> acquire)
         {
             //little performance workaround here:
             //we use "PerRequestCache" to cache a loaded object in memory for the current HTTP request.
@@ -236,7 +236,7 @@ namespace Nop.Core.Caching
         /// <param name="cacheKey">Cache key</param>
         /// <param name="cacheKeyParameters">Parameters to create cache key</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
+        public virtual async Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
             cacheKey = PrepareKey(cacheKey, cacheKeyParameters);
 
@@ -253,7 +253,7 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task SetAsync(CacheKey key, object data)
+        public virtual async Task SetAsync(CacheKey key, object data)
         {
             if ((key?.CacheTime ?? 0) <= 0 || data == null)
                 return;
@@ -271,7 +271,7 @@ namespace Nop.Core.Caching
         /// <param name="prefix">Cache key prefix</param>
         /// <param name="prefixParameters">Parameters to create cache key prefix</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
+        public virtual async Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
         {
             prefix = PrepareKeyPrefix(prefix, prefixParameters);
             _perRequestCache.RemoveByPrefix(prefix);
@@ -289,7 +289,7 @@ namespace Nop.Core.Caching
         /// Clear all cache data
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task ClearAsync()
+        public virtual async Task ClearAsync()
         {
             //we can't use _perRequestCache.Clear(),
             //because HttpContext stores some server data that we should not delete
@@ -311,7 +311,7 @@ namespace Nop.Core.Caching
         /// <param name="expirationTime">The time after which the lock will automatically be expired</param>
         /// <param name="action">Action to be performed with locking</param>
         /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
-        public bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
+        public virtual bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
         {
             //ensure that lock is acquired
             if (!string.IsNullOrEmpty(_distributedCache.GetString(resource)))

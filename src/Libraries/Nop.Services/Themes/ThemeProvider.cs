@@ -84,7 +84,7 @@ namespace Nop.Services.Themes
         /// </summary>
         /// <param name="text">Description text</param>
         /// <returns>Theme descriptor</returns>
-        public ThemeDescriptor GetThemeDescriptorFromText(string text)
+        public virtual ThemeDescriptor GetThemeDescriptorFromText(string text)
         {
             //get theme description from the JSON file
             var themeDescriptor = JsonConvert.DeserializeObject<ThemeDescriptor>(text);
@@ -103,7 +103,7 @@ namespace Nop.Services.Themes
         /// A task that represents the asynchronous operation
         /// The task result contains the list of the theme descriptor
         /// </returns>
-        public Task<IList<ThemeDescriptor>> GetThemesAsync()
+        public virtual Task<IList<ThemeDescriptor>> GetThemesAsync()
         {
             return Task.FromResult<IList<ThemeDescriptor>>(_themeDescriptors.Values.ToList());
         }
@@ -116,7 +116,7 @@ namespace Nop.Services.Themes
         /// A task that represents the asynchronous operation
         /// The task result contains the me descriptor
         /// </returns>
-        public Task<ThemeDescriptor> GetThemeBySystemNameAsync(string systemName)
+        public virtual Task<ThemeDescriptor> GetThemeBySystemNameAsync(string systemName)
         {
             if (string.IsNullOrEmpty(systemName))
                 return Task.FromResult<ThemeDescriptor>(null);
@@ -134,7 +134,7 @@ namespace Nop.Services.Themes
         /// A task that represents the asynchronous operation
         /// The task result contains the rue if the theme exists; otherwise false
         /// </returns>
-        public Task<bool> ThemeExistsAsync(string systemName)
+        public virtual Task<bool> ThemeExistsAsync(string systemName)
         {
             if (string.IsNullOrEmpty(systemName))
                 return Task.FromResult(false);

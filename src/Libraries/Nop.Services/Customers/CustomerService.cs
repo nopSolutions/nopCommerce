@@ -1145,7 +1145,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="roleMapping">Customer-customer role mapping</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task AddCustomerRoleMappingAsync(CustomerCustomerRoleMapping roleMapping)
+        public virtual async Task AddCustomerRoleMappingAsync(CustomerCustomerRoleMapping roleMapping)
         {
             await _customerCustomerRoleMappingRepository.InsertAsync(roleMapping);
         }
@@ -1156,7 +1156,7 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="role">Customer role</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task RemoveCustomerRoleMappingAsync(Customer customer, CustomerRole role)
+        public virtual async Task RemoveCustomerRoleMappingAsync(Customer customer, CustomerRole role)
         {
             if (customer is null)
                 throw new ArgumentNullException(nameof(customer));

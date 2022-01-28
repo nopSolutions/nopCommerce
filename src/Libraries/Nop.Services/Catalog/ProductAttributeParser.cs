@@ -96,7 +96,7 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeMappingId">Product attribute mapping identifier</param>
         /// <returns>Collections of pairs of product attribute values and their quantity</returns>
-        protected IList<Tuple<string, string>> ParseValuesWithQuantity(string attributesXml, int productAttributeMappingId)
+        protected virtual IList<Tuple<string, string>> ParseValuesWithQuantity(string attributesXml, int productAttributeMappingId)
         {
             var selectedValues = new List<Tuple<string, string>>();
             if (string.IsNullOrEmpty(attributesXml))

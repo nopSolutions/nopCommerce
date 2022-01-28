@@ -47,7 +47,7 @@ namespace Nop.Services.ScheduleTasks
         /// <summary>
         /// Initialize and execute task
         /// </summary>
-        protected void ExecuteTask(ScheduleTask scheduleTask)
+        protected virtual void ExecuteTask(ScheduleTask scheduleTask)
         {
             var type = Type.GetType(scheduleTask.Type) ??
                        //ensure that it works fine when only the type name is specified (do not require fully qualified names)
@@ -117,7 +117,7 @@ namespace Nop.Services.ScheduleTasks
         /// <param name="forceRun">Force run</param>
         /// <param name="throwException">A value indicating whether exception should be thrown if some error happens</param>
         /// <param name="ensureRunOncePerPeriod">A value indicating whether we should ensure this task is run once per run period</param>
-        public async Task ExecuteAsync(ScheduleTask scheduleTask, bool forceRun = false, bool throwException = false, bool ensureRunOncePerPeriod = true)
+        public virtual async Task ExecuteAsync(ScheduleTask scheduleTask, bool forceRun = false, bool throwException = false, bool ensureRunOncePerPeriod = true)
         {
             var enabled = forceRun || (scheduleTask?.Enabled ?? false);
 

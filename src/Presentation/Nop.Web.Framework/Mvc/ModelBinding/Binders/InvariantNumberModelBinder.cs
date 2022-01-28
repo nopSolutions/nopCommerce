@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -30,7 +30,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         private T? TryParse<T>(string value, TryParseNumber<T> handler) where T : struct
         {
