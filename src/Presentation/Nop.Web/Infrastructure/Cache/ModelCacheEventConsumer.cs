@@ -279,6 +279,7 @@ namespace Nop.Web.Infrastructure.Cache
         public async Task HandleEventAsync(EntityUpdatedEvent<Product> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ApiBestsellersVendorIdsPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductReviewsPrefixCacheKeyById, eventMessage.Entity.Id));
@@ -288,6 +289,7 @@ namespace Nop.Web.Infrastructure.Cache
         public async Task HandleEventAsync(EntityDeletedEvent<Product> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ApiBestsellersVendorIdsPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }

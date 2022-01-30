@@ -225,7 +225,7 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the product review overview model
         /// </returns>
-        protected virtual async Task<ProductReviewOverviewModel> PrepareProductReviewOverviewModelAsync(Product product)
+        public virtual async Task<ProductReviewOverviewModel> PrepareProductReviewOverviewModelAsync(Product product)
         {
             ProductReviewOverviewModel productReview;
 
@@ -505,7 +505,7 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the picture model
         /// </returns>
-        protected virtual async Task<PictureModel> PrepareProductOverviewPictureModelAsync(Product product, int? productThumbPictureSize = null)
+        public virtual async Task<PictureModel> PrepareProductOverviewPictureModelAsync(Product product, int? productThumbPictureSize = null)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));

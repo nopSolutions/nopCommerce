@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Web.Models.Catalog;
+using Nop.Web.Models.Media;
 
 namespace Nop.Web.Factories
 {
@@ -104,5 +105,10 @@ namespace Nop.Web.Factories
         /// The task result contains the product specification model
         /// </returns>
         Task<ProductSpecificationModel> PrepareProductSpecificationModelAsync(Product product);
+
+        Task<ProductReviewOverviewModel> PrepareProductReviewOverviewModelAsync(Product product);
+
+        Task<PictureModel>
+            PrepareProductOverviewPictureModelAsync(Product product, int? productThumbPictureSize = null);
     }
 }
