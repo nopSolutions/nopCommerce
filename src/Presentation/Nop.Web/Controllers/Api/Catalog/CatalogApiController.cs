@@ -34,6 +34,7 @@ using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Data;
 using System.Linq;
 using System.Net;
@@ -286,25 +287,36 @@ namespace Nop.Web.Controllers.Api.Security
                 throw new ArgumentNullException(nameof(products));
 
             var models = new List<ProductOverviewApiModel>();
+            
+            var allCategories = 
+                (await _catalogModelFactory.PrepareCategorySimpleModelsAsync()).ToImmutableDictionary(sc => sc.Id);
+            
             foreach (var product in products)
             {
                 var specifications = await PrepareProductSpecificationAttributeModelAsync(product);
                 if (specifications != null && product.Published)
                 {
                     var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
-                    var categoryName = "";
-                    var categories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id);
-                    if (categories.Any())
+                    string categoryNameJoined;
                     {
-                        foreach (var category in categories)
-                        {
-                            var cat = await _categoryService.GetCategoryByIdAsync(category.CategoryId);
-                            categoryName += cat.Name + ",";
-                        }
+                        var categoryNames = (await _categoryService.GetProductCategoriesByProductIdAsync(product.Id))
+                            .Select(pc => 
+                                allCategories.TryGetValue(pc.CategoryId, out var category) ? category.Name : string.Empty);
+                        categoryNameJoined = string.Join(',', categoryNames.Where(c => !string.IsNullOrEmpty(c)));
                     }
-                    var popularity = await _orderReportService.BestSellersReportAsync(showHidden: true, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0, orderBy: OrderByEnum.OrderByQuantity);
-                    var productReviews = await _productService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: _storeContext.GetCurrentStore().Id);
-                    var picsById = await _pictureService.GetPicturesByProductIdAsync(product.Id);
+
+                    var popularityByVendor = (await _staticCacheManager.GetAsync(
+                        _staticCacheManager.PrepareKeyForDefaultCache(
+                            NopModelCacheDefaults.HomepageBestsellersIdsKey, product.VendorId),
+                        async () => (await _orderReportService.BestSellersReportAsync(
+                            showHidden: true,
+                            vendorId: product.VendorId)).ToImmutableDictionary(k => k.ProductId)));
+                    
+                    var productReviewOverviewModel = 
+                        await _productModelFactory.PrepareProductReviewOverviewModelAsync(product);
+                    var productPictureModel =
+                        await _productModelFactory.PrepareProductOverviewPictureModelAsync(product);
+                    
                     var model = new ProductOverviewApiModel
                     {
                         Id = product.Id,
@@ -312,20 +324,22 @@ namespace Nop.Web.Controllers.Api.Security
                         ShortDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription),
                         FullDescription = await _localizationService.GetLocalizedAsync(product, x => x.FullDescription),
                         SeName = await _urlRecordService.GetSeNameAsync(product),
-                        CategoryName = categoryName.TrimEnd(','),
+                        CategoryName = categoryNameJoined,
                         Price = await _priceFormatter.FormatPriceAsync(product.Price),
                         PriceValue = product.Price,
-                        RatingSum = productReviews.Sum(pr => pr.Rating),
-                        TotalReviews = productReviews.Count,
-                        PopularityCount = popularity.Where(x => x.ProductId == product.Id).Any() ? popularity.Where(x => x.ProductId == product.Id).FirstOrDefault().TotalQuantity : 0,
-                        ImageUrl = await _pictureService.GetPictureUrlAsync(picsById.Any() ? picsById.FirstOrDefault().Id : 0, showDefaultPicture: true),
+                        RatingSum = productReviewOverviewModel.RatingSum,
+                        TotalReviews = productReviewOverviewModel.TotalReviews,
+                        PopularityCount = popularityByVendor.TryGetValue(product.Id, out var productPopularity) ? 
+                            productPopularity.TotalQuantity : 0,
+                        ImageUrl = productPictureModel.ImageUrl,
                         RibbonEnable = product.RibbonEnable,
                         RibbonText = product.RibbonText,
-                        VendorLogoPictureUrl = await _pictureService.GetPictureUrlAsync(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
+                        VendorLogoPictureUrl = await _pictureService.GetPictureUrlAsync(vendor?.PictureId ?? 0, showDefaultPicture: true),
+                        ProductSpecificationModel = specifications
                     };
 
                     models.Add(model);
-                    model.ProductSpecificationModel = specifications;
+                    
                 }
             }
 

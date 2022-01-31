@@ -1,4 +1,5 @@
-﻿using Nop.Core.Caching;
+﻿using System;
+using Nop.Core.Caching;
 
 namespace Nop.Web.Infrastructure.Cache
 {
@@ -65,6 +66,12 @@ namespace Nop.Web.Infrastructure.Cache
         public static CacheKey HomepageBestsellersIdsKey => new CacheKey("Nop.pres.bestsellers.homepage-{0}", HomepageBestsellersIdsPrefixCacheKey);
         public static string HomepageBestsellersIdsPrefixCacheKey => "Nop.pres.bestsellers.homepage";
 
+        public static CacheKey ApiBestsellersVendorIdsKey => new CacheKey("Nop.api.bestsellers-{}", ApiBestsellersVendorIdsPrefixCacheKey)
+        {
+            CacheTime = (int)TimeSpan.FromDays(1).TotalMinutes
+        };
+        public static string ApiBestsellersVendorIdsPrefixCacheKey => "Nop.api.bestsellers";
+        
         /// <summary>
         /// Key for "also purchased" product identifiers displayed on the product details page
         /// </summary>
