@@ -99,7 +99,7 @@ namespace Nop.Web
 			services.AddTokenAuthentication(_configuration);
 
 			// configure strongly typed settings object
-			services.Configure<JwtSettings>(_configuration.GetSection("JwtSettings"));		
+			services.Configure<JwtSettings>(_configuration.GetSection("Jwt"));		
         }
 
 		/// <summary>

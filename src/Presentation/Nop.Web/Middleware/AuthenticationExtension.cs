@@ -10,7 +10,7 @@ namespace Nop.Web.Middleware
     {
         public static IServiceCollection AddTokenAuthentication(this IServiceCollection services, IConfiguration config)
         {
-            var secret = config.GetSection("Jwt").GetSection("Key").Value;
+            var secret = config.GetSection("Jwt").GetValue<string>("Key");
             var key = Encoding.ASCII.GetBytes(secret);
             services.AddAuthentication(x =>
             {
