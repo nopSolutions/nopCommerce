@@ -12,13 +12,13 @@ namespace Nop.Web
     {
         private readonly string _issuer;
         private readonly string _secret;
-        private readonly string _expDate;
+        private readonly int _expirationInMinutes;
 
         public JwtService(IConfiguration config)
         {
-            _issuer = config.GetSection("Jwt").GetSection("Issuer").Value;
-            _secret = config.GetSection("Jwt").GetSection("Key").Value;
-            _expDate = config.GetSection("JwtConfig").GetSection("expirationInMinutes").Value;
+            _issuer = config.GetSection("Jwt").GetValue<string>("Issuer");
+            _secret = config.GetSection("Jwt").GetValue<string>("Key");
+            _expirationInMinutes = config.GetSection("Jwt").GetValue<int>("expirationInMinutes");
         }
 
         public string GenerateSecurityToken(string email, int customerId)
@@ -34,7 +34,7 @@ namespace Nop.Web
               _issuer,
               claims: permClaims,
               null,
-              expires: DateTime.Now.AddDays(7),
+              expires: DateTime.Now.AddMinutes(_expirationInMinutes),
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
