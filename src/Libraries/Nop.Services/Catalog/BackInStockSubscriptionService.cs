@@ -153,9 +153,8 @@ namespace Nop.Services.Catalog
             var subscriptions = await GetAllSubscriptionsByProductIdAsync(product.Id);
             foreach (var subscription in subscriptions)
             {
-                var customerLanguageId = await _genericAttributeService.GetAttributeAsync<Customer, int>(subscription.CustomerId, NopCustomerDefaults.LanguageIdAttribute, subscription.StoreId);
-
-                result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, customerLanguageId)).Count;
+                var customer = await _customerRepository.GetByIdAsync(subscription.CustomerId);
+                result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, customer?.LanguageId ?? 0)).Count;
             }
 
             for (var i = 0; i <= subscriptions.Count - 1; i++)

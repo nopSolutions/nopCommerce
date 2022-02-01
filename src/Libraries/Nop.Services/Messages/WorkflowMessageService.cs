@@ -259,7 +259,7 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -302,7 +302,7 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -346,7 +346,7 @@ namespace Nop.Services.Messages
 
                 //email to re-validate
                 var toEmail = customer.EmailToRevalidate;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -389,7 +389,7 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1626,7 +1626,7 @@ namespace Nop.Services.Messages
                     : customer.Email;
                 var toName = (await _customerService.IsGuestAsync(customer))
                     ? billingAddress.FirstName
-                    : await _customerService.GetCustomerFullNameAsync(customer);
+                    : _customerService.GetCustomerFullName(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1686,7 +1686,7 @@ namespace Nop.Services.Messages
                     : customer.Email;
                 var toName = (await _customerService.IsGuestAsync(customer))
                     ? billingAddress.FirstName
-                    : await _customerService.GetCustomerFullNameAsync(customer);
+                    : _customerService.GetCustomerFullName(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1736,7 +1736,7 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1786,7 +1786,7 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1830,7 +1830,7 @@ namespace Nop.Services.Messages
 
                 var customer = await _customerService.GetCustomerByIdAsync(privateMessage.ToCustomerId);
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -2069,7 +2069,7 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -2344,7 +2344,7 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();

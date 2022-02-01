@@ -143,11 +143,12 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task HandleEventAsync(EntityTokensAddedEvent<Customer, Token> eventMessage)
+        public Task HandleEventAsync(EntityTokensAddedEvent<Customer, Token> eventMessage)
         {
             //handle event
-            var phone = await _genericAttributeService.GetAttributeAsync<string>(eventMessage.Entity, NopCustomerDefaults.PhoneAttribute);
-            eventMessage.Tokens.Add(new Token("Customer.PhoneNumber", phone));
+            eventMessage.Tokens.Add(new Token("Customer.PhoneNumber", eventMessage.Entity.Phone));
+
+            return Task.CompletedTask;
         }
 
         #endregion

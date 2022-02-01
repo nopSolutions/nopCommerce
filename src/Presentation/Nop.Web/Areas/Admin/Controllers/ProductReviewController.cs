@@ -152,8 +152,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (productReview.IsApproved && !string.IsNullOrEmpty(productReview.ReplyText)
                     && _catalogSettings.NotifyCustomerAboutProductReviewReply && !productReview.CustomerNotifiedOfReply)
                 {
-                    var customerLanguageId = await _genericAttributeService.GetAttributeAsync<Customer, int>(productReview.CustomerId,
-                        NopCustomerDefaults.LanguageIdAttribute, productReview.StoreId);
+                    var customerLanguageId = (await _workContext.GetCurrentCustomerAsync()).LanguageId ?? 0;
 
                     var queuedEmailIds = await _workflowMessageService.SendProductReviewReplyCustomerNotificationMessageAsync(productReview, customerLanguageId);
                     if (queuedEmailIds.Any())

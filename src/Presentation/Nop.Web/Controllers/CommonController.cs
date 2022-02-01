@@ -10,6 +10,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Html;
 using Nop.Services.Localization;
@@ -33,6 +34,7 @@ namespace Nop.Web.Controllers
         private readonly ICommonModelFactory _commonModelFactory;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILanguageService _languageService;
@@ -57,6 +59,7 @@ namespace Nop.Web.Controllers
             ICommonModelFactory commonModelFactory,
             ICurrencyService currencyService,
             ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             IHtmlFormatter htmlFormatter,
             ILanguageService languageService,
@@ -77,6 +80,7 @@ namespace Nop.Web.Controllers
             _commonModelFactory = commonModelFactory;
             _currencyService = currencyService;
             _customerActivityService = customerActivityService;
+            _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _htmlFormatter = htmlFormatter;
             _languageService = languageService;
@@ -326,8 +330,10 @@ namespace Nop.Web.Controllers
                 return Json(new { stored = false });
 
             //save setting
-            var store = await _storeContext.GetCurrentStoreAsync();
-            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.EuCookieLawAcceptedAttribute, true, store.Id);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            customer.EuCookieLawAccepted = true;
+            await _customerService.UpdateCustomerAsync(customer);
+
             return Json(new { stored = true });
         }
 

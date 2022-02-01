@@ -51,96 +51,6 @@
         #region Customer attributes
 
         /// <summary>
-        /// Gets a name of generic attribute to store the value of 'FirstName'
-        /// </summary>
-        public static string FirstNameAttribute => "FirstName";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'LastName'
-        /// </summary>
-        public static string LastNameAttribute => "LastName";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'Gender'
-        /// </summary>
-        public static string GenderAttribute => "Gender";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'DateOfBirth'
-        /// </summary>
-        public static string DateOfBirthAttribute => "DateOfBirth";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'Company'
-        /// </summary>
-        public static string CompanyAttribute => "Company";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'StreetAddress'
-        /// </summary>
-        public static string StreetAddressAttribute => "StreetAddress";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'StreetAddress2'
-        /// </summary>
-        public static string StreetAddress2Attribute => "StreetAddress2";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'ZipPostalCode'
-        /// </summary>
-        public static string ZipPostalCodeAttribute => "ZipPostalCode";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'City'
-        /// </summary>
-        public static string CityAttribute => "City";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'County'
-        /// </summary>
-        public static string CountyAttribute => "County";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'CountryId'
-        /// </summary>
-        public static string CountryIdAttribute => "CountryId";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'StateProvinceId'
-        /// </summary>
-        public static string StateProvinceIdAttribute => "StateProvinceId";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'Phone'
-        /// </summary>
-        public static string PhoneAttribute => "Phone";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'Fax'
-        /// </summary>
-        public static string FaxAttribute => "Fax";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'VatNumber'
-        /// </summary>
-        public static string VatNumberAttribute => "VatNumber";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'VatNumberStatusId'
-        /// </summary>
-        public static string VatNumberStatusIdAttribute => "VatNumberStatusId";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'TimeZoneId'
-        /// </summary>
-        public static string TimeZoneIdAttribute => "TimeZoneId";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'CustomCustomerAttributes'
-        /// </summary>
-        public static string CustomCustomerAttributes => "CustomCustomerAttributes";
-
-        /// <summary>
         /// Gets a name of generic attribute to store the value of 'DiscountCouponCode'
         /// </summary>
         public static string DiscountCouponCodeAttribute => "DiscountCouponCode";
@@ -201,16 +111,6 @@
         public static string AdminAreaStoreScopeConfigurationAttribute => "AdminAreaStoreScopeConfiguration";
 
         /// <summary>
-        /// Gets a name of generic attribute to store the value of 'CurrencyId'
-        /// </summary>
-        public static string CurrencyIdAttribute => "CurrencyId";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'LanguageId'
-        /// </summary>
-        public static string LanguageIdAttribute => "LanguageId";
-
-        /// <summary>
         /// Gets a name of generic attribute to store the value of 'SelectedPaymentMethod'
         /// </summary>
         public static string SelectedPaymentMethodAttribute => "SelectedPaymentMethod";
@@ -251,19 +151,9 @@
         public static string WorkingThemeNameAttribute => "WorkingThemeName";
 
         /// <summary>
-        /// Gets a name of generic attribute to store the value of 'TaxDisplayTypeId'
-        /// </summary>
-        public static string TaxDisplayTypeIdAttribute => "TaxDisplayTypeId";
-
-        /// <summary>
         /// Gets a name of generic attribute to store the value of 'UseRewardPointsDuringCheckout'
         /// </summary>
         public static string UseRewardPointsDuringCheckoutAttribute => "UseRewardPointsDuringCheckout";
-
-        /// <summary>
-        /// Gets a name of generic attribute to store the value of 'EuCookieLawAccepted'
-        /// </summary>
-        public static string EuCookieLawAcceptedAttribute => "EuCookieLaw.Accepted";
 
         /// <summary>
         /// Gets a name of generic attribute to store the value of 'SelectedMultiFactorAuthProvider'

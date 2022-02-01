@@ -243,10 +243,9 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the customer full name
+        /// The result contains the customer full name
         /// </returns>
-        Task<string> GetCustomerFullNameAsync(Customer customer);
+        string GetCustomerFullName(Customer customer);
 
         /// <summary>
         /// Formats the customer name

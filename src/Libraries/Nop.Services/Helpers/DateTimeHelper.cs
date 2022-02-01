@@ -156,16 +156,16 @@ namespace Nop.Services.Helpers
         /// A task that represents the asynchronous operation
         /// The task result contains the customer time zone; if customer is null, then default store time zone
         /// </returns>
-        public virtual async Task<TimeZoneInfo> GetCustomerTimeZoneAsync(Customer customer)
+        public virtual TimeZoneInfo GetCustomerTimeZone(Customer customer)
         {
-            if (!_dateTimeSettings.AllowCustomersToSetTimeZone) 
+            if (!_dateTimeSettings.AllowCustomersToSetTimeZone)
                 return DefaultStoreTimeZone;
 
             TimeZoneInfo timeZoneInfo = null;
 
             var timeZoneId = string.Empty;
             if (customer != null)
-                timeZoneId = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
+                timeZoneId = customer.TimeZoneId;
 
             try
             {
@@ -189,7 +189,7 @@ namespace Nop.Services.Helpers
         /// </returns>
         public virtual async Task<TimeZoneInfo> GetCurrentTimeZoneAsync()
         {
-           return await GetCustomerTimeZoneAsync(await _workContext.GetCurrentCustomerAsync());
+           return GetCustomerTimeZone(await _workContext.GetCurrentCustomerAsync());
         }
 
         /// <summary>

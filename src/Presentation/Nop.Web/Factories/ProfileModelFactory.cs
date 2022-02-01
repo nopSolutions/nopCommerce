@@ -138,7 +138,7 @@ namespace Nop.Web.Factories
             {
                 locationEnabled = true;
 
-                var countryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                var countryId = customer.CountryId;
                 var country = await _countryService.GetCountryByIdAsync(countryId);
                 if (country != null)
                 {
@@ -177,11 +177,10 @@ namespace Nop.Web.Factories
             var dateOfBirth = string.Empty;
             if (_customerSettings.DateOfBirthEnabled)
             {
-                var dob = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
-                if (dob.HasValue)
+                if (customer.DateOfBirth.HasValue)
                 {
                     dateOfBirthEnabled = true;
-                    dateOfBirth = dob.Value.ToString("D");
+                    dateOfBirth = customer.DateOfBirth.Value.ToString("D");
                 }
             }
 

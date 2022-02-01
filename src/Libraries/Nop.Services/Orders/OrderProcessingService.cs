@@ -479,8 +479,7 @@ namespace Nop.Services.Orders
                 throw new NopException("Anonymous checkout is not allowed");
 
             //customer currency
-            var currencyTmp = await _currencyService.GetCurrencyByIdAsync(
-                await _genericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.CurrencyIdAttribute, processPaymentRequest.StoreId));
+            var currencyTmp = await _currencyService.GetCurrencyByIdAsync(details.Customer.CurrencyId ?? 0);
             var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
             var customerCurrency = currencyTmp != null && currencyTmp.Published ? currencyTmp : currentCurrency;
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
@@ -488,8 +487,7 @@ namespace Nop.Services.Orders
             details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
 
             //customer language
-            details.CustomerLanguage = await _languageService.GetLanguageByIdAsync(
-                await _genericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.LanguageIdAttribute, processPaymentRequest.StoreId));
+            details.CustomerLanguage = await _languageService.GetLanguageByIdAsync(details.Customer.LanguageId ?? 0);
             if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
                 details.CustomerLanguage = await _workContext.GetWorkingLanguageAsync();
 
@@ -551,7 +549,7 @@ namespace Nop.Services.Orders
 
             //tax display type
             if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
-                details.CustomerTaxDisplayType = (TaxDisplayType)await _genericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.TaxDisplayTypeIdAttribute, processPaymentRequest.StoreId);
+                details.CustomerTaxDisplayType = (TaxDisplayType)(await _workContext.GetCurrentCustomerAsync()).TaxDisplayTypeId;
             else
                 details.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
 
@@ -645,9 +643,8 @@ namespace Nop.Services.Orders
             (details.OrderTaxTotal, taxRatesDictionary) = await _orderTotalCalculationService.GetTaxTotalAsync(details.Cart);
 
             //VAT number
-            var customerVatStatus = (VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(details.Customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
-            if (_taxSettings.EuVatEnabled && customerVatStatus == VatNumberStatus.Valid)
-                details.VatNumber = await _genericAttributeService.GetAttributeAsync<string>(details.Customer, NopCustomerDefaults.VatNumberAttribute);
+            if (_taxSettings.EuVatEnabled && details.Customer.VatNumberStatus == VatNumberStatus.Valid)
+                details.VatNumber = details.Customer.VatNumber;
 
             //tax rates
             details.TaxRates = taxRatesDictionary.Aggregate(string.Empty, (current, next) =>

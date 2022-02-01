@@ -95,7 +95,7 @@
                         @if (await customerService.IsRegisteredAsync(currentCustomer))
                         {
                             <li class="nav-item">
-                                <a href="#" class="nav-link disabled">@await customerService.GetCustomerFullNameAsync(currentCustomer)</a>
+                                <a href="#" class="nav-link disabled">@await customerService.GetCustomerFullName(currentCustomer)</a>
                             </li>
                             <li class="nav-item">
                                 <a asp-controller="Customer" asp-action="Logout" asp-area="" class="nav-link">@T("Admin.Header.Logout")</a>

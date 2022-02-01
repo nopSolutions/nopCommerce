@@ -1026,7 +1026,7 @@ namespace Nop.Services.Messages
             if (language != null && !string.IsNullOrEmpty(language.LanguageCulture))
             {
                 var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-                var createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
+                var createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, _dateTimeHelper.GetCustomerTimeZone(customer));
                 tokens.Add(new Token("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture))));
             }
             else
@@ -1205,13 +1205,13 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Customer.Email", customer.Email));
             tokens.Add(new Token("Customer.Username", customer.Username));
-            tokens.Add(new Token("Customer.FullName", await _customerService.GetCustomerFullNameAsync(customer)));
-            tokens.Add(new Token("Customer.FirstName", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute)));
-            tokens.Add(new Token("Customer.LastName", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute)));
-            tokens.Add(new Token("Customer.VatNumber", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute)));
-            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute)).ToString()));
+            tokens.Add(new Token("Customer.FullName", _customerService.GetCustomerFullName(customer)));
+            tokens.Add(new Token("Customer.FirstName", customer.FirstName));
+            tokens.Add(new Token("Customer.LastName", customer.LastName));
+            tokens.Add(new Token("Customer.VatNumber", customer.VatNumber));
+            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)customer.VatNumberStatusId).ToString()));
 
-            var customAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+            var customAttributesXml = customer.CustomCustomerAttributesXML;
             tokens.Add(new Token("Customer.CustomAttributes", await _customerAttributeFormatter.FormatAttributesAsync(customAttributesXml), true));
 
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
