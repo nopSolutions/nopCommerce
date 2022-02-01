@@ -4,7 +4,6 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Events;
-using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Messages;
 
@@ -26,7 +25,6 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly SendinblueManager _sendinblueEmailManager;
         private readonly SendinblueMarketingAutomationManager _sendinblueMarketingAutomationManager;
 
@@ -34,11 +32,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
 
         #region Ctor
 
-        public EventConsumer(IGenericAttributeService genericAttributeService,
-            SendinblueManager sendinblueEmailManager,
+        public EventConsumer(SendinblueManager sendinblueEmailManager,
             SendinblueMarketingAutomationManager sendinblueMarketingAutomationManager)
         {
-            _genericAttributeService = genericAttributeService;
             _sendinblueEmailManager = sendinblueEmailManager;
             _sendinblueMarketingAutomationManager = sendinblueMarketingAutomationManager;
         }
@@ -143,11 +139,12 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task HandleEventAsync(EntityTokensAddedEvent<Customer, Token> eventMessage)
+        public Task HandleEventAsync(EntityTokensAddedEvent<Customer, Token> eventMessage)
         {
             //handle event
-            var phone = await _genericAttributeService.GetAttributeAsync<string>(eventMessage.Entity, NopCustomerDefaults.PhoneAttribute);
-            eventMessage.Tokens.Add(new Token("Customer.PhoneNumber", phone));
+            eventMessage.Tokens.Add(new Token("Customer.PhoneNumber", eventMessage.Entity.Phone));
+
+            return Task.CompletedTask;
         }
 
         #endregion
