@@ -643,7 +643,7 @@ namespace Nop.Services.Orders
             (details.OrderTaxTotal, taxRatesDictionary) = await _orderTotalCalculationService.GetTaxTotalAsync(details.Cart);
 
             //VAT number
-            if (_taxSettings.EuVatEnabled && details.Customer.VatNumberStatus == VatNumberStatus.Valid)
+            if (_taxSettings.EuVatEnabled && details.Customer.VatNumberStatusEnum == VatNumberStatus.Valid)
                 details.VatNumber = details.Customer.VatNumber;
 
             //tax rates

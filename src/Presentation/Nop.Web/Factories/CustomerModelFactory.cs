@@ -297,7 +297,7 @@ namespace Nop.Web.Factories
             }
 
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatus);
+            model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatusEnum);
             model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
             model.LastNameEnabled = _customerSettings.LastNameEnabled;
             model.FirstNameRequired = _customerSettings.FirstNameRequired;

@@ -698,7 +698,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.Fax = customer.Fax;
                     model.TimeZoneId = customer.TimeZoneId;
                     model.VatNumber = customer.VatNumber;
-                    model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatus);
+                    model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatusEnum);
                     model.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
                     model.LastVisitedPage = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute);

@@ -244,7 +244,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the vat number status
         /// </summary>
-        public VatNumberStatus VatNumberStatus
+        public VatNumberStatus VatNumberStatusEnum
         {
             get => (VatNumberStatus)VatNumberStatusId;
             set => VatNumberStatusId = (int)value;

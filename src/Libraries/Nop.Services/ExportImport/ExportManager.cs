@@ -1991,6 +1991,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("State province", async p => (await _stateProvinceService.GetStateProvinceByIdAsync(p.StateProvinceId))?.Name ?? string.Empty, !(_customerSettings.StateProvinceEnabled && _customerSettings.CountryEnabled)),
                 new PropertyByName<Customer>("Phone", p => p.Phone, !_customerSettings.PhoneEnabled),
                 new PropertyByName<Customer>("Fax", p => p.Fax, !_customerSettings.FaxEnabled),
+                new PropertyByName<Customer>("Fax", p => p.Fax, !_customerSettings.FaxEnabled),
                 new PropertyByName<Customer>("Customer attributes",  GetCustomCustomerAttributesAsync)
             }, _catalogSettings);
 
