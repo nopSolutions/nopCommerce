@@ -7452,6 +7452,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled.Hint">
     <Value>Check to enable honeypot technique for registration page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InstagramLink">
+    <Value>Instagram URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InstagramLink.Hint">
+    <Value>Specify your Instagram page URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1">
     <Value>Invoice footer text (left column)</Value>
   </LocaleResource>
@@ -17045,6 +17051,9 @@
   </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.Facebook">
     <Value>Facebook</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.Instagram">
+    <Value>Instagram</Value>
   </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.RSS">
     <Value>RSS</Value>
