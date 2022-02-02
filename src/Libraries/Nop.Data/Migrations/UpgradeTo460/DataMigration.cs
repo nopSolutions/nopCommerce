@@ -32,14 +32,14 @@ namespace Nop.Data.Migrations.UpgradeTo460
             var genderCustomerColumnName = "Gender";
             var dobCustomerColumnName = "DateOfBirth";
             var companyCustomerColumnName = "Company";
-            var address1CustomerColumnName = "StreetAddress1";
+            var address1CustomerColumnName = "StreetAddress";
             var address2CustomerColumnName = "StreetAddress2";
             var zioCustomerColumnName = "ZipPostalCode";
             var cityCustomerColumnName = "City";
             var countyCustomerColumnName = "County";
             var countryIdCustomerColumnName = "CountryId";
             var stateIdCustomerColumnName = "StateProvinceId";
-            var phoneNumberCustomerColumnName = "PhoneNumber";
+            var phoneCustomerColumnName = "Phone";
             var faxCustomerColumnName = "Fax";
             var vatNumberCustomerColumnName = "VatNumber";
             var vatNumberStatusIdCustomerColumnName = "VatNumberStatusId";
@@ -109,10 +109,10 @@ namespace Nop.Data.Migrations.UpgradeTo460
                 Alter.Table(customerTableName)
                     .AddColumn(stateIdCustomerColumnName).AsInt32().WithDefaultValue(0);
             }
-            if (!Schema.Table(customerTableName).Column(phoneNumberCustomerColumnName).Exists())
+            if (!Schema.Table(customerTableName).Column(phoneCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(phoneNumberCustomerColumnName).AsString().Nullable();
+                    .AddColumn(phoneCustomerColumnName).AsString().Nullable();
             }
             if (!Schema.Table(customerTableName).Column(faxCustomerColumnName).Exists())
             {
