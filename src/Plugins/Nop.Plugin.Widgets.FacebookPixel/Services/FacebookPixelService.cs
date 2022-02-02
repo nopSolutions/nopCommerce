@@ -527,7 +527,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                         return true;
 
                     //don't display Pixel for users who not accepted Cookie Consent
-                    return (await _workContext.GetCurrentCustomerAsync()).EuCookieLawAccepted;
+                    var cookieConsentAccepted = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(),
+                            NopCustomerDefaults.EuCookieLawAcceptedAttribute, store.Id);
+                    return cookieConsentAccepted;
                 }).ToListAsync();
                 if (!configurations.Any())
                     return string.Empty;

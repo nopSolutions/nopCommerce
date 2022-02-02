@@ -9,7 +9,7 @@ using System.Data;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-01-21 00:00:00", "4.50.0", UpdateMigrationType.Data, MigrationProcessType.Update)]
+    [NopMigration("2022-02-02 00:00:00", "4.60.0", UpdateMigrationType.Data, MigrationProcessType.Update)]
     public class DataMigration : Migration
     {
         private readonly INopDataProvider _dataProvider;
@@ -26,6 +26,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
         {
             // add column
             var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
+
             var firstNameCustomerColumnName = "FirstName";
             var lastNameCustomerColumnName = "LastName";
             var genderCustomerColumnName = "Gender";
@@ -47,7 +48,6 @@ namespace Nop.Data.Migrations.UpgradeTo460
             var currencyIdCustomerColumnName = "CurrencyId";
             var languageIdCustomerColumnName = "LanguageId";
             var taxDisplayTypeIdCustomerColumnName = "TaxDisplayTypeId";
-            var euCookieLawAcceptedCustomerColumnName = "EuCookieLawAccepted";
 
             if (!Schema.Table(customerTableName).Column(firstNameCustomerColumnName).Exists())
             {
@@ -153,11 +153,6 @@ namespace Nop.Data.Migrations.UpgradeTo460
             {
                 Alter.Table(customerTableName)
                     .AddColumn(taxDisplayTypeIdCustomerColumnName).AsInt32().Nullable();
-            }
-            if (!Schema.Table(customerTableName).Column(euCookieLawAcceptedCustomerColumnName).Exists())
-            {
-                Alter.Table(customerTableName)
-                    .AddColumn(euCookieLawAcceptedCustomerColumnName).AsBoolean().WithDefaultValue(false);
             }
         }
 

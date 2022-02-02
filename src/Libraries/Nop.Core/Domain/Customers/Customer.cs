@@ -135,11 +135,6 @@ namespace Nop.Core.Domain.Customers
         public int? TaxDisplayTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the EU cookie law accepted
-        /// </summary>
-        public bool EuCookieLawAccepted { get; set; }
-
-        /// <summary>
         /// Gets or sets the email that should be re-validated. Used in scenarios when a customer is already registered and wants to change an email address.
         /// </summary>
         public string EmailToRevalidate { get; set; }

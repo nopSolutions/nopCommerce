@@ -330,10 +330,8 @@ namespace Nop.Web.Controllers
                 return Json(new { stored = false });
 
             //save setting
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            customer.EuCookieLawAccepted = true;
-            await _customerService.UpdateCustomerAsync(customer);
-
+            var store = await _storeContext.GetCurrentStoreAsync();
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.EuCookieLawAcceptedAttribute, true, store.Id);
             return Json(new { stored = true });
         }
 
