@@ -738,9 +738,9 @@ namespace Nop.Services.Orders
             ShippingStatus? ss = null,
             int billingCountryId = 0,
             bool showHidden = false)
-        {            
+        {
             return await SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, ss, billingCountryId, showHidden: showHidden)
-                .SumAsync(bestseller => bestseller.Quantity * bestseller.PriceExclTax);
+                .SumAsync(bestseller => bestseller.PriceExclTax);
         }
 
         /// <summary>
