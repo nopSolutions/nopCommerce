@@ -24,6 +24,7 @@ using Nop.Services.Vendors;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Api.Security;
 using Nop.Web.Models.Order;
+using TimeZoneConverter;
 
 namespace Nop.Web.Controllers.Api.Security
 {
@@ -140,7 +141,7 @@ namespace Nop.Web.Controllers.Api.Security
             addToCartWarnings = await _shoppingCartService.AddToCartAsync(customer: customer,
                 product: product,
                 shoppingCartType: cartType,
-                storeId: _storeContext.GetCurrentStore().Id,
+                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                 quantity: quantity);
             if (addToCartWarnings.Any())
             {
@@ -274,18 +275,24 @@ namespace Nop.Web.Controllers.Api.Security
             var processPaymentRequest = new ProcessPaymentRequest();
             var customer = await _workContext.GetCurrentCustomerAsync();
             _paymentService.GenerateOrderGuid(processPaymentRequest);
-            processPaymentRequest.StoreId = _storeContext.GetCurrentStore().Id;
+            processPaymentRequest.StoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
             processPaymentRequest.CustomerId = customer.Id;
-            processPaymentRequest.ScheduleDate = scheduleDate;
+            
+            var company = await _companyService.GetCompanyByCustomerIdAsync(customer.Id);
+            var timezoneInfo = TZConvert.GetTimeZoneInfo(company.TimeZone);
+            processPaymentRequest.ScheduleDate = _dateTimeHelper.ConvertToUtcTime(
+                Convert.ToDateTime(scheduleDate), 
+                timezoneInfo)
+                .ToString("MM/dd/yyyy HH:mm:ss");
+            
             processPaymentRequest.PaymentMethodSystemName = "Payments.CheckMoneyOrder";
             var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
-            if (placeOrderResult.Success)
-            {
-                placeOrderResult.PlacedOrder.ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(Convert.ToDateTime(scheduleDate));
-                await _orderService.UpdateOrderAsync(placeOrderResult.PlacedOrder);
-                return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Order.Placed.Successfully") });
-            }
-            return Ok(new { success = false, message = string.Join(", ", placeOrderResult.Errors).ToString() });
+            
+            return Ok(new { success = placeOrderResult.Success, 
+                message = placeOrderResult.Success ? 
+                    await _localizationService.GetResourceAsync("Order.Placed.Successfully") :
+                    string.Join(", ", placeOrderResult.Errors)
+            });
         }
         [HttpPost("reorder/{orderId}")]
         public virtual async Task<IActionResult> ReOrder(int orderId)

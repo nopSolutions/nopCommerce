@@ -1586,12 +1586,13 @@ namespace Nop.Services.Orders
             var result = new PlaceOrderResult();
             try
             {
-
-                var scheduleDate = !string.IsNullOrWhiteSpace(processPaymentRequest.ScheduleDate) ? Convert.ToDateTime(processPaymentRequest.ScheduleDate) : (DateTime?)null;
-                if (scheduleDate == null)
+                if(string.IsNullOrWhiteSpace(processPaymentRequest.ScheduleDate))
                     throw new Exception("Delivery time is not selected");
-                DateTime? orderScheduleDate = scheduleDate.Value;
-
+                
+                var scheduleDate = DateTime.SpecifyKind(
+                    Convert.ToDateTime(processPaymentRequest.ScheduleDate), 
+                    DateTimeKind.Utc);
+                
                 if (processPaymentRequest.OrderGuid == Guid.Empty)
                     throw new Exception("Order GUID is not generated");
 
@@ -1603,28 +1604,28 @@ namespace Nop.Services.Orders
                 if (processPaymentResult == null)
                     throw new NopException("processPaymentResult is not available");
 
-                ;
                 if (processPaymentResult.Success)
                 {
                     //Check Customer today orders total amount is greater than company limited amount
                     var company = await _companyService.GetCompanyByCustomerIdAsync(details.Customer.Id);
                     if (company != null)
                     {
-                        var cartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(details.Cart);
-                        var orders = await _orderService.SearchOrdersAsync(customerId: details.Customer.Id, osIds: new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing });
+                        var cartTotal = 
+                            await _orderTotalCalculationService.GetShoppingCartTotalAsync(details.Cart);
+                        
+                        var orders = await _orderService.SearchOrdersAsync(customerId: details.Customer.Id,
+                            osIds: new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing });
                         if (orders.Any())
                         {
                             //Checks if the schedule date has any previous orders, if yes then checks limit according to that!
-                            //When Null the order is from Public Site else from Mobile app.
-                            var currentDate = DateTime.UtcNow;
 
-                            var ordersAccordingToScheduleDate = orders.Where(x => x.ScheduleDate.Date == scheduleDate.Value.Date).ToList();
+                            var ordersAccordingToScheduleDate = orders.Where(x => x.ScheduleDate.Date == scheduleDate.Date).ToList();
                             var todayOrderTotal = ordersAccordingToScheduleDate.Sum(x => x.OrderTotal) + cartTotal.shoppingCartTotal;
-                            if (todayOrderTotal > company.AmountLimit && !(await IsAccountLimitatioIgnoredAsync(details.Customer.Id)))
+                            if (todayOrderTotal > company.AmountLimit && !(await ShouldAccountLimitationBeIgnoredAsync(details.Customer.Id)))
                                 result.Errors.Add(string.Format(await _localizationService.GetResourceAsync("Order.Company.AmountLimit"), company.AmountLimit, await _localizationService.GetResourceAsync("Customer.Company.OrderTotal"), todayOrderTotal));
                         }
                         //if there are no previous orders found then checks for company limit
-                        else if (cartTotal.shoppingCartTotal > company.AmountLimit && !(await IsAccountLimitatioIgnoredAsync(details.Customer.Id)))
+                        else if (cartTotal.shoppingCartTotal > company.AmountLimit && !(await ShouldAccountLimitationBeIgnoredAsync(details.Customer.Id)))
                             result.Errors.Add(string.Format(await _localizationService.GetResourceAsync("Order.Company.AmountLimit"), company.AmountLimit, await _localizationService.GetResourceAsync("Customer.Company.OrderTotal"), cartTotal.shoppingCartTotal));
                     }
                     else
@@ -1662,10 +1663,10 @@ namespace Nop.Services.Orders
                     await CheckOrderStatusAsync(order);
 
                     //update schedule date
-                    order.ScheduleDate = orderScheduleDate.Value;
+                    order.ScheduleDate = scheduleDate;
                     await _orderService.UpdateOrderAsync(order);
 
-                    //raise event       
+                    //raise event
                     await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
 
                     if (order.PaymentStatus == PaymentStatus.Paid)
@@ -3218,7 +3219,7 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains a value indicating whether limitation is ignored
         /// </returns>
-        public virtual async Task<bool> IsAccountLimitatioIgnoredAsync(int customerId)
+        public virtual async Task<bool> ShouldAccountLimitationBeIgnoredAsync(int customerId)
         {
             var customer = await _customerService.GetCustomerByIdAsync(customerId);
             if (customer != null && (await _customerService.GetCustomerRolesAsync(customer))
