@@ -72,7 +72,6 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly ICategoryService _categoryService;
         private readonly ICatalogModelFactory _catalogModelFactory;
         private readonly ITopicModelFactory _topicModelFactory;
-        private readonly IWebHelper _webHelper;
         private readonly IPictureService _pictureService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
@@ -96,7 +95,6 @@ namespace Nop.Web.Controllers.Api.Security
             ISpecificationAttributeService specificationAttributeService,
             IPictureService pictureService,
             IUrlRecordService urlRecordService,
-            IWebHelper webHelper,
             ICatalogModelFactory catalogModelService,
             IProductModelFactory productModelFactory,
             ITopicModelFactory topicModelFactory,
@@ -129,7 +127,6 @@ namespace Nop.Web.Controllers.Api.Security
             _specificationAttributeService = specificationAttributeService;
             _pictureService = pictureService;
             _urlRecordService = urlRecordService;
-            _webHelper = webHelper;
             _categoryService = categoryService;
             _catalogModelFactory = catalogModelService;
             _topicModelFactory = topicModelFactory;
@@ -159,7 +156,8 @@ namespace Nop.Web.Controllers.Api.Security
         #region Utility
 
         [NonAction]
-        protected virtual async Task<ProductSpecificationApiModel> PrepareProductSpecificationAttributeModelAsync(Product product)
+        protected virtual async Task<ProductSpecificationApiModel> 
+            PrepareProductSpecificationAttributeModelAsync(Product product)
         {
             var result = new ProductSpecificationApiModel();
             if (product == null)
@@ -281,7 +279,8 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [NonAction]
-        protected virtual async Task<IEnumerable<ProductOverviewApiModel>> PrepareApiProductOverviewModels(IEnumerable<Product> products)
+        protected virtual async Task<IEnumerable<ProductOverviewApiModel>> 
+            PrepareApiProductOverviewModelsAsync(IEnumerable<Product> products)
         {
             if (products == null)
                 throw new ArgumentNullException(nameof(products));
@@ -347,7 +346,7 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [NonAction]
-        protected virtual async Task<CustomerProductReviewsModel> PrepareCustomerProductReviewsModel(int? page, int customerId)
+        private async Task<CustomerProductReviewsModel> PrepareCustomerProductReviewsModelAsync(int? page, int customerId)
         {
             var pageSize = _catalogSettings.ProductReviewsPageSizeOnAccountPage;
             var pageIndex = 0;
@@ -414,7 +413,7 @@ namespace Nop.Web.Controllers.Api.Security
         #region Category
 
         [HttpGet("category-list")]
-        public async Task<IActionResult> GetAllCategories()
+        public async Task<IActionResult> GetAllCategoriesAsync()
         {
             var categories = await _catalogModelFactory.PrepareCategorySimpleModelsAsync();
             if (categories.Count > 0)
@@ -449,7 +448,7 @@ namespace Nop.Web.Controllers.Api.Security
                 _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
 
             var products = await _productService.SearchProductsAsync(
-                storeId: _storeContext.GetCurrentStore().Id,
+                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                 keywords: term,
                 languageId: _workContext.GetWorkingLanguageAsync().Id,
                 visibleIndividuallyOnly: true,
@@ -465,7 +464,7 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpGet("product-specification-attributes-and-productvendors")]
-        public async Task<IActionResult> AllProductSpecificationAndProductVendors()
+        public async Task<IActionResult> AllProductSpecificationAndProductVendorsAsync()
         {
             //model
             var model = await PrepareProductSpecificationAttributeModelAsync(null);
@@ -473,15 +472,15 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpGet("product-search")]
-        public async Task<IActionResult> SearchProducts(SearchProductByFilters searchModel)
+        public async Task<IActionResult> SearchProductsAsync(SearchProductByFilters searchModel)
         {
-            var categoryIds = (await _categoryService.GetAllCategoriesAsync()).Select(c => c.Id).Where(id => id != 0).ToList();
-            var products = await _productService.SearchProductsAsync(keywords: searchModel.Keyword, showHidden: true,categoryIds: categoryIds);
+            var products = await _productService.SearchProductsAsync(
+                keywords: searchModel.Keyword);
             if (!products.Any())
                 return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Product.Not.Found") });
 
             //model
-            var model = await PrepareApiProductOverviewModels(products);
+            var model = await PrepareApiProductOverviewModelsAsync(products);
             return Ok(model);
         }
 
@@ -527,7 +526,7 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpGet("product-list/category/{categoryId}")]
-        public async Task<IActionResult> GetProductList(int categoryId, CatalogProductsCommand command, string brandFilter = "")
+        public async Task<IActionResult> GetProductListAsync(int categoryId, CatalogProductsCommand command, string brandFilter = "")
         {
             var category = await _categoryService.GetCategoryByIdAsync(categoryId);
             if (category == null || category.Deleted)
@@ -542,7 +541,7 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpGet("addtocart/productId/{productId}/quantity/{quantity}")]
-        public virtual async Task<IActionResult> AddProductToCart(int productId = 0, int quantity = 0)
+        public virtual async Task<IActionResult> AddProductToCartAsync(int productId = 0, int quantity = 0)
         {
             if (quantity <= 0)
                 return Ok(new { success = false, message = "Quantity should be > 0" });
@@ -600,7 +599,7 @@ namespace Nop.Web.Controllers.Api.Security
         #region Product Review
 
         [HttpGet("get-product-reviews/product/{productId}")]
-        public virtual async Task<IActionResult> ProductReviews(int productId)
+        public virtual async Task<IActionResult> ProductReviewsAsync(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
             var curCus = await _workContext.GetCurrentCustomerAsync();
@@ -628,7 +627,7 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpPost("add-product-reviews")]
-        public virtual async Task<IActionResult> ProductReviewsAdd([FromBody] AddProductReviewApiModel model)
+        public virtual async Task<IActionResult> ProductReviewsAddAsync([FromBody] AddProductReviewApiModel model)
         {
             var product = await _productService.GetProductByIdAsync(model.Id);
             var curCus = await _workContext.GetCurrentCustomerAsync();
@@ -698,13 +697,13 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpGet("get-product-reviews")]
-        public virtual async Task<IActionResult> CustomerProductReviews()
+        public virtual async Task<IActionResult> CustomerProductReviewsAsync()
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (await _customerService.IsGuestAsync(customer))
                 return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Customer.Not.Found") });
 
-            var model = PrepareCustomerProductReviewsModel(0, customer.Id);
+            var model = await PrepareCustomerProductReviewsModelAsync(0, customer.Id);
             return Ok(new { success = true, data = model });
         }
 

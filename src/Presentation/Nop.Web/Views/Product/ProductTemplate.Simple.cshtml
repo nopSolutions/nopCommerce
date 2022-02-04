@@ -72,7 +72,7 @@
                         @if (!string.IsNullOrEmpty(Model.ShortDescription))
                         {
                             <div class="short-description">
-                                @Html.Raw(Model.ShortDescription)
+                                @Html.Raw(Model.ShortDescription.Replace("\r", "").Replace("\n", "<br />"))
                             </div>
                         }
                         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsOverviewTop, additionalData = Model })
@@ -138,7 +138,7 @@
                     @if (!string.IsNullOrEmpty(Model.FullDescription))
                     {
                         <div class="full-description">
-                            @Html.Raw(Model.FullDescription)
+                            @Html.Raw(Model.FullDescription.Replace("\r", "").Replace("\n", "<br />"))
                         </div>
                     }
                     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsEssentialBottom, additionalData = Model })
