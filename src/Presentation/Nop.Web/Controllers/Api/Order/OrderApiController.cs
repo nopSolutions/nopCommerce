@@ -295,7 +295,7 @@ namespace Nop.Web.Controllers.Api.Security
             });
         }
         [HttpPost("reorder/{orderId}")]
-        public virtual async Task<IActionResult> ReOrder(int orderId)
+        public virtual async Task<IActionResult> ReOrderAsync(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
             if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
@@ -316,7 +316,7 @@ namespace Nop.Web.Controllers.Api.Security
             return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Order.ReOrdered"), productsList });
         }
         [HttpPost("order-rating")]
-        public async Task<IActionResult> OrderRating([FromBody] OrderRatingModel model)
+        public async Task<IActionResult> OrderRatingAsync([FromBody] OrderRatingModel model)
         {
             var order = await _orderService.GetOrderByIdAsync(model.OrderId);
             if (order == null)
@@ -329,7 +329,7 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpGet("get-todays-orders")]
-        public async Task<IActionResult> GetTodaysOrders()
+        public async Task<IActionResult> GetTodaysOrdersAsync()
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id);
@@ -424,7 +424,7 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpGet("get-previous-orders")]
-        public async Task<IActionResult> GetPreviousOrders()
+        public async Task<IActionResult> GetPreviousOrdersAsync()
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id);
@@ -519,14 +519,14 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpGet("get-upcoming-orders")]
-        public async Task<IActionResult> GetUpcomingOrders()
+        public async Task<IActionResult> GetUpcomingOrdersAsync()
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id);
             var perviousOrders = orders.Where(x => x.ScheduleDate.Date > DateTime.Now.Date);
             if (perviousOrders.Any())
             {
-                var languageId = _workContext.GetWorkingLanguageAsync().Id;
+                var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
                 var model = new CustomerOrderListModel();
                 foreach (var order in perviousOrders)
                 {

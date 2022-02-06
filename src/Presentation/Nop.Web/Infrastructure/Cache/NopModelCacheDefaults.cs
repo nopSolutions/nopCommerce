@@ -66,7 +66,7 @@ namespace Nop.Web.Infrastructure.Cache
         public static CacheKey HomepageBestsellersIdsKey => new CacheKey("Nop.pres.bestsellers.homepage-{0}", HomepageBestsellersIdsPrefixCacheKey);
         public static string HomepageBestsellersIdsPrefixCacheKey => "Nop.pres.bestsellers.homepage";
 
-        public static CacheKey ApiBestsellersVendorIdsKey => new CacheKey("Nop.api.bestsellers-{}", ApiBestsellersVendorIdsPrefixCacheKey)
+        public static CacheKey ApiBestsellersVendorIdsKey => new CacheKey("Nop.api.bestsellers-{0}", ApiBestsellersVendorIdsPrefixCacheKey)
         {
             CacheTime = (int)TimeSpan.FromDays(1).TotalMinutes
         };

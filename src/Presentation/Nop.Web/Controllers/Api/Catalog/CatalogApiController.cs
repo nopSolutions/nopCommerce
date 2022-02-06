@@ -288,12 +288,13 @@ namespace Nop.Web.Controllers.Api.Security
             var models = new List<ProductOverviewApiModel>();
             
             var allCategories = 
-                (await _catalogModelFactory.PrepareCategorySimpleModelsAsync()).ToImmutableDictionary(sc => sc.Id);
+                (await _catalogModelFactory.PrepareCategorySimpleModelsAsync())
+                    .ToImmutableDictionary(sc => sc.Id);
             
             foreach (var product in products)
             {
                 var specifications = await PrepareProductSpecificationAttributeModelAsync(product);
-                if (specifications != null && product.Published)
+                if (specifications != null)
                 {
                     var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
                     string categoryNameJoined;
@@ -306,7 +307,7 @@ namespace Nop.Web.Controllers.Api.Security
 
                     var popularityByVendor = (await _staticCacheManager.GetAsync(
                         _staticCacheManager.PrepareKeyForDefaultCache(
-                            NopModelCacheDefaults.HomepageBestsellersIdsKey, product.VendorId),
+                            NopModelCacheDefaults.ApiBestsellersVendorIdsKey, product.VendorId),
                         async () => (await _orderReportService.BestSellersReportAsync(
                             showHidden: true,
                             vendorId: product.VendorId)).ToImmutableDictionary(k => k.ProductId)));
@@ -338,6 +339,9 @@ namespace Nop.Web.Controllers.Api.Security
                     };
 
                     models.Add(model);
+                }
+                else
+                {
                     
                 }
             }
@@ -475,7 +479,8 @@ namespace Nop.Web.Controllers.Api.Security
         public async Task<IActionResult> SearchProductsAsync(SearchProductByFilters searchModel)
         {
             var products = await _productService.SearchProductsAsync(
-                keywords: searchModel.Keyword);
+                keywords: searchModel.Keyword,
+                showHidden: true);
             if (!products.Any())
                 return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Product.Not.Found") });
 
@@ -485,7 +490,7 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpGet("product/{id}")]
-        public async Task<IActionResult> GetProductById(int id, int updatecartitemid = 0)
+        public async Task<IActionResult> GetProductByIdAsync(int id, int updatecartitemid = 0)
         {
             var product = await _productService.GetProductByIdAsync(id);
             if (product == null || product.Deleted)
