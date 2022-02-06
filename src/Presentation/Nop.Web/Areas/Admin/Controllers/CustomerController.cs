@@ -1036,7 +1036,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     EmailAccountId = emailAccount.Id,
                     FromName = emailAccount.DisplayName,
                     From = emailAccount.Email,
-                    ToName = _customerService.GetCustomerFullName(customer),
+                    ToName = await _customerService.GetCustomerFullNameAsync(customer),
                     To = customer.Email,
                     Subject = model.SendEmail.Subject,
                     Body = model.SendEmail.Body,

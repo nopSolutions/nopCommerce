@@ -712,7 +712,7 @@ namespace Nop.Services.Customers
         /// <returns>
         /// The result contains the customer full name
         /// </returns>
-        public virtual string GetCustomerFullName(Customer customer)
+        public virtual Task<string> GetCustomerFullNameAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -732,7 +732,7 @@ namespace Nop.Services.Customers
                     fullName = lastName;
             }
 
-            return fullName;
+            return Task.FromResult(fullName);
         }
 
         /// <summary>
@@ -764,7 +764,7 @@ namespace Nop.Services.Customers
                     result = customer.Username;
                     break;
                 case CustomerNameFormat.ShowFullNames:
-                    result = GetCustomerFullName(customer);
+                    result = await GetCustomerFullNameAsync(customer);
                     break;
                 case CustomerNameFormat.ShowFirstName:
                     result = customer.FirstName;

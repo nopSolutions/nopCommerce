@@ -423,7 +423,7 @@ namespace Nop.Web.Controllers
 
             if (await _customerService.IsRegisteredAsync(customer))
             {
-                var fullName = _customerService.GetCustomerFullName(customer);
+                var fullName = await _customerService.GetCustomerFullNameAsync(customer);
                 var message = await _localizationService.GetResourceAsync("Account.Login.AlreadyLogin");
                 _notificationService.SuccessNotification(string.Format(message, fullName));
             }

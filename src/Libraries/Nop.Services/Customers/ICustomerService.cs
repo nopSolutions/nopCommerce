@@ -245,7 +245,7 @@ namespace Nop.Services.Customers
         /// <returns>
         /// The result contains the customer full name
         /// </returns>
-        string GetCustomerFullName(Customer customer);
+        Task<string> GetCustomerFullNameAsync(Customer customer);
 
         /// <summary>
         /// Formats the customer name

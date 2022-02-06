@@ -1498,7 +1498,7 @@ namespace Nop.Web.Factories
 
                 if (updatecartitem == null)
                 {
-                    model.GiftCard.SenderName = _customerService.GetCustomerFullName(customer);
+                    model.GiftCard.SenderName = await _customerService.GetCustomerFullNameAsync(customer);
                     model.GiftCard.SenderEmail = customer.Email;
                 }
                 else

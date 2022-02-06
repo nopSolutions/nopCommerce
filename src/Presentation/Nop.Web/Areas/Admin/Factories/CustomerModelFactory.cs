@@ -618,7 +618,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     customerModel.Email = (await _customerService.IsRegisteredAsync(customer))
                         ? customer.Email
                         : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
-                    customerModel.FullName = _customerService.GetCustomerFullName(customer);
+                    customerModel.FullName = await _customerService.GetCustomerFullNameAsync(customer);
                     customerModel.Company = customer.Company;
                     customerModel.Phone = customer.Phone;
                     customerModel.ZipPostalCode = customer.ZipPostalCode;
@@ -698,7 +698,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.Fax = customer.Fax;
                     model.TimeZoneId = customer.TimeZoneId;
                     model.VatNumber = customer.VatNumber;
-                    model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatusEnum);
+                    model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatus);
                     model.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
                     model.LastVisitedPage = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute);
@@ -707,6 +707,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
                     model.DisplayRegisteredInStore = model.Id > 0 && !string.IsNullOrEmpty(model.RegisteredInStore) &&
                         (await _storeService.GetAllStoresAsync()).Select(x => x.Id).Count() > 1;
+                    model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
 
                     //prepare model affiliate
                     var affiliate = await _affiliateService.GetAffiliateByIdAsync(customer.AffiliateId);

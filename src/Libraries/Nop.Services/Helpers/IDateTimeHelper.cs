@@ -77,7 +77,7 @@ namespace Nop.Services.Helpers
         /// A task that represents the asynchronous operation
         /// The task result contains the customer time zone; if customer is null, then default store time zone
         /// </returns>
-        TimeZoneInfo GetCustomerTimeZone(Customer customer);
+        Task<TimeZoneInfo> GetCustomerTimeZoneAsync(Customer customer);
 
         /// <summary>
         /// Gets the current user time zone

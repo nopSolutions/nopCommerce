@@ -1026,7 +1026,7 @@ namespace Nop.Services.Messages
             if (language != null && !string.IsNullOrEmpty(language.LanguageCulture))
             {
                 var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-                var createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, _dateTimeHelper.GetCustomerTimeZone(customer));
+                var createdOn =  _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
                 tokens.Add(new Token("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture))));
             }
             else
@@ -1205,7 +1205,7 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Customer.Email", customer.Email));
             tokens.Add(new Token("Customer.Username", customer.Username));
-            tokens.Add(new Token("Customer.FullName", _customerService.GetCustomerFullName(customer)));
+            tokens.Add(new Token("Customer.FullName", await _customerService.GetCustomerFullNameAsync(customer)));
             tokens.Add(new Token("Customer.FirstName", customer.FirstName));
             tokens.Add(new Token("Customer.LastName", customer.LastName));
             tokens.Add(new Token("Customer.VatNumber", customer.VatNumber));

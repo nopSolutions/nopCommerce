@@ -55,7 +55,7 @@ namespace Nop.Core.Domain.Customers
         public string Company { get; set; }
 
         /// <summary>
-        /// Gets or sets the atreet address
+        /// Gets or sets the street address
         /// </summary>
         public string StreetAddress { get; set; }
 
@@ -70,7 +70,7 @@ namespace Nop.Core.Domain.Customers
         public string ZipPostalCode { get; set; }
 
         /// <summary>
-        /// Gets or sets the zip
+        /// Gets or sets the city
         /// </summary>
         public string City { get; set; }
 
@@ -244,14 +244,14 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the vat number status
         /// </summary>
-        public VatNumberStatus VatNumberStatusEnum
+        public VatNumberStatus VatNumberStatus
         {
             get => (VatNumberStatus)VatNumberStatusId;
             set => VatNumberStatusId = (int)value;
         }
 
         /// <summary>
-        /// Gets or sets the vat number status
+        /// Gets or sets the tax display type
         /// </summary>
         public TaxDisplayType? TaxDisplayType
         {

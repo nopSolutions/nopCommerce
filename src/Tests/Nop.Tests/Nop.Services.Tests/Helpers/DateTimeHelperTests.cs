@@ -96,7 +96,7 @@ namespace Nop.Tests.Nop.Services.Tests.Helpers
             _customer.TimeZoneId = _gmtPlus3MoscowTimeZoneId;
             await _customerService.UpdateCustomerAsync(_customer);
 
-            var timeZone = GetService<IDateTimeHelper>().GetCustomerTimeZone(_customer);
+            var timeZone = await GetService<IDateTimeHelper>().GetCustomerTimeZoneAsync(_customer);
             timeZone.Should().NotBeNull();
             timeZone.Id.Should().Be(_gmtPlus3MoscowTimeZoneId);
         }
@@ -111,7 +111,7 @@ namespace Nop.Tests.Nop.Services.Tests.Helpers
             _customer.TimeZoneId = _gmtPlus3MoscowTimeZoneId;
             await _customerService.UpdateCustomerAsync(_customer);
             
-            var timeZone = GetService<IDateTimeHelper>().GetCustomerTimeZone(_customer);
+            var timeZone = await GetService<IDateTimeHelper>().GetCustomerTimeZoneAsync(_customer);
             timeZone.Should().NotBeNull();
             timeZone.Id.Should().Be(_gmtPlus2MinskTimeZoneId);  //(GMT+02:00) Minsk
         }

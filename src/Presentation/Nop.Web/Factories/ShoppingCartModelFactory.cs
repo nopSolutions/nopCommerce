@@ -979,7 +979,7 @@ namespace Nop.Web.Factories
             var customer = await _customerService.GetShoppingCartCustomerAsync(cart);
 
             model.CustomerGuid = customer.CustomerGuid;
-            model.CustomerFullname = _customerService.GetCustomerFullName(customer);
+            model.CustomerFullname = await _customerService.GetCustomerFullNameAsync(customer);
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnWishList;
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
 

@@ -1734,16 +1734,6 @@ namespace Nop.Services.ExportImport
                 return stateProvince?.Name ?? string.Empty;
             }
 
-            object getVatNumberStatus(Customer customer)
-            {
-                var vatNumberStatusId = customer.VatNumberStatusId;
-
-                if (!_catalogSettings.ExportImportRelatedEntitiesByName)
-                    return vatNumberStatusId;
-
-                return CommonHelper.ConvertEnum(((VatNumberStatus)vatNumberStatusId).ToString());
-            }
-
             //property manager 
             var manager = new PropertyManager<Customer>(new[]
             {
@@ -1781,7 +1771,11 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("Phone", p => p.Phone, !_customerSettings.PhoneEnabled),
                 new PropertyByName<Customer>("Fax", p => p.Fax, !_customerSettings.FaxEnabled),
                 new PropertyByName<Customer>("VatNumber", p => p.VatNumber),
-                new PropertyByName<Customer>("VatNumberStatus", getVatNumberStatus),
+                new PropertyByName<Customer>("VatNumberStatusId", p => p.VatNumberStatusId),
+                new PropertyByName<Customer>("VatNumberStatus", p => p.VatNumberStatusId)
+                {
+                    DropDownElements = await VatNumberStatus.Unknown.ToSelectListAsync(useLocalization: false)
+                },
                 new PropertyByName<Customer>("TimeZone", p => p.TimeZoneId, !_dateTimeSettings.AllowCustomersToSetTimeZone),
                 new PropertyByName<Customer>("AvatarPictureId", async p => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.AvatarPictureIdAttribute), !_customerSettings.AllowCustomersToUploadAvatars),
                 new PropertyByName<Customer>("ForumPostCount", async p => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.ForumPostCountAttribute)),
@@ -1990,7 +1984,6 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("Country", async p => (await _countryService.GetCountryByIdAsync(p.CountryId))?.Name ?? string.Empty, !_customerSettings.CountryEnabled),
                 new PropertyByName<Customer>("State province", async p => (await _stateProvinceService.GetStateProvinceByIdAsync(p.StateProvinceId))?.Name ?? string.Empty, !(_customerSettings.StateProvinceEnabled && _customerSettings.CountryEnabled)),
                 new PropertyByName<Customer>("Phone", p => p.Phone, !_customerSettings.PhoneEnabled),
-                new PropertyByName<Customer>("Fax", p => p.Fax, !_customerSettings.FaxEnabled),
                 new PropertyByName<Customer>("Fax", p => p.Fax, !_customerSettings.FaxEnabled),
                 new PropertyByName<Customer>("Customer attributes",  GetCustomCustomerAttributesAsync)
             }, _catalogSettings);

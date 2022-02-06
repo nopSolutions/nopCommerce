@@ -523,7 +523,7 @@ namespace Nop.Web.Factories
             {
                 var customer = await _workContext.GetCurrentCustomerAsync();
                 model.Email = customer.Email;
-                model.FullName = _customerService.GetCustomerFullName(customer);
+                model.FullName = await _customerService.GetCustomerFullNameAsync(customer);
             }
 
             model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
@@ -554,7 +554,7 @@ namespace Nop.Web.Factories
             {
                 var customer = await _workContext.GetCurrentCustomerAsync();
                 model.Email = customer.Email;
-                model.FullName = _customerService.GetCustomerFullName(customer);
+                model.FullName = await _customerService.GetCustomerFullNameAsync(customer);
             }
 
             model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;

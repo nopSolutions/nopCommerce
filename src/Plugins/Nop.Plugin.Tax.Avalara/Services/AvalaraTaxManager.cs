@@ -777,7 +777,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 companyId = companyId,
                 customerCode = customer.Id.ToString(),
                 alternateId = customer.CustomerGuid.ToString().ToLowerInvariant(),
-                name = _customerService.GetCustomerFullName(customer),
+                name = await _customerService.GetCustomerFullNameAsync(customer),
                 emailAddress = customer.Email,
                 line1 = address.line1,
                 line2 = address.line2,

@@ -549,7 +549,7 @@ namespace Nop.Services.Orders
 
             //tax display type
             if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
-                details.CustomerTaxDisplayType = (TaxDisplayType)(await _workContext.GetCurrentCustomerAsync()).TaxDisplayTypeId;
+                details.CustomerTaxDisplayType = (TaxDisplayType)details.Customer.TaxDisplayTypeId;
             else
                 details.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
 
@@ -643,7 +643,7 @@ namespace Nop.Services.Orders
             (details.OrderTaxTotal, taxRatesDictionary) = await _orderTotalCalculationService.GetTaxTotalAsync(details.Cart);
 
             //VAT number
-            if (_taxSettings.EuVatEnabled && details.Customer.VatNumberStatusEnum == VatNumberStatus.Valid)
+            if (_taxSettings.EuVatEnabled && details.Customer.VatNumberStatus == VatNumberStatus.Valid)
                 details.VatNumber = details.Customer.VatNumber;
 
             //tax rates
