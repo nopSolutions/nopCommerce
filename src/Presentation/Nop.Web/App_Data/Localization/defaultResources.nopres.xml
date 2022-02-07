@@ -5655,6 +5655,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowAnonymousUsersToReviewProduct.Hint">
     <Value>Check to allow anonymous users to write product reviews.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName">
+    <Value>Allow customers to search with category name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName.Hint">
+    <Value>Check to allow customer to search with category name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName">
+    <Value>Allow customers to search with manufacturer name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName.Hint">
+    <Value>Check to allow customer to search with manufacturer name.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowProductSorting">
     <Value>Allow product sorting</Value>
   </LocaleResource>

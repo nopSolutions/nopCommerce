@@ -38,9 +38,11 @@ namespace Nop.Services.Catalog
         protected readonly ILocalizationService _localizationService;
         protected readonly IProductAttributeParser _productAttributeParser;
         protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IRepository<Category> _categoryRepository;
         protected readonly IRepository<CrossSellProduct> _crossSellProductRepository;
         protected readonly IRepository<DiscountProductMapping> _discountProductMappingRepository;
         protected readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
+        protected readonly IRepository<Manufacturer> _manufacturerRepository;
         protected readonly IRepository<Product> _productRepository;
         protected readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
         protected readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
@@ -77,9 +79,11 @@ namespace Nop.Services.Catalog
             ILocalizationService localizationService,
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
+            IRepository<Category> categoryRepository,
             IRepository<CrossSellProduct> crossSellProductRepository,
             IRepository<DiscountProductMapping> discountProductMappingRepository,
             IRepository<LocalizedProperty> localizedPropertyRepository,
+            IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
             IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,
@@ -112,9 +116,11 @@ namespace Nop.Services.Catalog
             _localizationService = localizationService;
             _productAttributeParser = productAttributeParser;
             _productAttributeService = productAttributeService;
+            _categoryRepository = categoryRepository;
             _crossSellProductRepository = crossSellProductRepository;
             _discountProductMappingRepository = discountProductMappingRepository;
             _localizedPropertyRepository = localizedPropertyRepository;
+            _manufacturerRepository = manufacturerRepository;
             _productRepository = productRepository;
             _productAttributeCombinationRepository = productAttributeCombinationRepository;
             _productAttributeMappingRepository = productAttributeMappingRepository;
@@ -879,6 +885,50 @@ namespace Nop.Services.Catalog
                         from pac in _productAttributeCombinationRepository.Table
                         where pac.Sku == keywords
                         select pac.ProductId);
+                }
+
+                //search by category name if admin allows
+                if (_catalogSettings.AllowCustomersToSearchWithCategoryName)
+                {
+                    productsByKeywords = productsByKeywords.Union(
+                        from pc in _productCategoryRepository.Table
+                        join c in _categoryRepository.Table on pc.CategoryId equals c.Id
+                        where c.Name.Contains(keywords)
+                        select pc.ProductId
+                    );
+
+                    if (searchLocalizedValue)
+                    {
+                        productsByKeywords = productsByKeywords.Union(
+                        from pc in _productCategoryRepository.Table
+                        join lp in _localizedPropertyRepository.Table on pc.CategoryId equals lp.EntityId
+                        where lp.LocaleKeyGroup == nameof(Category) &&
+                              lp.LocaleKey == nameof(Category.Name) &&
+                              lp.LocaleValue.Contains(keywords)
+                        select pc.ProductId);
+                    }
+                }
+
+                //search by manufacturer name if admin allows
+                if (_catalogSettings.AllowCustomersToSearchWithManufacturerName)
+                {
+                    productsByKeywords = productsByKeywords.Union(
+                        from pm in _productManufacturerRepository.Table
+                        join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                        where m.Name.Contains(keywords)
+                        select pm.ProductId
+                    );
+
+                    if (searchLocalizedValue)
+                    {
+                        productsByKeywords = productsByKeywords.Union(
+                        from pm in _productManufacturerRepository.Table
+                        join lp in _localizedPropertyRepository.Table on pm.ManufacturerId equals lp.EntityId
+                        where lp.LocaleKeyGroup == nameof(Manufacturer) &&
+                              lp.LocaleKey == nameof(Manufacturer.Name) &&
+                              lp.LocaleValue.Contains(keywords)
+                        select pm.ProductId);
+                    }
                 }
 
                 if (searchProductTags)

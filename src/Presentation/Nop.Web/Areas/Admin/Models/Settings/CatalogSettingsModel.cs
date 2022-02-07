@@ -377,6 +377,14 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         
         public string PrimaryStoreCurrencyCode { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName")]
+        public bool AllowCustomersToSearchWithManufacturerName { get; set; }
+        public bool AllowCustomersToSearchWithManufacturerName_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName")]
+        public bool AllowCustomersToSearchWithCategoryName { get; set; }
+        public bool AllowCustomersToSearchWithCategoryName_OverrideForStore { get; set; }
+
         #endregion
     }
 }
