@@ -904,7 +904,8 @@ namespace Nop.Services.Catalog
                         join lp in _localizedPropertyRepository.Table on pc.CategoryId equals lp.EntityId
                         where lp.LocaleKeyGroup == nameof(Category) &&
                               lp.LocaleKey == nameof(Category.Name) &&
-                              lp.LocaleValue.Contains(keywords)
+                              lp.LocaleValue.Contains(keywords) &&
+                              lp.LanguageId == languageId
                         select pc.ProductId);
                     }
                 }
@@ -926,7 +927,8 @@ namespace Nop.Services.Catalog
                         join lp in _localizedPropertyRepository.Table on pm.ManufacturerId equals lp.EntityId
                         where lp.LocaleKeyGroup == nameof(Manufacturer) &&
                               lp.LocaleKey == nameof(Manufacturer.Name) &&
-                              lp.LocaleValue.Contains(keywords)
+                              lp.LocaleValue.Contains(keywords) &&
+                              lp.LanguageId == languageId
                         select pm.ProductId);
                     }
                 }
