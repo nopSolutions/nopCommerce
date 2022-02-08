@@ -200,7 +200,8 @@ namespace Nop.Services.Messages
                     "%Store.CompanyVat%",
                     "%Facebook.URL%",
                     "%Twitter.URL%",
-                    "%YouTube.URL%"
+                    "%YouTube.URL%",
+                    "%Instagram.URL%"
                 });
 
                 //customer tokens
@@ -941,6 +942,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Facebook.URL", _storeInformationSettings.FacebookLink));
             tokens.Add(new Token("Twitter.URL", _storeInformationSettings.TwitterLink));
             tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
+            tokens.Add(new Token("Instagram.URL", _storeInformationSettings.InstagramLink));
 
             //event notification
             await _eventPublisher.EntityTokensAddedAsync(store, tokens);
