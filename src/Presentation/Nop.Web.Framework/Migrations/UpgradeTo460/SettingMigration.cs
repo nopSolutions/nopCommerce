@@ -24,7 +24,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             //#3997
             if (!settingService.SettingExistsAsync(storeInformationSettings, settings => settings.InstagramLink).Result)
             {
-                storeInformationSettings.InstagramLink = "https://www.instagram.com/nopcommerce_official";
+                storeInformationSettings.InstagramLink = "";
                 settingService.SaveSettingAsync(storeInformationSettings, settings => settings.InstagramLink).Wait();
             }
         }
