@@ -710,7 +710,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>
-        /// The result contains the customer full name
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer full name
         /// </returns>
         public virtual Task<string> GetCustomerFullNameAsync(Customer customer)
         {

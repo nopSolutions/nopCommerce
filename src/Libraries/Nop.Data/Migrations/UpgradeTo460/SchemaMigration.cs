@@ -12,27 +12,10 @@ namespace Nop.Data.Migrations.UpgradeTo460
     [NopMigration("2022-02-02 00:00:00", "Customer attribute", MigrationProcessType.Update)]
     public class SchemaMigration : Migration
     {
-        private readonly INopDataProvider _dataProvider;
-
-        public SchemaMigration(INopDataProvider dataProvider)
-        {
-            _dataProvider = dataProvider;
-        }
-
         /// <summary>
         /// Collect the UP migration expressions
         /// </summary>
         public override void Up()
-        {
-            CustomerTable();
-        }
-
-        public override void Down()
-        {
-            //add the downgrade logic if necessary 
-        }
-
-        private void CustomerTable()
         {
             // add column
             var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
@@ -62,17 +45,17 @@ namespace Nop.Data.Migrations.UpgradeTo460
             if (!Schema.Table(customerTableName).Column(firstNameCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(firstNameCustomerColumnName).AsString().Nullable();
+                    .AddColumn(firstNameCustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(lastNameCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(lastNameCustomerColumnName).AsString().Nullable();
+                    .AddColumn(lastNameCustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(genderCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(genderCustomerColumnName).AsString().Nullable();
+                    .AddColumn(genderCustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(dobCustomerColumnName).Exists())
             {
@@ -82,32 +65,32 @@ namespace Nop.Data.Migrations.UpgradeTo460
             if (!Schema.Table(customerTableName).Column(companyCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(companyCustomerColumnName).AsString().Nullable();
+                    .AddColumn(companyCustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(address1CustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(address1CustomerColumnName).AsString().Nullable();
+                    .AddColumn(address1CustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(address2CustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(address2CustomerColumnName).AsString().Nullable();
+                    .AddColumn(address2CustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(zipCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(zipCustomerColumnName).AsString().Nullable();
+                    .AddColumn(zipCustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(cityCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(cityCustomerColumnName).AsString().Nullable();
+                    .AddColumn(cityCustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(countyCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(countyCustomerColumnName).AsString().Nullable();
+                    .AddColumn(countyCustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(countryIdCustomerColumnName).Exists())
             {
@@ -117,37 +100,37 @@ namespace Nop.Data.Migrations.UpgradeTo460
             if (!Schema.Table(customerTableName).Column(stateIdCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(stateIdCustomerColumnName).AsInt32().WithDefaultValue(0);
+                    .AddColumn(stateIdCustomerColumnName).AsInt32().NotNullable().SetExistingRowsTo(0);
             }
             if (!Schema.Table(customerTableName).Column(phoneCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(phoneCustomerColumnName).AsString().Nullable();
+                    .AddColumn(phoneCustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(faxCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(faxCustomerColumnName).AsString().Nullable();
+                    .AddColumn(faxCustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(vatNumberCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(vatNumberCustomerColumnName).AsString().Nullable();
+                    .AddColumn(vatNumberCustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(vatNumberStatusIdCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(vatNumberStatusIdCustomerColumnName).AsInt32().WithDefaultValue((int)VatNumberStatus.Unknown);
+                    .AddColumn(vatNumberStatusIdCustomerColumnName).AsInt32().NotNullable().SetExistingRowsTo((int)VatNumberStatus.Unknown);
             }
             if (!Schema.Table(customerTableName).Column(timeZoneIdCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(timeZoneIdCustomerColumnName).AsString().Nullable();
+                    .AddColumn(timeZoneIdCustomerColumnName).AsString(1000).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(attributeXmlCustomerColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(attributeXmlCustomerColumnName).AsString().Nullable();
+                    .AddColumn(attributeXmlCustomerColumnName).AsString(int.MaxValue).Nullable();
             }
             if (!Schema.Table(customerTableName).Column(currencyIdCustomerColumnName).Exists())
             {
@@ -164,6 +147,11 @@ namespace Nop.Data.Migrations.UpgradeTo460
                 Alter.Table(customerTableName)
                     .AddColumn(taxDisplayTypeIdCustomerColumnName).AsInt32().Nullable();
             }
+        }
+
+        public override void Down()
+        {
+            //add the downgrade logic if necessary 
         }
     }
 }

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Services.Common;
 
 namespace Nop.Services.Helpers
 {
@@ -16,7 +15,6 @@ namespace Nop.Services.Helpers
         #region Fields
 
         private readonly DateTimeSettings _dateTimeSettings;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -24,11 +22,9 @@ namespace Nop.Services.Helpers
         #region Ctor
 
         public DateTimeHelper(DateTimeSettings dateTimeSettings,
-            IGenericAttributeService genericAttributeService,
             IWorkContext workContext)
         {
             _dateTimeSettings = dateTimeSettings;
-            _genericAttributeService = genericAttributeService;
             _workContext = workContext;
         }
 
