@@ -10,7 +10,7 @@ using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-02-02 00:00:00", "4.60.0", UpdateMigrationType.Localization, MigrationProcessType.Update)]
+    [NopMigration("2022-02-07 00:00:00", "4.60.0", UpdateMigrationType.Localization, MigrationProcessType.Update)]
     public class LocalizationMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -31,11 +31,18 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             //use localizationService to add, update and delete localization resources
             localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
+                //#3075
+                ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName"] = "Allow customers to search with category name",
+                ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName.Hint"] = "Check to allow customer to search with category name.",
+                ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName"] = "Allow customers to search with manufacturer name",
+                ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName.Hint"] = "Check to allow customer to search with manufacturer name.",
+
                 //#3997
                 ["Admin.Configuration.Settings.GeneralCommon.InstagramLink"] = "Instagram URL",
                 ["Admin.Configuration.Settings.GeneralCommon.InstagramLink.Hint"] = "Specify your Instagram page URL. Leave empty if you have no such page.",
 
                 ["Footer.FollowUs.Instagram"] = "Instagram",
+
             }, languageId).Wait();
         }
 
