@@ -34,7 +34,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             //use localizationService to add, update and delete localization resources
             localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
-                //#3997
+                //#3075
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName"] = "Allow customers to search with category name",
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName.Hint"] = "Check to allow customer to search with category name.",
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName"] = "Allow customers to search with manufacturer name",
