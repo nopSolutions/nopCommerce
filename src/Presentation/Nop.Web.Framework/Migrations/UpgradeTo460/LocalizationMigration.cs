@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -39,6 +36,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName.Hint"] = "Check to allow customer to search with category name.",
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName"] = "Allow customers to search with manufacturer name",
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName.Hint"] = "Check to allow customer to search with manufacturer name.",
+
+                //#3997
+                ["Admin.Configuration.Settings.GeneralCommon.InstagramLink"] = "Instagram URL",
+                ["Admin.Configuration.Settings.GeneralCommon.InstagramLink.Hint"] = "Specify your Instagram page URL. Leave empty if you have no such page.",
+
+                ["Footer.FollowUs.Instagram"] = "Instagram",
+
             }, languageId).Wait();
         }
 

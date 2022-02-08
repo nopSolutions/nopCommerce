@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -32,6 +33,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             {
                 catalogSettings.AllowCustomersToSearchWithCategoryName = true;
                 settingService.SaveSettingAsync(catalogSettings, settings => settings.AllowCustomersToSearchWithCategoryName).Wait();
+            }
+            
+            var storeInformationSettings = settingService.LoadSettingAsync<StoreInformationSettings>().Result;
+
+            //#3997
+            if (!settingService.SettingExistsAsync(storeInformationSettings, settings => settings.InstagramLink).Result)
+            {
+                storeInformationSettings.InstagramLink = "";
+                settingService.SaveSettingAsync(storeInformationSettings, settings => settings.InstagramLink).Wait();
             }
         }
 

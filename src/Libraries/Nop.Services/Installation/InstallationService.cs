@@ -3199,6 +3199,7 @@ namespace Nop.Services.Installation
                 FacebookLink = "https://www.facebook.com/nopCommerce",
                 TwitterLink = "https://twitter.com/nopCommerce",
                 YoutubeLink = "https://www.youtube.com/user/nopCommerce",
+                InstagramLink = "https://www.instagram.com/nopcommerce_official",
                 HidePoweredByNopCommerce = false
             });
 

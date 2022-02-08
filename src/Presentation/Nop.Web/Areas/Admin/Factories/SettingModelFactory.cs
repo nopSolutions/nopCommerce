@@ -332,6 +332,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 FacebookLink = storeInformationSettings.FacebookLink,
                 TwitterLink = storeInformationSettings.TwitterLink,
                 YoutubeLink = storeInformationSettings.YoutubeLink,
+                InstagramLink = storeInformationSettings.InstagramLink,
                 SubjectFieldOnContactUsForm = commonSettings.SubjectFieldOnContactUsForm,
                 UseSystemEmailForContactUsForm = commonSettings.UseSystemEmailForContactUsForm,
                 PopupForTermsOfServiceLinks = commonSettings.PopupForTermsOfServiceLinks
@@ -352,6 +353,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.FacebookLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.FacebookLink, storeId);
             model.TwitterLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.TwitterLink, storeId);
             model.YoutubeLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.YoutubeLink, storeId);
+            model.InstagramLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.InstagramLink, storeId);
             model.SubjectFieldOnContactUsForm_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.SubjectFieldOnContactUsForm, storeId);
             model.UseSystemEmailForContactUsForm_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.UseSystemEmailForContactUsForm, storeId);
             model.PopupForTermsOfServiceLinks_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.PopupForTermsOfServiceLinks, storeId);
