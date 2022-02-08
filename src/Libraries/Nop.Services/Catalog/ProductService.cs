@@ -872,6 +872,21 @@ namespace Nop.Services.Catalog
                             (searchSku && p.Sku == keywords)
                         select p.Id;
 
+                if (searchLocalizedValue)
+                {
+                    productsByKeywords = productsByKeywords.Union(
+                        from lp in _localizedPropertyRepository.Table
+                        let checkName = lp.LocaleKey == nameof(Product.Name) &&
+                                        lp.LocaleValue.Contains(keywords)
+                        let checkShortDesc = searchDescriptions &&
+                                        lp.LocaleKey == nameof(Product.ShortDescription) &&
+                                        lp.LocaleValue.Contains(keywords)
+                        where
+                            lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId && (checkName || checkShortDesc)
+
+                        select lp.EntityId);
+                }
+
                 //search by SKU for ProductAttributeCombination
                 if (searchSku)
                 {
@@ -886,7 +901,7 @@ namespace Nop.Services.Catalog
                     productsByKeywords = productsByKeywords.Union(
                         from pptm in _productTagMappingRepository.Table
                         join pt in _productTagRepository.Table on pptm.ProductTagId equals pt.Id
-                        where pt.Name == keywords
+                        where pt.Name.Contains(keywords)
                         select pptm.ProductId
                     );
 
@@ -897,29 +912,10 @@ namespace Nop.Services.Catalog
                         join lp in _localizedPropertyRepository.Table on pptm.ProductTagId equals lp.EntityId
                         where lp.LocaleKeyGroup == nameof(ProductTag) &&
                               lp.LocaleKey == nameof(ProductTag.Name) &&
-                              lp.LocaleValue.Contains(keywords)
-                        select lp.EntityId);
+                              lp.LocaleValue.Contains(keywords) &&
+                              lp.LanguageId == languageId
+                        select pptm.ProductId);
                     }
-                }
-
-                if (searchLocalizedValue)
-                {
-                    productsByKeywords = productsByKeywords.Union(
-                                from lp in _localizedPropertyRepository.Table
-                                let checkName = lp.LocaleKey == nameof(Product.Name) &&
-                                                lp.LocaleValue.Contains(keywords)
-                                let checkShortDesc = searchDescriptions &&
-                                                lp.LocaleKey == nameof(Product.ShortDescription) &&
-                                                lp.LocaleValue.Contains(keywords)
-                                let checkProductTags = searchProductTags &&
-                                                lp.LocaleKeyGroup == nameof(ProductTag) &&
-                                                lp.LocaleKey == nameof(ProductTag.Name) &&
-                                                lp.LocaleValue.Contains(keywords)
-                                where
-                                    lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId && (checkName || checkShortDesc) ||
-                                    checkProductTags
-
-                                select lp.EntityId);
                 }
 
                 productsQuery =
