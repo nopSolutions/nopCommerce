@@ -200,7 +200,8 @@ namespace Nop.Services.Messages
                     "%Store.CompanyVat%",
                     "%Facebook.URL%",
                     "%Twitter.URL%",
-                    "%YouTube.URL%"
+                    "%YouTube.URL%",
+                    "%Instagram.URL%"
                 });
 
                 //customer tokens
