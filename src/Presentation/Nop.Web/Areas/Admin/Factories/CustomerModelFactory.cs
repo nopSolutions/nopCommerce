@@ -592,6 +592,14 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter customers
             _ = int.TryParse(searchModel.SearchDayOfBirth, out var dayOfBirth);
             _ = int.TryParse(searchModel.SearchMonthOfBirth, out var monthOfBirth);
+            var createdFromUtc = !searchModel.SearchRegistrationDateFrom.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchRegistrationDateFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+            var createdToUtc = !searchModel.SearchRegistrationDateTo.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchRegistrationDateTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+            var lastActivityFromUtc = !searchModel.SearchLastActivityFrom.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchLastActivityFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+            var lastActivityToUtc = !searchModel.SearchLastActivityTo.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchLastActivityTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
             //get customers
             var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
@@ -602,6 +610,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 dayOfBirth: dayOfBirth,
                 monthOfBirth: monthOfBirth,
                 company: searchModel.SearchCompany,
+                createdFromUtc: createdFromUtc,
+                createdToUtc: createdToUtc,
+                lastActivityFromUtc: lastActivityFromUtc,
+                lastActivityToUtc: lastActivityToUtc,
                 phone: searchModel.SearchPhone,
                 zipPostalCode: searchModel.SearchZipPostalCode,
                 ipAddress: searchModel.SearchIpAddress,

@@ -36,6 +36,16 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.Settings.GeneralCommon.InstagramLink.Hint"] = "Specify your Instagram page URL. Leave empty if you have no such page.",
 
                 ["Footer.FollowUs.Instagram"] = "Instagram",
+
+                //#5947
+                ["Admin.Customers.Customers.List.SearchLastActivityFrom"] = "Last activity from",
+                ["Admin.Customers.Customers.List.SearchLastActivityFrom.Hint"] = "The last activity from date for the search.",
+                ["Admin.Customers.Customers.List.SearchLastActivityTo"] = "Last activity to",
+                ["Admin.Customers.Customers.List.SearchLastActivityTo.Hint"] = "The last activity to date for the search.",
+                ["Admin.Customers.Customers.List.SearchRegistrationDateFrom"] = "Registration date from",
+                ["Admin.Customers.Customers.List.SearchRegistrationDateFrom.Hint"] = "The registration from date for the search.",
+                ["Admin.Customers.Customers.List.SearchRegistrationDateTo"] = "Registration date to",
+                ["Admin.Customers.Customers.List.SearchRegistrationDateTo.Hint"] = "The registration to date for the search.",
             }, languageId).Wait();
         }
 
