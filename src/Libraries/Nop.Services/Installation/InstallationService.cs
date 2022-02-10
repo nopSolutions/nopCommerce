@@ -3057,7 +3057,9 @@ namespace Nop.Services.Installation
                 EnableManufacturerFiltering = true,
                 EnablePriceRangeFiltering = true,
                 EnableSpecificationAttributeFiltering = true,
-                AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay
+                AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay,
+                AllowCustomersToSearchWithCategoryName = true,
+                AllowCustomersToSearchWithManufacturerName = true
             });
 
             await settingService.SaveSettingAsync(new LocalizationSettings

@@ -767,7 +767,10 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if (order is null)
                     throw new ArgumentNullException(nameof(order));
 
-                //move the shipment if from the customer to the order entry
+                if (order.ShippingRateComputationMethodSystemName != EasyPostDefaults.SystemName)
+                    return false;
+
+                //move the shipment from the customer to the order entry
                 var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
                 var shipmentId = await _genericAttributeService
                     .GetAttributeAsync<string>(customer, EasyPostDefaults.ShipmentIdAttribute, order.StoreId);
