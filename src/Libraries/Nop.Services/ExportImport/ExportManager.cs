@@ -1475,12 +1475,12 @@ namespace Nop.Services.ExportImport
             if (!_catalogSettings.ExportImportProductAttributes && !_catalogSettings.ExportImportProductSpecificationAttributes)
                 return await new PropertyManager<Product>(properties, _catalogSettings).ExportToXlsxAsync(productList);
 
-            if (productAdvancedMode || _productEditorSettings.ProductAttributes)
-                return await ExportProductsToXlsxWithAttributesAsync(properties, productList);
-
             //activity log
             await _customerActivityService.InsertActivityAsync("ExportProducts",
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportProducts"), productList.Count));
+
+            if (productAdvancedMode || _productEditorSettings.ProductAttributes)
+                return await ExportProductsToXlsxWithAttributesAsync(properties, productList);
 
             return await new PropertyManager<Product>(properties, _catalogSettings).ExportToXlsxAsync(productList);
         }
