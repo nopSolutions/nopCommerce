@@ -29,6 +29,13 @@ namespace Nop.Web.Models.Api.Catalog
         public int TotalReviews { get; set; }
         public int PopularityCount { get; set; }
         public string VendorLogoPictureUrl { get; set; }
+        public List<KeyValuePair<ProductAttributeValue, ProductAttributeMapping>> ProductAttributeValues { get; set; }
         public ProductSpecificationApiModel ProductSpecificationModel { get; set; }
+        public int Quantity { get; set; } = 1;
+    }
+
+    public class ProductOverviewApiModelDTO
+    {
+        public List<ProductOverviewApiModel> ProductOverviewApiModels { get; set; }
     }
 }

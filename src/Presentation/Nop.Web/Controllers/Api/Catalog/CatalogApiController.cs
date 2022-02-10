@@ -81,6 +81,7 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly ISettingService _settingService;
+        private readonly IProductAttributeService _productAttributeService;
 
         #endregion
 
@@ -88,7 +89,7 @@ namespace Nop.Web.Controllers.Api.Security
 
         public CatalogApiController(
             ShoppingCartSettings shoppingCartSettings,
-        LocalizationSettings localizationSettings,
+            LocalizationSettings localizationSettings,
             IWorkflowMessageService workflowMessageService,
             IOrderService orderService,
             IOrderReportService orderReportService,
@@ -118,7 +119,8 @@ namespace Nop.Web.Controllers.Api.Security
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IStaticCacheManager staticCacheManager,
-            ISettingService settingService)
+            ISettingService settingService,
+            IProductAttributeService productAttributeService)
         {
             _shoppingCartSettings = shoppingCartSettings;
             _localizationSettings = localizationSettings;
@@ -152,6 +154,7 @@ namespace Nop.Web.Controllers.Api.Security
             _dateTimeHelper = dateTimeHelper;
             _staticCacheManager = staticCacheManager;
             _settingService = settingService;
+            _productAttributeService = productAttributeService;
         }
 
         #endregion
@@ -281,18 +284,20 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [NonAction]
-        protected virtual async Task<IEnumerable<ProductOverviewApiModel>> PrepareApiProductOverviewModels(IEnumerable<Product> products)
+        protected virtual async Task<IEnumerable<ProductOverviewApiModel>> PrepareApiProductOverviewModels(IEnumerable<Product> products, Dictionary<int, List<KeyValuePair<ProductAttributeValue, ProductAttributeMapping>>> attributeValuesDictionary)
         {
             if (products == null)
                 throw new ArgumentNullException(nameof(products));
 
             var models = new List<ProductOverviewApiModel>();
-            
-            var allCategories = 
+
+            var allCategories =
                 (await _catalogModelFactory.PrepareCategorySimpleModelsAsync()).ToImmutableDictionary(sc => sc.Id);
-            
+
             foreach (var product in products)
             {
+                List<KeyValuePair<ProductAttributeValue,ProductAttributeMapping>> attributeValues = null;
+                attributeValuesDictionary.TryGetValue(product.Id, out attributeValues);
                 var specifications = await PrepareProductSpecificationAttributeModelAsync(product);
                 if (specifications != null && product.Published)
                 {
@@ -300,7 +305,7 @@ namespace Nop.Web.Controllers.Api.Security
                     string categoryNameJoined;
                     {
                         var categoryNames = (await _categoryService.GetProductCategoriesByProductIdAsync(product.Id))
-                            .Select(pc => 
+                            .Select(pc =>
                                 allCategories.TryGetValue(pc.CategoryId, out var category) ? category.Name : string.Empty);
                         categoryNameJoined = string.Join(',', categoryNames.Where(c => !string.IsNullOrEmpty(c)));
                     }
@@ -311,12 +316,12 @@ namespace Nop.Web.Controllers.Api.Security
                         async () => (await _orderReportService.BestSellersReportAsync(
                             showHidden: true,
                             vendorId: product.VendorId)).ToImmutableDictionary(k => k.ProductId)));
-                    
-                    var productReviewOverviewModel = 
+
+                    var productReviewOverviewModel =
                         await _productModelFactory.PrepareProductReviewOverviewModelAsync(product);
                     var productPictureModel =
                         await _productModelFactory.PrepareProductOverviewPictureModelAsync(product);
-                    
+
                     var model = new ProductOverviewApiModel
                     {
                         Id = product.Id,
@@ -329,17 +334,18 @@ namespace Nop.Web.Controllers.Api.Security
                         PriceValue = product.Price,
                         RatingSum = productReviewOverviewModel.RatingSum,
                         TotalReviews = productReviewOverviewModel.TotalReviews,
-                        PopularityCount = popularityByVendor.TryGetValue(product.Id, out var productPopularity) ? 
+                        PopularityCount = popularityByVendor.TryGetValue(product.Id, out var productPopularity) ?
                             productPopularity.TotalQuantity : 0,
                         ImageUrl = productPictureModel.ImageUrl,
                         RibbonEnable = product.RibbonEnable,
                         RibbonText = product.RibbonText,
                         VendorLogoPictureUrl = await _pictureService.GetPictureUrlAsync(vendor?.PictureId ?? 0, showDefaultPicture: true),
-                        ProductSpecificationModel = specifications
+                        ProductSpecificationModel = specifications,
+                        ProductAttributeValues = attributeValues
                     };
 
                     models.Add(model);
-                    
+
                 }
             }
 
@@ -472,16 +478,25 @@ namespace Nop.Web.Controllers.Api.Security
             return Ok(model);
         }
 
+        [HttpGet("product-attributes")]
+        public async Task<IActionResult> AllProductAttributes()
+        {
+            //model
+            var model = await PrepareProductSpecificationAttributeModelAsync(null);
+            return Ok(model);
+        }
+
         [HttpGet("product-search")]
         public async Task<IActionResult> SearchProducts(SearchProductByFilters searchModel)
         {
             var categoryIds = (await _categoryService.GetAllCategoriesAsync()).Select(c => c.Id).Where(id => id != 0).ToList();
-            var products = await _productService.SearchProductsAsync(keywords: searchModel.Keyword, showHidden: true,categoryIds: categoryIds);
+            var productAttributes = await _productAttributeService.GetAllGroupedProductAttributeValuesAsync();
+            var products = await _productService.SearchProductsAsync(keywords: searchModel.Keyword, showHidden: true, categoryIds: categoryIds);
             if (!products.Any())
                 return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Product.Not.Found") });
 
             //model
-            var model = await PrepareApiProductOverviewModels(products);
+            var model = await PrepareApiProductOverviewModels(products, productAttributes);
             return Ok(model);
         }
 
