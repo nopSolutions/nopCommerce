@@ -1059,6 +1059,27 @@
   <LocaleResource Name="ActivityLog.EditWarehouse">
     <Value>Edited a warehouse (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportCategories">
+    <Value>{0} categories were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportCustomers">
+    <Value>{0} customers were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportManufacturers">
+    <Value>{0} manufacturers were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportNewsLetterSubscriptions">
+    <Value>{0} newsletter subscriptions were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportOrders">
+    <Value>{0} orders were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportProducts">
+    <Value>{0} products were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportStates">
+    <Value>{0} states and provinces were exported</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.Impersonation.Finished.Customer">
     <Value>Impersonation by store owner was finished (Email: {0}, ID = {1})</Value>
   </LocaleResource>
@@ -1074,14 +1095,23 @@
   <LocaleResource Name="ActivityLog.ImportCategories">
     <Value>{0} categories were imported</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportCustomers">
+    <Value>{0} customers were imported</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportManufacturers">
     <Value>{0} manufacturers were imported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportOrders">
+    <Value>{0} orders were imported</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportProducts">
     <Value>{0} products were imported</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportStates">
     <Value>{0} states and provinces were imported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportNewsLetterSubscriptions">
+    <Value>{0} newsletter subscriptions were imported</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.InstallNewPlugin">
     <Value>Installed a new plugin (FriendlyName: '{0}')</Value>
