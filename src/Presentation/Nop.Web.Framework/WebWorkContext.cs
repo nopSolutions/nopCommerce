@@ -415,6 +415,14 @@ namespace Nop.Web.Framework
             var customer = await GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
 
+            if (customer.IsSearchEngineAccount())
+            {
+                _cachedCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)
+                    ?? (await _currencyService.GetAllCurrenciesAsync(storeId: store.Id)).FirstOrDefault();
+
+                return _cachedCurrency;
+            }
+
             var allStoreCurrencies = await _currencyService.GetAllCurrenciesAsync(storeId: store.Id);
 
             //check customer currency availability
@@ -450,6 +458,9 @@ namespace Nop.Web.Framework
         {
             //save passed currency identifier
             var customer = await GetCurrentCustomerAsync();
+            if (customer.IsSearchEngineAccount())
+                return;
+
             customer.CurrencyId = currency?.Id;
             await _customerService.UpdateCustomerAsync(customer);
 
