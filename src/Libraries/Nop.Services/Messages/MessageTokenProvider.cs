@@ -903,16 +903,12 @@ namespace Nop.Services.Messages
             if (string.IsNullOrEmpty(store.Url))
                 throw new Exception("URL cannot be null");
 
-            //generate a URL with an absolute path
+            //generate the relative URL
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-            var url = new PathString(urlHelper.RouteUrl(routeName, routeValues));
-
-            //remove the application path from the generated URL if exists
-            var pathBase = _actionContextAccessor.ActionContext?.HttpContext?.Request?.PathBase ?? PathString.Empty;
-            url.StartsWithSegments(pathBase, out url);
+            var url = urlHelper.RouteUrl(routeName, routeValues);
 
             //compose the result
-            return new Uri(WebUtility.UrlDecode($"{store.Url.TrimEnd('/')}{url}"), UriKind.Absolute).AbsoluteUri;
+            return new Uri(new Uri(store.Url), url).AbsoluteUri;
         }
 
         #endregion
