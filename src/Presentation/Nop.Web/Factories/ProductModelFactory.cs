@@ -401,11 +401,11 @@ namespace Nop.Web.Factories
 
                         if (prices.Any())
                         {
-                            hasMultiplePrices = prices.Count > 1;
-
                             var price = prices.OrderBy(p => p.Key).First();
                             minPossiblePriceWithoutDiscount = price.Key;
                             minPossiblePriceWithDiscount = price.Value;
+
+                            hasMultiplePrices = prices.Any(p => p.Key > price.Key);
                         }
                         // show default price when required attributes available but no values added
                         else
