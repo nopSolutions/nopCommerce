@@ -1096,6 +1096,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AssociatedProductPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AvatarPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.CartThumbPictureSize_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.OrderThumbPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.CategoryThumbPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DefaultImageQuality_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DefaultPictureZoomEnabled_OverrideForStore, options => options.Ignore())
@@ -1272,6 +1273,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<OrderSettings, OrderSettingsModel>()
                 .ForMember(model => model.AllowAdminsToBuyCallForPriceProducts_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ShowProductThumbnailInOrderDetailsPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AnonymousCheckoutAllowed_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, options => options.Ignore())

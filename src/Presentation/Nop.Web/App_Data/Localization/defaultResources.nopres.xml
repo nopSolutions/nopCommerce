@@ -7776,6 +7776,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.MultipleThumbDirectories.Hint">
     <Value>Check to enable multiple thumb directories. It can be helpful if your hosting company has some limitations to the number of allowed files per directory.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.OrderThumbPictureSize">
+    <Value>Order thumbnail image size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.OrderThumbPictureSize.Hint">
+    <Value>The default size (pixels) for product thumbnail images on the order details page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase">
     <Value>Pictures are stored into...</Value>
   </LocaleResource>
@@ -8189,6 +8195,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestSettings">
     <Value>Return request settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ShowProductThumbnailInOrderDetailsPage">
+    <Value>Show product thumbnail in order details page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ShowProductThumbnailInOrderDetailsPage.Hint">
+    <Value>Check to show product thumbnail in order details page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceOnOrderConfirmPage">
     <Value>Terms of service (confirm order page)</Value>
@@ -17690,6 +17702,9 @@
   </LocaleResource>
   <LocaleResource Name="Order.Product(s)">
     <Value>Product(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Product(s).Image">
+    <Value>Image</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Product(s).Name">
     <Value>Name</Value>

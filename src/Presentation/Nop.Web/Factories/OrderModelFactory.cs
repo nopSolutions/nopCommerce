@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -16,12 +18,15 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Vendors;
+using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Common;
+using Nop.Web.Models.Media;
 using Nop.Web.Models.Order;
 
 namespace Nop.Web.Factories
@@ -43,11 +48,13 @@ namespace Nop.Web.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
+        private readonly MediaSettings _mediaSettings;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPaymentService _paymentService;
+        private readonly IPictureService _pictureService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductService _productService;
         private readonly IRewardPointService _rewardPointService;
@@ -61,8 +68,10 @@ namespace Nop.Web.Factories
         private readonly PdfSettings _pdfSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -78,11 +87,13 @@ namespace Nop.Web.Factories
             IDateTimeHelper dateTimeHelper,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
+            MediaSettings mediaSettings,
             IOrderProcessingService orderProcessingService,
             IOrderService orderService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IPaymentPluginManager paymentPluginManager,
             IPaymentService paymentService,
+            IPictureService pictureService,
             IPriceFormatter priceFormatter,
             IProductService productService,
             IRewardPointService rewardPointService,
@@ -96,8 +107,10 @@ namespace Nop.Web.Factories
             PdfSettings pdfSettings,
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
+            IStaticCacheManager staticCacheManager,
             TaxSettings taxSettings,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            IWebHelper webHelper)
         {
             _addressSettings = addressSettings;
             _catalogSettings = catalogSettings;
@@ -109,11 +122,13 @@ namespace Nop.Web.Factories
             _dateTimeHelper = dateTimeHelper;
             _giftCardService = giftCardService;
             _localizationService = localizationService;
+            _mediaSettings = mediaSettings;
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;
             _orderTotalCalculationService = orderTotalCalculationService;
             _paymentPluginManager = paymentPluginManager;
             _paymentService = paymentService;
+            _pictureService = pictureService;
             _priceFormatter = priceFormatter;
             _productService = productService;
             _rewardPointService = rewardPointService;
@@ -127,8 +142,48 @@ namespace Nop.Web.Factories
             _pdfSettings = pdfSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _staticCacheManager = staticCacheManager;
             _taxSettings = taxSettings;
             _vendorSettings = vendorSettings;
+            _webHelper = webHelper;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Prepare the order item picture model
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <param name="pictureSize">Picture size</param>
+        /// <param name="showDefaultPicture">Whether to show the default picture</param>
+        /// <param name="productName">Product name</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture model
+        /// </returns>
+        protected virtual async Task<PictureModel> PrepareOrderItemPictureModelAsync(OrderItem orderItem, int pictureSize, bool showDefaultPicture, string productName)
+        {
+            var pictureCacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.OrderPictureModelKey
+                , orderItem, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
+
+            var model = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
+            {
+                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+
+                //order item picture
+                var orderItemPicture = await _pictureService.GetProductPictureAsync(product, orderItem.AttributesXml);
+
+                return new PictureModel
+                {
+                    ImageUrl = (await _pictureService.GetPictureUrlAsync(orderItemPicture, pictureSize, showDefaultPicture)).Url,
+                    Title = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"), productName),
+                    AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"), productName),
+                };
+            });
+
+            return model;
         }
 
         #endregion
@@ -449,6 +504,7 @@ namespace Nop.Web.Factories
             //purchased products
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             model.ShowVendorName = _vendorSettings.ShowVendorOnOrderDetailsPage;
+            model.ShowProductThumbnail = _orderSettings.ShowProductThumbnailInOrderDetailsPage;
 
             var orderItems = await _orderService.GetOrderItemsAsync(order.Id);
 
@@ -509,6 +565,11 @@ namespace Nop.Web.Factories
                     orderItemModel.DownloadId = product.DownloadId;
                 if (await _orderService.IsLicenseDownloadAllowedAsync(orderItem))
                     orderItemModel.LicenseId = orderItem.LicenseDownloadId ?? 0;
+
+                if (_orderSettings.ShowProductThumbnailInOrderDetailsPage)
+                {
+                    orderItemModel.Picture = await PrepareOrderItemPictureModelAsync(orderItem, _mediaSettings.OrderThumbPictureSize, true, orderItemModel.ProductName);
+                }
             }
 
             return model;

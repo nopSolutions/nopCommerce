@@ -563,6 +563,10 @@
                             {
                                 <col width="1" />
                             }
+                            @if (Model.ShowProductThumbnail)
+                            {
+                                <col width="1" />
+                            }
                             <col />
                             @if (Model.ShowVendorName)
                             {
@@ -578,6 +582,12 @@
                                 {
                                     <th class="sku">
                                         @T("Order.Product(s).SKU")
+                                    </th>
+                                }
+                                @if (Model.ShowProductThumbnail)
+                                {
+                                    <th class="picture">
+                                        @T("Order.Product(s).Image")
                                     </th>
                                 }
                                 <th class="name">
@@ -609,6 +619,12 @@
                                         <td class="sku">
                                             <label class="td-title">@T("Order.Product(s).SKU"):</label>
                                             <span class="sku-number">@item.Sku</span>
+                                        </td>
+                                    }
+                                    @if (Model.ShowProductThumbnail)
+                                    {
+                                        <td class="picture">
+                                            <a href="@Url.RouteUrl("Product", new {SeName = item.ProductSeName})"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
                                         </td>
                                     }
                                     <td class="product">

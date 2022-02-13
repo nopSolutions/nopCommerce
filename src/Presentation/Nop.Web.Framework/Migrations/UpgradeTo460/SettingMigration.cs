@@ -1,6 +1,8 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -34,7 +36,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 catalogSettings.AllowCustomersToSearchWithCategoryName = true;
                 settingService.SaveSettingAsync(catalogSettings, settings => settings.AllowCustomersToSearchWithCategoryName).Wait();
             }
-            
+
             var storeInformationSettings = settingService.LoadSettingAsync<StoreInformationSettings>().Result;
 
             //#3997
@@ -42,6 +44,24 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             {
                 storeInformationSettings.InstagramLink = "";
                 settingService.SaveSettingAsync(storeInformationSettings, settings => settings.InstagramLink).Wait();
+            }
+
+            var orderSettings = settingService.LoadSettingAsync<OrderSettings>().Result;
+
+            //#5604
+            if (!settingService.SettingExistsAsync(orderSettings, settings => settings.ShowProductThumbnailInOrderDetailsPage).Result)
+            {
+                orderSettings.ShowProductThumbnailInOrderDetailsPage = true;
+                settingService.SaveSettingAsync(orderSettings, settings => settings.ShowProductThumbnailInOrderDetailsPage).Wait();
+            }
+
+            var mediaSettings = settingService.LoadSettingAsync<MediaSettings>().Result;
+
+            //#5604
+            if (!settingService.SettingExistsAsync(mediaSettings, settings => settings.OrderThumbPictureSize).Result)
+            {
+                mediaSettings.OrderThumbPictureSize = 80;
+                settingService.SaveSettingAsync(mediaSettings, settings => settings.OrderThumbPictureSize).Wait();
             }
         }
 
