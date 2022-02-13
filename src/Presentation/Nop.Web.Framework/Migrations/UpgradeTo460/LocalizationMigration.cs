@@ -134,6 +134,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#5123
                 ["Admin.Catalog.Products.Pictures.Fields.Picture.Hint"] = "You can choose multiple images to upload at once. If the picture size exceeds your stores max image size setting, it will be automatically resized.",
                 ["Common.FileUploader.Upload.Files"] = "Upload files",
+
+                //#29
+                ["Admin.Configuration.Settings.Catalog.DisplayFromPrices"] = "Display \"From\" prices",
+                ["Admin.Configuration.Settings.Catalog.DisplayFromPrices.Hint"] = "Check to display \"From\" prices on catalog pages.",
             }, languageId).Wait();
 
             #endregion

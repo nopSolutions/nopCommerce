@@ -383,6 +383,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool EnableSpecificationAttributeFiltering { get; set; }
         public bool EnableSpecificationAttributeFiltering_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayFromPrices")]
+        public bool DisplayFromPrices { get; set; }
+        public bool DisplayFromPrices_OverrideForStore { get; set; }
+
         public string PrimaryStoreCurrencyCode { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName")]
