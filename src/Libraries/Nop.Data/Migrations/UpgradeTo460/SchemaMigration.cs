@@ -18,7 +18,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
         public override void Up()
         {
             // add column
-            var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
+            var customerTableName = nameof(Customer);
 
             var firstNameCustomerColumnName = nameof(Customer.FirstName);
             var lastNameCustomerColumnName = nameof(Customer.LastName);

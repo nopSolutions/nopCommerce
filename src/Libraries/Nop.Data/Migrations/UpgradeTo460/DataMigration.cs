@@ -4,6 +4,10 @@ using System.Data;
 using System;
 using System.Linq;
 using Nop.Core.Domain.Common;
+using System.Collections.Generic;
+using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Directory;
+using System.Globalization;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
@@ -30,6 +34,8 @@ namespace Nop.Data.Migrations.UpgradeTo460
                 nameof(Customer.StateProvinceId), nameof(Customer.VatNumberStatusId), nameof(Customer.CurrencyId), nameof(Customer.LanguageId), 
                 nameof(Customer.TaxDisplayTypeId), nameof(Customer.DateOfBirth)};
 
+            var languages = _dataProvider.GetTable<Language>().ToList();
+            var currencies = _dataProvider.GetTable<Currency>().ToList();
             var customerRole = _dataProvider.GetTable<CustomerRole>().FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.RegisteredRoleName);
             var customerRoleId = customerRole?.Id ?? 0;
 
@@ -43,33 +49,48 @@ namespace Nop.Data.Migrations.UpgradeTo460
 
             while (true)
             {
-                var customers = query.Select(x => x.Customer).Skip(pageIndex * pageSize).Take(pageSize).ToList();
+                var customers = query.Select(x => x.Customer).ToPagedListAsync(pageIndex, pageSize).Result;
                 if (!customers.Any())
                     break;
 
-                for (var i = 0; i < customers.Count; i++)
-                {
-                    var customer = customers[i];
-                    var customerAttributes = _dataProvider.GetTable<GenericAttribute>()
-                        .Where(ga => ga.KeyGroup == nameof(Customer) && ga.EntityId == customer.Id).ToList();
+                var customerIds = customers.Select(c => c.Id).ToList();
+                var geneticAttributes = _dataProvider.GetTable<GenericAttribute>()
+                    .Where(ga => ga.KeyGroup == nameof(Customer) && customerIds.Contains(ga.EntityId) && attributeKyes.Contains(ga.Key)).ToList();
 
+                foreach (var customer in customers)
+                {
+                    var customerAttributes = geneticAttributes.Where(ga => ga.EntityId == customer.Id).ToList();
                     if (!customerAttributes.Any())
                         continue;
 
-                    customer.FirstName = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.FirstName))?.Value;
-                    customer.LastName = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.LastName))?.Value;
-                    customer.Gender = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.Gender))?.Value;
-                    customer.Company = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.Company))?.Value;
-                    customer.StreetAddress = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.StreetAddress))?.Value;
-                    customer.StreetAddress2 = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.StreetAddress2))?.Value;
-                    customer.ZipPostalCode = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.ZipPostalCode))?.Value;
-                    customer.City = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.City))?.Value;
-                    customer.County = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.County))?.Value;
-                    customer.Phone = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.Phone))?.Value;
-                    customer.Fax = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.Fax))?.Value;
-                    customer.VatNumber = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.VatNumber))?.Value;
-                    customer.TimeZoneId = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.TimeZoneId))?.Value;
-                    customer.CustomCustomerAttributesXML = customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.CustomCustomerAttributesXML))?.Value;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.FirstName), 1000, out var attributeValue))
+                        customer.FirstName = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.LastName), 1000, out attributeValue))
+                        customer.LastName = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.Gender), 1000, out attributeValue))
+                        customer.Gender = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.Company), 1000, out attributeValue))
+                        customer.Company = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.StreetAddress), 1000, out attributeValue))
+                        customer.StreetAddress = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.StreetAddress2), 1000, out attributeValue))
+                        customer.StreetAddress2 = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.ZipPostalCode), 1000, out attributeValue))
+                        customer.ZipPostalCode = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.City), 1000, out attributeValue))
+                        customer.City = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.County), 1000, out attributeValue))
+                        customer.County = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.Phone), 1000, out attributeValue))
+                        customer.Phone = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.Fax), 1000, out attributeValue))
+                        customer.Fax = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.VatNumber), 1000, out attributeValue))
+                        customer.VatNumber = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.TimeZoneId), 1000, out attributeValue))
+                        customer.TimeZoneId = attributeValue;
+                    if (TryGetAttributeValue(customerAttributes, nameof(Customer.CustomCustomerAttributesXML), int.MaxValue, out attributeValue))
+                        customer.CustomCustomerAttributesXML = attributeValue;
 
                     if (int.TryParse(customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.CountryId))?.Value, out var countryId))
                         customer.CountryId = countryId;
@@ -78,19 +99,17 @@ namespace Nop.Data.Migrations.UpgradeTo460
                     if (int.TryParse(customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.VatNumberStatusId))?.Value, out var vatNumberStatusId))
                         customer.VatNumberStatusId = vatNumberStatusId;
                     if (int.TryParse(customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.CurrencyId))?.Value, out var currencyId))
-                        customer.CurrencyId = currencyId;
+                        customer.CurrencyId = currencies.FirstOrDefault(c => c.Id == currencyId)?.Id;
                     if (int.TryParse(customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.LanguageId))?.Value, out var languageId))
-                        customer.LanguageId = languageId;
+                        customer.LanguageId = languages.FirstOrDefault(l => l.Id == languageId)?.Id;
                     if (int.TryParse(customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.TaxDisplayTypeId))?.Value, out var taxDisplayTypeId))
                         customer.TaxDisplayTypeId = taxDisplayTypeId;
-                    if (DateTime.TryParse(customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.DateOfBirth))?.Value, out var dateOfBirth))
+                    if (DateTime.TryParseExact(customerAttributes.FirstOrDefault(ga => ga.Key == nameof(Customer.DateOfBirth))?.Value, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateOfBirth))
                         customer.DateOfBirth = dateOfBirth;
-
-                    _dataProvider.UpdateEntityAsync(customer);
-
-                    var deletedAttributes = customerAttributes.Where(ga => attributeKyes.Contains(ga.Key)).ToList();
-                    _dataProvider.BulkDeleteEntitiesAsync(deletedAttributes);
                 }
+
+                _dataProvider.UpdateEntitiesAsync(customers);
+                _dataProvider.BulkDeleteEntitiesAsync(geneticAttributes);
 
                 pageIndex++;
             }
@@ -99,6 +118,19 @@ namespace Nop.Data.Migrations.UpgradeTo460
         public override void Down()
         {
             //add the downgrade logic if necessary 
+        }
+
+        private bool TryGetAttributeValue(IList<GenericAttribute> attributes, string key, int maxLength, out string value)
+        {
+            value = null;
+            if (attributes.FirstOrDefault(ga => ga.Key == key) is GenericAttribute genericAttribute)
+            {
+                value = genericAttribute.Value;
+                value = value.Length > maxLength ? value[..maxLength] : value;
+                return true;
+            }
+
+            return false;
         }
     }
 }
