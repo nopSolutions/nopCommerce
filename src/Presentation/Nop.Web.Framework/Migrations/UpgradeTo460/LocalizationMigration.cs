@@ -43,6 +43,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 ["Footer.FollowUs.Instagram"] = "Instagram",
 
+                //#29
+                ["Admin.Configuration.Settings.Catalog.DisplayFromPrices"] = "Display \"From\" prices",
+                ["Admin.Configuration.Settings.Catalog.DisplayFromPrices.Hint"] = "Check to display \"From\" prices on catalog pages.",
+
             }, languageId).Wait();
         }
 

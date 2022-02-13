@@ -22,6 +22,7 @@ using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping.Date;
@@ -63,6 +64,7 @@ namespace Nop.Web.Factories
         private readonly IProductTagService _productTagService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly IReviewTypeService _reviewTypeService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
@@ -104,6 +106,7 @@ namespace Nop.Web.Factories
             IProductTagService productTagService,
             IProductTemplateService productTemplateService,
             IReviewTypeService reviewTypeService,
+            IShoppingCartService shoppingCartService,
             ISpecificationAttributeService specificationAttributeService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
@@ -141,6 +144,7 @@ namespace Nop.Web.Factories
             _productTagService = productTagService;
             _productTemplateService = productTemplateService;
             _reviewTypeService = reviewTypeService;
+            _shoppingCartService = shoppingCartService;
             _specificationAttributeService = specificationAttributeService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
@@ -155,7 +159,6 @@ namespace Nop.Web.Factories
             _seoSettings = seoSettings;
             _shippingSettings = shippingSettings;
             _vendorSettings = vendorSettings;
-            
         }
 
         #endregion
@@ -349,7 +352,67 @@ namespace Nop.Web.Factories
                 {
                     //prices
                     var customer = await _workContext.GetCurrentCustomerAsync();
-                    var (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer);
+                    var minPossiblePriceWithoutDiscount = decimal.Zero;
+                    var minPossiblePriceWithDiscount = decimal.Zero;
+                    var hasMultiplePrices = false;
+                    if (_catalogSettings.DisplayFromPrices)
+                    {
+                        var prices = new List<KeyValuePair<decimal, decimal>>();
+                        var allAttributesXml = await _productAttributeParser.GenerateAllCombinationsAsync(product, true);
+
+                        // price when there is no required attributes
+                        var attributesMappings = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
+                        if (!attributesMappings.Any(am => !am.IsNonCombinable() && am.IsRequired))
+                        {
+                            var finalPrice = await _priceCalculationService.GetFinalPriceAsync(product, customer);
+                            prices.Add(new KeyValuePair<decimal, decimal>(finalPrice.finalPrice, finalPrice.priceWithoutDiscounts));
+                        }
+
+                        foreach (var attributesXml in allAttributesXml)
+                        {
+                            //new one
+                            var warnings = new List<string>();
+                            warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(customer,
+                                ShoppingCartType.ShoppingCart, product, 1, attributesXml, true, true));
+                            if (warnings.Count != 0)
+                                continue;
+
+                            var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
+                            if (combination?.OverriddenPrice.HasValue ?? false)
+                            {
+                                var finalPrice = await _priceCalculationService.GetFinalPriceAsync(product, customer, combination.OverriddenPrice.Value);
+                                prices.Add(new KeyValuePair<decimal, decimal>(finalPrice.finalPrice, finalPrice.priceWithoutDiscounts));
+                            }
+                            else
+                            {
+                                var attributesTotalPrice = decimal.Zero;
+                                var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
+                                if (attributeValues != null)
+                                {
+                                    foreach (var attributeValue in attributeValues)
+                                    {
+                                        attributesTotalPrice += await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer);
+                                    }
+                                }
+                                var finalPrice = await _priceCalculationService.GetFinalPriceAsync(product, customer, attributesTotalPrice);
+                                prices.Add(new KeyValuePair<decimal, decimal>(finalPrice.finalPrice, finalPrice.priceWithoutDiscounts));
+                            }
+                        }
+
+                        if (prices.Any())
+                        {
+                            hasMultiplePrices = prices.Count > 1;
+
+                            var price = prices.OrderBy(p => p.Key).First();
+                            minPossiblePriceWithoutDiscount = price.Key;
+                            minPossiblePriceWithDiscount = price.Value;
+                        }
+                        // show default price when required attributes available but no values added
+                        else
+                            (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer);
+                    }
+                    else
+                        (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer);
 
                     if (product.HasTierPrices)
                     {
@@ -399,8 +462,8 @@ namespace Nop.Web.Factories
                             priceModel.OldPrice = await _priceFormatter.FormatPriceAsync(strikeThroughPrice);
                             priceModel.OldPriceValue = strikeThroughPrice;
                         }
-
-                        priceModel.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
+                        priceModel.Price = !hasMultiplePrices ? await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount) :
+                            string.Format(await _localizationService.GetResourceAsync("Products.PriceRangeFrom"), await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount));
                         priceModel.PriceValue = finalPriceWithDiscount;
                     }
 

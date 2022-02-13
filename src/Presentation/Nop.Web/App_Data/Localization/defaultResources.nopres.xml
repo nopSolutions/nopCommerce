@@ -5766,6 +5766,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts.Hint">
     <Value>Check to display "a product has been discontinued" message when viewing details pages of unpublished products.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayFromPrices">
+    <Value>Display "From" prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayFromPrices.Hint">
+    <Value>Check to display "From" prices on catalog pages.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoFooter">
     <Value>Display tax/shipping info (footer)</Value>
   </LocaleResource>
