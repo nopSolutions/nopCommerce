@@ -601,6 +601,22 @@ namespace Nop.Web.Areas.Admin.Factories
             var lastActivityToUtc = !searchModel.SearchLastActivityTo.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchLastActivityTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
+            if (createdFromUtc.HasValue || createdToUtc.HasValue)
+            {
+                if (!searchModel.SelectedCustomerRoleIds.Any())
+                {
+                    var customerRoles = await _customerService.GetAllCustomerRolesAsync(showHidden: true);
+                    searchModel.SelectedCustomerRoleIds = customerRoles
+                        .Where(cr => cr.SystemName != NopCustomerDefaults.GuestsRoleName).Select(cr => cr.Id).ToList();
+                }
+                else
+                {
+                    var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
+                    if (guestRole != null)
+                        searchModel.SelectedCustomerRoleIds.Remove(guestRole.Id);
+                }
+            }
+
             //get customers
             var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
                 email: searchModel.SearchEmail,
