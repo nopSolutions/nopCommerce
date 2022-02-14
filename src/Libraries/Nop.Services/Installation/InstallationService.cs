@@ -3200,7 +3200,9 @@ namespace Nop.Services.Installation
                 TwitterLink = "https://twitter.com/nopCommerce",
                 YoutubeLink = "https://www.youtube.com/user/nopCommerce",
                 InstagramLink = "https://www.instagram.com/nopcommerce_official",
-                HidePoweredByNopCommerce = false
+                HidePoweredByNopCommerce = false,
+                HeaderCustomHtml = string.Empty,
+                FooterCustomHtml = string.Empty
             });
 
             await settingService.SaveSettingAsync(new ExternalAuthenticationSettings

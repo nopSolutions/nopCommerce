@@ -43,6 +43,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 ["Footer.FollowUs.Instagram"] = "Instagram",
 
+                //#5802
+                ["Admin.Configuration.Settings.GeneralCommon.BlockTitle.CustomHtml"] = "Custom HTML",
+                ["Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml"] = "Header custom HTML",
+                ["Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml.Hint"] = "Enter custom HTML here for header section",
+                ["Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml"] = "Footer custom HTML",
+                ["Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml.Hint"] = "Enter custom HTML here for footer section",
             }, languageId).Wait();
         }
 

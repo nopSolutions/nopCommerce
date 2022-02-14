@@ -1461,6 +1461,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 storeInformationSettings.TwitterLink = model.StoreInformationSettings.TwitterLink;
                 storeInformationSettings.YoutubeLink = model.StoreInformationSettings.YoutubeLink;
                 storeInformationSettings.InstagramLink = model.StoreInformationSettings.InstagramLink;
+                storeInformationSettings.HeaderCustomHtml = model.CustomHtmlSettings.HeaderCustomHtml;
+                storeInformationSettings.FooterCustomHtml = model.CustomHtmlSettings.FooterCustomHtml;
                 //contact us
                 commonSettings.SubjectFieldOnContactUsForm = model.StoreInformationSettings.SubjectFieldOnContactUsForm;
                 commonSettings.UseSystemEmailForContactUsForm = model.StoreInformationSettings.UseSystemEmailForContactUsForm;
@@ -1494,6 +1496,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(storeInformationSettings, x => x.TwitterLink, model.StoreInformationSettings.TwitterLink_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(storeInformationSettings, x => x.YoutubeLink, model.StoreInformationSettings.YoutubeLink_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(storeInformationSettings, x => x.InstagramLink, model.StoreInformationSettings.InstagramLink_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(storeInformationSettings, x => x.HeaderCustomHtml, model.CustomHtmlSettings.HeaderCustomHtml_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(storeInformationSettings, x => x.FooterCustomHtml, model.CustomHtmlSettings.FooterCustomHtml_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.SubjectFieldOnContactUsForm, model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.UseSystemEmailForContactUsForm, model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.PopupForTermsOfServiceLinks, model.StoreInformationSettings.PopupForTermsOfServiceLinks_OverrideForStore, storeScope, false);

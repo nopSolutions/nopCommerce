@@ -52,6 +52,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public MinificationSettingsModel MinificationSettings { get; set; }
 
+        public CustomHtmlSettingsModel CustomHtmlSettings { get; set; }
         #endregion
     }
 }

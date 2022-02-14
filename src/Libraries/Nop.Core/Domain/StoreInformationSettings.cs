@@ -57,5 +57,15 @@ namespace Nop.Core.Domain
         /// Gets or sets a value of Instagram account URL of the site
         /// </summary>
         public string InstagramLink { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of header custom HTML
+        /// </summary>
+        public string HeaderCustomHtml { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of footer custom HTML
+        /// </summary>
+        public string FooterCustomHtml { get; set; }
     }
 }

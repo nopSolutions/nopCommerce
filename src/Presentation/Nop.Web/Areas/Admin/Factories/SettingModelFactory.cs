@@ -763,6 +763,35 @@ namespace Nop.Web.Areas.Admin.Factories
             await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);
         }
 
+        /// <summary>
+        /// Prepare custom HTML settings model
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the custom HTML settings model
+        /// </returns>
+        protected virtual async Task<CustomHtmlSettingsModel> PrepareCustomHtmlSettingsModelAsync()
+        {
+            //load settings for a chosen store scope
+            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var storeInformationSettings = await _settingService.LoadSettingAsync<StoreInformationSettings>(storeId);
+
+            //fill in model values from the entity
+            var model = new CustomHtmlSettingsModel
+            {
+                HeaderCustomHtml = storeInformationSettings.HeaderCustomHtml,
+                FooterCustomHtml = storeInformationSettings.FooterCustomHtml
+            };
+
+            //fill in overridden values
+            if (storeId > 0)
+            {
+                model.HeaderCustomHtml_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.HeaderCustomHtml, storeId);
+                model.FooterCustomHtml_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.FooterCustomHtml, storeId);
+            }
+
+            return model;
+        }
         #endregion
 
         #region Methods
@@ -1644,6 +1673,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare display default footer item settings model
             model.DisplayDefaultFooterItemSettings = await PrepareDisplayDefaultFooterItemSettingsModelAsync();
+
+            //prepare custom HTML settings model
+            model.CustomHtmlSettings = await PrepareCustomHtmlSettingsModelAsync();
 
             return model;
         }

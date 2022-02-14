@@ -1,4 +1,5 @@
 ﻿@using Nop.Core.Configuration
+@using Nop.Core.Domain
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
 @using Nop.Services.Security
@@ -9,6 +10,7 @@
 @inject IPermissionService permissionService
 @inject SeoSettings seoSettings
 @inject AppSettings appSettings
+@inject StoreInformationSettings storeInformationSettings
 
 @{
 
@@ -68,11 +70,17 @@
     @NopHtml.GenerateScripts(ResourceLocation.Head)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->
+    
+    <!--header custom HTML-->
+    @Html.Raw(storeInformationSettings.HeaderCustomHtml)
 </head>
 <body>
     @RenderBody()
 
     @NopHtml.GenerateScripts(ResourceLocation.Footer)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
+    
+     <!--footer custom HTML-->
+    @Html.Raw(storeInformationSettings.FooterCustomHtml)
 </body>
 </html>

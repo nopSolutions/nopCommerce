@@ -43,6 +43,19 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 storeInformationSettings.InstagramLink = "";
                 settingService.SaveSettingAsync(storeInformationSettings, settings => settings.InstagramLink).Wait();
             }
+
+            //#5802
+            if (!settingService.SettingExistsAsync(storeInformationSettings, settings => settings.HeaderCustomHtml).Result)
+            {
+                storeInformationSettings.HeaderCustomHtml = "";
+                settingService.SaveSettingAsync(storeInformationSettings, settings => settings.HeaderCustomHtml).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(storeInformationSettings, settings => settings.FooterCustomHtml).Result)
+            {
+                storeInformationSettings.FooterCustomHtml = "";
+                settingService.SaveSettingAsync(storeInformationSettings, settings => settings.FooterCustomHtml).Wait();
+            }
         }
 
         public override void Down()
