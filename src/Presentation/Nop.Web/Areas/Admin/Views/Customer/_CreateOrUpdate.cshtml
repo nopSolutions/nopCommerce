@@ -50,7 +50,7 @@
                     <nop-card asp-name="customer-notes" asp-icon="fas fa-coins" asp-title="@T("Admin.Customers.Customers.RewardPoints")" asp-hide-block-attribute-name="@hideRewardPointsBlockAttributeName" asp-hide="@hideRewardPointsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.RewardPoints", Model)</nop-card>
                 }
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

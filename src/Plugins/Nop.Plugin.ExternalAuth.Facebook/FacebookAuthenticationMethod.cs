@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core;
+using Nop.Plugin.ExternalAuth.Facebook.Components;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -45,12 +47,12 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store
+        /// Gets a type of a view component for displaying plugin in public store
         /// </summary>
-        /// <returns>View component name</returns>
-        public string GetPublicViewComponentName()
+        /// <returns>View component type</returns>
+        public Type GetPublicViewComponent()
         {
-            return FacebookAuthenticationDefaults.VIEW_COMPONENT_NAME;
+            return typeof(FacebookAuthenticationViewComponent);
         }
 
         /// <summary>

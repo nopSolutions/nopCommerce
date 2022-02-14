@@ -6,7 +6,7 @@
 @inject IWorkContext workContext
 @inject OrderSettings orderSettings
 <div class="order-summary-content">
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentBefore, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryContentBefore, additionalData = Model })
     @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
     @if (Model.Items.Count > 0)
     {
@@ -229,30 +229,30 @@
                         <button type="submit" name="updatecart" id="updatecart" class="button-2 update-cart-button">@T("ShoppingCart.UpdateCart")</button>
 
                         <button type="submit" name="continueshopping" class="button-2 continue-shopping-button">@T("ShoppingCart.ContinueShopping")</button>
-                        @await Component.InvokeAsync("ShoppingCartEstimateShipping")
+                        @await Component.InvokeAsync(typeof(ShoppingCartEstimateShippingViewComponent))
                     </div>
                 }
                 @if (Model.IsEditable)
                 {
                     @await Html.PartialAsync("_CheckoutAttributes", Model)
                 }
-                @await Component.InvokeAsync("SelectedCheckoutAttributes")
+                @await Component.InvokeAsync(typeof(SelectedCheckoutAttributesViewComponent))
             </div>
             <div class="cart-footer">
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryCartFooter, additionalData = Model })
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryCartFooter, additionalData = Model })
                 @if (Model.IsEditable)
                 {
                     <div class="cart-collaterals">
                         <div class="deals">
                             @await Html.PartialAsync("_DiscountBox", Model.DiscountBox)
                             @await Html.PartialAsync("_GiftCardBox", Model.GiftCardBox)
-                            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentDeals, additionalData = Model })
+                            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryContentDeals, additionalData = Model })
                         </div>
                     </div>
                 }
             <div class="totals">
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryTotals, additionalData = Model })
-                @await Component.InvokeAsync("OrderTotals", new { isEditable = Model.IsEditable })
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryTotals, additionalData = Model })
+                @await Component.InvokeAsync(typeof(OrderTotalsViewComponent), new { isEditable = Model.IsEditable })
                 @if (Model.IsEditable)
                 {
                     if (!string.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
@@ -330,7 +330,7 @@
                     </div>
                     <div class="addon-buttons">
                         @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
-                        @foreach (var pm in Model.ButtonPaymentMethodViewComponentNames)
+                        @foreach (var pm in Model.ButtonPaymentMethodViewComponents)
                         {
                             @await Component.InvokeAsync(pm)
                         }
@@ -340,7 +340,7 @@
             </div>
             @if (Model.IsEditable)
             {
-                @await Component.InvokeAsync("CrossSellProducts")
+                @await Component.InvokeAsync(typeof(CrossSellProductsViewComponent))
             }
         </form>
     }
@@ -350,5 +350,5 @@
             @T("ShoppingCart.CartIsEmpty")
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentAfter, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryContentAfter, additionalData = Model })
 </div>

@@ -15,7 +15,7 @@
         <div class="description">
             @T("Sitemap.Description")
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SitemapBefore, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.SitemapBefore, additionalData = Model })
         @foreach (var itemGroup in Model.Items.GroupBy(itemGroup => itemGroup.GroupTitle))
         {
             <div class="entity">
@@ -41,6 +41,6 @@
                 </div>
             }
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SitemapAfter, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.SitemapAfter, additionalData = Model })
     </div>
 </div>

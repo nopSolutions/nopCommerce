@@ -4,7 +4,7 @@
 <input asp-for="Id" type="hidden" />
 
 <div class="cards-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestReasonSettingsTop, additionalData = Model })
+    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ReturnRequestReasonSettingsTop, additionalData = Model })
     <div class="card card-default">
         <div class="card-body">
             @(await Html.LocalizedEditorAsync<ReturnRequestReasonModel, ReturnRequestReasonLocalizedModel>("returnrequestreason-localized",
@@ -44,5 +44,5 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestReasonSettingsBottom, additionalData = Model })
+    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ReturnRequestReasonSettingsBottom, additionalData = Model })
 </div>
