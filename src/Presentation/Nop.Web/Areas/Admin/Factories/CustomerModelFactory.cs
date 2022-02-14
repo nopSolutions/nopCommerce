@@ -601,6 +601,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var lastActivityToUtc = !searchModel.SearchLastActivityTo.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchLastActivityTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
+            //exclude guests from the result when filter "by registration date" is used
             if (createdFromUtc.HasValue || createdToUtc.HasValue)
             {
                 if (!searchModel.SelectedCustomerRoleIds.Any())
