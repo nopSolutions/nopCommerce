@@ -21,6 +21,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <param name="lastActivityFromUtc">Last activity date from (UTC); null to load all records</param>
+        /// <param name="lastActivityToUtc">Last activity date to (UTC); null to load all records</param>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <param name="vendorId">Vendor identifier</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
@@ -42,6 +44,7 @@ namespace Nop.Services.Customers
         /// The task result contains the customers
         /// </returns>
         Task<IPagedList<Customer>> GetAllCustomersAsync(DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            DateTime? lastActivityFromUtc = null, DateTime? lastActivityToUtc = null,
             int affiliateId = 0, int vendorId = 0, int[] customerRoleIds = null,
             string email = null, string username = null, string firstName = null, string lastName = null,
             int dayOfBirth = 0, int monthOfBirth = 0,

@@ -45,10 +45,20 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#5802
                 ["Admin.Configuration.Settings.GeneralCommon.BlockTitle.CustomHtml"] = "Custom HTML",
-                ["Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml"] = "Header custom HTML",
-                ["Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml.Hint"] = "Enter custom HTML here for header section",
                 ["Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml"] = "Footer custom HTML",
                 ["Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml.Hint"] = "Enter custom HTML here for footer section",
+                ["Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml"] = "Header custom HTML",
+                ["Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml.Hint"] = "Enter custom HTML here for header section",
+
+                //#5947
+                ["Admin.Customers.Customers.List.SearchLastActivityFrom"] = "Last activity from",
+                ["Admin.Customers.Customers.List.SearchLastActivityFrom.Hint"] = "The last activity from date for the search.",
+                ["Admin.Customers.Customers.List.SearchLastActivityTo"] = "Last activity to",
+                ["Admin.Customers.Customers.List.SearchLastActivityTo.Hint"] = "The last activity to date for the search.",
+                ["Admin.Customers.Customers.List.SearchRegistrationDateFrom"] = "Registration date from",
+                ["Admin.Customers.Customers.List.SearchRegistrationDateFrom.Hint"] = "The registration from date for the search.",
+                ["Admin.Customers.Customers.List.SearchRegistrationDateTo"] = "Registration date to",
+                ["Admin.Customers.Customers.List.SearchRegistrationDateTo.Hint"] = "The registration to date for the search.",
             }, languageId).Wait();
         }
 

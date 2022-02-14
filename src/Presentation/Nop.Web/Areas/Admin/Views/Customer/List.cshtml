@@ -149,8 +149,40 @@
                                                 </div>
                                             </div>
                                         }
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchRegistrationDateFrom" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchRegistrationDateFrom" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchRegistrationDateTo" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchRegistrationDateTo" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-7">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchLastActivityFrom" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchLastActivityFrom" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchLastActivityTo" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchLastActivityTo" />
+                                            </div>
+                                        </div>
                                         @if (Model.CompanyEnabled)
                                         {
                                             <div class="form-group row">
@@ -260,6 +292,10 @@
                                     new FilterParameter(nameof(Model.SearchDayOfBirth)),
                                     new FilterParameter(nameof(Model.SearchMonthOfBirth)),
                                     new FilterParameter(nameof(Model.SearchCompany)),
+                                    new FilterParameter(nameof(Model.SearchRegistrationDateFrom)),
+                                    new FilterParameter(nameof(Model.SearchRegistrationDateTo)),
+                                    new FilterParameter(nameof(Model.SearchLastActivityFrom)),
+                                    new FilterParameter(nameof(Model.SearchLastActivityTo)),
                                     new FilterParameter(nameof(Model.SearchPhone)),
                                     new FilterParameter(nameof(Model.SearchZipPostalCode)),
                                     new FilterParameter(nameof(Model.SearchIpAddress)),
