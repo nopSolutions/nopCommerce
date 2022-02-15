@@ -623,6 +623,8 @@ namespace Nop.Services.Catalog
                 var query = from p in _productRepository.Table
                             join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
                             where p.Published && !p.Deleted && p.VisibleIndividually &&
+                                (!p.AvailableStartDateTimeUtc.HasValue || p.AvailableStartDateTimeUtc.Value < DateTime.UtcNow) &&
+                                (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > DateTime.UtcNow) &&
                                 pc.IsFeaturedProduct && categoryId == pc.CategoryId
                             select p;
 
@@ -668,6 +670,8 @@ namespace Nop.Services.Catalog
                 var query = from p in _productRepository.Table
                             join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
                             where p.Published && !p.Deleted && p.VisibleIndividually &&
+                                (!p.AvailableStartDateTimeUtc.HasValue || p.AvailableStartDateTimeUtc.Value < DateTime.UtcNow) &&
+                                (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > DateTime.UtcNow) &&
                                 pm.IsFeaturedProduct && manufacturerId == pm.ManufacturerId
                             select p;
 
