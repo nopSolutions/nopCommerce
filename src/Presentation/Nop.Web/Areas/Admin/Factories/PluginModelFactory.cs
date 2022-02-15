@@ -141,7 +141,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 case IWidgetPlugin widgetPlugin:
                     model.IsEnabled = _widgetPluginManager.IsPluginActive(widgetPlugin);
-                    break;                
+                    break;
 
                 default:
                     model.CanChangeEnabled = false;
