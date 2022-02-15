@@ -61,6 +61,7 @@ namespace Nop.Services.Orders
         private readonly IWorkContext _workContext;
         private readonly OrderSettings _orderSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly IProductAvailabilityService _productAvailabilityService;
 
         #endregion
 
@@ -92,7 +93,7 @@ namespace Nop.Services.Orders
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
             OrderSettings orderSettings,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings, IProductAvailabilityService productAvailabilityService)
         {
             _catalogSettings = catalogSettings;
             _aclService = aclService;
@@ -121,6 +122,7 @@ namespace Nop.Services.Orders
             _workContext = workContext;
             _orderSettings = orderSettings;
             _shoppingCartSettings = shoppingCartSettings;
+            _productAvailabilityService = productAvailabilityService;
         }
 
         #endregion
@@ -302,8 +304,10 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains the warnings
         /// </returns>
-        protected virtual async Task<IList<string>> GetStandardWarningsAsync(Customer customer, ShoppingCartType shoppingCartType, Product product,
-            string attributesXml, decimal customerEnteredPrice, int quantity, int shoppingCartItemId, int storeId)
+        protected virtual async Task<IList<string>> GetStandardWarningsAsync(Customer customer, 
+            ShoppingCartType shoppingCartType, Product product, string attributesXml, 
+            decimal customerEnteredPrice, int quantity, int shoppingCartItemId, 
+            int storeId, DateTime? scheduledDateUTC)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -321,10 +325,11 @@ namespace Nop.Services.Orders
             }
 
             //published
-            //if (!product.Published)
-            //{
-            //    warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.ProductUnpublished"));
-            //}
+            if (!product.Published && scheduledDateUTC.HasValue && 
+                !(await _productAvailabilityService.IsProductAvailabilityForDateAsync(product, scheduledDateUTC.Value)))
+            {
+                warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.ProductUnpublished"));
+            }
 
             //we can add only simple products
             if (product.ProductType != ProductType.SimpleProduct)
@@ -622,6 +627,19 @@ namespace Nop.Services.Orders
             var shoppingCartItem = await _sciRepository.Table.FirstOrDefaultAsync(sci => sci.Id == shoppingCartItemId);
             if (shoppingCartItem != null)
                 await DeleteShoppingCartItemAsync(shoppingCartItem, resetCheckoutData, ensureOnlyActiveCheckoutAttributes);
+        }
+
+        public virtual async Task DeleteShoppingCartItemsAsync(Customer customer, int storeId, 
+            ShoppingCartType shoppingCartType)
+        {
+            await _customerService.ResetCheckoutDataAsync(
+                customer, storeId, true, true);
+
+            await _sciRepository.DeleteAsync(sci => 
+                sci.CustomerId == customer.Id && sci.ShoppingCartTypeId == (int)ShoppingCartType.ShoppingCart);
+            
+            customer.HasShoppingCartItems = false;
+            await _customerService.UpdateCustomerAsync(customer);
         }
 
         /// <summary>
@@ -1063,7 +1081,7 @@ namespace Nop.Services.Orders
             int quantity = 1, bool addRequiredProducts = true, int shoppingCartItemId = 0,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
-            bool getRentalWarnings = true)
+            bool getRentalWarnings = true, DateTime? scheduledDateUTC = default)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1072,7 +1090,7 @@ namespace Nop.Services.Orders
 
             //standard properties
             if (getStandardWarnings)
-                warnings.AddRange(await GetStandardWarningsAsync(customer, shoppingCartType, product, attributesXml, customerEnteredPrice, quantity, shoppingCartItemId, storeId));
+                warnings.AddRange(await GetStandardWarningsAsync(customer, shoppingCartType, product, attributesXml, customerEnteredPrice, quantity, shoppingCartItemId, storeId, scheduledDateUTC));
 
             //selected attributes
             if (getAttributesWarnings)
@@ -1478,7 +1496,7 @@ namespace Nop.Services.Orders
             ShoppingCartType shoppingCartType, int storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool addRequiredProducts = true)
+            int quantity = 1, bool addRequiredProducts = true, DateTime? scheduledDateUTC = default)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -1527,7 +1545,8 @@ namespace Nop.Services.Orders
                 warnings.AddRange(await GetShoppingCartItemWarningsAsync(customer, shoppingCartType, product,
                     storeId, attributesXml,
                     customerEnteredPrice, rentalStartDate, rentalEndDate,
-                    newQuantity, addRequiredProducts, shoppingCartItem.Id));
+                    newQuantity, addRequiredProducts, shoppingCartItem.Id, 
+                    scheduledDateUTC: scheduledDateUTC));
 
                 if (warnings.Any())
                     return warnings;
@@ -1544,7 +1563,8 @@ namespace Nop.Services.Orders
                 warnings.AddRange(await GetShoppingCartItemWarningsAsync(customer, shoppingCartType, product,
                     storeId, attributesXml, customerEnteredPrice,
                     rentalStartDate, rentalEndDate,
-                    quantity, addRequiredProducts));
+                    quantity, addRequiredProducts, 
+                    scheduledDateUTC: scheduledDateUTC));
 
                 if (warnings.Any())
                     return warnings;

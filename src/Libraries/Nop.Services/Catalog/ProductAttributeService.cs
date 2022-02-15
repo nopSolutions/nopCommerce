@@ -68,7 +68,7 @@ namespace Nop.Services.Catalog
             if (productAttributes == null)
                 throw new ArgumentNullException(nameof(productAttributes));
 
-            foreach (var productAttribute in productAttributes) 
+            foreach (var productAttribute in productAttributes)
                 await DeleteProductAttributeAsync(productAttribute);
         }
 
@@ -87,8 +87,8 @@ namespace Nop.Services.Catalog
             var productAttributes = await _productAttributeRepository.GetAllPagedAsync(query =>
             {
                 return from pa in query
-                    orderby pa.Name
-                    select pa;
+                       orderby pa.Name
+                       select pa;
             }, pageIndex, pageSize);
 
             return productAttributes;
@@ -158,7 +158,7 @@ namespace Nop.Services.Catalog
             var filter = await query.Select(a => a.Id)
                 .Where(m => queryFilter.Contains(m))
                 .ToListAsync();
-            
+
             return queryFilter.Except(filter).ToArray();
         }
 
@@ -189,9 +189,9 @@ namespace Nop.Services.Catalog
             var allCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeMappingsByProductCacheKey, productId);
 
             var query = from pam in _productAttributeMappingRepository.Table
-                orderby pam.DisplayOrder, pam.Id
-                where pam.ProductId == productId
-                select pam;
+                        orderby pam.DisplayOrder, pam.Id
+                        where pam.ProductId == productId
+                        select pam;
 
             var attributes = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) ?? new List<ProductAttributeMapping>();
 
@@ -258,9 +258,9 @@ namespace Nop.Services.Catalog
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeValuesByAttributeCacheKey, productAttributeMappingId);
 
             var query = from pav in _productAttributeValueRepository.Table
-                orderby pav.DisplayOrder, pav.Id
-                where pav.ProductAttributeMappingId == productAttributeMappingId
-                select pav;
+                        orderby pav.DisplayOrder, pav.Id
+                        where pav.ProductAttributeMappingId == productAttributeMappingId
+                        select pav;
             var productAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return productAttributeValues;
@@ -399,8 +399,8 @@ namespace Nop.Services.Catalog
             {
                 return from c in query
                        orderby c.Id
-                    where c.ProductId == productId
-                    select c;
+                       where c.ProductId == productId
+                       select c;
             }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeCombinationsByProductCacheKey, productId));
 
             return combinations;

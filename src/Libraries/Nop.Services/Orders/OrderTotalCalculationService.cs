@@ -1173,7 +1173,8 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains the shopping cart total;Null if shopping cart total couldn't be calculated now. Applied gift cards. Applied discount amount. Applied discounts. Reward points to redeem. Reward points amount in primary store currency to redeem
         /// </returns>
-        public virtual async Task<(decimal? shoppingCartTotal, decimal discountAmount, List<Discount> appliedDiscounts, List<AppliedGiftCard> appliedGiftCards, int redeemedRewardPoints, decimal redeemedRewardPointsAmount)> GetShoppingCartTotalAsync(IList<ShoppingCartItem> cart,
+        public virtual async Task<(decimal? shoppingCartTotal, decimal discountAmount, List<Discount> appliedDiscounts, List<AppliedGiftCard> appliedGiftCards, int redeemedRewardPoints, decimal redeemedRewardPointsAmount)> 
+            GetShoppingCartTotalAsync(IList<ShoppingCartItem> cart,
             bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true)
         {
             var redeemedRewardPoints = 0;

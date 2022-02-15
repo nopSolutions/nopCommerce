@@ -33,6 +33,8 @@ namespace Nop.Services.Orders
         Task DeleteShoppingCartItemAsync(int shoppingCartItemId, bool resetCheckoutData = true,
             bool ensureOnlyActiveCheckoutAttributes = false);
 
+        Task DeleteShoppingCartItemsAsync(Customer customer, int storeId, ShoppingCartType shoppingCartType);
+        
         /// <summary>
         /// Deletes expired shopping cart items
         /// </summary>
@@ -148,7 +150,7 @@ namespace Nop.Services.Orders
             int quantity = 1, bool addRequiredProducts = true, int shoppingCartItemId = 0,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
-            bool getRentalWarnings = true);
+            bool getRentalWarnings = true, DateTime? scheduledDateUTC = default);
 
         /// <summary>
         /// Validates whether this shopping cart is valid
@@ -172,8 +174,8 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains the shopping cart unit price (one item). Applied discount amount. Applied discounts
         /// </returns>
-        Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> GetUnitPriceAsync(ShoppingCartItem shoppingCartItem,
-            bool includeDiscounts);
+        Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> 
+            GetUnitPriceAsync(ShoppingCartItem shoppingCartItem, bool includeDiscounts);
 
         /// <summary>
         /// Gets the shopping cart unit price (one item)
@@ -191,7 +193,8 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains the shopping cart unit price (one item)
         /// </returns>
-        Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> GetUnitPriceAsync(Product product,
+        Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> 
+            GetUnitPriceAsync(Product product,
             Customer customer,
             ShoppingCartType shoppingCartType,
             int quantity,
@@ -209,8 +212,8 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains the shopping cart item sub total. Applied discount amount.Applied discounts. Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items
         /// </returns>
-        Task<(decimal subTotal, decimal discountAmount, List<Discount> appliedDiscounts, int? maximumDiscountQty)> GetSubTotalAsync(ShoppingCartItem shoppingCartItem,
-            bool includeDiscounts);
+        Task<(decimal subTotal, decimal discountAmount, List<Discount> appliedDiscounts, int? maximumDiscountQty)> 
+            GetSubTotalAsync(ShoppingCartItem shoppingCartItem, bool includeDiscounts);
 
         //TODO: migrate to an extension method
         /// <summary>
@@ -256,7 +259,7 @@ namespace Nop.Services.Orders
             ShoppingCartType shoppingCartType, int storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool addRequiredProducts = true);
+            int quantity = 1, bool addRequiredProducts = true, DateTime? scheduledDateUTC = default);
 
         /// <summary>
         /// Updates the shopping cart item
@@ -316,6 +319,7 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains the error (if exists); otherwise, empty string
         /// </returns>
-        Task<(string error, int cycleLength, RecurringProductCyclePeriod cyclePeriod, int totalCycles)> GetRecurringCycleInfoAsync(IList<ShoppingCartItem> shoppingCart);
+        Task<(string error, int cycleLength, RecurringProductCyclePeriod cyclePeriod, int totalCycles)> 
+            GetRecurringCycleInfoAsync(IList<ShoppingCartItem> shoppingCart);
     }
 }
