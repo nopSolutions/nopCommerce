@@ -11,7 +11,9 @@
     //add main CSS file
     NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles{(supportRtl ? ".rtl" : "")}.css");
 
+    //add swiper css file
+    NopHtml.AppendCssFileParts("~/lib_npm/swiper/swiper-bundle.min.css");
+
     //add jQuery UI css file
     NopHtml.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
-
 }

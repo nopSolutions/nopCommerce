@@ -76,7 +76,23 @@ namespace Nop.Web.Infrastructure.Cache
         public static string ProductsAlsoPurchasedIdsPrefixCacheKey => "Nop.pres.alsopuchased";
 
         /// <summary>
-        /// Key for default product picture caching (all pictures)
+        /// Key for product picture caching on the product catalog pages (all pictures)
+        /// </summary>
+        /// <remarks>
+        /// {0} : product id
+        /// {1} : picture size
+        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
+        /// {3} : value indicating whether to display all product pictures
+        /// {4} : language ID ("alt" and "title" can depend on localized product name)
+        /// {5} : is connection SSL secured?
+        /// {6} : current store ID
+        /// </remarks>
+        public static CacheKey ProductOverviewPicturesModelKey => new("Nop.pres.product.overviewpictures-{0}-{1}-{2}-{3}-{4}-{5}-{6}", ProductOverviewPicturesPrefixCacheKey, ProductOverviewPicturesPrefixCacheKeyById);
+        public static string ProductOverviewPicturesPrefixCacheKey => "Nop.pres.product.overviewpictures";
+        public static string ProductOverviewPicturesPrefixCacheKeyById => "Nop.pres.product.overviewpictures-{0}-";
+
+        /// <summary>
+        /// Key for product picture caching on the product details page (all pictures)
         /// </summary>
         /// <remarks>
         /// {0} : product id
@@ -86,24 +102,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public static CacheKey ProductDefaultPictureModelKey => new("Nop.pres.product.detailspictures-{0}-{1}-{2}-{3}-{4}-{5}", ProductDefaultPicturePrefixCacheKey, ProductDefaultPicturePrefixCacheKeyById);
-        public static string ProductDefaultPicturePrefixCacheKey => "Nop.pres.product.detailspictures";
-        public static string ProductDefaultPicturePrefixCacheKeyById => "Nop.pres.product.detailspictures-{0}-";
-
-        /// <summary>
-        /// Key for product picture caching on the product details page
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// {1} : picture size
-        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
-        /// {3} : language ID ("alt" and "title" can depend on localized product name)
-        /// {4} : is connection SSL secured?
-        /// {5} : current store ID
-        /// </remarks>
-        public static CacheKey ProductDetailsPicturesModelKey => new("Nop.pres.product.picture-{0}-{1}-{2}-{3}-{4}-{5}", ProductDetailsPicturesPrefixCacheKey, ProductDetailsPicturesPrefixCacheKeyById);
-        public static string ProductDetailsPicturesPrefixCacheKey => "Nop.pres.product.picture";
-        public static string ProductDetailsPicturesPrefixCacheKeyById => "Nop.pres.product.picture-{0}-";
+        public static CacheKey ProductDetailsPicturesModelKey => new("Nop.pres.product.detailspictures-{0}-{1}-{2}-{3}-{4}-{5}", ProductDetailsPicturesPrefixCacheKey, ProductDetailsPicturesPrefixCacheKeyById);
+        public static string ProductDetailsPicturesPrefixCacheKey => "Nop.pres.product.detailspictures";
+        public static string ProductDetailsPicturesPrefixCacheKeyById => "Nop.pres.product.detailspictures-{0}-";
 
         /// <summary>
         /// Key for product reviews caching

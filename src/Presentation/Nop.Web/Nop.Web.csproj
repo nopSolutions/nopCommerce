@@ -29,12 +29,32 @@
     <!-- We copy the entire \App_Data directory. But we ignore JSON files and data protection keys  -->
     <Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\*.json" />
     <Content Remove="App_Data\*.json" />
+    <Content Remove="wwwroot\lib_npm\swiper\core\**" />
+    <Content Remove="wwwroot\lib_npm\swiper\modules\**" />
+    <Content Remove="wwwroot\lib_npm\swiper\shared\**" />
+    <Content Remove="wwwroot\lib_npm\swiper\types\**" />
     <Content Update="App_Data\DataProtectionKeys\*.xml" CopyToPublishDirectory="Never" />
 
     <Compile Remove="Plugins\**;Themes\**" />
+
+    <Compile Remove="wwwroot\lib_npm\swiper\core\**" />
+
+    <Compile Remove="wwwroot\lib_npm\swiper\modules\**" />
+
+    <Compile Remove="wwwroot\lib_npm\swiper\shared\**" />
+
+    <Compile Remove="wwwroot\lib_npm\swiper\types\**" />
     <Content Remove="Plugins\**;Themes\**" />
     <EmbeddedResource Remove="Plugins\**;Themes\**" />
+    <EmbeddedResource Remove="wwwroot\lib_npm\swiper\core\**" />
+    <EmbeddedResource Remove="wwwroot\lib_npm\swiper\modules\**" />
+    <EmbeddedResource Remove="wwwroot\lib_npm\swiper\shared\**" />
+    <EmbeddedResource Remove="wwwroot\lib_npm\swiper\types\**" />
     <None Remove="Plugins\**;Themes\**" />
+    <None Remove="wwwroot\lib_npm\swiper\core\**" />
+    <None Remove="wwwroot\lib_npm\swiper\modules\**" />
+    <None Remove="wwwroot\lib_npm\swiper\shared\**" />
+    <None Remove="wwwroot\lib_npm\swiper\types\**" />
 
     <Content Include="Plugins\bin\placeholder.txt" CopyToPublishDirectory="PreserveNewest" />
     <None Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\runtimes\**;Plugins\**\ref\**;Plugins\**\*.pdb" />
@@ -43,6 +63,8 @@
 
     <!-- We copy the \Logs directory -->
     <Content Include="Logs\**" CopyToPublishDirectory="PreserveNewest" />
+    <Content Remove="wwwroot\lib_npm\swiper\swiper.less" />
+    <Content Remove="wwwroot\lib_npm\swiper\swiper.scss" />
 
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -60,6 +82,13 @@
 
   <ItemGroup>
     <Folder Include="Plugins\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\lib_npm\swiper\swiper-bundle.js" />
+    <None Include="wwwroot\lib_npm\swiper\swiper-bundle.js.map" />
+    <None Include="wwwroot\lib_npm\swiper\swiper-bundle.min.js" />
+    <None Include="wwwroot\lib_npm\swiper\swiper-bundle.min.js.map" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target.

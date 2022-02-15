@@ -69,7 +69,8 @@ namespace Nop.Web.Components
                 return Content("");
 
             //prepare model
-            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize, 
+                false, false, _catalogSettings.DisplayAllPicturesOnCatalogPages)).ToList();
             return View(model);
         }
     }

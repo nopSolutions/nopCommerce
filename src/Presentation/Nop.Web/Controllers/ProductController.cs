@@ -328,7 +328,7 @@ namespace Nop.Web.Controllers
             var products = await _recentlyViewedProductsService.GetRecentlyViewedProductsAsync(_catalogSettings.RecentlyViewedProductsNumber);
 
             var model = new List<ProductOverviewModel>();
-            model.AddRange(await _productModelFactory.PrepareProductOverviewModelsAsync(products));
+            model.AddRange(await _productModelFactory.PrepareProductOverviewModelsAsync(products, loadAllPictures: _catalogSettings.DisplayAllPicturesOnCatalogPages));
 
             return View(model);
         }
@@ -345,7 +345,7 @@ namespace Nop.Web.Controllers
             var store = await _storeContext.GetCurrentStoreAsync();
             var storeId = store.Id;
             var products = await _productService.GetProductsMarkedAsNewAsync(storeId);
-            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, loadAllPictures: _catalogSettings.DisplayAllPicturesOnCatalogPages)).ToList();
 
             return View(model);
         }

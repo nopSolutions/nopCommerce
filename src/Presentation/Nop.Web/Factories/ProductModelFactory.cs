@@ -527,7 +527,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the picture model
         /// </returns>
-        protected virtual async Task<PictureModel> PrepareProductOverviewPictureModelAsync(Product product, int? productThumbPictureSize = null)
+        protected virtual async Task<(PictureModel pictureModel, IList<PictureModel> allPictureModels)> PrepareProductOverviewPicturesModelAsync(Product product, 
+            int? productThumbPictureSize = null, bool loadAllPictures = false)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -535,39 +536,72 @@ namespace Nop.Web.Factories
             var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
             //If a size has been set in the view, we use it in priority
             var pictureSize = productThumbPictureSize ?? _mediaSettings.ProductThumbPictureSize;
+            //value is 0 when load all pictures
+            var recordsToReturn = loadAllPictures ? 0 : 1;
 
             //prepare picture model
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductDefaultPictureModelKey, 
-                product, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(),
-                await _storeContext.GetCurrentStoreAsync());
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductOverviewPicturesModelKey, 
+                product, pictureSize, true, loadAllPictures, await _workContext.GetWorkingLanguageAsync(), 
+                _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
 
-            var defaultPictureModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var cachedPictures = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var picture = (await _pictureService.GetPicturesByProductIdAsync(product.Id, 1)).FirstOrDefault();
-                string fullSizeImageUrl, imageUrl;
-                (imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
-                (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
+                var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id, recordsToReturn);
+                var defaultPicture = pictures.FirstOrDefault();
 
-                var pictureModel = new PictureModel
+                string fullSizeImageUrl, imageUrl;
+                (imageUrl, defaultPicture) = await _pictureService.GetPictureUrlAsync(defaultPicture, pictureSize);
+                (fullSizeImageUrl, defaultPicture) = await _pictureService.GetPictureUrlAsync(defaultPicture, 0);
+
+                var defaultPictureModel = new PictureModel
                 {
                     ImageUrl = imageUrl,
                     FullSizeImageUrl = fullSizeImageUrl,
                     //"title" attribute
-                    Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute))
-                        ? picture.TitleAttribute
+                    Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute))
+                        ? defaultPicture.TitleAttribute
                         : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"),
                             productName),
                     //"alt" attribute
-                    AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute))
-                        ? picture.AltAttribute
+                    AlternateText = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.AltAttribute))
+                        ? defaultPicture.AltAttribute
                         : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"),
                             productName)
                 };
 
-                return pictureModel;
+                //all pictures
+                var pictureModels = new List<PictureModel>();
+                for (var i = 0; i < pictures.Count; i++)
+                {
+                    var picture = pictures[i];
+
+                    (imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
+                    (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
+
+                    var pictureModel = new PictureModel
+                    {
+                        ImageUrl = imageUrl,
+                        FullSizeImageUrl = fullSizeImageUrl,
+                        //"title" attribute
+                        Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute))
+                            ? picture.TitleAttribute
+                            : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"),
+                                productName),
+                        //"alt" attribute
+                        AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute))
+                            ? picture.AltAttribute
+                            : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"),
+                                productName)
+                    };
+
+                    pictureModels.Add(pictureModel);
+                }
+
+                return new { DefaultPictureModel = defaultPictureModel, PictureModels = pictureModels };
             });
 
-            return defaultPictureModel;
+            var allPictureModels = cachedPictures.PictureModels;
+            return (cachedPictures.DefaultPictureModel, allPictureModels);
         }
 
         /// <summary>
@@ -1237,7 +1271,7 @@ namespace Nop.Web.Factories
         public virtual async Task<IEnumerable<ProductOverviewModel>> PrepareProductOverviewModelsAsync(IEnumerable<Product> products,
             bool preparePriceModel = true, bool preparePictureModel = true,
             int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
-            bool forceRedirectionAfterAddingToCart = false)
+            bool forceRedirectionAfterAddingToCart = false, bool loadAllPictures = false)
         {
             if (products == null)
                 throw new ArgumentNullException(nameof(products));
@@ -1268,7 +1302,9 @@ namespace Nop.Web.Factories
                 //picture
                 if (preparePictureModel)
                 {
-                    model.DefaultPictureModel = await PrepareProductOverviewPictureModelAsync(product, productThumbPictureSize);
+                    IList<PictureModel> allPictureModels;
+                    (model.DefaultPictureModel, allPictureModels) = await PrepareProductOverviewPicturesModelAsync(product, productThumbPictureSize, loadAllPictures);
+                    model.PictureModels = allPictureModels;
                 }
 
                 //specs

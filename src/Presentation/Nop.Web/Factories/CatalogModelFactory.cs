@@ -362,7 +362,8 @@ namespace Nop.Web.Factories
                 model.NoResultMessage = await _localizationService.GetResourceAsync("Catalog.Products.NoResult");
             else
             {
-                model.Products = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
+                model.Products = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, 
+                    loadAllPictures: _catalogSettings.DisplayAllPicturesOnCatalogPages)).ToList();
                 model.LoadPagedList(products);
             }
         }
@@ -463,7 +464,8 @@ namespace Nop.Web.Factories
             {
                 var featuredProducts = await _productService.GetCategoryFeaturedProductsAsync(category.Id, currentStore.Id);
                 if (featuredProducts != null)
-                    model.FeaturedProducts = (await _productModelFactory.PrepareProductOverviewModelsAsync(featuredProducts)).ToList();
+                    model.FeaturedProducts = (await _productModelFactory.PrepareProductOverviewModelsAsync(featuredProducts, 
+                        loadAllPictures: _catalogSettings.DisplayAllPicturesOnCatalogPages)).ToList();
             }
 
             return model;
@@ -943,7 +945,8 @@ namespace Nop.Web.Factories
                 var storeId = store.Id;
                 var featuredProducts = await _productService.GetManufacturerFeaturedProductsAsync(manufacturer.Id, storeId);
                 if (featuredProducts != null)
-                    model.FeaturedProducts = (await _productModelFactory.PrepareProductOverviewModelsAsync(featuredProducts)).ToList();
+                    model.FeaturedProducts = (await _productModelFactory.PrepareProductOverviewModelsAsync(featuredProducts, 
+                        loadAllPictures: _catalogSettings.DisplayAllPicturesOnCatalogPages)).ToList();
             }
 
             return model;
