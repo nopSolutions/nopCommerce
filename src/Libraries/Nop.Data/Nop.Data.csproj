@@ -14,12 +14,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentMigrator" Version="3.3.1" />
-    <PackageReference Include="FluentMigrator.Runner" Version="3.3.1" />
+    <PackageReference Include="FluentMigrator" Version="3.3.2" />
+    <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
     <PackageReference Include="linq2db" Version="3.6.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="4.0.0" />
-    <PackageReference Include="MySql.Data" Version="8.0.27" />
-    <PackageReference Include="Npgsql" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
+    <PackageReference Include="MySql.Data" Version="8.0.28" />
+    <PackageReference Include="Npgsql" Version="6.0.3" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
   </ItemGroup>
 
