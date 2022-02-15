@@ -8890,12 +8890,6 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
-                    SystemKeyword = "ImportCustomers",
-                    Enabled = true,
-                    Name = "Customers were imported"
-                },
-                new ActivityLogType
-                {
                     SystemKeyword = "ImportCategories",
                     Enabled = true,
                     Name = "Categories were imported"
@@ -8911,12 +8905,6 @@ namespace Nop.Services.Installation
                     SystemKeyword = "ImportProducts",
                     Enabled = true,
                     Name = "Products were imported"
-                },
-                new ActivityLogType
-                {
-                    SystemKeyword = "ImportOrders",
-                    Enabled = true,
-                    Name = "Orders were imported"
                 },
                 new ActivityLogType
                 {

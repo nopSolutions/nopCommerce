@@ -1095,14 +1095,8 @@
   <LocaleResource Name="ActivityLog.ImportCategories">
     <Value>{0} categories were imported</Value>
   </LocaleResource>
-  <LocaleResource Name="ActivityLog.ImportCustomers">
-    <Value>{0} customers were imported</Value>
-  </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportManufacturers">
     <Value>{0} manufacturers were imported</Value>
-  </LocaleResource>
-  <LocaleResource Name="ActivityLog.ImportOrders">
-    <Value>{0} orders were imported</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportProducts">
     <Value>{0} products were imported</Value>

@@ -29,26 +29,6 @@ namespace Nop.Data.Migrations.UpgradeTo460
         {
             var activityLogTypeTable = _dataProvider.GetTable<ActivityLogType>();
 
-            if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ImportCustomers", StringComparison.InvariantCultureIgnoreCase) == 0))
-                _dataProvider.InsertEntity(
-                    new ActivityLogType
-                    {
-                        SystemKeyword = "ImportCustomers",
-                        Enabled = true,
-                        Name = "Customers were imported"
-                    }
-                );
-
-            if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ImportOrders", StringComparison.InvariantCultureIgnoreCase) == 0))
-                _dataProvider.InsertEntity(
-                    new ActivityLogType
-                    {
-                        SystemKeyword = "ImportOrders",
-                        Enabled = true,
-                        Name = "Orders were imported"
-                    }
-                );
-
             if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ImportNewsLetterSubscriptions", StringComparison.InvariantCultureIgnoreCase) == 0))
                 _dataProvider.InsertEntity(
                     new ActivityLogType

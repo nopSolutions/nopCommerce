@@ -51,8 +51,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["ActivityLog.ExportProducts"] = "{0} products were exported",
                 ["ActivityLog.ExportStates"] = "{0} states and provinces were exported",
                 ["ActivityLog.ExportNewsLetterSubscriptions"] = "{0} newsletter subscriptions were exported",
-                ["ActivityLog.ImportOrders"] = "{0} orders were imported",
-                ["ActivityLog.ImportCustomers"] = "{0} customers were imported",
                 ["ActivityLog.ImportNewsLetterSubscriptions"] = "{0} newsletter subscriptions were imported",
             }, languageId).Wait();
         }
