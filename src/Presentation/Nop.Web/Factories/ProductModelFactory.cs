@@ -1388,6 +1388,7 @@ namespace Nop.Web.Factories
                         Id = vendor.Id,
                         Name = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
                         SeName = await _urlRecordService.GetSeNameAsync(vendor),
+                        PictureUrl = await _pictureService.GetPictureUrlAsync(vendor.PictureId)
                     };
                 }
             }

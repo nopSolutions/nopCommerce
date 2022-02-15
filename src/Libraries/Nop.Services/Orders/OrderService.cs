@@ -425,7 +425,7 @@ namespace Nop.Services.Orders
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 
-            return query.Select(order => order.Id).ToList();
+            return await query.Select(order => order.Id).ToListAsync();
         }
 
         /// <summary>

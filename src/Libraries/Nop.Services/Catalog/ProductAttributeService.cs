@@ -245,25 +245,6 @@ namespace Nop.Services.Catalog
             await _productAttributeValueRepository.DeleteAsync(productAttributeValue);
         }
 
-
-        /// <summary>
-        /// Gets product attribute values
-        /// </summary>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the product attribute mapping collection
-        /// </returns>
-        public virtual async Task<Dictionary<int, List<KeyValuePair<ProductAttributeValue, ProductAttributeMapping>>>> GetAllGroupedProductAttributeValuesAsync()
-        {
-            var productAttributeValues = (await (from pav in _productAttributeValueRepository.Table
-                                                 join pam in _productAttributeMappingRepository.Table
-                                                 on pav.ProductAttributeMappingId equals pam.Id
-                                                 select new KeyValuePair<ProductAttributeValue, ProductAttributeMapping>(pav, pam)).ToListAsync())
-                         .GroupBy(t => t.Value.ProductId)
-                         .ToDictionary(i => i.Key, i => i.ToList());
-            return productAttributeValues;
-        }
-
         /// <summary>
         /// Gets product attribute values by product attribute mapping identifier
         /// </summary>

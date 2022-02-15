@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
@@ -32,6 +32,8 @@ using Nop.Web.Models.Api.Catalog;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Text;
+using Nop.Web.Extensions.Api;
+using Nop.Web.Models.Api.Order;
 
 namespace Nop.Web.Controllers.Api.Security
 {
@@ -61,6 +63,7 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICompanyService _companyService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductAttributeService _productAttributeService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
@@ -86,7 +89,8 @@ namespace Nop.Web.Controllers.Api.Security
             ICustomerActivityService customerActivityService,
             ICompanyService companyService,
             IProductAttributeParser productAttributeParser,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings, 
+            IProductAttributeService productAttributeService)
         {
             _orderService = orderService;
             _customerService = customerService;
@@ -108,6 +112,7 @@ namespace Nop.Web.Controllers.Api.Security
             _companyService = companyService;
             _productAttributeParser = productAttributeParser;
             _shoppingCartSettings = shoppingCartSettings;
+            _productAttributeService = productAttributeService;
         }
 
         #endregion
@@ -237,168 +242,69 @@ namespace Nop.Web.Controllers.Api.Security
             }
         }
 
-        private async Task<string> GetAttributtesFormAsync(ProductOverviewApiModel productOverviewApiModel, Product product, List<string> addToCartWarnings)
+        protected virtual async Task<List<CartErrorModel>> AddProductsToCartAsync(
+            Core.Domain.Customers.Customer customer,
+            int storeId,
+            ProductOrderRequestApiModel productOrderRequestApiModel)
         {
-            var selectedAttributes =await productOverviewApiModel.ProductAttributeValues.Where(i => i.Key.IsPreSelected == true).ToListAsync();
-            if (selectedAttributes.Count==0)
-            {
-                return null;
-            }
-            StringBuilder attributeValues = new StringBuilder();
-            foreach ( var selectedAttribute in selectedAttributes)
-            {
-                attributeValues.Append(selectedAttribute.Key.Id.ToString()+",");
-            }
-            attributeValues.Length -= 1;
-            var attributeForm = new FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>
-                     {
-                      { $"product_attribute_{selectedAttributes.First().Value.Id}", attributeValues.ToString()},
-                      { $"addtocart_{product.Id}.EnteredQuantity", productOverviewApiModel.Quantity.ToString() }
-                     });
-            var attributes = await _productAttributeParser.ParseProductAttributesAsync(product, attributeForm, addToCartWarnings);
-            return attributes;
-        }
+            var errorList = new List<CartErrorModel>();
 
-        protected async Task TestAddToCartAsync(int shoppingCartTypeId, JToken item)
-        {
-            var product = await _productService.GetProductByIdAsync(int.Parse(item["Id"].ToString()));
-            var selectedAttribute = item["ProductAttributeValues"].Where(i => int.Parse(i["Key"]["IsPreSelected"].ToString()) == 1).FirstOrDefault();
-            var form = new FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>
-{
-    { $"product_attribute_{selectedAttribute["Value"]["Id"].ToString()}", selectedAttribute["Key"]["Id"].ToString() },
-    { $"addtocart_{product.Id}.EnteredQuantity", item["quantity"].ToString() }
-});
-
-            //
-            if (product == null)
+            var scheduledDateUTC = await ConvertCustomerLocalTimeToUTCAsync(
+                customer,
+                productOrderRequestApiModel.ScheduleDate);
+            
+            foreach (var currentProductOrder in productOrderRequestApiModel.Products)
             {
-                var retValu = Json(new
+                try
                 {
-                    redirect = Url.RouteUrl("Homepage")
-                });
-            }
-
-            //we can add only simple products
-            if (product.ProductType != ProductType.SimpleProduct)
-            {
-                var retValu = Json(new
-                {
-                    success = false,
-                    message = "Only simple products could be added to the cart"
-                });
-            }
-
-            //update existing shopping cart item
-            var updatecartitemid = 0;
-            foreach (var formKey in form.Keys)
-                if (formKey.Equals($"addtocart_{product.Id}.UpdatedShoppingCartItemId", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    int.TryParse(form[formKey], out updatecartitemid);
-                    break;
-                }
-
-            ShoppingCartItem updatecartitem = null;
-            if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
-            {
-                //search with the same cart type as specified
-                var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), (ShoppingCartType)shoppingCartTypeId, (await _storeContext.GetCurrentStoreAsync()).Id);
-
-                updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
-                //not found? let's ignore it. in this case we'll add a new item
-                //if (updatecartitem == null)
-                //{
-                //    return Json(new
-                //    {
-                //        success = false,
-                //        message = "No shopping cart item found to update"
-                //    });
-                //}
-                //is it this product?
-                if (updatecartitem != null && product.Id != updatecartitem.ProductId)
-                {
-                    var err = Json(new
+                    var product = await _productService.GetProductByIdAsync(currentProductOrder.ProductId);
+                    if (product == null)
                     {
-                        success = false,
-                        message = "This product does not match a passed shopping cart item identifier"
+                        errorList.Add(new CartErrorModel
+                        {
+                            Success = false, 
+                            Id = currentProductOrder.ProductId,
+                            Message = "No product found"
+                        });
+                    
+                        continue;
+                    }
+
+                    var attributesXml = await currentProductOrder.ConvertToAttributesXmlAsync(
+                        _productAttributeParser, _productAttributeService);
+
+                    //now let's try adding product to the cart (now including product attribute validation, etc)
+                    var addToCartWarnings = await _shoppingCartService.AddToCartAsync(customer: customer,
+                        product: product,
+                        shoppingCartType: ShoppingCartType.ShoppingCart,
+                        attributesXml: attributesXml,
+                        storeId: storeId,
+                        scheduledDateUTC: scheduledDateUTC,
+                        quantity: currentProductOrder.Quantity
+                    );
+                
+                    if (addToCartWarnings.Any())
+                    {
+                        errorList.Add(new CartErrorModel
+                        {
+                            Success = false,
+                            Id = currentProductOrder.ProductId,
+                            Message = string.Join(", ", addToCartWarnings)
+                        });
+                    }
+                }
+                catch (Exception e)
+                {
+                    errorList.Add(new CartErrorModel
+                    {
+                        Success = false,
+                        Id = currentProductOrder.ProductId,
+                        Message = e.Message
                     });
                 }
             }
 
-            var addToCartWarnings = new List<string>();
-
-            //customer entered price
-            var customerEnteredPriceConverted = await _productAttributeParser.ParseCustomerEnteredPriceAsync(product, form);
-
-            //entered quantity
-            var quantity = _productAttributeParser.ParseEnteredQuantity(product, form);
-
-            //product and gift card attributes
-            var attributes = await _productAttributeParser.ParseProductAttributesAsync(product, form, addToCartWarnings);
-
-            //rental attributes
-            _productAttributeParser.ParseRentalDates(product, form, out var rentalStartDate, out var rentalEndDate);
-
-            var cartType = updatecartitem == null ? (ShoppingCartType)shoppingCartTypeId :
-                //if the item to update is found, then we ignore the specified "shoppingCartTypeId" parameter
-                updatecartitem.ShoppingCartType;
-
-            await SaveItemAsync(updatecartitem, addToCartWarnings, product, cartType, attributes, customerEnteredPriceConverted, rentalStartDate, rentalEndDate, quantity);
-
-            //return result
-            var test = await GetProductToCartDetailsAsync(addToCartWarnings, cartType, product);
-        }
-
-        protected virtual async Task<CartErrorModel> AddProductToCart(int productId = 0, int quantity = 0, string attributesXml = "")
-        {
-            if (quantity <= 0)
-                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = "Quantity should be > 0" });
-
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (customer == null)
-                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = "invalid customer" });
-
-            var product = await _productService.GetProductByIdAsync(productId);
-            if (product == null)
-                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = "No product found" });
-
-            var cartType = (ShoppingCartType)1;
-            if (product.OrderMinimumQuantity > quantity)
-                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = "Quantity should be > 0" });
-
-            //get standard warnings without attribute validations
-            //first, try to find existing shopping cart item
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, cartType, _storeContext.GetCurrentStore().Id);
-            var shoppingCartItem = await _shoppingCartService.FindShoppingCartItemInTheCartAsync(cart, cartType, product);
-            //if we already have the same product in the cart, then use the total quantity to validate
-            var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
-            var addToCartWarnings = await _shoppingCartService
-                .GetShoppingCartItemWarningsAsync(customer, cartType,
-                product, _storeContext.GetCurrentStore().Id, string.Empty,
-                decimal.Zero, null, null, quantityToValidate, false, shoppingCartItem?.Id ?? 0, true, false, false, false);
-            if (addToCartWarnings.Any())
-            {
-                if (addToCartWarnings.Contains("The maximum number of distinct products allowed in the cart is 10."))
-                    return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = "The maximum number of distinct products allowed in the cart is 10." });
-                //cannot be added to the cart
-                //let's display standard warnings
-                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = string.Join(" , ", addToCartWarnings).ToString() });
-            }
-
-            //now let's try adding product to the cart (now including product attribute validation, etc)
-            addToCartWarnings = await _shoppingCartService.AddToCartAsync(customer: customer,
-                product: product,
-                shoppingCartType: cartType,
-                attributesXml: attributesXml,
-                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
-                quantity: quantity);
-            if (addToCartWarnings.Any())
-            {
-                //cannot be added to the cart
-                //but we do not display attribute and gift card warnings here. let's do it on the product details page
-                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = string.Join(" , ", addToCartWarnings).ToString() });
-            }
-
-            return await Task.FromResult(new CartErrorModel { Success = true, Id = productId, Message = await _localizationService.GetResourceAsync("Product.Added.Successfully.To.Cart") });
+            return errorList;
         }
 
         protected virtual async Task LogEditOrderAsync(int orderId)
@@ -412,13 +318,6 @@ namespace Nop.Web.Controllers.Api.Security
         #endregion
 
         #region Order
-        public class ReOrderModel
-        {
-            public bool Success { get; set; }
-            public int Id { get; set; }
-            public int Quantity { get; set; }
-            public string Message { get; set; }
-        }
         public class CartErrorModel
         {
             public bool Success { get; set; }
@@ -460,7 +359,8 @@ namespace Nop.Web.Controllers.Api.Security
                 var result = await expoSDKClient.PushSendAsync(pushTicketReq);
             }
 
-            return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Order.Cancelled.Successfully") });
+            return Ok(new { success = true, 
+                message = await _localizationService.GetResourceAsync("Order.Cancelled.Successfully") });
         }
 
         [HttpPost("delete-cart/{ids}")]
@@ -480,55 +380,62 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpPost("check-products")]
-        public async Task<IActionResult> CheckProducts([FromBody] List<ProductOverviewApiModel> cartItems, IFormCollection form)
+        public async Task<IActionResult> CheckProductsAsync(
+            [FromBody] ProductOrderRequestApiModel orderRequest)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
-            //testForm.Keys.Add("test");
-            //form ["test"]= "test_result";
-            var carts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, _storeContext.GetCurrentStore().Id);
-            foreach (var item in carts)
-                await _shoppingCartService.DeleteShoppingCartItemAsync(item.Id);
-            var errorList = new List<CartErrorModel>();
-            int[] ids = cartItems.Select(i => i.Id).ToArray();
+            var currentStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
 
-            var counter = 0;
-            var products = await _productService.GetProductsByIdsAsync(ids);
+            await _shoppingCartService.DeleteShoppingCartItemsAsync(customer,
+                currentStoreId, ShoppingCartType.ShoppingCart);
 
+            var cartErrorModel = await AddProductsToCartAsync(customer, currentStoreId, orderRequest);
 
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, 
+                ShoppingCartType.ShoppingCart, 
+                currentStoreId);
 
-            var addToCartWarnings = new List<string>();
+            var cartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(
+                cart, false);
 
-            //Microsoft.Extensions.Primitives.StringValues cartItems = "";
-            //var cartItemsJson = JObject.Parse(form.Keys.First().ToString());
-            //var cartProductsArray = JArray.Parse(cartItemsJson["cartItems"].ToString());
-
-            //foreach (var item in cartProductsArray)
-            //{
-            //    await TestAddToCartAsync((int)ShoppingCartType.ShoppingCart, item);
-            //}
-
-
-            foreach (var cartItem in cartItems)
+            if (cartErrorModel.Any(error => !error.Success))
             {
-                var product = products.Where(i => i.Id == cartItem.Id).FirstOrDefault();
-
-                if (!product.Published || product.Deleted)
-                    errorList.Add(new CartErrorModel { Success = false, Id = product.Id, Message = product.Name + " is not valid" });
-                var attributesXml = await GetAttributtesFormAsync(cartItem, product, addToCartWarnings);
-                errorList.Add(await AddProductToCart(product.Id, cartItem.Quantity, attributesXml));
-
-                counter++;
+                return Ok(new
+                {
+                    success = false,
+                    errorList = cartErrorModel.Where(x => !x.Success),
+                    cartTotal = cartTotal.shoppingCartTotal
+                });
             }
 
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, _storeContext.GetCurrentStore().Id);
-
-            var cartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, false);
-            if (errorList.Any() && errorList.Where(x => !x.Success).Count() > 0)
-                return Ok(new { success = false, errorList = errorList.Where(x => !x.Success), cartTotal = cartTotal.shoppingCartTotal });
-
-            return Ok(new { success = true, message = "All products are fine", cartTotal = cartTotal.shoppingCartTotal });
+            return Ok(new { 
+                success = true, 
+                message = "All products are fine", 
+                cartTotal = cartTotal.shoppingCartTotal 
+            });
         }
 
+        private async Task<DateTime> ConvertCustomerLocalTimeToUTCAsync(
+            Core.Domain.Customers.Customer customer,
+            string date)
+        {
+            var company = await _companyService.GetCompanyByCustomerIdAsync(customer.Id);
+            var timezoneInfo = TZConvert.GetTimeZoneInfo(company.TimeZone);
+            var dateTimeObject = _dateTimeHelper.ConvertToUtcTime(
+                Convert.ToDateTime(date),
+                timezoneInfo);
+            return dateTimeObject;
+        }
+
+        // This is temporary until PlaceOrderAsync is fixed to accept datetime
+        private async Task<string> ConvertCustomerLocalTimeToUTCStringAsync(
+            Core.Domain.Customers.Customer customer,
+            string date)
+        {
+            return (await ConvertCustomerLocalTimeToUTCAsync(customer, date))
+                .ToString("MM/dd/yyyy HH:mm:ss");
+        }
+        
         [HttpPost("order-confirmation/{scheduleDate}")]
         public async Task<IActionResult> OrderConfirmation(string scheduleDate)
         {
@@ -537,13 +444,8 @@ namespace Nop.Web.Controllers.Api.Security
             _paymentService.GenerateOrderGuid(processPaymentRequest);
             processPaymentRequest.StoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
             processPaymentRequest.CustomerId = customer.Id;
-
-            var company = await _companyService.GetCompanyByCustomerIdAsync(customer.Id);
-            var timezoneInfo = TZConvert.GetTimeZoneInfo(company.TimeZone);
-            processPaymentRequest.ScheduleDate = _dateTimeHelper.ConvertToUtcTime(
-                Convert.ToDateTime(scheduleDate),
-                timezoneInfo)
-                .ToString("MM/dd/yyyy HH:mm:ss");
+            processPaymentRequest.ScheduleDate = 
+                await ConvertCustomerLocalTimeToUTCStringAsync(customer, scheduleDate);
 
             processPaymentRequest.PaymentMethodSystemName = "Payments.CheckMoneyOrder";
             var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
@@ -556,26 +458,51 @@ namespace Nop.Web.Controllers.Api.Security
                     string.Join(", ", placeOrderResult.Errors)
             });
         }
+        
         [HttpPost("reorder/{orderId}")]
         public virtual async Task<IActionResult> ReOrder(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
-            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
-                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Order.NoOrderFound") });
+            if (order == null || order.Deleted ||
+                (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
+            {
+                return Ok(new
+                {
+                    success = false, message = await _localizationService.GetResourceAsync("Order.NoOrderFound")
+                });
+            }
 
-            var productsList = new List<ReOrderModel>();
+            var productsList = new List<ReOrderResponseApiModel>();
             //move shopping cart items (if possible)
             foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
             {
                 var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
                 if (!product.Published || product.Deleted)
-                    productsList.Add(new ReOrderModel { Success = false, Id = product.Id, Message = product.Name + " is not valid", Quantity = orderItem.Quantity });
+                {
+                    productsList.Add(new ReOrderResponseApiModel
+                    {
+                        Success = false,
+                        Id = product.Id,
+                        Message = product.Name + " is not valid",
+                        Quantity = orderItem.Quantity
+                    });
+                }
                 else
                 {
-                    productsList.Add(new ReOrderModel { Success = true, Id = product.Id, Quantity = orderItem.Quantity });
+                    productsList.Add(new ReOrderResponseApiModel
+                    {
+                        Success = true, 
+                        Id = product.Id, 
+                        Quantity = orderItem.Quantity
+                    });
                 }
             }
-            return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Order.ReOrdered"), productsList });
+            return Ok(new
+            {
+                success = true, 
+                message = await _localizationService.GetResourceAsync("Order.ReOrdered"), 
+                productsList = productsList
+            });
         }
         [HttpPost("order-rating")]
         public async Task<IActionResult> OrderRating([FromBody] OrderRatingModel model)

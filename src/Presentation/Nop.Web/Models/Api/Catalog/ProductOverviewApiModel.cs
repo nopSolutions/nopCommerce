@@ -8,7 +8,7 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Api.Catalog
 {
-    public partial class ProductOverviewApiModel
+    public class ProductOverviewApiModel
     {
         public ProductOverviewApiModel()
         {
@@ -28,8 +28,8 @@ namespace Nop.Web.Models.Api.Catalog
         public int RatingSum { get; set; }
         public int TotalReviews { get; set; }
         public int PopularityCount { get; set; }
-        public string VendorLogoPictureUrl { get; set; }
-        public List<KeyValuePair<ProductAttributeValue, ProductAttributeMapping>> ProductAttributeValues { get; set; }
+        public ProductAttributesApiModel ProductAttributesModel { get; set; }
+        public VendorBriefInfoModel Vendor { get; set; }
         public ProductSpecificationApiModel ProductSpecificationModel { get; set; }
         public int Quantity { get; set; } = 1;
     }

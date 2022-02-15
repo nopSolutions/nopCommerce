@@ -138,15 +138,6 @@ namespace Nop.Services.Catalog
         Task DeleteProductAttributeValueAsync(ProductAttributeValue productAttributeValue);
 
         /// <summary>
-        /// Gets product attribute values by 
-        /// </summary>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the product attribute values
-        /// </returns>
-        Task<Dictionary<int, List<KeyValuePair<ProductAttributeValue, ProductAttributeMapping>>>> GetAllGroupedProductAttributeValuesAsync();
-
-        /// <summary>
         /// Gets product attribute values by product attribute mapping identifier
         /// </summary>
         /// <param name="productAttributeMappingId">The product attribute mapping identifier</param>
