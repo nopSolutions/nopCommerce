@@ -8800,9 +8800,57 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "ImportNewsLetterSubscriptions",
+                    Enabled = true,
+                    Name = "Newsletter subscriptions were imported"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "ImportStates",
                     Enabled = true,
                     Name = "States were imported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportCustomers",
+                    Enabled = true,
+                    Name = "Customers were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportCategories",
+                    Enabled = true,
+                    Name = "Categories were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportManufacturers",
+                    Enabled = true,
+                    Name = "Manufacturers were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportProducts",
+                    Enabled = true,
+                    Name = "Products were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportOrders",
+                    Enabled = true,
+                    Name = "Orders were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportStates",
+                    Enabled = true,
+                    Name = "States were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportNewsLetterSubscriptions",
+                    Enabled = true,
+                    Name = "Newsletter subscriptions were exported"
                 },
                 new ActivityLogType
                 {

@@ -30,6 +30,7 @@ using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
@@ -51,6 +52,7 @@ namespace Nop.Services.ExportImport
 
         private readonly AddressSettings _addressSettings;
         private readonly CatalogSettings _catalogSettings;
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly ForumSettings _forumSettings;
@@ -95,6 +97,7 @@ namespace Nop.Services.ExportImport
 
         public ExportManager(AddressSettings addressSettings,
             CatalogSettings catalogSettings,
+            ICustomerActivityService customerActivityService,
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
             ForumSettings forumSettings,
@@ -135,6 +138,7 @@ namespace Nop.Services.ExportImport
         {
             _addressSettings = addressSettings;
             _catalogSettings = catalogSettings;
+            _customerActivityService = customerActivityService;
             _customerSettings = customerSettings;
             _dateTimeSettings = dateTimeSettings;
             _addressService = addressService;
@@ -179,11 +183,13 @@ namespace Nop.Services.ExportImport
         #region Utilities
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task WriteCategoriesAsync(XmlWriter xmlWriter, int parentCategoryId)
+        protected virtual async Task<int> WriteCategoriesAsync(XmlWriter xmlWriter, int parentCategoryId, int totalCategories)
         {
             var categories = await _categoryService.GetAllCategoriesByParentCategoryIdAsync(parentCategoryId, true);
             if (categories == null || !categories.Any())
-                return;
+                return totalCategories;
+
+            totalCategories += categories.Count;
 
             foreach (var category in categories)
             {
@@ -235,10 +241,12 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteEndElementAsync();
 
                 await xmlWriter.WriteStartElementAsync("SubCategories");
-                await WriteCategoriesAsync(xmlWriter, category.Id);
+                totalCategories = await WriteCategoriesAsync(xmlWriter, category.Id, totalCategories);
                 await xmlWriter.WriteEndElementAsync();
                 await xmlWriter.WriteEndElementAsync();
             }
+
+            return totalCategories;
         }
 
         /// <summary>
@@ -819,6 +827,10 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteEndDocumentAsync();
             await xmlWriter.FlushAsync();
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportManufacturers",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportManufacturers"), manufacturers.Count));
+
             return stringWriter.ToString();
         }
 
@@ -852,6 +864,10 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Manufacturer>("DisplayOrder", p => p.DisplayOrder)
             }, _catalogSettings);
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportManufacturers",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportManufacturers"), manufacturers.Count()));
+
             return await manager.ExportToXlsxAsync(manufacturers);
         }
 
@@ -876,10 +892,14 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteStartDocumentAsync();
             await xmlWriter.WriteStartElementAsync("Categories");
             await xmlWriter.WriteAttributeStringAsync("Version", NopVersion.CURRENT_VERSION);
-            await WriteCategoriesAsync(xmlWriter, 0);
+            var totalCategories = await WriteCategoriesAsync(xmlWriter, 0, 0);
             await xmlWriter.WriteEndElementAsync();
             await xmlWriter.WriteEndDocumentAsync();
             await xmlWriter.FlushAsync();
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportCategories",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportCategories"), totalCategories));
 
             return stringWriter.ToString();
         }
@@ -927,6 +947,10 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Category>("Published", p => p.Published, await IgnoreExportCategoryPropertyAsync()),
                 new PropertyByName<Category>("DisplayOrder", p => p.DisplayOrder)
             }, _catalogSettings);
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportCategories",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportCategories"), categories.Count));
 
             return await manager.ExportToXlsxAsync(categories);
         }
@@ -1262,6 +1286,10 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteEndDocumentAsync();
             await xmlWriter.FlushAsync();
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportProducts",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportProducts"), products.Count));
+
             return stringWriter.ToString();
         }
 
@@ -1445,6 +1473,10 @@ namespace Nop.Services.ExportImport
             if (!_catalogSettings.ExportImportProductAttributes && !_catalogSettings.ExportImportProductSpecificationAttributes)
                 return await new PropertyManager<Product>(properties, _catalogSettings).ExportToXlsxAsync(productList);
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportProducts",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportProducts"), productList.Count));
+
             if (productAdvancedMode || _productEditorSettings.ProductAttributes)
                 return await ExportProductsToXlsxWithAttributesAsync(properties, productList);
 
@@ -1589,6 +1621,10 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteEndDocumentAsync();
             await xmlWriter.FlushAsync();
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportOrders",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportOrders"), orders.Count));
+
             return stringWriter.ToString();
         }
 
@@ -1675,6 +1711,10 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("ShippingPhoneNumber", async p => (await orderAddress(p))?.PhoneNumber ?? string.Empty),
                 new PropertyByName<Order>("ShippingFaxNumber", async p => (await orderAddress(p))?.FaxNumber ?? string.Empty)
             };
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportOrders",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportOrders"), orders.Count));
 
             return _orderSettings.ExportWithProducts
                 ? await ExportOrderToXlsxWithProductsAsync(properties, orders)
@@ -1783,6 +1823,10 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("CustomCustomerAttributes",  GetCustomCustomerAttributesAsync)
             }, _catalogSettings);
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportCustomers",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportCustomers"), customers.Count));
+
             return await manager.ExportToXlsxAsync(customers);
         }
 
@@ -1876,6 +1920,10 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteEndDocumentAsync();
             await xmlWriter.FlushAsync();
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportCustomers",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportCustomers"), customers.Count));
+
             return stringWriter.ToString();
         }
 
@@ -1912,6 +1960,10 @@ namespace Nop.Services.ExportImport
                 sb.Append(Environment.NewLine);
             }
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportNewsLetterSubscriptions",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportNewsLetterSubscriptions"), subscriptions.Count));
+
             return sb.ToString();
         }
 
@@ -1943,6 +1995,10 @@ namespace Nop.Services.ExportImport
                 sb.Append(state.DisplayOrder);
                 sb.Append(Environment.NewLine); //new line
             }
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportStates",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportStates"), states.Count));
 
             return sb.ToString();
         }

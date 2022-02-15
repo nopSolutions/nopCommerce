@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -8,6 +8,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Logging;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
@@ -26,7 +27,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
         /// </summary>
         public override void Up()
         {
-            // customer attibute values to customer table column values
+            //#4601 customer attibute values to customer table column values
             var attributeKyes = new string[] { nameof(Customer.FirstName), nameof(Customer.LastName), nameof(Customer.Gender),
                 nameof(Customer.Company), nameof(Customer.StreetAddress), nameof(Customer.StreetAddress2), nameof(Customer.ZipPostalCode),
                 nameof(Customer.City), nameof(Customer.County), nameof(Customer.Phone), nameof(Customer.Fax), nameof(Customer.VatNumber),
@@ -114,6 +115,89 @@ namespace Nop.Data.Migrations.UpgradeTo460
                 _dataProvider.UpdateEntitiesAsync(customers);
                 _dataProvider.BulkDeleteEntitiesAsync(genericAttributes);
             }
+
+            //#3777 new activity log types
+            var activityLogTypeTable = _dataProvider.GetTable<ActivityLogType>();
+
+            if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ImportNewsLetterSubscriptions", StringComparison.InvariantCultureIgnoreCase) == 0))
+                _dataProvider.InsertEntity(
+                    new ActivityLogType
+                    {
+                        SystemKeyword = "ImportNewsLetterSubscriptions",
+                        Enabled = true,
+                        Name = "Newsletter subscriptions were imported"
+                    }
+                );
+
+            if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportCustomers", StringComparison.InvariantCultureIgnoreCase) == 0))
+                _dataProvider.InsertEntity(
+                    new ActivityLogType
+                    {
+                        SystemKeyword = "ExportCustomers",
+                        Enabled = true,
+                        Name = "Customers were exported"
+                    }
+                );
+
+            if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportCategories", StringComparison.InvariantCultureIgnoreCase) == 0))
+                _dataProvider.InsertEntity(
+                    new ActivityLogType
+                    {
+                        SystemKeyword = "ExportCategories",
+                        Enabled = true,
+                        Name = "Categories were exported"
+                    }
+                );
+
+            if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportManufacturers", StringComparison.InvariantCultureIgnoreCase) == 0))
+                _dataProvider.InsertEntity(
+                    new ActivityLogType
+                    {
+                        SystemKeyword = "ExportManufacturers",
+                        Enabled = true,
+                        Name = "Manufacturers were exported"
+                    }
+                );
+
+            if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportProducts", StringComparison.InvariantCultureIgnoreCase) == 0))
+                _dataProvider.InsertEntity(
+                    new ActivityLogType
+                    {
+                        SystemKeyword = "ExportProducts",
+                        Enabled = true,
+                        Name = "Products were exported"
+                    }
+                );
+
+            if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportOrders", StringComparison.InvariantCultureIgnoreCase) == 0))
+                _dataProvider.InsertEntity(
+                    new ActivityLogType
+                    {
+                        SystemKeyword = "ExportOrders",
+                        Enabled = true,
+                        Name = "Orders were exported"
+                    }
+                );
+
+            if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportStates", StringComparison.InvariantCultureIgnoreCase) == 0))
+                _dataProvider.InsertEntity(
+                    new ActivityLogType
+                    {
+                        SystemKeyword = "ExportStates",
+                        Enabled = true,
+                        Name = "States were exported"
+                    }
+                );
+
+            if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportNewsLetterSubscriptions", StringComparison.InvariantCultureIgnoreCase) == 0))
+                _dataProvider.InsertEntity(
+                    new ActivityLogType
+                    {
+                        SystemKeyword = "ExportNewsLetterSubscriptions",
+                        Enabled = true,
+                        Name = "Newsletter subscriptions were exported"
+                    }
+                );
         }
 
         public override void Down()

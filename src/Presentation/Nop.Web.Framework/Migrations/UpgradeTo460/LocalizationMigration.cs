@@ -43,6 +43,16 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 ["Footer.FollowUs.Instagram"] = "Instagram",
 
+                //#3777
+                ["ActivityLog.ExportCategories"] = "{0} categories were exported",
+                ["ActivityLog.ExportCustomers"] = "{0} customers were exported",
+                ["ActivityLog.ExportManufacturers"] = "{0} manufacturers were exported",
+                ["ActivityLog.ExportOrders"] = "{0} orders were exported",
+                ["ActivityLog.ExportProducts"] = "{0} products were exported",
+                ["ActivityLog.ExportStates"] = "{0} states and provinces were exported",
+                ["ActivityLog.ExportNewsLetterSubscriptions"] = "{0} newsletter subscriptions were exported",
+                ["ActivityLog.ImportNewsLetterSubscriptions"] = "{0} newsletter subscriptions were imported",
+
                 //#5947
                 ["Admin.Customers.Customers.List.SearchLastActivityFrom"] = "Last activity from",
                 ["Admin.Customers.Customers.List.SearchLastActivityFrom.Hint"] = "The last activity from date for the search.",
