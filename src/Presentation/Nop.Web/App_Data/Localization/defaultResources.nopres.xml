@@ -4596,24 +4596,6 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin">
     <Value>Plugin configuration</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup">
-    <Value>Clear plugin shadow directory on startup</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup.Hint">
-    <Value>Enable this setting to clear the plugin shadow directory (/Plugins/bin) on application startup.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup">
-    <Value>Copy locked plugins to subdirectories on startup</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup.Hint">
-    <Value>Enable this setting to copy 'locked' assemblies from the plugin shadow directory (/Plugins/bin) to temporary subdirectories on application startup.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy">
-    <Value>Use plugins shadow copy</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy.Hint">
-    <Value>Enable this setting to copy plugins to the shadow directory (/Plugins/bin) on application startup.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly">
     <Value>Use unsafe load assembly</Value>
   </LocaleResource>

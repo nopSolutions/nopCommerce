@@ -21,6 +21,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             //do not use DI, because it produces exception on the installation process
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
 
             var languages = languageService.GetAllLanguagesAsync(true).Result;
@@ -32,7 +33,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             localizationService.DeleteLocaleResourcesAsync(new List<string>
             {
-                //nothing yet
+                //#6102
+                "Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup",
+                "Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup.Hint",
+                "Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup",
+                "Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup.Hint",
+                "Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy",
+                "Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy.Hint"
             }).Wait();
 
             #endregion
@@ -63,6 +70,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             #region Add locales
 
+=======
+>>>>>>> 72ef48f4ff ( #6102. Refactoring of plugin system)
             localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 //#3075
