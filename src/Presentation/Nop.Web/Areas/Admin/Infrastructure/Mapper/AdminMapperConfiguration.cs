@@ -879,6 +879,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.LastLoginDateUtc, options => options.Ignore())
                 .ForMember(entity => entity.BillingAddressId, options => options.Ignore())
                 .ForMember(entity => entity.ShippingAddressId, options => options.Ignore())
+                .ForMember(entity => entity.VatNumberStatusId, options => options.Ignore())
+                .ForMember(entity => entity.CustomCustomerAttributesXML, options => options.Ignore())
+                .ForMember(entity => entity.CurrencyId, options => options.Ignore())
+                .ForMember(entity => entity.LanguageId, options => options.Ignore())
+                .ForMember(entity => entity.TaxDisplayTypeId, options => options.Ignore())
+                .ForMember(entity => entity.VatNumberStatus, options => options.Ignore())
+                .ForMember(entity => entity.TaxDisplayType, options => options.Ignore())
                 .ForMember(entity => entity.RegisteredInStoreId, options => options.Ignore());
 
             CreateMap<Customer, OnlineCustomerModel>()
