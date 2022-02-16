@@ -1059,6 +1059,27 @@
   <LocaleResource Name="ActivityLog.EditWarehouse">
     <Value>Edited a warehouse (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportCategories">
+    <Value>{0} categories were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportCustomers">
+    <Value>{0} customers were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportManufacturers">
+    <Value>{0} manufacturers were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportNewsLetterSubscriptions">
+    <Value>{0} newsletter subscriptions were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportOrders">
+    <Value>{0} orders were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportProducts">
+    <Value>{0} products were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportStates">
+    <Value>{0} states and provinces were exported</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.Impersonation.Finished.Customer">
     <Value>Impersonation by store owner was finished (Email: {0}, ID = {1})</Value>
   </LocaleResource>
@@ -1082,6 +1103,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportStates">
     <Value>{0} states and provinces were imported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportNewsLetterSubscriptions">
+    <Value>{0} newsletter subscriptions were imported</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.InstallNewPlugin">
     <Value>Installed a new plugin (FriendlyName: '{0}')</Value>
@@ -11751,6 +11775,18 @@
   <LocaleResource Name="Admin.Customers.Customers.List.SearchIpAddress.Hint">
     <Value>Search by IP address.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchLastActivityFrom">
+    <Value>Last activity from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchLastActivityFrom.Hint">
+    <Value>The last activity from date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchLastActivityTo">
+    <Value>Last activity to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchLastActivityTo.Hint">
+    <Value>The last activity to date for the search.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.List.SearchLastName">
     <Value>Last name</Value>
   </LocaleResource>
@@ -11762,6 +11798,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.List.SearchPhone.Hint">
     <Value>Search by a phone number.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchRegistrationDateFrom">
+    <Value>Registration date from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchRegistrationDateFrom.Hint">
+    <Value>The registration from date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchRegistrationDateTo">
+    <Value>Registration date to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchRegistrationDateTo.Hint">
+    <Value>The registration to date for the search.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.List.SearchUsername">
     <Value>Username</Value>
