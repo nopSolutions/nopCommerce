@@ -3519,9 +3519,6 @@
   <LocaleResource Name="Admin.Catalog.Products.Pictures.AddNew">
     <Value>Add a new picture</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.Alert.AddNew">
-    <Value>Upload picture first.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures.Alert.PictureAdd">
     <Value>Failed to add product picture.</Value>
   </LocaleResource>
@@ -3547,7 +3544,7 @@
     <Value>Picture</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.Picture.Hint">
-    <Value>Choose a picture to upload. If the picture size exceeds your stores max image size setting, it will be automatically resized.</Value>
+    <Value>You can choose multiple images to upload at once. If the picture size exceeds your stores max image size setting, it will be automatically resized.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures.SaveBeforeEdit">
     <Value>You need to save the product before you can upload pictures for this product page.</Value>

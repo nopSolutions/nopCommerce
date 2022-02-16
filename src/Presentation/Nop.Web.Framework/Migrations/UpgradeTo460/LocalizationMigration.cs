@@ -28,6 +28,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
                 .Select(lang => lang.Id).FirstOrDefault();
 
+            localizationService.DeleteLocaleResourcesAsync(new List<string>
+            {
+                //#5123
+                "Admin.Catalog.Products.Pictures.Alert.AddNew",
+            }).Wait();
+
             //use localizationService to add, update and delete localization resources
             localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
@@ -62,6 +68,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Customers.Customers.List.SearchRegistrationDateFrom.Hint"] = "The registration from date for the search.",
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo"] = "Registration date to",
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo.Hint"] = "The registration to date for the search.",
+
+                //#5123
+                ["Admin.Catalog.Products.Pictures.Fields.Picture.Hint"] = "You can choose multiple images to upload at once. If the picture size exceeds your stores max image size setting, it will be automatically resized.",
             }, languageId).Wait();
         }
 
