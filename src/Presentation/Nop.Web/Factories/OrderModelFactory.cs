@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -48,7 +48,6 @@ namespace Nop.Web.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
-        private readonly MediaSettings _mediaSettings;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
@@ -60,18 +59,19 @@ namespace Nop.Web.Factories
         private readonly IRewardPointService _rewardPointService;
         private readonly IShipmentService _shipmentService;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
+        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
+        private readonly MediaSettings _mediaSettings;
         private readonly OrderSettings _orderSettings;
         private readonly PdfSettings _pdfSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
-        private readonly IStaticCacheManager _staticCacheManager;
         private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
-        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -87,7 +87,6 @@ namespace Nop.Web.Factories
             IDateTimeHelper dateTimeHelper,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
-            MediaSettings mediaSettings,
             IOrderProcessingService orderProcessingService,
             IOrderService orderService,
             IOrderTotalCalculationService orderTotalCalculationService,
@@ -99,18 +98,19 @@ namespace Nop.Web.Factories
             IRewardPointService rewardPointService,
             IShipmentService shipmentService,
             IStateProvinceService stateProvinceService,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
+            IWebHelper webHelper,
             IWorkContext workContext,
+            MediaSettings mediaSettings,
             OrderSettings orderSettings,
             PdfSettings pdfSettings,
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
-            IStaticCacheManager staticCacheManager,
             TaxSettings taxSettings,
-            VendorSettings vendorSettings,
-            IWebHelper webHelper)
+            VendorSettings vendorSettings)
         {
             _addressSettings = addressSettings;
             _catalogSettings = catalogSettings;
@@ -122,7 +122,6 @@ namespace Nop.Web.Factories
             _dateTimeHelper = dateTimeHelper;
             _giftCardService = giftCardService;
             _localizationService = localizationService;
-            _mediaSettings = mediaSettings;
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;
             _orderTotalCalculationService = orderTotalCalculationService;
@@ -134,18 +133,19 @@ namespace Nop.Web.Factories
             _rewardPointService = rewardPointService;
             _shipmentService = shipmentService;
             _stateProvinceService = stateProvinceService;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _urlRecordService = urlRecordService;
             _vendorService = vendorService;
+            _webHelper = webHelper;
             _workContext = workContext;
+            _mediaSettings = mediaSettings;
             _orderSettings = orderSettings;
             _pdfSettings = pdfSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
-            _staticCacheManager = staticCacheManager;
             _taxSettings = taxSettings;
             _vendorSettings = vendorSettings;
-            _webHelper = webHelper;
         }
 
         #endregion
@@ -165,8 +165,10 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<PictureModel> PrepareOrderItemPictureModelAsync(OrderItem orderItem, int pictureSize, bool showDefaultPicture, string productName)
         {
-            var pictureCacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.OrderPictureModelKey
-                , orderItem, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var pictureCacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.OrderPictureModelKey,
+                orderItem, pictureSize, showDefaultPicture, language, _webHelper.IsCurrentConnectionSecured(), store);
 
             var model = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
             {
@@ -461,7 +463,7 @@ namespace Nop.Web.Factories
                 model.OrderTotalDiscount = await _priceFormatter.FormatPriceAsync(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false, languageId);
                 model.OrderTotalDiscountValue = orderDiscountInCustomerCurrency;
             }
-            
+
             //gift cards
             foreach (var gcuh in await _giftCardService.GetGiftCardUsageHistoryAsync(order))
             {
