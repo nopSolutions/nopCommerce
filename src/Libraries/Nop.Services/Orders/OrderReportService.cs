@@ -696,6 +696,16 @@ namespace Nop.Services.Orders
                     TotalQuantity = g.Sum(x => x.Quantity)
                 };
 
+            bsReport = from item in bsReport
+                join p in _productRepository.Table on item.ProductId equals p.Id
+                select new BestsellersReportLine
+                {
+                    ProductId = item.ProductId,
+                    TotalAmount = item.TotalAmount,
+                    TotalQuantity = item.TotalQuantity,
+                    ProductName = p.Name
+                };
+
             bsReport = orderBy switch
             {
                 OrderByEnum.OrderByQuantity => bsReport.OrderByDescending(x => x.TotalQuantity),
