@@ -3070,6 +3070,7 @@ namespace Nop.Services.Installation
                 ManufacturerThumbPictureSize = 420,
                 VendorThumbPictureSize = 450,
                 CartThumbPictureSize = 80,
+                OrderThumbPictureSize = 80,
                 MiniCartThumbPictureSize = 70,
                 AutoCompleteSearchThumbPictureSize = 20,
                 ImageSquarePictureSize = 32,
@@ -3205,6 +3206,7 @@ namespace Nop.Services.Installation
                 CustomOrderNumberMask = "{ID}",
                 ExportWithProducts = true,
                 AllowAdminsToBuyCallForPriceProducts = true,
+                ShowProductThumbnailInOrderDetailsPage = true,
                 DisplayCustomerCurrencyOnOrders = false,
                 DisplayOrderSummary = true
             });

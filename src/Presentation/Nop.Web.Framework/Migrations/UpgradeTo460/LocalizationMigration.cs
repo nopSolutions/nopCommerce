@@ -43,6 +43,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 ["Footer.FollowUs.Instagram"] = "Instagram",
 
+                //#5604
+                ["Admin.Configuration.Settings.Order.ShowProductThumbnailInOrderDetailsPage"] = "Show product thumbnail in order details page",
+                ["Admin.Configuration.Settings.Order.ShowProductThumbnailInOrderDetailsPage.Hint"] = "Check to show product thumbnail in order details page.",
+                ["Admin.Configuration.Settings.Media.OrderThumbPictureSize"] = "Order thumbnail image size",
+                ["Admin.Configuration.Settings.Media.OrderThumbPictureSize.Hint"] = "The default size (pixels) for product thumbnail images on the order details page.",
+
+                ["Order.Product(s).Image"] = "Image",
+
                 //#3777
                 ["ActivityLog.ExportCategories"] = "{0} categories were exported",
                 ["ActivityLog.ExportCustomers"] = "{0} customers were exported",
@@ -62,6 +70,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Customers.Customers.List.SearchRegistrationDateFrom.Hint"] = "The registration from date for the search.",
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo"] = "Registration date to",
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo.Hint"] = "The registration to date for the search.",
+
             }, languageId).Wait();
         }
 
