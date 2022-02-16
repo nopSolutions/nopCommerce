@@ -34,6 +34,7 @@ using System.IO;
 using System.Text;
 using Nop.Web.Extensions.Api;
 using Nop.Web.Models.Api.Order;
+using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers.Api.Security
 {
@@ -553,6 +554,14 @@ namespace Nop.Web.Controllers.Api.Security
                         var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
                         var productPicture = await _pictureService.GetPicturesByProductIdAsync(orderItem.ProductId);
                         var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
+                        var vendorBriefModel = new VendorBriefInfoModel
+                        {
+                            Id = vendor.Id,
+                            Name = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
+                            SeName = await _urlRecordService.GetSeNameAsync(vendor),
+                            PictureUrl = await _pictureService.GetPictureUrlAsync(vendor.PictureId)
+                        };
+                        
                         var orderItemModel = new OrderDetailsModel.OrderItemModel
                         {
                             Id = orderItem.Id,
@@ -565,7 +574,7 @@ namespace Nop.Web.Controllers.Api.Security
                             ProductSeName = await _urlRecordService.GetSeNameAsync(product),
                             Quantity = orderItem.Quantity,
                             AttributeInfo = orderItem.AttributeDescription,
-                            VendorLogoPictureUrl = await _pictureService.GetPictureUrlAsync(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
+                            Vendor = vendorBriefModel
                         };
                         //rental info
                         if (product.IsRental)
@@ -642,12 +651,25 @@ namespace Nop.Web.Controllers.Api.Security
                     orderModel.OrderTotal = await _priceFormatter.FormatPriceAsync(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.GetWorkingLanguageAsync().Id);
 
                     var orderItems = await _orderService.GetOrderItemsAsync(order.Id);
-
+                    
+                    
+                    
+                        
+                        
                     foreach (var orderItem in orderItems)
                     {
                         var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
                         var productPicture = await _pictureService.GetPicturesByProductIdAsync(orderItem.ProductId);
                         var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
+                        
+                        var vendorBriefModel = new VendorBriefInfoModel
+                        {
+                            Id = vendor.Id,
+                            Name = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
+                            SeName = await _urlRecordService.GetSeNameAsync(vendor),
+                            PictureUrl = await _pictureService.GetPictureUrlAsync(vendor.PictureId)
+                        };
+                        
                         var orderItemModel = new OrderDetailsModel.OrderItemModel
                         {
                             Id = orderItem.Id,
@@ -660,7 +682,7 @@ namespace Nop.Web.Controllers.Api.Security
                             ProductPictureUrl = productPicture.Any() ? await _pictureService.GetPictureUrlAsync(productPicture.FirstOrDefault().Id) : await _pictureService.GetDefaultPictureUrlAsync(),
                             Quantity = orderItem.Quantity,
                             AttributeInfo = orderItem.AttributeDescription,
-                            VendorLogoPictureUrl = await _pictureService.GetPictureUrlAsync(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
+                            Vendor = vendorBriefModel
                         };
                         //rental info
                         if (product.IsRental)
@@ -742,6 +764,15 @@ namespace Nop.Web.Controllers.Api.Security
                         var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
                         var productPicture = await _pictureService.GetPicturesByProductIdAsync(orderItem.ProductId);
                         var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
+                        
+                        var vendorBriefModel = new VendorBriefInfoModel
+                        {
+                            Id = vendor.Id,
+                            Name = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
+                            SeName = await _urlRecordService.GetSeNameAsync(vendor),
+                            PictureUrl = await _pictureService.GetPictureUrlAsync(vendor.PictureId)
+                        };
+                        
                         var orderItemModel = new OrderDetailsModel.OrderItemModel
                         {
                             Id = orderItem.Id,
@@ -754,7 +785,7 @@ namespace Nop.Web.Controllers.Api.Security
                             ProductSeName = await _urlRecordService.GetSeNameAsync(product),
                             Quantity = orderItem.Quantity,
                             AttributeInfo = orderItem.AttributeDescription,
-                            VendorLogoPictureUrl = await _pictureService.GetPictureUrlAsync(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
+                            Vendor = vendorBriefModel
                         };
                         //rental info
                         if (product.IsRental)
