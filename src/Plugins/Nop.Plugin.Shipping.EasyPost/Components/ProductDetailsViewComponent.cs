@@ -18,8 +18,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Components
     /// <summary>
     /// Represents view component to render an additional block on the product details page in the admin area
     /// </summary>
-    [ViewComponent(Name = EasyPostDefaults.PRODUCT_DETAILS_VIEW_COMPONENT_NAME)]
-    public class ProductDetailsViewComponentName : NopViewComponent
+    public class ProductDetailsViewComponent : NopViewComponent
     {
         #region Fields
 
@@ -33,7 +32,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Components
 
         #region Ctor
 
-        public ProductDetailsViewComponentName(ICountryService countryService,
+        public ProductDetailsViewComponent(ICountryService countryService,
             IGenericAttributeService genericAttributeService,
             IPermissionService permissionService,
             IProductService productService,

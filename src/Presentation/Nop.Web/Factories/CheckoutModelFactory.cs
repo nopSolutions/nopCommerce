@@ -548,7 +548,7 @@ namespace Nop.Web.Factories
         {
             return Task.FromResult(new CheckoutPaymentInfoModel
             {
-                PaymentViewComponentName = paymentMethod.GetPublicViewComponentName(),
+                PaymentViewComponent = paymentMethod.GetPublicViewComponent(),
                 DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab
             });
         }

@@ -7,7 +7,7 @@
     //page class
     NopHtml.AppendPageCssClassParts("html-move-topic-page");
 }
-@await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
+@await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumTopicId = Model.Id })
 <div class="page move-topic-page">
     <div class="page-title">
         <h1>@T("Forum.MoveTopic")</h1>

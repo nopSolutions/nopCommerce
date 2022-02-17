@@ -188,7 +188,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         {
             var model = await _checkoutModelFactory.PreparePaymentInfoModelAsync(_paymentMethod);
 
-            model.PaymentViewComponentName.Should().Be(_paymentMethod.GetPublicViewComponentName());
+            model.PaymentViewComponent.Should().Be(_paymentMethod.GetPublicViewComponent());
             model.DisplayOrderTotals.Should().Be(_orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab);
         }
 

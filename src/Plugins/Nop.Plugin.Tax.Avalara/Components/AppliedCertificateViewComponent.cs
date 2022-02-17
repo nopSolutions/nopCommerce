@@ -14,7 +14,6 @@ namespace Nop.Plugin.Tax.Avalara.Components
     /// <summary>
     /// Represents a view component to display applied exemption certificate on the order confirmation page
     /// </summary>
-    [ViewComponent(Name = AvalaraTaxDefaults.APPLIED_CERTIFICATE_VIEW_COMPONENT_NAME)]
     public class AppliedCertificateViewComponent : NopViewComponent
     {
         #region Fields

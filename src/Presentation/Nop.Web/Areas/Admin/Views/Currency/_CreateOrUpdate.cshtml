@@ -9,7 +9,7 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="cards-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrencyDetailsTop, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CurrencyDetailsTop, additionalData = Model })
                 <div class="card card-default">
                     <div class="card-body">
                         @(await Html.LocalizedEditorAsync<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
@@ -121,7 +121,7 @@
                                         </script>
                                     </div>
                                     <div class="col-md-8">
-                                        @await Component.InvokeAsync("MultistoreDisabledWarning")
+                                        @await Component.InvokeAsync(typeof(MultistoreDisabledWarningViewComponent))
                                     </div>
                                 </div>
                             </div>
@@ -166,7 +166,7 @@
                         }
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrencyDetailsBottom, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CurrencyDetailsBottom, additionalData = Model })
             </div>
         </div>
     </div>
