@@ -87,18 +87,48 @@
             <span asp-validation-for="NewProductsEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="NewProductsEnabled">
-        <div class="form-group row">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NewProductsPageAllowCustomersToSelectPageSize_OverrideForStore" asp-input="NewProductsPageAllowCustomersToSelectPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NewProductsPageAllowCustomersToSelectPageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NewProductsPageAllowCustomersToSelectPageSize" />
+            <span asp-validation-for="NewProductsPageAllowCustomersToSelectPageSize"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="NewProductsPageAllowCustomersToSelectPageSize" disable-auto-generation="true">
+        <div class="form-group row" id="pnlNewProductsPagePageSizeOptions">
             <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="NewProductsNumber_OverrideForStore" asp-input="NewProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="NewProductsNumber" />
+                <nop-override-store-checkbox asp-for="NewProductsPagePageSizeOptions_OverrideForStore" asp-input="NewProductsPagePageSizeOptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="NewProductsPagePageSizeOptions" />
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="NewProductsNumber" />
-                <span asp-validation-for="NewProductsNumber"></span>
+                <nop-editor asp-for="NewProductsPagePageSizeOptions" />
+                <span asp-validation-for="NewProductsPagePageSizeOptions"></span>
             </div>
         </div>
     </nop-nested-setting>
+    <div class="form-group row" id="pnlNewProductsPageProductsPerPage">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NewProductsNumber_OverrideForStore" asp-input="NewProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NewProductsNumber" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NewProductsNumber" />
+            <span asp-validation-for="NewProductsNumber"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NewProductsFeedCount_OverrideForStore" asp-input="NewProductsFeedCount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NewProductsFeedCount" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NewProductsFeedCount" />
+            <span asp-validation-for="NewProductsFeedCount"></span>
+        </div>
+    </div>
     <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="DisplayDatePreOrderAvailability_OverrideForStore" asp-input="DisplayDatePreOrderAvailability" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -110,3 +140,20 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.NewProductsPageAllowCustomersToSelectPageSize)").click(toggleNewProductsPagePageSize);
+
+        toggleNewProductsPagePageSize();
+    });
+
+    function toggleNewProductsPagePageSize() {
+        if ($('#@Html.IdFor(model => model.NewProductsPageAllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlNewProductsPageProductsPerPage').hideElement();
+            $('#pnlNewProductsPagePageSizeOptions').showElement();
+        } else {
+            $('#pnlNewProductsPageProductsPerPage').showElement();
+            $('#pnlNewProductsPagePageSizeOptions').hideElement();
+        }
+    }
+</script>

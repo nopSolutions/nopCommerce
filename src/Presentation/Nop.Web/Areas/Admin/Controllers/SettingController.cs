@@ -769,6 +769,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.AttributeValueOutOfStockDisplayType, model.AttributeValueOutOfStockDisplayType_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.AllowCustomersToSearchWithManufacturerName, model.AllowCustomersToSearchWithManufacturerName_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.AllowCustomersToSearchWithCategoryName, model.AllowCustomersToSearchWithCategoryName_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.NewProductsPageAllowCustomersToSelectPageSize, model.NewProductsPageAllowCustomersToSelectPageSize_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.NewProductsPagePageSizeOptions, model.NewProductsPagePageSizeOptions_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.NewProductsFeedCount, model.NewProductsFeedCount_OverrideForStore, storeScope, false);
 
                 //now settings not overridable per store
                 await _settingService.SaveSettingAsync(catalogSettings, x => x.IgnoreDiscounts, 0, false);

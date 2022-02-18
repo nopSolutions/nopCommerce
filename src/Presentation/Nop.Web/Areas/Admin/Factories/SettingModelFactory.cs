@@ -1211,6 +1211,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.AttributeValueOutOfStockDisplayType_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AttributeValueOutOfStockDisplayType, storeId);
                 model.AllowCustomersToSearchWithManufacturerName_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowCustomersToSearchWithManufacturerName, storeId);
                 model.AllowCustomersToSearchWithCategoryName_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowCustomersToSearchWithCategoryName, storeId);
+                model.NewProductsPageAllowCustomersToSelectPageSize_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NewProductsPageAllowCustomersToSelectPageSize, storeId);
+                model.NewProductsPagePageSizeOptions_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NewProductsPagePageSizeOptions, storeId);
+                model.NewProductsFeedCount_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NewProductsFeedCount, storeId);
             }
 
             //prepare nested search model

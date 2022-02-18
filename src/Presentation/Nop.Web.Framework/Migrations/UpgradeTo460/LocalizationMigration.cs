@@ -71,6 +71,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo"] = "Registration date to",
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo.Hint"] = "The registration to date for the search.",
 
+                //#3511
+                ["Admin.Configuration.Settings.Catalog.NewProductsPageAllowCustomersToSelectPageSize"] = "'New products' page. Allow customers to select page size",
+                ["Admin.Configuration.Settings.Catalog.NewProductsPageAllowCustomersToSelectPageSize.Hint"] = "'New products' page. Check to allow customers to select the page size from a predefined list of options.",
+                ["Admin.Configuration.Settings.Catalog.NewProductsPagePageSizeOptions"] = "'New products' page. Page size options",
+                ["Admin.Configuration.Settings.Catalog.NewProductsPagePageSizeOptions.Hint"] = "'New products' page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.",
+                ["Admin.Configuration.Settings.Catalog.NewProductsFeedCount"] = "Number of products on 'New products' feed",
+                ["Admin.Configuration.Settings.Catalog.NewProductsFeedCount.Hint"] = "The number of products to include in the 'New products' feed.",
+
             }, languageId).Wait();
         }
 
