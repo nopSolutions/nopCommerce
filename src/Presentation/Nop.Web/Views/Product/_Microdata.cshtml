@@ -6,7 +6,7 @@
     var isAssociatedProduct = ViewData.ContainsKey("isAccessoryOrSparePartFor");
     var productUrl = isAssociatedProduct && ViewData.ContainsKey("parentURL")
         ? ViewData["parentURL"]
-        : Url.RouteUrl("Product", new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        : Url.ProductRouteUrl(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
     var productPrice = Model.AssociatedProducts.Any()
         ? Model.AssociatedProducts.Min(associatedProduct => associatedProduct.ProductPrice.PriceValue)
         : Model.ProductPrice.PriceValue;

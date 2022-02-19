@@ -35,6 +35,7 @@ using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
@@ -530,7 +531,7 @@ namespace Nop.Web.Controllers
             {
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                    redirect = Url.ProductRouteUrl(new { SeName = await _urlRecordService.GetSeNameAsync(product) })
                 });
             }
 
@@ -541,7 +542,7 @@ namespace Nop.Web.Controllers
                 //it can confuse customers. That's why we redirect customers to the product details page
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                    redirect = Url.ProductRouteUrl(new { SeName = await _urlRecordService.GetSeNameAsync(product) })
                 });
             }
 
@@ -550,7 +551,7 @@ namespace Nop.Web.Controllers
                 //cannot be added to the cart (requires a customer to enter price)
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                    redirect = Url.ProductRouteUrl(new { SeName = await _urlRecordService.GetSeNameAsync(product) })
                 });
             }
 
@@ -559,7 +560,7 @@ namespace Nop.Web.Controllers
                 //rental products require start/end dates to be entered
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                    redirect = Url.ProductRouteUrl(new { SeName = await _urlRecordService.GetSeNameAsync(product) })
                 });
             }
 
@@ -569,7 +570,7 @@ namespace Nop.Web.Controllers
                 //cannot be added to the cart (requires a customer to select a quantity from dropdownlist)
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                    redirect = Url.ProductRouteUrl(new { SeName = await _urlRecordService.GetSeNameAsync(product) })
                 });
             }
 
@@ -580,7 +581,7 @@ namespace Nop.Web.Controllers
                 //product has some attributes. let a customer see them
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                    redirect = Url.ProductRouteUrl(new { SeName = await _urlRecordService.GetSeNameAsync(product) })
                 });
             }
 
@@ -636,7 +637,7 @@ namespace Nop.Web.Controllers
                 //but we do not display attribute and gift card warnings here. let's do it on the product details page
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                    redirect = Url.ProductRouteUrl(new { SeName = await _urlRecordService.GetSeNameAsync(product) })
                 });
             }
 

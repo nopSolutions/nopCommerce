@@ -35,9 +35,12 @@ namespace Nop.Web.Infrastructure
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
+            //product route with breadcrumb
+            var productUrlPattern = $"{lang}/{{CategorySeName}}/{{SeName}}";
+            endpointRouteBuilder.MapDynamicControllerRoute<ProductRouteTransformer>(productUrlPattern);
+
             //generic routes
             var genericPattern = $"{lang}/{{SeName}}";
-
             endpointRouteBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(genericPattern);
 
             endpointRouteBuilder.MapControllerRoute(name: "GenericUrl",
@@ -50,6 +53,10 @@ namespace Nop.Web.Infrastructure
 
             endpointRouteBuilder.MapControllerRoute(name: "Product",
                 pattern: genericPattern,
+                defaults: new { controller = "Product", action = "ProductDetails" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "ProductBreadcrumb",
+                pattern: productUrlPattern,
                 defaults: new { controller = "Product", action = "ProductDetails" });
 
             endpointRouteBuilder.MapControllerRoute(name: "Category",

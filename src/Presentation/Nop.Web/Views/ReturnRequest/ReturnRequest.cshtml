@@ -50,7 +50,7 @@
                                 {
                                     <tr>
                                         <td class="product">
-                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                                            <a href="@Url.ProductRouteUrl(new { SeName = item.ProductSeName })">@item.ProductName</a>
                                             @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                             {
                                                 <div class="attributes">

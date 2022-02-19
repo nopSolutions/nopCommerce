@@ -37,6 +37,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Themes;
 using Nop.Services.Topics;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Cache;
@@ -740,7 +741,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = productsGroupTitle,
                         Name = await _localizationService.GetLocalizedAsync(product, x => x.Name),
-                        Url = urlHelper.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                        Url = urlHelper.ProductRouteUrl(new { SeName = await _urlRecordService.GetSeNameAsync(product) })
                     }).ToListAsync());
                 }
 

@@ -37,6 +37,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(catalogSettings, settings => settings.AllowCustomersToSearchWithCategoryName).Wait();
             }
 
+            //#385
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.EnableProductUrlWithCategoryBreadcrumb).Result)
+            {
+                catalogSettings.EnableProductUrlWithCategoryBreadcrumb = false;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.EnableProductUrlWithCategoryBreadcrumb).Wait();
+            }
+
             var storeInformationSettings = settingService.LoadSettingAsync<StoreInformationSettings>().Result;
 
             //#3997

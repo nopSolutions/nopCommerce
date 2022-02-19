@@ -1,4 +1,5 @@
 @model ProductModel
+@using Nop.Web.Framework.Mvc.Routing
 
 @{
     //page title
@@ -17,7 +18,7 @@
             </small>
         </h1>
         <div class="float-right">
-            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info">
+            <button type="button" onclick="javascript:OpenWindow('@Url.ProductRouteUrl(new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info">
                 <i class="far fa-eye"></i>
                 @T("Admin.Common.Preview")
             </button>

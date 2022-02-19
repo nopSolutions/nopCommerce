@@ -272,7 +272,10 @@ namespace Nop.Web.Framework.Infrastructure
 
             //slug route transformer
             if (DataSettingsManager.IsDatabaseInstalled())
+            {
+                services.AddScoped<ProductRouteTransformer>();
                 services.AddScoped<SlugRouteTransformer>();
+            }
 
             //schedule tasks
             services.AddSingleton<ITaskScheduler, TaskScheduler>();

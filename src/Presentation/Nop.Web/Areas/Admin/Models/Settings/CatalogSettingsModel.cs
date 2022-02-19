@@ -385,6 +385,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool AllowCustomersToSearchWithCategoryName { get; set; }
         public bool AllowCustomersToSearchWithCategoryName_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.EnableProductUrlWithCategoryBreadcrumb")]
+        public bool EnableProductUrlWithCategoryBreadcrumb { get; set; }
+        public bool EnableProductUrlWithCategoryBreadcrumb_OverrideForStore { get; set; }
+
         #endregion
     }
 }

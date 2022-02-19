@@ -37,6 +37,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName"] = "Allow customers to search with manufacturer name",
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName.Hint"] = "Check to allow customer to search with manufacturer name.",
 
+                //#385
+                ["Admin.Configuration.Settings.Catalog.EnableProductUrlWithCategoryBreadcrumb"] = "Enable product URL with category breadcrumb",
+                ["Admin.Configuration.Settings.Catalog.EnableProductUrlWithCategoryBreadcrumb.Hint"] = "Check to enable product URL with category breadcrumb.",
+
                 //#3997
                 ["Admin.Configuration.Settings.GeneralCommon.InstagramLink"] = "Instagram URL",
                 ["Admin.Configuration.Settings.GeneralCommon.InstagramLink.Hint"] = "Specify your Instagram page URL. Leave empty if you have no such page.",

@@ -33,7 +33,7 @@
                 <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                     <strong class="current-item" itemprop="name">@Model.ProductName</strong>
                     <span itemprop="item" itemscope itemtype="http://schema.org/Thing" 
-                          id="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">
+                          id="@Url.ProductRouteUrl(new { SeName = Model.ProductSeName })">
                     </span>
                     <meta itemprop="position" content="@position" />
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductBreadcrumbAfter, additionalData = Model })

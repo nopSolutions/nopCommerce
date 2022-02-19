@@ -549,5 +549,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether customer can search with category name
         /// </summary>
         public bool AllowCustomersToSearchWithCategoryName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether product urls with category breadcrumb
+        /// </summary>
+        public bool EnableProductUrlWithCategoryBreadcrumb { get; set; }
     }
 }

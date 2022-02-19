@@ -27,7 +27,7 @@
                 <ul class="details">
                     <li class="product">
                         <label>@T("Account.CustomerReturnRequests.Item")</label>
-                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                        <a href="@Url.ProductRouteUrl(new { SeName = item.ProductSeName })">@item.ProductName</a>
                         <span>x @item.Quantity</span>
                     </li>
                     <li class="reason">

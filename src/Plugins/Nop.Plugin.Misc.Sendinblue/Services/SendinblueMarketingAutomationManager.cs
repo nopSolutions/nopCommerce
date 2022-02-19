@@ -18,6 +18,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
+using Nop.Web.Framework.Mvc.Routing;
 using SendinblueMarketingAutomation.Api;
 using SendinblueMarketingAutomation.Client;
 using SendinblueMarketingAutomation.Model;
@@ -208,7 +209,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                                 res = all == "," ? res : all + ", " + res;
                                 return res;
                             }),
-                            url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
+                            url = urlHelper.ProductRouteUrl(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
                             image = (await _pictureService.GetPictureUrlAsync(picture)).Url,
                             quantity = item.Quantity,
                             price = (await _shoppingCartService.GetSubTotalAsync(item, true)).subTotal
@@ -320,7 +321,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                             res = all == "," ? res : all + ", " + res;
                             return res;
                         }),
-                        url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
+                        url = urlHelper.ProductRouteUrl(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
                         image = (await _pictureService.GetPictureUrlAsync(picture)).Url,
                         quantity = item.Quantity,
                         price = item.PriceInclTax,
