@@ -1569,7 +1569,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     shipmentItemModel.AllowToChooseWarehouse = true;
                     foreach (var pwi in (await _productService.GetAllProductWarehouseInventoryRecordsAsync(orderItem.ProductId)).OrderBy(w => w.WarehouseId).ToList())
                     {
-                        if (await _productService.GetWarehousesByIdAsync(pwi.WarehouseId) is Warehouse warehouse)
+                        if (await _productService.GetWarehouseByIdAsync(pwi.WarehouseId) is Warehouse warehouse)
                         {
                             shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
                             {

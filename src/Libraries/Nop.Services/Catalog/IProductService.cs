@@ -828,7 +828,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        Task<Warehouse> GetWarehousesByIdAsync(int warehouseId);
+        Task<Warehouse> GetWarehouseByIdAsync(int warehouseId);
 
         /// <summary>
         /// Deletes a ProductWarehouseInventory
