@@ -661,6 +661,8 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="orderBy">1 - order by quantity, 2 - order by total amount</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>
         /// A task that represents the asynchronous operation
@@ -682,7 +684,6 @@ namespace Nop.Services.Orders
             int pageSize = int.MaxValue,
             bool showHidden = false)
         {
-
             var bestSellers = SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, ss, billingCountryId, showHidden);
 
             var bsReport =
