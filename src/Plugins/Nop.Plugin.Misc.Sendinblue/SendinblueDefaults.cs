@@ -9,11 +9,6 @@ namespace Nop.Plugin.Misc.Sendinblue
     public static class SendinblueDefaults
     {
         /// <summary>
-        /// Gets a name of the view component to embed tracking script on pages
-        /// </summary>
-        public const string TRACKING_VIEW_COMPONENT_NAME = "WidgetsSendinblue";
-
-        /// <summary>
         /// Gets a plugin system name
         /// </summary>
         public static string SystemName => "Misc.Sendinblue";

@@ -828,31 +828,13 @@ namespace Nop.Services.Installation
 
             secondUser.BillingAddressId = defaultSecondUserAddress.Id;
             secondUser.ShippingAddressId = defaultSecondUserAddress.Id;
+            secondUser.FirstName = defaultSecondUserAddress.FirstName;
+            secondUser.LastName = defaultSecondUserAddress.LastName;
 
             await InsertInstallationDataAsync(secondUser);
 
             await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = secondUser.Id, AddressId = defaultSecondUserAddress.Id });
             await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = secondUser.Id, CustomerRoleId = crRegistered.Id });
-
-            //set default customer name
-            await InsertInstallationDataAsync(new GenericAttribute
-            {
-                EntityId = secondUser.Id,
-                Key = NopCustomerDefaults.FirstNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultSecondUserAddress.FirstName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            },
-            new GenericAttribute
-            {
-                EntityId = secondUser.Id,
-                Key = NopCustomerDefaults.LastNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultSecondUserAddress.LastName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            });
 
             //set customer password
             await InsertInstallationDataAsync(new CustomerPassword
@@ -896,31 +878,13 @@ namespace Nop.Services.Installation
 
             thirdUser.BillingAddressId = defaultThirdUserAddress.Id;
             thirdUser.ShippingAddressId = defaultThirdUserAddress.Id;
+            thirdUser.FirstName = defaultThirdUserAddress.FirstName;
+            thirdUser.LastName = defaultThirdUserAddress.LastName;
 
             await InsertInstallationDataAsync(thirdUser);
 
             await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = thirdUser.Id, AddressId = defaultThirdUserAddress.Id });
             await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = thirdUser.Id, CustomerRoleId = crRegistered.Id });
-
-            //set default customer name
-            await InsertInstallationDataAsync(new GenericAttribute
-            {
-                EntityId = thirdUser.Id,
-                Key = NopCustomerDefaults.FirstNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultThirdUserAddress.FirstName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            },
-            new GenericAttribute
-            {
-                EntityId = thirdUser.Id,
-                Key = NopCustomerDefaults.LastNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultThirdUserAddress.LastName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            });
 
             //set customer password
             await InsertInstallationDataAsync(new CustomerPassword
@@ -963,31 +927,13 @@ namespace Nop.Services.Installation
 
             fourthUser.BillingAddressId = defaultFourthUserAddress.Id;
             fourthUser.ShippingAddressId = defaultFourthUserAddress.Id;
+            fourthUser.FirstName = defaultFourthUserAddress.FirstName;
+            fourthUser.LastName = defaultFourthUserAddress.LastName;
 
             await InsertInstallationDataAsync(fourthUser);
 
             await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = fourthUser.Id, AddressId = defaultFourthUserAddress.Id });
             await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = fourthUser.Id, CustomerRoleId = crRegistered.Id });
-
-            //set default customer name
-            await InsertInstallationDataAsync(new GenericAttribute
-            {
-                EntityId = fourthUser.Id,
-                Key = NopCustomerDefaults.FirstNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultFourthUserAddress.FirstName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            },
-            new GenericAttribute
-            {
-                EntityId = fourthUser.Id,
-                Key = NopCustomerDefaults.LastNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultFourthUserAddress.LastName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            });
 
             //set customer password
             await InsertInstallationDataAsync(new CustomerPassword
@@ -1031,31 +977,13 @@ namespace Nop.Services.Installation
 
             fifthUser.BillingAddressId = defaultFifthUserAddress.Id;
             fifthUser.ShippingAddressId = defaultFifthUserAddress.Id;
+            fifthUser.FirstName = defaultFifthUserAddress.FirstName;
+            fifthUser.LastName = defaultFifthUserAddress.LastName;
 
             await InsertInstallationDataAsync(fifthUser);
 
             await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = fifthUser.Id, AddressId = defaultFifthUserAddress.Id });
             await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = fifthUser.Id, CustomerRoleId = crRegistered.Id });
-
-            //set default customer name
-            await InsertInstallationDataAsync(new GenericAttribute
-            {
-                EntityId = fifthUser.Id,
-                Key = NopCustomerDefaults.FirstNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultFifthUserAddress.FirstName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            },
-            new GenericAttribute
-            {
-                EntityId = fifthUser.Id,
-                Key = NopCustomerDefaults.LastNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultFifthUserAddress.LastName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            });
 
             //set customer password
             await InsertInstallationDataAsync(new CustomerPassword
@@ -1099,31 +1027,13 @@ namespace Nop.Services.Installation
 
             sixthUser.BillingAddressId = defaultSixthUserAddress.Id;
             sixthUser.ShippingAddressId = defaultSixthUserAddress.Id;
+            sixthUser.FirstName = defaultSixthUserAddress.FirstName;
+            sixthUser.LastName = defaultSixthUserAddress.LastName;
 
             await InsertInstallationDataAsync(sixthUser);
 
             await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = sixthUser.Id, AddressId = defaultSixthUserAddress.Id });
             await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = sixthUser.Id, CustomerRoleId = crRegistered.Id });
-
-            //set default customer name
-            await InsertInstallationDataAsync(new GenericAttribute
-            {
-                EntityId = sixthUser.Id,
-                Key = NopCustomerDefaults.FirstNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultSixthUserAddress.FirstName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            },
-            new GenericAttribute
-            {
-                EntityId = sixthUser.Id,
-                Key = NopCustomerDefaults.LastNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultSixthUserAddress.LastName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            });
 
             //set customer password
             await InsertInstallationDataAsync(new CustomerPassword
@@ -1225,6 +1135,8 @@ namespace Nop.Services.Installation
 
             adminUser.BillingAddressId = defaultAdminUserAddress.Id;
             adminUser.ShippingAddressId = defaultAdminUserAddress.Id;
+            adminUser.FirstName = defaultAdminUserAddress.FirstName;
+            adminUser.LastName = defaultAdminUserAddress.LastName;
 
             await InsertInstallationDataAsync(adminUser);
 
@@ -1234,26 +1146,6 @@ namespace Nop.Services.Installation
                 new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crAdministrators.Id },
                 new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crForumModerators.Id },
                 new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crRegistered.Id });
-
-            //set default customer name
-            await InsertInstallationDataAsync(new GenericAttribute
-            {
-                EntityId = adminUser.Id,
-                Key = NopCustomerDefaults.FirstNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = "John",
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            },
-            new GenericAttribute
-            {
-                EntityId = adminUser.Id,
-                Key = NopCustomerDefaults.LastNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = "Smith",
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            });
 
             //set hashed admin password
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
@@ -3057,7 +2949,9 @@ namespace Nop.Services.Installation
                 EnableManufacturerFiltering = true,
                 EnablePriceRangeFiltering = true,
                 EnableSpecificationAttributeFiltering = true,
-                AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay
+                AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay,
+                AllowCustomersToSearchWithCategoryName = true,
+                AllowCustomersToSearchWithManufacturerName = true
             });
 
             await settingService.SaveSettingAsync(new LocalizationSettings
@@ -3176,6 +3070,7 @@ namespace Nop.Services.Installation
                 ManufacturerThumbPictureSize = 420,
                 VendorThumbPictureSize = 450,
                 CartThumbPictureSize = 80,
+                OrderThumbPictureSize = 80,
                 MiniCartThumbPictureSize = 70,
                 AutoCompleteSearchThumbPictureSize = 20,
                 ImageSquarePictureSize = 32,
@@ -3197,6 +3092,7 @@ namespace Nop.Services.Installation
                 FacebookLink = "https://www.facebook.com/nopCommerce",
                 TwitterLink = "https://twitter.com/nopCommerce",
                 YoutubeLink = "https://www.youtube.com/user/nopCommerce",
+                InstagramLink = "https://www.instagram.com/nopcommerce_official",
                 HidePoweredByNopCommerce = false
             });
 
@@ -3310,6 +3206,7 @@ namespace Nop.Services.Installation
                 CustomOrderNumberMask = "{ID}",
                 ExportWithProducts = true,
                 AllowAdminsToBuyCallForPriceProducts = true,
+                ShowProductThumbnailInOrderDetailsPage = true,
                 DisplayCustomerCurrencyOnOrders = false,
                 DisplayOrderSummary = true
             });
@@ -8905,9 +8802,57 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "ImportNewsLetterSubscriptions",
+                    Enabled = true,
+                    Name = "Newsletter subscriptions were imported"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "ImportStates",
                     Enabled = true,
                     Name = "States were imported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportCustomers",
+                    Enabled = true,
+                    Name = "Customers were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportCategories",
+                    Enabled = true,
+                    Name = "Categories were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportManufacturers",
+                    Enabled = true,
+                    Name = "Manufacturers were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportProducts",
+                    Enabled = true,
+                    Name = "Products were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportOrders",
+                    Enabled = true,
+                    Name = "Orders were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportStates",
+                    Enabled = true,
+                    Name = "States were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportNewsLetterSubscriptions",
+                    Enabled = true,
+                    Name = "Newsletter subscriptions were exported"
                 },
                 new ActivityLogType
                 {

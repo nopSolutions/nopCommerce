@@ -10,7 +10,7 @@
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.RewardPoints })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.RewardPoints })
 }
 <div class="page account-page reward-points-page">
     <div class="page-title">

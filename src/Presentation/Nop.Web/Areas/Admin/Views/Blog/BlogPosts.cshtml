@@ -22,7 +22,7 @@
             <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogListButtons, additionalData = Model })
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.BlogListButtons, additionalData = Model })
     </div>
 </div>
 

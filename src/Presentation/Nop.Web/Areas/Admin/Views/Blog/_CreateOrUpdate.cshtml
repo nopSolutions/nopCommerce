@@ -19,7 +19,7 @@
                 <nop-card asp-name="blog-post-info" asp-icon="fas fa-info" asp-title="@T("Admin.ContentManagement.Blog.BlogPosts.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
                 <nop-card asp-name="blog-post-seo" asp-icon="fas fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogPostDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.BlogPostDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

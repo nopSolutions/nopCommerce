@@ -396,7 +396,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AttributeValueOutOfStockDisplayType_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.SortOptionSearchModel, options => options.Ignore())
                 .ForMember(model => model.ReviewTypeSearchModel, options => options.Ignore())
-                .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore());
+                .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
+                .ForMember(model => model.AllowCustomersToSearchWithManufacturerName_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.AllowCustomersToSearchWithCategoryName_OverrideForStore, options => options.Ignore());
             CreateMap<CatalogSettingsModel, CatalogSettings>()
                 .ForMember(settings => settings.AjaxProcessAttributeChange, options => options.Ignore())
                 .ForMember(settings => settings.CompareProductsNumber, options => options.Ignore())
@@ -876,6 +878,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.LastLoginDateUtc, options => options.Ignore())
                 .ForMember(entity => entity.BillingAddressId, options => options.Ignore())
                 .ForMember(entity => entity.ShippingAddressId, options => options.Ignore())
+                .ForMember(entity => entity.VatNumberStatusId, options => options.Ignore())
+                .ForMember(entity => entity.CustomCustomerAttributesXML, options => options.Ignore())
+                .ForMember(entity => entity.CurrencyId, options => options.Ignore())
+                .ForMember(entity => entity.LanguageId, options => options.Ignore())
+                .ForMember(entity => entity.TaxDisplayTypeId, options => options.Ignore())
+                .ForMember(entity => entity.VatNumberStatus, options => options.Ignore())
+                .ForMember(entity => entity.TaxDisplayType, options => options.Ignore())
                 .ForMember(entity => entity.RegisteredInStoreId, options => options.Ignore());
 
             CreateMap<Customer, OnlineCustomerModel>()
@@ -1094,6 +1103,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AssociatedProductPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AvatarPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.CartThumbPictureSize_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.OrderThumbPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.CategoryThumbPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DefaultImageQuality_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DefaultPictureZoomEnabled_OverrideForStore, options => options.Ignore())
@@ -1270,6 +1280,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<OrderSettings, OrderSettingsModel>()
                 .ForMember(model => model.AllowAdminsToBuyCallForPriceProducts_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ShowProductThumbnailInOrderDetailsPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AnonymousCheckoutAllowed_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, options => options.Ignore())

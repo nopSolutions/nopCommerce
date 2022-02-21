@@ -428,7 +428,7 @@
             </div>
         </form>
         <div class="external-authentication">
-            @await Component.InvokeAsync("ExternalMethods", "ExternalAuthentication")
+            @await Component.InvokeAsync(typeof(ExternalMethodsViewComponent), "ExternalAuthentication")
         </div>
     </div>
 </div>

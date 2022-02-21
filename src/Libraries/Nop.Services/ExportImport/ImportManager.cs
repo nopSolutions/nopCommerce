@@ -1866,6 +1866,9 @@ namespace Nop.Services.ExportImport
                     count++;
                 }
 
+            await _customerActivityService.InsertActivityAsync("ImportNewsLetterSubscriptions",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportNewsLetterSubscriptions"), count));
+
             return count;
         }
 

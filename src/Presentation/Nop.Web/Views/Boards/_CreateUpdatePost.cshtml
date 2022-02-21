@@ -5,7 +5,7 @@
     NopHtml.AppendPageCssClassParts("html-forum-edit-page");
 }
 
-@await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })
+@await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumTopicId = Model.ForumTopicId })
 <div class="page forum-edit-page">
     <div class="page-title">
         @if (Model.IsEdit)

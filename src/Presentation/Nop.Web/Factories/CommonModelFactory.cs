@@ -434,6 +434,7 @@ namespace Nop.Web.Factories
                 FacebookLink = _storeInformationSettings.FacebookLink,
                 TwitterLink = _storeInformationSettings.TwitterLink,
                 YoutubeLink = _storeInformationSettings.YoutubeLink,
+                InstagramLink = _storeInformationSettings.InstagramLink,
                 WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id,
                 NewsEnabled = _newsSettings.Enabled,
             };

@@ -11,6 +11,6 @@
         <h1>@T("PageTitle.PageNotFound")</h1>
     </div>
     <div class="page-body">
-        @await Component.InvokeAsync("TopicBlock", new { systemName = "PageNotFound" })
+        @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "PageNotFound" })
     </div>
 </div>

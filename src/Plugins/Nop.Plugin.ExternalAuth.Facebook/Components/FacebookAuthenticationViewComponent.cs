@@ -6,7 +6,6 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Components
     /// <summary>
     /// Represents view component to display login button
     /// </summary>
-    [ViewComponent(Name = FacebookAuthenticationDefaults.VIEW_COMPONENT_NAME)]
     public class FacebookAuthenticationViewComponent : NopViewComponent
     {
         /// <summary>

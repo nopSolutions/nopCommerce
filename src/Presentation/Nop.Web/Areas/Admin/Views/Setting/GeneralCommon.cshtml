@@ -61,15 +61,15 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GeneralCommonSettingsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GeneralCommonSettingsButtons, additionalData = Model })
         </div>
     </div>
 
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
-                @await Component.InvokeAsync("StoreScopeConfiguration")
-                @await Component.InvokeAsync("SettingMode")
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
                 <div asp-validation-summary="All"></div>
 
                 <nop-cards id="generalcommon-cards">
@@ -87,7 +87,7 @@
                     <nop-card asp-name="generalcommon-localization" asp-icon="fas fa-globe" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization")" asp-hide-block-attribute-name="@hideLocalizationBlockAttributeName" asp-hide="@hideLocalizationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Localization", Model)</nop-card>
                     <nop-card asp-name="generalcommon-adminarea" asp-icon="fas fa-clipboard" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.AdminArea")" asp-hide-block-attribute-name="@hideAdminAreaBlockAttributeName" asp-hide="@hideAdminAreaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.AdminArea", Model)</nop-card>
 
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GeneralCommonDetailsBlock, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GeneralCommonDetailsBlock, additionalData = Model })
                 </nop-cards>
             </div>
         </div>

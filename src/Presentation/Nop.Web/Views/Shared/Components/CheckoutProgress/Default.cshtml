@@ -1,7 +1,7 @@
 ﻿@model CheckoutProgressModel
 <div class="order-progress">
     <ul>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutProgressBefore, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutProgressBefore, additionalData = Model })
         <li class="active-step">
             <a @(Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw($" href=\"{Url.RouteUrl("ShoppingCart")}\"") : null)>@T("Checkout.Progress.Cart")</a>
         </li>
@@ -20,6 +20,6 @@
         <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
             <a>@T("Checkout.Progress.Complete")</a>
         </li>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutProgressAfter, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutProgressAfter, additionalData = Model })
     </ul>
 </div>

@@ -117,24 +117,5 @@
         public static string ProductOriginCountryAttribute => "EasyPost.Product.OriginCountry";
 
         #endregion
-
-        #region View components
-
-        /// <summary>
-        /// Gets the name of the view component to display an additional block on the product details page in the admin area
-        /// </summary>
-        public const string PRODUCT_DETAILS_VIEW_COMPONENT_NAME = "EasyPost.ProductDetailsBlock";
-
-        /// <summary>
-        /// Gets the name of the view component to display an additional block on the shipment details page in the admin area
-        /// </summary>
-        public const string SHIPMENT_DETAILS_VIEW_COMPONENT_NAME = "EasyPost.ShipmentDetailsBlock";
-
-        /// <summary>
-        /// Gets the name of the view component to display address verification warning on the opc shipping methods page in the public store
-        /// </summary>
-        public const string SHIPPING_METHODS_VIEW_COMPONENT_NAME = "EasyPost.OpcShippingMethods";
-
-        #endregion
     }
 }

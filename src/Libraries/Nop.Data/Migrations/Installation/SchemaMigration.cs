@@ -51,6 +51,7 @@ namespace Nop.Data.Migrations.Installation
             Create.TableFor<StateProvince>();
             Create.TableFor<Address>();
             Create.TableFor<Affiliate>();
+            Create.TableFor<Language>();
             Create.TableFor<CustomerAttribute>();
             Create.TableFor<CustomerAttributeValue>();
             Create.TableFor<Customer>();
@@ -88,7 +89,6 @@ namespace Nop.Data.Migrations.Installation
             Create.TableFor<ShoppingCartItem>();
             Create.TableFor<Store>();
             Create.TableFor<StoreMapping>();
-            Create.TableFor<Language>();
             Create.TableFor<LocaleStringResource>();
             Create.TableFor<LocalizedProperty>();
             Create.TableFor<BlogPost>();

@@ -109,9 +109,9 @@
                 <div class="title">
                     <strong>@T("Footer.FollowUs")</strong>
                 </div>
-                @await Component.InvokeAsync("SocialButtons")
+                @await Component.InvokeAsync(typeof(SocialButtonsViewComponent))
             </div>
-            @await Component.InvokeAsync("NewsletterBox")
+            @await Component.InvokeAsync(typeof(NewsletterBoxViewComponent))
         </div>
     </div>
     <div class="footer-lower">
@@ -133,9 +133,9 @@
                 Powered by <a href="@(OfficialSite.Main)" target="_blank" @(Model.IsHomePage ? string.Empty : "rel=nofollow")>nopCommerce</a>
             </div>
         }
-        @await Component.InvokeAsync("StoreThemeSelector")
+        @await Component.InvokeAsync(typeof(StoreThemeSelectorViewComponent))
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.Footer, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.Footer, additionalData = Model })
 </div>
 <script asp-location="Footer">
     $(document).ready(function () {

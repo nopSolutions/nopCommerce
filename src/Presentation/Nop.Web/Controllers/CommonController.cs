@@ -289,6 +289,8 @@ namespace Nop.Web.Controllers
         //SEO sitemap page
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(true)]
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> SitemapXml(int? id)
