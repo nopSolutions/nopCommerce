@@ -1,0 +1,39 @@
+﻿@model Nop.Plugin.Payments.PaytrIframe.Paytr.InstallmentTable
+@{
+    Layout = "";
+    Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Payments.PaytrIframe/Content/paytr-ins-table-style.min.css");
+}
+
+@if (Model.ShowTable)
+{
+    <div class="product-collateral">
+        <div class="title">
+            <strong>@Model.Title</strong>
+        </div>
+
+        @Html.Raw(Model.TopDescription)
+
+        <div id="paytrInstallmentTableContent" style="margin: 10px 0;">
+            <div id="paytr_taksit_tablosu"></div>
+            <script src="https://www.paytr.com/odeme/taksit-tablosu/v2?token=@Model.Token&merchant_id=@Model.MerchantId&amount=@Model.Amount.ToString("0.00")&taksit=@Model.MaxInstallment&tumu=@Model.AdvancedInstallment"></script>
+        </div>
+
+        @Html.Raw(Model.BottomDescription)
+    </div>
+
+    <script asp-location="Footer">
+        $(document).on('product_attributes_changed', function (data) {
+            if (data) {
+                const contentDiv = $('#paytrInstallmentTableContent');
+                const price = data.changedData.price.replace(/[^\d.^\d,]/g, '');
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = 'https://www.paytr.com/odeme/taksit-tablosu/v2?token=@Model.Token&merchant_id=@Model.MerchantId&amount=' + price + '&taksit=@Model.MaxInstallment&tumu=@Model.AdvancedInstallment';
+
+                contentDiv.find('#paytr_taksit_tablosu').empty();
+                contentDiv.find('script').remove();
+                contentDiv.append(script);
+            }
+        });
+    </script>
+}

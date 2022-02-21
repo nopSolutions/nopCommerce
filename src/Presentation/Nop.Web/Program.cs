@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Nop.Core.Configuration;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Configuration.AddJsonFile(NopConfigurationDefaults.AppSettingsFilePath, true, true);
@@ -13,7 +13,7 @@ builder.Configuration.AddEnvironmentVariables();
 //Add services to the application and configure service provider
 builder.Services.ConfigureApplicationServices(builder);
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 //Configure the application HTTP request pipeline
 app.ConfigureRequestPipeline();

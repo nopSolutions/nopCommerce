@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+}
+@model PaytrPayment
+@using Nop.Plugin.Payments.PaytrIframe.Paytr
+
+@if (Model.status)
+{
+    <script src="https://www.paytr.com/js/iframeResizer.min.js"></script>
+    <iframe visible="true" runat="server" id="paytriframe" frameborder="0" scrolling="no" style="width: 100%;" src="https://www.paytr.com/odeme/guvenli/@Model.token"></iframe>
+    <script>iFrameResize({}, '#paytriframe');</script>
+}
+else
+{
+    <div style="background: #fff3cd;
+        color: #664d03;
+        padding: 1rem;
+        -moz-border-radius: .25rem;
+        -webkit-border-radius: .25rem;
+        border-radius: .25rem;
+        border: 1px solid #ffecb5;">@Model.message</div>
+    }

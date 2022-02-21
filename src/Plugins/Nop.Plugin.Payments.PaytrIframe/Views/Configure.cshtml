@@ -1,0 +1,302 @@
+﻿@using Nop.Plugin.Payments.PaytrIframe.Models
+@model ConfigurationModel
+@inject Nop.Core.IWebHelper webHelper
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+<form asp-controller="PaymentPaytrIframe" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <div style="background: #eee;padding: 12px;-moz-border-radius: 6px;-webkit-border-radius: 6px;border-radius: 6px;margin-bottom: 10px;">
+                    <p>@Html.Raw(T("Plugins.Payments.PaytrIframe.StoreInformation"))</p>
+                    <p>@Html.Raw(T("Plugins.Payments.PaytrIframe.CallbackInstruction"))</p>
+                </div>
+
+                @(await Html.LocalizedEditorAsync<ConfigurationModel, ConfigurationModel.ConfigurationLocalizedModel>("plugin-settings-localized",
+                @<div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="PaymentInfo_OverrideForStore" asp-input="@Model.Locales[item].PaymentInfo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="@Model.Locales[item].PaymentInfo" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-textarea asp-for="@Model.Locales[item].PaymentInfo" />
+                            <span asp-validation-for="@Model.Locales[item].PaymentInfo"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="PaymentMethodDescription_OverrideForStore" asp-input="@Model.Locales[item].PaymentMethodDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="@Model.Locales[item].PaymentMethodDescription" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-textarea asp-for="@Model.Locales[item].PaymentMethodDescription" />
+                            <span asp-validation-for="@Model.Locales[item].PaymentMethodDescription"></span>
+                        </div>
+                    </div>
+                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                </div>
+                ,
+                @<div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="PaymentInfo_OverrideForStore" asp-input="PaymentInfo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="PaymentInfo" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-textarea asp-for="PaymentInfo" />
+                            <span asp-validation-for="PaymentInfo"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="PaymentMethodDescription_OverrideForStore" asp-input="PaymentMethodDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="PaymentMethodDescription" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-textarea asp-for="PaymentMethodDescription" />
+                            <span asp-validation-for="PaymentMethodDescription"></span>
+                        </div>
+                    </div>
+                </div>
+                ,
+                true
+                ))
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="MerchantId_OverrideForStore" asp-input="MerchantId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="MerchantId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MerchantId" />
+                        <span asp-validation-for="MerchantId"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="MerchantKey_OverrideForStore" asp-input="MerchantKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="MerchantKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MerchantKey" />
+                        <span asp-validation-for="MerchantKey"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="MerchantSalt_OverrideForStore" asp-input="MerchantSalt" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="MerchantSalt" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MerchantSalt" />
+                        <span asp-validation-for="MerchantSalt"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Language_OverrideForStore" asp-input="Language" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Language" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="Language" asp-items="@(new SelectList(await ViewBag.LanguageOptions, "Value", "Option"))" />
+                        <span asp-validation-for="Language"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Installment_OverrideForStore" asp-input="Installment" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Installment" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="Installment" asp-items="@(new SelectList(await ViewBag.InstallmentOptions, "Value", "Option"))" />
+                        <span asp-validation-for="Installment"></span>
+                    </div>
+                </div>
+
+                <div id="categoryBasedContent" class="row" style="display: none; background: #efefef; padding: 18px 0;"></div>
+            </div>
+            <div class="card-body">
+                <div style="background: #eee;padding: 12px;-moz-border-radius: 6px;-webkit-border-radius: 6px;border-radius: 6px;margin-bottom: 10px;">
+                    <p>@T("Plugins.Payments.PaytrIframe.InstallmentTokenInformation")</p>
+                </div>
+
+                @(await Html.LocalizedEditorAsync<ConfigurationModel, ConfigurationModel.ConfigurationLocalizedModel>("plugin-settings-localized-two",
+                @<div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="InstallmentTableTitle_OverrideForStore" asp-input="@Model.Locales[item].InstallmentTableTitle" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="@Model.Locales[item].InstallmentTableTitle" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="@Model.Locales[item].InstallmentTableTitle" />
+                            <span asp-validation-for="@Model.Locales[item].InstallmentTableTitle"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="InstallmentTableTopDescription_OverrideForStore" asp-input="@Model.Locales[item].InstallmentTableTopDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="@Model.Locales[item].InstallmentTableTopDescription" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="@Model.Locales[item].InstallmentTableTopDescription" asp-template="RichEditor" />
+                            <span asp-validation-for="@Model.Locales[item].InstallmentTableTopDescription"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="InstallmentTableBottomDescription_OverrideForStore" asp-input="@Model.Locales[item].InstallmentTableBottomDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="@Model.Locales[item].InstallmentTableBottomDescription" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="@Model.Locales[item].InstallmentTableBottomDescription" asp-template="RichEditor" />
+                            <span asp-validation-for="@Model.Locales[item].InstallmentTableBottomDescription"></span>
+                        </div>
+                    </div>
+                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                </div>
+                ,
+                @<div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="InstallmentTableTitle_OverrideForStore" asp-input="InstallmentTableTitle" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="InstallmentTableTitle" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="InstallmentTableTitle" />
+                            <span asp-validation-for="InstallmentTableTitle"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="InstallmentTableTopDescription_OverrideForStore" asp-input="InstallmentTableTopDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="InstallmentTableTopDescription" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="InstallmentTableTopDescription" asp-template="RichEditor" />
+                            <span asp-validation-for="InstallmentTableTopDescription"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="InstallmentTableBottomDescription_OverrideForStore" asp-input="InstallmentTableBottomDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="InstallmentTableBottomDescription" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="InstallmentTableBottomDescription" asp-template="RichEditor" />
+                            <span asp-validation-for="InstallmentTableBottomDescription"></span>
+                        </div>
+                    </div>
+                </div>
+                ,
+                true
+                ))
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="InstallmentTableToken_OverrideForStore" asp-input="InstallmentTableToken" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="InstallmentTableToken" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="InstallmentTableToken" />
+                        <span asp-validation-for="InstallmentTableToken"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="InstallmentTableMax_OverrideForStore" asp-input="InstallmentTableMax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="InstallmentTableMax" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="InstallmentTableMax" asp-items="@(new SelectList(await ViewBag.InstallmentTableMaxOptions, "Value", "Option"))" />
+                        <span asp-validation-for="InstallmentTableMax"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="InstallmentTableAdvanced_OverrideForStore" asp-input="InstallmentTableAdvanced" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="InstallmentTableAdvanced" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="InstallmentTableAdvanced" asp-items="@(new SelectList(await ViewBag.InstallmentTableAdvancedOptions, "Key", "Value"))" />
+                        <span asp-validation-for="InstallmentTableAdvanced"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+
+    $(document).on('change', '#Installment', function () {
+        ajaxCategoryBased(this.value);
+    });
+
+    $(window).on('load', function () {
+        ajaxCategoryBased($('#Installment').val());
+    });
+
+    function ajaxCategoryBased(val) {
+        const body = $('#categoryBasedContent');
+
+        if (val === "13") {
+            $.ajax({
+                type: "POST",
+                url: "/Plugins/PaymentPaytrIframe/CategoryOptions",
+                dataType: "json",
+                beforeSend: function () {
+                    body.css({ "display": "block" });
+                    body.html('<div style="text-align: center;">@Html.Raw(T("Media.MagnificPopup.Loading"))</div>')
+                },
+                success: function (response) {
+                    let formGroup = '<div class="form-group row">';
+
+                    $.each(response.CategoryOptions, function (catI, catV) {
+                        formGroup += '<div class="col-md-4 row">';
+                        formGroup += '<div class="col-md-3"><div class="label-wrapper"><label class="control-label">' + catV.Name + '</label></div></div>';
+                        formGroup += '<div class="col-md-9"><select name="CategoryInstallment[' + catV.Id + ']" class="form-control">';
+
+                        $.each(response.InstallmentOptions, function (insI, insV) {
+                            formGroup += '<option value="' + insV.Value + '"';
+
+                            if (response.CategoryInstallment) {
+                                let CategoryInstallment = JSON.parse(response.CategoryInstallment);
+
+                                if (CategoryInstallment[catV.Id] == insV.Value) {
+                                    formGroup += 'selected="selected"';
+                                }
+                            }
+
+                            formGroup += '>' + insV.Option + '</option>';
+                        });
+
+                        formGroup += '</select></div>';
+                        formGroup += '</div>';
+                    });
+
+                    formGroup += '</div>';
+
+                    body.html(formGroup);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                }
+            });
+        } else {
+            body.html('');
+            body.css({ "display": "none" });
+        }
+    }
+</script>

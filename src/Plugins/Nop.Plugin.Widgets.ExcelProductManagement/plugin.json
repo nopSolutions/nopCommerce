@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Modalog",
+  "FriendlyName": "Excel Product Management",
+  "SystemName": "Widgets.ExcelProductManagement",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "Author Name",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.ExcelProductManagement.dll",
+  "Description": "Excel ile ürün yönetimi"
+}

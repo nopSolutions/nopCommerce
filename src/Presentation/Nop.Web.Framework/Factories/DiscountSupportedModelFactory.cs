@@ -39,7 +39,7 @@ namespace Nop.Web.Framework.Factories
         /// <param name="model">Model</param>
         /// <param name="availableDiscounts">List of all available discounts</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual Task<TModel> PrepareModelDiscountsAsync<TModel>(TModel model, IList<Discount> availableDiscounts) where TModel : IDiscountSupportedModel
+        virtual public Task<TModel> PrepareModelDiscountsAsync<TModel>(TModel model, IList<Discount> availableDiscounts) where TModel : IDiscountSupportedModel
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -65,7 +65,7 @@ namespace Nop.Web.Framework.Factories
         /// <param name="availableDiscounts">List of all available discounts</param>
         /// <param name="ignoreAppliedDiscounts">Whether to ignore existing applied discounts</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task<TModel> PrepareModelDiscountsAsync<TModel, TMapping>(TModel model, IDiscountSupported<TMapping> entity,
+        async virtual public Task<TModel> PrepareModelDiscountsAsync<TModel, TMapping>(TModel model, IDiscountSupported<TMapping> entity,
             IList<Discount> availableDiscounts, bool ignoreAppliedDiscounts)
             where TModel : IDiscountSupportedModel where TMapping : DiscountMapping
         {

@@ -100,7 +100,7 @@ namespace Nop.Tests
             SetDataProviderType(DataProviderType.Unknown);
         }
 
-        private static void Init()
+        static private void Init()
         {
             
             var dataProvider = _serviceProvider.GetService<IDataProviderManager>().DataProvider;
@@ -118,7 +118,7 @@ namespace Nop.Tests
             EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider).Wait();
         }
         
-        protected static T PropertiesShouldEqual<T, Tm>(T entity, Tm model, params string[] filter) where T : BaseEntity
+        static protected T PropertiesShouldEqual<T, Tm>(T entity, Tm model, params string[] filter) where T : BaseEntity
         where Tm : BaseNopModel
         {
             var objectProperties = typeof(T).GetProperties();
