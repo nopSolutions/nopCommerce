@@ -1,9 +1,8 @@
 ﻿using Nop.Core;
 
-namespace Nop.Plugin.Widgets.ExcelProductManagement.Domains
-{
-    public partial class CustomTable : BaseEntity
-    {
+namespace Nop.Plugin.Widgets.ExcelProductManagement.Domains;
 
-    }
+public partial class CustomTable : BaseEntity
+{
+
 }

@@ -60,7 +60,61 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Plugins\" />
+    <Folder Include="Plugins\DiscountRules.CustomerRoles\Views\" />
+    <Folder Include="Plugins\ExchangeRate.EcbExchange\" />
+    <Folder Include="Plugins\Misc.Sendinblue\Content\" />
+    <Folder Include="Plugins\Misc.Sendinblue\Views\" />
+    <Folder Include="Plugins\Misc.WebApi.Frontend\Views\" />
+    <Folder Include="Plugins\Nop.Plugin.Widget.VendorProductManagement\" />
+    <Folder Include="Plugins\Nop.Plugin.Widgets.ExcelProductManagement\" />
+    <Folder Include="Plugins\Payments.CashOnDelivery\Views\" />
+    <Folder Include="Plugins\Payments.CheckMoneyOrder\Views\" />
+    <Folder Include="Plugins\Payments.Manual\Views\" />
+    <Folder Include="Plugins\Payments.PayPalStandard\Views\" />
+    <Folder Include="Plugins\Payments.PaytrIframe\Content\" />
+    <Folder Include="Plugins\Payments.PaytrIframe\Views\" />
+    <Folder Include="Plugins\Pickup.PickupInStore\Views\" />
+    <Folder Include="Plugins\Shipping.FixedByWeightByTotal\Views\" />
+    <Folder Include="Plugins\Shipping.ShipStation\Views\" />
+    <Folder Include="Plugins\Shipping.UPS\Views\" />
+    <Folder Include="Plugins\Tax.FixedOrByCountryStateZip\Views\" />
+    <Folder Include="Plugins\Widgets.AccessiBe\Views\" />
+    <Folder Include="Plugins\Widgets.FacebookPixel\Views\Configuration\" />
+    <Folder Include="Plugins\Widgets.GoogleAnalytics\Views\" />
+    <Folder Include="Plugins\Widgets.NivoSlider\Content\nivoslider\sample-images\" />
+    <Folder Include="Plugins\Widgets.NivoSlider\Content\nivoslider\themes\bar\" />
+    <Folder Include="Plugins\Widgets.NivoSlider\Content\nivoslider\themes\custom\" />
+    <Folder Include="Plugins\Widgets.NivoSlider\Content\nivoslider\themes\dark\" />
+    <Folder Include="Plugins\Widgets.NivoSlider\Content\nivoslider\themes\default\" />
+    <Folder Include="Plugins\Widgets.NivoSlider\Content\nivoslider\themes\light\" />
+    <Folder Include="Plugins\Widgets.NivoSlider\Scripts\" />
+    <Folder Include="Plugins\Widgets.NivoSlider\Views\" />
+    <Folder Include="Plugins\Widgets.What3words\Content\" />
+    <Folder Include="Plugins\Widgets.What3words\Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Plugins\Misc.Sendinblue\runtimes\linux-arm64\native\libSkiaSharp.so" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\linux-arm\native\libSkiaSharp.so" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\linux-musl-x64\native\libSkiaSharp.so" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\linux-x64\native\libSkiaSharp.so" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\osx\native\libSkiaSharp.dylib" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win-arm64\native\libSkiaSharp.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win-x64\native\libSkiaSharp.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win-x86\native\libSkiaSharp.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win\lib\netcoreapp2.0\System.Diagnostics.PerformanceCounter.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll" />
+    <None Include="Plugins\Misc.Sendinblue\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target.
