@@ -2545,7 +2545,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        public virtual async Task<Warehouse> GetWarehousesByIdAsync(int warehouseId)
+        public virtual async Task<Warehouse> GetWarehouseByIdAsync(int warehouseId)
         {
             return await _warehouseRepository.GetByIdAsync(warehouseId, cache => default);
         }
