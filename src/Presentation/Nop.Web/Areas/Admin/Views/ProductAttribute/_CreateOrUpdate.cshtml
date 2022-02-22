@@ -31,7 +31,7 @@
                         <nop-card asp-name="product-attribute-used-by-products" asp-icon="fas fa-object-group" asp-title="@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")" asp-hide-block-attribute-name="@hideUsedByProductsBlockAttributeName" asp-hide="@hideUsedByProductsBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.UsedByProducts", Model)</nop-card>
                     }
 
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeDetailsBlock, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeDetailsBlock, additionalData = Model })
                 </nop-cards>
             </div>
         </div>

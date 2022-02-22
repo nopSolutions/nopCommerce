@@ -51,6 +51,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public int CartThumbPictureSize { get; set; }
         public bool CartThumbPictureSize_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.OrderThumbPictureSize")]
+        public int OrderThumbPictureSize { get; set; }
+        public bool OrderThumbPictureSize_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.MiniCartThumbPictureSize")]
         public int MiniCartThumbPictureSize { get; set; }
         public bool MiniCartThumbPictureSize_OverrideForStore { get; set; }

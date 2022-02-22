@@ -26,7 +26,7 @@
                 {
                     <nop-card asp-name="specification-attribute-usedbyproducts" asp-icon="fas fa-check-square" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts")" asp-hide-block-attribute-name="@hideUsedByProductsBlockAttributeName" asp-hide="@hideUsedByProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdateSpecificationAttribute.UsedByProducts", Model)</nop-card>
                 }
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

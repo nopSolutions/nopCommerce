@@ -53,6 +53,11 @@ namespace Nop.Core.Domain.Media
         public int CartThumbPictureSize { get; set; }
 
         /// <summary>
+        /// Picture size of product pictures on the order details page
+        /// </summary>
+        public int OrderThumbPictureSize { get; set; }
+
+        /// <summary>
         /// Picture size of product pictures for minishipping cart box
         /// </summary>
         public int MiniCartThumbPictureSize { get; set; }

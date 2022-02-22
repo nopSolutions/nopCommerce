@@ -43,7 +43,7 @@
                 <nop-card asp-name="templates-product" asp-icon="fas fa-cube" asp-title="@T("Admin.System.Templates.Product")" asp-hide-block-attribute-name="@hideProductBlockAttributeName" asp-hide="@hideProductBlock">@await Html.PartialAsync("_List.Product", Model)</nop-card>
                 <nop-card asp-name="templates-topic" asp-icon="fas fa-book" asp-title="@T("Admin.System.Templates.Topic")" asp-hide-block-attribute-name="@hideTopicBlockAttributeName" asp-hide="@hideTopicBlock">@await Html.PartialAsync("_List.Topic", Model)</nop-card>
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TemplatesDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TemplatesDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

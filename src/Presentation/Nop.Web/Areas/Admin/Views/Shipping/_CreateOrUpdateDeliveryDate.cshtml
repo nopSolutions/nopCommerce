@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="cards-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DeliveryDateDetailsTop, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DeliveryDateDetailsTop, additionalData = Model })
                 <div class="card card-default">
                     <div class="card-body">
                         @(await Html.LocalizedEditorAsync<DeliveryDateModel, DeliveryDateLocalizedModel>("delivery-date-localized",
@@ -47,7 +47,7 @@
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DeliveryDateDetailsBottomp, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DeliveryDateDetailsBottomp, additionalData = Model })
             </div>
         </div>
     </div>

@@ -19,7 +19,7 @@
                 <nop-card asp-name="recurringpayment-info" asp-icon="fas fa-info" asp-title="@T("Admin.RecurringPayments.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
                 <nop-card asp-name="recurringpayment-history" asp-icon="fas fa-history" asp-title="@T("Admin.RecurringPayments.History")" asp-hide-block-attribute-name="@hideHistoryBlockAttributeName" asp-hide="@hideHistoryBlock">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-card>
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReccuringPaymentDetailBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ReccuringPaymentDetailBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

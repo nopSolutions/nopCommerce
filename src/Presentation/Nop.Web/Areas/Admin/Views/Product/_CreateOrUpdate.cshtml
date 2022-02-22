@@ -62,7 +62,7 @@
             <div class="row">
                 <div class="col-md-12 clearfix">
                     <div class="float-left">
-                        @await Component.InvokeAsync("SettingMode", new { modeName = "product-advanced-mode" })
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "product-advanced-mode" })
                     </div>
                     @if (!Model.IsLoggedInAsVendor)
                     {
@@ -96,7 +96,7 @@
                     <nop-card asp-name="product-stock-quantity-history" asp-icon="fas fa-history" asp-title="@T("Admin.Catalog.Products.StockQuantityHistory")" asp-hide-block-attribute-name="@hideStockQuantityHistoryBlockAttributeName" asp-hide="@hideStockQuantityHistoryBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.StockQuantityHistory)">@await Html.PartialAsync("_CreateOrUpdate.StockQuantityHistory", Model)</nop-card>
                 }
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

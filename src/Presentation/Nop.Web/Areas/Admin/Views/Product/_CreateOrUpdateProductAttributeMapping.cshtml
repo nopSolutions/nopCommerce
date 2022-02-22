@@ -28,7 +28,7 @@
                     <nop-card asp-name="product-attribute-mapping-condition" asp-icon="fas fa-arrow-right" asp-title="@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")" asp-hide-block-attribute-name="@hideConditionBlockAttributeName" asp-hide="@hideConditionBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdateProductAttributeMapping.Condition", Model)</nop-card>
                 }
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeMappingDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeMappingDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

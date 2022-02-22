@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="col-md-12 clearfix">
                     <div class="float-left">
-                        @await Component.InvokeAsync("SettingMode", new { modeName = "vendor-advanced-mode" })
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "vendor-advanced-mode" })
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                     <nop-card asp-name="vendor-products" asp-icon="fas fa-th-list" asp-title="@T("Admin.Vendors.VendorNotes")" asp-hide-block-attribute-name="@hideVendorNotesBlockAttributeName" asp-hide="@hideVendorNotesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Notes", Model)</nop-card>
                 }
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.VendorDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

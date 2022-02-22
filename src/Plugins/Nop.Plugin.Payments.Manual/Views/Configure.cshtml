@@ -3,7 +3,7 @@
     Layout = "_ConfigurePlugin";
 }
 
-@await Component.InvokeAsync("StoreScopeConfiguration")
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
 <form asp-controller="PaymentManual" asp-action="Configure" method="post">
     <div class="cards-group">

@@ -4,8 +4,8 @@
 
     NopHtml.AddTitleParts(T("Forum.PageTitle.TopicNew").Text);
 }
-@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicCreateBefore, additionalData = Model })
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicCreateBefore, additionalData = Model })
 <form asp-route="TopicCreate" method="post">
     @await Html.PartialAsync("_CreateUpdateTopic", Model)
 </form>
-@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicCreateAfter, additionalData = Model })
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicCreateAfter, additionalData = Model })

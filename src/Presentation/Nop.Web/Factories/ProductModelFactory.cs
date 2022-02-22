@@ -368,6 +368,24 @@ namespace Nop.Web.Factories
                     var finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithoutDiscountBase, currentCurrency);
                     var finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithDiscountBase, currentCurrency);
 
+                    var strikeThroughPrice = decimal.Zero;
+
+                    if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
+                        strikeThroughPrice = oldPrice;
+
+                    if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
+                        strikeThroughPrice = finalPriceWithoutDiscount;
+
+                    if (strikeThroughPrice > decimal.Zero)
+                    {
+                        priceModel.OldPrice = await _priceFormatter.FormatPriceAsync(strikeThroughPrice);
+                    }
+                    else
+                    {
+                        priceModel.OldPrice = null;
+                        priceModel.OldPriceValue = null;
+                    }
+
                     //do we have tier prices configured?
                     var tierPrices = new List<TierPrice>();
                     if (product.HasTierPrices)
@@ -379,31 +397,15 @@ namespace Nop.Web.Factories
                     var displayFromMessage = tierPrices.Any() && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
                     if (displayFromMessage)
                     {
-                        priceModel.OldPrice = null;
-                        priceModel.OldPriceValue = null;
                         priceModel.Price = string.Format(await _localizationService.GetResourceAsync("Products.PriceRangeFrom"), await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount));
                         priceModel.PriceValue = finalPriceWithDiscount;
                     }
                     else
                     {
-                        var strikeThroughPrice = decimal.Zero;
-
-                        if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
-                            strikeThroughPrice = oldPrice;
-
-                        if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
-                            strikeThroughPrice = finalPriceWithoutDiscount;
-
-                        if (strikeThroughPrice > decimal.Zero)
-                        {
-                            priceModel.OldPrice = await _priceFormatter.FormatPriceAsync(strikeThroughPrice);
-                            priceModel.OldPriceValue = strikeThroughPrice;
-                        }
-
                         priceModel.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
                         priceModel.PriceValue = finalPriceWithDiscount;
                     }
-
+                    
                     if (product.IsRental)
                     {
                         //rental product

@@ -381,6 +381,7 @@ namespace Nop.Web.Infrastructure.Cache
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.OrderPicturePrefixCacheKey);
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
@@ -388,6 +389,7 @@ namespace Nop.Web.Infrastructure.Cache
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.OrderPicturePrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductDefaultPicturePrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryPicturePrefixCacheKey);
@@ -400,6 +402,7 @@ namespace Nop.Web.Infrastructure.Cache
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.OrderPicturePrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductDefaultPicturePrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryPicturePrefixCacheKey);
@@ -418,6 +421,7 @@ namespace Nop.Web.Infrastructure.Cache
             await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.OrderPicturePrefixCacheKey);
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
@@ -427,6 +431,7 @@ namespace Nop.Web.Infrastructure.Cache
             await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.OrderPicturePrefixCacheKey);
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
@@ -436,6 +441,7 @@ namespace Nop.Web.Infrastructure.Cache
             await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.OrderPicturePrefixCacheKey);
         }
 
         #endregion

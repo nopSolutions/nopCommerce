@@ -38,15 +38,15 @@
                     <i class="far fa-save"></i>
                     @T("Admin.Common.Save")
                 </button>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxSettingsButtons, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TaxSettingsButtons, additionalData = Model })
             </div>
         </div>
 
         <section class="content">
             <div class="container-fluid">
                 <div class="form-horizontal">
-                    @await Component.InvokeAsync("StoreScopeConfiguration")
-                    @await Component.InvokeAsync("SettingMode")
+                    @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                    @await Component.InvokeAsync(typeof(SettingModeViewComponent))
                     <div asp-validation-summary="All"></div>
 
                     <nop-cards id="taxsettings-cards">
@@ -57,7 +57,7 @@
                         <nop-card asp-name="taxsettings-payment" asp-icon="far fa-credit-card" asp-title="@T("Admin.Configuration.Settings.Tax.BlockTitle.Payment")" asp-hide-block-attribute-name="@hidePaymentBlockAttributeName" asp-hide="@hidePaymentBlock" asp-advanced="true">@await Html.PartialAsync("_Tax.Payment", Model)</nop-card>
                         <nop-card asp-name="taxsettings-vat" asp-icon="fas fa-percent" asp-title="@T("Admin.Configuration.Settings.Tax.BlockTitle.VAT")" asp-hide-block-attribute-name="@hideVATBlockAttributeName" asp-hide="@hideVATBlock" asp-advanced="false">@await Html.PartialAsync("_Tax.VAT", Model)</nop-card>
 
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxSettingsDetailsBlock, additionalData = Model })
+                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TaxSettingsDetailsBlock, additionalData = Model })
                     </nop-cards>
                 </div>
             </div>
