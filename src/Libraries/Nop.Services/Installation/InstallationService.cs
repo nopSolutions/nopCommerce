@@ -2882,8 +2882,10 @@ namespace Nop.Services.Installation
                 AllowAnonymousUsersToEmailAFriend = false,
                 RecentlyViewedProductsNumber = 3,
                 RecentlyViewedProductsEnabled = true,
-                NewProductsNumber = 6,
                 NewProductsEnabled = true,
+                NewProductsPageSize = 6,
+                NewProductsAllowCustomersToSelectPageSize = true,
+                NewProductsPageSizeOptions = "6, 3, 9",
                 CompareProductsEnabled = true,
                 CompareProductsNumber = 4,
                 ProductSearchAutoCompleteEnabled = true,
@@ -2951,10 +2953,7 @@ namespace Nop.Services.Installation
                 EnableSpecificationAttributeFiltering = true,
                 AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay,
                 AllowCustomersToSearchWithCategoryName = true,
-                AllowCustomersToSearchWithManufacturerName = true,
-                NewProductsPageAllowCustomersToSelectPageSize = true,
-                NewProductsPagePageSizeOptions = "6, 3, 9",
-                NewProductsFeedCount = 6
+                AllowCustomersToSearchWithManufacturerName = true
             });
 
             await settingService.SaveSettingAsync(new LocalizationSettings

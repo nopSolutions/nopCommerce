@@ -700,7 +700,7 @@ namespace Nop.Web.Factories
             //view mode
             await PrepareViewModesAsync(model, command);
             //page size
-            await PreparePageSizeOptionsAsync(model, command, category.AllowCustomersToSelectPageSize, 
+            await PreparePageSizeOptionsAsync(model, command, category.AllowCustomersToSelectPageSize,
                 category.PageSizeOptions, category.PageSize);
 
             var categoryIds = new List<int> { category.Id };
@@ -786,7 +786,7 @@ namespace Nop.Web.Factories
 
             return model;
         }
-        
+
         /// <summary>
         /// Prepare category (simple) models
         /// </summary>
@@ -902,7 +902,7 @@ namespace Nop.Web.Factories
                 return XDocument.Parse(xml);
             });
         }
-        
+
         #endregion
 
         #region Manufacturers
@@ -1565,12 +1565,11 @@ namespace Nop.Web.Factories
             var currentStore = await _storeContext.GetCurrentStoreAsync();
 
             //page size
-            await PreparePageSizeOptionsAsync(model, command, _catalogSettings.NewProductsPageAllowCustomersToSelectPageSize,
-                _catalogSettings.NewProductsPagePageSizeOptions, _catalogSettings.NewProductsNumber);
+            await PreparePageSizeOptionsAsync(model, command, _catalogSettings.NewProductsAllowCustomersToSelectPageSize,
+                _catalogSettings.NewProductsPageSizeOptions, _catalogSettings.NewProductsPageSize);
 
             //products
-            var products = await _productService.GetProductsMarkedAsNewAsync(
-                storeId: currentStore.Id,
+            var products = await _productService.GetProductsMarkedAsNewAsync(storeId: currentStore.Id,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
 
@@ -1889,7 +1888,7 @@ namespace Nop.Web.Factories
         #endregion
 
         #region Common
-        
+
         /// <summary>
         /// Prepare sorting options
         /// </summary>
@@ -2037,7 +2036,7 @@ namespace Nop.Web.Factories
 
             return Task.CompletedTask;
         }
-        
+
         #endregion
     }
 }

@@ -5940,35 +5940,29 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay.Hint">
     <Value>Enter the number of manufacturers to display in manufacturer navigation block.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsAllowCustomersToSelectPageSize">
+    <Value>'New products' page. Allow customers to select page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsAllowCustomersToSelectPageSize.Hint">
+    <Value>'New products' page. Check to allow customers to select the page size from a predefined list of options.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsEnabled">
     <Value>'New products' page enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsEnabled.Hint">
     <Value>Check to enable the 'New products' page in your store.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsFeedCount">
-    <Value>Number of products on 'New products' feed</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsFeedCount.Hint">
-    <Value>The number of products to include in the 'New products' feed.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumber">
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageSize">
     <Value>Number of products on 'New products' page</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint">
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint">
     <Value>The number of products to display when 'New products' page is enabled.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageAllowCustomersToSelectPageSize">
-      <Value>'New products' page. Allow customers to select page size</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions">
+    <Value>'New products' page. Page size options</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageAllowCustomersToSelectPageSize.Hint">
-      <Value>'New products' page. Check to allow customers to select the page size from a predefined list of options.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPagePageSizeOptions">
-      <Value>'New products' page. Page size options</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPagePageSizeOptions.Hint">
-      <Value>'New products' page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions.Hint">
+    <Value>'New products' page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NotifyCustomerAboutProductReviewReply">
     <Value>Notify customer about product review reply</Value>
@@ -7627,7 +7621,7 @@
     <Value>When enabled, your URLs will be http://www.yourStore.com/en/ or http://www.yourStore.com/ru/ (SEO friendly).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning">
-      <Value>Attention! The changes will take effect only after the application is restarted.</Value>
+    <Value>Attention! The changes will take effect only after the application is restarted.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions">
     <Value><![CDATA[<p>These settings do not apply to sitemap.xml, only for your site map. You can configure generation for sitemap.xml on <a href="{0}">all settings page</a></p>]]></Value>
@@ -15586,7 +15580,7 @@
     <Value>View path is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.NotDeleteOnlyOne">
-      <Value>It's not allowed to delete the only one template.</Value>
+    <Value>It's not allowed to delete the only one template.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Product">
     <Value>Product templates</Value>
@@ -16216,8 +16210,8 @@
     <Value>Sorry, checkout process is temporary disabled</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.EditAddress">
-      <Value>Edit address</Value>
-  </LocaleResource>  
+    <Value>Edit address</Value>
+  </LocaleResource>
   <LocaleResource Name="Checkout.EnterBillingAddress">
     <Value>Enter billing address</Value>
   </LocaleResource>
@@ -18143,7 +18137,7 @@
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.FileName">
     <Value>order</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="PDFInvoice.GiftCardInfo">
     <Value>Gift card ({0}):</Value>
   </LocaleResource>

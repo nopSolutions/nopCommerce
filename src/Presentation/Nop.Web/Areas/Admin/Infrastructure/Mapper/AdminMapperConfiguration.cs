@@ -339,7 +339,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.IncludeShortDescriptionInCompareProducts_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ManufacturersBlockItemsToDisplay_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NewProductsEnabled_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.NewProductsNumber_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.NewProductsPageSize_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.NewProductsAllowCustomersToSelectPageSize_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.NewProductsPageSizeOptions_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NotifyCustomerAboutProductReviewReply_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NumberOfBestsellersOnHomepage_OverrideForStore, options => options.Ignore())
@@ -398,10 +400,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ReviewTypeSearchModel, options => options.Ignore())
                 .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
                 .ForMember(model => model.AllowCustomersToSearchWithManufacturerName_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.AllowCustomersToSearchWithCategoryName_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.NewProductsPageAllowCustomersToSelectPageSize_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.NewProductsPagePageSizeOptions_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.NewProductsFeedCount_OverrideForStore, options => options.Ignore());
+                .ForMember(model => model.AllowCustomersToSearchWithCategoryName_OverrideForStore, options => options.Ignore());
             CreateMap<CatalogSettingsModel, CatalogSettings>()
                 .ForMember(settings => settings.AjaxProcessAttributeChange, options => options.Ignore())
                 .ForMember(settings => settings.CompareProductsNumber, options => options.Ignore())

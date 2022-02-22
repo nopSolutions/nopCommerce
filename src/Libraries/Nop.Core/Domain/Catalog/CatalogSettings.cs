@@ -176,14 +176,24 @@ namespace Nop.Core.Domain.Catalog
         public bool RecentlyViewedProductsEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets a number of products on the "New products" page
-        /// </summary>
-        public int NewProductsNumber { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether "New products" page is enabled
         /// </summary>
         public bool NewProductsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of products on the "New products" page
+        /// </summary>
+        public int NewProductsPageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether customers are allowed to select page size on the "New products" page
+        /// </summary>
+        public bool NewProductsAllowCustomersToSelectPageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the available customer selectable page size options on the "New products" page
+        /// </summary>
+        public string NewProductsPageSizeOptions { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether "Compare products" feature is enabled
@@ -549,20 +559,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether customer can search with category name
         /// </summary>
         public bool AllowCustomersToSearchWithCategoryName { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether customers are allowed to select page size on the new products page
-        /// </summary>
-        public bool NewProductsPageAllowCustomersToSelectPageSize { get; set; }
-
-        /// <summary>
-        /// Gets or sets the available customer selectable page size options on the new products page
-        /// </summary>
-        public string NewProductsPagePageSizeOptions { get; set; }
-
-        /// <summary>
-        /// Gets or sets the number of items to display for new products rss feed
-        /// </summary>
-        public int NewProductsFeedCount { get; set; }
     }
 }

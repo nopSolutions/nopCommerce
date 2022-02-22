@@ -38,22 +38,29 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             }
 
             //#3511
-            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.NewProductsPageAllowCustomersToSelectPageSize).Result)
+            var newProductsNumber = settingService.GetSettingAsync("catalogsettings.newproductsnumber").Result;
+            if (newProductsNumber is not null && int.TryParse(newProductsNumber.Value, out var newProductsPageSize))
             {
-                catalogSettings.NewProductsPageAllowCustomersToSelectPageSize = true;
-                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsPageAllowCustomersToSelectPageSize).Wait();
+                catalogSettings.NewProductsPageSize = newProductsPageSize;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsPageSize).Wait();
+                settingService.DeleteSettingAsync(newProductsNumber).Wait();
+            }
+            else if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.NewProductsPageSize).Result)
+            {
+                catalogSettings.NewProductsPageSize = 6;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsPageSize).Wait();
             }
 
-            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.NewProductsPagePageSizeOptions).Result)
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.NewProductsAllowCustomersToSelectPageSize).Result)
             {
-                catalogSettings.NewProductsPagePageSizeOptions = "6, 3, 9";
-                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsPagePageSizeOptions).Wait();
+                catalogSettings.NewProductsAllowCustomersToSelectPageSize = false;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsAllowCustomersToSelectPageSize).Wait();
             }
 
-            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.NewProductsFeedCount).Result)
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.NewProductsPageSizeOptions).Result)
             {
-                catalogSettings.NewProductsFeedCount = 6;
-                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsFeedCount).Wait();
+                catalogSettings.NewProductsPageSizeOptions = "6, 3, 9";
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsPageSizeOptions).Wait();
             }
 
             var storeInformationSettings = settingService.LoadSettingAsync<StoreInformationSettings>().Result;

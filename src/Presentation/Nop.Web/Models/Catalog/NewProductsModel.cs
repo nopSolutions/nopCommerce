@@ -5,7 +5,7 @@ namespace Nop.Web.Models.Catalog
     /// <summary>
     /// Represents a new products model
     /// </summary>
-    public partial record NewProductsModel : BaseNopEntityModel
+    public partial record NewProductsModel : BaseNopModel
     {
         #region Properties
 

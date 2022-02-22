@@ -315,7 +315,7 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> NewProducts(CatalogProductsCommand command)
         {
             if (!_catalogSettings.NewProductsEnabled)
-                return Content("");
+                return InvokeHttp404();
 
             var model = new NewProductsModel
             {
@@ -353,9 +353,7 @@ namespace Nop.Web.Controllers
             var items = new List<RssItem>();
 
             var storeId = store.Id;
-            var products = await _productService.GetProductsMarkedAsNewAsync(
-                storeId: storeId, 
-                pageSize: _catalogSettings.NewProductsFeedCount);
+            var products = await _productService.GetProductsMarkedAsNewAsync(storeId: storeId);
 
             foreach (var product in products)
             {

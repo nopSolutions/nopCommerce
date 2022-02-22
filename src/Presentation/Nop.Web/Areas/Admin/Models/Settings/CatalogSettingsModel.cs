@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
 using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -25,11 +25,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         #region Properties
 
         public int ActiveStoreScopeConfiguration { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage")]
         public bool AllowViewUnpublishedProductPage { get; set; }
         public bool AllowViewUnpublishedProductPage_OverrideForStore { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts")]
         public bool DisplayDiscontinuedMessageForUnpublishedProducts { get; set; }
         public bool DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore { get; set; }
@@ -147,13 +147,21 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool RecentlyViewedProductsEnabled { get; set; }
         public bool RecentlyViewedProductsEnabled_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsNumber")]
-        public int NewProductsNumber { get; set; }
-        public bool NewProductsNumber_OverrideForStore { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsEnabled")]
         public bool NewProductsEnabled { get; set; }
         public bool NewProductsEnabled_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsPageSize")]
+        public int NewProductsPageSize { get; set; }
+        public bool NewProductsPageSize_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsAllowCustomersToSelectPageSize")]
+        public bool NewProductsAllowCustomersToSelectPageSize { get; set; }
+        public bool NewProductsAllowCustomersToSelectPageSize_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions")]
+        public string NewProductsPageSizeOptions { get; set; }
+        public bool NewProductsPageSizeOptions_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.CompareProductsEnabled")]
         public bool CompareProductsEnabled { get; set; }
@@ -226,7 +234,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsAlsoPurchasedNumber")]
         public int ProductsAlsoPurchasedNumber { get; set; }
         public bool ProductsAlsoPurchasedNumber_OverrideForStore { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NumberOfProductTags")]
         public int NumberOfProductTags { get; set; }
         public bool NumberOfProductTags_OverrideForStore { get; set; }
@@ -266,7 +274,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IncludeFullDescriptionInCompareProducts")]
         public bool IncludeFullDescriptionInCompareProducts { get; set; }
         public bool IncludeFullDescriptionInCompareProducts_OverrideForStore { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay")]
         public int ManufacturersBlockItemsToDisplay { get; set; }
         public bool ManufacturersBlockItemsToDisplay_OverrideForStore { get; set; }
@@ -302,7 +310,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportProductSpecificationAttributes")]
         public bool ExportImportProductSpecificationAttributes { get; set; }
         public bool ExportImportProductSpecificationAttributes_OverrideForStore { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportProductCategoryBreadcrumb")]
         public bool ExportImportProductCategoryBreadcrumb { get; set; }
         public bool ExportImportProductCategoryBreadcrumb_OverrideForStore { get; set; }
@@ -374,7 +382,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering")]
         public bool EnableSpecificationAttributeFiltering { get; set; }
         public bool EnableSpecificationAttributeFiltering_OverrideForStore { get; set; }
-        
+
         public string PrimaryStoreCurrencyCode { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName")]
@@ -385,17 +393,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool AllowCustomersToSearchWithCategoryName { get; set; }
         public bool AllowCustomersToSearchWithCategoryName_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsPageAllowCustomersToSelectPageSize")]
-        public bool NewProductsPageAllowCustomersToSelectPageSize { get; set; }
-        public bool NewProductsPageAllowCustomersToSelectPageSize_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsPagePageSizeOptions")]
-        public string NewProductsPagePageSizeOptions { get; set; }
-        public bool NewProductsPagePageSizeOptions_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsFeedCount")]
-        public int NewProductsFeedCount { get; set; }
-        public bool NewProductsFeedCount_OverrideForStore { get; set; }
         #endregion
     }
 }

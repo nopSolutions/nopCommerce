@@ -21,14 +21,48 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             //do not use DI, because it produces exception on the installation process
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
+
             var languages = languageService.GetAllLanguagesAsync(true).Result;
             var languageId = languages
                 .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
                 .Select(lang => lang.Id).FirstOrDefault();
 
-            //use localizationService to add, update and delete localization resources
+            #region Delete locales
+
+            localizationService.DeleteLocaleResourcesAsync(new List<string>
+            {
+                //nothing yet
+            }).Wait();
+
+            #endregion
+
+            #region Rename locales
+
+            var localesToRename = new[]
+            {
+                //#3511
+                new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize" },
+                new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint" },
+            };
+
+            foreach (var lang in languages)
+            {
+                foreach (var locale in localesToRename)
+                {
+                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
+                    if (lsr is not null)
+                    {
+                        lsr.ResourceName = locale.NewName;
+                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
+                    }
+                }
+            }
+
+            #endregion
+
+            #region Add locales
+
             localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 //#3075
@@ -72,14 +106,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo.Hint"] = "The registration to date for the search.",
 
                 //#3511
-                ["Admin.Configuration.Settings.Catalog.NewProductsPageAllowCustomersToSelectPageSize"] = "'New products' page. Allow customers to select page size",
-                ["Admin.Configuration.Settings.Catalog.NewProductsPageAllowCustomersToSelectPageSize.Hint"] = "'New products' page. Check to allow customers to select the page size from a predefined list of options.",
-                ["Admin.Configuration.Settings.Catalog.NewProductsPagePageSizeOptions"] = "'New products' page. Page size options",
-                ["Admin.Configuration.Settings.Catalog.NewProductsPagePageSizeOptions.Hint"] = "'New products' page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.",
-                ["Admin.Configuration.Settings.Catalog.NewProductsFeedCount"] = "Number of products on 'New products' feed",
-                ["Admin.Configuration.Settings.Catalog.NewProductsFeedCount.Hint"] = "The number of products to include in the 'New products' feed.",
+                ["Admin.Configuration.Settings.Catalog.NewProductsAllowCustomersToSelectPageSize"] = "'New products' page. Allow customers to select page size",
+                ["Admin.Configuration.Settings.Catalog.NewProductsAllowCustomersToSelectPageSize.Hint"] = "'New products' page. Check to allow customers to select the page size from a predefined list of options.",
+                ["Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions"] = "'New products' page. Page size options",
+                ["Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions.Hint"] = "'New products' page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.",
 
             }, languageId).Wait();
+
+            #endregion
         }
 
         /// <summary>Collects the DOWN migration expressions</summary>
