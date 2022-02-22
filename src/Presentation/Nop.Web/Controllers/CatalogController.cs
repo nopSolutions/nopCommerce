@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -6,15 +8,18 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Catalog;
 
@@ -39,6 +44,7 @@ namespace Nop.Web.Controllers
         private readonly IProductTagService _productTagService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -63,6 +69,7 @@ namespace Nop.Web.Controllers
             IProductTagService productTagService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService,
             IVendorService vendorService,
             IWebHelper webHelper,
             IWorkContext workContext,
@@ -83,6 +90,7 @@ namespace Nop.Web.Controllers
             _productTagService = productTagService;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
             _vendorService = vendorService;
             _webHelper = webHelper;
             _workContext = workContext;
@@ -298,6 +306,75 @@ namespace Nop.Web.Controllers
             var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync();
 
             return View(model);
+        }
+
+        #endregion
+
+        #region New (recently added) products page
+
+        public virtual async Task<IActionResult> NewProducts(CatalogProductsCommand command)
+        {
+            if (!_catalogSettings.NewProductsEnabled)
+                return Content("");
+
+            var model = new NewProductsModel
+            {
+                CatalogProductsModel = await _catalogModelFactory.PrepareNewProductsModelAsync(command)
+            };
+
+            return View(model);
+        }
+
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        public virtual async Task<IActionResult> GetNewProducts(CatalogProductsCommand command)
+        {
+            if (!_catalogSettings.NewProductsEnabled)
+                return NotFound();
+
+            var model = await _catalogModelFactory.PrepareNewProductsModelAsync(command);
+
+            return PartialView("_ProductsInGridOrLines", model);
+        }
+
+        [CheckLanguageSeoCode(true)]
+        public virtual async Task<IActionResult> NewProductsRss()
+        {
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var feed = new RssFeed(
+                $"{await _localizationService.GetLocalizedAsync(store, x => x.Name)}: New products",
+                "Information about products",
+                new Uri(_webHelper.GetStoreLocation()),
+                DateTime.UtcNow);
+
+            if (!_catalogSettings.NewProductsEnabled)
+                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
+
+            var items = new List<RssItem>();
+
+            var storeId = store.Id;
+            var products = await _productService.GetProductsMarkedAsNewAsync(
+                storeId: storeId, 
+                pageSize: _catalogSettings.NewProductsFeedCount);
+
+            foreach (var product in products)
+            {
+                var productUrl = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) }, _webHelper.GetCurrentRequestProtocol());
+                var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
+                var productDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription);
+                var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{store.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);
+                items.Add(item);
+                //uncomment below if you want to add RSS enclosure for pictures
+                //var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+                //if (picture != null)
+                //{
+                //    var imageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize);
+                //    item.ElementExtensions.Add(new XElement("enclosure", new XAttribute("type", "image/jpeg"), new XAttribute("url", imageUrl), new XAttribute("length", picture.PictureBinary.Length)));
+                //}
+
+            }
+            feed.Items = items;
+            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
         #endregion

@@ -37,6 +37,25 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(catalogSettings, settings => settings.AllowCustomersToSearchWithCategoryName).Wait();
             }
 
+            //#3511
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.NewProductsPageAllowCustomersToSelectPageSize).Result)
+            {
+                catalogSettings.NewProductsPageAllowCustomersToSelectPageSize = true;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsPageAllowCustomersToSelectPageSize).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.NewProductsPagePageSizeOptions).Result)
+            {
+                catalogSettings.NewProductsPagePageSizeOptions = "6, 3, 9";
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsPagePageSizeOptions).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.NewProductsFeedCount).Result)
+            {
+                catalogSettings.NewProductsFeedCount = 6;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsFeedCount).Wait();
+            }
+
             var storeInformationSettings = settingService.LoadSettingAsync<StoreInformationSettings>().Result;
 
             //#3997

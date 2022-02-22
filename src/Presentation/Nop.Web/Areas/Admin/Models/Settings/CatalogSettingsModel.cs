@@ -385,6 +385,17 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool AllowCustomersToSearchWithCategoryName { get; set; }
         public bool AllowCustomersToSearchWithCategoryName_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsPageAllowCustomersToSelectPageSize")]
+        public bool NewProductsPageAllowCustomersToSelectPageSize { get; set; }
+        public bool NewProductsPageAllowCustomersToSelectPageSize_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsPagePageSizeOptions")]
+        public string NewProductsPagePageSizeOptions { get; set; }
+        public bool NewProductsPagePageSizeOptions_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsFeedCount")]
+        public int NewProductsFeedCount { get; set; }
+        public bool NewProductsFeedCount_OverrideForStore { get; set; }
         #endregion
     }
 }

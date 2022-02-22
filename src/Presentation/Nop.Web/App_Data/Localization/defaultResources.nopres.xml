@@ -5946,11 +5946,29 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsEnabled.Hint">
     <Value>Check to enable the 'New products' page in your store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsFeedCount">
+    <Value>Number of products on 'New products' feed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsFeedCount.Hint">
+    <Value>The number of products to include in the 'New products' feed.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumber">
     <Value>Number of products on 'New products' page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint">
     <Value>The number of products to display when 'New products' page is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageAllowCustomersToSelectPageSize">
+      <Value>'New products' page. Allow customers to select page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageAllowCustomersToSelectPageSize.Hint">
+      <Value>'New products' page. Check to allow customers to select the page size from a predefined list of options.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPagePageSizeOptions">
+      <Value>'New products' page. Page size options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPagePageSizeOptions.Hint">
+      <Value>'New products' page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NotifyCustomerAboutProductReviewReply">
     <Value>Notify customer about product review reply</Value>

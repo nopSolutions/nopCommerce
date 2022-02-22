@@ -118,7 +118,7 @@ namespace Nop.Web.Infrastructure
             //new products
             endpointRouteBuilder.MapControllerRoute(name: "NewProducts",
                 pattern: $"{lang}/newproducts/",
-                defaults: new { controller = "Product", action = "NewProducts" });
+                defaults: new { controller = "Catalog", action = "NewProducts" });
 
             //blog
             endpointRouteBuilder.MapControllerRoute(name: "Blog",
@@ -463,7 +463,7 @@ namespace Nop.Web.Infrastructure
             //new RSS (file result)
             endpointRouteBuilder.MapControllerRoute(name: "NewProductsRSS",
                 pattern: $"newproducts/rss",
-                defaults: new { controller = "Product", action = "NewProductsRss" });
+                defaults: new { controller = "Catalog", action = "NewProductsRss" });
 
             //get state list by country ID (AJAX)
             endpointRouteBuilder.MapControllerRoute(name: "GetStatesByCountryId", 
