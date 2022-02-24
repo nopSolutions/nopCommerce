@@ -19,14 +19,12 @@
     $(document).ready(function() {
         @if (!Model.IsLoggedInAsVendor)
         {
-            <text>$("#@Html.IdFor(model => model.ShowOnHomepage)").click(toggleShowOnHomepage);</text>
+            <text>
+            $("#@Html.IdFor(model => model.ShowOnHomepage)").click(toggleShowOnHomepage);
+            toggleShowOnHomepage();
+            </text>
         }
         $("#@Html.IdFor(model => model.ProductTypeId)").change(toggleProductType);
-
-        @if (!Model.IsLoggedInAsVendor)
-        {
-            <text>toggleShowOnHomepage();</text>
-        }
         toggleProductType();
     });
 
