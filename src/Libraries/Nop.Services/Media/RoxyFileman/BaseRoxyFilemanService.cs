@@ -113,7 +113,7 @@ namespace Nop.Services.Media.RoxyFileman
             var fileType = "file";
 
             fileExtension = fileExtension.ToLowerInvariant();
-            if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif" || fileExtension == ".webp")
+            if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif" || fileExtension == ".webp" || fileExtension == ".svg")
                 fileType = "image";
 
             if (fileExtension == ".swf" || fileExtension == ".flv")
