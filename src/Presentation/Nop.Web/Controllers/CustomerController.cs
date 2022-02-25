@@ -1644,7 +1644,15 @@ namespace Nop.Web.Controllers
                 if (changePasswordResult.Success)
                 {
                     _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
-                    return string.IsNullOrEmpty(returnUrl)  ? View(model) : new RedirectResult(returnUrl);
+
+                    if (string.IsNullOrEmpty(returnUrl))
+                        return View(model);
+
+                    //prevent open redirection attack
+                    if (!Url.IsLocalUrl(returnUrl))
+                        returnUrl = Url.RouteUrl("Homepage");
+
+                    return new RedirectResult(returnUrl);
                 }
 
                 //errors
