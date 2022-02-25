@@ -1057,6 +1057,28 @@ namespace Nop.Services.Customers
                     await ApplyGiftCardCouponCodeAsync(customer, existingCouponCode);
         }
 
+        /// <summary>
+        /// Returns a list of ids of not existing customers
+        /// </summary>
+        /// <param name="ids">The ids of the customers to check</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of ids not existing customers
+        /// </returns>
+        public virtual async Task<int[]> GetNotExistingCustomerIdsAsync(int[] ids)
+        {
+            if (ids == null)
+                throw new ArgumentNullException(nameof(ids));
+
+            var query = _customerRepository.Table;
+            var queryFilter = ids.Distinct().ToArray();
+            var filter = await query.Select(a => a.Id)
+                .Where(m => queryFilter.Contains(m))
+                .ToListAsync();
+
+            return queryFilter.Except(filter).ToArray();
+        }
+
         #endregion
 
         #region Customer roles

@@ -1696,6 +1696,28 @@ namespace Nop.Services.Catalog
                 .AnyAsync(p => productIds.Contains(p.Id) && p.IsRecurring);
         }
 
+        /// <summary>
+        /// Returns a list of SKUs of not existing products
+        /// </summary>
+        /// <param name="skus">The SKUs of the products to check</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of SKUs not existing products
+        /// </returns>
+        public virtual async Task<string[]> GetNotExistingProductSkusAsync(string[] skus)
+        {
+            if (skus == null)
+                throw new ArgumentNullException(nameof(skus));
+
+            var query = _productRepository.Table;
+            var queryFilter = skus.Distinct().ToArray();
+            var filter = await query.Select(a => a.Sku)
+                .Where(m => queryFilter.Contains(m))
+                .ToListAsync();
+
+            return queryFilter.Except(filter).ToArray();
+        }
+
         #endregion
 
         #region Inventory management methods

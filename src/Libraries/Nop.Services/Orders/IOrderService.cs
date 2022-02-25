@@ -169,6 +169,16 @@ namespace Nop.Services.Orders
         /// </returns>
         Task<bool> HasItemsToDeliverAsync(Order order);
 
+        /// <summary>
+        /// Get orders by guids
+        /// </summary>
+        /// <param name="orderGuids">Order guids</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the orders
+        /// </returns>
+        Task<IList<Order>> GetOrdersByGuidAsync(Guid[] orderGuids);
+
         #endregion
 
         #region Orders items

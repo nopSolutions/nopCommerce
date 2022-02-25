@@ -327,6 +327,16 @@ namespace Nop.Services.Customers
         /// </returns>
         Task RemoveGiftCardCouponCodeAsync(Customer customer, string couponCode);
 
+        /// <summary>
+        /// Returns a list of ids of not existing customers
+        /// </summary>
+        /// <param name="ids">The ids of the customers to check</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of ids not existing customers
+        /// </returns>
+        Task<int[]> GetNotExistingCustomerIdsAsync(int[] ids);
+
         #endregion
 
         #region Customer roles
