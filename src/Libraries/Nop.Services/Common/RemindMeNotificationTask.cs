@@ -1,15 +1,18 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Expo.Server.Client;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Common.PushApiTask;
+using Nop.Services.Companies;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Tasks;
+using TimeZoneConverter;
 
 namespace Nop.Services.Common
 {
@@ -26,6 +29,8 @@ namespace Nop.Services.Common
         private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
         private readonly ILocalizationService _localizationService;
+        private readonly ICompanyService _companyService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
@@ -36,7 +41,9 @@ namespace Nop.Services.Common
             ICustomerService customerService,
             ISettingService settingService,
             IOrderService orderService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            ICompanyService companyService,
+            ICustomerActivityService customerActivityService)
         {
             _dateTimeHelper = dateTimeHelper;
             _catalogSettings = catalogSettings;
@@ -44,6 +51,8 @@ namespace Nop.Services.Common
             _settingService = settingService;
             _orderService = orderService;
             _localizationService = localizationService;
+            _companyService = companyService;
+            _customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -58,7 +67,7 @@ namespace Nop.Services.Common
             var startingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.StartingTimeOfRemindMeTask");
             if (startingHour == 0)
                 startingHour = 11;
-                
+
             var customers = await _customerService.GetAllPushNotificationCustomersAsync(isRemindMeNotification: true);
             if (customers.Count > 0)
             {
@@ -66,12 +75,15 @@ namespace Nop.Services.Common
                 var osIds = new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing };
                 foreach (var customer in customers)
                 {
-                    var customerTime = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
+                    var company = await _companyService.GetCompanyByCustomerIdAsync(customer.Id);
+                    var timezoneInfo = TZConvert.GetTimeZoneInfo(company.TimeZone);
+                    var customerTime = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, timezoneInfo);
                     if (customerTime.Hour == startingHour)
                     {
                         var order = await _orderService.SearchOrdersAsync(customerId: customer.Id, createdToUtc: currentDate, osIds: osIds);
                         if (order.Count == 0)
                         {
+                            await _customerActivityService.InsertActivityAsync("User Remander",string.Format("Rmand user {0}", customer.Email), customer);
                             if (!string.IsNullOrEmpty(customer.PushToken))
                             {
                                 var expoSDKClient = new PushApiTaskClient();
@@ -88,7 +100,7 @@ namespace Nop.Services.Common
                 }
             }
         }
-        
+
         #endregion
     }
 }
