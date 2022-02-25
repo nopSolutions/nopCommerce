@@ -1098,6 +1098,9 @@
   <LocaleResource Name="ActivityLog.ImportManufacturers">
     <Value>{0} manufacturers were imported</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportOrders">
+    <Value>{0} orders were imported</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportProducts">
     <Value>{0} products were imported</Value>
   </LocaleResource>
@@ -12957,6 +12960,15 @@
   <LocaleResource Name="Admin.Orders.Fields.VoidOffline">
     <Value>Void (Offline)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Import.CustomersDontExist">
+    <Value>Customers with the following guids don't exist: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Import.ProductsDontExist">
+    <Value>Products with the following SKUs don't exist: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Imported">
+    <Value>Orders have been imported successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Info">
     <Value>Info</Value>
   </LocaleResource>
@@ -12995,6 +13007,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.GoDirectlyToNumber.Hint">
     <Value>Go directly to order #.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.ImportFromExcelTip">
+    <Value>Imported orders are distinguished by order guid. If the order guid already exists, then its corresponding information will be updated.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.OrderNotes">
     <Value>Order notes</Value>
