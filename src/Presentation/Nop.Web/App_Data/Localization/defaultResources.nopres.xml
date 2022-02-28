@@ -3061,7 +3061,7 @@
     <Value>Low stock activity</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockActivity.Hint">
-    <Value>Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'. Activation of the action will occur only after an order is placed.</Value>
+    <Value>Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'. Activation of the action will occur only after an order is placed. If the value is 'Nothing', the product detail page will display a low-stock message in public store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod">
     <Value>Inventory method</Value>
@@ -18560,6 +18560,12 @@
   </LocaleResource>
   <LocaleResource Name="Products.Availability.InStockWithQuantity">
     <Value>{0} in stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.LowStock">
+    <Value>Low stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.LowStockWithQuantity">
+    <Value>{0} low stock</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Availability.OutOfStock">
     <Value>Out of stock</Value>

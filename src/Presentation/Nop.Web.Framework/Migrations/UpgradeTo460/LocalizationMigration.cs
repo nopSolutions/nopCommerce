@@ -61,7 +61,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             #endregion
 
-            #region Add locales
+            #region Add or update locales
 
             localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
@@ -110,6 +110,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.Settings.Catalog.NewProductsAllowCustomersToSelectPageSize.Hint"] = "'New products' page. Check to allow customers to select the page size from a predefined list of options.",
                 ["Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions"] = "'New products' page. Page size options",
                 ["Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions.Hint"] = "'New products' page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.",
+
+                //#5089
+                ["Products.Availability.LowStock"] = "Low stock",
+                ["Products.Availability.LowStockWithQuantity"] = "{0} low stock",
+                ["Admin.Catalog.Products.Fields.LowStockActivity.Hint"] = "Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'. Activation of the action will occur only after an order is placed. If the value is 'Nothing', the product detail page will display a low-stock message in public store.",
 
             }, languageId).Wait();
 
