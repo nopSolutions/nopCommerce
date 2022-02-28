@@ -7447,7 +7447,7 @@
       <Value>Footer custom HTML</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml.Hint">
-      <Value>Enter custom HTML here for footer section</Value>
+      <Value>Enter custom HTML here for footer section.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription">
     <Value>Generate product META description</Value>
@@ -7459,7 +7459,7 @@
       <Value>Header custom HTML</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml.Hint">
-      <Value>Enter custom HTML here for header section</Value>
+      <Value>Enter custom HTML here for header section.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageDescription">
     <Value>Home page meta description</Value>

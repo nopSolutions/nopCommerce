@@ -774,20 +774,20 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var storeInformationSettings = await _settingService.LoadSettingAsync<StoreInformationSettings>(storeId);
+            var commonSettings = await _settingService.LoadSettingAsync<CommonSettings>(storeId);
 
             //fill in model values from the entity
             var model = new CustomHtmlSettingsModel
             {
-                HeaderCustomHtml = storeInformationSettings.HeaderCustomHtml,
-                FooterCustomHtml = storeInformationSettings.FooterCustomHtml
+                HeaderCustomHtml = commonSettings.HeaderCustomHtml,
+                FooterCustomHtml = commonSettings.FooterCustomHtml
             };
 
             //fill in overridden values
             if (storeId > 0)
             {
-                model.HeaderCustomHtml_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.HeaderCustomHtml, storeId);
-                model.FooterCustomHtml_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.FooterCustomHtml, storeId);
+                model.HeaderCustomHtml_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.HeaderCustomHtml, storeId);
+                model.FooterCustomHtml_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.FooterCustomHtml, storeId);
             }
 
             return model;

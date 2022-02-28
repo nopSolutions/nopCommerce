@@ -10,7 +10,6 @@
 @inject IPermissionService permissionService
 @inject SeoSettings seoSettings
 @inject AppSettings appSettings
-@inject StoreInformationSettings storeInformationSettings
 
 @{
 
@@ -72,7 +71,7 @@
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->
     
     <!--header custom HTML-->
-    @Html.Raw(storeInformationSettings.HeaderCustomHtml)
+    @Html.Raw(commonSettings.HeaderCustomHtml)
 </head>
 <body>
     @RenderBody()
@@ -81,6 +80,6 @@
     @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
     
      <!--footer custom HTML-->
-    @Html.Raw(storeInformationSettings.FooterCustomHtml)
+    @Html.Raw(commonSettings.FooterCustomHtml)
 </body>
 </html>

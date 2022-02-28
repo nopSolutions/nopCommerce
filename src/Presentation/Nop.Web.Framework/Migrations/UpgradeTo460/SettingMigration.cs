@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -44,17 +45,19 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(storeInformationSettings, settings => settings.InstagramLink).Wait();
             }
 
+            var commonSettings = settingService.LoadSettingAsync<CommonSettings>().Result;
+
             //#5802
-            if (!settingService.SettingExistsAsync(storeInformationSettings, settings => settings.HeaderCustomHtml).Result)
+            if (!settingService.SettingExistsAsync(commonSettings, settings => settings.HeaderCustomHtml).Result)
             {
-                storeInformationSettings.HeaderCustomHtml = "";
-                settingService.SaveSettingAsync(storeInformationSettings, settings => settings.HeaderCustomHtml).Wait();
+                commonSettings.HeaderCustomHtml = "";
+                settingService.SaveSettingAsync(commonSettings, settings => settings.HeaderCustomHtml).Wait();
             }
 
-            if (!settingService.SettingExistsAsync(storeInformationSettings, settings => settings.FooterCustomHtml).Result)
+            if (!settingService.SettingExistsAsync(commonSettings, settings => settings.FooterCustomHtml).Result)
             {
-                storeInformationSettings.FooterCustomHtml = "";
-                settingService.SaveSettingAsync(storeInformationSettings, settings => settings.FooterCustomHtml).Wait();
+                commonSettings.FooterCustomHtml = "";
+                settingService.SaveSettingAsync(commonSettings, settings => settings.FooterCustomHtml).Wait();
             }
         }
 
