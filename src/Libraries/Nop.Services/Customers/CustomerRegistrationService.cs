@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Events;
@@ -25,6 +27,7 @@ namespace Nop.Services.Customers
         #region Fields
 
         private readonly CustomerSettings _customerSettings;
+        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAuthenticationService _authenticationService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
@@ -39,6 +42,7 @@ namespace Nop.Services.Customers
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
+        private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -48,6 +52,7 @@ namespace Nop.Services.Customers
         #region Ctor
 
         public CustomerRegistrationService(CustomerSettings customerSettings,
+            IActionContextAccessor actionContextAccessor,
             IAuthenticationService authenticationService,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
@@ -62,11 +67,13 @@ namespace Nop.Services.Customers
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
             IStoreService storeService,
+            IUrlHelperFactory urlHelperFactory,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             RewardPointsSettings rewardPointsSettings)
         {
             _customerSettings = customerSettings;
+            _actionContextAccessor = actionContextAccessor;
             _authenticationService = authenticationService;
             _customerActivityService = customerActivityService;
             _customerService = customerService;
@@ -81,6 +88,7 @@ namespace Nop.Services.Customers
             _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
             _storeService = storeService;
+            _urlHelperFactory = urlHelperFactory;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
             _rewardPointsSettings = rewardPointsSettings;
@@ -434,8 +442,10 @@ namespace Nop.Services.Customers
             await _customerActivityService.InsertActivityAsync(customer, "PublicStore.Login",
                 await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login"), customer);
 
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
             //redirect to the return URL if it's specified
-            if (!string.IsNullOrEmpty(returnUrl))
+            if (!string.IsNullOrEmpty(returnUrl) && urlHelper.IsLocalUrl(returnUrl))
                 return new RedirectResult(returnUrl);
 
             return new RedirectToRouteResult("Homepage", null);
