@@ -77,12 +77,18 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 ["Footer.FollowUs.Instagram"] = "Instagram",
 
+                //#5802
+                ["Admin.Configuration.Settings.GeneralCommon.BlockTitle.CustomHtml"] = "Custom HTML",
+                ["Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml"] = "Footer custom HTML",
+                ["Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml.Hint"] = "Enter custom HTML here for footer section.",
+                ["Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml"] = "Header custom HTML",
+                ["Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml.Hint"] = "Enter custom HTML here for header section.",
+
                 //#5604
                 ["Admin.Configuration.Settings.Order.ShowProductThumbnailInOrderDetailsPage"] = "Show product thumbnail in order details page",
                 ["Admin.Configuration.Settings.Order.ShowProductThumbnailInOrderDetailsPage.Hint"] = "Check to show product thumbnail in order details page.",
                 ["Admin.Configuration.Settings.Media.OrderThumbPictureSize"] = "Order thumbnail image size",
                 ["Admin.Configuration.Settings.Media.OrderThumbPictureSize.Hint"] = "The default size (pixels) for product thumbnail images on the order details page.",
-
                 ["Order.Product(s).Image"] = "Image",
 
                 //#3777

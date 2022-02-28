@@ -7131,6 +7131,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common">
     <Value>Common</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.CustomHtml">
+      <Value>Custom HTML</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons">
     <Value>Favicon and app icons</Value>
   </LocaleResource>
@@ -7476,11 +7479,23 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons.Hint">
     <Value>Upload single icon or archive with favicon and app icons for different operating systems and devices. You can see an example of the favicon and app icons archive in /icons/samples in the root of the site. Your favicon and app icons path is "/icons/icons_{0}"</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml">
+      <Value>Footer custom HTML</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml.Hint">
+      <Value>Enter custom HTML here for footer section.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription">
     <Value>Generate product META description</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription.Hint">
     <Value>When enabled, product META descriptions will be automatically generated (if not specified on the product details page) based on product short description.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml">
+      <Value>Header custom HTML</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml.Hint">
+      <Value>Enter custom HTML here for header section.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageDescription">
     <Value>Home page meta description</Value>

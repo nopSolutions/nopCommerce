@@ -1485,6 +1485,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 commonSettings.EnableHtmlMinification = model.MinificationSettings.EnableHtmlMinification;
                 //use response compression
                 commonSettings.UseResponseCompression = model.MinificationSettings.UseResponseCompression;
+                //custom header and footer HTML
+                commonSettings.HeaderCustomHtml = model.CustomHtmlSettings.HeaderCustomHtml;
+                commonSettings.FooterCustomHtml = model.CustomHtmlSettings.FooterCustomHtml;
 
                 //we do not clear cache after each setting update.
                 //this behavior can increase performance because cached settings will not be cleared 
@@ -1512,6 +1515,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(sitemapSettings, x => x.SitemapIncludeTopics, model.SitemapSettings.SitemapIncludeTopics_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.EnableHtmlMinification, model.MinificationSettings.EnableHtmlMinification_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.UseResponseCompression, model.MinificationSettings.UseResponseCompression_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.HeaderCustomHtml, model.CustomHtmlSettings.HeaderCustomHtml_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.FooterCustomHtml, model.CustomHtmlSettings.FooterCustomHtml_OverrideForStore, storeScope, false);
 
                 //now clear settings cache
                 await _settingService.ClearCacheAsync();

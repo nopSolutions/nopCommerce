@@ -68,11 +68,15 @@
     @NopHtml.GenerateScripts(ResourceLocation.Head)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->
+    
+    @Html.Raw(commonSettings.HeaderCustomHtml)
 </head>
 <body>
     @RenderBody()
 
     @NopHtml.GenerateScripts(ResourceLocation.Footer)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
+    
+    @Html.Raw(commonSettings.FooterCustomHtml)
 </body>
 </html>

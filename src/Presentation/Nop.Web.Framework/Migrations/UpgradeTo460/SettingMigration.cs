@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
@@ -70,6 +71,21 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             {
                 storeInformationSettings.InstagramLink = "";
                 settingService.SaveSettingAsync(storeInformationSettings, settings => settings.InstagramLink).Wait();
+            }
+
+            var commonSettings = settingService.LoadSettingAsync<CommonSettings>().Result;
+
+            //#5802
+            if (!settingService.SettingExistsAsync(commonSettings, settings => settings.HeaderCustomHtml).Result)
+            {
+                commonSettings.HeaderCustomHtml = "";
+                settingService.SaveSettingAsync(commonSettings, settings => settings.HeaderCustomHtml).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(commonSettings, settings => settings.FooterCustomHtml).Result)
+            {
+                commonSettings.FooterCustomHtml = "";
+                settingService.SaveSettingAsync(commonSettings, settings => settings.FooterCustomHtml).Wait();
             }
 
             var orderSettings = settingService.LoadSettingAsync<OrderSettings>().Result;
