@@ -22,6 +22,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             DisplayDefaultFooterItemSettings = new DisplayDefaultFooterItemSettingsModel();
             AdminAreaSettings = new AdminAreaSettingsModel();
             MinificationSettings = new MinificationSettingsModel();
+            CustomHtmlSettings = new CustomHtmlSettingsModel();
         }
 
         #endregion
@@ -53,6 +54,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public MinificationSettingsModel MinificationSettings { get; set; }
 
         public CustomHtmlSettingsModel CustomHtmlSettings { get; set; }
+        
         #endregion
     }
 }
