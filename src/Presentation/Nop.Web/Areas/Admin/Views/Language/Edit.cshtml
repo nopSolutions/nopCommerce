@@ -38,7 +38,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.LanguageDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

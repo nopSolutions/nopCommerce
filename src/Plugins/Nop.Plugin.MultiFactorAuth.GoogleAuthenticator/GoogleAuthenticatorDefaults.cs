@@ -8,17 +8,6 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
     public class GoogleAuthenticatorDefaults
     {
         /// <summary>
-        /// Gets a name of the view component to display GoogleAuthenticator settings
-        /// </summary>
-        public const string VIEW_COMPONENT_NAME = "GoogleAuthenticator.Auth";
-
-        /// <summary>
-        /// Gets a name of the view component to verification page
-        /// </summary>
-        public const string VERIFICATION_VIEW_COMPONENT_NAME = "GoogleAuthenticator.Verify";
-
-
-        /// <summary>
         /// Gets a plugin system name
         /// </summary>
         public static string SystemName = "MultiFactorAuth.GoogleAuthenticator";

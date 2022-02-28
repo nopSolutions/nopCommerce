@@ -10,6 +10,7 @@ using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Plugin.Payments.PayPalStandard.Components;
 using Nop.Plugin.Payments.PayPalStandard.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -554,12 +555,12 @@ namespace Nop.Plugin.Payments.PayPalStandard
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store ("payment info" checkout step)
+        /// Gets a type of a view component for displaying plugin in public store ("payment info" checkout step)
         /// </summary>
-        /// <returns>View component name</returns>
-        public string GetPublicViewComponentName()
+        /// <returns>View component type</returns>
+        public Type GetPublicViewComponent()
         {
-            return "PaymentPayPalStandard";
+            return typeof(PaymentPayPalStandardViewComponent);
         }
 
         /// <summary>

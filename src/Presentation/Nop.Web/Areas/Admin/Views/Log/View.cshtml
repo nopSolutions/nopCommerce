@@ -21,7 +21,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LogDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.LogDetailsButtons, additionalData = Model })
         </div>
     </div>
 

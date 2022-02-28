@@ -30,6 +30,7 @@ using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
@@ -51,6 +52,7 @@ namespace Nop.Services.ExportImport
 
         private readonly AddressSettings _addressSettings;
         private readonly CatalogSettings _catalogSettings;
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly ForumSettings _forumSettings;
@@ -95,6 +97,7 @@ namespace Nop.Services.ExportImport
 
         public ExportManager(AddressSettings addressSettings,
             CatalogSettings catalogSettings,
+            ICustomerActivityService customerActivityService,
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
             ForumSettings forumSettings,
@@ -135,6 +138,7 @@ namespace Nop.Services.ExportImport
         {
             _addressSettings = addressSettings;
             _catalogSettings = catalogSettings;
+            _customerActivityService = customerActivityService;
             _customerSettings = customerSettings;
             _dateTimeSettings = dateTimeSettings;
             _addressService = addressService;
@@ -179,11 +183,13 @@ namespace Nop.Services.ExportImport
         #region Utilities
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task WriteCategoriesAsync(XmlWriter xmlWriter, int parentCategoryId)
+        protected virtual async Task<int> WriteCategoriesAsync(XmlWriter xmlWriter, int parentCategoryId, int totalCategories)
         {
             var categories = await _categoryService.GetAllCategoriesByParentCategoryIdAsync(parentCategoryId, true);
             if (categories == null || !categories.Any())
-                return;
+                return totalCategories;
+
+            totalCategories += categories.Count;
 
             foreach (var category in categories)
             {
@@ -235,10 +241,12 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteEndElementAsync();
 
                 await xmlWriter.WriteStartElementAsync("SubCategories");
-                await WriteCategoriesAsync(xmlWriter, category.Id);
+                totalCategories = await WriteCategoriesAsync(xmlWriter, category.Id, totalCategories);
                 await xmlWriter.WriteEndElementAsync();
                 await xmlWriter.WriteEndElementAsync();
             }
+
+            return totalCategories;
         }
 
         /// <summary>
@@ -735,9 +743,7 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<object> GetCustomCustomerAttributesAsync(Customer customer)
         {
-            var selectedCustomerAttributes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
-            
-            return await _customerAttributeFormatter.FormatAttributesAsync(selectedCustomerAttributes, ";");
+            return await _customerAttributeFormatter.FormatAttributesAsync(customer.CustomCustomerAttributesXML, ";");
         }
 
         #endregion
@@ -821,6 +827,10 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteEndDocumentAsync();
             await xmlWriter.FlushAsync();
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportManufacturers",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportManufacturers"), manufacturers.Count));
+
             return stringWriter.ToString();
         }
 
@@ -854,6 +864,10 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Manufacturer>("DisplayOrder", p => p.DisplayOrder)
             }, _catalogSettings);
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportManufacturers",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportManufacturers"), manufacturers.Count()));
+
             return await manager.ExportToXlsxAsync(manufacturers);
         }
 
@@ -878,10 +892,14 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteStartDocumentAsync();
             await xmlWriter.WriteStartElementAsync("Categories");
             await xmlWriter.WriteAttributeStringAsync("Version", NopVersion.CURRENT_VERSION);
-            await WriteCategoriesAsync(xmlWriter, 0);
+            var totalCategories = await WriteCategoriesAsync(xmlWriter, 0, 0);
             await xmlWriter.WriteEndElementAsync();
             await xmlWriter.WriteEndDocumentAsync();
             await xmlWriter.FlushAsync();
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportCategories",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportCategories"), totalCategories));
 
             return stringWriter.ToString();
         }
@@ -929,6 +947,10 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Category>("Published", p => p.Published, await IgnoreExportCategoryPropertyAsync()),
                 new PropertyByName<Category>("DisplayOrder", p => p.DisplayOrder)
             }, _catalogSettings);
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportCategories",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportCategories"), categories.Count));
 
             return await manager.ExportToXlsxAsync(categories);
         }
@@ -1264,6 +1286,10 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteEndDocumentAsync();
             await xmlWriter.FlushAsync();
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportProducts",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportProducts"), products.Count));
+
             return stringWriter.ToString();
         }
 
@@ -1447,6 +1473,10 @@ namespace Nop.Services.ExportImport
             if (!_catalogSettings.ExportImportProductAttributes && !_catalogSettings.ExportImportProductSpecificationAttributes)
                 return await new PropertyManager<Product>(properties, _catalogSettings).ExportToXlsxAsync(productList);
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportProducts",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportProducts"), productList.Count));
+
             if (productAdvancedMode || _productEditorSettings.ProductAttributes)
                 return await ExportProductsToXlsxWithAttributesAsync(properties, productList);
 
@@ -1591,6 +1621,10 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteEndDocumentAsync();
             await xmlWriter.FlushAsync();
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportOrders",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportOrders"), orders.Count));
+
             return stringWriter.ToString();
         }
 
@@ -1678,6 +1712,10 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("ShippingFaxNumber", async p => (await orderAddress(p))?.FaxNumber ?? string.Empty)
             };
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportOrders",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportOrders"), orders.Count));
+
             return _orderSettings.ExportWithProducts
                 ? await ExportOrderToXlsxWithProductsAsync(properties, orders)
                 : await new PropertyManager<Order>(properties, _catalogSettings).ExportToXlsxAsync(orders);
@@ -1714,7 +1752,7 @@ namespace Nop.Services.ExportImport
 
             async Task<object> getCountry(Customer customer)
             {
-                var countryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                var countryId = customer.CountryId;
 
                 if (!_catalogSettings.ExportImportRelatedEntitiesByName)
                     return countryId;
@@ -1726,7 +1764,7 @@ namespace Nop.Services.ExportImport
 
             async Task<object> getStateProvince(Customer customer)
             {
-                var stateProvinceId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
+                var stateProvinceId = customer.StateProvinceId;
 
                 if (!_catalogSettings.ExportImportRelatedEntitiesByName)
                     return stateProvinceId;
@@ -1734,16 +1772,6 @@ namespace Nop.Services.ExportImport
                 var stateProvince = await _stateProvinceService.GetStateProvinceByIdAsync(stateProvinceId);
 
                 return stateProvince?.Name ?? string.Empty;
-            }
-
-            async Task<object> getVatNumberStatus(Customer customer)
-            {
-                var vatNumberStatusId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
-
-                if (!_catalogSettings.ExportImportRelatedEntitiesByName)
-                    return vatNumberStatusId;
-
-                return CommonHelper.ConvertEnum(((VatNumberStatus)vatNumberStatusId).ToString());
             }
 
             //property manager 
@@ -1769,27 +1797,35 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("IsVendor", async p => await _customerService.IsVendorAsync(p)),
                 new PropertyByName<Customer>("CreatedOnUtc", p => p.CreatedOnUtc),
                 //attributes
-                new PropertyByName<Customer>("FirstName", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.FirstNameAttribute), !_customerSettings.FirstNameEnabled),
-                new PropertyByName<Customer>("LastName", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.LastNameAttribute), !_customerSettings.LastNameEnabled),
-                new PropertyByName<Customer>("Gender", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.GenderAttribute), !_customerSettings.GenderEnabled),
-                new PropertyByName<Customer>("Company", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.CompanyAttribute), !_customerSettings.CompanyEnabled),
-                new PropertyByName<Customer>("StreetAddress", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.StreetAddressAttribute), !_customerSettings.StreetAddressEnabled),
-                new PropertyByName<Customer>("StreetAddress2", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.StreetAddress2Attribute), !_customerSettings.StreetAddress2Enabled),
-                new PropertyByName<Customer>("ZipPostalCode", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.ZipPostalCodeAttribute), !_customerSettings.ZipPostalCodeEnabled),
-                new PropertyByName<Customer>("City", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.CityAttribute), !_customerSettings.CityEnabled),
-                new PropertyByName<Customer>("County", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.CountyAttribute), !_customerSettings.CountyEnabled),
+                new PropertyByName<Customer>("FirstName", p => p.FirstName, !_customerSettings.FirstNameEnabled),
+                new PropertyByName<Customer>("LastName", p => p.LastName, !_customerSettings.LastNameEnabled),
+                new PropertyByName<Customer>("Gender", p => p.Gender, !_customerSettings.GenderEnabled),
+                new PropertyByName<Customer>("Company", p => p.Company, !_customerSettings.CompanyEnabled),
+                new PropertyByName<Customer>("StreetAddress", p => p.StreetAddress, !_customerSettings.StreetAddressEnabled),
+                new PropertyByName<Customer>("StreetAddress2", p => p.StreetAddress2, !_customerSettings.StreetAddress2Enabled),
+                new PropertyByName<Customer>("ZipPostalCode", p => p.ZipPostalCode, !_customerSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Customer>("City", p => p.City, !_customerSettings.CityEnabled),
+                new PropertyByName<Customer>("County", p => p.County, !_customerSettings.CountyEnabled),
                 new PropertyByName<Customer>("Country", getCountry, !_customerSettings.CountryEnabled),
                 new PropertyByName<Customer>("StateProvince", getStateProvince, !_customerSettings.StateProvinceEnabled),
-                new PropertyByName<Customer>("Phone", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.PhoneAttribute), !_customerSettings.PhoneEnabled),
-                new PropertyByName<Customer>("Fax", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.FaxAttribute), !_customerSettings.FaxEnabled),
-                new PropertyByName<Customer>("VatNumber", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.VatNumberAttribute)),
-                new PropertyByName<Customer>("VatNumberStatus", getVatNumberStatus),
-                new PropertyByName<Customer>("TimeZone", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.TimeZoneIdAttribute), !_dateTimeSettings.AllowCustomersToSetTimeZone),
+                new PropertyByName<Customer>("Phone", p => p.Phone, !_customerSettings.PhoneEnabled),
+                new PropertyByName<Customer>("Fax", p => p.Fax, !_customerSettings.FaxEnabled),
+                new PropertyByName<Customer>("VatNumber", p => p.VatNumber),
+                new PropertyByName<Customer>("VatNumberStatusId", p => p.VatNumberStatusId),
+                new PropertyByName<Customer>("VatNumberStatus", p => p.VatNumberStatusId)
+                {
+                    DropDownElements = await VatNumberStatus.Unknown.ToSelectListAsync(useLocalization: false)
+                },
+                new PropertyByName<Customer>("TimeZone", p => p.TimeZoneId, !_dateTimeSettings.AllowCustomersToSetTimeZone),
                 new PropertyByName<Customer>("AvatarPictureId", async p => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.AvatarPictureIdAttribute), !_customerSettings.AllowCustomersToUploadAvatars),
                 new PropertyByName<Customer>("ForumPostCount", async p => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.ForumPostCountAttribute)),
                 new PropertyByName<Customer>("Signature", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.SignatureAttribute)),
                 new PropertyByName<Customer>("CustomCustomerAttributes",  GetCustomCustomerAttributesAsync)
             }, _catalogSettings);
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportCustomers",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportCustomers"), customers.Count));
 
             return await manager.ExportToXlsxAsync(customers);
         }
@@ -1841,23 +1877,23 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteElementStringAsync("IsForumModerator", null, (await _customerService.IsForumModeratorAsync(customer)).ToString());
                 await xmlWriter.WriteElementStringAsync("CreatedOnUtc", null, customer.CreatedOnUtc.ToString(CultureInfo.InvariantCulture));
 
-                await xmlWriter.WriteElementStringAsync("FirstName", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute));
-                await xmlWriter.WriteElementStringAsync("LastName", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute));
-                await xmlWriter.WriteElementStringAsync("Gender", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute));
-                await xmlWriter.WriteElementStringAsync("Company", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute));
+                await xmlWriter.WriteElementStringAsync("FirstName", null, customer.FirstName);
+                await xmlWriter.WriteElementStringAsync("LastName", null, customer.LastName);
+                await xmlWriter.WriteElementStringAsync("Gender", null, customer.Gender);
+                await xmlWriter.WriteElementStringAsync("Company", null, customer.Company);
 
-                await xmlWriter.WriteElementStringAsync("CountryId", null, (await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute)).ToString());
-                await xmlWriter.WriteElementStringAsync("StreetAddress", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute));
-                await xmlWriter.WriteElementStringAsync("StreetAddress2", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute));
-                await xmlWriter.WriteElementStringAsync("ZipPostalCode", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute));
-                await xmlWriter.WriteElementStringAsync("City", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute));
-                await xmlWriter.WriteElementStringAsync("County", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute));
-                await xmlWriter.WriteElementStringAsync("StateProvinceId", null, (await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute)).ToString());
-                await xmlWriter.WriteElementStringAsync("Phone", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute));
-                await xmlWriter.WriteElementStringAsync("Fax", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute));
-                await xmlWriter.WriteElementStringAsync("VatNumber", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute));
-                await xmlWriter.WriteElementStringAsync("VatNumberStatusId", null, (await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute)).ToString());
-                await xmlWriter.WriteElementStringAsync("TimeZoneId", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute));
+                await xmlWriter.WriteElementStringAsync("CountryId", null, customer.CountryId.ToString());
+                await xmlWriter.WriteElementStringAsync("StreetAddress", null, customer.StreetAddress);
+                await xmlWriter.WriteElementStringAsync("StreetAddress2", null, customer.StreetAddress2);
+                await xmlWriter.WriteElementStringAsync("ZipPostalCode", null, customer.ZipPostalCode);
+                await xmlWriter.WriteElementStringAsync("City", null, customer.City);
+                await xmlWriter.WriteElementStringAsync("County", null, customer.County);
+                await xmlWriter.WriteElementStringAsync("StateProvinceId", null, customer.StateProvinceId.ToString());
+                await xmlWriter.WriteElementStringAsync("Phone", null, customer.Phone);
+                await xmlWriter.WriteElementStringAsync("Fax", null, customer.Fax);
+                await xmlWriter.WriteElementStringAsync("VatNumber", null, customer.VatNumber);
+                await xmlWriter.WriteElementStringAsync("VatNumberStatusId", null, customer.VatNumberStatusId.ToString());
+                await xmlWriter.WriteElementStringAsync("TimeZoneId", null, customer.TimeZoneId);
 
                 foreach (var store in await _storeService.GetAllStoresAsync())
                 {
@@ -1870,11 +1906,9 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteElementStringAsync("ForumPostCount", null, (await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.ForumPostCountAttribute)).ToString());
                 await xmlWriter.WriteElementStringAsync("Signature", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute));
 
-                var selectedCustomerAttributesString = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
-
-                if (!string.IsNullOrEmpty(selectedCustomerAttributesString))
+                if (!string.IsNullOrEmpty(customer.CustomCustomerAttributesXML))
                 {
-                    var selectedCustomerAttributes = new StringReader(selectedCustomerAttributesString);
+                    var selectedCustomerAttributes = new StringReader(customer.CustomCustomerAttributesXML);
                     var selectedCustomerAttributesXmlReader = XmlReader.Create(selectedCustomerAttributes);
                     await xmlWriter.WriteNodeAsync(selectedCustomerAttributesXmlReader, false);
                 }
@@ -1885,6 +1919,10 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteEndElementAsync();
             await xmlWriter.WriteEndDocumentAsync();
             await xmlWriter.FlushAsync();
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportCustomers",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportCustomers"), customers.Count));
 
             return stringWriter.ToString();
         }
@@ -1922,6 +1960,10 @@ namespace Nop.Services.ExportImport
                 sb.Append(Environment.NewLine);
             }
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportNewsLetterSubscriptions",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportNewsLetterSubscriptions"), subscriptions.Count));
+
             return sb.ToString();
         }
 
@@ -1954,6 +1996,10 @@ namespace Nop.Services.ExportImport
                 sb.Append(Environment.NewLine); //new line
             }
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ExportStates",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportStates"), states.Count));
+
             return sb.ToString();
         }
 
@@ -1981,20 +2027,20 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("Email", p => p.Email),
                 new PropertyByName<Customer>("Username", p => p.Username, !_customerSettings.UsernamesEnabled), 
                 //attributes
-                new PropertyByName<Customer>("First name", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.FirstNameAttribute), !_customerSettings.FirstNameEnabled),
-                new PropertyByName<Customer>("Last name", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.LastNameAttribute), !_customerSettings.LastNameEnabled),
-                new PropertyByName<Customer>("Gender", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.GenderAttribute), !_customerSettings.GenderEnabled),
-                new PropertyByName<Customer>("Date of birth", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.DateOfBirthAttribute), !_customerSettings.DateOfBirthEnabled),
-                new PropertyByName<Customer>("Company", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.CompanyAttribute), !_customerSettings.CompanyEnabled),
-                new PropertyByName<Customer>("Street address", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.StreetAddressAttribute), !_customerSettings.StreetAddressEnabled),
-                new PropertyByName<Customer>("Street address 2", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.StreetAddress2Attribute), !_customerSettings.StreetAddress2Enabled),
-                new PropertyByName<Customer>("Zip / postal code", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.ZipPostalCodeAttribute), !_customerSettings.ZipPostalCodeEnabled),
-                new PropertyByName<Customer>("City", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.CityAttribute), !_customerSettings.CityEnabled),
-                new PropertyByName<Customer>("County", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.CountyAttribute), !_customerSettings.CountyEnabled),
-                new PropertyByName<Customer>("Country", async p => (await _countryService.GetCountryByIdAsync(await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.CountryIdAttribute)))?.Name ?? string.Empty, !_customerSettings.CountryEnabled),
-                new PropertyByName<Customer>("State province", async p => (await _stateProvinceService.GetStateProvinceByIdAsync(await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.StateProvinceIdAttribute)))?.Name ?? string.Empty, !(_customerSettings.StateProvinceEnabled && _customerSettings.CountryEnabled)),
-                new PropertyByName<Customer>("Phone", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.PhoneAttribute), !_customerSettings.PhoneEnabled),
-                new PropertyByName<Customer>("Fax", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.FaxAttribute), !_customerSettings.FaxEnabled),
+                new PropertyByName<Customer>("First name", p => p.FirstName, !_customerSettings.FirstNameEnabled),
+                new PropertyByName<Customer>("Last name", p => p.LastName, !_customerSettings.LastNameEnabled),
+                new PropertyByName<Customer>("Gender", p => p.Gender, !_customerSettings.GenderEnabled),
+                new PropertyByName<Customer>("Date of birth", p => p.DateOfBirth, !_customerSettings.DateOfBirthEnabled),
+                new PropertyByName<Customer>("Company", p => p.Company, !_customerSettings.CompanyEnabled),
+                new PropertyByName<Customer>("Street address", p => p.StreetAddress, !_customerSettings.StreetAddressEnabled),
+                new PropertyByName<Customer>("Street address 2", p => p.StreetAddress2, !_customerSettings.StreetAddress2Enabled),
+                new PropertyByName<Customer>("Zip / postal code", p => p.ZipPostalCode, !_customerSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Customer>("City", p => p.City, !_customerSettings.CityEnabled),
+                new PropertyByName<Customer>("County", p => p.County, !_customerSettings.CountyEnabled),
+                new PropertyByName<Customer>("Country", async p => (await _countryService.GetCountryByIdAsync(p.CountryId))?.Name ?? string.Empty, !_customerSettings.CountryEnabled),
+                new PropertyByName<Customer>("State province", async p => (await _stateProvinceService.GetStateProvinceByIdAsync(p.StateProvinceId))?.Name ?? string.Empty, !(_customerSettings.StateProvinceEnabled && _customerSettings.CountryEnabled)),
+                new PropertyByName<Customer>("Phone", p => p.Phone, !_customerSettings.PhoneEnabled),
+                new PropertyByName<Customer>("Fax", p => p.Fax, !_customerSettings.FaxEnabled),
                 new PropertyByName<Customer>("Customer attributes",  GetCustomCustomerAttributesAsync)
             }, _catalogSettings);
 

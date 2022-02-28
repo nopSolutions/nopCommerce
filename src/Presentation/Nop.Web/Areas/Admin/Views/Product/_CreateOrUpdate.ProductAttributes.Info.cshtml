@@ -1,6 +1,6 @@
 @model ProductModel
 
-@await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoTop, additionalData = Model })
+@await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoTop, additionalData = Model })
 <div class="cards-group">
     <div class="card card-default">
         <div class="card-body">
@@ -73,4 +73,4 @@
         </div>
     </div>
 </div>
-@await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoBottom, additionalData = Model })
+@await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoBottom, additionalData = Model })

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core;
+using Nop.Plugin.Widgets.GoogleAnalytics.Components;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -58,13 +60,13 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying widget
+        /// Gets a type of a view component for displaying widget
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
-        /// <returns>View component name</returns>
-        public string GetWidgetViewComponentName(string widgetZone)
+        /// <returns>View component type</returns>
+        public Type GetWidgetViewComponent(string widgetZone)
         {
-            return "WidgetsGoogleAnalytics";
+            return typeof(WidgetsGoogleAnalyticsViewComponent);
         }
 
         /// <summary>

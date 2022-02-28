@@ -66,11 +66,13 @@ namespace Nop.Services.Catalog
         /// Gets products which marked as new
         /// </summary>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the list of new products
         /// </returns>
-        Task<IList<Product>> GetProductsMarkedAsNewAsync(int storeId = 0);
+        Task<IPagedList<Product>> GetProductsMarkedAsNewAsync(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets product
@@ -828,7 +830,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        Task<Warehouse> GetWarehousesByIdAsync(int warehouseId);
+        Task<Warehouse> GetWarehouseByIdAsync(int warehouseId);
 
         /// <summary>
         /// Deletes a ProductWarehouseInventory

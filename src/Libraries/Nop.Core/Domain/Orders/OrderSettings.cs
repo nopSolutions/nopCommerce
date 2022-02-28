@@ -164,6 +164,11 @@ namespace Nop.Core.Domain.Orders
         public bool AllowAdminsToBuyCallForPriceProducts { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show product thumbnail in order details page"
+        /// </summary>
+        public bool ShowProductThumbnailInOrderDetailsPage { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the gift card usage history have to delete when an order is cancelled
         /// </summary>
         public bool DeleteGiftCardUsageHistory { get; set; }

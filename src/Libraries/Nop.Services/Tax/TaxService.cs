@@ -108,10 +108,7 @@ namespace Nop.Services.Tax
 
             //get country specified during registration?
             if (country == null && _customerSettings.CountryEnabled)
-            {
-                var countryId = await _genericAttributeService.GetAttributeAsync<Customer, int>(customer.Id, NopCustomerDefaults.CountryIdAttribute);
-                country = await _countryService.GetCountryByIdAsync(countryId);
-            }
+                country = await _countryService.GetCountryByIdAsync(customer.CountryId);
 
             //get country by IP address
             if (country == null)
@@ -130,7 +127,7 @@ namespace Nop.Services.Tax
                 return false;
 
             //company (business) or consumer?
-            var customerVatStatus = (VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
+            var customerVatStatus = (VatNumberStatus)customer.VatNumberStatusId;
             if (customerVatStatus == VatNumberStatus.Valid)
                 return false;
 
@@ -443,7 +440,7 @@ namespace Nop.Services.Tax
 
             // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
             // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
-            var customerVatStatus = (VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
+            var customerVatStatus = (VatNumberStatus)customer.VatNumberStatusId;
 
             return country.Id != _taxSettings.EuVatShopCountryId &&
                    customerVatStatus == VatNumberStatus.Valid &&

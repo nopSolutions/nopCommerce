@@ -1204,12 +1204,12 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.Email", customer.Email));
             tokens.Add(new Token("Customer.Username", customer.Username));
             tokens.Add(new Token("Customer.FullName", await _customerService.GetCustomerFullNameAsync(customer)));
-            tokens.Add(new Token("Customer.FirstName", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute)));
-            tokens.Add(new Token("Customer.LastName", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute)));
-            tokens.Add(new Token("Customer.VatNumber", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute)));
-            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute)).ToString()));
+            tokens.Add(new Token("Customer.FirstName", customer.FirstName));
+            tokens.Add(new Token("Customer.LastName", customer.LastName));
+            tokens.Add(new Token("Customer.VatNumber", customer.VatNumber));
+            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)customer.VatNumberStatusId).ToString()));
 
-            var customAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+            var customAttributesXml = customer.CustomCustomerAttributesXML;
             tokens.Add(new Token("Customer.CustomAttributes", await _customerAttributeFormatter.FormatAttributesAsync(customAttributesXml), true));
 
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)

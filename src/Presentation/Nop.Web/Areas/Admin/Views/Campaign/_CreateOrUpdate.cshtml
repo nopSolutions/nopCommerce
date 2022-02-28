@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="cards-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CampaignDetailsTop, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CampaignDetailsTop, additionalData = Model })
                 @if (Model.Id > 0)
                 {
                     <div class="card card-default">
@@ -161,7 +161,7 @@
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CampaignDetailsBottom, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CampaignDetailsBottom, additionalData = Model })
             </div>
         </div>
     </div>

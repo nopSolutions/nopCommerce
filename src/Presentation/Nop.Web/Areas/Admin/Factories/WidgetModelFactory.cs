@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare models
             var models = widgets.Select(widget => new RenderWidgetModel
             {
-                WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),
+                WidgetViewComponent = widget.GetWidgetViewComponent(widgetZone),
                 WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone, ["additionalData"] = additionalData }
             }).ToList();
 

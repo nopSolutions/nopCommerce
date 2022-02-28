@@ -16,7 +16,6 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components
     /// <summary>
     /// Represents the view component to display buttons
     /// </summary>
-    [ViewComponent(Name = PayPalCommerceDefaults.BUTTONS_VIEW_COMPONENT_NAME)]
     public class ButtonsViewComponent : NopViewComponent
     {
         #region Fields

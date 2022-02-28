@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
-using Nop.Services.Common;
 using Nop.Services.Messages;
 
 namespace Nop.Services.Catalog
@@ -17,7 +16,6 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IRepository<BackInStockSubscription> _backInStockSubscriptionRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Product> _productRepository;
@@ -27,13 +25,11 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        public BackInStockSubscriptionService(IGenericAttributeService genericAttributeService,
-            IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
+        public BackInStockSubscriptionService(IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
             IRepository<Customer> customerRepository,
             IRepository<Product> productRepository,
             IWorkflowMessageService workflowMessageService)
         {
-            _genericAttributeService = genericAttributeService;
             _backInStockSubscriptionRepository = backInStockSubscriptionRepository;
             _customerRepository = customerRepository;
             _productRepository = productRepository;
@@ -135,7 +131,7 @@ namespace Nop.Services.Catalog
         {
             await _backInStockSubscriptionRepository.InsertAsync(subscription);
         }
-        
+
         /// <summary>
         /// Send notification to subscribers
         /// </summary>
@@ -153,9 +149,8 @@ namespace Nop.Services.Catalog
             var subscriptions = await GetAllSubscriptionsByProductIdAsync(product.Id);
             foreach (var subscription in subscriptions)
             {
-                var customerLanguageId = await _genericAttributeService.GetAttributeAsync<Customer, int>(subscription.CustomerId, NopCustomerDefaults.LanguageIdAttribute, subscription.StoreId);
-
-                result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, customerLanguageId)).Count;
+                var customer = await _customerRepository.GetByIdAsync(subscription.CustomerId);
+                result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, customer?.LanguageId ?? 0)).Count;
             }
 
             for (var i = 0; i <= subscriptions.Count - 1; i++)
@@ -163,7 +158,7 @@ namespace Nop.Services.Catalog
 
             return result;
         }
-        
+
         /// <summary>
         /// Gets all subscriptions
         /// </summary>

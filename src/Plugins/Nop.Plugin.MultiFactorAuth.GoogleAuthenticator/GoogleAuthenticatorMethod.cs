@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
+using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Components;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -54,21 +56,21 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store
+        /// Gets a type of a view component for displaying plugin in public store
         /// </summary>
         /// <returns>View component name</returns>
-        public string GetPublicViewComponentName()
+        public Type GetPublicViewComponent()
         {
-            return GoogleAuthenticatorDefaults.VIEW_COMPONENT_NAME;
+            return typeof(GAAuthenticationViewComponent);
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying verification page
+        /// Gets a type of a view component for displaying verification page
         /// </summary>
         /// <returns>View component name</returns>
-        public string GetVerificationViewComponentName()
+        public Type GetVerificationViewComponent()
         {
-            return GoogleAuthenticatorDefaults.VERIFICATION_VIEW_COMPONENT_NAME;
+            return typeof(GAVerificationViewComponent);
         }
 
         /// <summary>

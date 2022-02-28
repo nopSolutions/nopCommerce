@@ -19,7 +19,7 @@
 {
     @section left
     {
-        @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.MultiFactorAuthentication })
+        @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.MultiFactorAuthentication })
     }
 }
 
@@ -36,7 +36,7 @@
     </div>
     <div class="page-body">
         <div class="configure-provider">
-            @(await Component.InvokeAsync(Model.ViewComponentName)) 
+            @(await Component.InvokeAsync(Model.ViewComponent)) 
         </div>
     </div>
 </div>

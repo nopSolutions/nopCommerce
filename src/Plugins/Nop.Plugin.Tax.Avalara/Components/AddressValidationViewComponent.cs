@@ -23,7 +23,6 @@ namespace Nop.Plugin.Tax.Avalara.Components
     /// <summary>
     /// Represents a view component to validate entered address and display a confirmation dialog on the checkout page
     /// </summary>
-    [ViewComponent(Name = AvalaraTaxDefaults.ADDRESS_VALIDATION_VIEW_COMPONENT_NAME)]
     public class AddressValidationViewComponent : NopViewComponent
     {
         #region Fields

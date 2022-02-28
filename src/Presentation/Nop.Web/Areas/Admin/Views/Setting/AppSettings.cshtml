@@ -37,12 +37,12 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AppSettingsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AppSettingsButtons, additionalData = Model })
         </div>
     </div>
     <div class="content">
         <div class="form-horizontal">
-            @await Component.InvokeAsync("SettingMode")
+            @await Component.InvokeAsync(typeof(SettingModeViewComponent))
             <div asp-validation-summary="All"></div>
             <div class="container-fluid">
                 <div class="cards-group">
@@ -60,12 +60,12 @@
                 <nop-card asp-name="app-settings-cache" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Cache")" asp-hide-block-attribute-name="@hideCacheBlockAttributeName" asp-hide="@hideCacheBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Cache", Model)</nop-card>
                 <nop-card asp-name="app-settings-distributed-cache" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.DistributedCache")" asp-hide-block-attribute-name="@hideDistributedCacheBlockAttributeName" asp-hide="@hideDistributedCacheBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.DistributedCache", Model)</nop-card>
                 <nop-card asp-name="app-settings-hosting" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Hosting")" asp-hide-block-attribute-name="@hideHostingBlockAttributeName" asp-hide="@hideHostingBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Hosting", Model)</nop-card>
-                <nop-card asp-name="app-settings-azure-blob" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.AzureBlob")" asp-hide-block-attribute-name="@hideAzureBlobBlockAttributeName" asp-hide="@hideAzureBlobBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.AzureBlob", Model.AzureBlobConfigModel)</nop-card>
+                <nop-card asp-name="app-settings-azure-blob" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.AzureBlob")" asp-hide-block-attribute-name="@hideAzureBlobBlockAttributeName" asp-hide="@hideAzureBlobBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.AzureBlob", Model)</nop-card>
                 <nop-card asp-name="app-settings-installation" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Installation")" asp-hide-block-attribute-name="@hideInstallationBlockAttributeName" asp-hide="@hideInstallationBlock" asp-advanced="true">@await Html.PartialAsync("_AppSettings.Installation", Model)</nop-card>
                 <nop-card asp-name="app-settings-plugin" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Plugin")" asp-hide-block-attribute-name="@hidePluginBlockAttributeName" asp-hide="@hidePluginBlock" asp-advanced="true">@await Html.PartialAsync("_AppSettings.Plugin", Model)</nop-card>
                 <nop-card asp-name="app-settings-common" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Common", Model)</nop-card>
                 <nop-card asp-name="app-settings-web-optimizer" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.WebOptimizer")" asp-hide-block-attribute-name="@hideWebOptimizerBlockAttributeName" asp-hide="@hideWebOptimizerBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.WebOptimizer", Model)</nop-card>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AppSettingsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AppSettingsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>
