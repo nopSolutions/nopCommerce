@@ -1065,15 +1065,16 @@ namespace Nop.Services.Customers
         /// A task that represents the asynchronous operation
         /// The task result contains the list of ids not existing customers
         /// </returns>
-        public virtual async Task<int[]> GetNotExistingCustomerIdsAsync(int[] ids)
+        public virtual async Task<int[]> GetNotExistingCustomersAsync(int[] ids)
         {
             if (ids == null)
                 throw new ArgumentNullException(nameof(ids));
 
             var query = _customerRepository.Table;
             var queryFilter = ids.Distinct().ToArray();
-            var filter = await query.Select(a => a.Id)
-                .Where(m => queryFilter.Contains(m))
+            //filtering by ID
+            var filter = await query.Select(c => c.Id)
+                .Where(c => queryFilter.Contains(c))
                 .ToListAsync();
 
             return queryFilter.Except(filter).ToArray();

@@ -19,7 +19,7 @@ namespace Nop.Services.ExportImport
 
         public int OrderGuidCellNum { get; internal set; }
 
-        public List<Guid> AllOrderGuid { get; set; }
+        public List<Guid> AllOrderGuids { get; set; }
 
         public List<int> OrdersInFile { get; set; }
     }

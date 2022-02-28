@@ -425,15 +425,15 @@ namespace Nop.Services.Catalog
         Task<bool> HasAnyRecurringProductAsync(int[] productIds);
 
         /// <summary>
-        /// Returns a list of SKUs of not existing products
+        /// Returns a list of sku of not existing products
         /// </summary>
-        /// <param name="skus">The SKUs of the products to check</param>
+        /// <param name="productSku">The sku of the products to check</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the list of SKUs not existing products
+        /// The task result contains the list of sku not existing products
         /// </returns>
-        Task<string[]> GetNotExistingProductSkusAsync(string[] skus);
-        
+        Task<string[]> GetNotExistingProductsAsync(string[] productSku);
+
         #endregion
 
         #region Inventory management methods

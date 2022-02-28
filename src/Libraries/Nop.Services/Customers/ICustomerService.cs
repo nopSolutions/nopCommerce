@@ -335,7 +335,7 @@ namespace Nop.Services.Customers
         /// A task that represents the asynchronous operation
         /// The task result contains the list of ids not existing customers
         /// </returns>
-        Task<int[]> GetNotExistingCustomerIdsAsync(int[] ids);
+        Task<int[]> GetNotExistingCustomersAsync(int[] ids);
 
         #endregion
 

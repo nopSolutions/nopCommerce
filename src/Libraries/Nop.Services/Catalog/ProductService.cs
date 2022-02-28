@@ -1697,22 +1697,23 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Returns a list of SKUs of not existing products
+        /// Returns a list of sku of not existing products
         /// </summary>
-        /// <param name="skus">The SKUs of the products to check</param>
+        /// <param name="productSku">The sku of the products to check</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the list of SKUs not existing products
+        /// The task result contains the list of sku not existing products
         /// </returns>
-        public virtual async Task<string[]> GetNotExistingProductSkusAsync(string[] skus)
+        public virtual async Task<string[]> GetNotExistingProductsAsync(string[] productSku)
         {
-            if (skus == null)
-                throw new ArgumentNullException(nameof(skus));
+            if (productSku == null)
+                throw new ArgumentNullException(nameof(productSku));
 
             var query = _productRepository.Table;
-            var queryFilter = skus.Distinct().ToArray();
-            var filter = await query.Select(a => a.Sku)
-                .Where(m => queryFilter.Contains(m))
+            var queryFilter = productSku.Distinct().ToArray();
+            //filtering by SKU
+            var filter = await query.Select(p => p.Sku)
+                .Where(p => queryFilter.Contains(p))
                 .ToListAsync();
 
             return queryFilter.Except(filter).ToArray();

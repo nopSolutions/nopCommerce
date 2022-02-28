@@ -17,6 +17,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
@@ -1284,14 +1285,14 @@ namespace Nop.Services.ExportImport
             }
 
             //performance optimization, the check for the existence of the customers in one SQL request
-            var notExistingCustomerIds = await _customerService.GetNotExistingCustomerIdsAsync(allCustomerIds.ToArray());
+            var notExistingCustomerIds = await _customerService.GetNotExistingCustomersAsync(allCustomerIds.ToArray());
             if (notExistingCustomerIds.Any())
             {
                 throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.CustomersDontExist"), string.Join(", ", notExistingCustomerIds)));
             }
 
             //performance optimization, the check for the existence of the order items in one SQL request
-            var notExistingProductSkus = await _productService.GetNotExistingProductSkusAsync(allOrderItemSkus.ToArray());
+            var notExistingProductSkus = await _productService.GetNotExistingProductsAsync(allOrderItemSkus.ToArray());
             if (notExistingProductSkus.Any())
             {
                 throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.ProductsDontExist"), string.Join(", ", notExistingProductSkus)));
@@ -1305,7 +1306,7 @@ namespace Nop.Services.ExportImport
                 OrdersInFile = ordersInFile,
                 OrderItemManager = orderItemManager,
                 OrderGuidCellNum = orderGuidCellNum,
-                AllOrderGuid = allOrderGuids
+                AllOrderGuids = allOrderGuids
             };
         }
 
@@ -2405,7 +2406,7 @@ namespace Nop.Services.ExportImport
             var metadata = await PrepareImportOrderDataAsync(worksheet);
 
             //performance optimization, load all orders by guid in one SQL request
-            var allOrdersByGuid = await _orderService.GetOrdersByGuidAsync(metadata.AllOrderGuid.ToArray());
+            var allOrdersByGuids = await _orderService.GetOrdersByGuidsAsync(metadata.AllOrderGuids.ToArray());
 
             Order lastLoadedOrder = null;
 
@@ -2429,7 +2430,7 @@ namespace Nop.Services.ExportImport
 
                 metadata.Manager.ReadFromXlsx(worksheet, iRow);
 
-                var order = metadata.OrderGuidCellNum > 0 ? allOrdersByGuid.FirstOrDefault(p => p.OrderGuid.ToString() == metadata.Manager.GetProperty("OrderGuid").StringValue) : null;
+                var order = metadata.OrderGuidCellNum > 0 ? allOrdersByGuids.FirstOrDefault(p => p.OrderGuid.ToString() == metadata.Manager.GetProperty("OrderGuid").StringValue) : null;
 
                 var isNew = order == null;
 
@@ -2450,7 +2451,6 @@ namespace Nop.Services.ExportImport
                 orderAddress ??= new Address();
 
                 var customer = await _customerService.GetCustomerByIdAsync(metadata.Manager.GetProperty("CustomerId").IntValue);
-                var storeId = metadata.Manager.GetProperty("StoreId").IntValue;
 
                 foreach (var property in metadata.Manager.GetProperties)
                 {
@@ -2460,7 +2460,10 @@ namespace Nop.Services.ExportImport
                             order.Id = property.IntValue;
                             break;
                         case "StoreId":
-                            order.StoreId = storeId;
+                            if (await _storeService.GetStoreByIdAsync(property.IntValue) is Store orderStore)
+                                order.StoreId = property.IntValue;
+                            else
+                                order.StoreId = (await _storeContext.GetCurrentStoreAsync())?.Id ?? 0;
                             break;
                         case "OrderGuid":
                             order.OrderGuid = Guid.TryParse(property.StringValue, out var orderGuid) ? orderGuid : Guid.NewGuid();
@@ -2576,14 +2579,16 @@ namespace Nop.Services.ExportImport
                         case "BillingCounty":
                             orderBillingAddress.County = property.StringValue;
                             break;
-                        case "BillingStateProvinceId":
-                            orderBillingAddress.StateProvinceId = property.IntValueNullable;
+                        case "BillingStateProvinceAbbreviation":
+                            if (await _stateProvinceService.GetStateProvinceByAbbreviationAsync(property.StringValue) is StateProvince billingState)
+                                orderBillingAddress.StateProvinceId = billingState.Id;
                             break;
                         case "BillingZipPostalCode":
                             orderBillingAddress.ZipPostalCode = property.StringValue;
                             break;
-                        case "BillingCountryId":
-                            orderBillingAddress.CountryId = property.IntValueNullable;
+                        case "BillingCountryCode":
+                            if (await _countryService.GetCountryByTwoLetterIsoCodeAsync(property.StringValue) is Country billingCountry)
+                                orderBillingAddress.CountryId = billingCountry.Id;
                             break;
                         case "ShippingFirstName":
                             orderAddress.FirstName = property.StringValue;
@@ -2615,14 +2620,16 @@ namespace Nop.Services.ExportImport
                         case "ShippingCounty":
                             orderAddress.County = property.StringValue;
                             break;
-                        case "ShippingStateProvinceId":
-                            orderAddress.StateProvinceId = property.IntValueNullable;
+                        case "ShippingStateProvinceAbbreviation":
+                            if (await _stateProvinceService.GetStateProvinceByAbbreviationAsync(property.StringValue) is StateProvince shippingState)
+                                orderAddress.StateProvinceId = shippingState.Id;
                             break;
                         case "ShippingZipPostalCode":
                             orderAddress.ZipPostalCode = property.StringValue;
                             break;
-                        case "ShippingCountryId":
-                            orderAddress.CountryId = property.IntValueNullable;
+                        case "ShippingCountryCode":
+                            if (await _countryService.GetCountryByTwoLetterIsoCodeAsync(property.StringValue) is Country shippingCountry)
+                                orderAddress.CountryId = shippingCountry.Id;
                             break;
                     }
                 }
@@ -2661,15 +2668,6 @@ namespace Nop.Services.ExportImport
                 //set some default values if not specified
                 if (isNew)
                 {
-                    //affiliate
-                    var affiliate = await _affiliateService.GetAffiliateByIdAsync(customer.AffiliateId);
-                    if (affiliate != null && affiliate.Active && !affiliate.Deleted)
-                        order.AffiliateId = affiliate.Id;
-
-                    //checkout attributes
-                    order.CheckoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, storeId);
-                    order.CheckoutAttributeDescription = await _checkoutAttributeFormatter.FormatAttributesAsync(order.CheckoutAttributesXml, customer);
-
                     //customer language
                     var customerLanguage = await _languageService.GetLanguageByIdAsync(customer.LanguageId ?? 0);
                     if (customerLanguage == null || !customerLanguage.Published)
@@ -2677,10 +2675,7 @@ namespace Nop.Services.ExportImport
                     order.CustomerLanguageId = customerLanguage.Id;
 
                     //tax display type
-                    if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
-                        order.CustomerTaxDisplayType = customer.TaxDisplayType ?? TaxDisplayType.IncludingTax;
-                    else
-                        order.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
+                    order.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
 
                     //set other default values
                     order.AllowStoringCreditCardNumber = false;
