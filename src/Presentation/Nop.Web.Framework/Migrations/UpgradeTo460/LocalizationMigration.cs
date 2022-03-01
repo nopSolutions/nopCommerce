@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using FluentMigrator;
@@ -70,8 +70,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             #region Add locales
 
-=======
->>>>>>> 72ef48f4ff ( #6102. Refactoring of plugin system)
             localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 //#3075
