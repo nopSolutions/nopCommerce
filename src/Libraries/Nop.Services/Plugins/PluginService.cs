@@ -205,7 +205,7 @@ namespace Nop.Services.Plugins
             _migrationManager.ApplyUpMigrations(assembly, migrationProcessType);
         }
 
-        protected virtual bool IsPluginsUploaded()
+        protected virtual bool PluginsUploaded()
         {
             var pluginsDirectories =
                 _fileProvider.GetDirectories(_fileProvider.MapPath(NopPluginDefaults.UploadedPath));
@@ -657,7 +657,7 @@ namespace Nop.Services.Plugins
             return _pluginsInfo.PluginNamesToInstall.Any()
                    || _pluginsInfo.PluginNamesToUninstall.Any()
                    || _pluginsInfo.PluginNamesToDelete.Any()
-                   || IsPluginsUploaded();
+                   || PluginsUploaded();
         }
 
         /// <summary>
