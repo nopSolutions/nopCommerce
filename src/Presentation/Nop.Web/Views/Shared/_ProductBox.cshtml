@@ -26,9 +26,7 @@
     <div class="picture">
         @if (Model.PictureModels.Count > 1)
         {
-            var rtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
-            var dir = rtl ? "dir=rtl" : "";
-            <div class="swiper" id="swiper-@Model.Id" @dir>
+            <div class="swiper" id="swiper-@Model.Id" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())">
                 <div class="swiper-wrapper">
                     @foreach (var picture in Model.PictureModels)
                     {
@@ -52,8 +50,9 @@
         }
         else
         {
-            <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
-                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+            var picture = Model.PictureModels.FirstOrDefault();
+            <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@picture?.Title">
+                <img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" />
             </a>
         }
     </div>

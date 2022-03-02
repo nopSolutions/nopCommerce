@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -13,19 +12,16 @@ namespace Nop.Web.Components
     public class HomepageProductsViewComponent : NopViewComponent
     {
         private readonly IAclService _aclService;
-        private readonly CatalogSettings _catalogSettings;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
         private readonly IStoreMappingService _storeMappingService;
 
         public HomepageProductsViewComponent(IAclService aclService,
-            CatalogSettings catalogSettings,
             IProductModelFactory productModelFactory,
             IProductService productService,
             IStoreMappingService storeMappingService)
         {
             _aclService = aclService;
-            _catalogSettings = catalogSettings;
             _productModelFactory = productModelFactory;
             _productService = productService;
             _storeMappingService = storeMappingService;
@@ -44,8 +40,7 @@ namespace Nop.Web.Components
             if (!products.Any())
                 return Content("");
 
-            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize, 
-                false, false, _catalogSettings.DisplayAllPicturesOnCatalogPages)).ToList();
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
 
             return View(model);
         }

@@ -352,7 +352,7 @@ namespace Nop.Web.Controllers
                           {
                               label = p.Name,
                               producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
-                              productpictureurl = p.DefaultPictureModel.ImageUrl,
+                              productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
                               showlinktoresultsearch = showLinkToResultSearch
                           })
                 .ToList();

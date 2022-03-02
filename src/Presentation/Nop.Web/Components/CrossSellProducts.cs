@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Orders;
@@ -16,7 +15,6 @@ namespace Nop.Web.Components
     public class CrossSellProductsViewComponent : NopViewComponent
     {
         private readonly IAclService _aclService;
-        private readonly CatalogSettings _catalogSettings;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
         private readonly IShoppingCartService _shoppingCartService;
@@ -26,7 +24,6 @@ namespace Nop.Web.Components
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public CrossSellProductsViewComponent(IAclService aclService,
-            CatalogSettings catalogSettings,
             IProductModelFactory productModelFactory,
             IProductService productService,
             IShoppingCartService shoppingCartService,
@@ -36,7 +33,6 @@ namespace Nop.Web.Components
             ShoppingCartSettings shoppingCartSettings)
         {
             _aclService = aclService;
-            _catalogSettings = catalogSettings;
             _productModelFactory = productModelFactory;
             _productService = productService;
             _shoppingCartService = shoppingCartService;
@@ -67,8 +63,7 @@ namespace Nop.Web.Components
             //even if "ShoppingCartSettings.DisplayCartAfterAddingProduct" setting  is enabled.
             //That's why we force page refresh (redirect) in this case
             var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products,
-                    productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true,
-                    loadAllPictures: _catalogSettings.DisplayAllPicturesOnCatalogPages))
+                    productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true))
                 .ToList();
 
             return View(model);
