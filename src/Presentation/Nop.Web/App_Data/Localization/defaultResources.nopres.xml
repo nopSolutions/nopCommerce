@@ -16428,6 +16428,9 @@
   <LocaleResource Name="Common.FileUploader.Upload">
     <Value>Upload a file</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.Upload.Files">
+    <Value>Upload files</Value>
+  </LocaleResource>
   <LocaleResource Name="Common.Hide">
     <Value>Hide</Value>
   </LocaleResource>

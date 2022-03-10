@@ -33,7 +33,7 @@
             <span>@T("Common.FileUploader.DropFiles")</span>
         </div>
         <div class="qq-upload-button-selector btn bg-gradient-green">
-            <div>@T("Common.FileUploader.Upload")</div>
+            <div>@T("Common.FileUploader.Upload.Files")</div>
         </div>
         <span class="qq-drop-processing-selector qq-drop-processing">
             <span>@T("Common.FileUploader.Processing")</span>
@@ -70,7 +70,6 @@
             }
         }).on("complete", function(event, id, name, responseJSON, xhr) {
             if (responseJSON.success) {
-                $("#@(clientId + "value") input").val(responseJSON.pictureId);
                 if ('@tableSelector'){
                     updateTable('@tableSelector');
                 }
@@ -80,12 +79,6 @@
                     $('.qq-upload-status-text').text(responseJSON.message);
                 }
             }
-        });
-        
-        $("#@(clientId + "remove")").click(function(e) {
-            $("#@(clientId + "value") input").val(0);
-            $("#@(clientId) .qq-upload-list-selector").empty();
-            $(this).hide();
         });
     });
 </script>

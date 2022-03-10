@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using FluentMigrator;
@@ -129,6 +129,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#5123
                 ["Admin.Catalog.Products.Pictures.Fields.Picture.Hint"] = "You can choose multiple images to upload at once. If the picture size exceeds your stores max image size setting, it will be automatically resized.",
+                ["Common.FileUploader.Upload.Files"] = "Upload files",
             }, languageId).Wait();
 
             #endregion
