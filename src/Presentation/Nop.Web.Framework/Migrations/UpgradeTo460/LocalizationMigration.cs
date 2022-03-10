@@ -39,7 +39,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 "Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup",
                 "Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup.Hint",
                 "Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy",
-                "Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy.Hint"
+                "Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy.Hint",
+
+                //#5123
+                "Admin.Catalog.Products.Pictures.Alert.AddNew",
             }).Wait();
 
             #endregion
@@ -124,6 +127,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions"] = "'New products' page. Page size options",
                 ["Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions.Hint"] = "'New products' page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.",
 
+                //#5123
+                ["Admin.Catalog.Products.Pictures.Fields.Picture.Hint"] = "You can choose multiple images to upload at once. If the picture size exceeds your stores max image size setting, it will be automatically resized.",
             }, languageId).Wait();
 
             #endregion
