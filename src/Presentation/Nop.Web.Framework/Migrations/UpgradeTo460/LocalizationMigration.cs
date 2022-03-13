@@ -31,48 +31,25 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             #region Delete locales
 
-            localizationService.DeleteLocaleResourcesAsync(new List<string>
-            {
-                //#6102
-                "Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup",
-                "Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup.Hint",
-                "Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup",
-                "Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup.Hint",
-                "Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy",
-                "Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy.Hint",
-
-                //#5123
-                "Admin.Catalog.Products.Pictures.Alert.AddNew",
-            }).Wait();
+            DeleteLocales(localizationService);
 
             #endregion
 
             #region Rename locales
 
-            var localesToRename = new[]
-            {
-                //#3511
-                new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize" },
-                new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint" },
-            };
-
-            foreach (var lang in languages)
-            {
-                foreach (var locale in localesToRename)
-                {
-                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
-                    if (lsr is not null)
-                    {
-                        lsr.ResourceName = locale.NewName;
-                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
-                    }
-                }
-            }
+            RenameLocales(localizationService, languages);
 
             #endregion
 
             #region Add locales
 
+            AddLocales(localizationService, languageId);
+
+            #endregion
+        }
+
+        private static void AddLocales(ILocalizationService localizationService, int languageId)
+        {
             localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 //#3075
@@ -131,8 +108,46 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Catalog.Products.Pictures.Fields.Picture.Hint"] = "You can choose multiple images to upload at once. If the picture size exceeds your stores max image size setting, it will be automatically resized.",
                 ["Common.FileUploader.Upload.Files"] = "Upload files",
             }, languageId).Wait();
+        }
 
-            #endregion
+        private static void RenameLocales(ILocalizationService localizationService, IList<Core.Domain.Localization.Language> languages)
+        {
+            var localesToRename = new[]
+                        {
+                //#3511
+                new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize" },
+                new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint" },
+            };
+
+            foreach (var lang in languages)
+            {
+                foreach (var locale in localesToRename)
+                {
+                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
+                    if (lsr is not null)
+                    {
+                        lsr.ResourceName = locale.NewName;
+                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
+                    }
+                }
+            }
+        }
+
+        private static void DeleteLocales(ILocalizationService localizationService)
+        {
+            localizationService.DeleteLocaleResourcesAsync(new List<string>
+            {
+                //#6102
+                "Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup",
+                "Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup.Hint",
+                "Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup",
+                "Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup.Hint",
+                "Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy",
+                "Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy.Hint",
+
+                //#5123
+                "Admin.Catalog.Products.Pictures.Alert.AddNew",
+            }).Wait();
         }
 
         /// <summary>Collects the DOWN migration expressions</summary>
