@@ -52,9 +52,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             IStoreContext storeContext,
             IWebHelper webHelper,
             IWorkContext workContext,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings): base(localizationService, notificationService, permissionService, settingService, storeContext)
         {
-            base(localizationService, notificationService, permissionService, settingService, storeContext);
             _genericAttributeService = genericAttributeService;
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;

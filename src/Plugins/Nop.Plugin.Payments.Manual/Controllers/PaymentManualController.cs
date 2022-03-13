@@ -19,11 +19,6 @@ namespace Nop.Plugin.Payments.Manual.Controllers
     [AutoValidateAntiforgeryToken]
     public class PaymentManualController : BasePaymentController
     {
-        #region Fields
-        
-   
-
-        #endregion
 
         #region Ctor
 
