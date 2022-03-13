@@ -31,12 +31,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
         private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPermissionService _permissionService;
-        private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
-        private readonly INotificationService _notificationService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -59,16 +54,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             IWorkContext workContext,
             ShoppingCartSettings shoppingCartSettings)
         {
+            base(localizationService, notificationService, permissionService, settingService, storeContext);
             _genericAttributeService = genericAttributeService;
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;
             _paymentPluginManager = paymentPluginManager;
-            _permissionService = permissionService;
-            _localizationService = localizationService;
             _logger = logger;
-            _notificationService = notificationService;
-            _settingService = settingService;
-            _storeContext = storeContext;
             _webHelper = webHelper;
             _workContext = workContext;
             _shoppingCartSettings = shoppingCartSettings;

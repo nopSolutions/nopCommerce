@@ -21,11 +21,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
     {
         #region Fields
         
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
+   
 
         #endregion
 
@@ -35,13 +31,8 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             INotificationService notificationService,
             IPermissionService permissionService,
             ISettingService settingService,
-            IStoreContext storeContext)
+            IStoreContext storeContext) : base(localizationService, notificationService, permissionService, settingService, storeContext)
         {
-            _localizationService = localizationService;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
-            _settingService = settingService;
-            _storeContext = storeContext;
         }
 
         #endregion
