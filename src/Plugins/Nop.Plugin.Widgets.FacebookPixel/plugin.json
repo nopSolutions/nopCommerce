@@ -2,7 +2,7 @@
   "Group": "Widgets",
   "FriendlyName": "Facebook Pixel",
   "SystemName": "Widgets.FacebookPixel",
-  "Version": "1.13",
+  "Version": "1.13.1",
   "SupportedVersions": [ "4.50" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,
