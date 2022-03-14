@@ -13,6 +13,12 @@ WORKDIR /src/Presentation/Nop.Web
 RUN dotnet build Nop.Web.csproj -c Release
 
 # build plugins
+WORKDIR /src/Plugins/Nop.Plugin.Api/Nop.Plugin.Api
+RUN dotnet build Nop.Plugin.Api.csproj
+WORKDIR /src/Plugins/NopBrasil.Plugin.Payments.PagSeguro
+RUN dotnet build NopBrasil.Plugin.Payments.PagSeguro.csproj
+WORKDIR /src/Plugins/NopBrasil.Plugin.Shipping.Correios
+RUN dotnet build NopBrasil.Plugin.Shipping.Correios.csproj
 WORKDIR /src/Plugins/Nop.Plugin.DiscountRules.CustomerRoles
 RUN dotnet build Nop.Plugin.DiscountRules.CustomerRoles.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.ExchangeRate.EcbExchange
@@ -25,8 +31,8 @@ WORKDIR /src/Plugins/Nop.Plugin.Payments.CheckMoneyOrder
 RUN dotnet build Nop.Plugin.Payments.CheckMoneyOrder.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.Manual
 RUN dotnet build Nop.Plugin.Payments.Manual.csproj -c Release
-WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalSmartPaymentButtons
-RUN dotnet build Nop.Plugin.Payments.PayPalSmartPaymentButtons.csproj -c Release
+#WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalSmartPaymentButtons
+#RUN dotnet build Nop.Plugin.Payments.PayPalSmartPaymentButtons.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalStandard
 RUN dotnet build Nop.Plugin.Payments.PayPalStandard.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Pickup.PickupInStore
