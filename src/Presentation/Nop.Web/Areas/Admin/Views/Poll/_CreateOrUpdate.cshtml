@@ -19,7 +19,7 @@
                 <nop-card asp-name="poll-info" asp-icon="fas fa-info" asp-title="@T("Admin.ContentManagement.Polls.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
                 <nop-card asp-name="poll-answers" asp-icon="fas fa-commenting" asp-title="@T("Admin.ContentManagement.Polls.Answers")" asp-hide-block-attribute-name="@hideAnswersBlockAttributeName" asp-hide="@hideAnswersBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Answers", Model)</nop-card>
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PollDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PollDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

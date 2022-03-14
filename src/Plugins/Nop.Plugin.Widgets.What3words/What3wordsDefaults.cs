@@ -18,21 +18,6 @@ namespace Nop.Plugin.Widgets.What3words
         public static string UserAgent => $"nopCommerce-{NopVersion.CURRENT_VERSION}";
 
         /// <summary>
-        /// Name of the view component to display widget in public store
-        /// </summary>
-        public const string VIEW_COMPONENT_NAME = "What3words";
-
-        /// <summary>
-        /// Name of the view component to display widget in admin panel (order details)
-        /// </summary>
-        public const string ORDER_ADMIN_VIEW_COMPONENT_NAME = "What3wordsOrderAdmin";
-
-        /// <summary>
-        /// Name of the view component to display widget in public store (order summary)
-        /// </summary>
-        public const string ORDER_PUBLIC_VIEW_COMPONENT_NAME = "What3wordsOrderPublic";
-
-        /// <summary>
         /// Gets the configuration route name
         /// </summary>
         public static string ConfigurationRouteName => "Plugin.Widgets.What3words.Configure";

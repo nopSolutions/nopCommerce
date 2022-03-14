@@ -202,6 +202,22 @@ namespace Nop.Web.Infrastructure.Cache
         public static string CartPicturePrefixCacheKey => "Nop.pres.cart.picture";
 
         /// <summary>
+        /// Key for cart picture caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : order item id
+        /// P.S. we could cache by product ID. it could increase performance.
+        /// but it won't work for product attributes with custom images
+        /// {1} : picture size
+        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
+        /// {3} : language ID ("alt" and "title" can depend on localized product name)
+        /// {4} : is connection SSL secured?
+        /// {5} : current store ID
+        /// </remarks>
+        public static CacheKey OrderPictureModelKey => new("Nop.pres.order.picture-{0}-{1}-{2}-{3}-{4}-{5}", OrderPicturePrefixCacheKey);
+        public static string OrderPicturePrefixCacheKey => "Nop.pres.order.picture";
+
+        /// <summary>
         /// Key for home page polls
         /// </summary>
         /// <remarks>

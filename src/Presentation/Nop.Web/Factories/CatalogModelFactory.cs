@@ -1542,6 +1542,44 @@ namespace Nop.Web.Factories
 
         #endregion
 
+        #region New products
+
+        /// <summary>
+        /// Prepare new products model
+        /// </summary>
+        /// <param name="command">Model to get the catalog products</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the new products model
+        /// </returns>
+        public virtual async Task<CatalogProductsModel> PrepareNewProductsModelAsync(CatalogProductsCommand command)
+        {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
+            var model = new CatalogProductsModel
+            {
+                UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading
+            };
+
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+
+            //page size
+            await PreparePageSizeOptionsAsync(model, command, _catalogSettings.NewProductsAllowCustomersToSelectPageSize,
+                _catalogSettings.NewProductsPageSizeOptions, _catalogSettings.NewProductsPageSize);
+
+            //products
+            var products = await _productService.GetProductsMarkedAsNewAsync(storeId: currentStore.Id,
+                pageIndex: command.PageNumber - 1,
+                pageSize: command.PageSize);
+
+            await PrepareCatalogProductsAsync(model, products);
+
+            return model;
+        }
+
+        #endregion
+
         #region Searching
 
         /// <summary>

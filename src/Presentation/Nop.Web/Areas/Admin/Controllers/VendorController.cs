@@ -29,6 +29,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressService _addressService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
@@ -48,7 +49,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public VendorController(IAddressService addressService,
+        public VendorController(IAddressAttributeParser addressAttributeParser,
+            IAddressService addressService,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
@@ -63,6 +65,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IVendorModelFactory vendorModelFactory,
             IVendorService vendorService)
         {
+            _addressAttributeParser = addressAttributeParser;
             _addressService = addressService;
             _customerActivityService = customerActivityService;
             _customerService = customerService;
@@ -338,6 +341,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
+            //custom address attributes
+            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+            var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
+            foreach (var error in customAttributeWarnings)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
             if (ModelState.IsValid)
             {
                 var prevPictureId = vendor.PictureId;
@@ -360,6 +371,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (address == null)
                 {
                     address = model.Address.ToEntity<Address>();
+                    address.CustomAttributes = customAttributes;
                     address.CreatedOnUtc = DateTime.UtcNow;
 
                     //some validation
@@ -375,6 +387,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                 {
                     address = model.Address.ToEntity(address);
+                    address.CustomAttributes = customAttributes;
 
                     //some validation
                     if (address.CountryId == 0)

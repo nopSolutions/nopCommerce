@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="col-md-12 clearfix">
                     <div class="float-left">
-                        @await Component.InvokeAsync("SettingMode", new { modeName = "checkoutattribute-advanced-mode" })
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "checkoutattribute-advanced-mode" })
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                 <nop-card asp-name="checkout-attributes-values" asp-icon="fas fa-tv" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values")" asp-hide-block-attribute-name="@hideValuesBlockAttributeName" asp-hide="@hideValuesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-card>
                 <nop-card asp-name="checkout-attributes-conditions" asp-icon="fas fa-bookmark" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")" asp-hide-block-attribute-name="@hideConditionBlockAttributeName" asp-hide="@hideConditionBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Condition", Model)</nop-card>
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CheckoutAttributeDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

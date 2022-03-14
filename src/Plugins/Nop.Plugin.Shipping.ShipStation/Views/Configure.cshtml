@@ -5,7 +5,7 @@
 @using Nop.Plugin.Shipping.ShipStation
 @model Nop.Plugin.Shipping.ShipStation.Models.ShipStationModel
 
-@await Component.InvokeAsync("StoreScopeConfiguration")
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
 <form asp-controller="ShipStation" asp-action="Configure" method="post">
     <div class="cards-group">

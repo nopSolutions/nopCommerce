@@ -37,11 +37,6 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// </summary>
         public static string CheckoutOnePageRouteName => "CheckoutOnePage";
 
-        /// <summary>
-        /// Gets the name of the view component to place Facebook Pixel into the page
-        /// </summary>
-        public const string VIEW_COMPONENT = "FacebookPixel";
-
         #region Caching
 
         /// <summary>

@@ -110,7 +110,7 @@
                                     @Model.BillingAddress.CountryName
                                 </td>
                             </tr>
-                            @await Component.InvokeAsync("Widget", new { widgetZone = AdminWidgetZones.OrderBillingAddressDetailsBottom, additionalData = Model })
+                            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderBillingAddressDetailsBottom, additionalData = Model })
                             @if (!string.IsNullOrEmpty(Model.BillingAddress.FormattedCustomAddressAttributes))
                             {
                                 <tr>
@@ -240,7 +240,7 @@
                                             @Model.ShippingAddress.CountryName
                                         </td>
                                     </tr>
-                                    @await Component.InvokeAsync("Widget", new { widgetZone = AdminWidgetZones.OrderShippingAddressDetailsBottom, additionalData = Model })
+                                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderShippingAddressDetailsBottom, additionalData = Model })
                                     @if (!string.IsNullOrEmpty(Model.ShippingAddress.FormattedCustomAddressAttributes))
                                     {
                                         <tr class="custom-attributes-view">
