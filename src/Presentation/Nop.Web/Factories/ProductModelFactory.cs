@@ -527,10 +527,9 @@ namespace Nop.Web.Factories
         /// <param name="productThumbPictureSize">Product thumb picture size (longest side); pass null to use the default value of media settings</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the picture model
+        /// The task result contains picture models
         /// </returns>
-        protected virtual async Task<IList<PictureModel>> PrepareProductOverviewPicturesModelAsync(Product product, 
-            int? productThumbPictureSize = null)
+        protected virtual async Task<IList<PictureModel>> PrepareProductOverviewPicturesModelAsync(Product product, int? productThumbPictureSize = null)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -546,7 +545,8 @@ namespace Nop.Web.Factories
 
             var cachedPictures = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
+                var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id,
+                    _catalogSettings.DisplayAllPicturesOnCatalogPages ? 0 : 1);
                 string fullSizeImageUrl, imageUrl;
 
                 //all pictures
