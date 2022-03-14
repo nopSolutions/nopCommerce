@@ -239,7 +239,7 @@ namespace Nop.Web.Controllers
                 model = new ProductDetailsModel.ProductEstimateShippingModel();
 
             var errors = new List<string>();
-            
+
             if (!_shippingSettings.EstimateShippingCityNameEnabled && string.IsNullOrEmpty(model.ZipPostalCode))
                 errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.ZipPostalCode.Required"));
 
@@ -266,7 +266,7 @@ namespace Nop.Web.Controllers
                     Errors = errors
                 });
             }
-            
+
             var store = await _storeContext.GetCurrentStoreAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
 
@@ -345,7 +345,7 @@ namespace Nop.Web.Controllers
 
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
-            
+
             //default value for all additional review types
             if (model.ReviewTypeList.Count > 0)
                 foreach (var additionalProductReview in model.AddAdditionalProductReviewList)

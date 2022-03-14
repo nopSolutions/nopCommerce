@@ -38,6 +38,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(catalogSettings, settings => settings.AllowCustomersToSearchWithCategoryName).Wait();
             }
 
+            //#1933
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.DisplayAllPicturesOnCatalogPages).Result)
+            {
+                catalogSettings.DisplayAllPicturesOnCatalogPages = false;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.DisplayAllPicturesOnCatalogPages).Wait();
+            }
+            
             //#3511
             var newProductsNumber = settingService.GetSettingAsync("catalogsettings.newproductsnumber").Result;
             if (newProductsNumber is not null && int.TryParse(newProductsNumber.Value, out var newProductsPageSize))

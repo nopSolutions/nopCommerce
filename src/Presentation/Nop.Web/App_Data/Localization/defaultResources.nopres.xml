@@ -5757,6 +5757,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DefaultViewMode.Hint">
     <Value>Choose the default view mode for catalog pages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages">
+    <Value>Display all pictures on catalog pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages.Hint">
+    <Value>Check to display all pictures on catalog pages.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDatePreOrderAvailability">
     <Value>Display the date for a pre-order availability</Value>
   </LocaleResource>

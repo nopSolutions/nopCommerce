@@ -527,9 +527,9 @@ namespace Nop.Web.Factories
         /// <param name="productThumbPictureSize">Product thumb picture size (longest side); pass null to use the default value of media settings</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the picture model
+        /// The task result contains picture models
         /// </returns>
-        protected virtual async Task<PictureModel> PrepareProductOverviewPictureModelAsync(Product product, int? productThumbPictureSize = null)
+        protected virtual async Task<IList<PictureModel>> PrepareProductOverviewPicturesModelAsync(Product product, int? productThumbPictureSize = null)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -539,37 +539,48 @@ namespace Nop.Web.Factories
             var pictureSize = productThumbPictureSize ?? _mediaSettings.ProductThumbPictureSize;
 
             //prepare picture model
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductDefaultPictureModelKey, 
-                product, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(),
-                await _storeContext.GetCurrentStoreAsync());
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductOverviewPicturesModelKey, 
+                product, pictureSize, true, _catalogSettings.DisplayAllPicturesOnCatalogPages, await _workContext.GetWorkingLanguageAsync(), 
+                _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
 
-            var defaultPictureModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var cachedPictures = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var picture = (await _pictureService.GetPicturesByProductIdAsync(product.Id, 1)).FirstOrDefault();
+                var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id,
+                    _catalogSettings.DisplayAllPicturesOnCatalogPages ? 0 : 1);
                 string fullSizeImageUrl, imageUrl;
-                (imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
-                (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
 
-                var pictureModel = new PictureModel
+                //all pictures
+                var pictureModels = new List<PictureModel>();
+                for (var i = 0; i < pictures.Count; i++)
                 {
-                    ImageUrl = imageUrl,
-                    FullSizeImageUrl = fullSizeImageUrl,
-                    //"title" attribute
-                    Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute))
-                        ? picture.TitleAttribute
-                        : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"),
-                            productName),
-                    //"alt" attribute
-                    AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute))
-                        ? picture.AltAttribute
-                        : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"),
-                            productName)
-                };
+                    var picture = pictures[i];
 
-                return pictureModel;
+                    (imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
+                    (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
+
+                    var pictureModel = new PictureModel
+                    {
+                        ImageUrl = imageUrl,
+                        FullSizeImageUrl = fullSizeImageUrl,
+                        //"title" attribute
+                        Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute))
+                            ? picture.TitleAttribute
+                            : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"),
+                                productName),
+                        //"alt" attribute
+                        AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute))
+                            ? picture.AltAttribute
+                            : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"),
+                                productName)
+                    };
+
+                    pictureModels.Add(pictureModel);
+                }
+
+                return pictureModels;
             });
 
-            return defaultPictureModel;
+            return cachedPictures;
         }
 
         /// <summary>
@@ -1270,7 +1281,7 @@ namespace Nop.Web.Factories
                 //picture
                 if (preparePictureModel)
                 {
-                    model.DefaultPictureModel = await PrepareProductOverviewPictureModelAsync(product, productThumbPictureSize);
+                    model.PictureModels = await PrepareProductOverviewPicturesModelAsync(product, productThumbPictureSize);
                 }
 
                 //specs

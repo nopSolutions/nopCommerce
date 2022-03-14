@@ -393,6 +393,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool AllowCustomersToSearchWithCategoryName { get; set; }
         public bool AllowCustomersToSearchWithCategoryName_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages")]
+        public bool DisplayAllPicturesOnCatalogPages { get; set; }
+        public bool DisplayAllPicturesOnCatalogPages_OverrideForStore { get; set; }
+
         #endregion
     }
 }
