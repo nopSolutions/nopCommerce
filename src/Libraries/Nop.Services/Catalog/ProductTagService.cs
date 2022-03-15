@@ -243,12 +243,13 @@ namespace Nop.Services.Catalog
 
             var seName = await _urlRecordService.ValidateSeNameAsync(productTag, string.Empty, productTag.Name, true);
             await _urlRecordService.SaveSlugAsync(productTag, seName, 0);
+            
         }
 
         /// <summary>
         /// Get products quantity linked to a passed tag identifier
         /// </summary>
-        /// <param name="productTagId">Product tag identifier</param>
+        /// <param name="productTagId">Product tag identifier</param>dd
         /// <param name="storeId">Store identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>
@@ -352,7 +353,9 @@ namespace Nop.Services.Catalog
                     //add new product tag
                     productTag = new ProductTag
                     {
-                        Name = productTagName
+                        Name = productTagName,
+                        MetaDescription = productTag2.MetaDescription,
+                        MetaKeywords = productTag2.MetaKeywords
                     };
                     await InsertProductTagAsync(productTag);
                 }
@@ -364,6 +367,10 @@ namespace Nop.Services.Catalog
 
                 var seName = await _urlRecordService.ValidateSeNameAsync(productTag, string.Empty, productTag.Name, true);
                 await _urlRecordService.SaveSlugAsync(productTag, seName, 0);
+                //var seMetaDescription = await _urlRecordService.ValidateSeNameAsync(productTag, string.Empty, productTag.MetaDescription, true);
+                //await _urlRecordService.SaveSlugAsync(productTag, seMetaDescription, 0);
+                //var seMetaKeywords = await _urlRecordService.ValidateSeNameAsync(productTag, string.Empty, productTag.MetaKeywords, true);
+                //await _urlRecordService.SaveSlugAsync(productTag, seMetaKeywords, 0);
             }
 
             //cache

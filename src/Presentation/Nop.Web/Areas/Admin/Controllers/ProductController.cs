@@ -202,6 +202,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 var seName = await _urlRecordService.ValidateSeNameAsync(productTag, string.Empty, localized.Name, false);
                 await _urlRecordService.SaveSlugAsync(productTag, seName, localized.LanguageId);
+             
+
+                //For metakeyword by Lancelot
+                await _localizedEntityService.SaveLocalizedValueAsync(productTag,
+                    x => x.MetaKeywords,
+                    localized.MetaKeywords,
+                    localized.LanguageId);
+                await _localizedEntityService.SaveLocalizedValueAsync(productTag,
+                    x => x.MetaDescription,
+                    localized.MetaDescription,
+                    localized.LanguageId);
+
+
             }
         }
 

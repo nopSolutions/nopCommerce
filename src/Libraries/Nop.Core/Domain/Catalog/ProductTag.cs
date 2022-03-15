@@ -12,5 +12,8 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
+        //product tag seo update by Lancelot
+        public string MetaKeywords { get; set; }
+        public string MetaDescription { get; set; }
     }
 }

@@ -15,6 +15,11 @@
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="ProductTags">@T("Admin.Catalog.ProductTags.BackToList")</a>
             </small>
+        <h1 class="float-left">
+			@T("Admin.Catalog.ProductTags.EditTagDetails") - @Model.Name
+            @T("Admin.Catalog.ProductTags.EditTagDetails") - @Model.MetaDescription
+            @T("Admin.Catalog.ProductTags.EditTagDetails") - @Model.MetaKeywords
+        </h1>
         </h1>
         <div class="float-right">
             <button type="submit" name="save" class="btn btn-primary">

@@ -29,6 +29,20 @@
                                     <nop-editor asp-for="@Model.Locales[item].Name" />
                                     <span asp-validation-for="@Model.Locales[item].Name"></span>
                                 </div>
+								<div class="col-sm-3">
+                                 <nop-label asp-for="@Model.Locales[item].MetaDescription" />
+                             </div>
+                             <div class="col-sm-9">
+                                 <nop-editor asp-for="@Model.Locales[item].MetaDescription" />
+                                 <span asp-validation-for="@Model.Locales[item].MetaDescription"></span>
+                             </div>
+                             <div class="col-sm-3">
+                                 <nop-label asp-for="@Model.Locales[item].MetaKeywords" />
+                             </div>
+                             <div class="col-sm-9">
+                                 <nop-editor asp-for="@Model.Locales[item].MetaKeywords" />
+                                 <span asp-validation-for="@Model.Locales[item].MetaKeywords"></span>
+                             </div>
                             </div>
                             <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
                         </div>
@@ -40,8 +54,22 @@
                                 </div>
                                 <div class="col-sm-9">
                                     <nop-editor asp-for="Name" asp-required="true" />
-                                    <span asp-validation-for="Name"></span>
-                                </div>
+                                    <span asp-validation-for="Name"></span>                         
+                             </div>
+                             <div class="col-sm-3">
+                                 <nop-label asp-for="MetaDescription" />
+                             </div>
+                             <div class="col-sm-9">
+                                 <nop-editor asp-for="MetaDescription" asp-required="false" />
+                                 <span asp-validation-for="MetaDescription"></span>
+                             </div>
+                             <div class="col-sm-3">
+                                 <nop-label asp-for="MetaKeywords" />
+                             </div>
+                             <div class="col-sm-9">
+                                 <nop-editor asp-for="MetaKeywords" asp-required="false" />
+                                 <span asp-validation-for="MetaKeywords"></span>
+                             </div>
                             </div>
                         </div>
         ))

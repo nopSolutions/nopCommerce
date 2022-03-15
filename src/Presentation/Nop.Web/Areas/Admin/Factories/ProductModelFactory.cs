@@ -1711,6 +1711,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
                     locale.Name = await _localizationService.GetLocalizedAsync(productTag, entity => entity.Name, languageId, false, false);
+                    locale.MetaDescription = await _localizationService.GetLocalizedAsync(productTag, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaKeywords = await _localizationService.GetLocalizedAsync(productTag, entity => entity.MetaKeywords, languageId, false, false);
                 };
             }
 

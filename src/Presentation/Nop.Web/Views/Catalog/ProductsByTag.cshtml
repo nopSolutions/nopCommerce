@@ -9,7 +9,9 @@
     NopHtml.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
     //page class
     NopHtml.AppendPageCssClassParts("html-product-tag-page");
-
+    //lancelot Seo
+    NopHtml.AddMetaDescriptionParts(Model.MetaDescription);
+    NopHtml.AddMetaKeywordParts(Model.MetaKeywords);
     //canonical URL
     if (seoSettings.CanonicalUrlsEnabled)
     {

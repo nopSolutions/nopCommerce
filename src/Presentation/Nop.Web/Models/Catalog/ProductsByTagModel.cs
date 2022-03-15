@@ -12,7 +12,9 @@ namespace Nop.Web.Models.Catalog
 
         public string TagName { get; set; }
         public string TagSeName { get; set; }
-
+        //product tag seo update by Lancelot
+        public string MetaKeywords { get; set; }
+        public string MetaDescription { get; set; }
         public CatalogProductsModel CatalogProductsModel { get; set; }
     }
 }
