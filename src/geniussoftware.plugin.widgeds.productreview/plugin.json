@@ -1,0 +1,11 @@
+﻿{
+  "Group": "enius Software",
+  "FriendlyName": "Product Review",
+  "SystemName": "geniussoftware.plugin.widgeds.productreview",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "Genius Software",
+  "DisplayOrder": 1,
+  "FileName": "geniussoftware.plugin.widgeds.productreview.dll",
+  "Description": "This plugin allows you to write product reviews"
+}
