@@ -29,7 +29,6 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly WidgetSettings _widgetSettings;
 
-
         #endregion
 
         #region Ctor
@@ -107,10 +106,15 @@ namespace Nop.Plugin.Widgets.FacebookPixel
                 ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones.Hint"] = "Choose widget zones in which the custom event will be tracked (e.g. blogpost_page_top).",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Search.WidgetZone"] = "Widget zone",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Search.WidgetZone.Hint"] = "Search custom events by the widget zone.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.AccessToken"] = "Access token",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.AccessToken.Hint"] = "Enter the Facebook Conversions API access token.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.AccessToken.Required"] = "Access token is required",
                 ["Plugins.Widgets.FacebookPixel.Configuration.Fields.DisableForUsersNotAcceptingCookieConsent"] = "Disable for users not accepting Cookie Consent",
                 ["Plugins.Widgets.FacebookPixel.Configuration.Fields.DisableForUsersNotAcceptingCookieConsent.Hint"] = "Check to disable the Facebook Pixel for users not accepting Cookie Consent. You may want this if you conduct business in countries that are subject to General Data Protection Regulation (GDPR). You also need to activate the \"DisplayEuCookieLawWarning\" setting on the General settings page in order to display Cookie Consent for users.",
-                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.Enabled"] = "Enabled",
-                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.Enabled.Hint"] = "Toggle to enable/disable this Facebook Pixel configuration.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelScriptEnabled"] = "Pixel enabled",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelScriptEnabled.Hint"] = "Toggle to enable/disable Facebook Pixel for this configuration.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.ConversionsApiEnabled"] = "Conversions API enabled",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.ConversionsApiEnabled.Hint"] = "Toggle to enable/disable Facebook Conversions API for this configuration.",
                 ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId"] = "Pixel ID",
                 ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId.Hint"] = "Enter the Facebook Pixel ID.",
                 ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId.Required"] = "Pixel ID is required",

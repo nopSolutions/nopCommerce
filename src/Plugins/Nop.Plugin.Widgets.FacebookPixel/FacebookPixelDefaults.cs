@@ -124,6 +124,21 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// </summary>
         public static string TrackedEventsSessionValue => "FacebookPixelTrackedEvents";
 
+        /// <summary>
+        /// Gets the name of facebook conversions api base address to send tracked events
+        /// </summary>
+        public const string FB_CONVERSIONS_API_BASE_ADDRESS = "https://graph.facebook.com";
+        
+        /// <summary>
+        /// Gets the name of facebook conversions api version to send tracked events
+        /// </summary>
+        public const string FB_CONVERSIONS_API_VERSION = "v13.0";
+
+        /// <summary>
+        /// Gets the name of facebook conversions api event endpoint to send tracked events
+        /// </summary>
+        public const string FB_CONVERSIONS_API_EVENT_ENDPOINT = "events";
+
         #endregion
     }
 }
