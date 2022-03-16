@@ -5776,10 +5776,10 @@
     <Value>Check to display "a product has been discontinued" message when viewing details pages of unpublished products.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayFromPrices">
-    <Value>Display "From" prices</Value>
+    <Value>Display 'From' prices</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayFromPrices.Hint">
-    <Value>Check to display "From" prices on catalog pages.</Value>
+    <Value>Check to display 'From' prices on catalog pages. This will display the minimum possible price of a product based on price adjustments of attributes and combinations instead of the fixed base price. If enabled, it is also recommended to enable setting 'Cache product prices'. But please note that it can affect performance if you use some complex discounts, discount requirement rules, etc.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoFooter">
     <Value>Display tax/shipping info (footer)</Value>
