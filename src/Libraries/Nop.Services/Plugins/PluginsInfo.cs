@@ -78,24 +78,21 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="json">Json data of PluginInfo</param>
         /// <returns>True if data are loaded, otherwise False</returns>
-        protected virtual bool DeserializePluginInfo(string json)
+        protected virtual void DeserializePluginInfo(string json)
         {
             if (string.IsNullOrEmpty(json))
-                return false;
+                return;
 
             var pluginsInfo = JsonConvert.DeserializeObject<PluginsInfo>(json);
 
             if (pluginsInfo == null)
-                return false;
+                return;
 
             InstalledPluginNames = pluginsInfo.InstalledPluginNames;
             InstalledPlugins = pluginsInfo.InstalledPlugins;
             PluginNamesToUninstall = pluginsInfo.PluginNamesToUninstall;
             PluginNamesToDelete = pluginsInfo.PluginNamesToDelete;
             PluginNamesToInstall = pluginsInfo.PluginNamesToInstall;
-
-            return InstalledPlugins.Any() || PluginNamesToUninstall.Any() || PluginNamesToDelete.Any() ||
-                   PluginNamesToInstall.Any();
         }
 
         /// <summary>
@@ -175,7 +172,7 @@ namespace Nop.Services.Plugins
         /// <returns>
         /// The true if data are loaded, otherwise False
         /// </returns>
-        public virtual bool LoadPluginInfo()
+        public virtual void LoadPluginInfo()
         {
             //check whether plugins info file exists
             var filePath = _fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
@@ -194,8 +191,7 @@ namespace Nop.Services.Plugins
                 ? _fileProvider.ReadAllText(filePath, Encoding.UTF8)
                 : string.Empty;
 
-            if (string.IsNullOrEmpty(text) || !DeserializePluginInfo(text))
-                return false;
+            DeserializePluginInfo(text);
 
             var pluginDescriptors = new List<(PluginDescriptor pluginDescriptor, bool needToDeploy)>();
             var incompatiblePlugins = new List<string>();
@@ -293,8 +289,6 @@ namespace Nop.Services.Plugins
 
             IncompatiblePlugins = incompatiblePlugins;
             PluginDescriptors = pluginDescriptors;
-
-            return true;
         }
 
 

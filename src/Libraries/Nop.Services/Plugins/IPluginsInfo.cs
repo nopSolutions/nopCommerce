@@ -21,7 +21,7 @@ namespace Nop.Services.Plugins
         /// <returns>
         /// The true if data are loaded, otherwise False
         /// </returns>
-        bool LoadPluginInfo();
+        void LoadPluginInfo();
         
         /// <summary>
         /// Save plugins info to the file
