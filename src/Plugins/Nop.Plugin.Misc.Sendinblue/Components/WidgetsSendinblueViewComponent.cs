@@ -10,7 +10,6 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
     /// <summary>
     /// Represents view component to embed tracking script on pages
     /// </summary>
-    [ViewComponent(Name = SendinblueDefaults.TRACKING_VIEW_COMPONENT_NAME)]
     public class WidgetsSendinblueViewComponent : NopViewComponent
     {
         #region Fields

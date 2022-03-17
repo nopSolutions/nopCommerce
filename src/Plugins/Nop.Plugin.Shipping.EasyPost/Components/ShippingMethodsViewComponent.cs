@@ -15,8 +15,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Components
     /// <summary>
     /// Represents view component to display address verification warning on the opc shipping methods page in the public store
     /// </summary>
-    [ViewComponent(Name = EasyPostDefaults.SHIPPING_METHODS_VIEW_COMPONENT_NAME)]
-    public class ShippingMethodsViewComponentName : NopViewComponent
+    public class ShippingMethodsViewComponent : NopViewComponent
     {
         #region Fields
 
@@ -27,7 +26,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Components
 
         #region Ctor
 
-        public ShippingMethodsViewComponentName(EasyPostSettings easyPostSettings,
+        public ShippingMethodsViewComponent(EasyPostSettings easyPostSettings,
             IShippingPluginManager shippingPluginManager)
         {
             _easyPostSettings = easyPostSettings;

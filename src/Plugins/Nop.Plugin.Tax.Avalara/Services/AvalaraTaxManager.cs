@@ -499,10 +499,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
                     var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
                     var useEuVatRules = (product?.IsTelecommunicationsOrBroadcastingOrElectronicServices ?? false)
                         && ((await _countryService.GetCountryByAddressAsync(billingAddress)
-                            ?? await _countryService.GetCountryByIdAsync(await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute))
+                            ?? await _countryService.GetCountryByIdAsync(customer.CountryId)
                             ?? await _countryService.GetCountryByTwoLetterIsoCodeAsync(_geoLookupService.LookupCountryIsoCode(customer.LastIpAddress)))
                             ?.SubjectToVat ?? false)
-                        && await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute) != (int)VatNumberStatus.Valid;
+                        && customer.VatNumberStatusId != (int)VatNumberStatus.Valid;
 
                     if (useEuVatRules)
                     {
@@ -764,12 +764,12 @@ namespace Nop.Plugin.Tax.Avalara.Services
         {
             var defaultAddress = new Address
             {
-                Address1 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute),
-                Address2 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute),
-                City = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute),
-                ZipPostalCode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute),
-                StateProvinceId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute),
-                CountryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute)
+                Address1 = customer.StreetAddress,
+                Address2 = customer.StreetAddress2,
+                City = customer.City,
+                ZipPostalCode = customer.ZipPostalCode,
+                StateProvinceId = customer.StateProvinceId,
+                CountryId = customer.CountryId
             };
             var address = await MapAddressAsync(defaultAddress);
             var model = new CustomerModel

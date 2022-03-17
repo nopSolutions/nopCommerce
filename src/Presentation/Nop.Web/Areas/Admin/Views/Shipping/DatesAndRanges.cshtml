@@ -22,7 +22,7 @@
     </h1>
     <div class="float-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DatesAndRangesButtons, additionalData = Model })
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DatesAndRangesButtons, additionalData = Model })
     </div>
 </div>
 
@@ -37,7 +37,7 @@
                         <nop-card asp-name="datesandranges-dates" asp-icon="far fa-calendar-alt" asp-title="@T("Admin.Configuration.Shipping.DeliveryDates")" asp-hide-block-attribute-name="@hideDatesBlockAttributeName" asp-hide="@hideDatesBlock" asp-advanced="false">@await Html.PartialAsync("_DatesAndRanges.Dates", Model)</nop-card>
                         <nop-card asp-name="datesandranges-ranges" asp-icon="fas fa-arrows-alt-h" asp-title="@T("Admin.Configuration.Shipping.ProductAvailabilityRanges")" asp-hide-block-attribute-name="@hideRangesBlockAttributeName" asp-hide="@hideRangesBlock" asp-advanced="false">@await Html.PartialAsync("_DatesAndRanges.Ranges", Model)</nop-card>
 
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DatesAndRangesDetailsBlock, additionalData = Model })
+                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DatesAndRangesDetailsBlock, additionalData = Model })
                     </nop-cards>
                 </div>
             </div>

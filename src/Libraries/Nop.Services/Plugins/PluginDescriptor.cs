@@ -24,15 +24,6 @@ namespace Nop.Services.Plugins
             DependsOn = new List<string>();
         }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="referencedAssembly">Referenced assembly</param>
-        public PluginDescriptor(Assembly referencedAssembly) : this()
-        {
-            ReferencedAssembly = referencedAssembly;
-        }
-
         #endregion
 
         #region Methods
@@ -197,13 +188,19 @@ namespace Nop.Services.Plugins
         public virtual Type PluginType { get; set; }
 
         /// <summary>
-        /// Gets or sets the original assembly file that a shadow copy was made from it
+        /// Gets or sets the original assembly file
         /// </summary>
         [JsonIgnore]
         public virtual string OriginalAssemblyFile { get; set; }
 
         /// <summary>
-        /// Gets or sets the assembly that has been shadow copied that is active in the application
+        /// Gets or sets the list of all library files in the plugin directory
+        /// </summary>
+        [JsonIgnore]
+        public virtual IList<string> PluginFiles { get; set; }
+
+        /// <summary>
+        /// Gets or sets the assembly that is active in the application
         /// </summary>
         [JsonIgnore]
         public virtual Assembly ReferencedAssembly { get; set; }

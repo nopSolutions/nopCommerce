@@ -25,7 +25,7 @@
                     <nop-card asp-name="gift-card-usage-history" asp-icon="fas fa-history" asp-title="@T("Admin.GiftCards.History")" asp-hide-block-attribute-name="@hideUsageHistoryBlockAttributeName" asp-hide="@HideUsageHistoryBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-card>
                 }
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GiftCardDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GiftCardDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

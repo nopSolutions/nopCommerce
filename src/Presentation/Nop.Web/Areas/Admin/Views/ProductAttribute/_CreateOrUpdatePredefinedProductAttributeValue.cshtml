@@ -18,7 +18,7 @@
         <div class="form-horizontal">
             <div class="form-horizontal">
                 <div class="cards-group">
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributePredefinedValuesDetailsTop, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributePredefinedValuesDetailsTop, additionalData = Model })
                     <div class="card card-default card-popup">
                         <div class="card-body">
                             @(await Html.LocalizedEditorAsync<PredefinedProductAttributeValueModel, PredefinedProductAttributeValueLocalizedModel>("productattributevalue-localized",
@@ -103,7 +103,7 @@
                             </div>
                         </div>
                     </div>
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributePredefinedValuesDetailsBottom, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributePredefinedValuesDetailsBottom, additionalData = Model })
                 </div>
             </div>
         </div>

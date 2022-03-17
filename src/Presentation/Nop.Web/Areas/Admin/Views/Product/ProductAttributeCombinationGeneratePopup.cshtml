@@ -41,7 +41,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Generate")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeCombinationDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeCombinationDetailsButtons, additionalData = Model })
         </div>
     </div>
     <section class="content">

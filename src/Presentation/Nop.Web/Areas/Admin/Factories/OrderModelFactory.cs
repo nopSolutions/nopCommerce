@@ -1569,7 +1569,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     shipmentItemModel.AllowToChooseWarehouse = true;
                     foreach (var pwi in (await _productService.GetAllProductWarehouseInventoryRecordsAsync(orderItem.ProductId)).OrderBy(w => w.WarehouseId).ToList())
                     {
-                        if (await _productService.GetWarehousesByIdAsync(pwi.WarehouseId) is Warehouse warehouse)
+                        if (await _productService.GetWarehouseByIdAsync(pwi.WarehouseId) is Warehouse warehouse)
                         {
                             shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
                             {
@@ -1797,11 +1797,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     var bestsellerModel = new BestsellerModel
                     {
                         ProductId = bestseller.ProductId,
-                        TotalQuantity = bestseller.TotalQuantity
+                        TotalQuantity = bestseller.TotalQuantity,
+                        ProductName = bestseller.ProductName
                     };
 
                     //fill in additional values (not existing in the entity)
-                    bestsellerModel.ProductName = (await _productService.GetProductByIdAsync(bestseller.ProductId))?.Name;
                     bestsellerModel.TotalAmount = await _priceFormatter.FormatPriceAsync(bestseller.TotalAmount, true, false);
 
                     return bestsellerModel;

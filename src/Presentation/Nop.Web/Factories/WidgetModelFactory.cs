@@ -72,7 +72,7 @@ namespace Nop.Web.Factories
                 (await _widgetPluginManager.LoadActivePluginsAsync(customer, store.Id, widgetZone))
                 .Select(widget => new RenderWidgetModel
                 {
-                    WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),
+                    WidgetViewComponent = widget.GetWidgetViewComponent(widgetZone),
                     WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone }
                 }));
 
@@ -80,7 +80,7 @@ namespace Nop.Web.Factories
             //We need to clone the cached model before modifications (the updated one should not be cached)
             var models = cachedModels.Select(renderModel => new RenderWidgetModel
             {
-                WidgetViewComponentName = renderModel.WidgetViewComponentName,
+                WidgetViewComponent = renderModel.WidgetViewComponent,
                 WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone, ["additionalData"] = additionalData }
             }).ToList();
 

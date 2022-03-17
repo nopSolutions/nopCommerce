@@ -9,18 +9,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     public partial record PluginConfigModel : BaseNopModel, IConfigModel
     {
         #region Properties
-
-        [NopResourceDisplayName("Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup")]
-        public bool ClearPluginShadowDirectoryOnStartup { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup")]
-        public bool CopyLockedPluginAssembilesToSubdirectoriesOnStartup { get; set; }
-
+        
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly")]
         public bool UseUnsafeLoadAssembly { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy")]
-        public bool UsePluginsShadowCopy { get; set; }
 
         #endregion
     }

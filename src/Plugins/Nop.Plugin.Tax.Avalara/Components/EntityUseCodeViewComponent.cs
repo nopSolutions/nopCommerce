@@ -27,7 +27,6 @@ namespace Nop.Plugin.Tax.Avalara.Components
     /// <summary>
     /// Represents a view component to render an additional field on customer details, customer role details, product details, checkout attribute details views
     /// </summary>
-    [ViewComponent(Name = AvalaraTaxDefaults.ENTITY_USE_CODE_VIEW_COMPONENT_NAME)]
     public class EntityUseCodeViewComponent : NopViewComponent
     {
         #region Fields

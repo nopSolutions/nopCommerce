@@ -1,6 +1,6 @@
 @model ProductModel
 
-@await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesCombinationsTop, additionalData = Model })
+@await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesCombinationsTop, additionalData = Model })
 <div class="cards-group">
     <div class="card card-default">
         <div class="card-body">
@@ -150,5 +150,5 @@
         </div>
     </div>
 </div>
-@await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesCombinationsBottom, additionalData = Model })
+@await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesCombinationsBottom, additionalData = Model })
 <nop-alert asp-alert-id="generateAllAttributeCombinationsAlert" asp-alert-message="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedGenerate")" />
