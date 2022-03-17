@@ -120,6 +120,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Customers.Customers.List.SearchRegistrationDateFrom.Hint"] = "The registration from date for the search.",
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo"] = "Registration date to",
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo.Hint"] = "The registration to date for the search.",
+                
+                //#5313
+                ["ActivityLog.ImportOrders"] = "{0} orders were imported",
+                ["Admin.Orders.Import.CustomersDontExist"] = "Customers with the following guids don't exist: {0}",
+                ["Admin.Orders.Import.ProductsDontExist"] = "Products with the following SKUs don't exist: {0}",
+                ["Admin.Orders.Imported"] = "Orders have been imported successfully.",
+                ["Admin.Orders.List.ImportFromExcelTip"] = "Imported orders are distinguished by order guid. If the order guid already exists, then its corresponding information will be updated.",
 
                 //#1933
                 ["Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages"] = "Display all pictures on catalog pages",

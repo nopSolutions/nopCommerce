@@ -365,6 +365,27 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Get customers by guids
+        /// </summary>
+        /// <param name="customerGuids">Customer guids</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customers
+        /// </returns>
+        public virtual async Task<IList<Customer>> GetCustomersByGuidsAsync(Guid[] customerGuids)
+        {
+            if (customerGuids == null)
+                return null;
+
+            var query = from c in _customerRepository.Table
+                        where customerGuids.Contains(c.CustomerGuid)
+                        select c;
+            var customers = await query.ToListAsync();
+
+            return customers;
+        }
+
+        /// <summary>
         /// Gets a customer by GUID
         /// </summary>
         /// <param name="customerGuid">Customer GUID</param>
@@ -1055,6 +1076,29 @@ namespace Nop.Services.Customers
             foreach (var existingCouponCode in existingCouponCodes)
                 if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                     await ApplyGiftCardCouponCodeAsync(customer, existingCouponCode);
+        }
+
+        /// <summary>
+        /// Returns a list of guids of not existing customers
+        /// </summary>
+        /// <param name="guids">The guids of the customers to check</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of guids not existing customers
+        /// </returns>
+        public virtual async Task<Guid[]> GetNotExistingCustomersAsync(Guid[] guids)
+        {
+            if (guids == null)
+                throw new ArgumentNullException(nameof(guids));
+
+            var query = _customerRepository.Table;
+            var queryFilter = guids.Distinct().ToArray();
+            //filtering by guid
+            var filter = await query.Select(c => c.CustomerGuid)
+                .Where(c => queryFilter.Contains(c))
+                .ToListAsync();
+
+            return queryFilter.Except(filter).ToArray();
         }
 
         #endregion

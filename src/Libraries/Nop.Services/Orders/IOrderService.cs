@@ -55,6 +55,16 @@ namespace Nop.Services.Orders
         Task<IList<Order>> GetOrdersByIdsAsync(int[] orderIds);
 
         /// <summary>
+        /// Get orders by guids
+        /// </summary>
+        /// <param name="orderGuids">Order guids</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the orders
+        /// </returns>
+        Task<IList<Order>> GetOrdersByGuidsAsync(Guid[] orderGuids);
+
+        /// <summary>
         /// Gets an order
         /// </summary>
         /// <param name="orderGuid">The order identifier</param>
