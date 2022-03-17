@@ -24,8 +24,8 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="addDefaultTitle">A value indicating whether to insert a default title</param>
         /// <param name="part">Title part</param>
-        /// <returns>Generated string</returns>
-        string GenerateTitle(bool addDefaultTitle = true, string part = "");
+        /// <returns>Generated HTML string</returns>
+        IHtmlContent GenerateTitle(bool addDefaultTitle = true, string part = "");
 
         /// <summary>
         /// Add meta description element to the <![CDATA[<head>]]>
@@ -43,8 +43,8 @@ namespace Nop.Web.Framework.UI
         /// Generate all description parts
         /// </summary>
         /// <param name="part">Meta description part</param>
-        /// <returns>Generated string</returns>
-        string GenerateMetaDescription(string part = "");
+        /// <returns>Generated HTML string</returns>
+        IHtmlContent GenerateMetaDescription(string part = "");
 
         /// <summary>
         /// Add meta keyword element to the <![CDATA[<head>]]>
@@ -62,8 +62,8 @@ namespace Nop.Web.Framework.UI
         /// Generate all keyword parts
         /// </summary>
         /// <param name="part">Meta keyword part</param>
-        /// <returns>Generated string</returns>
-        string GenerateMetaKeywords(string part = "");
+        /// <returns>Generated HTML string</returns>
+        IHtmlContent GenerateMetaKeywords(string part = "");
 
         /// <summary>
         /// Add script element
@@ -71,8 +71,9 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool isAsync = false);
+        void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false);
 
         /// <summary>
         /// Append script element
@@ -80,14 +81,15 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool isAsync = false);
+        void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false);
 
         /// <summary>
         /// Generate all script parts
         /// </summary>
         /// <param name="location">A location of the script element</param>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         IHtmlContent GenerateScripts(ResourceLocation location);
 
         /// <summary>
@@ -108,31 +110,30 @@ namespace Nop.Web.Framework.UI
         /// Generate all inline script parts
         /// </summary>
         /// <param name="location">A location of the script element</param>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         IHtmlContent GenerateInlineScripts(ResourceLocation location);
 
         /// <summary>
         /// Add CSS element
         /// </summary>
-        /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        void AddCssFileParts(ResourceLocation location, string src, string debugSrc);
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this style sheet from bundling</param>
+        void AddCssFileParts(string src, string debugSrc = "", bool excludeFromBundle = false);
 
         /// <summary>
         /// Append CSS element
         /// </summary>
-        /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        void AppendCssFileParts(ResourceLocation location, string src, string debugSrc);
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this style sheet from bundling</param>
+        void AppendCssFileParts(string src, string debugSrc = "", bool excludeFromBundle = false);
 
         /// <summary>
         /// Generate all CSS parts
         /// </summary>
-        /// <param name="location">A location of the script element</param>
-        /// <returns>Generated HTML</returns>
-        IHtmlContent GenerateCssFiles(ResourceLocation location);
+        /// <returns>Generated HTML string</returns>
+        IHtmlContent GenerateCssFiles();
 
         /// <summary>
         /// Add canonical URL element to the <![CDATA[<head>]]>
@@ -150,7 +151,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all canonical URL parts
         /// </summary>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         IHtmlContent GenerateCanonicalUrls();
 
         /// <summary>
@@ -168,7 +169,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all custom elements
         /// </summary>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         IHtmlContent GenerateHeadCustom();
 
         /// <summary>
@@ -213,5 +214,12 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <returns>System name</returns>
         string GetActiveMenuItemSystemName();
+
+        /// <summary>
+        /// Get the route name associated with the request rendering this page
+        /// </summary>
+        /// <param name="handleDefaultRoutes">A value indicating whether to build the name using engine information unless otherwise specified</param>
+        /// <returns>Route name</returns>
+        string GetRouteName(bool handleDefaultRoutes = false);
     }
 }

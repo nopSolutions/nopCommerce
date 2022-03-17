@@ -11,7 +11,7 @@ namespace Nop.Web.Framework.Configuration
         public WebOptimizerConfig()
         {
             EnableDiskCache = true;
-            EnableTagHelperBundling = true;
+            EnableTagHelperBundling = false;
         }
 
         #endregion

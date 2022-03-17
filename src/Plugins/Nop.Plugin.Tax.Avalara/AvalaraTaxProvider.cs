@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Tax;
+using Nop.Plugin.Tax.Avalara.Components;
 using Nop.Plugin.Tax.Avalara.Domain;
 using Nop.Plugin.Tax.Avalara.Services;
 using Nop.Services.Cms;
@@ -154,29 +155,25 @@ namespace Nop.Plugin.Tax.Avalara
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying widget
+        /// Gets a type of a view component for displaying widget
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
-        /// <returns>View component name</returns>
-        public string GetWidgetViewComponentName(string widgetZone)
+        /// <returns>View component type</returns>
+        public Type GetWidgetViewComponent(string widgetZone)
         {
             if (widgetZone.Equals(AdminWidgetZones.CustomerDetailsBlock) ||
                 widgetZone.Equals(AdminWidgetZones.CustomerRoleDetailsTop))
-            {
-                return AvalaraTaxDefaults.ENTITY_USE_CODE_VIEW_COMPONENT_NAME;
-            }
+                return typeof(EntityUseCodeViewComponent);
 
             if (widgetZone.Equals(AdminWidgetZones.ProductListButtons))
-                return AvalaraTaxDefaults.EXPORT_ITEMS_VIEW_COMPONENT_NAME;
+                return typeof(ExportItemsViewComponent);
 
             if (widgetZone.Equals(PublicWidgetZones.CheckoutConfirmTop) ||
                 widgetZone.Equals(PublicWidgetZones.OpCheckoutConfirmTop))
-            {
-                return AvalaraTaxDefaults.ADDRESS_VALIDATION_VIEW_COMPONENT_NAME;
-            }
+                return typeof(AddressValidationViewComponent);
 
             if (widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore))
-                return AvalaraTaxDefaults.APPLIED_CERTIFICATE_VIEW_COMPONENT_NAME;
+                return typeof(AppliedCertificateViewComponent);
 
             return null;
         }

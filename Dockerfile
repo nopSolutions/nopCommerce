@@ -23,6 +23,8 @@ WORKDIR /src/Plugins/Nop.Plugin.Misc.Sendinblue
 RUN dotnet build Nop.Plugin.Misc.Sendinblue.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Misc.WebApi.Frontend
 RUN dotnet build Nop.Plugin.Misc.WebApi.Frontend.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
+RUN dotnet build Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.CheckMoneyOrder
 RUN dotnet build Nop.Plugin.Payments.CheckMoneyOrder.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.Manual
@@ -33,6 +35,8 @@ WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalStandard
 RUN dotnet build Nop.Plugin.Payments.PayPalStandard.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Pickup.PickupInStore
 RUN dotnet build Nop.Plugin.Pickup.PickupInStore.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.Shipping.EasyPost
+RUN dotnet build Nop.Plugin.Shipping.EasyPost.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.FixedByWeightByTotal
 RUN dotnet build Nop.Plugin.Shipping.FixedByWeightByTotal.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.ShipStation
@@ -51,6 +55,8 @@ WORKDIR /src/Plugins/Nop.Plugin.Widgets.GoogleAnalytics
 RUN dotnet build Nop.Plugin.Widgets.GoogleAnalytics.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Widgets.NivoSlider
 RUN dotnet build Nop.Plugin.Widgets.NivoSlider.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.Widgets.What3words
+RUN dotnet build Nop.Plugin.Widgets.What3words.csproj -c Release
 
 # publish project
 WORKDIR /src/Presentation/Nop.Web   

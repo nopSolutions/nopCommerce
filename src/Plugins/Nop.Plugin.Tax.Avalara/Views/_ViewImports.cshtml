@@ -4,6 +4,7 @@
 @addTagHelper *, Nop.Web.Framework
 
 @inject AvalaraTaxSettings avalaraTaxSettings
+@inject INopHtmlHelper NopHtml
 
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Mvc.ViewFeatures
@@ -18,6 +19,8 @@
 @using Nop.Plugin.Tax.Avalara.Models.EntityUseCode
 @using Nop.Plugin.Tax.Avalara.Models.Log
 @using Nop.Plugin.Tax.Avalara.Models.Tax
+@using Nop.Web.Areas.Admin.Components
+@using Nop.Web.Components
 @using Nop.Web.Extensions
 @using Nop.Web.Framework
 @using Nop.Web.Framework.Extensions

@@ -10,10 +10,9 @@
     NopHtml.AppendPageCssClassParts("html-forum-topic-page");
 }
 <div class="page forum-topic-page">
-    @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
+    @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumTopicId = Model.Id })
     @await Html.PartialAsync("_ForumHeader")
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicAfterHeader, additionalData = Model })
-    <nop-antiforgery-token />
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicAfterHeader, additionalData = Model })
     <div class="topic-name">
         <h1>@Model.Subject</h1>
     </div>
@@ -95,7 +94,7 @@
                 RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
             });
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicTop, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicTop, additionalData = Model })
         @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
         {
             <div class="pager upper">
@@ -149,7 +148,7 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicBottom, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicBottom, additionalData = Model })
 </div>
 <script asp-location="Footer">
     function deletepost(postId) {

@@ -1,9 +1,11 @@
 ﻿@using Nop.Core.Configuration
+@using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
 @using Nop.Services.Security
 @using Nop.Core.Events
 
+@inject CatalogSettings catalogSettings
 @inject CommonSettings commonSettings
 @inject IEventPublisher eventPublisher
 @inject IPermissionService permissionService
@@ -11,6 +13,26 @@
 @inject AppSettings appSettings
 
 @{
+    if (catalogSettings.DisplayAllPicturesOnCatalogPages)
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/swiper/swiper-bundle.min.js");
+    }
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
+    //when jQuery migrate script logging is active you will see the log in the browser console
+    if (commonSettings.JqueryMigrateScriptLoggingActive)
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.js");
+    }
+    else
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.min.js");
+    }
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation/jquery.validate.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery/jquery.min.js");
 
     //custom tag(s);
     if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
@@ -21,7 +43,7 @@
     var displayMiniProfiler = appSettings.Get<CommonConfig>().MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
 
     //event
-    await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
+    await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
 }
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
@@ -36,15 +58,14 @@
     @*This is used so that themes can inject content into the header*@
     @await Html.PartialAsync("Head")
 
-    @NopHtml.GenerateCssFiles(ResourceLocation.Head)
-    <style-bundle /> @* bundle tag must be below other link tags *@
+    @NopHtml.GenerateCssFiles()
 
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeadHtmlTag })
     @NopHtml.GenerateCanonicalUrls()
-    @await Component.InvokeAsync("NewsRssHeaderLink")
-    @await Component.InvokeAsync("BlogRssHeaderLink")
+    @await Component.InvokeAsync(typeof(NewsRssHeaderLinkViewComponent))
+    @await Component.InvokeAsync(typeof(BlogRssHeaderLinkViewComponent))
     @*Insert favicon and app icons head code*@
-    @await Component.InvokeAsync("Favicon")
+    @await Component.InvokeAsync(typeof(FaviconViewComponent))
     @if (displayMiniProfiler)
     {
         <mini-profiler />
@@ -52,33 +73,16 @@
     @NopHtml.GenerateScripts(ResourceLocation.Head)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->
+    
+    @Html.Raw(commonSettings.HeaderCustomHtml)
 </head>
 <body>
+    <nop-antiforgery-token />
     @RenderBody()
-
-    <script src="~/lib_npm/jquery/jquery.min.js"></script>
-    @* when jQuery migrate script logging is active you will see the log in the browser console *@
-    @if (commonSettings.JqueryMigrateScriptLoggingActive)
-    {
-        <script src="~/lib_npm/jquery-migrate/jquery-migrate.js"></script>
-    }
-    else
-    {
-        <script src="~/lib_npm/jquery-migrate/jquery-migrate.min.js"></script>
-    }
-    <script src="~/lib_npm/jquery-ui-dist/jquery-ui.min.js"></script>
-    <script src="~/lib_npm/jquery-validation/jquery.validate.min.js"></script>
-    <script src="~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
-
-    <script src="~/js/public.countryselect.js"></script>
-    <script src="~/js/public.ajaxcart.js"></script>
-    <script src="~/js/public.common.js"></script>
-
-    <!-- FooterScripts  -->
-    <script-bundle />
 
     @NopHtml.GenerateScripts(ResourceLocation.Footer)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
+    
+    @Html.Raw(commonSettings.FooterCustomHtml)
 </body>
 </html>

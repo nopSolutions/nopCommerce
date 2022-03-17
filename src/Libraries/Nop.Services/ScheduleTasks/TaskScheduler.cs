@@ -229,7 +229,7 @@ namespace Nop.Services.ScheduleTasks
                 }
                 finally
                 {
-                    if (!_disposed)
+                    if (!_disposed && _timer != null)
                     {
                         if (RunOnlyOnce)
                             Dispose();

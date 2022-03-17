@@ -67,6 +67,7 @@ a {
 	padding: 5px 10px;
 }
 .order-details-page .data-table .sku,
+.order-details-page .data-table .picture,
 .order-details-page .data-table .unit-price,
 .order-details-page .data-table .quantity,
 .order-details-page .data-table .total {

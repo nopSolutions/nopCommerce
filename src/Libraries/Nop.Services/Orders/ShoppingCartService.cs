@@ -338,10 +338,8 @@ namespace Nop.Services.Orders
                 warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.ProductUnpublished"));
             }
 
-            var store = await _storeContext.GetCurrentStoreAsync();
-
             //Store mapping
-            if (!await _storeMappingService.AuthorizeAsync(product, store.Id))
+            if (!await _storeMappingService.AuthorizeAsync(product, storeId))
             {
                 warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.ProductUnpublished"));
             }

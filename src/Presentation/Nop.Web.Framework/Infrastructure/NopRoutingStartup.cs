@@ -33,9 +33,6 @@ namespace Nop.Web.Framework.Infrastructure
 
             //Add the RoutingMiddleware
             application.UseRouting();
-
-            //Endpoints routing
-            application.UseNopEndpoints();
         }
 
         /// <summary>

@@ -41,15 +41,18 @@
     }    
     <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
         <meta itemprop="url" content="@productUrl"/>
-        <meta itemprop="price" content="@productPrice.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"/>
+        <meta itemprop="price" content="@(Model.ProductPrice.CallForPrice ? null : productPrice.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture))"/>
         <meta itemprop="priceCurrency" content="@Model.ProductPrice.CurrencyCode"/>
         <meta itemprop="priceValidUntil" content="@Model.AvailableEndDate"/>
         <meta itemprop="availability" content="http://schema.org/@(Model.InStock ? "InStock" : "OutOfStock")" />
     </div>
-    <div itemprop="review" itemscope itemtype="http://schema.org/Review">
-        <meta itemprop="author" content="ALL"/>
-        <meta itemprop="url" content="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductReviewOverview.ProductId })"/>
-    </div>
+    @if (Model.ProductReviewOverview.AllowCustomerReviews)
+    {
+        <div itemprop="review" itemscope itemtype="http://schema.org/Review">
+            <meta itemprop="author" content="ALL"/>
+            <meta itemprop="url" content="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductReviewOverview.ProductId })"/>
+        </div>
+    }
     @foreach (var product in Model.AssociatedProducts)
     {
         var viewDataDictionary = new ViewDataDictionary(ViewData);

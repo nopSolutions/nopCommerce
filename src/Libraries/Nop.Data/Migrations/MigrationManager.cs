@@ -42,20 +42,51 @@ namespace Nop.Data.Migrations
         #endregion
 
         #region Utils
-        
+
         /// <summary>
-        /// Returns the instances for found types implementing FluentMigrator.IMigration
+        /// Returns the instances for found types implementing FluentMigrator.IMigration which ready to Up process
         /// </summary>
         /// <param name="assembly">Assembly to find migrations</param>
-        /// <param name="migrationProcessType">Type of migration process; pass null to load all migrations</param>
+        /// <param name="migrationProcessType">Type of migration process; pass MigrationProcessType.NoMatter to load all migrations</param>
         /// <returns>The instances for found types implementing FluentMigrator.IMigration</returns>
-        protected virtual IEnumerable<IMigrationInfo> GetMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.NoMatter)
+        protected virtual IEnumerable<IMigrationInfo> GetUpMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.NoMatter)
         {
             var migrations = _filteringMigrationSource
                 .GetMigrations(t =>
                 {
                     var migrationAttribute = t.GetCustomAttribute<NopMigrationAttribute>();
+                    
                     if (migrationAttribute is null || _versionLoader.Value.VersionInfo.HasAppliedMigration(migrationAttribute.Version))
+                        return false;
+
+                    if (migrationAttribute.TargetMigrationProcess != MigrationProcessType.NoMatter &&
+                        migrationProcessType != MigrationProcessType.NoMatter &&
+                        migrationProcessType != migrationAttribute.TargetMigrationProcess)
+                        return false;
+
+                    return assembly == null || t.Assembly == assembly;
+
+                }) ?? Enumerable.Empty<IMigration>();
+
+            return migrations
+                .Select(m => _migrationRunnerConventions.GetMigrationInfoForMigration(m))
+                .OrderBy(migration => migration.Version);
+        }
+
+        /// <summary>
+        /// Returns the instances for found types implementing FluentMigrator.IMigration which ready to Down process
+        /// </summary>
+        /// <param name="assembly">Assembly to find migrations</param>
+        /// <param name="migrationProcessType">Type of migration process; pass MigrationProcessType.NoMatter to load all migrations</param>
+        /// <returns>The instances for found types implementing FluentMigrator.IMigration</returns>
+        protected virtual IEnumerable<IMigrationInfo> GetDownMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.NoMatter)
+        {
+            var migrations = _filteringMigrationSource
+                .GetMigrations(t =>
+                {
+                    var migrationAttribute = t.GetCustomAttribute<NopMigrationAttribute>();
+
+                    if (migrationAttribute is null || !_versionLoader.Value.VersionInfo.HasAppliedMigration(migrationAttribute.Version))
                         return false;
 
                     if (migrationAttribute.TargetMigrationProcess != MigrationProcessType.NoMatter &&
@@ -68,8 +99,6 @@ namespace Nop.Data.Migrations
 
             return migrations
                 .Select(m => _migrationRunnerConventions.GetMigrationInfoForMigration(m))
-                //.OrderBy(m => m.Migration.GetType().GetCustomAttribute<NopMigrationAttribute>().MigrationTarget)
-                //.ThenBy(migration => migration.Version);
                 .OrderBy(migration => migration.Version);
         }
 
@@ -87,7 +116,7 @@ namespace Nop.Data.Migrations
             if (assembly is null)
                 throw new ArgumentNullException(nameof(assembly));
 
-            foreach (var migrationInfo in GetMigrations(assembly, migrationProcessType))
+            foreach (var migrationInfo in GetUpMigrations(assembly, migrationProcessType))
             {
                 _migrationRunner.Up(migrationInfo.Migration);
 
@@ -102,7 +131,7 @@ namespace Nop.Data.Migrations
         }
         
         /// <summary>
-        /// Executes all found (and unapplied) migrations
+        /// Executes all found (and applied) migrations
         /// </summary>
         /// <param name="assembly">Assembly to find the migration</param>
         public void ApplyDownMigrations(Assembly assembly)
@@ -110,9 +139,7 @@ namespace Nop.Data.Migrations
             if(assembly is null)
                 throw new ArgumentNullException(nameof(assembly));
 
-            var migrations = GetMigrations(assembly).Reverse();
-
-            foreach (var migrationInfo in migrations)
+            foreach (var migrationInfo in GetDownMigrations(assembly).Reverse())
             {
                 _migrationRunner.Down(migrationInfo.Migration);
                 _versionLoader.Value.DeleteVersion(migrationInfo.Version);

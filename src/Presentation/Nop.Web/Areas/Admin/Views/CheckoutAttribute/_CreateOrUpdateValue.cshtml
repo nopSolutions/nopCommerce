@@ -20,7 +20,7 @@
     <div class="container-fluid">
         <div class="form-horizontal">
         <div class="cards-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeValueDetailsTop, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CheckoutAttributeValueDetailsTop, additionalData = Model })
             <div class="card card-default card-popup">
                 <div class="card-body">
                     @(await Html.LocalizedEditorAsync<CheckoutAttributeValueModel, CheckoutAttributeValueLocalizedModel>("checkoutattributevalue-localized",
@@ -110,7 +110,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeValueDetailsBottom, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CheckoutAttributeValueDetailsBottom, additionalData = Model })
         </div>
     </div>
     </div>

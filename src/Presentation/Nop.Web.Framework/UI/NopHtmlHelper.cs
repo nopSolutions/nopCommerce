@@ -1,16 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Seo;
+using Nop.Services.Localization;
+using Nop.Web.Framework.Configuration;
+using Nop.Web.Framework.Mvc.Routing;
+using WebOptimizer;
 
 namespace Nop.Web.Framework.UI
 {
@@ -21,15 +33,17 @@ namespace Nop.Web.Framework.UI
     {
         #region Fields
 
+        private readonly AppSettings _appSettings;
         private readonly HtmlEncoder _htmlEncoder;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IAssetPipeline _assetPipeline;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly SeoSettings _seoSettings;
 
         private readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts = new();
         private readonly Dictionary<ResourceLocation, List<string>> _inlineScriptParts = new();
-        private readonly Dictionary<ResourceLocation, List<CssReferenceMeta>> _cssParts = new();
+        private readonly List<CssReferenceMeta> _cssParts = new();
 
         private readonly List<string> _canonicalUrlParts = new();
         private readonly List<string> _headCustomParts = new();
@@ -45,17 +59,72 @@ namespace Nop.Web.Framework.UI
 
         #region Ctor
 
-        public NopHtmlHelper(HtmlEncoder htmlEncoder,
+        public NopHtmlHelper(AppSettings appSettings,
             IActionContextAccessor actionContextAccessor,
+            HtmlEncoder htmlEncoder,
+            IAssetPipeline assetPipeline,
             IUrlHelperFactory urlHelperFactory,
             IWebHostEnvironment webHostEnvironment,
             SeoSettings seoSettings)
         {
-            _htmlEncoder = htmlEncoder;
+            _appSettings = appSettings;
             _actionContextAccessor = actionContextAccessor;
+            _htmlEncoder = htmlEncoder;
+            _assetPipeline = assetPipeline;
             _urlHelperFactory = urlHelperFactory;
             _webHostEnvironment = webHostEnvironment;
             _seoSettings = seoSettings;
+        }
+
+        #endregion
+
+        #region Utils
+
+        private string GetAssetKey(string key, ResourceLocation location)
+        {
+            var keyPrefix = Enum.GetName(location) + key;
+
+            var routeKey = GetRouteName(handleDefaultRoutes: true);
+
+            if (string.IsNullOrEmpty(routeKey))
+                return keyPrefix;
+
+            return string.Concat(routeKey, ".", keyPrefix);
+        }
+
+        /// <summary>
+        /// Get or create an asset to the optimization pipeline.
+        /// </summary>
+        /// <param name="bundlePath">A registered route</param>
+        /// <param name="sourceFiles">Relative file names of the sources to optimize; if not specified, will use <paramref name="bundlePath"/></param>
+        /// <returns>The bundle</returns>
+        private IAsset GetOrCreateBundle(string bundlePath, Func<string, string[], IAsset> createAsset, params string[] sourceFiles)
+        {
+            if(string.IsNullOrEmpty(bundlePath))
+                throw new ArgumentNullException(nameof(bundlePath));
+
+            if (createAsset is null)
+                throw new ArgumentNullException(nameof(createAsset));
+
+            if (sourceFiles.Length == 0)
+                sourceFiles = new[] { bundlePath };
+
+            //remove the base path from the generated URL if exists
+            var pathBase = _actionContextAccessor.ActionContext?.HttpContext?.Request?.PathBase ?? PathString.Empty;
+            sourceFiles = sourceFiles.Select(src => src.RemoveApplicationPathFromRawUrl(pathBase)).ToArray();
+
+            if (!_assetPipeline.TryGetAssetFromRoute(bundlePath, out var bundleAsset))
+            {
+                bundleAsset = createAsset(bundlePath, sourceFiles);
+            }
+            else if (bundleAsset.SourceFiles.Count != sourceFiles.Length || !bundleAsset.SourceFiles.SequenceEqual(sourceFiles))
+            {
+                bundleAsset.SourceFiles.Clear();
+                foreach (var source in sourceFiles)
+                    bundleAsset.TryAddSourceFile(source);
+            }
+
+            return bundleAsset;
         }
 
         #endregion
@@ -91,8 +160,8 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="addDefaultTitle">A value indicating whether to insert a default title</param>
         /// <param name="part">Title part</param>
-        /// <returns>Generated string</returns>
-        public virtual string GenerateTitle(bool addDefaultTitle = true, string part = "")
+        /// <returns>Generated HTML string</returns>
+        public virtual IHtmlContent GenerateTitle(bool addDefaultTitle = true, string part = "")
         {
             AppendTitleParts(part);
 
@@ -129,7 +198,7 @@ namespace Nop.Web.Framework.UI
                 //store name only
                 result = _seoSettings.DefaultTitle;
             }
-            return _htmlEncoder.Encode(result);
+            return new HtmlString(_htmlEncoder.Encode(result));
         }
 
         /// <summary>
@@ -160,15 +229,15 @@ namespace Nop.Web.Framework.UI
         /// Generate all description parts
         /// </summary>
         /// <param name="part">Meta description part</param>
-        /// <returns>Generated string</returns>
-        public virtual string GenerateMetaDescription(string part = "")
+        /// <returns>Generated HTML string</returns>
+        public virtual IHtmlContent GenerateMetaDescription(string part = "")
         {
             AppendMetaDescriptionParts(part);
 
             var metaDescription = string.Join(", ", _metaDescriptionParts.AsEnumerable().Reverse().ToArray());
             var result = !string.IsNullOrEmpty(metaDescription) ? metaDescription : _seoSettings.DefaultMetaDescription;
 
-            return _htmlEncoder.Encode(result);
+            return new HtmlString(_htmlEncoder.Encode(result));
         }
 
         /// <summary>
@@ -199,15 +268,15 @@ namespace Nop.Web.Framework.UI
         /// Generate all keyword parts
         /// </summary>
         /// <param name="part">Meta keyword part</param>
-        /// <returns>Generated string</returns>
-        public virtual string GenerateMetaKeywords(string part = "")
+        /// <returns>Generated HTML string</returns>
+        public virtual IHtmlContent GenerateMetaKeywords(string part = "")
         {
             AppendMetaKeywordParts(part);
 
             var metaKeyword = string.Join(", ", _metaKeywordParts.AsEnumerable().Reverse().ToArray());
             var result = !string.IsNullOrEmpty(metaKeyword) ? metaKeyword : _seoSettings.DefaultMetaKeywords;
 
-            return _htmlEncoder.Encode(result);
+            return new HtmlString(_htmlEncoder.Encode(result));
         }
 
         /// <summary>
@@ -216,8 +285,9 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool isAsync = false)
+        public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
@@ -225,14 +295,17 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (string.IsNullOrEmpty(debugSrc))
-                debugSrc = src;
+            if (!string.IsNullOrEmpty(debugSrc) && _webHostEnvironment.IsDevelopment())
+                src = debugSrc;
+
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             _scriptParts[location].Add(new ScriptReferenceMeta
             {
+                ExcludeFromBundle = excludeFromBundle,
                 IsAsync = isAsync,
-                Src = src,
-                DebugSrc = debugSrc
+                IsLocal = urlHelper.IsLocalUrl(src),
+                Src = urlHelper.Content(src)
             });
         }
 
@@ -242,8 +315,9 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool isAsync = false)
+        public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
@@ -251,14 +325,17 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (string.IsNullOrEmpty(debugSrc))
-                debugSrc = src;
+            if (!string.IsNullOrEmpty(debugSrc) && _webHostEnvironment.IsDevelopment())
+                src = debugSrc;
+
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             _scriptParts[location].Insert(0, new ScriptReferenceMeta
             {
+                ExcludeFromBundle = excludeFromBundle,
                 IsAsync = isAsync,
-                Src = src,
-                DebugSrc = debugSrc
+                IsLocal = urlHelper.IsLocalUrl(src),
+                Src = urlHelper.Content(src)
             });
         }
 
@@ -266,7 +343,7 @@ namespace Nop.Web.Framework.UI
         /// Generate all script parts
         /// </summary>
         /// <param name="location">A location of the script element</param>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateScripts(ResourceLocation location)
         {
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
@@ -275,18 +352,44 @@ namespace Nop.Web.Framework.UI
             if (!_scriptParts.Any())
                 return HtmlString.Empty;
 
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-
-            var debugModel = _webHostEnvironment.IsDevelopment();
-
             var result = new StringBuilder();
-            foreach (var item in _scriptParts[location].Distinct())
+            var woConfig = _appSettings.Get<WebOptimizerConfig>();
+            if (woConfig.EnableJavaScriptBundling && _scriptParts[location].Any(item => !item.ExcludeFromBundle))
             {
-                var src = debugModel ? item.DebugSrc : item.Src;
-                result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src), item.IsAsync ? "async " : "");
-                result.Append(Environment.NewLine);
+                var bundleKey = string.Concat("/js/", GetAssetKey(woConfig.JavaScriptBundleSuffix, location), ".js");
+
+                var sources = _scriptParts[location]
+                    .Where(item => !item.ExcludeFromBundle && item.IsLocal)
+                    .Select(item => item.Src)
+                    .Distinct().ToArray();
+
+                var bundleAsset = GetOrCreateBundle(bundleKey, _assetPipeline.AddJavaScriptBundle, sources);
+
+                var pathBase = _actionContextAccessor.ActionContext?.HttpContext?.Request?.PathBase ?? PathString.Empty;
+                result.AppendFormat("<script type=\"{0}\" src=\"{1}{2}?v={3}\"></script>",
+                    MimeTypes.TextJavascript, pathBase, bundleAsset.Route, bundleAsset.GenerateCacheKey(_actionContextAccessor.ActionContext.HttpContext));
             }
 
+            var scripts = _scriptParts[location]
+                .Where(item => !woConfig.EnableJavaScriptBundling || item.ExcludeFromBundle || !item.IsLocal)
+                .Distinct();
+
+            foreach (var item in scripts)
+            {
+                if (!item.IsLocal)
+                {
+                    result.AppendFormat("<script type=\"{0}\" src=\"{1}\"></script>", MimeTypes.TextJavascript, item.Src);
+                    result.Append(Environment.NewLine);
+                    continue;
+                }
+
+                var asset = GetOrCreateBundle(item.Src, _assetPipeline.AddJavaScriptBundle);
+
+                result.AppendFormat("<script type=\"{0}\" src=\"{1}?v={2}\"></script>",
+                    MimeTypes.TextJavascript, asset.Route, asset.GenerateCacheKey(_actionContextAccessor.ActionContext.HttpContext));
+
+                result.Append(Environment.NewLine);
+            }
             return new HtmlString(result.ToString());
         }
 
@@ -332,7 +435,7 @@ namespace Nop.Web.Framework.UI
         /// Generate all inline script parts
         /// </summary>
         /// <param name="location">A location of the script element</param>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateInlineScripts(ResourceLocation location)
         {
             if (!_inlineScriptParts.ContainsKey(location) || _inlineScriptParts[location] == null)
@@ -353,75 +456,124 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Add CSS element
         /// </summary>
-        /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        public virtual void AddCssFileParts(ResourceLocation location, string src, string debugSrc)
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this style sheet from bundling</param>
+        public virtual void AddCssFileParts(string src, string debugSrc = "", bool excludeFromBundle = false)
         {
-            if (!_cssParts.ContainsKey(location))
-                _cssParts.Add(location, new List<CssReferenceMeta>());
-
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (string.IsNullOrEmpty(debugSrc))
-                debugSrc = src;
+            if (!string.IsNullOrEmpty(debugSrc) && _webHostEnvironment.IsDevelopment())
+                src = debugSrc;
 
-            _cssParts[location].Add(new CssReferenceMeta
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
+            _cssParts.Add(new CssReferenceMeta
             {
-                Src = src,
-                DebugSrc = debugSrc
+                ExcludeFromBundle = excludeFromBundle,
+                IsLocal = urlHelper.IsLocalUrl(src),
+                Src = urlHelper.Content(src)
             });
         }
 
         /// <summary>
         /// Append CSS element
         /// </summary>
-        /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        public virtual void AppendCssFileParts(ResourceLocation location, string src, string debugSrc)
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this style sheet from bundling</param>
+        public virtual void AppendCssFileParts(string src, string debugSrc = "", bool excludeFromBundle = false)
         {
-            if (!_cssParts.ContainsKey(location))
-                _cssParts.Add(location, new List<CssReferenceMeta>());
-
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (string.IsNullOrEmpty(debugSrc))
-                debugSrc = src;
+            if (!string.IsNullOrEmpty(debugSrc) && _webHostEnvironment.IsDevelopment())
+                src = debugSrc;
 
-            _cssParts[location].Insert(0, new CssReferenceMeta
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
+            _cssParts.Insert(0, new CssReferenceMeta
             {
-                Src = src,
-                DebugSrc = debugSrc
+                ExcludeFromBundle = excludeFromBundle,
+                IsLocal = urlHelper.IsLocalUrl(src),
+                Src = urlHelper.Content(src)
             });
         }
 
         /// <summary>
         /// Generate all CSS parts
         /// </summary>
-        /// <param name="location">A location of the script element</param>
-        /// <returns>Generated HTML</returns>
-        public virtual IHtmlContent GenerateCssFiles(ResourceLocation location)
+        /// <returns>Generated HTML string</returns>
+        public virtual IHtmlContent GenerateCssFiles()
         {
-            if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
+            if (_cssParts.Count == 0)
                 return HtmlString.Empty;
-
-            if (!_cssParts.Any())
-                return HtmlString.Empty;
-
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             var debugModel = _webHostEnvironment.IsDevelopment();
 
             var result = new StringBuilder();
-            foreach (var item in _cssParts[location].Distinct())
+
+            var woConfig = _appSettings.Get<WebOptimizerConfig>();
+
+            if (woConfig.EnableCssBundling && _cssParts.Any(item => !item.ExcludeFromBundle))
             {
-                var src = debugModel ? item.DebugSrc : item.Src;
-                result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(src), MimeTypes.TextCss);
+                var bundleSuffix = woConfig.CssBundleSuffix;
+
+                if (CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
+                    bundleSuffix += ".rtl";
+
+                var bundleKey = string.Concat("/css/", GetAssetKey(bundleSuffix, ResourceLocation.Head), ".css");
+
+                var sources = _cssParts
+                    .Where(item => !item.ExcludeFromBundle && item.IsLocal)
+                    .Distinct()
+                    //remove the application path from the generated URL if exists
+                    .Select(item => item.Src).ToArray();
+
+                var bundleAsset = GetOrCreateBundle(bundleKey, (bundleKey, assetFiles) =>
+                {
+                    return _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextCss}; charset=UTF-8", assetFiles)
+                        .EnforceFileExtensions(".css")
+                        .AdjustRelativePaths()
+                        .Concatenate()
+                        .AddResponseHeader(HeaderNames.XContentTypeOptions, "nosniff")
+                        .MinifyCss();
+                }, sources);
+
+                var pathBase = _actionContextAccessor.ActionContext?.HttpContext?.Request?.PathBase ?? PathString.Empty;
+                result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}{2}?v={3}\" />",
+                    MimeTypes.TextCss, pathBase, bundleAsset.Route, bundleAsset.GenerateCacheKey(_actionContextAccessor.ActionContext.HttpContext));
+            }
+
+            var styles = _cssParts
+                    .Where(item => !woConfig.EnableCssBundling || item.ExcludeFromBundle || !item.IsLocal)
+                    .Distinct();
+
+            foreach (var item in styles)
+            {
+                if (!item.IsLocal)
+                {
+                    result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}\" />", MimeTypes.TextCss, item.Src);
+                    result.Append(Environment.NewLine);
+                    continue;
+                }
+
+                var asset = GetOrCreateBundle(item.Src, (bundleKey, assetFiles) =>
+                {
+                    return _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextCss}; charset=UTF-8", assetFiles)
+                        .EnforceFileExtensions(".css")
+                        .AdjustRelativePaths()
+                        .Concatenate()
+                        .AddResponseHeader(HeaderNames.XContentTypeOptions, "nosniff")
+                        .MinifyCss();
+                });
+
+                result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}?v={2}\" />",
+                    MimeTypes.TextCss, asset.Route, asset.GenerateCacheKey(_actionContextAccessor.ActionContext.HttpContext));
                 result.AppendLine();
             }
+
             return new HtmlString(result.ToString());
         }
 
@@ -461,7 +613,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all canonical URL parts
         /// </summary>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateCanonicalUrls()
         {
             var result = new StringBuilder();
@@ -500,7 +652,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all custom elements
         /// </summary>
-        /// <returns>Generated string</returns>
+        /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateHeadCustom()
         {
             //use only distinct rows
@@ -594,6 +746,52 @@ namespace Nop.Web.Framework.UI
             return _activeAdminMenuSystemName;
         }
 
+        /// <summary>
+        /// Get the route name associated with the request rendering this page
+        /// </summary>
+        /// <param name="handleDefaultRoutes">A value indicating whether to build the name using engine information unless otherwise specified</param>
+        /// <returns>Route name</returns>
+        public virtual string GetRouteName(bool handleDefaultRoutes = false)
+        {
+            var actionContext = _actionContextAccessor.ActionContext;
+
+            if (actionContext is null)
+                return string.Empty;
+
+            var httpContext = actionContext.HttpContext;
+            var routeName = httpContext.GetEndpoint()?.Metadata.GetMetadata<RouteNameMetadata>()?.RouteName ?? string.Empty;
+
+            if (!string.IsNullOrEmpty(routeName) && routeName != "areaRoute")
+                return routeName;
+
+            //then try to get a generic one (actually it's an action name, not the route)
+            if (httpContext.GetRouteValue(NopPathRouteDefaults.SeNameFieldKey) is not null &&
+                httpContext.GetRouteValue(NopPathRouteDefaults.ActionFieldKey) is string actionKey)
+            {
+                //there are some cases when the action name doesn't match the route name
+                //it's not easy to make them the same, so we'll just handle them here
+                return actionKey switch
+                {
+                    "ProductDetails" => "Product",
+                    "TopicDetails" => "Topic",
+                    _ => actionKey
+                };
+            }
+
+            if (handleDefaultRoutes)
+            {
+                return actionContext.ActionDescriptor switch
+                {
+                    ControllerActionDescriptor controllerAction => string.Concat(controllerAction.ControllerName, controllerAction.ActionName),
+                    CompiledPageActionDescriptor compiledPage => string.Concat(compiledPage.AreaName, compiledPage.ViewEnginePath.Replace("/", "")),
+                    PageActionDescriptor pageAction => string.Concat(pageAction.AreaName, pageAction.ViewEnginePath.Replace("/", "")),
+                    _ => actionContext.ActionDescriptor.DisplayName?.Replace("/", "") ?? string.Empty
+                };
+            }
+
+            return routeName;
+        }
+
         #endregion
 
         #region Nested classes
@@ -601,78 +799,49 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// JS file meta data
         /// </summary>
-        private class ScriptReferenceMeta : IEquatable<ScriptReferenceMeta>
+        private record ScriptReferenceMeta
         {
             /// <summary>
-            /// A value indicating whether to load the script asynchronously 
+            /// A value indicating whether to exclude the script from bundling
+            /// </summary>
+            public bool ExcludeFromBundle { get; set; }
+
+            /// <summary>
+            /// A value indicating whether to load the script asynchronously
             /// </summary>
             public bool IsAsync { get; set; }
+
+            /// <summary>
+            /// A value indicating whether the Src is local
+            /// </summary>
+            public bool IsLocal { get; set; }
 
             /// <summary>
             /// Src for production
             /// </summary>
             public string Src { get; set; }
-
-            /// <summary>
-            /// Src for debugging
-            /// </summary>
-            public string DebugSrc { get; set; }
-
-            /// <summary>
-            /// Equals
-            /// </summary>
-            /// <param name="item">Other item</param>
-            /// <returns>Result</returns>
-            public bool Equals(ScriptReferenceMeta item)
-            {
-                if (item == null)
-                    return false;
-                return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc);
-            }
-            /// <summary>
-            /// Get hash code
-            /// </summary>
-            /// <returns></returns>
-            public override int GetHashCode()
-            {
-                return Src == null ? 0 : Src.GetHashCode();
-            }
         }
 
         /// <summary>
         /// CSS file meta data
         /// </summary>
-        private class CssReferenceMeta : IEquatable<CssReferenceMeta>
+        private record CssReferenceMeta
         {
+            /// <summary>
+            /// A value indicating whether to exclude the script from bundling
+            /// </summary>
+            public bool ExcludeFromBundle { get; set; }
+
             /// <summary>
             /// Src for production
             /// </summary>
             public string Src { get; set; }
 
             /// <summary>
-            /// Src for debugging
+            /// A value indicating whether the Src is local
             /// </summary>
-            public string DebugSrc { get; set; }
+            public bool IsLocal { get; set; }
 
-            /// <summary>
-            /// Equals
-            /// </summary>
-            /// <param name="item">Other item</param>
-            /// <returns>Result</returns>
-            public bool Equals(CssReferenceMeta item)
-            {
-                if (item == null)
-                    return false;
-                return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc);
-            }
-            /// <summary>
-            /// Get hash code
-            /// </summary>
-            /// <returns></returns>
-            public override int GetHashCode()
-            {
-                return Src == null ? 0 : Src.GetHashCode();
-            }
         }
 
         #endregion

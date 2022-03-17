@@ -192,17 +192,17 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             //prepare user object
             var customer = await _workContext.GetCurrentCustomerAsync();
             var email = customer.Email;
-            var firstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-            var lastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
-            var phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
-            var gender = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute);
-            var birthday = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
-            var city = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
-            var countryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+            var firstName = customer.FirstName;
+            var lastName = customer.LastName;
+            var phone = customer.Phone;
+            var gender = customer.Gender;
+            var birthday = customer.DateOfBirth;
+            var city = customer.City;
+            var countryId = customer.CountryId;
             var countryName = (await _countryService.GetCountryByIdAsync(countryId))?.TwoLetterIsoCode;
-            var stateId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
+            var stateId = customer.StateProvinceId;
             var stateName = (await _stateProvinceService.GetStateProvinceByIdAsync(stateId))?.Abbreviation;
-            var zipcode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+            var zipcode = customer.ZipPostalCode;
 
             var userObject = FormatEventObject(new List<(string Name, object Value)>
                 {
@@ -264,15 +264,15 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             //prepare user object
             var customer = await _workContext.GetCurrentCustomerAsync();
             var createdOn = new DateTimeOffset(customer.CreatedOnUtc).ToUnixTimeSeconds().ToString();
-            var city = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
-            var countryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+            var city = customer.City;
+            var countryId = customer.CountryId;
             var countryName = (await _countryService.GetCountryByIdAsync(countryId))?.TwoLetterIsoCode;
             var currency = (await _workContext.GetWorkingCurrencyAsync())?.CurrencyCode;
-            var gender = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute);
+            var gender = customer.Gender;
             var language = (await _workContext.GetWorkingLanguageAsync())?.UniqueSeoCode;
-            var stateId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
+            var stateId = customer.StateProvinceId;
             var stateName = (await _stateProvinceService.GetStateProvinceByIdAsync(stateId))?.Abbreviation;
-            var zipcode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+            var zipcode = customer.ZipPostalCode;
 
             var userObject = FormatEventObject(new List<(string Name, object Value)>
             {
@@ -517,7 +517,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             return await HandleFunctionAsync(async () =>
             {
                 //get the enabled configurations
-                var store = _storeContext.GetCurrentStoreAsync();
+                var store = await _storeContext.GetCurrentStoreAsync();
                 var configurations = await (await GetConfigurationsAsync(store.Id)).WhereAwait(async configuration =>
                 {
                     if (!configuration.Enabled)

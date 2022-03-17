@@ -212,11 +212,11 @@ namespace Nop.Web.Factories
             var store = await _storeContext.GetCurrentStoreAsync();
             if (!excludeProperties)
             {
-                model.VatNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
-                model.FirstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-                model.LastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
-                model.Gender = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute);
-                var dateOfBirth = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
+                model.VatNumber = customer.VatNumber;
+                model.FirstName = customer.FirstName;
+                model.LastName = customer.LastName;
+                model.Gender = customer.Gender;
+                var dateOfBirth = customer.DateOfBirth;
                 if (dateOfBirth.HasValue)
                 {
                     var currentCalendar = CultureInfo.CurrentCulture.Calendar;
@@ -225,16 +225,16 @@ namespace Nop.Web.Factories
                     model.DateOfBirthMonth = currentCalendar.GetMonth(dateOfBirth.Value);
                     model.DateOfBirthYear = currentCalendar.GetYear(dateOfBirth.Value);
                 }
-                model.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                model.StreetAddress = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
-                model.StreetAddress2 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
-                model.ZipPostalCode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
-                model.City = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
-                model.County = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute);
-                model.CountryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
-                model.StateProvinceId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
-                model.Phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                model.Fax = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
+                model.Company = customer.Company;
+                model.StreetAddress = customer.StreetAddress;
+                model.StreetAddress2 = customer.StreetAddress2;
+                model.ZipPostalCode = customer.ZipPostalCode;
+                model.City = customer.City;
+                model.County = customer.County;
+                model.CountryId = customer.CountryId;
+                model.StateProvinceId = customer.StateProvinceId;
+                model.Phone = customer.Phone;
+                model.Fax = customer.Fax;
 
                 //newsletter
                 var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
@@ -297,8 +297,7 @@ namespace Nop.Web.Factories
             }
 
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync((VatNumberStatus)await _genericAttributeService
-                .GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
+            model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatus);
             model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
             model.LastNameEnabled = _customerSettings.LastNameEnabled;
             model.FirstNameRequired = _customerSettings.FirstNameRequired;
@@ -949,7 +948,7 @@ namespace Nop.Web.Factories
                 providerModel.SystemName = sysName;
                 providerModel.Description = await multiFactorAuthenticationProvider.GetDescriptionAsync();
                 providerModel.LogoUrl = await _multiFactorAuthenticationPluginManager.GetPluginLogoUrlAsync(multiFactorAuthenticationProvider);
-                providerModel.ViewComponentName = isLogin ? multiFactorAuthenticationProvider.GetVerificationViewComponentName() : multiFactorAuthenticationProvider.GetPublicViewComponentName();
+                providerModel.ViewComponent = isLogin ? multiFactorAuthenticationProvider.GetVerificationViewComponent() : multiFactorAuthenticationProvider.GetPublicViewComponent();
                 providerModel.Selected = sysName == selectedProvider;
             }
 
@@ -1002,7 +1001,7 @@ namespace Nop.Web.Factories
                 //set already selected attributes
                 var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
                     overrideAttributesXml :
-                    await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+                    customer.CustomCustomerAttributesXML;
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:

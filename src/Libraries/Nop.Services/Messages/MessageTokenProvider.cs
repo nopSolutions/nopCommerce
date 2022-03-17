@@ -200,7 +200,8 @@ namespace Nop.Services.Messages
                     "%Store.CompanyVat%",
                     "%Facebook.URL%",
                     "%Twitter.URL%",
-                    "%YouTube.URL%"
+                    "%YouTube.URL%",
+                    "%Instagram.URL%"
                 });
 
                 //customer tokens
@@ -902,16 +903,12 @@ namespace Nop.Services.Messages
             if (string.IsNullOrEmpty(store.Url))
                 throw new Exception("URL cannot be null");
 
-            //generate a URL with an absolute path
+            //generate the relative URL
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-            var url = new PathString(urlHelper.RouteUrl(routeName, routeValues));
-
-            //remove the application path from the generated URL if exists
-            var pathBase = _actionContextAccessor.ActionContext?.HttpContext?.Request?.PathBase ?? PathString.Empty;
-            url.StartsWithSegments(pathBase, out url);
+            var url = urlHelper.RouteUrl(routeName, routeValues);
 
             //compose the result
-            return new Uri(WebUtility.UrlDecode($"{store.Url.TrimEnd('/')}{url}"), UriKind.Absolute).AbsoluteUri;
+            return new Uri(new Uri(store.Url), url).AbsoluteUri;
         }
 
         #endregion
@@ -941,6 +938,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Facebook.URL", _storeInformationSettings.FacebookLink));
             tokens.Add(new Token("Twitter.URL", _storeInformationSettings.TwitterLink));
             tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
+            tokens.Add(new Token("Instagram.URL", _storeInformationSettings.InstagramLink));
 
             //event notification
             await _eventPublisher.EntityTokensAddedAsync(store, tokens);
@@ -1206,12 +1204,12 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.Email", customer.Email));
             tokens.Add(new Token("Customer.Username", customer.Username));
             tokens.Add(new Token("Customer.FullName", await _customerService.GetCustomerFullNameAsync(customer)));
-            tokens.Add(new Token("Customer.FirstName", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute)));
-            tokens.Add(new Token("Customer.LastName", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute)));
-            tokens.Add(new Token("Customer.VatNumber", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute)));
-            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute)).ToString()));
+            tokens.Add(new Token("Customer.FirstName", customer.FirstName));
+            tokens.Add(new Token("Customer.LastName", customer.LastName));
+            tokens.Add(new Token("Customer.VatNumber", customer.VatNumber));
+            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)customer.VatNumberStatusId).ToString()));
 
-            var customAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+            var customAttributesXml = customer.CustomCustomerAttributesXML;
             tokens.Add(new Token("Customer.CustomAttributes", await _customerAttributeFormatter.FormatAttributesAsync(customAttributesXml), true));
 
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)

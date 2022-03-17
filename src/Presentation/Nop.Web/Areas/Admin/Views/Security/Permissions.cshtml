@@ -17,7 +17,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PermissionListButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PermissionListButtons, additionalData = Model })
         </div>
     </div>
 
@@ -46,11 +46,8 @@
                                     @foreach (var cr in Model.AvailableCustomerRoles)
                                     {
                                         <text>
-                                    $('#selectall-@(cr.Id)').click(function () {
-                                        $('.allow_@(cr.Id)').attr('checked', $(this).is(':checked')).change();
-                                    });
-
-                                    </text>
+                                            prepareTableCheckboxes('#selectall-@(cr.Id)', '.allow_@(cr.Id)');
+                                        </text>
                                     }
                                 });
                                 </script>

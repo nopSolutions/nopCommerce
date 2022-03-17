@@ -264,10 +264,10 @@ namespace Nop.Services.Orders
         Task<IList<string>> VoidAsync(Order order);
 
         /// <summary>
-        /// Gets a value indicating whether order can be marked as Tasked
+        /// Gets a value indicating whether order can be marked as voided
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A value indicating whether order can be marked as Tasked</returns>
+        /// <returns>A value indicating whether order can be marked as voided</returns>
         bool CanVoidOffline(Order order);
 
         /// <summary>

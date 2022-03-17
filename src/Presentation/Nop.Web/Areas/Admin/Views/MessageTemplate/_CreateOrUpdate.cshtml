@@ -9,9 +9,9 @@
 <section class="content">
     <div class="container-fluid">
         <div class="form-horizontal">
-            @await Component.InvokeAsync("SettingMode", new { modeName = "messagetemplate-advanced-mode" })
+            @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "messagetemplate-advanced-mode" })
             <div class="cards-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MessageTemplateDetailsTop, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MessageTemplateDetailsTop, additionalData = Model })
                 <div class="card card-default">
                     <div class="card-body">
                         <div class="margin-bottom">
@@ -276,14 +276,14 @@
                                         </script>
                                     </div>
                                     <div class="col-md-8">
-                                        @await Component.InvokeAsync("MultistoreDisabledWarning")
+                                        @await Component.InvokeAsync(typeof(MultistoreDisabledWarningViewComponent))
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MessageTemplateDetailsBottom, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MessageTemplateDetailsBottom, additionalData = Model })
             </div>
             <script>
                 $(document).ready(function() {

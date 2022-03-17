@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
+using Nop.Core.Domain.ScheduleTasks;
+using Nop.Data;
 using Nop.Services.ScheduleTasks;
 using NUnit.Framework;
 
@@ -9,11 +12,21 @@ namespace Nop.Tests.Nop.Services.Tests.ScheduleTasks
     public class TaskSchedulerTests : ServiceTest
     {
         private TestTaskScheduler _taskScheduler;
+        private IRepository<ScheduleTask> _scheduleTaskRepository;
 
         [OneTimeSetUp]
-        public void SetUp()
+        public async Task SetUp()
         {
             _taskScheduler = GetService<ITaskScheduler>() as TestTaskScheduler;
+            _scheduleTaskRepository = GetService<IRepository<ScheduleTask>>();
+
+            var item = await _scheduleTaskRepository.GetByIdAsync(1);
+            item.LastStartUtc = DateTime.UtcNow.AddSeconds(-(item.Seconds + 1));
+            await _scheduleTaskRepository.UpdateAsync(item);
+
+            item = await _scheduleTaskRepository.GetByIdAsync(2);
+            item.LastStartUtc = DateTime.UtcNow.AddSeconds(item.Seconds - 1);
+            await _scheduleTaskRepository.UpdateAsync(item);
         }
 
         [OneTimeTearDown]
@@ -31,16 +44,9 @@ namespace Nop.Tests.Nop.Services.Tests.ScheduleTasks
         }
 
         [Test]
-        public void CanStartScheduler()
+        public void CanStartStopScheduler()
         {
             _taskScheduler.IsRun.Should().BeFalse();
-            _taskScheduler.StartScheduler();
-            _taskScheduler.IsRun.Should().BeTrue();
-        }
-
-        [Test]
-        public void CanStopScheduler()
-        {
             _taskScheduler.StartScheduler();
             _taskScheduler.IsRun.Should().BeTrue();
             _taskScheduler.StopScheduler();

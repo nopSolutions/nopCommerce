@@ -4,15 +4,10 @@
 @inject SeoSettings seoSettings
 @{
     var isPopup = ViewBag.IsPopup ?? false;
-    var scriptLocation = ResourceLocation.Footer;
 
     if (!isPopup)
     {
         Layout = "_ColumnsOne";
-    }
-    else
-    {
-        scriptLocation = ResourceLocation.None;
     }
 
     if (!Model.IsPasswordProtected)
@@ -35,7 +30,7 @@
 }
 @if (Model.IsPasswordProtected)
 {
-    <script asp-location="@scriptLocation">
+    <script asp-location="Footer">
         $(document).ready(function () {
             $('#button-password').on('click', function () {
                 var postData = {

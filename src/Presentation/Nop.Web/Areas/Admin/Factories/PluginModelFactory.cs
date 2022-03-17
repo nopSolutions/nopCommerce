@@ -8,6 +8,7 @@ using Nop.Core.Caching;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Cms;
+using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
@@ -110,6 +111,10 @@ namespace Nop.Web.Areas.Admin.Factories
             model.CanChangeEnabled = true;
             switch (plugin)
             {
+                case IMiscPlugin:
+                    model.CanChangeEnabled = false;
+                    break;
+
                 case IPaymentMethod paymentMethod:
                     model.IsEnabled = _paymentPluginManager.IsPluginActive(paymentMethod);
                     break;

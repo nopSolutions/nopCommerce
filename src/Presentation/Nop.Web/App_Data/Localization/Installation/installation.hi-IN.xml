@@ -79,7 +79,7 @@
     <Value>स्थापित करें</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>NopCommerce अधिष्ठापन कर रहा है ...</Value>
+    <Value>nopCommerce अधिष्ठापन कर रहा है ...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
     <Value>एकीकृत Windows प्रमाणीकरण का उपयोग करें</Value>

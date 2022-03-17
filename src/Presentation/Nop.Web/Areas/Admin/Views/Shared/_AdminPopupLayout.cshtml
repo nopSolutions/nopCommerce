@@ -9,7 +9,7 @@
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //event
-    await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
+    await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
 }
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(localizationSettings.IgnoreRtlPropertyForAdminArea)">
@@ -32,17 +32,14 @@
         </div>
     </div>
 
-    <!-- FooterScripts  -->
-    <script-bundle />
-
-    @NopHtml.GenerateScripts(ResourceLocation.Footer)
-    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
-
     <script>
         $(document).ready(function () {
             //enable tooltips
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
+
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)    
 </body>
 </html>

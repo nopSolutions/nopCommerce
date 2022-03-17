@@ -402,7 +402,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //add minification & bundling
             var cssSettings = new CssBundlingSettings
             {
-                FingerprintUrls = false, 
+                FingerprintUrls = false,
                 Minify = cssBundling
             };
 

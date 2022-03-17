@@ -17,7 +17,7 @@
         <div class="form-horizontal">
             <div class="form-horizontal">
                 <div class="cards-group">
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTierPriceDetailsTop, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductTierPriceDetailsTop, additionalData = Model })
                     <div class="card card-default card-popup">
                         <div class="card-body">
                             <div class="form-group row">
@@ -76,7 +76,7 @@
                             </div>
                         </div>
                     </div>
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTierPriceDetailsBottom, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductTierPriceDetailsBottom, additionalData = Model })
                 </div>
             </div>
         </div>

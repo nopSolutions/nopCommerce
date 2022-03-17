@@ -475,7 +475,7 @@
     <Value>Log in</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.AlreadyLogin">
-    <Value>You are already logged in as {0}. You may log in to another account.</Value>
+    <Value>You are already logged in as {0}. You may log in with another account.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.CheckoutAsGuest">
     <Value>Checkout as Guest</Value>
@@ -508,7 +508,7 @@
     <Value>New Customer</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.NewCustomerText">
-    <Value>By creating an account on our website, you will be able to shop faster, be up to date on an orders status, and keep track of the orders you have previously made.</Value>
+    <Value>By creating an account on our website, you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.ReturningCustomer">
     <Value>Returning Customer</Value>
@@ -1059,6 +1059,27 @@
   <LocaleResource Name="ActivityLog.EditWarehouse">
     <Value>Edited a warehouse (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportCategories">
+    <Value>{0} categories were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportCustomers">
+    <Value>{0} customers were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportManufacturers">
+    <Value>{0} manufacturers were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportNewsLetterSubscriptions">
+    <Value>{0} newsletter subscriptions were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportOrders">
+    <Value>{0} orders were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportProducts">
+    <Value>{0} products were exported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportStates">
+    <Value>{0} states and provinces were exported</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.Impersonation.Finished.Customer">
     <Value>Impersonation by store owner was finished (Email: {0}, ID = {1})</Value>
   </LocaleResource>
@@ -1082,6 +1103,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportStates">
     <Value>{0} states and provinces were imported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportNewsLetterSubscriptions">
+    <Value>{0} newsletter subscriptions were imported</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.InstallNewPlugin">
     <Value>Installed a new plugin (FriendlyName: '{0}')</Value>
@@ -3495,9 +3519,6 @@
   <LocaleResource Name="Admin.Catalog.Products.Pictures.AddNew">
     <Value>Add a new picture</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.Alert.AddNew">
-    <Value>Upload picture first.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures.Alert.PictureAdd">
     <Value>Failed to add product picture.</Value>
   </LocaleResource>
@@ -3523,7 +3544,7 @@
     <Value>Picture</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.Picture.Hint">
-    <Value>Choose a picture to upload. If the picture size exceeds your stores max image size setting, it will be automatically resized.</Value>
+    <Value>You can choose multiple images to upload at once. If the picture size exceeds your stores max image size setting, it will be automatically resized.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures.SaveBeforeEdit">
     <Value>You need to save the product before you can upload pictures for this product page.</Value>
@@ -4571,24 +4592,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin">
     <Value>Plugin configuration</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup">
-    <Value>Clear plugin shadow directory on startup</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup.Hint">
-    <Value>Enable this setting to clear the plugin shadow directory (/Plugins/bin) on application startup.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup">
-    <Value>Copy locked plugins to subdirectories on startup</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup.Hint">
-    <Value>Enable this setting to copy 'locked' assemblies from the plugin shadow directory (/Plugins/bin) to temporary subdirectories on application startup.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy">
-    <Value>Use plugins shadow copy</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy.Hint">
-    <Value>Enable this setting to copy plugins to the shadow directory (/Plugins/bin) on application startup.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly">
     <Value>Use unsafe load assembly</Value>
@@ -5655,6 +5658,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowAnonymousUsersToReviewProduct.Hint">
     <Value>Check to allow anonymous users to write product reviews.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName">
+    <Value>Allow customers to search with category name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName.Hint">
+    <Value>Check to allow customer to search with category name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName">
+    <Value>Allow customers to search with manufacturer name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName.Hint">
+    <Value>Check to allow customer to search with manufacturer name.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowProductSorting">
     <Value>Allow product sorting</Value>
   </LocaleResource>
@@ -5741,6 +5756,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DefaultViewMode.Hint">
     <Value>Choose the default view mode for catalog pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages">
+    <Value>Display all pictures on catalog pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages.Hint">
+    <Value>Check to display all pictures on catalog pages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDatePreOrderAvailability">
     <Value>Display the date for a pre-order availability</Value>
@@ -5904,17 +5925,29 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay.Hint">
     <Value>Enter the number of manufacturers to display in manufacturer navigation block.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsAllowCustomersToSelectPageSize">
+    <Value>'New products' page. Allow customers to select page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsAllowCustomersToSelectPageSize.Hint">
+    <Value>'New products' page. Check to allow customers to select the page size from a predefined list of options.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsEnabled">
     <Value>'New products' page enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsEnabled.Hint">
     <Value>Check to enable the 'New products' page in your store.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumber">
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageSize">
     <Value>Number of products on 'New products' page</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint">
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint">
     <Value>The number of products to display when 'New products' page is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions">
+    <Value>'New products' page. Page size options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions.Hint">
+    <Value>'New products' page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NotifyCustomerAboutProductReviewReply">
     <Value>Notify customer about product review reply</Value>
@@ -7083,6 +7116,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common">
     <Value>Common</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.CustomHtml">
+      <Value>Custom HTML</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons">
     <Value>Favicon and app icons</Value>
   </LocaleResource>
@@ -7428,11 +7464,23 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons.Hint">
     <Value>Upload single icon or archive with favicon and app icons for different operating systems and devices. You can see an example of the favicon and app icons archive in /icons/samples in the root of the site. Your favicon and app icons path is "/icons/icons_{0}"</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml">
+      <Value>Footer custom HTML</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml.Hint">
+      <Value>Enter custom HTML here for footer section.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription">
     <Value>Generate product META description</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription.Hint">
     <Value>When enabled, product META descriptions will be automatically generated (if not specified on the product details page) based on product short description.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml">
+      <Value>Header custom HTML</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml.Hint">
+      <Value>Enter custom HTML here for header section.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageDescription">
     <Value>Home page meta description</Value>
@@ -7451,6 +7499,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled.Hint">
     <Value>Check to enable honeypot technique for registration page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InstagramLink">
+    <Value>Instagram URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InstagramLink.Hint">
+    <Value>Specify your Instagram page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1">
     <Value>Invoice footer text (left column)</Value>
@@ -7567,7 +7621,7 @@
     <Value>When enabled, your URLs will be http://www.yourStore.com/en/ or http://www.yourStore.com/ru/ (SEO friendly).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning">
-      <Value>Attention! The changes will take effect only after the application is restarted.</Value>
+    <Value>Attention! The changes will take effect only after the application is restarted.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions">
     <Value><![CDATA[<p>These settings do not apply to sitemap.xml, only for your site map. You can configure generation for sitemap.xml on <a href="{0}">all settings page</a></p>]]></Value>
@@ -7757,6 +7811,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.MultipleThumbDirectories.Hint">
     <Value>Check to enable multiple thumb directories. It can be helpful if your hosting company has some limitations to the number of allowed files per directory.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.OrderThumbPictureSize">
+    <Value>Order thumbnail image size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.OrderThumbPictureSize.Hint">
+    <Value>The default size (pixels) for product thumbnail images on the order details page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase">
     <Value>Pictures are stored into...</Value>
@@ -8171,6 +8231,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestSettings">
     <Value>Return request settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ShowProductThumbnailInOrderDetailsPage">
+    <Value>Show product thumbnail in order details page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ShowProductThumbnailInOrderDetailsPage.Hint">
+    <Value>Check to show product thumbnail in order details page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceOnOrderConfirmPage">
     <Value>Terms of service (confirm order page)</Value>
@@ -8623,7 +8689,7 @@
     <Value>Sort shipping methods by</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingSorting.Hint">
-    <Value>Select the field to sort the shipping by.</Value>
+    <Value>Select the field to sort the shipping methods by.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress">
     <Value>Ship to the same address</Value>
@@ -10468,7 +10534,7 @@
     <Value>Search keywords</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint">
-    <Value>Search message template(s) by specific keywords.</Value>
+    <Value>Keywords to search by name, body, or subject.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore">
     <Value>Store</Value>
@@ -11721,6 +11787,18 @@
   <LocaleResource Name="Admin.Customers.Customers.List.SearchIpAddress.Hint">
     <Value>Search by IP address.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchLastActivityFrom">
+    <Value>Last activity from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchLastActivityFrom.Hint">
+    <Value>The last activity from date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchLastActivityTo">
+    <Value>Last activity to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchLastActivityTo.Hint">
+    <Value>The last activity to date for the search.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.List.SearchLastName">
     <Value>Last name</Value>
   </LocaleResource>
@@ -11732,6 +11810,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.List.SearchPhone.Hint">
     <Value>Search by a phone number.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchRegistrationDateFrom">
+    <Value>Registration date from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchRegistrationDateFrom.Hint">
+    <Value>The registration from date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchRegistrationDateTo">
+    <Value>Registration date to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchRegistrationDateTo.Hint">
+    <Value>The registration to date for the search.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.List.SearchUsername">
     <Value>Username</Value>
@@ -15489,6 +15579,9 @@
   <LocaleResource Name="Admin.System.Templates.Manufacturer.ViewPath.Required">
     <Value>View path is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.NotDeleteOnlyOne">
+    <Value>It's not allowed to delete the only one template.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Product">
     <Value>Product templates</Value>
   </LocaleResource>
@@ -16116,6 +16209,9 @@
   <LocaleResource Name="Checkout.Disabled">
     <Value>Sorry, checkout process is temporary disabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.EditAddress">
+    <Value>Edit address</Value>
+  </LocaleResource>
   <LocaleResource Name="Checkout.EnterBillingAddress">
     <Value>Enter billing address</Value>
   </LocaleResource>
@@ -16337,6 +16433,9 @@
   </LocaleResource>
   <LocaleResource Name="Common.FileUploader.Upload">
     <Value>Upload a file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.Upload.Files">
+    <Value>Upload files</Value>
   </LocaleResource>
   <LocaleResource Name="Common.Hide">
     <Value>Hide</Value>
@@ -17040,6 +17139,9 @@
   <LocaleResource Name="Footer.FollowUs.Facebook">
     <Value>Facebook</Value>
   </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.Instagram">
+    <Value>Instagram</Value>
+  </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.RSS">
     <Value>RSS</Value>
   </LocaleResource>
@@ -17664,6 +17766,9 @@
   <LocaleResource Name="Order.Product(s)">
     <Value>Product(s)</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.Product(s).Image">
+    <Value>Image</Value>
+  </LocaleResource>
   <LocaleResource Name="Order.Product(s).Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -18035,7 +18140,7 @@
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.FileName">
     <Value>order</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="PDFInvoice.GiftCardInfo">
     <Value>Gift card ({0}):</Value>
   </LocaleResource>
@@ -18165,6 +18270,9 @@
   <LocaleResource Name="Permission.AccessAdminPanel">
     <Value>Access admin area</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.AccessProfiling">
+    <Value>Public store. Access MiniProfiler results</Value>
+  </LocaleResource>
   <LocaleResource Name="Permission.AccessWebService">
     <Value>Plugins. Access Web Service</Value>
   </LocaleResource>
@@ -18198,6 +18306,9 @@
   <LocaleResource Name="Permission.ManageAffiliates">
     <Value>Admin area. Manage Affiliates</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.ManageAppSettings">
+    <Value>Admin area. Manage App Setting</Value>
+  </LocaleResource>
   <LocaleResource Name="Permission.ManageAttributes">
     <Value>Admin area. Manage Attributes</Value>
   </LocaleResource>
@@ -18228,6 +18339,9 @@
   <LocaleResource Name="Permission.ManageEmailAccounts">
     <Value>Admin area. Manage Email Accounts</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.ManageExternalAuthenticationMethods">
+    <Value>Admin area. Manage External Authentication Methods</Value>
+  </LocaleResource>
   <LocaleResource Name="Permission.ManageForums">
     <Value>Admin area. Manage Forums</Value>
   </LocaleResource>
@@ -18248,6 +18362,9 @@
   </LocaleResource>
   <LocaleResource Name="Permission.ManageMessageTemplates">
     <Value>Admin area. Manage Message Templates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageMultifactorAuthenticationMethods">
+    <Value>Admin area. Manage Multifactor Authentication Methods</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.ManageNews">
     <Value>Admin area. Manage News</Value>
@@ -18314,6 +18431,9 @@
   </LocaleResource>
   <LocaleResource Name="Permission.PublicStoreAllowNavigation">
     <Value>Public store. Allow navigation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.SalesSummaryReport">
+    <Value>Admin area. Access sales summary report</Value>
   </LocaleResource>
   <LocaleResource Name="Polls.OnlyRegisteredUsersVote">
     <Value>Only registered users can vote.</Value>

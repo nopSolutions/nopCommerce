@@ -38,6 +38,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order => 500; //authentication should be loaded before MVC
+        public int Order => 500; //These middleware are placed between UseRouting and UseEndpoints
     }
 }
