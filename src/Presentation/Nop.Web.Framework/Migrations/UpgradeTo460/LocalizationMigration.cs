@@ -71,7 +71,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             #endregion
 
-            #region Add locales
+            #region Add or update locales
 
             localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
@@ -145,6 +145,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#29
                 ["Admin.Configuration.Settings.Catalog.DisplayFromPrices"] = "Display 'From' prices",
                 ["Admin.Configuration.Settings.Catalog.DisplayFromPrices.Hint"] = "Check to display 'From' prices on catalog pages. This will display the minimum possible price of a product based on price adjustments of attributes and combinations instead of the fixed base price. If enabled, it is also recommended to enable setting 'Cache product prices'. But please note that it can affect performance if you use some complex discounts, discount requirement rules, etc.",
+                
+                //#5089
+                ["Products.Availability.LowStock"] = "Low stock",
+                ["Products.Availability.LowStockWithQuantity"] = "{0} low stock",
+                ["Admin.Catalog.Products.Fields.LowStockActivity.Hint"] = "Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'. Activation of the action will occur only after an order is placed. If the value is 'Nothing', the product detail page will display a low-stock message in public store.",
+
             }, languageId).Wait();
 
             #endregion
