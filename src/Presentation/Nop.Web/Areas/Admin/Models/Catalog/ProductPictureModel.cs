@@ -13,7 +13,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         public int ProductId { get; set; }
 
-        [UIHint("Picture")]
+        [UIHint("MultiPicture")]
         [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.Picture")]
         public int PictureId { get; set; }
 

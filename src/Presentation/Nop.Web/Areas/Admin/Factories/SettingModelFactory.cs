@@ -763,6 +763,35 @@ namespace Nop.Web.Areas.Admin.Factories
             await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);
         }
 
+        /// <summary>
+        /// Prepare custom HTML settings model
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the custom HTML settings model
+        /// </returns>
+        protected virtual async Task<CustomHtmlSettingsModel> PrepareCustomHtmlSettingsModelAsync()
+        {
+            //load settings for a chosen store scope
+            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var commonSettings = await _settingService.LoadSettingAsync<CommonSettings>(storeId);
+
+            //fill in model values from the entity
+            var model = new CustomHtmlSettingsModel
+            {
+                HeaderCustomHtml = commonSettings.HeaderCustomHtml,
+                FooterCustomHtml = commonSettings.FooterCustomHtml
+            };
+
+            //fill in overridden values
+            if (storeId > 0)
+            {
+                model.HeaderCustomHtml_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.HeaderCustomHtml, storeId);
+                model.FooterCustomHtml_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.FooterCustomHtml, storeId);
+            }
+
+            return model;
+        }
         #endregion
 
         #region Methods
@@ -1154,8 +1183,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.AllowAnonymousUsersToEmailAFriend_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowAnonymousUsersToEmailAFriend, storeId);
                 model.RecentlyViewedProductsNumber_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.RecentlyViewedProductsNumber, storeId);
                 model.RecentlyViewedProductsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.RecentlyViewedProductsEnabled, storeId);
-                model.NewProductsNumber_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NewProductsNumber, storeId);
                 model.NewProductsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NewProductsEnabled, storeId);
+                model.NewProductsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NewProductsPageSize, storeId);
+                model.NewProductsAllowCustomersToSelectPageSize_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NewProductsAllowCustomersToSelectPageSize, storeId);
+                model.NewProductsPageSizeOptions_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NewProductsPageSizeOptions, storeId);
                 model.CompareProductsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.CompareProductsEnabled, storeId);
                 model.ShowBestsellersOnHomepage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowBestsellersOnHomepage, storeId);
                 model.NumberOfBestsellersOnHomepage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NumberOfBestsellersOnHomepage, storeId);
@@ -1208,9 +1239,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.EnableManufacturerFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.EnableManufacturerFiltering, storeId);
                 model.EnablePriceRangeFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.EnablePriceRangeFiltering, storeId);
                 model.EnableSpecificationAttributeFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.EnableSpecificationAttributeFiltering, storeId);
+                model.DisplayFromPrices_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayFromPrices, storeId);
                 model.AttributeValueOutOfStockDisplayType_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AttributeValueOutOfStockDisplayType, storeId);
                 model.AllowCustomersToSearchWithManufacturerName_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowCustomersToSearchWithManufacturerName, storeId);
                 model.AllowCustomersToSearchWithCategoryName_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowCustomersToSearchWithCategoryName, storeId);
+                model.DisplayAllPicturesOnCatalogPages_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayAllPicturesOnCatalogPages, storeId);
             }
 
             //prepare nested search model
@@ -1646,6 +1679,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare display default footer item settings model
             model.DisplayDefaultFooterItemSettings = await PrepareDisplayDefaultFooterItemSettingsModelAsync();
+
+            //prepare custom HTML settings model
+            model.CustomHtmlSettings = await PrepareCustomHtmlSettingsModelAsync();
 
             return model;
         }

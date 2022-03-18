@@ -1,4 +1,4 @@
-﻿@model IList<ProductOverviewModel>
+﻿@model NewProductsModel
 @{
     Layout = "_ColumnsTwo";
 
@@ -13,18 +13,11 @@
         <h1>@T("Products.NewProducts")</h1>
     </div>
     <div class="page-body">
-        @if (Model.Count > 0)
-        {
-            <div class="product-grid">
-                <div class="item-grid">
-                    @foreach (var product in Model)
-                    {
-                        <div class="item-box">
-                            @await Html.PartialAsync("_ProductBox", product)
-                        </div>
-                    }
-                </div>
-            </div>        
+        @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
+        @{ 
+            var newProductsViewData = new ViewDataDictionary(ViewData);
+            newProductsViewData["fetchUrl"] = Html.Raw(Url.Action("GetNewProducts", "Catalog"));
         }
+        @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, newProductsViewData)
     </div>
 </div>

@@ -23,12 +23,56 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
+
             var languages = languageService.GetAllLanguagesAsync(true).Result;
             var languageId = languages
                 .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
                 .Select(lang => lang.Id).FirstOrDefault();
 
-            //use localizationService to add, update and delete localization resources
+            #region Delete locales
+
+            localizationService.DeleteLocaleResourcesAsync(new List<string>
+            {
+                //#6102
+                "Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup",
+                "Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup.Hint",
+                "Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup",
+                "Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup.Hint",
+                "Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy",
+                "Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy.Hint",
+
+                //#5123
+                "Admin.Catalog.Products.Pictures.Alert.AddNew",
+            }).Wait();
+
+            #endregion
+
+            #region Rename locales
+
+            var localesToRename = new[]
+            {
+                //#3511
+                new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize" },
+                new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint" },
+            };
+
+            foreach (var lang in languages)
+            {
+                foreach (var locale in localesToRename)
+                {
+                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
+                    if (lsr is not null)
+                    {
+                        lsr.ResourceName = locale.NewName;
+                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
+                    }
+                }
+            }
+
+            #endregion
+
+            #region Add locales
+
             localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 //#3075
@@ -43,12 +87,18 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 ["Footer.FollowUs.Instagram"] = "Instagram",
 
+                //#5802
+                ["Admin.Configuration.Settings.GeneralCommon.BlockTitle.CustomHtml"] = "Custom HTML",
+                ["Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml"] = "Footer custom HTML",
+                ["Admin.Configuration.Settings.GeneralCommon.FooterCustomHtml.Hint"] = "Enter custom HTML here for footer section.",
+                ["Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml"] = "Header custom HTML",
+                ["Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml.Hint"] = "Enter custom HTML here for header section.",
+
                 //#5604
                 ["Admin.Configuration.Settings.Order.ShowProductThumbnailInOrderDetailsPage"] = "Show product thumbnail in order details page",
                 ["Admin.Configuration.Settings.Order.ShowProductThumbnailInOrderDetailsPage.Hint"] = "Check to show product thumbnail in order details page.",
                 ["Admin.Configuration.Settings.Media.OrderThumbPictureSize"] = "Order thumbnail image size",
                 ["Admin.Configuration.Settings.Media.OrderThumbPictureSize.Hint"] = "The default size (pixels) for product thumbnail images on the order details page.",
-
                 ["Order.Product(s).Image"] = "Image",
 
                 //#3777
@@ -70,8 +120,34 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Customers.Customers.List.SearchRegistrationDateFrom.Hint"] = "The registration from date for the search.",
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo"] = "Registration date to",
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo.Hint"] = "The registration to date for the search.",
+                
+                //#5313
+                ["ActivityLog.ImportOrders"] = "{0} orders were imported",
+                ["Admin.Orders.Import.CustomersDontExist"] = "Customers with the following guids don't exist: {0}",
+                ["Admin.Orders.Import.ProductsDontExist"] = "Products with the following SKUs don't exist: {0}",
+                ["Admin.Orders.Imported"] = "Orders have been imported successfully.",
+                ["Admin.Orders.List.ImportFromExcelTip"] = "Imported orders are distinguished by order guid. If the order guid already exists, then its corresponding information will be updated.",
 
+                //#1933
+                ["Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages"] = "Display all pictures on catalog pages",
+                ["Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages.Hint"] = "Check to display all pictures on catalog pages.",
+
+                //#3511
+                ["Admin.Configuration.Settings.Catalog.NewProductsAllowCustomersToSelectPageSize"] = "'New products' page. Allow customers to select page size",
+                ["Admin.Configuration.Settings.Catalog.NewProductsAllowCustomersToSelectPageSize.Hint"] = "'New products' page. Check to allow customers to select the page size from a predefined list of options.",
+                ["Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions"] = "'New products' page. Page size options",
+                ["Admin.Configuration.Settings.Catalog.NewProductsPageSizeOptions.Hint"] = "'New products' page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.",
+
+                //#5123
+                ["Admin.Catalog.Products.Pictures.Fields.Picture.Hint"] = "You can choose multiple images to upload at once. If the picture size exceeds your stores max image size setting, it will be automatically resized.",
+                ["Common.FileUploader.Upload.Files"] = "Upload files",
+
+                //#29
+                ["Admin.Configuration.Settings.Catalog.DisplayFromPrices"] = "Display 'From' prices",
+                ["Admin.Configuration.Settings.Catalog.DisplayFromPrices.Hint"] = "Check to display 'From' prices on catalog pages. This will display the minimum possible price of a product based on price adjustments of attributes and combinations instead of the fixed base price. If enabled, it is also recommended to enable setting 'Cache product prices'. But please note that it can affect performance if you use some complex discounts, discount requirement rules, etc.",
             }, languageId).Wait();
+
+            #endregion
         }
 
         /// <summary>Collects the DOWN migration expressions</summary>

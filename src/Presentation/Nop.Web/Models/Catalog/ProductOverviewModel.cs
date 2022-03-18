@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Models;
 using Nop.Web.Models.Media;
@@ -10,7 +11,7 @@ namespace Nop.Web.Models.Catalog
         public ProductOverviewModel()
         {
             ProductPrice = new ProductPriceModel();
-            DefaultPictureModel = new PictureModel();
+            PictureModels = new List<PictureModel>();
             ProductSpecificationModel = new ProductSpecificationModel();
             ReviewOverviewModel = new ProductReviewOverviewModel();
         }
@@ -28,10 +29,9 @@ namespace Nop.Web.Models.Catalog
 
         //price
         public ProductPriceModel ProductPrice { get; set; }
-        //picture
-        public PictureModel DefaultPictureModel { get; set; }
+        //pictures
+        public IList<PictureModel> PictureModels { get; set; }
         //specification attributes
-
         public ProductSpecificationModel ProductSpecificationModel { get; set; }
         //price
         public ProductReviewOverviewModel ReviewOverviewModel { get; set; }

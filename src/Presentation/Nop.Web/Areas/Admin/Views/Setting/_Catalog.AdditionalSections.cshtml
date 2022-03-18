@@ -87,15 +87,39 @@
             <span asp-validation-for="NewProductsEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="NewProductsEnabled">
-        <div class="form-group row">
+    <nop-nested-setting asp-for="NewProductsEnabled" disable-auto-generation="true">
+        <div class="form-group row" id="pnlNewProductsAllowCustomersToSelectPageSize">
             <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="NewProductsNumber_OverrideForStore" asp-input="NewProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="NewProductsNumber" />
+                <nop-override-store-checkbox asp-for="NewProductsAllowCustomersToSelectPageSize_OverrideForStore" asp-input="NewProductsAllowCustomersToSelectPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="NewProductsAllowCustomersToSelectPageSize" />
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="NewProductsNumber" />
-                <span asp-validation-for="NewProductsNumber"></span>
+                <nop-editor asp-for="NewProductsAllowCustomersToSelectPageSize" />
+                <span asp-validation-for="NewProductsAllowCustomersToSelectPageSize"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="NewProductsAllowCustomersToSelectPageSize" disable-auto-generation="true">
+            <div class="form-group row" id="pnlNewProductsPageSizeOptions">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="NewProductsPageSizeOptions_OverrideForStore" asp-input="NewProductsPageSizeOptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="NewProductsPageSizeOptions" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="NewProductsPageSizeOptions" />
+                    <span asp-validation-for="NewProductsPageSizeOptions"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+    </nop-nested-setting>
+    <nop-nested-setting asp-for="NewProductsEnabled" disable-auto-generation="true">
+        <div class="form-group row" id="pnlNewProductsPageProductsPerPage">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="NewProductsPageSize_OverrideForStore" asp-input="NewProductsPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="NewProductsPageSize" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="NewProductsPageSize" />
+                <span asp-validation-for="NewProductsPageSize"></span>
             </div>
         </div>
     </nop-nested-setting>
@@ -110,3 +134,35 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.NewProductsEnabled)").click(toggleNewProductsEnabled);
+        toggleNewProductsEnabled();
+        $("#@Html.IdFor(model => model.NewProductsAllowCustomersToSelectPageSize)").click(toggleNewProductsPageSize);
+        toggleNewProductsPageSize();
+    });
+
+    function toggleNewProductsEnabled() {
+        if ($('#@Html.IdFor(model => model.NewProductsEnabled)').is(':checked')) {
+            $('#pnlNewProductsAllowCustomersToSelectPageSize').showElement();
+            toggleNewProductsPageSize();
+        } else {
+            $('#pnlNewProductsAllowCustomersToSelectPageSize').hideElement();
+            $('#pnlNewProductsPageSizeOptions').hideElement();
+            $('#pnlNewProductsPageProductsPerPage').hideElement();
+        }
+    }
+
+    function toggleNewProductsPageSize() {
+        if ($('#@Html.IdFor(model => model.NewProductsAllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlNewProductsPageProductsPerPage').hideElement();
+            if ($('#@Html.IdFor(model => model.NewProductsEnabled)').is(':checked'))
+                $('#pnlNewProductsPageSizeOptions').showElement();
+        } else {
+            $('#pnlNewProductsPageSizeOptions').hideElement();
+            if ($('#@Html.IdFor(model => model.NewProductsEnabled)').is(':checked'))
+                $('#pnlNewProductsPageProductsPerPage').showElement();
+        }
+    }
+</script>

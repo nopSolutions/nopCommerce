@@ -72,7 +72,10 @@ namespace Nop.Services.Plugins
         protected virtual IDescriptor UploadSingleItem(string archivePath)
         {
             //get path to the plugins directory
-            var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
+            var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.UploadedPath);
+
+            //ensure plugins directory is created
+            _fileProvider.CreateDirectory(pluginsDirectory);
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
@@ -161,7 +164,10 @@ namespace Nop.Services.Plugins
         protected virtual IList<IDescriptor> UploadMultipleItems(string archivePath, IList<UploadedItem> uploadedItems)
         {
             //get path to the plugins directory
-            var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
+            var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.UploadedPath);
+
+            //ensure plugins directory is created
+            _fileProvider.CreateDirectory(pluginsDirectory);
 
             //get path to the themes directory
             var themesDirectory = string.Empty;

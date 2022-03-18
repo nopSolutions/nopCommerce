@@ -620,7 +620,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             return await HandleFunctionAsync(async () =>
             {
                 //get the enabled configurations
-                var store = _storeContext.GetCurrentStoreAsync();
+                var store = await _storeContext.GetCurrentStoreAsync();
                 var configurations = await (await GetConfigurationsAsync(store.Id)).WhereAwait(async configuration =>
                 {
                     if (!configuration.PixelScriptEnabled)

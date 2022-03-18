@@ -141,6 +141,16 @@ namespace Nop.Services.Customers
         Task<IList<Customer>> GetCustomersByIdsAsync(int[] customerIds);
 
         /// <summary>
+        /// Get customers by guids
+        /// </summary>
+        /// <param name="customerGuids">Customer guids</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customers
+        /// </returns>
+        Task<IList<Customer>> GetCustomersByGuidsAsync(Guid[] customerGuids);
+
+        /// <summary>
         /// Gets a customer by GUID
         /// </summary>
         /// <param name="customerGuid">Customer GUID</param>
@@ -326,6 +336,16 @@ namespace Nop.Services.Customers
         /// The task result contains the new coupon codes document
         /// </returns>
         Task RemoveGiftCardCouponCodeAsync(Customer customer, string couponCode);
+
+        /// <summary>
+        /// Returns a list of guids of not existing customers
+        /// </summary>
+        /// <param name="guids">The guids of the customers to check</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of guids not existing customers
+        /// </returns>
+        Task<Guid[]> GetNotExistingCustomersAsync(Guid[] guids);
 
         #endregion
 
