@@ -1591,13 +1591,9 @@ label, label + * {
   font-size: 0;
 }
 
-.product-filter + .product-filter {
-  margin-top: 20px;
-}
-
 .product-filter .filter-title {
   margin: 0 0 10px;
-  background-color: #f6f6f6;
+  background: #f6f6f6 url('../images/toggle-gray.png') right 10px no-repeat;
   padding: 10px;
   font-size: 17px;
   color: #444;
@@ -1610,6 +1606,7 @@ label, label + * {
 .product-filter .filter-content {
   padding: 10px;
   color: #444;
+  margin-bottom: 20px;
 }
 
 .product-filter .group {
@@ -8146,12 +8143,16 @@ pre {
   /*** COLUMN ***/
 
 
+  .product-filter .filter-title {
+    background: #f6f6f6;
+  }
+
   .block {
     float: none;
     width: auto;
     margin: 0 0 20px;
   }
-
+  
   .block .title {
     margin: 0;
     border-bottom: 1px solid #ddd;

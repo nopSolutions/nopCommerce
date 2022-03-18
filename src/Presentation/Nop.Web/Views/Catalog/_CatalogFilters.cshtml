@@ -23,3 +23,19 @@
         @await Html.PartialAsync("_FilterManufacturerBox", Model.ManufacturerFilter)
     }
 </div>
+
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $('.block .filter-title').on('click', function () {
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+            if (result.width < 1001) {
+                $(this).siblings('.filter-content').slideToggle('slow');
+            }
+        });
+    });
+</script>
