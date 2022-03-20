@@ -107,17 +107,6 @@ namespace Nop.Services.Security
         Task<bool> AuthorizeAsync(string permissionRecordSystemName, Customer customer);
 
         /// <summary>
-        /// Authorize permission
-        /// </summary>
-        /// <param name="permissionRecordSystemName">Permission record system name</param>
-        /// <param name="customerRoleId">Customer role identifier</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the rue - authorized; otherwise, false
-        /// </returns>
-        Task<bool> AuthorizeAsync(string permissionRecordSystemName, int customerRoleId);
-
-        /// <summary>
         /// Gets a permission record-customer role mapping
         /// </summary>
         /// <param name="permissionId">Permission identifier</param>

@@ -25,6 +25,7 @@ namespace Nop.Services.Security
         private readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappingRepository;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWorkContext _workContext;
+        private readonly IAuthorizationService _authorizationService;
 
         #endregion
 
@@ -35,7 +36,8 @@ namespace Nop.Services.Security
             IRepository<PermissionRecord> permissionRecordRepository,
             IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
             IStaticCacheManager staticCacheManager,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IAuthorizationService authorizationService)
         {
             _customerService = customerService;
             _localizationService = localizationService;
@@ -43,6 +45,7 @@ namespace Nop.Services.Security
             _permissionRecordCustomerRoleMappingRepository = permissionRecordCustomerRoleMappingRepository;
             _staticCacheManager = staticCacheManager;
             _workContext = workContext;
+            _authorizationService = authorizationService;
         }
 
         #endregion
@@ -311,39 +314,12 @@ namespace Nop.Services.Security
 
             var customerRoles = await _customerService.GetCustomerRolesAsync(customer);
             foreach (var role in customerRoles)
-                if (await AuthorizeAsync(permissionRecordSystemName, role.Id))
+                if (await _authorizationService.AuthorizeAsync(permissionRecordSystemName, role.Id))
                     //yes, we have such permission
                     return true;
 
             //no permission found
             return false;
-        }
-
-        /// <summary>
-        /// Authorize permission
-        /// </summary>
-        /// <param name="permissionRecordSystemName">Permission record system name</param>
-        /// <param name="customerRoleId">Customer role identifier</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the rue - authorized; otherwise, false
-        /// </returns>
-        public virtual async Task<bool> AuthorizeAsync(string permissionRecordSystemName, int customerRoleId)
-        {
-            if (string.IsNullOrEmpty(permissionRecordSystemName))
-                return false;
-
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionAllowedCacheKey, permissionRecordSystemName, customerRoleId);
-
-            return await _staticCacheManager.GetAsync(key, async () =>
-            {
-                var permissions = await GetPermissionRecordsByCustomerRoleIdAsync(customerRoleId);
-                foreach (var permission in permissions)
-                    if (permission.SystemName.Equals(permissionRecordSystemName, StringComparison.InvariantCultureIgnoreCase))
-                        return true;
-
-                return false;
-            });
         }
 
         /// <summary>

@@ -42,9 +42,6 @@
     <!-- We copy the \Logs directory -->
     <Content Include="Logs\**" CopyToPublishDirectory="PreserveNewest" />
 
-    <None Update="Areas\Admin\sitemap.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -67,7 +64,7 @@
       <!-- Get plugin description files to get plugin paths -->
       <PluginsDescription Include="$(MSBuildProjectDirectory)\Plugins\**\plugin.json;" />
       <!-- Get paths for all plugins -->
-      <PluginsFolders Include="@(PluginsDescription->'%(relativedir)')" />
+      <PluginsFolders Include="@(PluginsDescription-&gt;'%(relativedir)')" />
 
       <!-- Get paths for ClearPluginAssemblies project -->
       <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />

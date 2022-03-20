@@ -295,6 +295,7 @@ namespace Nop.Tests
             services.AddTransient<ICustomerRegistrationService, CustomerRegistrationService>();
             services.AddTransient<ICustomerReportService, CustomerReportService>();
             services.AddTransient<IPermissionService, PermissionService>();
+            services.AddTransient<IAuthorizationService, AuthorizationService>();
             services.AddTransient<IAclService, AclService>();
             services.AddTransient<IPriceCalculationService, PriceCalculationService>();
             services.AddTransient<IGeoLookupService, GeoLookupService>();

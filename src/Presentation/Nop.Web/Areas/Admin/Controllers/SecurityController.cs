@@ -28,6 +28,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ISecurityModelFactory _securityModelFactory;
         private readonly IWorkContext _workContext;
+        private readonly IAuthorizationService _authorizationService;
 
         #endregion
 
@@ -39,7 +40,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService,
             ISecurityModelFactory securityModelFactory,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IAuthorizationService authorizationService)
         {
             _customerService = customerService;
             _localizationService = localizationService;
@@ -48,6 +50,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _permissionService = permissionService;
             _securityModelFactory = securityModelFactory;
             _workContext = workContext;
+            _authorizationService = authorizationService;
         }
 
         #endregion
@@ -99,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     var allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
 
-                    if (allow == await _permissionService.AuthorizeAsync(pr.SystemName, cr.Id))
+                    if (allow == await _authorizationService.AuthorizeAsync(pr.SystemName, cr.Id))
                         continue;
 
                     if (allow)
