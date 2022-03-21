@@ -134,6 +134,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#5123
                 ["Admin.Catalog.Products.Pictures.Fields.Picture.Hint"] = "You can choose multiple images to upload at once. If the picture size exceeds your stores max image size setting, it will be automatically resized.",
                 ["Common.FileUploader.Upload.Files"] = "Upload files",
+
+                //#5809
+                ["Admin.Configuration.Settings.Gdpr.DeleteInactiveCustomersAfterMonths"] = "Delete inactive customers after months",
+                ["Admin.Configuration.Settings.Gdpr.DeleteInactiveCustomersAfterMonths.Hint"] = "Enter the number of months after which the customers and their personal data will be deleted.",
             }, languageId).Wait();
 
             #endregion

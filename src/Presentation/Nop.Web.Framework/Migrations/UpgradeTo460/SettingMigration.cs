@@ -2,6 +2,7 @@
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
@@ -111,6 +112,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             {
                 mediaSettings.OrderThumbPictureSize = 80;
                 settingService.SaveSettingAsync(mediaSettings, settings => settings.OrderThumbPictureSize).Wait();
+            }
+
+            var gdprSettings = settingService.LoadSettingAsync<GdprSettings>().Result;
+
+            //#5809
+            if (!settingService.SettingExistsAsync(gdprSettings, settings => settings.DeleteInactiveCustomersAfterMonths).Result)
+            {
+                gdprSettings.DeleteInactiveCustomersAfterMonths = 36;
+                settingService.SaveSettingAsync(gdprSettings, settings => settings.DeleteInactiveCustomersAfterMonths).Wait();
             }
         }
 
