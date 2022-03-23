@@ -1697,6 +1697,11 @@ namespace Nop.Web.Controllers
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
 
+            var contentType = uploadedFile.ContentType.ToLowerInvariant();
+
+            if (!contentType.Equals("image/jpeg") && !contentType.Equals("image/gif"))
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Avatar.UploadRules"));
+
             if (ModelState.IsValid)
             {
                 try
@@ -1710,9 +1715,9 @@ namespace Nop.Web.Controllers
 
                         var customerPictureBinary = await _downloadService.GetDownloadBitsAsync(uploadedFile);
                         if (customerAvatar != null)
-                            customerAvatar = await _pictureService.UpdatePictureAsync(customerAvatar.Id, customerPictureBinary, uploadedFile.ContentType, null);
+                            customerAvatar = await _pictureService.UpdatePictureAsync(customerAvatar.Id, customerPictureBinary, contentType, null);
                         else
-                            customerAvatar = await _pictureService.InsertPictureAsync(customerPictureBinary, uploadedFile.ContentType, null);
+                            customerAvatar = await _pictureService.InsertPictureAsync(customerPictureBinary, contentType, null);
                     }
 
                     var customerAvatarId = 0;
