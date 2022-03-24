@@ -9150,12 +9150,11 @@ namespace Nop.Services.Installation
                 },
                 new ScheduleTask
                 {
-                    Name = "Delete inactive customers",
+                    Name = "Delete inactive customers (GDPR)",
                     //24 hours
                     Seconds = 86400,
                     Type = "Nop.Services.Gdpr.DeleteInactiveCustomersTask, Nop.Services",
                     Enabled = false,
-                    LastEnabledUtc = lastEnabledUtc,
                     StopOnError = false
                 }
             };
