@@ -7065,6 +7065,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Updated">
     <Value>The GDPR consent has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.DeleteInactiveCustomersAfterMonths">
+    <Value>Delete inactive customers after months</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.DeleteInactiveCustomersAfterMonths.Hint">
+    <Value>Enter the number of months after which the customers and their personal data will be deleted.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Gdpr.GdprEnabled">
     <Value>GDPR enabled</Value>
   </LocaleResource>

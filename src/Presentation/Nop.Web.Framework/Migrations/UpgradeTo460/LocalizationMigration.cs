@@ -142,6 +142,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Catalog.Products.Pictures.Fields.Picture.Hint"] = "You can choose multiple images to upload at once. If the picture size exceeds your stores max image size setting, it will be automatically resized.",
                 ["Common.FileUploader.Upload.Files"] = "Upload files",
 
+                //#5809
+                ["Admin.Configuration.Settings.Gdpr.DeleteInactiveCustomersAfterMonths"] = "Delete inactive customers after months",
+                ["Admin.Configuration.Settings.Gdpr.DeleteInactiveCustomersAfterMonths.Hint"] = "Enter the number of months after which the customers and their personal data will be deleted.",
+
                 //#29
                 ["Admin.Configuration.Settings.Catalog.DisplayFromPrices"] = "Display 'From' prices",
                 ["Admin.Configuration.Settings.Catalog.DisplayFromPrices.Hint"] = "Check to display 'From' prices on catalog pages. This will display the minimum possible price of a product based on price adjustments of attributes and combinations instead of the fixed base price. If enabled, it is also recommended to enable setting 'Cache product prices'. But please note that it can affect performance if you use some complex discounts, discount requirement rules, etc.",

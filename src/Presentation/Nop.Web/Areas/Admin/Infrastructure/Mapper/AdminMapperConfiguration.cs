@@ -1044,7 +1044,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.GdprEnabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.LogNewsletterConsent_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.LogPrivacyPolicyConsent_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.LogUserProfileChanges_OverrideForStore, options => options.Ignore());
+                .ForMember(model => model.LogUserProfileChanges_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.DeleteInactiveCustomersAfterMonths_OverrideForStore, options => options.Ignore());
             CreateMap<GdprSettingsModel, GdprSettings>();
 
             CreateMap<GdprConsent, GdprConsentModel>();
