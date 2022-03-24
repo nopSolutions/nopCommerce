@@ -151,6 +151,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Products.Availability.LowStockWithQuantity"] = "{0} low stock",
                 ["Admin.Catalog.Products.Fields.LowStockActivity.Hint"] = "Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'. Activation of the action will occur only after an order is placed. If the value is 'Nothing', the product detail page will display a low-stock message in public store.",
 
+                //#6101
+                ["Admin.System.Warnings.PluginNotInstalled.HelpText"] = "You may delete the plugins you don't use in order to decrease startup time",
+
             }, languageId).Wait();
 
             #endregion

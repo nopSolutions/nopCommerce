@@ -15739,7 +15739,7 @@
     <Value>You haven't installed the following plugin(s)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PluginNotInstalled.HelpText">
-    <Value>You may delete the plugins you don't use in order to increase startup time</Value>
+    <Value>You may delete the plugins you don't use in order to decrease startup time</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PluginNotLoaded">
     <Value>'{0}' plugin is not compatible or cannot be loaded.</Value>
