@@ -160,6 +160,19 @@ namespace Nop.Services.ExportImport.Help
         public DateTime? DateTimeNullable => !string.IsNullOrWhiteSpace(StringValue) ? null : PropertyValue as DateTime?;
 
         /// <summary>
+        /// Converted property value to guid
+        /// </summary>
+        public Guid GuidValue
+        {
+            get
+            {
+                if (PropertyValue == null || !Guid.TryParse(PropertyValue.ToString(), out var rez))
+                    return default;
+                return rez;
+            }
+        }
+
+        /// <summary>
         /// To string
         /// </summary>
         /// <returns>String</returns>

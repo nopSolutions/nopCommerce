@@ -72,6 +72,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsPageSizeOptions).Wait();
             }
 
+            //#29
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.DisplayFromPrices).Result)
+            {
+                catalogSettings.DisplayFromPrices = false;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.DisplayFromPrices).Wait();
+            }
+
             var storeInformationSettings = settingService.LoadSettingAsync<StoreInformationSettings>().Result;
 
             //#3997

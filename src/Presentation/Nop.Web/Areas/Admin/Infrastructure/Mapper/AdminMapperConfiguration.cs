@@ -394,6 +394,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.EnableManufacturerFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.EnablePriceRangeFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.EnableSpecificationAttributeFiltering_OverrideForStore, mo => mo.Ignore())
+                .ForMember(model => model.DisplayFromPrices_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.AttributeValueOutOfStockDisplayTypes, mo => mo.Ignore())
                 .ForMember(model => model.AttributeValueOutOfStockDisplayType_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.SortOptionSearchModel, options => options.Ignore())

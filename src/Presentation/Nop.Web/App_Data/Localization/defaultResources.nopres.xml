@@ -1098,6 +1098,9 @@
   <LocaleResource Name="ActivityLog.ImportManufacturers">
     <Value>{0} manufacturers were imported</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportOrders">
+    <Value>{0} orders were imported</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportProducts">
     <Value>{0} products were imported</Value>
   </LocaleResource>
@@ -3061,7 +3064,7 @@
     <Value>Low stock activity</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockActivity.Hint">
-    <Value>Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'. Activation of the action will occur only after an order is placed.</Value>
+    <Value>Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'. Activation of the action will occur only after an order is placed. If the value is 'Nothing', the product detail page will display a low-stock message in public store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod">
     <Value>Inventory method</Value>
@@ -5774,6 +5777,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts.Hint">
     <Value>Check to display "a product has been discontinued" message when viewing details pages of unpublished products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayFromPrices">
+    <Value>Display 'From' prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayFromPrices.Hint">
+    <Value>Check to display 'From' prices on catalog pages. This will display the minimum possible price of a product based on price adjustments of attributes and combinations instead of the fixed base price. If enabled, it is also recommended to enable setting 'Cache product prices'. But please note that it can affect performance if you use some complex discounts, discount requirement rules, etc.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoFooter">
     <Value>Display tax/shipping info (footer)</Value>
@@ -12975,6 +12984,15 @@
   <LocaleResource Name="Admin.Orders.Fields.VoidOffline">
     <Value>Void (Offline)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Import.CustomersDontExist">
+    <Value>Customers with the following guids don't exist: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Import.ProductsDontExist">
+    <Value>Products with the following SKUs don't exist: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Imported">
+    <Value>Orders have been imported successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Info">
     <Value>Info</Value>
   </LocaleResource>
@@ -13013,6 +13031,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.GoDirectlyToNumber.Hint">
     <Value>Go directly to order #.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.ImportFromExcelTip">
+    <Value>Imported orders are distinguished by order guid. If the order guid already exists, then its corresponding information will be updated.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.OrderNotes">
     <Value>Order notes</Value>
@@ -15724,7 +15745,7 @@
     <Value>You haven't installed the following plugin(s)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PluginNotInstalled.HelpText">
-    <Value>You may delete the plugins you don't use in order to increase startup time</Value>
+    <Value>You may delete the plugins you don't use in order to decrease startup time</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PluginNotLoaded">
     <Value>'{0}' plugin is not compatible or cannot be loaded.</Value>
@@ -18569,6 +18590,12 @@
   </LocaleResource>
   <LocaleResource Name="Products.Availability.InStockWithQuantity">
     <Value>{0} in stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.LowStock">
+    <Value>Low stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.LowStockWithQuantity">
+    <Value>{0} low stock</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Availability.OutOfStock">
     <Value>Out of stock</Value>

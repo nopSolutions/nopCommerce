@@ -706,7 +706,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //new one
                 var warnings = new List<string>();
                 warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(await _workContext.GetCurrentCustomerAsync(),
-                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true, true));
+                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true, true, true));
                 if (warnings.Count != 0)
                     continue;
 

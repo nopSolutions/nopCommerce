@@ -1191,7 +1191,19 @@ namespace Nop.Services.Common
             if (logoExists)
             {
                 var logoFilePath = await _pictureService.GetThumbLocalPathAsync(logoPicture, 0, false);
-                var logo = Image.GetInstance(logoFilePath);
+                Image logo;
+                
+                if (logoPicture.MimeType == MimeTypes.ImageSvg)
+                {
+                    //we must first convert the SVG to PNG to show the image in the PDF document
+                    var picturePng = await _pictureService.ConvertSvgToPngAsync(logoFilePath);
+                    logo = Image.GetInstance(picturePng);
+                }
+                else
+                {
+                    logo = Image.GetInstance(logoFilePath);
+                }
+                
                 logo.Alignment = GetAlignment(lang, true);
                 logo.ScaleToFit(65f, 65f);
 
