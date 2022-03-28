@@ -766,7 +766,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //prepare model
                     model = await _orderModelFactory.PrepareOrderModelAsync(model, order);
 
-                    return RedirectToAction("PartiallyRefundOrderPopup", new { id = order.Id, online });
+                    return View(model);
                 }
 
                 //prepare model
@@ -1501,7 +1501,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //success
             ViewBag.RefreshPage = true;
 
-            return RedirectToAction("UploadLicenseFilePopup", new { id = order.Id, orderItemId = orderItem.Id });
+            return View(model);
         }
 
         [HttpPost, ActionName("UploadLicenseFilePopup")]
@@ -1533,7 +1533,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //success
             ViewBag.RefreshPage = true;
 
-            return RedirectToAction("UploadLicenseFilePopup", new { id = order.Id, orderItemId = orderItem.Id });
+            return View(model);
         }
 
         public virtual async Task<IActionResult> AddProductToOrder(int orderId)
