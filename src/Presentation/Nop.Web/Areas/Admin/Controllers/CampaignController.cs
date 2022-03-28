@@ -247,7 +247,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.Campaigns.TestEmailSentToCustomers"));
 
-                return View(model);
+                return RedirectToAction("Edit", new { id = campaign.Id });
             }
             catch (Exception exc)
             {
@@ -289,7 +289,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _notificationService.SuccessNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent));
 
-                return View(model);
+                return RedirectToAction("Edit", new { id = campaign.Id });
             }
             catch (Exception exc)
             {
