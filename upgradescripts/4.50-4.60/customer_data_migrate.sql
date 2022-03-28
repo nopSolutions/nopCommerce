@@ -107,20 +107,20 @@ GO
 --add FKs
 IF NOT EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_Customer_CurrencyId_Currency_Id') AND parent_object_id = OBJECT_ID(N'Customer'))
 BEGIN
-ALTER TABLE [dbo].[Customer]  WITH CHECK ADD  CONSTRAINT [FK_Customer_CurrencyId_Currency_Id] FOREIGN KEY([CurrencyId])
-REFERENCES [dbo].[Currency] ([Id])
+ALTER TABLE [Customer]  WITH CHECK ADD  CONSTRAINT [FK_Customer_CurrencyId_Currency_Id] FOREIGN KEY([CurrencyId])
+REFERENCES [Currency] ([Id])
 ON DELETE SET NULL
 
-ALTER TABLE [dbo].[Customer] CHECK CONSTRAINT [FK_Customer_CurrencyId_Currency_Id]
+ALTER TABLE [Customer] CHECK CONSTRAINT [FK_Customer_CurrencyId_Currency_Id]
 END
 GO
 IF NOT EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_Customer_LanguageId_Language_Id') AND parent_object_id = OBJECT_ID(N'Customer'))
 BEGIN
-ALTER TABLE [dbo].[Customer]  WITH CHECK ADD  CONSTRAINT [FK_Customer_LanguageId_Language_Id] FOREIGN KEY([LanguageId])
-REFERENCES [dbo].[Language] ([Id])
+ALTER TABLE [Customer]  WITH CHECK ADD  CONSTRAINT [FK_Customer_LanguageId_Language_Id] FOREIGN KEY([LanguageId])
+REFERENCES [Language] ([Id])
 ON DELETE SET NULL
 
-ALTER TABLE [dbo].[Customer] CHECK CONSTRAINT [FK_Customer_LanguageId_Language_Id]
+ALTER TABLE [Customer] CHECK CONSTRAINT [FK_Customer_LanguageId_Language_Id]
 END
 GO
 
