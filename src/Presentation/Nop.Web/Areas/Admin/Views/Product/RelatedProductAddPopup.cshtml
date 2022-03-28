@@ -102,44 +102,46 @@ else
 
                     <div class="card card-default">
                         <div class="card-body">
-                            @await Html.PartialAsync("Table", new DataTablesModel
-                            {
-                                Name = "products-grid",
-                                UrlRead = new DataUrl("RelatedProductAddPopupList", "Product", null),
-                                SearchButtonId = "search-products",
-                                Length = Model.PageSize,
-                                LengthMenu = Model.AvailablePageSizes,
-                                Filters = new List<FilterParameter>
+                            @{
+                                await Html.RenderPartialAsync("Table", new DataTablesModel
                                 {
-                                    new FilterParameter(nameof(Model.SearchProductName)),
-                                    new FilterParameter(nameof(Model.SearchCategoryId)),
-                                    new FilterParameter(nameof(Model.SearchManufacturerId)),
-                                    new FilterParameter(nameof(Model.SearchStoreId)),
-                                    new FilterParameter(nameof(Model.SearchVendorId)),
-                                    new FilterParameter(nameof(Model.SearchProductTypeId))
-                                },
-                                ColumnCollection = new List<ColumnProperty>
-                                {
-                                    new ColumnProperty(nameof(ProductModel.Id))
+                                    Name = "products-grid",
+                                    UrlRead = new DataUrl("RelatedProductAddPopupList", "Product", null),
+                                    SearchButtonId = "search-products",
+                                    Length = Model.PageSize,
+                                    LengthMenu = Model.AvailablePageSizes,
+                                    Filters = new List<FilterParameter>
                                     {
-                                        IsMasterCheckBox = true,
-                                        Render = new RenderCheckBox(nameof(AddRelatedProductModel.SelectedProductIds)),
-                                        ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Width = "50"
+                                        new FilterParameter(nameof(Model.SearchProductName)),
+                                        new FilterParameter(nameof(Model.SearchCategoryId)),
+                                        new FilterParameter(nameof(Model.SearchManufacturerId)),
+                                        new FilterParameter(nameof(Model.SearchStoreId)),
+                                        new FilterParameter(nameof(Model.SearchVendorId)),
+                                        new FilterParameter(nameof(Model.SearchProductTypeId))
                                     },
-                                    new ColumnProperty(nameof(ProductModel.Name))
+                                    ColumnCollection = new List<ColumnProperty>
                                     {
-                                        Title = T("Admin.Catalog.Products.Fields.Name").Text
-                                    },
-                                    new ColumnProperty(nameof(ProductModel.Published))
-                                    {
-                                        Title = T("Admin.Catalog.Products.Fields.Published").Text,
-                                        Width = "100",
-                                        ClassName = NopColumnClassDefaults.CenterAll,
-                                        Render = new RenderBoolean()
+                                        new ColumnProperty(nameof(ProductModel.Id))
+                                        {
+                                            IsMasterCheckBox = true,
+                                            Render = new RenderCheckBox(nameof(AddRelatedProductModel.SelectedProductIds)),
+                                            ClassName =  NopColumnClassDefaults.CenterAll,
+                                            Width = "50"
+                                        },
+                                        new ColumnProperty(nameof(ProductModel.Name))
+                                        {
+                                            Title = T("Admin.Catalog.Products.Fields.Name").Text
+                                        },
+                                        new ColumnProperty(nameof(ProductModel.Published))
+                                        {
+                                            Title = T("Admin.Catalog.Products.Fields.Published").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.CenterAll,
+                                            Render = new RenderBoolean()
+                                        }
                                     }
-                                }
-                            })
+                                });
+                            }
                         </div>
                         <div class="card-footer">
                             <button type="submit" name="save" class="btn btn-primary">

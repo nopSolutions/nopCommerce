@@ -10,7 +10,7 @@
 <form asp-controller="Country" asp-action="Create" method="post" id="country-form">
     <div class="content-header clearfix">
         <h1 class="float-left">
-            @T("Admin.Configuration.Countries.AddNew") 
+            @T("Admin.Configuration.Countries.AddNew")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.Configuration.Countries.BackToList")</a>
@@ -28,5 +28,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CountryDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdate", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdate", Model);
+    }
 </form>

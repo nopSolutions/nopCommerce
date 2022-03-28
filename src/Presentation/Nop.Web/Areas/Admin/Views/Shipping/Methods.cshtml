@@ -35,39 +35,41 @@
                         <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ShippingManagement", Docs.ShippingManagement + Utm.OnAdmin)" asp-add-wrapper="false"/>
                     </p>
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "shippingmethod-grid",
-                        UrlRead = new DataUrl("Methods", "Shipping", null),
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        ColumnCollection = new List<ColumnProperty>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new ColumnProperty(nameof(ShippingMethodModel.Name))
+                            Name = "shippingmethod-grid",
+                            UrlRead = new DataUrl("Methods", "Shipping", null),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Configuration.Shipping.Methods.Fields.Name").Text,
-                                Width = "200"
-                            },
-                            new ColumnProperty(nameof(ShippingMethodModel.Description))
-                            {
-                                Title = T("Admin.Configuration.Shipping.Methods.Fields.Description").Text,
-                                Width = "400"
-                            },
-                            new ColumnProperty(nameof(ShippingMethodModel.DisplayOrder))
-                            {
-                                Title = T("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll
-                            },
-                            new ColumnProperty(nameof(ShippingMethodModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("EditMethod"))
+                                new ColumnProperty(nameof(ShippingMethodModel.Name))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.Methods.Fields.Name").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ShippingMethodModel.Description))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.Methods.Fields.Description").Text,
+                                    Width = "400"
+                                },
+                                new ColumnProperty(nameof(ShippingMethodModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll
+                                },
+                                new ColumnProperty(nameof(ShippingMethodModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("EditMethod"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
             </div>
         </div>

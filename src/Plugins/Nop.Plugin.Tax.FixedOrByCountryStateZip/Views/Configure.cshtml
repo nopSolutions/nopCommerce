@@ -8,7 +8,9 @@
     ViewBag.TourStep = TourStep.TaxManual;
 }
 
-@await Html.PartialAsync("_AdminTour")
+@{
+    await Html.RenderPartialAsync("_AdminTour");
+}
 
 @if (Model.AvailableTaxCategories.Any())
 {
@@ -68,8 +70,8 @@
     </script>
     <nop-alert asp-alert-id="saveModeAlert" asp-alert-message="@T("Admin.Common.Alert.Save.Error")" />
 
-    @await Html.PartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_FixedRate.cshtml")
-    @await Html.PartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_CountryStateZip.cshtml", Model)
+    await Html.RenderPartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_FixedRate.cshtml");
+    await Html.RenderPartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_CountryStateZip.cshtml", Model);
 }
 else
 {

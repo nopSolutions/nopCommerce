@@ -10,17 +10,17 @@
 <div class="block product-filters">
     @if (Model.PriceRangeFilter.Enabled)
     {
-        @await Html.PartialAsync("_FilterPriceBox", Model.PriceRangeFilter)
+        await Html.RenderPartialAsync("_FilterPriceBox", Model.PriceRangeFilter);
     }
 
     @if (Model.SpecificationFilter.Enabled)
     {
-        @await Html.PartialAsync("_FilterSpecsBox", Model.SpecificationFilter)
+        await Html.RenderPartialAsync("_FilterSpecsBox", Model.SpecificationFilter);
     }
 
     @if (Model.ManufacturerFilter.Enabled)
     {
-        @await Html.PartialAsync("_FilterManufacturerBox", Model.ManufacturerFilter)
+        await Html.RenderPartialAsync("_FilterManufacturerBox", Model.ManufacturerFilter);
     }
 </div>
 

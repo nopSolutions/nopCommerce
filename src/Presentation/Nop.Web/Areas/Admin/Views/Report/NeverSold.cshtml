@@ -104,37 +104,39 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "neversoldreport-grid",
-                        UrlRead = new DataUrl("NeverSoldList", "Report", null),
-                        SearchButtonId = "search-neversoldreport",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
-                            new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
-                            new FilterParameter(nameof(Model.SearchCategoryId)),
-                            new FilterParameter(nameof(Model.SearchManufacturerId)),
-                            new FilterParameter(nameof(Model.SearchStoreId)),
-                            new FilterParameter(nameof(Model.SearchVendorId))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(NeverSoldReportModel.ProductName))
+                            Name = "neversoldreport-grid",
+                            UrlRead = new DataUrl("NeverSoldList", "Report", null),
+                            SearchButtonId = "search-neversoldreport",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.Reports.Sales.NeverSold.Fields.Name").Text
+                                new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.SearchCategoryId)),
+                                new FilterParameter(nameof(Model.SearchManufacturerId)),
+                                new FilterParameter(nameof(Model.SearchStoreId)),
+                                new FilterParameter(nameof(Model.SearchVendorId))
                             },
-                            new ColumnProperty(nameof(NeverSoldReportModel.ProductId))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                                new ColumnProperty(nameof(NeverSoldReportModel.ProductName))
+                                {
+                                    Title = T("Admin.Reports.Sales.NeverSold.Fields.Name").Text
+                                },
+                                new ColumnProperty(nameof(NeverSoldReportModel.ProductId))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
             </div>
         </div>

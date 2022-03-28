@@ -185,5 +185,7 @@
         </div>
     </nop-nested-setting>
     @*render custom address attributes*@
-    @await Html.PartialAsync("../AddressAttribute/ListBlock.cshtml", Model.AddressAttributeSearchModel)
+    @{
+        await Html.RenderPartialAsync("../AddressAttribute/ListBlock.cshtml", Model.AddressAttributeSearchModel);
+    }
 </div>

@@ -8,7 +8,7 @@
 }
 
 <form asp-controller="SpecificationAttribute" asp-action="OptionCreatePopup"
-      asp-route-specificationAttributeId="@Context.Request.Query["specificationAttributeId"]" 
+      asp-route-specificationAttributeId="@Context.Request.Query["specificationAttributeId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
@@ -23,5 +23,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeOptionDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdateOption", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdateOption", Model);
+    }
 </form>

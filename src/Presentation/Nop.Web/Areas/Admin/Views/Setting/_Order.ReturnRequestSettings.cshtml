@@ -68,7 +68,9 @@
     </div>
 </div>
 <div class="card-body">
-    @await Html.PartialAsync("../ReturnRequest/_ReturnRequestReasons.cshtml", Model.ReturnRequestReasonSearchModel)
-    @await Html.PartialAsync("../ReturnRequest/_ReturnRequestActions.cshtml", Model.ReturnRequestActionSearchModel)
+    @{
+        await Html.RenderPartialAsync("../ReturnRequest/_ReturnRequestReasons.cshtml", Model.ReturnRequestReasonSearchModel);
+        await Html.RenderPartialAsync("../ReturnRequest/_ReturnRequestActions.cshtml", Model.ReturnRequestActionSearchModel);
+    }
     @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderSettingsReturnRequestSettingsBottom, additionalData = Model })
 </div>

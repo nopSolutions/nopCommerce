@@ -25,53 +25,55 @@
         </div>
     </div>
         
-    @await Html.PartialAsync("Table", new DataTablesModel
-    {
-        Name = "stock-quantity-history-grid",
-        UrlRead = new DataUrl("StockQuantityHistory", "Product", new RouteValueDictionary { [nameof(Model.StockQuantityHistorySearchModel.ProductId)] = Model.StockQuantityHistorySearchModel.ProductId }),
-        SearchButtonId = "search-stock-quantity-history",
-        Length = Model.StockQuantityHistorySearchModel.PageSize,
-        LengthMenu = Model.StockQuantityHistorySearchModel.AvailablePageSizes,
-        Filters = new List<FilterParameter>
+    @{
+        await Html.RenderPartialAsync("Table", new DataTablesModel
         {
-            new FilterParameter(nameof(StockQuantityHistorySearchModel.WarehouseId), nameof(StockQuantityHistorySearchModel))
-        },
-        ColumnCollection = new List<ColumnProperty>
-        {
-            new ColumnProperty(nameof(StockQuantityHistoryModel.WarehouseName))
+            Name = "stock-quantity-history-grid",
+            UrlRead = new DataUrl("StockQuantityHistory", "Product", new RouteValueDictionary { [nameof(Model.StockQuantityHistorySearchModel.ProductId)] = Model.StockQuantityHistorySearchModel.ProductId }),
+            SearchButtonId = "search-stock-quantity-history",
+            Length = Model.StockQuantityHistorySearchModel.PageSize,
+            LengthMenu = Model.StockQuantityHistorySearchModel.AvailablePageSizes,
+            Filters = new List<FilterParameter>
             {
-                Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.Warehouse").Text,
-                Width = "150"
+                new FilterParameter(nameof(StockQuantityHistorySearchModel.WarehouseId), nameof(StockQuantityHistorySearchModel))
             },
-            new ColumnProperty(nameof(StockQuantityHistoryModel.AttributeCombination))
+            ColumnCollection = new List<ColumnProperty>
             {
-                Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.Combination").Text,
-                Width = "180",
-                Encode = false
-            },
-            new ColumnProperty(nameof(StockQuantityHistoryModel.QuantityAdjustment))
-            {
-                Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.QuantityAdjustment").Text,
-                Width = "150",
-                Render = new RenderCustom("renderStockQuantityHistoryQuantityAdjustment")
-            },
-            new ColumnProperty(nameof(StockQuantityHistoryModel.StockQuantity))
-            {
-                Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.StockQuantity").Text,
-                Width = "130"
-            },
-            new ColumnProperty(nameof(StockQuantityHistoryModel.Message))
-            {
-                Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.Message").Text
-            },
-            new ColumnProperty(nameof(StockQuantityHistoryModel.CreatedOn))
-            {
-                Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.CreatedOn").Text,
-                Width = "170",
-                Render = new RenderDate()
+                new ColumnProperty(nameof(StockQuantityHistoryModel.WarehouseName))
+                {
+                    Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.Warehouse").Text,
+                    Width = "150"
+                },
+                new ColumnProperty(nameof(StockQuantityHistoryModel.AttributeCombination))
+                {
+                    Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.Combination").Text,
+                    Width = "180",
+                    Encode = false
+                },
+                new ColumnProperty(nameof(StockQuantityHistoryModel.QuantityAdjustment))
+                {
+                    Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.QuantityAdjustment").Text,
+                    Width = "150",
+                    Render = new RenderCustom("renderStockQuantityHistoryQuantityAdjustment")
+                },
+                new ColumnProperty(nameof(StockQuantityHistoryModel.StockQuantity))
+                {
+                    Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.StockQuantity").Text,
+                    Width = "130"
+                },
+                new ColumnProperty(nameof(StockQuantityHistoryModel.Message))
+                {
+                    Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.Message").Text
+                },
+                new ColumnProperty(nameof(StockQuantityHistoryModel.CreatedOn))
+                {
+                    Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.CreatedOn").Text,
+                    Width = "170",
+                    Render = new RenderDate()
+                }
             }
-        }
-    })
+        });
+    }
     <script>
         function renderStockQuantityHistoryQuantityAdjustment(data, type, row, meta) {
             return (data > 0 ? '+' : '') + data;

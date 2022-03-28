@@ -28,56 +28,58 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.CustomerRoles", Docs.CustomerRoles + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "customerroles-grid",
-                        UrlRead = new DataUrl("List", "CustomerRole", null),
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        ColumnCollection = new List<ColumnProperty>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new ColumnProperty(nameof(CustomerRoleModel.Name))
+                            Name = "customerroles-grid",
+                            UrlRead = new DataUrl("List", "CustomerRole", null),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Customers.CustomerRoles.Fields.Name").Text,
-                                Width = "300"
-                            },
-                            new ColumnProperty(nameof(CustomerRoleModel.FreeShipping))
-                            {
-                                Title = T("Admin.Customers.CustomerRoles.Fields.FreeShipping").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(CustomerRoleModel.TaxExempt))
-                            {
-                                Title = T("Admin.Customers.CustomerRoles.Fields.TaxExempt").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(CustomerRoleModel.Active))
-                            {
-                                Title = T("Admin.Customers.CustomerRoles.Fields.Active").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(CustomerRoleModel.IsSystemRole))
-                            {
-                                Title = T("Admin.Customers.CustomerRoles.Fields.IsSystemRole").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(CustomerRoleModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                new ColumnProperty(nameof(CustomerRoleModel.Name))
+                                {
+                                    Title = T("Admin.Customers.CustomerRoles.Fields.Name").Text,
+                                    Width = "300"
+                                },
+                                new ColumnProperty(nameof(CustomerRoleModel.FreeShipping))
+                                {
+                                    Title = T("Admin.Customers.CustomerRoles.Fields.FreeShipping").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(CustomerRoleModel.TaxExempt))
+                                {
+                                    Title = T("Admin.Customers.CustomerRoles.Fields.TaxExempt").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(CustomerRoleModel.Active))
+                                {
+                                    Title = T("Admin.Customers.CustomerRoles.Fields.Active").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(CustomerRoleModel.IsSystemRole))
+                                {
+                                    Title = T("Admin.Customers.CustomerRoles.Fields.IsSystemRole").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(CustomerRoleModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
             </div>
         </div>

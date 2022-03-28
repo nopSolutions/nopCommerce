@@ -11,7 +11,9 @@
 }
 <div class="page forum-topic-page">
     @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumTopicId = Model.Id })
-    @await Html.PartialAsync("_ForumHeader")
+    @{
+        await Html.RenderPartialAsync("_ForumHeader");
+    }
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicAfterHeader, additionalData = Model })
     <div class="topic-name">
         <h1>@Model.Subject</h1>

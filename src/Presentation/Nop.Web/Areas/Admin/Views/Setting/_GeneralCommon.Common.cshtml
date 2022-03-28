@@ -7,7 +7,9 @@
     ViewBag.TourStep = TourStep.GeneralSettings;
 }
 
-@await Html.PartialAsync("_AdminTour")
+@{
+    await Html.RenderPartialAsync("_AdminTour");
+}
 
 <div class="card-body">
     <div class="form-group row" id="theme-area">

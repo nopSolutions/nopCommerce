@@ -60,5 +60,7 @@
         table.ColumnCollection = columns;
     }
 
-    @await Html.PartialAsync("Table", table)
+    @{
+        await Html.RenderPartialAsync("Table", table);
+    }
 </div>

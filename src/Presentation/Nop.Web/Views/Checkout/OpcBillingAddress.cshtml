@@ -68,7 +68,7 @@
             @{
                 var dataDictAddress = new ViewDataDictionary(ViewData);
                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "BillingNewAddress";
-                @await Html.PartialAsync("_CreateOrUpdateAddress", Model.BillingNewAddress, dataDictAddress)
+                await Html.RenderPartialAsync("_CreateOrUpdateAddress", Model.BillingNewAddress, dataDictAddress);
             }
         </div>
     </div>

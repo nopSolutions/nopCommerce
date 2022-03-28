@@ -2,7 +2,7 @@
 
 @{
     Layout = "_AdminPopupLayout";
- 
+
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditValueDetails").Text;
 }
@@ -22,5 +22,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeValueDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdateProductAttributeValue", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdateProductAttributeValue", Model);
+    }
 </form>

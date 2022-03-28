@@ -143,7 +143,7 @@
     }
     @if (Model.CustomAddressAttributes.Count > 0)
     {
-        @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
+        await Html.RenderPartialAsync("_AddressAttributes", Model.CustomAddressAttributes);
     }
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AddressBottom, additionalData = Model })
 </div>

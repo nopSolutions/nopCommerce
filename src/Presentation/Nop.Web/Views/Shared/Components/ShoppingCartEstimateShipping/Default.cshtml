@@ -1,13 +1,15 @@
 ﻿@model EstimateShippingModel
 
-<a href="#estimate-shipping-popup" 
-   id="open-estimate-shipping-popup" 
-   data-effect="estimate-shipping-popup-zoom-in" 
+<a href="#estimate-shipping-popup"
+   id="open-estimate-shipping-popup"
+   data-effect="estimate-shipping-popup-zoom-in"
    class="estimate-shipping-button">
     @T("ShoppingCart.EstimateShipping.Button")
 </a>
 <div id="estimate-shipping-popup" class="estimate-shipping-popup mfp-with-anim mfp-hide">
-    @await Html.PartialAsync("_EstimateShippingPopUp", Model)
+    @{
+        await Html.RenderPartialAsync("_EstimateShippingPopUp", Model);
+    }
 </div>
 
 <script asp-location="Footer">

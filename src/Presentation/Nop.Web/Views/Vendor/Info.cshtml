@@ -24,13 +24,13 @@
                 <div class="form-fields">
                     <div class="inputs">
                         <label asp-for="Name" asp-postfix=":"></label>
-                        <input asp-for="Name"/>
+                        <input asp-for="Name" />
                         <nop-required />
                         <span asp-validation-for="Name"></span>
                     </div>
                     <div class="inputs">
                         <label asp-for="Email" asp-postfix=":"></label>
-                        <input asp-for="Email"/>
+                        <input asp-for="Email" />
                         <nop-required />
                         <span asp-validation-for="Email"></span>
                     </div>
@@ -52,14 +52,16 @@
                     </div>
                 </div>
             </div>
-        @if (Model.VendorAttributes.Count > 0)
-        {
-            <div class="fieldset">
-                <div class="form-fields">
-                    @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
+            @if (Model.VendorAttributes.Count > 0)
+            {
+                <div class="fieldset">
+                    <div class="form-fields">
+                        @{
+                            await Html.RenderPartialAsync("_VendorAttributes", Model.VendorAttributes);
+                        }
+                    </div>
                 </div>
-            </div>
-        }
+            }
             <div class="buttons">
                 <button type="submit" name="save-info-button" class="button-1 save-vendorinfo-button">@T("Common.Save")</button>
             </div>

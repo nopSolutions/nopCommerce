@@ -253,59 +253,61 @@
                     {
                         <div class="card card-default">
                             <div class="card-body">
-                                @await Html.PartialAsync("Table", new DataTablesModel
-                                {
-                                    Name = "messages-grid",
-                                    UrlRead = new DataUrl("MessageList", "Sendinblue", null),
-                                    UrlUpdate = new DataUrl("MessageUpdate", "Sendinblue", null),
-                                    Length = Model.MessageTemplateSearchModel.PageSize,
-                                    LengthMenu = Model.MessageTemplateSearchModel.AvailablePageSizes,
-                                    ColumnCollection = new List<ColumnProperty>
+                                @{
+                                    await Html.RenderPartialAsync("Table", new DataTablesModel
                                     {
-                                        new ColumnProperty(nameof(SendinblueMessageTemplateModel.Name))
+                                        Name = "messages-grid",
+                                        UrlRead = new DataUrl("MessageList", "Sendinblue", null),
+                                        UrlUpdate = new DataUrl("MessageUpdate", "Sendinblue", null),
+                                        Length = Model.MessageTemplateSearchModel.PageSize,
+                                        LengthMenu = Model.MessageTemplateSearchModel.AvailablePageSizes,
+                                        ColumnCollection = new List<ColumnProperty>
                                         {
-                                            Title = T("Admin.ContentManagement.MessageTemplates.Fields.Name").Text
-                                        },
-                                        new ColumnProperty(nameof(SendinblueMessageTemplateModel.IsActive))
-                                        {
-                                            Title = T("Admin.ContentManagement.MessageTemplates.Fields.IsActive").Text,
-                                            Width = "100",
-                                            ClassName = NopColumnClassDefaults.CenterAll,
-                                            Render = new RenderBoolean(),
-                                            Editable = true,
-                                            EditType = EditType.Checkbox
-                                        },
-                                        new ColumnProperty(nameof(SendinblueMessageTemplateModel.ListOfStores))
-                                        {
-                                            Title = T("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores").Text
-                                        },
-                                        new ColumnProperty(nameof(SendinblueMessageTemplateModel.UseSendinblueTemplate))
-                                        {
-                                            Title = T("Plugins.Misc.Sendinblue.UseSendinblueTemplate").Text,
-                                            Width = "100",
-                                            ClassName = NopColumnClassDefaults.CenterAll,
-                                            Render = new RenderBoolean(),
-                                            Editable = true,
-                                            EditType = EditType.Checkbox
-                                        },
-                                        new ColumnProperty(nameof(SendinblueMessageTemplateModel.Id))
-                                        {
-                                            Title = T("Plugins.Misc.Sendinblue.EditTemplate").Text,
-                                            Width = "150",
-                                            Render = new RenderLink(new DataUrl(string.Empty, nameof(SendinblueMessageTemplateModel.EditLink)))
+                                            new ColumnProperty(nameof(SendinblueMessageTemplateModel.Name))
                                             {
-                                                Title = T("Plugins.Misc.Sendinblue.EditTemplate").Text
+                                                Title = T("Admin.ContentManagement.MessageTemplates.Fields.Name").Text
+                                            },
+                                            new ColumnProperty(nameof(SendinblueMessageTemplateModel.IsActive))
+                                            {
+                                                Title = T("Admin.ContentManagement.MessageTemplates.Fields.IsActive").Text,
+                                                Width = "100",
+                                                ClassName = NopColumnClassDefaults.CenterAll,
+                                                Render = new RenderBoolean(),
+                                                Editable = true,
+                                                EditType = EditType.Checkbox
+                                            },
+                                            new ColumnProperty(nameof(SendinblueMessageTemplateModel.ListOfStores))
+                                            {
+                                                Title = T("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores").Text
+                                            },
+                                            new ColumnProperty(nameof(SendinblueMessageTemplateModel.UseSendinblueTemplate))
+                                            {
+                                                Title = T("Plugins.Misc.Sendinblue.UseSendinblueTemplate").Text,
+                                                Width = "100",
+                                                ClassName = NopColumnClassDefaults.CenterAll,
+                                                Render = new RenderBoolean(),
+                                                Editable = true,
+                                                EditType = EditType.Checkbox
+                                            },
+                                            new ColumnProperty(nameof(SendinblueMessageTemplateModel.Id))
+                                            {
+                                                Title = T("Plugins.Misc.Sendinblue.EditTemplate").Text,
+                                                Width = "150",
+                                                Render = new RenderLink(new DataUrl(string.Empty, nameof(SendinblueMessageTemplateModel.EditLink)))
+                                                {
+                                                    Title = T("Plugins.Misc.Sendinblue.EditTemplate").Text
+                                                }
+                                            },
+                                            new ColumnProperty(nameof(SendinblueMessageTemplateModel.Id))
+                                            {
+                                                Title = T("Admin.Common.Edit").Text,
+                                                Width = "200",
+                                                ClassName =  NopColumnClassDefaults.Button,
+                                                Render = new RenderButtonsInlineEdit()
                                             }
-                                        },
-                                        new ColumnProperty(nameof(SendinblueMessageTemplateModel.Id))
-                                        {
-                                            Title = T("Admin.Common.Edit").Text,
-                                            Width = "200",
-                                            ClassName =  NopColumnClassDefaults.Button,
-                                            Render = new RenderButtonsInlineEdit()
                                         }
-                                    }
-                                })
+                                    });
+                                }
                             </div>
                         </div>
                     }
@@ -381,39 +383,41 @@
                                     }
                                 </script>
 
-                                @await Html.PartialAsync("Table", new DataTablesModel
-                                {
-                                    Name = "sms-grid",
-                                    UrlRead = new DataUrl("SMSList", "Sendinblue", null),
-                                    UrlDelete = new DataUrl("SMSDelete", "Sendinblue", null),
-                                    Length = Model.SmsSearchModel.PageSize,
-                                    LengthMenu = Model.SmsSearchModel.AvailablePageSizes,
-                                    ColumnCollection = new List<ColumnProperty>
+                                @{
+                                    await Html.RenderPartialAsync("Table", new DataTablesModel
                                     {
-                                        new ColumnProperty(nameof(SmsModel.Name))
+                                        Name = "sms-grid",
+                                        UrlRead = new DataUrl("SMSList", "Sendinblue", null),
+                                        UrlDelete = new DataUrl("SMSDelete", "Sendinblue", null),
+                                        Length = Model.SmsSearchModel.PageSize,
+                                        LengthMenu = Model.SmsSearchModel.AvailablePageSizes,
+                                        ColumnCollection = new List<ColumnProperty>
                                         {
-                                            Title = T("Admin.ContentManagement.MessageTemplates.Fields.Name").Text,
-                                            Width = "300",
-                                        },
-                                        new ColumnProperty(nameof(SmsModel.PhoneType))
-                                        {
-                                            Title = T("Plugins.Misc.Sendinblue.PhoneType").Text,
-                                            Width = "200",
-                                        },
-                                        new ColumnProperty(nameof(SmsModel.Text))
-                                        {
-                                            Title = T("Plugins.Misc.Sendinblue.SMSText").Text,
-                                            Width = "500"
-                                        },
-                                        new ColumnProperty(nameof(SmsModel.Id))
-                                        {
-                                            Title = T("Admin.Common.Delete").Text,
-                                            Width = "100",
-                                            ClassName =  NopColumnClassDefaults.Button,
-                                            Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                            new ColumnProperty(nameof(SmsModel.Name))
+                                            {
+                                                Title = T("Admin.ContentManagement.MessageTemplates.Fields.Name").Text,
+                                                Width = "300",
+                                            },
+                                            new ColumnProperty(nameof(SmsModel.PhoneType))
+                                            {
+                                                Title = T("Plugins.Misc.Sendinblue.PhoneType").Text,
+                                                Width = "200",
+                                            },
+                                            new ColumnProperty(nameof(SmsModel.Text))
+                                            {
+                                                Title = T("Plugins.Misc.Sendinblue.SMSText").Text,
+                                                Width = "500"
+                                            },
+                                            new ColumnProperty(nameof(SmsModel.Id))
+                                            {
+                                                Title = T("Admin.Common.Delete").Text,
+                                                Width = "100",
+                                                ClassName =  NopColumnClassDefaults.Button,
+                                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                            }
                                         }
-                                    }
-                                })
+                                    });
+                                }
                                 <div class="card card-default no-margin">
                                     <div class="card-header">
                                         @T("Admin.Common.AddNewRecord")

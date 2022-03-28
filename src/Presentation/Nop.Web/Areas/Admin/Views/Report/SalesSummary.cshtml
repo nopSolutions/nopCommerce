@@ -163,55 +163,57 @@
                     <div class="card-body">
                         <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
 
-                        @await Html.PartialAsync("Table", new DataTablesModel
-                        {
-                            Name = "salessummary-grid",
-                            UrlRead = new DataUrl("SalesSummaryList", "Report", null),
-                            SearchButtonId = "search-salessummary",
-                            Length = Model.PageSize,
-                            LengthMenu = Model.AvailablePageSizes,
-                            Filters = new List<FilterParameter>
+                        @{
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
                             {
-                                new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
-                                new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
-                                new FilterParameter(nameof(Model.StoreId)),
-                                new FilterParameter(nameof(Model.OrderStatusId)),
-                                new FilterParameter(nameof(Model.PaymentStatusId)),
-                                new FilterParameter(nameof(Model.CategoryId)),
-                                new FilterParameter(nameof(Model.ManufacturerId)),
-                                new FilterParameter(nameof(Model.BillingCountryId)),
-                                new FilterParameter(nameof(Model.ProductId)),
-                                new FilterParameter(nameof(Model.SearchGroupId))
-                            },
-                            ColumnCollection = new List<ColumnProperty>
-                            {
-                                new ColumnProperty(nameof(SalesSummaryModel.Summary))
+                                Name = "salessummary-grid",
+                                UrlRead = new DataUrl("SalesSummaryList", "Report", null),
+                                SearchButtonId = "search-salessummary",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
                                 {
-                                    Title = T("Admin.Reports.SalesSummary.Fields.Summary").Text
+                                    new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                                    new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
+                                    new FilterParameter(nameof(Model.StoreId)),
+                                    new FilterParameter(nameof(Model.OrderStatusId)),
+                                    new FilterParameter(nameof(Model.PaymentStatusId)),
+                                    new FilterParameter(nameof(Model.CategoryId)),
+                                    new FilterParameter(nameof(Model.ManufacturerId)),
+                                    new FilterParameter(nameof(Model.BillingCountryId)),
+                                    new FilterParameter(nameof(Model.ProductId)),
+                                    new FilterParameter(nameof(Model.SearchGroupId))
                                 },
-                                new ColumnProperty(nameof(SalesSummaryModel.NumberOfOrders))
+                                ColumnCollection = new List<ColumnProperty>
                                 {
-                                    Title = T("Admin.Reports.SalesSummary.Fields.NumberOfOrders").Text,
-                                    Width = "150"
-                                },
-                                new ColumnProperty(nameof(SalesSummaryModel.ProfitStr))
-                                {
-                                    Title = T("Admin.Reports.SalesSummary.Fields.Profit").Text
-                                },
-                                new ColumnProperty(nameof(SalesSummaryModel.Shipping))
-                                {
-                                    Title = T("Admin.Reports.SalesSummary.Fields.Shipping").Text
-                                },
-                                new ColumnProperty(nameof(SalesSummaryModel.Tax))
-                                {
-                                    Title = T("Admin.Reports.SalesSummary.Fields.Tax").Text
-                                },
-                                new ColumnProperty(nameof(SalesSummaryModel.OrderTotal))
-                                {
-                                    Title = T("Admin.Reports.SalesSummary.Fields.OrderTotal").Text
-                                },
-                            }
-                        })
+                                    new ColumnProperty(nameof(SalesSummaryModel.Summary))
+                                    {
+                                        Title = T("Admin.Reports.SalesSummary.Fields.Summary").Text
+                                    },
+                                    new ColumnProperty(nameof(SalesSummaryModel.NumberOfOrders))
+                                    {
+                                        Title = T("Admin.Reports.SalesSummary.Fields.NumberOfOrders").Text,
+                                        Width = "150"
+                                    },
+                                    new ColumnProperty(nameof(SalesSummaryModel.ProfitStr))
+                                    {
+                                        Title = T("Admin.Reports.SalesSummary.Fields.Profit").Text
+                                    },
+                                    new ColumnProperty(nameof(SalesSummaryModel.Shipping))
+                                    {
+                                        Title = T("Admin.Reports.SalesSummary.Fields.Shipping").Text
+                                    },
+                                    new ColumnProperty(nameof(SalesSummaryModel.Tax))
+                                    {
+                                        Title = T("Admin.Reports.SalesSummary.Fields.Tax").Text
+                                    },
+                                    new ColumnProperty(nameof(SalesSummaryModel.OrderTotal))
+                                    {
+                                        Title = T("Admin.Reports.SalesSummary.Fields.OrderTotal").Text
+                                    },
+                                }
+                            });
+                        }
                     </div>
                 </div>
             </div>

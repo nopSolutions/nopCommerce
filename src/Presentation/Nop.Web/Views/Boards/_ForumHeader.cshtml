@@ -4,5 +4,7 @@
     <div class="current-time">
         @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.UtcNow)).ToString("F"))
     </div>
-    @await Html.PartialAsync("_SearchBox")
+    @{
+        await Html.RenderPartialAsync("_SearchBox");
+    }
 </div>

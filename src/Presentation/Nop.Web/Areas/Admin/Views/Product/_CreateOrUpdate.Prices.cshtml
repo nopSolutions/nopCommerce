@@ -239,58 +239,60 @@
                 <p>
                     @T("Admin.Catalog.Products.TierPrices.Hint")
                 </p>
-                @await Html.PartialAsync("Table", new DataTablesModel
-                {
-                    Name = "tierprices-grid",
-                    UrlRead = new DataUrl("TierPriceList", "Product", new RouteValueDictionary { [nameof(Model.TierPriceSearchModel.ProductId)] = Model.TierPriceSearchModel.ProductId }),
-                    UrlDelete = new DataUrl("TierPriceDelete", "Product", null),
-                    Length = Model.TierPriceSearchModel.PageSize,
-                    LengthMenu = Model.TierPriceSearchModel.AvailablePageSizes,
-                    ColumnCollection = new List<ColumnProperty>
+                @{
+                    await Html.RenderPartialAsync("Table", new DataTablesModel
                     {
-                        new ColumnProperty(nameof(TierPriceModel.Store))
+                        Name = "tierprices-grid",
+                        UrlRead = new DataUrl("TierPriceList", "Product", new RouteValueDictionary { [nameof(Model.TierPriceSearchModel.ProductId)] = Model.TierPriceSearchModel.ProductId }),
+                        UrlDelete = new DataUrl("TierPriceDelete", "Product", null),
+                        Length = Model.TierPriceSearchModel.PageSize,
+                        LengthMenu = Model.TierPriceSearchModel.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
                         {
-                            Title = T("Admin.Catalog.Products.TierPrices.Fields.Store").Text,
-                            Visible = stores.Count > 1
-                        },
-                        new ColumnProperty(nameof(TierPriceModel.CustomerRole))
-                        {
-                            Title = T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole").Text
-                        },
-                        new ColumnProperty(nameof(TierPriceModel.Quantity))
-                        {
-                            Title = T("Admin.Catalog.Products.TierPrices.Fields.Quantity").Text
-                        },
-                        new ColumnProperty(nameof(TierPriceModel.Price))
-                        {
-                            Title = T("Admin.Catalog.Products.TierPrices.Fields.Price").Text
-                        },
-                        new ColumnProperty(nameof(TierPriceModel.StartDateTimeUtc))
-                        {
-                            Title = T("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc").Text,
-                            Render = new RenderDate()
-                        },
-                        new ColumnProperty(nameof(TierPriceModel.EndDateTimeUtc))
-                        {
-                            Title = T("Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc").Text,
-                            Render = new RenderDate()
-                        },
-                        new ColumnProperty(nameof(TierPriceModel.Id))
-                        {
-                            Title = T("Admin.Common.Edit").Text,
-                            Width = "100",
-                            ClassName =  NopColumnClassDefaults.Button,
-                            Render = new RenderCustom("renderPriceColumnEdit")
-                        },
-                        new ColumnProperty(nameof(TierPriceModel.Id))
-                        {
-                            Title = T("Admin.Common.Delete").Text,
-                            Width = "100",
-                            Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
-                            ClassName =  NopColumnClassDefaults.Button
+                            new ColumnProperty(nameof(TierPriceModel.Store))
+                            {
+                                Title = T("Admin.Catalog.Products.TierPrices.Fields.Store").Text,
+                                Visible = stores.Count > 1
+                            },
+                            new ColumnProperty(nameof(TierPriceModel.CustomerRole))
+                            {
+                                Title = T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole").Text
+                            },
+                            new ColumnProperty(nameof(TierPriceModel.Quantity))
+                            {
+                                Title = T("Admin.Catalog.Products.TierPrices.Fields.Quantity").Text
+                            },
+                            new ColumnProperty(nameof(TierPriceModel.Price))
+                            {
+                                Title = T("Admin.Catalog.Products.TierPrices.Fields.Price").Text
+                            },
+                            new ColumnProperty(nameof(TierPriceModel.StartDateTimeUtc))
+                            {
+                                Title = T("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc").Text,
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(TierPriceModel.EndDateTimeUtc))
+                            {
+                                Title = T("Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc").Text,
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(TierPriceModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderCustom("renderPriceColumnEdit")
+                            },
+                            new ColumnProperty(nameof(TierPriceModel.Id))
+                            {
+                                Title = T("Admin.Common.Delete").Text,
+                                Width = "100",
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                ClassName =  NopColumnClassDefaults.Button
+                            }
                         }
-                    }
-                })
+                    });
+                }
 
                 <script>
                     function renderPriceColumnEdit(data, type, row, meta) {

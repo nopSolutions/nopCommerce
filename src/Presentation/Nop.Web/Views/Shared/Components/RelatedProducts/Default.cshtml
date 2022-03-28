@@ -8,7 +8,11 @@
         <div class="item-grid">
             @foreach (var item in Model)
             {
-                <div class="item-box">@await Html.PartialAsync("_ProductBox", item)</div>
+                <div class="item-box">
+                    @{
+                        await Html.RenderPartialAsync("_ProductBox", item);
+                    }
+                </div>
             }
         </div>
     </div>

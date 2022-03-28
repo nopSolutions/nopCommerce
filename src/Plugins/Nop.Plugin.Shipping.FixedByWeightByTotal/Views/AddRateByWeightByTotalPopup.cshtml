@@ -18,7 +18,9 @@
     <section class="content">
 		<div class="container-fluid">
 			<div class="form-horizontal">
-				@await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_CreateOrUpdateRateByWeightByTotal.cshtml", Model)
+                @{
+				    await Html.RenderPartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_CreateOrUpdateRateByWeightByTotal.cshtml", Model);
+                }
 			</div>
 		</div>
     </section>

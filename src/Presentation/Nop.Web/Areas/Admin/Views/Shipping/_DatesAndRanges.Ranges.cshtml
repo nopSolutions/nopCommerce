@@ -4,34 +4,36 @@
     <p>
         <em>@T("Admin.Configuration.Shipping.ProductAvailabilityRanges.Hint")</em>
     </p>
-    @await Html.PartialAsync("Table", new DataTablesModel
-    {
-        Name = "productavailabilityrange-grid",
-        UrlRead = new DataUrl("ProductAvailabilityRanges", "Shipping", null),
-        SearchButtonId = "search-categories",
-        Length = Model.ProductAvailabilityRangeSearchModel.PageSize,
-        LengthMenu = Model.ProductAvailabilityRangeSearchModel.AvailablePageSizes,
-        ColumnCollection = new List<ColumnProperty>
+    @{
+        await Html.RenderPartialAsync("Table", new DataTablesModel
         {
-            new ColumnProperty(nameof(ProductAvailabilityRangeModel.Name))
+            Name = "productavailabilityrange-grid",
+            UrlRead = new DataUrl("ProductAvailabilityRanges", "Shipping", null),
+            SearchButtonId = "search-categories",
+            Length = Model.ProductAvailabilityRangeSearchModel.PageSize,
+            LengthMenu = Model.ProductAvailabilityRangeSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
             {
-                Title = T("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name").Text
-            },
-            new ColumnProperty(nameof(ProductAvailabilityRangeModel.DisplayOrder))
-            {
-                Title = T("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.DisplayOrder").Text,
-                Width = "150",
-                ClassName =  NopColumnClassDefaults.CenterAll
-            },
-            new ColumnProperty(nameof(ProductAvailabilityRangeModel.Id))
-            {
-                Title = T("Admin.Common.Edit").Text,
-                Width = "100",
-                ClassName =  NopColumnClassDefaults.Button,
-                Render = new RenderButtonEdit(new DataUrl("EditProductAvailabilityRange"))
+                new ColumnProperty(nameof(ProductAvailabilityRangeModel.Name))
+                {
+                    Title = T("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name").Text
+                },
+                new ColumnProperty(nameof(ProductAvailabilityRangeModel.DisplayOrder))
+                {
+                    Title = T("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.DisplayOrder").Text,
+                    Width = "150",
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(ProductAvailabilityRangeModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonEdit(new DataUrl("EditProductAvailabilityRange"))
+                }
             }
-        }
-    })
+        });
+    }
 </div>
 <div class="card-footer">
     <a asp-action="CreateProductAvailabilityRange" class="btn btn-primary">

@@ -95,45 +95,47 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "best-customers-numberoforders-grid",
-                        UrlRead = new DataUrl("ReportBestCustomersByNumberOfOrdersList", "Report", null),
-                        SearchButtonId = "search-best-customers-numberoforders-grid",
-                        Length = Model.BestCustomersByNumberOfOrders.PageSize,
-                        LengthMenu = Model.BestCustomersByNumberOfOrders.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.OrderBy), (int)OrderByEnum.OrderByQuantity),
-                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
-                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.EndDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
-                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.OrderStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
-                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.PaymentStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
-                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.ShippingStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(BestCustomersReportModel.CustomerName))
+                            Name = "best-customers-numberoforders-grid",
+                            UrlRead = new DataUrl("ReportBestCustomersByNumberOfOrdersList", "Report", null),
+                            SearchButtonId = "search-best-customers-numberoforders-grid",
+                            Length = Model.BestCustomersByNumberOfOrders.PageSize,
+                            LengthMenu = Model.BestCustomersByNumberOfOrders.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.Reports.Customers.BestBy.Fields.Customer").Text
+                                new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.OrderBy), (int)OrderByEnum.OrderByQuantity),
+                                new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                                new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.EndDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                                new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.OrderStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                                new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.PaymentStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
+                                new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.ShippingStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders))
                             },
-                            new ColumnProperty(nameof(BestCustomersReportModel.OrderTotal))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Reports.Customers.BestBy.Fields.OrderTotal").Text
-                            },
-                            new ColumnProperty(nameof(BestCustomersReportModel.OrderCount))
-                            {
-                                Title = T("Admin.Reports.Customers.BestBy.Fields.OrderCount").Text
-                            },
-                            new ColumnProperty(nameof(BestCustomersReportModel.CustomerId))
-                            {
-                                Title = T("Admin.Common.View").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/"))
+                                new ColumnProperty(nameof(BestCustomersReportModel.CustomerName))
+                                {
+                                    Title = T("Admin.Reports.Customers.BestBy.Fields.Customer").Text
+                                },
+                                new ColumnProperty(nameof(BestCustomersReportModel.OrderTotal))
+                                {
+                                    Title = T("Admin.Reports.Customers.BestBy.Fields.OrderTotal").Text
+                                },
+                                new ColumnProperty(nameof(BestCustomersReportModel.OrderCount))
+                                {
+                                    Title = T("Admin.Reports.Customers.BestBy.Fields.OrderCount").Text
+                                },
+                                new ColumnProperty(nameof(BestCustomersReportModel.CustomerId))
+                                {
+                                    Title = T("Admin.Common.View").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
             </div>
         </div>

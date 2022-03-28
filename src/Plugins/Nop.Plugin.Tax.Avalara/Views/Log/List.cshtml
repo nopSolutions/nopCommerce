@@ -36,54 +36,56 @@
 
     <div class="card card-default">
         <div class="card-body">
-            @await Html.PartialAsync("Table", new DataTablesModel
-            {
-            Name = "log-grid",
-            UrlRead = new DataUrl("LogList", "TaxTransactionLog", null),
-            SearchButtonId = "search-log",
-            Length = Model.TaxTransactionLogSearchModel.PageSize,
-            LengthMenu = Model.TaxTransactionLogSearchModel.AvailablePageSizes,
-            Filters = new List<FilterParameter>
+            @{
+                await Html.RenderPartialAsync("Table", new DataTablesModel
                 {
-                new FilterParameter(nameof(Model.TaxTransactionLogSearchModel.CreatedFrom), nameof(Model.TaxTransactionLogSearchModel)),
-                new FilterParameter(nameof(Model.TaxTransactionLogSearchModel.CreatedTo), nameof(Model.TaxTransactionLogSearchModel))
-                },
-                ColumnCollection = new List<ColumnProperty>
+                    Name = "log-grid",
+                    UrlRead = new DataUrl("LogList", "TaxTransactionLog", null),
+                    SearchButtonId = "search-log",
+                    Length = Model.TaxTransactionLogSearchModel.PageSize,
+                    LengthMenu = Model.TaxTransactionLogSearchModel.AvailablePageSizes,
+                    Filters = new List<FilterParameter>
                     {
-                    new ColumnProperty(nameof(TaxTransactionLogModel.Id))
-                    {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox("checkbox_log"),
-                    ClassName =  NopColumnClassDefaults.CenterAll,
-                    Width = "50",
+                        new FilterParameter(nameof(Model.TaxTransactionLogSearchModel.CreatedFrom), nameof(Model.TaxTransactionLogSearchModel)),
+                        new FilterParameter(nameof(Model.TaxTransactionLogSearchModel.CreatedTo), nameof(Model.TaxTransactionLogSearchModel))
                     },
-                    new ColumnProperty(nameof(TaxTransactionLogModel.StatusCode))
+                    ColumnCollection = new List<ColumnProperty>
                     {
-                    Title = T("Plugins.Tax.Avalara.Log.StatusCode").Text,
-                    Width = "100"
-                    },
-                    new ColumnProperty(nameof(TaxTransactionLogModel.Url))
-                    {
-                    Title = T("Plugins.Tax.Avalara.Log.Url").Text,
-                    Width = "200"
-                    },
-                    new ColumnProperty(nameof(TaxTransactionLogModel.CreatedDate))
-                    {
-                    Title = T("Plugins.Tax.Avalara.Log.CreatedDate").Text,
-                    Width = "200",
-                    Render = new RenderDate()
-                    },
-                    new ColumnProperty(nameof(TaxTransactionLogModel.Id))
-                    {
-                    Title = T("Admin.Common.View").Text,
-                    Width = "100",
-                    ClassName = NopColumnClassDefaults.Button,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/TaxTransactionLog/View/"))
+                        new ColumnProperty(nameof(TaxTransactionLogModel.Id))
+                        {
+                            IsMasterCheckBox = true,
+                            Render = new RenderCheckBox("checkbox_log"),
+                            ClassName =  NopColumnClassDefaults.CenterAll,
+                            Width = "50",
+                        },
+                        new ColumnProperty(nameof(TaxTransactionLogModel.StatusCode))
+                        {
+                            Title = T("Plugins.Tax.Avalara.Log.StatusCode").Text,
+                            Width = "100"
+                        },
+                        new ColumnProperty(nameof(TaxTransactionLogModel.Url))
+                        {
+                            Title = T("Plugins.Tax.Avalara.Log.Url").Text,
+                            Width = "200"
+                        },
+                        new ColumnProperty(nameof(TaxTransactionLogModel.CreatedDate))
+                        {
+                            Title = T("Plugins.Tax.Avalara.Log.CreatedDate").Text,
+                            Width = "200",
+                            Render = new RenderDate()
+                        },
+                        new ColumnProperty(nameof(TaxTransactionLogModel.Id))
+                        {
+                            Title = T("Admin.Common.View").Text,
+                            Width = "100",
+                            ClassName = NopColumnClassDefaults.Button,
+                            Render = new RenderButtonView(new DataUrl("~/Admin/TaxTransactionLog/View/"))
+                        }
                     }
-                    }
-                    })
+                });
+            }
 
-                                               <script>
+            <script>
                 $(document).ready(function() {
                     $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
                         var postData = {
@@ -128,7 +130,7 @@
                         return false;
                     });
                 });
-                                               </script>
+            </script>
         </div>
         <div class="card-footer">
             <button type="button" id="delete-selected" class="btn btn-danger">

@@ -65,33 +65,35 @@
                     <div class="card-body">
                         <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Warehouses", Docs.Warehouses + Utm.OnAdmin)" />
 
-                        @await Html.PartialAsync("Table", new DataTablesModel
-                        {
-                            Name = "warehouse-grid",
-                            UrlRead = new DataUrl("Warehouses", "Shipping", null),
-                            SearchButtonId = "search-warehouse",
-                            Length = Model.PageSize,
-                            LengthMenu = Model.AvailablePageSizes,
-                            Filters = new List<FilterParameter>
+                        @{
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
                             {
-                                new FilterParameter(nameof(Model.SearchName))
-                            },
-                            ColumnCollection = new List<ColumnProperty>
-                            {
-                                new ColumnProperty(nameof(WarehouseModel.Name))
+                                Name = "warehouse-grid",
+                                UrlRead = new DataUrl("Warehouses", "Shipping", null),
+                                SearchButtonId = "search-warehouse",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
                                 {
-                                    Title = T("Admin.Configuration.Shipping.Warehouses.Fields.Name").Text
+                                    new FilterParameter(nameof(Model.SearchName))
                                 },
-
-                                new ColumnProperty(nameof(WarehouseModel.Id))
+                                ColumnCollection = new List<ColumnProperty>
                                 {
-                                    Title = T("Admin.Common.Edit").Text,
-                                    Width = "100",
-                                    ClassName =  NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonEdit(new DataUrl("EditWarehouse"))
+                                    new ColumnProperty(nameof(WarehouseModel.Name))
+                                    {
+                                        Title = T("Admin.Configuration.Shipping.Warehouses.Fields.Name").Text
+                                    },
+
+                                    new ColumnProperty(nameof(WarehouseModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "100",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonEdit(new DataUrl("EditWarehouse"))
+                                    }
                                 }
-                            }
-                        })
+                            });
+                        }
                     </div>
                 </div>
             </div>

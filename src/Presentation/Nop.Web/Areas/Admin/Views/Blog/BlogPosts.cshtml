@@ -78,64 +78,66 @@
                         <div class="card-body">
                             <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Blog", Docs.Blog + Utm.OnAdmin)" />
 
-                            @await Html.PartialAsync("Table", new DataTablesModel
-                            {
-                                Name = "blogpost-grid",
-                                UrlRead = new DataUrl("List", "Blog", null),
-                                SearchButtonId = "search-blogpost",
-                                Length = Model.BlogPosts.PageSize,
-                                LengthMenu = Model.BlogPosts.AvailablePageSizes,
-                                Filters = new List<FilterParameter>
+                            @{
+                                await Html.RenderPartialAsync("Table", new DataTablesModel
                                 {
-                                    new FilterParameter(nameof(Model.BlogPosts.SearchStoreId), nameof(Model.BlogPosts)),
-                                    new FilterParameter(nameof(Model.SearchTitle))
-                                },
-                                ColumnCollection = new List<ColumnProperty>
-                                {
-                                    new ColumnProperty(nameof(BlogPostModel.Title))
+                                    Name = "blogpost-grid",
+                                    UrlRead = new DataUrl("List", "Blog", null),
+                                    SearchButtonId = "search-blogpost",
+                                    Length = Model.BlogPosts.PageSize,
+                                    LengthMenu = Model.BlogPosts.AvailablePageSizes,
+                                    Filters = new List<FilterParameter>
                                     {
-                                        Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title").Text,
-                                        Width = "400"
+                                        new FilterParameter(nameof(Model.BlogPosts.SearchStoreId), nameof(Model.BlogPosts)),
+                                        new FilterParameter(nameof(Model.SearchTitle))
                                     },
-                                    new ColumnProperty(nameof(BlogPostModel.LanguageName))
+                                    ColumnCollection = new List<ColumnProperty>
                                     {
-                                        Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language").Text,
-                                        Width = "150"
-                                    },
-                                    new ColumnProperty(nameof(BlogPostModel.Id))
-                                    {
-                                        Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text,
-                                        Width = "200",
-                                        ClassName = NopColumnClassDefaults.Button,
-                                        Render = new RenderCustom("renderColumnComments")
-                                    },
-                                    new ColumnProperty(nameof(BlogPostModel.StartDateUtc))
-                                    {
-                                        Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate").Text,
-                                        Width = "200",
-                                        Render = new RenderDate()
-                                    },
-                                    new ColumnProperty(nameof(BlogPostModel.EndDateUtc))
-                                    {
-                                        Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate").Text,
-                                        Width = "200",
-                                        Render = new RenderDate()
-                                    },
-                                    new ColumnProperty(nameof(BlogPostModel.CreatedOn))
-                                    {
-                                        Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn").Text,
-                                        Width = "200",
-                                        Render = new RenderDate()
-                                    },
-                                    new ColumnProperty(nameof(BlogPostModel.Id))
-                                    {
-                                        Title = T("Admin.Common.Edit").Text,
-                                        Width = "100",
-                                        ClassName = NopColumnClassDefaults.Button,
-                                        Render = new RenderButtonEdit(new DataUrl("BlogPostEdit"))
+                                        new ColumnProperty(nameof(BlogPostModel.Title))
+                                        {
+                                            Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title").Text,
+                                            Width = "400"
+                                        },
+                                        new ColumnProperty(nameof(BlogPostModel.LanguageName))
+                                        {
+                                            Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language").Text,
+                                            Width = "150"
+                                        },
+                                        new ColumnProperty(nameof(BlogPostModel.Id))
+                                        {
+                                            Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text,
+                                            Width = "200",
+                                            ClassName = NopColumnClassDefaults.Button,
+                                            Render = new RenderCustom("renderColumnComments")
+                                        },
+                                        new ColumnProperty(nameof(BlogPostModel.StartDateUtc))
+                                        {
+                                            Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate").Text,
+                                            Width = "200",
+                                            Render = new RenderDate()
+                                        },
+                                        new ColumnProperty(nameof(BlogPostModel.EndDateUtc))
+                                        {
+                                            Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate").Text,
+                                            Width = "200",
+                                            Render = new RenderDate()
+                                        },
+                                        new ColumnProperty(nameof(BlogPostModel.CreatedOn))
+                                        {
+                                            Title = T("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn").Text,
+                                            Width = "200",
+                                            Render = new RenderDate()
+                                        },
+                                        new ColumnProperty(nameof(BlogPostModel.Id))
+                                        {
+                                            Title = T("Admin.Common.Edit").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.Button,
+                                            Render = new RenderButtonEdit(new DataUrl("BlogPostEdit"))
+                                        }
                                     }
-                                }
-                            })
+                                });
+                            }
 
                             <script>
                         function renderColumnComments(data, type, row, meta) {

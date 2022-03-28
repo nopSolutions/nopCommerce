@@ -103,91 +103,93 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.News", Docs.News + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "comments-grid",
-                        SearchButtonId = "search-comments",
-                        UrlRead = new DataUrl("Comments", "News", new RouteValueDictionary { [nameof(Model.NewsItemId)] = Model.NewsItemId }),
-                        UrlDelete = new DataUrl("CommentDelete", "News", null),
-                        UrlUpdate = new DataUrl("CommentUpdate", "News", null),
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.CreatedOnFrom)),
-                            new FilterParameter(nameof(Model.CreatedOnTo)),
-                            new FilterParameter(nameof(Model.SearchText)),
-                            new FilterParameter(nameof(Model.SearchApprovedId))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(NewsCommentModel.Id))
+                            Name = "comments-grid",
+                            SearchButtonId = "search-comments",
+                            UrlRead = new DataUrl("Comments", "News", new RouteValueDictionary { [nameof(Model.NewsItemId)] = Model.NewsItemId }),
+                            UrlDelete = new DataUrl("CommentDelete", "News", null),
+                            UrlUpdate = new DataUrl("CommentUpdate", "News", null),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                IsMasterCheckBox = true,
-                                Render = new RenderCheckBox("checkbox_comments"),
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Width = "50"
+                                new FilterParameter(nameof(Model.CreatedOnFrom)),
+                                new FilterParameter(nameof(Model.CreatedOnTo)),
+                                new FilterParameter(nameof(Model.SearchText)),
+                                new FilterParameter(nameof(Model.SearchApprovedId))
                             },
-                            new ColumnProperty(nameof(NewsCommentModel.NewsItemTitle))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.ContentManagement.News.Comments.Fields.NewsItem").Text,
-                                Width = "200",
-                                Render = new RenderLink(new DataUrl("~/Admin/News/NewsItemEdit/", nameof(NewsCommentModel.NewsItemId)))
-                            },
-                            new ColumnProperty(nameof(NewsCommentModel.StoreName))
-                            {
-                                Title = T("Admin.ContentManagement.News.Comments.Fields.StoreName").Text,
-                                Width = "100",
-                                Visible = (await storeService.GetAllStoresAsync()).Count > 1
-                            },
-                            new ColumnProperty(nameof(NewsCommentModel.CustomerInfo))
-                            {
-                                Title = T("Admin.ContentManagement.News.Comments.Fields.Customer").Text,
-                                Width = "100",
-                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(NewsCommentModel.CustomerId)))
-                            },
-                            new ColumnProperty(nameof(NewsCommentModel.CommentTitle))
-                            {
-                                Title = T("Admin.ContentManagement.News.Comments.Fields.CommentTitle").Text,
-                                Width = "200"
-                            },
-                            new ColumnProperty(nameof(NewsCommentModel.CommentText))
-                            {
-                                Title = T("Admin.ContentManagement.News.Comments.Fields.CommentText").Text,
-                                Encode = false
-                            },
-                            new ColumnProperty(nameof(NewsCommentModel.IsApproved))
-                            {
-                                Title = T("Admin.ContentManagement.News.Comments.Fields.IsApproved").Text,
-                                Width = "100",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean(),
-                                Editable = true,
-                                EditType = EditType.Checkbox
-                            },
-                            new ColumnProperty(nameof(NewsCommentModel.CreatedOn))
-                            {
-                                Title = T("Admin.ContentManagement.News.Comments.Fields.CreatedOn").Text,
-                                Width = "120",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderDate()
-                            },
-                            new ColumnProperty(nameof(NewsCommentModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonsInlineEdit()
-                            },
-                            new ColumnProperty(nameof(NewsCommentModel.Id))
-                            {
-                                Title = T("Admin.Common.Delete").Text,
-                                Width = "100",
-                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
-                                ClassName = NopColumnClassDefaults.Button
+                                new ColumnProperty(nameof(NewsCommentModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_comments"),
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "50"
+                                },
+                                new ColumnProperty(nameof(NewsCommentModel.NewsItemTitle))
+                                {
+                                    Title = T("Admin.ContentManagement.News.Comments.Fields.NewsItem").Text,
+                                    Width = "200",
+                                    Render = new RenderLink(new DataUrl("~/Admin/News/NewsItemEdit/", nameof(NewsCommentModel.NewsItemId)))
+                                },
+                                new ColumnProperty(nameof(NewsCommentModel.StoreName))
+                                {
+                                    Title = T("Admin.ContentManagement.News.Comments.Fields.StoreName").Text,
+                                    Width = "100",
+                                    Visible = (await storeService.GetAllStoresAsync()).Count > 1
+                                },
+                                new ColumnProperty(nameof(NewsCommentModel.CustomerInfo))
+                                {
+                                    Title = T("Admin.ContentManagement.News.Comments.Fields.Customer").Text,
+                                    Width = "100",
+                                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(NewsCommentModel.CustomerId)))
+                                },
+                                new ColumnProperty(nameof(NewsCommentModel.CommentTitle))
+                                {
+                                    Title = T("Admin.ContentManagement.News.Comments.Fields.CommentTitle").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(NewsCommentModel.CommentText))
+                                {
+                                    Title = T("Admin.ContentManagement.News.Comments.Fields.CommentText").Text,
+                                    Encode = false
+                                },
+                                new ColumnProperty(nameof(NewsCommentModel.IsApproved))
+                                {
+                                    Title = T("Admin.ContentManagement.News.Comments.Fields.IsApproved").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean(),
+                                    Editable = true,
+                                    EditType = EditType.Checkbox
+                                },
+                                new ColumnProperty(nameof(NewsCommentModel.CreatedOn))
+                                {
+                                    Title = T("Admin.ContentManagement.News.Comments.Fields.CreatedOn").Text,
+                                    Width = "120",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(NewsCommentModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonsInlineEdit()
+                                },
+                                new ColumnProperty(nameof(NewsCommentModel.Id))
+                                {
+                                    Title = T("Admin.Common.Delete").Text,
+                                    Width = "100",
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                    ClassName = NopColumnClassDefaults.Button
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
 
                     <script>
                         $(document).ready(function() {

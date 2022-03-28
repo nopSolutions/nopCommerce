@@ -10,7 +10,9 @@
     NopHtml.SetActiveMenuItemSystemName("Products");
 }
 
-@await Html.PartialAsync("_AdminTour")
+@{
+    await Html.RenderPartialAsync("_AdminTour");
+}
 
 <form asp-controller="Product" asp-action="Create" method="post" id="product-form">
     <div class="content-header clearfix">
@@ -33,10 +35,12 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdate", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdate", Model);
+    }
 </form>
 @if (!Model.IsLoggedInAsVendor)
 {
     //product editor settings modal
-    @await Html.PartialAsync("_ProductEditorSettingsModal", Model)
+    await Html.RenderPartialAsync("_ProductEditorSettingsModal", Model);
 }

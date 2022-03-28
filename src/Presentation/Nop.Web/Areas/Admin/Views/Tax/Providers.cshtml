@@ -17,7 +17,9 @@
     }
 }
 
-@await Html.PartialAsync("_AdminTour")
+@{
+    await Html.RenderPartialAsync("_AdminTour");
+}
 
 <form asp-controller="Tax" asp-action="Providers" method="post">
     <div class="content-header clearfix">
@@ -39,48 +41,50 @@
                             </p>
 
                             <div id="tax-providers-area">
-                                @await Html.PartialAsync("Table", new DataTablesModel
-                                {
-                                    Name = "tax-providers-grid",
-                                    RowIdBasedOnField = nameof(PaymentMethodModel.SystemName),
-                                    UrlRead = new DataUrl("Providers", "Tax", null),
-                                    Length = Model.PageSize,
-                                    LengthMenu = Model.AvailablePageSizes,
-                                    ColumnCollection = new List<ColumnProperty>
+                                @{
+                                    await Html.RenderPartialAsync("Table", new DataTablesModel
                                     {
-                                        new ColumnProperty(nameof(TaxProviderModel.FriendlyName))
+                                        Name = "tax-providers-grid",
+                                        RowIdBasedOnField = nameof(PaymentMethodModel.SystemName),
+                                        UrlRead = new DataUrl("Providers", "Tax", null),
+                                        Length = Model.PageSize,
+                                        LengthMenu = Model.AvailablePageSizes,
+                                        ColumnCollection = new List<ColumnProperty>
                                         {
-                                            Title = T("Admin.Configuration.Tax.Providers.Fields.FriendlyName").Text,
-                                            Width = "250"
-                                        },
-                                        new ColumnProperty(nameof(TaxProviderModel.SystemName))
-                                        {
-                                            Title = T("Admin.Configuration.Tax.Providers.Fields.SystemName").Text,
-                                            Width = "250"
-                                        },
-                                        new ColumnProperty(nameof(TaxProviderModel.IsPrimaryTaxProvider))
-                                        {
-                                            Title = T("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider").Text,
-                                            Width = "100",
-                                            ClassName =  NopColumnClassDefaults.CenterAll,
-                                            Render = new RenderBoolean()
-                                        },
-                                        new ColumnProperty(nameof(TaxProviderModel.SystemName))
-                                        {
-                                            Title = T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text,
-                                            Width = "200",
-                                            ClassName =  NopColumnClassDefaults.Button + " column-primary",
-                                            Render = new RenderCustom("renderColumnSystemName")
-                                        },
-                                        new ColumnProperty(nameof(TaxProviderModel.SystemName))
-                                        {
-                                            Title = T("Admin.Configuration.Tax.Providers.Configure").Text,
-                                            Width = "150",
-                                            ClassName =  NopColumnClassDefaults.Button + " column-configure",
-                                            Render = new RenderCustom("renderColumnConfigure")
+                                            new ColumnProperty(nameof(TaxProviderModel.FriendlyName))
+                                            {
+                                                Title = T("Admin.Configuration.Tax.Providers.Fields.FriendlyName").Text,
+                                                Width = "250"
+                                            },
+                                            new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                                            {
+                                                Title = T("Admin.Configuration.Tax.Providers.Fields.SystemName").Text,
+                                                Width = "250"
+                                            },
+                                            new ColumnProperty(nameof(TaxProviderModel.IsPrimaryTaxProvider))
+                                            {
+                                                Title = T("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider").Text,
+                                                Width = "100",
+                                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                                Render = new RenderBoolean()
+                                            },
+                                            new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                                            {
+                                                Title = T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text,
+                                                Width = "200",
+                                                ClassName =  NopColumnClassDefaults.Button + " column-primary",
+                                                Render = new RenderCustom("renderColumnSystemName")
+                                            },
+                                            new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                                            {
+                                                Title = T("Admin.Configuration.Tax.Providers.Configure").Text,
+                                                Width = "150",
+                                                ClassName =  NopColumnClassDefaults.Button + " column-configure",
+                                                Render = new RenderCustom("renderColumnConfigure")
+                                            }
                                         }
-                                    }
-                                })
+                                    });
+                                }
                             </div>
 
                             <script>

@@ -20,12 +20,16 @@
     @NopHtml.GenerateHeadCustom()
 
     @* CSS & Script resources *@
-    @{ await Html.RenderPartialAsync("_AdminScripts");  }
+    @{
+        await Html.RenderPartialAsync("_AdminScripts");
+    }
 </head>
 <body class="hold-transition skin-blue sidebar-collapse layout-fixed">
     <div class="wrapper">
         <div class="content-wrapper">
-            @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Notifications.cshtml")
+            @{
+                await Html.RenderPartialAsync("~/Areas/Admin/Views/Shared/Notifications.cshtml");
+            }
             <div>
                 <nop-antiforgery-token />
                 @RenderBody()
@@ -41,6 +45,6 @@
     </script>
 
     @NopHtml.GenerateScripts(ResourceLocation.Footer)
-    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)    
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
 </body>
 </html>

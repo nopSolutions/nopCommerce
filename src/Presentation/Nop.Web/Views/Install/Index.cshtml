@@ -44,7 +44,9 @@
                 <div asp-validation-summary="All" class="message-error"></div>
 
                 <p>@ILS.GetResource("Tooltip2")</p>
-                <p>@ILS.GetResource("Documentation1") 
+                <p>
+                    
+                    @ILS.GetResource("Documentation1")
                     <a href="@(Docs.Main + Utm.OnInstall)" target="_blank" rel="noopener noreferrer">@ILS.GetResource("Documentation2")</a>.
                 </p>
 
@@ -122,18 +124,18 @@
                     @if (!string.IsNullOrEmpty(Model.RestartUrl))
                     {
                         <text>
-                            $(document).ready(function () {
-                                showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("RestartProgress")))');
-                                $.ajax({
-                                    type: "GET",
-                                    url: "@Url.Action("RestartApplication", "Install")",
-                                    complete: function() {
-                                        window.setTimeout(function () {
-                                            window.location.replace('@Model.RestartUrl');
-                                        }, @NopCommonDefaults.RestartTimeout);
-                                    }
+                                $(document).ready(function () {
+                                    showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("RestartProgress")))');
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "@Url.Action("RestartApplication", "Install")",
+                                        complete: function() {
+                                            window.setTimeout(function () {
+                                                window.location.replace('@Model.RestartUrl');
+                                            }, @NopCommonDefaults.RestartTimeout);
+                                        }
+                                    });
                                 });
-                            });
                         </text>
                     }
                 </script>
@@ -230,7 +232,9 @@
                             </div>
                             <div id="sqlConnectionInfo">
                                 <hr />
-                                @await Html.PartialAsync("_Install.ConnectionString", Model)
+                                @{
+                                    await Html.RenderPartialAsync("_Install.ConnectionString", Model);
+                                }
                                 <div class="form-group row" id="sqlDatabaseConnectionString">
                                     <label class="col-sm-3 col-form-label text-right font-weight-bold">
                                         @ILS.GetResource("ConnectionString")

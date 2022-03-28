@@ -63,51 +63,53 @@
                     <div class="card-body">
                         <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
 
-                        @await Html.PartialAsync("Table", new DataTablesModel
-                        {
-                            Name = "products-grid",
-                            UrlRead = new DataUrl("LowStockList", "Report", null),
-                            SearchButtonId = "search-products",
-                            Length = Model.PageSize,
-                            LengthMenu = Model.AvailablePageSizes,
-                            Filters = new List<FilterParameter>
+                        @{
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
                             {
-                                new FilterParameter(nameof(Model.SearchPublishedId))
-                            },
-                            ColumnCollection = new List<ColumnProperty>
-                            {
-                                new ColumnProperty(nameof(LowStockProductModel.Name))
+                                Name = "products-grid",
+                                UrlRead = new DataUrl("LowStockList", "Report", null),
+                                SearchButtonId = "search-products",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
                                 {
-                                    Title = T("Admin.Catalog.Products.Fields.Name").Text,
-                                    Width = "300",
-                                    Render = new RenderCustom("renderColumnName")
+                                    new FilterParameter(nameof(Model.SearchPublishedId))
                                 },
-                                new ColumnProperty(nameof(LowStockProductModel.ManageInventoryMethod))
+                                ColumnCollection = new List<ColumnProperty>
                                 {
-                                    Title = T("Admin.Catalog.Products.Fields.ManageInventoryMethod").Text,
-                                    Width = "150"
-                                },
-                                new ColumnProperty(nameof(LowStockProductModel.StockQuantity))
-                                {
-                                    Title = T("Admin.Catalog.Products.Fields.StockQuantity").Text,
-                                    Width = "100"
-                                },
-                                new ColumnProperty(nameof(LowStockProductModel.Published))
-                                {
-                                    Title = T("Admin.Catalog.Products.Fields.Published").Text,
-                                    Width = "100",
-                                    ClassName =  NopColumnClassDefaults.CenterAll,
-                                    Render = new RenderBoolean()
-                                },
-                                new ColumnProperty(nameof(LowStockProductModel.Id))
-                                {
-                                    Title = T("Admin.Common.View").Text,
-                                    Width = "100",
-                                    ClassName =  NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                                    new ColumnProperty(nameof(LowStockProductModel.Name))
+                                    {
+                                        Title = T("Admin.Catalog.Products.Fields.Name").Text,
+                                        Width = "300",
+                                        Render = new RenderCustom("renderColumnName")
+                                    },
+                                    new ColumnProperty(nameof(LowStockProductModel.ManageInventoryMethod))
+                                    {
+                                        Title = T("Admin.Catalog.Products.Fields.ManageInventoryMethod").Text,
+                                        Width = "150"
+                                    },
+                                    new ColumnProperty(nameof(LowStockProductModel.StockQuantity))
+                                    {
+                                        Title = T("Admin.Catalog.Products.Fields.StockQuantity").Text,
+                                        Width = "100"
+                                    },
+                                    new ColumnProperty(nameof(LowStockProductModel.Published))
+                                    {
+                                        Title = T("Admin.Catalog.Products.Fields.Published").Text,
+                                        Width = "100",
+                                        ClassName =  NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean()
+                                    },
+                                    new ColumnProperty(nameof(LowStockProductModel.Id))
+                                    {
+                                        Title = T("Admin.Common.View").Text,
+                                        Width = "100",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                                    }
                                 }
-                            }
-                        })
+                            });
+                        }
 
                         <script asp-location="Footer">
                             function renderColumnName(data, type, row, meta) {

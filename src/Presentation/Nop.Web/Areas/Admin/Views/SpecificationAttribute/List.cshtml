@@ -38,75 +38,77 @@
                     @T("Admin.Catalog.Attributes.SpecificationAttributes.Description")
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.SpecificationAttributes", Docs.SpecificationAttributes + Utm.OnAdmin)" asp-add-wrapper="false"/>
                 </p>
-                @await Html.PartialAsync("Table", new DataTablesModel
-                {
-                    Name = "specificationattributegroups-grid",
-                    UrlRead = new DataUrl("SpecificationAttributeGroupList", "SpecificationAttribute", null),
-                    PrimaryKeyColumn = nameof(SpecificationAttributeGroupModel.Id),
-                    Length = Model.PageSize,
-                    LengthMenu = Model.AvailablePageSizes,
-                    ColumnCollection = new List<ColumnProperty>
+                @{
+                    await Html.RenderPartialAsync("Table", new DataTablesModel
                     {
-                        new ColumnProperty(null)
-                        {
-                            Render = new RenderChildCaret(),
-                            Width = "5",
-                            Searchable = false,
-                            ClassName =  NopColumnClassDefaults.ChildControl
-                        },
-                        new ColumnProperty(nameof(SpecificationAttributeGroupModel.Name))
-                        {
-                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.Name").Text,
-                            Render = new RenderCustom("renderColumnNameSpecificationAttributeGroup")
-                        },
-                        new ColumnProperty(nameof(SpecificationAttributeGroupModel.DisplayOrder))
-                        {
-                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.DisplayOrder").Text,
-                            Width = "100",
-                            ClassName =  NopColumnClassDefaults.CenterAll
-                        }
-                    },
-                    ChildTable = new DataTablesModel
-                    {
-                        Name = "specificationattributes-grid",
-                        UrlRead = new DataUrl("SpecificationAttributeList", "SpecificationAttribute", null),
-                        IsChildTable = true,
+                        Name = "specificationattributegroups-grid",
+                        UrlRead = new DataUrl("SpecificationAttributeGroupList", "SpecificationAttribute", null),
+                        PrimaryKeyColumn = nameof(SpecificationAttributeGroupModel.Id),
                         Length = Model.PageSize,
                         LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
-                        {
-                            new FilterParameter(nameof(SpecificationAttributeModel.SpecificationAttributeGroupId), nameof(SpecificationAttributeGroupModel.Id), true)
-                        },
                         ColumnCollection = new List<ColumnProperty>
                         {
-                            new ColumnProperty(nameof(SpecificationAttributeModel.Id))
+                            new ColumnProperty(null)
                             {
-                                IsMasterCheckBox = true,
-                                Render = new RenderCheckBox("checkbox_specificationattributes"),
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Width = "50"
+                                Render = new RenderChildCaret(),
+                                Width = "5",
+                                Searchable = false,
+                                ClassName =  NopColumnClassDefaults.ChildControl
                             },
-                            new ColumnProperty(nameof(SpecificationAttributeModel.Name))
+                            new ColumnProperty(nameof(SpecificationAttributeGroupModel.Name))
                             {
-                                Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name").Text,
-                                    Width = "300"
+                                Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.Name").Text,
+                                Render = new RenderCustom("renderColumnNameSpecificationAttributeGroup")
                             },
-                            new ColumnProperty(nameof(SpecificationAttributeModel.DisplayOrder))
+                            new ColumnProperty(nameof(SpecificationAttributeGroupModel.DisplayOrder))
                             {
-                                Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.DisplayOrder").Text,
-                                Width = "150",
+                                Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.DisplayOrder").Text,
+                                Width = "100",
                                 ClassName =  NopColumnClassDefaults.CenterAll
-                            },
-                            new ColumnProperty(nameof(SpecificationAttributeModel.Id))
+                            }
+                        },
+                        ChildTable = new DataTablesModel
+                        {
+                            Name = "specificationattributes-grid",
+                            UrlRead = new DataUrl("SpecificationAttributeList", "SpecificationAttribute", null),
+                            IsChildTable = true,
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "50",
-                                ClassName = NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("EditSpecificationAttribute"))
+                                new FilterParameter(nameof(SpecificationAttributeModel.SpecificationAttributeGroupId), nameof(SpecificationAttributeGroupModel.Id), true)
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(SpecificationAttributeModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_specificationattributes"),
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "50"
+                                },
+                                new ColumnProperty(nameof(SpecificationAttributeModel.Name))
+                                {
+                                    Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name").Text,
+                                        Width = "300"
+                                },
+                                new ColumnProperty(nameof(SpecificationAttributeModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.DisplayOrder").Text,
+                                    Width = "150",
+                                    ClassName =  NopColumnClassDefaults.CenterAll
+                                },
+                                new ColumnProperty(nameof(SpecificationAttributeModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "50",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("EditSpecificationAttribute"))
+                                }
                             }
                         }
-                    }
-                })
+                    });
+                }
 
                 <script>
                 function renderColumnNameSpecificationAttributeGroup(name, type, row, meta) {

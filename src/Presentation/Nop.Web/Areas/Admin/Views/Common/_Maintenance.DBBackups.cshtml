@@ -3,45 +3,47 @@
     <p>
         @T("Admin.System.Maintenance.BackupDatabase.Description")
     </p>
-    @await Html.PartialAsync("Table", new DataTablesModel
-    {
-        Name = "backup-list",
-        UrlRead = new DataUrl("BackupFiles", "Common", null),
-        Length = Model.BackupFileSearchModel.PageSize,
-        LengthMenu = Model.BackupFileSearchModel.AvailablePageSizes,
-        ColumnCollection = new List<ColumnProperty>
+    @{
+        await Html.RenderPartialAsync("Table", new DataTablesModel
         {
-            new ColumnProperty(nameof(BackupFileModel.Name))
+            Name = "backup-list",
+            UrlRead = new DataUrl("BackupFiles", "Common", null),
+            Length = Model.BackupFileSearchModel.PageSize,
+            LengthMenu = Model.BackupFileSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
             {
-                Title = T("Admin.System.Maintenance.BackupDatabase.FileName").Text
-            },
-            new ColumnProperty(nameof(BackupFileModel.Length))
-            {
-                Title = T("Admin.System.Maintenance.BackupDatabase.FileSize").Text
-            },
-            new ColumnProperty(nameof(BackupFileModel.Link))
-            {
-                Title = T("Admin.System.Maintenance.BackupDatabase.Download").Text,
-                Render = new RenderCustom("renderDownload"),
-                Width = "150",
-                ClassName = NopColumnClassDefaults.Button
-            },
-            new ColumnProperty(nameof(BackupFileModel.Name))
-            {
-                Title = T("Admin.System.Maintenance.BackupDatabase.Restore").Text,
-                Render = new RenderCustom("renderRestore"),
-                Width = "150",
-                ClassName = NopColumnClassDefaults.Button
-            },
-            new ColumnProperty(nameof(BackupFileModel.Name))
-            {
-                Title = T("Admin.System.Maintenance.BackupDatabase.Delete").Text,
-                Render = new RenderCustom("renderDelete"),
-                Width = "150",
-                ClassName = NopColumnClassDefaults.Button
+                new ColumnProperty(nameof(BackupFileModel.Name))
+                {
+                    Title = T("Admin.System.Maintenance.BackupDatabase.FileName").Text
+                },
+                new ColumnProperty(nameof(BackupFileModel.Length))
+                {
+                    Title = T("Admin.System.Maintenance.BackupDatabase.FileSize").Text
+                },
+                new ColumnProperty(nameof(BackupFileModel.Link))
+                {
+                    Title = T("Admin.System.Maintenance.BackupDatabase.Download").Text,
+                    Render = new RenderCustom("renderDownload"),
+                    Width = "150",
+                    ClassName = NopColumnClassDefaults.Button
+                },
+                new ColumnProperty(nameof(BackupFileModel.Name))
+                {
+                    Title = T("Admin.System.Maintenance.BackupDatabase.Restore").Text,
+                    Render = new RenderCustom("renderRestore"),
+                    Width = "150",
+                    ClassName = NopColumnClassDefaults.Button
+                },
+                new ColumnProperty(nameof(BackupFileModel.Name))
+                {
+                    Title = T("Admin.System.Maintenance.BackupDatabase.Delete").Text,
+                    Render = new RenderCustom("renderDelete"),
+                    Width = "150",
+                    ClassName = NopColumnClassDefaults.Button
+                }
             }
-        }
-    })
+        });
+    }
 </div>
 <div class="card-footer">
     <button type="submit" id="backup-database" name="backup-database" class="btn btn-primary">

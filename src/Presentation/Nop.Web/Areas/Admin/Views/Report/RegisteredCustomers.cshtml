@@ -20,25 +20,27 @@
                     <div class="card-body">
                         <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
 
-                        @await Html.PartialAsync("Table", new DataTablesModel
-                        {
-                            Name = "registered-customers-grid",
-                            UrlRead = new DataUrl("ReportRegisteredCustomersList", "Report", null),
-                            Length = Model.RegisteredCustomers.PageSize,
-                            LengthMenu = Model.RegisteredCustomers.AvailablePageSizes,
-                            ColumnCollection = new List<ColumnProperty>
+                        @{
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
                             {
-                                new ColumnProperty(nameof(RegisteredCustomersReportModel.Period))
+                                Name = "registered-customers-grid",
+                                UrlRead = new DataUrl("ReportRegisteredCustomersList", "Report", null),
+                                Length = Model.RegisteredCustomers.PageSize,
+                                LengthMenu = Model.RegisteredCustomers.AvailablePageSizes,
+                                ColumnCollection = new List<ColumnProperty>
                                 {
-                                    Title = T("Admin.Reports.Customers.RegisteredCustomers.Fields.Period").Text
-                                },
-                                new ColumnProperty(nameof(RegisteredCustomersReportModel.Customers))
-                                {
-                                    Title = T("Admin.Reports.Customers.RegisteredCustomers.Fields.Customers").Text,
-                                    Width = "150"
+                                    new ColumnProperty(nameof(RegisteredCustomersReportModel.Period))
+                                    {
+                                        Title = T("Admin.Reports.Customers.RegisteredCustomers.Fields.Period").Text
+                                    },
+                                    new ColumnProperty(nameof(RegisteredCustomersReportModel.Customers))
+                                    {
+                                        Title = T("Admin.Reports.Customers.RegisteredCustomers.Fields.Customers").Text,
+                                        Width = "150"
+                                    }
                                 }
-                            }
-                        })
+                            });
+                        }
                     </div>
                 </div>
             </div>

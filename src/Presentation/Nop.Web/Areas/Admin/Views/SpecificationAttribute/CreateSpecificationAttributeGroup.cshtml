@@ -28,5 +28,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeGroupDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdateSpecificationAttributeGroup", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdateSpecificationAttributeGroup", Model);
+    }
 </form>

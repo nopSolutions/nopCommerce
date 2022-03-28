@@ -22,6 +22,8 @@
             </button>
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeCombinationDetailsButtons, additionalData = Model })
         </div>
-    </div>    
-    @await Html.PartialAsync("_CreateOrUpdateProductAttributeCombination", Model)    
+    </div>
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdateProductAttributeCombination", Model);
+    }
 </form>

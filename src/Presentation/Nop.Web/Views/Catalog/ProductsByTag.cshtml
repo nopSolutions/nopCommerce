@@ -19,7 +19,9 @@
 }
 
 @section CatalogFilters {
-    @await Html.PartialAsync("_CatalogFilters", Model.CatalogProductsModel)
+    @{
+        await Html.RenderPartialAsync("_CatalogFilters", Model.CatalogProductsModel);
+        }
 }
 
 <div class="page product-tag-page">
@@ -28,13 +30,17 @@
     </div>
     <div class="page-body">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductsByTagTop, additionalData = Model })
-        @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
+        @{
+            await Html.RenderPartialAsync("_CatalogSelectors", Model.CatalogProductsModel);
+        }
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductsByTagBeforeProductList, additionalData = Model })
         @{
             var catalogProductsViewData = new ViewDataDictionary(ViewData);
             catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("GetTagProducts", "Catalog", new { tagId = Model.Id }));
         }
-        @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
+        @{
+            await Html.RenderPartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData);
+        }
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductsByTagBottom, additionalData = Model })
     </div>
 </div>

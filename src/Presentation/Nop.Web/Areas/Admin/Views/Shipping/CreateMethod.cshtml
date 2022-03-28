@@ -28,5 +28,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShippingMethodDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdateMethod", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdateMethod", Model);
+    }
 </form>

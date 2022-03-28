@@ -62,6 +62,6 @@
             viewDataDictionary.Add("parentURL", productUrl);
         }
         
-        @await Html.PartialAsync("_Microdata", product, viewDataDictionary)        
+        await Html.RenderPartialAsync("_Microdata", product, viewDataDictionary);
     }
 </div>

@@ -115,7 +115,7 @@
 
     @if (Model.VendorAttributes.Count > 0)
     {
-        @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
+        await Html.RenderPartialAsync("_VendorAttributes", Model.VendorAttributes);
     }
 
     <div class="card card-default advanced-setting">

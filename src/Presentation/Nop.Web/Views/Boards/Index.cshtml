@@ -9,7 +9,9 @@
 }
 <div class="page forums-main-page">
     @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "ForumWelcomeMessage" })
-    @await Html.PartialAsync("_ForumHeader")
+    @{
+        await Html.RenderPartialAsync("_ForumHeader");
+    }
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsMainAfterHeader, additionalData = Model })
     @foreach (var forumGroup in Model.ForumGroups)
     {

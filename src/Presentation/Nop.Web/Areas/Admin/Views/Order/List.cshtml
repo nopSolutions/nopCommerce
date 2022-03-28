@@ -389,7 +389,9 @@
                                 var orderSummaryColumnNumber = 8;
                             }
 
-                            @await Html.PartialAsync("Table", gridModel)
+                            @{
+                                await Html.RenderPartialAsync("Table", gridModel);
+                            }
 
                             <script>
                             function renderColumnOrderStatus(data, type, row, meta) {

@@ -81,7 +81,7 @@ else
             <ul class="nav nav-treeview">
                 @foreach (var childItem in childNodes)
                 {
-                    @await Html.PartialAsync("_MenuItem", childItem)
+                    await Html.RenderPartialAsync("_MenuItem", childItem);
                 }
             </ul>
 

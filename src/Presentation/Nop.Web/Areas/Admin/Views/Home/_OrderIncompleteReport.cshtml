@@ -34,33 +34,35 @@
         });
     </script>
     <div class="card-body">
-        @await Html.PartialAsync("Table", new DataTablesModel
-        {
-            Name = "incomplete-order-report-grid",
-            UrlRead = new DataUrl("OrderIncompleteReportList", "Order", null),
-            Length = int.MaxValue,
-            Paging = false,
-            Info = false,
-            ColumnCollection = new List<ColumnProperty>
+        @{
+            await Html.RenderPartialAsync("Table", new DataTablesModel
             {
-                new ColumnProperty(nameof(OrderIncompleteReportModel.Item))
+                Name = "incomplete-order-report-grid",
+                UrlRead = new DataUrl("OrderIncompleteReportList", "Order", null),
+                Length = int.MaxValue,
+                Paging = false,
+                Info = false,
+                ColumnCollection = new List<ColumnProperty>
                 {
-                    Title = T("Admin.SalesReport.Incomplete.Item").Text
-                },
-                new ColumnProperty(nameof(OrderIncompleteReportModel.Total))
-                {
-                    Title = T("Admin.SalesReport.Incomplete.Total").Text,
-                    Width = "50"
-                },
-                new ColumnProperty(nameof(OrderIncompleteReportModel.Count))
-                {
-                    Title = T("Admin.SalesReport.Incomplete.Count").Text,
-                    Width = "120",
-                    ClassName =  NopColumnClassDefaults.Button,
-                    Render = new RenderCustom("renderColumnOrderIncompleteReportCount")
+                    new ColumnProperty(nameof(OrderIncompleteReportModel.Item))
+                    {
+                        Title = T("Admin.SalesReport.Incomplete.Item").Text
+                    },
+                    new ColumnProperty(nameof(OrderIncompleteReportModel.Total))
+                    {
+                        Title = T("Admin.SalesReport.Incomplete.Total").Text,
+                        Width = "50"
+                    },
+                    new ColumnProperty(nameof(OrderIncompleteReportModel.Count))
+                    {
+                        Title = T("Admin.SalesReport.Incomplete.Count").Text,
+                        Width = "120",
+                        ClassName =  NopColumnClassDefaults.Button,
+                        Render = new RenderCustom("renderColumnOrderIncompleteReportCount")
+                    }
                 }
-            }
-        })
+            });
+        }
         <script>
             function renderColumnOrderIncompleteReportCount(data, type, row, meta) {
                 return '<a class="btn btn-default" href="' + row.ViewLink +'"><i class="far fa-eye"></i>' + row.Count + ' - @T("Admin.SalesReport.Incomplete.View").Text</a>';

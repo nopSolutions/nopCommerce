@@ -1,74 +1,76 @@
 ﻿@model MeasureSearchModel
 
 <div class="card-body">
-        @await Html.PartialAsync("Table", new DataTablesModel
-        {
-            Name = "measureweight-grid",
-            UrlRead = new DataUrl("Weights", "Measure", null),
-            UrlUpdate = new DataUrl("WeightUpdate", "Measure", null),
-            UrlDelete = new DataUrl("WeightDelete", "Measure", null),
-            SearchButtonId = "search-resources",
-            Length = Model.PageSize,
-            LengthMenu = Model.AvailablePageSizes,
-            ColumnCollection = new List<ColumnProperty>
+        @{
+            await Html.RenderPartialAsync("Table", new DataTablesModel
             {
-                new ColumnProperty(nameof(MeasureWeightModel.Name))
+                Name = "measureweight-grid",
+                UrlRead = new DataUrl("Weights", "Measure", null),
+                UrlUpdate = new DataUrl("WeightUpdate", "Measure", null),
+                UrlDelete = new DataUrl("WeightDelete", "Measure", null),
+                SearchButtonId = "search-resources",
+                Length = Model.PageSize,
+                LengthMenu = Model.AvailablePageSizes,
+                ColumnCollection = new List<ColumnProperty>
                 {
-                    Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.Name").Text,
-                    Editable = true,
-                    EditType = EditType.String
-                },
-                new ColumnProperty(nameof(MeasureWeightModel.SystemKeyword))
-                {
-                    Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword").Text,
-                    Editable = true,
-                    EditType = EditType.String
-                },
-                new ColumnProperty(nameof(MeasureWeightModel.Ratio))
-                {
-                    Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio").Text,
-                    Editable = true,
-                    EditType = EditType.Number
-                },
-                new ColumnProperty(nameof(MeasureWeightModel.DisplayOrder))
-                {
-                    Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder").Text,
-                    Width = "100",
-                    Editable = true,
-                    EditType = EditType.Number
-                },
-                new ColumnProperty(nameof(MeasureWeightModel.IsPrimaryWeight))
-                {
-                    Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.IsPrimaryWeight").Text,
-                    Width = "100",
-                    ClassName =  NopColumnClassDefaults.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(MeasureWeightModel.Id))
-                {
-                    Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight").Text,
-                    ClassName =  NopColumnClassDefaults.CenterAll,
-                    Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight").Text)
+                    new ColumnProperty(nameof(MeasureWeightModel.Name))
                     {
-                        OnClickFunctionName = "markAsPrimaryWeight"
+                        Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.Name").Text,
+                        Editable = true,
+                        EditType = EditType.String
+                    },
+                    new ColumnProperty(nameof(MeasureWeightModel.SystemKeyword))
+                    {
+                        Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword").Text,
+                        Editable = true,
+                        EditType = EditType.String
+                    },
+                    new ColumnProperty(nameof(MeasureWeightModel.Ratio))
+                    {
+                        Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio").Text,
+                        Editable = true,
+                        EditType = EditType.Number
+                    },
+                    new ColumnProperty(nameof(MeasureWeightModel.DisplayOrder))
+                    {
+                        Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder").Text,
+                        Width = "100",
+                        Editable = true,
+                        EditType = EditType.Number
+                    },
+                    new ColumnProperty(nameof(MeasureWeightModel.IsPrimaryWeight))
+                    {
+                        Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.IsPrimaryWeight").Text,
+                        Width = "100",
+                        ClassName =  NopColumnClassDefaults.CenterAll,
+                        Render = new RenderBoolean()
+                    },
+                    new ColumnProperty(nameof(MeasureWeightModel.Id))
+                    {
+                        Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight").Text,
+                        ClassName =  NopColumnClassDefaults.CenterAll,
+                        Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight").Text)
+                        {
+                            OnClickFunctionName = "markAsPrimaryWeight"
+                        }
+                    },
+                    new ColumnProperty(nameof(MeasureWeightModel.Id))
+                    {
+                        Title = T("Admin.Common.Edit").Text,
+                        Width = "200",
+                        ClassName =  NopColumnClassDefaults.Button,
+                        Render = new RenderButtonsInlineEdit()
+                    },
+                    new ColumnProperty(nameof(MeasureWeightModel.Id))
+                    {
+                        Title = T("Admin.Common.Delete").Text,
+                        Width = "100",
+                        ClassName =  NopColumnClassDefaults.Button,
+                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
                     }
-                },
-                new ColumnProperty(nameof(MeasureWeightModel.Id))
-                {
-                    Title = T("Admin.Common.Edit").Text,
-                    Width = "200",
-                    ClassName =  NopColumnClassDefaults.Button,
-                    Render = new RenderButtonsInlineEdit()
-                },
-                new ColumnProperty(nameof(MeasureWeightModel.Id))
-                {
-                    Title = T("Admin.Common.Delete").Text,
-                    Width = "100",
-                    ClassName =  NopColumnClassDefaults.Button,
-                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
                 }
-            }
-        })
+            });
+        }
 
         <button type="submit" class="btn btn-default" id="btnMarkAsPrimaryWeight" style="display:none"></button>
         <script>

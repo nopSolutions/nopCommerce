@@ -90,61 +90,63 @@
                             <div class="card-body">
                                 <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Plugins", Docs.Plugins + Utm.OnAdmin)" />
 
-                                @await Html.PartialAsync("Table", new DataTablesModel
-                           {
-                               Name = "plugins-grid",
-                               UrlRead = new DataUrl("OfficialFeedSelect", "Plugin", null),
-                               SearchButtonId = "search-plugins",
-                               Length = Model.PageSize,
-                               LengthMenu = Model.AvailablePageSizes,
-                               Filters = new List<FilterParameter>
+                                @{
+                                    await Html.RenderPartialAsync("Table", new DataTablesModel
                                     {
-                                        new FilterParameter(nameof(Model.SearchName)),
-                                        new FilterParameter(nameof(Model.SearchVersionId)),
-                                        new FilterParameter(nameof(Model.SearchCategoryId)),
-                                        new FilterParameter(nameof(Model.SearchPriceId))
-                                    },
-                               ColumnCollection = new List<ColumnProperty>
-                                    {
-                                        new ColumnProperty(nameof(OfficialFeedPluginModel.PictureUrl))
-                                        {
-                                            Title = T("Admin.Configuration.Plugins.OfficialFeed.Picture").Text,
-                                            Render = new RenderPicture(width: 120)
-                                        },
-                                        new ColumnProperty(nameof(OfficialFeedPluginModel.Name))
-                                        {
-                                            Title = T("Admin.Configuration.Plugins.OfficialFeed.Name").Text,
-                                            Width = "600"
-                                        },
-                                        new ColumnProperty(nameof(OfficialFeedPluginModel.Price))
-                                        {
-                                            Title = T("Admin.Configuration.Plugins.OfficialFeed.Price").Text,
-                                            Width = "70"
-                                        },
-                                        new ColumnProperty(nameof(OfficialFeedPluginModel.Url))
-                                        {
-                                            Title = T("Admin.Configuration.Plugins.OfficialFeed.Download").Text,
-                                            Width = "150",
-                                            ClassName =  NopColumnClassDefaults.Button,
-                                            Render = new RenderCustom("renderColumnUrl")
-                                        },
-                                        new ColumnProperty(nameof(OfficialFeedPluginModel.CategoryName))
-                                        {
-                                            Title = T("Admin.Configuration.Plugins.OfficialFeed.Category").Text,
-                                            Width = "200"
-                                        },
-                                        new ColumnProperty(nameof(OfficialFeedPluginModel.SupportedVersions))
-                                        {
-                                            Title = T("Admin.Configuration.Plugins.OfficialFeed.SupportedVersions").Text,
-                                            Width = "200"
-                                        }
-                                    }
-                           })
+                                       Name = "plugins-grid",
+                                       UrlRead = new DataUrl("OfficialFeedSelect", "Plugin", null),
+                                       SearchButtonId = "search-plugins",
+                                       Length = Model.PageSize,
+                                       LengthMenu = Model.AvailablePageSizes,
+                                       Filters = new List<FilterParameter>
+                                            {
+                                                new FilterParameter(nameof(Model.SearchName)),
+                                                new FilterParameter(nameof(Model.SearchVersionId)),
+                                                new FilterParameter(nameof(Model.SearchCategoryId)),
+                                                new FilterParameter(nameof(Model.SearchPriceId))
+                                            },
+                                       ColumnCollection = new List<ColumnProperty>
+                                            {
+                                                new ColumnProperty(nameof(OfficialFeedPluginModel.PictureUrl))
+                                                {
+                                                    Title = T("Admin.Configuration.Plugins.OfficialFeed.Picture").Text,
+                                                    Render = new RenderPicture(width: 120)
+                                                },
+                                                new ColumnProperty(nameof(OfficialFeedPluginModel.Name))
+                                                {
+                                                    Title = T("Admin.Configuration.Plugins.OfficialFeed.Name").Text,
+                                                    Width = "600"
+                                                },
+                                                new ColumnProperty(nameof(OfficialFeedPluginModel.Price))
+                                                {
+                                                    Title = T("Admin.Configuration.Plugins.OfficialFeed.Price").Text,
+                                                    Width = "70"
+                                                },
+                                                new ColumnProperty(nameof(OfficialFeedPluginModel.Url))
+                                                {
+                                                    Title = T("Admin.Configuration.Plugins.OfficialFeed.Download").Text,
+                                                    Width = "150",
+                                                    ClassName =  NopColumnClassDefaults.Button,
+                                                    Render = new RenderCustom("renderColumnUrl")
+                                                },
+                                                new ColumnProperty(nameof(OfficialFeedPluginModel.CategoryName))
+                                                {
+                                                    Title = T("Admin.Configuration.Plugins.OfficialFeed.Category").Text,
+                                                    Width = "200"
+                                                },
+                                                new ColumnProperty(nameof(OfficialFeedPluginModel.SupportedVersions))
+                                                {
+                                                    Title = T("Admin.Configuration.Plugins.OfficialFeed.SupportedVersions").Text,
+                                                    Width = "200"
+                                                }
+                                            }
+                                    });
+                                }
 
                                 <script>
-                            function renderColumnUrl(data, type, row, meta) {
-                                return '<a class="btn btn-default" href="' + data + '?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank"><i class="fas fa-download"></i>@T("Admin.Configuration.Plugins.OfficialFeed.Download").Text</a>';
-                            }
+                                    function renderColumnUrl(data, type, row, meta) {
+                                        return '<a class="btn btn-default" href="' + data + '?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank"><i class="fas fa-download"></i>@T("Admin.Configuration.Plugins.OfficialFeed.Download").Text</a>';
+                                    }
                                 </script>
                             </div>
 

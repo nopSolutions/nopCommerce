@@ -206,107 +206,109 @@
                           <div class="card-body">
                             <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Products", Docs.Products + Utm.OnAdmin)" />
 
-                              @await Html.PartialAsync("Table", new DataTablesModel
-                         {
-                             Name = "products-grid",
-                             UrlRead = new DataUrl("ProductList", "Product", null),
-                             SearchButtonId = "search-products",
-                             Length = Model.PageSize,
-                             LengthMenu = Model.AvailablePageSizes,
-                             Filters = new List<FilterParameter>
-                                  {
-                                      new FilterParameter(nameof(Model.SearchProductName)),
-                                      new FilterParameter(nameof(Model.SearchCategoryId)),
-                                      new FilterParameter(nameof(Model.SearchIncludeSubCategories), typeof(bool)),
-                                      new FilterParameter(nameof(Model.SearchManufacturerId)),
-                                      new FilterParameter(nameof(Model.SearchStoreId)),
-                                      new FilterParameter(nameof(Model.SearchWarehouseId)),
-                                      new FilterParameter(nameof(Model.SearchVendorId)),
-                                      new FilterParameter(nameof(Model.SearchProductTypeId)),
-                                      new FilterParameter(nameof(Model.SearchPublishedId))
-                                  },
-                             ColumnCollection = new List<ColumnProperty>
-                                  {
-                                      new ColumnProperty(nameof(ProductModel.Id))
-                                      {
-                                          IsMasterCheckBox = true,
-                                          Render = new RenderCheckBox("checkbox_products"),
-                                          ClassName =  NopColumnClassDefaults.CenterAll,
-                                          Width = "50"
-                                      },
-                                      new ColumnProperty(nameof(ProductModel.PictureThumbnailUrl))
-                                      {
-                                          Title = T("Admin.Catalog.Products.Fields.PictureThumbnailUrl").Text,
-                                          Width = "100",
-                                          Render = new RenderPicture()
-                                      },
-                                      new ColumnProperty(nameof(ProductModel.Name))
-                                      {
-                                          Title = T("Admin.Catalog.Products.Fields.Name").Text
-                                      },
-                                      new ColumnProperty(nameof(ProductModel.Sku))
-                                      {
-                                          Title = T("Admin.Catalog.Products.Fields.Sku").Text,
-                                          Width = "100"
-                                      },
-                                      new ColumnProperty(nameof(ProductModel.Price))
-                                      {
-                                          Title = T("Admin.Catalog.Products.Fields.Price").Text,
-                                          Render = new RenderCustom("renderColumnPrice")
-                                      },
-                                      new ColumnProperty(nameof(ProductModel.StockQuantityStr))
-                                      {
-                                          Title = T("Admin.Catalog.Products.Fields.StockQuantity").Text
-                                      },                                      
-                                      new ColumnProperty(nameof(ProductModel.Published))
-                                      {
-                                          Title = T("Admin.Catalog.Products.Fields.Published").Text,
-                                          Width = "80",
-                                          ClassName = NopColumnClassDefaults.CenterAll,
-                                          Render = new RenderBoolean()
-                                      },
-                                      new ColumnProperty(nameof(ProductModel.Id))
-                                      {
-                                          Title = T("Admin.Common.Edit").Text,
-                                          Width = "80",
-                                          ClassName =  NopColumnClassDefaults.Button,
-                                          Render = new RenderButtonEdit(new DataUrl("Edit"))
-                                      }
-                                  }
-                         })
+                              @{
+                                  await Html.RenderPartialAsync("Table", new DataTablesModel
+                                 {
+                                     Name = "products-grid",
+                                     UrlRead = new DataUrl("ProductList", "Product", null),
+                                     SearchButtonId = "search-products",
+                                     Length = Model.PageSize,
+                                     LengthMenu = Model.AvailablePageSizes,
+                                     Filters = new List<FilterParameter>
+                                          {
+                                              new FilterParameter(nameof(Model.SearchProductName)),
+                                              new FilterParameter(nameof(Model.SearchCategoryId)),
+                                              new FilterParameter(nameof(Model.SearchIncludeSubCategories), typeof(bool)),
+                                              new FilterParameter(nameof(Model.SearchManufacturerId)),
+                                              new FilterParameter(nameof(Model.SearchStoreId)),
+                                              new FilterParameter(nameof(Model.SearchWarehouseId)),
+                                              new FilterParameter(nameof(Model.SearchVendorId)),
+                                              new FilterParameter(nameof(Model.SearchProductTypeId)),
+                                              new FilterParameter(nameof(Model.SearchPublishedId))
+                                          },
+                                     ColumnCollection = new List<ColumnProperty>
+                                          {
+                                              new ColumnProperty(nameof(ProductModel.Id))
+                                              {
+                                                  IsMasterCheckBox = true,
+                                                  Render = new RenderCheckBox("checkbox_products"),
+                                                  ClassName =  NopColumnClassDefaults.CenterAll,
+                                                  Width = "50"
+                                              },
+                                              new ColumnProperty(nameof(ProductModel.PictureThumbnailUrl))
+                                              {
+                                                  Title = T("Admin.Catalog.Products.Fields.PictureThumbnailUrl").Text,
+                                                  Width = "100",
+                                                  Render = new RenderPicture()
+                                              },
+                                              new ColumnProperty(nameof(ProductModel.Name))
+                                              {
+                                                  Title = T("Admin.Catalog.Products.Fields.Name").Text
+                                              },
+                                              new ColumnProperty(nameof(ProductModel.Sku))
+                                              {
+                                                  Title = T("Admin.Catalog.Products.Fields.Sku").Text,
+                                                  Width = "100"
+                                              },
+                                              new ColumnProperty(nameof(ProductModel.Price))
+                                              {
+                                                  Title = T("Admin.Catalog.Products.Fields.Price").Text,
+                                                  Render = new RenderCustom("renderColumnPrice")
+                                              },
+                                              new ColumnProperty(nameof(ProductModel.StockQuantityStr))
+                                              {
+                                                  Title = T("Admin.Catalog.Products.Fields.StockQuantity").Text
+                                              },                                      
+                                              new ColumnProperty(nameof(ProductModel.Published))
+                                              {
+                                                  Title = T("Admin.Catalog.Products.Fields.Published").Text,
+                                                  Width = "80",
+                                                  ClassName = NopColumnClassDefaults.CenterAll,
+                                                  Render = new RenderBoolean()
+                                              },
+                                              new ColumnProperty(nameof(ProductModel.Id))
+                                              {
+                                                  Title = T("Admin.Common.Edit").Text,
+                                                  Width = "80",
+                                                  ClassName =  NopColumnClassDefaults.Button,
+                                                  Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                              }
+                                          }
+                                    });
+                                }
 
                               <script>
-                            function renderColumnPrice(data, type, row, meta) {
-                                return (row.ProductTypeId != @((int)ProductType.GroupedProduct) ) ? data : null;
-                            }
+                                function renderColumnPrice(data, type, row, meta) {
+                                    return (row.ProductTypeId != @((int)ProductType.GroupedProduct) ) ? data : null;
+                                }
 
-                            $(document).ready(function () {
-                                $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
-                                    var postData = {
-                                        selectedIds: selectedIds
-                                    };
-                                    addAntiForgeryToken(postData);
-                                    $.ajax({
-                                        cache: false,
-                                        type: "POST",
-                                        url: "@(Url.Action("DeleteSelected", "Product"))",
-                                        data: postData,
-                                        error: function (jqXHR, textStatus, errorThrown) {
-                                            showAlert('deleteSelectedFailed', errorThrown);
-                                        },
-                                        complete: function (jqXHR, textStatus) {
-                                            if (jqXHR.status === 204)
-                                            {
-                                                showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
-                                                return;
+                                $(document).ready(function () {
+                                    $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                        var postData = {
+                                            selectedIds: selectedIds
+                                        };
+                                        addAntiForgeryToken(postData);
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@(Url.Action("DeleteSelected", "Product"))",
+                                            data: postData,
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                showAlert('deleteSelectedFailed', errorThrown);
+                                            },
+                                            complete: function (jqXHR, textStatus) {
+                                                if (jqXHR.status === 204)
+                                                {
+                                                    showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                    return;
+                                                }
+                                                updateTable('#products-grid');
                                             }
-                                            updateTable('#products-grid');
-                                        }
+                                        });
+                                        $('#delete-selected-action-confirmation').modal('toggle');
+                                        return false;
                                     });
-                                    $('#delete-selected-action-confirmation').modal('toggle');
-                                    return false;
                                 });
-                            });
 
                               </script>
                               <nop-alert asp-alert-id="deleteSelectedFailed" />

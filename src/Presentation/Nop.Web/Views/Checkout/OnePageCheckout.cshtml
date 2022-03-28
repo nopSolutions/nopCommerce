@@ -56,14 +56,16 @@
                 <div id="checkout-step-billing" class="step a-item" style="display: none;">
                     <form id="co-billing-form" action="" method="post">
                         <div id="checkout-billing-load">
-                            @await Html.PartialAsync("OpcBillingAddress", Model.BillingAddress)
+                            @{
+                                await Html.RenderPartialAsync("OpcBillingAddress", Model.BillingAddress);
+                            }
                             @*billing address content will be loaded here*@
                         </div>
                     </form>
                     <script asp-location="Footer">
                         Billing.init('#co-billing-form', '@(storeLocation)checkout/OpcSaveBilling/',
-                            @(Model.DisableBillingAddressCheckoutStep.ToString().ToLowerInvariant()),
-                            @((await _customerService.IsGuestAsync(await workContext.GetCurrentCustomerAsync())).ToString().ToLowerInvariant()));
+                        @(Model.DisableBillingAddressCheckoutStep.ToString().ToLowerInvariant()),
+                        @((await _customerService.IsGuestAsync(await workContext.GetCurrentCustomerAsync())).ToString().ToLowerInvariant()));
                         if ($("#billing-address-select").length > 0) {
                             Billing.newAddress(!$('#billing-address-select').val());
                         }

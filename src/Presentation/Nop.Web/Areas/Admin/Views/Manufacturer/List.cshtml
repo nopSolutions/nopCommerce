@@ -115,55 +115,56 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Manufacturers", Docs.Manufacturers + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "manufacturers-grid",
-                        UrlRead = new DataUrl("List", "Manufacturer", null),
-                        SearchButtonId = "search-manufacturers",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.SearchManufacturerName)),
-                            new FilterParameter(nameof(Model.SearchStoreId)),
-                            new FilterParameter(nameof(Model.SearchPublishedId))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(ManufacturerModel.Id))
+                            Name = "manufacturers-grid",
+                            UrlRead = new DataUrl("List", "Manufacturer", null),
+                            SearchButtonId = "search-manufacturers",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                IsMasterCheckBox = true,
-                                Render = new RenderCheckBox("checkbox_manufacturers"),
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Width = "50"
+                                new FilterParameter(nameof(Model.SearchManufacturerName)),
+                                new FilterParameter(nameof(Model.SearchStoreId)),
+                                new FilterParameter(nameof(Model.SearchPublishedId))
                             },
-                            new ColumnProperty(nameof(ManufacturerModel.Name))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Catalog.Manufacturers.Fields.Name").Text
-                            },
-                            new ColumnProperty(nameof(ManufacturerModel.Published))
-                            {
-                                Title = T("Admin.Catalog.Manufacturers.Fields.Published").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(ManufacturerModel.DisplayOrder))
-                            {
-                                Title = T("Admin.Catalog.Manufacturers.Fields.DisplayOrder").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll
-                            },
-                            new ColumnProperty(nameof(ManufacturerModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                new ColumnProperty(nameof(ManufacturerModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_manufacturers"),
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "50"
+                                },
+                                new ColumnProperty(nameof(ManufacturerModel.Name))
+                                {
+                                    Title = T("Admin.Catalog.Manufacturers.Fields.Name").Text
+                                },
+                                new ColumnProperty(nameof(ManufacturerModel.Published))
+                                {
+                                    Title = T("Admin.Catalog.Manufacturers.Fields.Published").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(ManufacturerModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.Catalog.Manufacturers.Fields.DisplayOrder").Text,
+                                    Width = "150",
+                                    ClassName = NopColumnClassDefaults.CenterAll
+                                },
+                                new ColumnProperty(nameof(ManufacturerModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
                             }
-                        }
-                    })
-
+                        });
+                    }
 
                     <script>
                         $(document).ready(function () {

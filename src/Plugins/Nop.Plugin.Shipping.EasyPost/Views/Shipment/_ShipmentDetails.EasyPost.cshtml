@@ -137,7 +137,7 @@
                 </div>
             }
 
-            @await Html.PartialAsync("~/Plugins/Shipping.EasyPost/Views/Pickup/_PickupDetails.cshtml", Model.PickupModel)
+            await Html.RenderPartialAsync("~/Plugins/Shipping.EasyPost/Views/Pickup/_PickupDetails.cshtml", Model.PickupModel);
         }
         else
         {

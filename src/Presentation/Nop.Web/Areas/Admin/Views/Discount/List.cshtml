@@ -103,66 +103,68 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Discounts", Docs.Discounts + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-               {
-                   Name = "discounts-grid",
-                   UrlRead = new DataUrl("List", "Discount", null),
-                   SearchButtonId = "search-discounts",
-                   Length = Model.PageSize,
-                   LengthMenu = Model.AvailablePageSizes,
-                   Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.SearchDiscountTypeId)),
-                            new FilterParameter(nameof(Model.SearchDiscountCouponCode)),
-                            new FilterParameter(nameof(Model.SearchDiscountName)),
-                            new FilterParameter(nameof(Model.SearchStartDate), typeof(DateTime?)),
-                            new FilterParameter(nameof(Model.SearchEndDate), typeof(DateTime?))
-                        },
-                   ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(DiscountModel.Name))
+                            Name = "discounts-grid",
+                            UrlRead = new DataUrl("List", "Discount", null),
+                            SearchButtonId = "search-discounts",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.Promotions.Discounts.Fields.Name").Text,
-                                Width = "350"
+                                new FilterParameter(nameof(Model.SearchDiscountTypeId)),
+                                new FilterParameter(nameof(Model.SearchDiscountCouponCode)),
+                                new FilterParameter(nameof(Model.SearchDiscountName)),
+                                new FilterParameter(nameof(Model.SearchStartDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.SearchEndDate), typeof(DateTime?))
                             },
-                            new ColumnProperty(nameof(DiscountModel.DiscountTypeName))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Promotions.Discounts.Fields.DiscountType").Text,
-                                Width = "250"
-                            },
-                            new ColumnProperty(nameof(DiscountModel.DiscountAmount))
-                            {
-                                Title = T("Admin.Promotions.Discounts.Fields.Discount").Text,
-                                Width = "200",
-                                Render = new RenderCustom("renderColumnDiscount")
-                            },
-                            new ColumnProperty(nameof(DiscountModel.StartDateUtc))
-                            {
-                                Title = T("Admin.Promotions.Discounts.Fields.StartDate").Text,
-                                Width = "200",
-                                Render = new RenderDate()
-                            },
-                            new ColumnProperty(nameof(DiscountModel.EndDateUtc))
-                            {
-                                Title = T("Admin.Promotions.Discounts.Fields.EndDate").Text,
-                                Width = "200",
-                                Render = new RenderDate()
-                            },
-                            new ColumnProperty(nameof(DiscountModel.TimesUsed))
-                            {
-                                Title = T("Admin.Promotions.Discounts.Fields.TimesUsed").Text,
-                                Width = "200",
-                                ClassName =  NopColumnClassDefaults.CenterAll
-                            },
-                            new ColumnProperty(nameof(DiscountModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                new ColumnProperty(nameof(DiscountModel.Name))
+                                {
+                                    Title = T("Admin.Promotions.Discounts.Fields.Name").Text,
+                                    Width = "350"
+                                },
+                                new ColumnProperty(nameof(DiscountModel.DiscountTypeName))
+                                {
+                                    Title = T("Admin.Promotions.Discounts.Fields.DiscountType").Text,
+                                    Width = "250"
+                                },
+                                new ColumnProperty(nameof(DiscountModel.DiscountAmount))
+                                {
+                                    Title = T("Admin.Promotions.Discounts.Fields.Discount").Text,
+                                    Width = "200",
+                                    Render = new RenderCustom("renderColumnDiscount")
+                                },
+                                new ColumnProperty(nameof(DiscountModel.StartDateUtc))
+                                {
+                                    Title = T("Admin.Promotions.Discounts.Fields.StartDate").Text,
+                                    Width = "200",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(DiscountModel.EndDateUtc))
+                                {
+                                    Title = T("Admin.Promotions.Discounts.Fields.EndDate").Text,
+                                    Width = "200",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(DiscountModel.TimesUsed))
+                                {
+                                    Title = T("Admin.Promotions.Discounts.Fields.TimesUsed").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.CenterAll
+                                },
+                                new ColumnProperty(nameof(DiscountModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
                             }
-                        }
-               })
+                        });
+                    }
                     <script>
                         function renderColumnDiscount(data, type, row, meta) {
                             return (row.UsePercentage) ? row.DiscountPercentage + '%' : row.DiscountAmount + ' ' + row.PrimaryStoreCurrencyCode;

@@ -39,44 +39,46 @@
         </div>
     }
 
-    @await Html.PartialAsync("Table", new DataTablesModel
-    {
-        Name = "history-grid",
-        UrlRead = new DataUrl("HistoryList", "RecurringPayment", new RouteValueDictionary { [nameof(Model.RecurringPaymentHistorySearchModel.RecurringPaymentId)] = Model.RecurringPaymentHistorySearchModel.RecurringPaymentId }),
-        Length = Model.RecurringPaymentHistorySearchModel.PageSize,
-        LengthMenu = Model.RecurringPaymentHistorySearchModel.AvailablePageSizes,
-        ColumnCollection = new List<ColumnProperty>
+    @{
+        await Html.RenderPartialAsync("Table", new DataTablesModel
         {
-            new ColumnProperty(nameof(RecurringPaymentHistoryModel.CustomOrderNumber))
+            Name = "history-grid",
+            UrlRead = new DataUrl("HistoryList", "RecurringPayment", new RouteValueDictionary { [nameof(Model.RecurringPaymentHistorySearchModel.RecurringPaymentId)] = Model.RecurringPaymentHistorySearchModel.RecurringPaymentId }),
+            Length = Model.RecurringPaymentHistorySearchModel.PageSize,
+            LengthMenu = Model.RecurringPaymentHistorySearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
             {
-                Title = T("Admin.RecurringPayments.History.CustomOrderNumber").Text,
-                ClassName =  NopColumnClassDefaults.Button,
-                Width = "200",
-                Render = new RenderCustom("renderColumnOrderInfo")
-            },
-            new ColumnProperty(nameof(RecurringPaymentHistoryModel.OrderStatus))
-            {
-                Title = T("Admin.RecurringPayments.History.OrderStatus").Text,
-                Width = "200"
-            },
-            new ColumnProperty(nameof(RecurringPaymentHistoryModel.PaymentStatus))
-            {
-                Title = T("Admin.RecurringPayments.History.PaymentStatus").Text,
-                Width = "200"
-            },
-            new ColumnProperty(nameof(RecurringPaymentHistoryModel.ShippingStatus))
-            {
-                Title = T("Admin.RecurringPayments.History.ShippingStatus").Text,
-                Width = "200"
-            },
-            new ColumnProperty(nameof(RecurringPaymentHistoryModel.CreatedOn))
-            {
-                Title = T("Admin.RecurringPayments.History.CreatedOn").Text,
-                Width = "100",
-                Render = new RenderDate()
+                new ColumnProperty(nameof(RecurringPaymentHistoryModel.CustomOrderNumber))
+                {
+                    Title = T("Admin.RecurringPayments.History.CustomOrderNumber").Text,
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Width = "200",
+                    Render = new RenderCustom("renderColumnOrderInfo")
+                },
+                new ColumnProperty(nameof(RecurringPaymentHistoryModel.OrderStatus))
+                {
+                    Title = T("Admin.RecurringPayments.History.OrderStatus").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(RecurringPaymentHistoryModel.PaymentStatus))
+                {
+                    Title = T("Admin.RecurringPayments.History.PaymentStatus").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(RecurringPaymentHistoryModel.ShippingStatus))
+                {
+                    Title = T("Admin.RecurringPayments.History.ShippingStatus").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(RecurringPaymentHistoryModel.CreatedOn))
+                {
+                    Title = T("Admin.RecurringPayments.History.CreatedOn").Text,
+                    Width = "100",
+                    Render = new RenderDate()
+                }
             }
-        }
-    })
+        });
+    }
     <script asp-location="Footer">
         function renderColumnOrderInfo(data, type, row, meta) {
             if (row.OrderId > 0) {

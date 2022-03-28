@@ -68,44 +68,46 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.EmailCampaigns", Docs.EmailCampaigns + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "campaigns-grid",
-                        UrlRead = new DataUrl("List", "Campaign", null),
-                        SearchButtonId = "search-campaigns",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.StoreId))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(CampaignModel.Name))
+                            Name = "campaigns-grid",
+                            UrlRead = new DataUrl("List", "Campaign", null),
+                            SearchButtonId = "search-campaigns",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.Promotions.Campaigns.Fields.Name").Text
+                                new FilterParameter(nameof(Model.StoreId))
                             },
-                            new ColumnProperty(nameof(CampaignModel.CreatedOn))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Promotions.Campaigns.Fields.CreatedOn").Text,
-                                Width = "200",
-                                Render = new RenderDate()
-                            },
-                            new ColumnProperty(nameof(CampaignModel.DontSendBeforeDate))
-                            {
-                                Title = T("Admin.Promotions.Campaigns.Fields.DontSendBeforeDate").Text,
-                                Width = "200",
-                                Render = new RenderDate()
-                            },
-                            new ColumnProperty(nameof(CampaignModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName = NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                new ColumnProperty(nameof(CampaignModel.Name))
+                                {
+                                    Title = T("Admin.Promotions.Campaigns.Fields.Name").Text
+                                },
+                                new ColumnProperty(nameof(CampaignModel.CreatedOn))
+                                {
+                                    Title = T("Admin.Promotions.Campaigns.Fields.CreatedOn").Text,
+                                    Width = "200",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(CampaignModel.DontSendBeforeDate))
+                                {
+                                    Title = T("Admin.Promotions.Campaigns.Fields.DontSendBeforeDate").Text,
+                                    Width = "200",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(CampaignModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
             </div>
         </div>

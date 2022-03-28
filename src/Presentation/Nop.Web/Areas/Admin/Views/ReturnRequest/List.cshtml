@@ -91,76 +91,78 @@
                         @T("Admin.ReturnRequests.Description")
                         <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ReturnRequests", Docs.ReturnRequests + Utm.OnAdmin)" asp-add-wrapper="false"/>
                     </p>
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "returnrequests-grid",
-                        UrlRead = new DataUrl("List", "ReturnRequest", null),
-                        SearchButtonId = "search-returnrequests",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
-                            new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
-                            new FilterParameter(nameof(Model.CustomNumber)),
-                            new FilterParameter(nameof(Model.ReturnRequestStatusId))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(ReturnRequestModel.CustomNumber))
+                            Name = "returnrequests-grid",
+                            UrlRead = new DataUrl("List", "ReturnRequest", null),
+                            SearchButtonId = "search-returnrequests",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.ReturnRequests.Fields.CustomNumber").Text,
-                                Width = "100"
+                                new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.CustomNumber)),
+                                new FilterParameter(nameof(Model.ReturnRequestStatusId))
                             },
-                            new ColumnProperty(nameof(ReturnRequestModel.ProductName))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.ReturnRequests.Fields.Product").Text,
-                                Width = "350",
-                                Render = new RenderCustom("renderColumnProductName")
-                            },
-                            new ColumnProperty(nameof(ReturnRequestModel.Quantity))
-                            {
-                                Title = T("Admin.ReturnRequests.Fields.Quantity").Text,
-                                Width = "100"
-                            },
-                            new ColumnProperty(nameof(ReturnRequestModel.ReturnedQuantity))
-                            {
-                                Title = T("Admin.ReturnRequests.Fields.ReturnedQuantity").Text,
-                                Width = "100"
-                            },
-                            new ColumnProperty(nameof(ReturnRequestModel.CustomerId))
-                            {
-                                Title = T("Admin.ReturnRequests.Fields.Customer").Text,
-                                Width = "350",
-                                Render = new RenderCustom("renderColumnCustomerInfo")
-                            },
-                            new ColumnProperty(nameof(ReturnRequestModel.CustomOrderNumber))
-                            {
-                                Title = T("Admin.ReturnRequests.Fields.CustomOrderNumber").Text,
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Width = "200",
-                                Render = new RenderCustom("renderColumnOrderInfo")
-                            },
-                            new ColumnProperty(nameof(ReturnRequestModel.ReturnRequestStatusStr))
-                            {
-                                Title = T("Admin.ReturnRequests.Fields.Status").Text,
-                                Width = "200"
-                            },
-                            new ColumnProperty(nameof(ReturnRequestModel.CreatedOn))
-                            {
-                                Title = T("Admin.ReturnRequests.Fields.CreatedOn").Text,
-                                Width = "100",
-                                Render = new RenderDate()
-                            },
-                            new ColumnProperty(nameof(ReturnRequestModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                new ColumnProperty(nameof(ReturnRequestModel.CustomNumber))
+                                {
+                                    Title = T("Admin.ReturnRequests.Fields.CustomNumber").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(ReturnRequestModel.ProductName))
+                                {
+                                    Title = T("Admin.ReturnRequests.Fields.Product").Text,
+                                    Width = "350",
+                                    Render = new RenderCustom("renderColumnProductName")
+                                },
+                                new ColumnProperty(nameof(ReturnRequestModel.Quantity))
+                                {
+                                    Title = T("Admin.ReturnRequests.Fields.Quantity").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(ReturnRequestModel.ReturnedQuantity))
+                                {
+                                    Title = T("Admin.ReturnRequests.Fields.ReturnedQuantity").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(ReturnRequestModel.CustomerId))
+                                {
+                                    Title = T("Admin.ReturnRequests.Fields.Customer").Text,
+                                    Width = "350",
+                                    Render = new RenderCustom("renderColumnCustomerInfo")
+                                },
+                                new ColumnProperty(nameof(ReturnRequestModel.CustomOrderNumber))
+                                {
+                                    Title = T("Admin.ReturnRequests.Fields.CustomOrderNumber").Text,
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Width = "200",
+                                    Render = new RenderCustom("renderColumnOrderInfo")
+                                },
+                                new ColumnProperty(nameof(ReturnRequestModel.ReturnRequestStatusStr))
+                                {
+                                    Title = T("Admin.ReturnRequests.Fields.Status").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ReturnRequestModel.CreatedOn))
+                                {
+                                    Title = T("Admin.ReturnRequests.Fields.CreatedOn").Text,
+                                    Width = "100",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(ReturnRequestModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
 
                     <script asp-location="Footer">
                         function renderColumnProductName(data, type, row, meta) {

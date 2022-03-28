@@ -55,7 +55,7 @@
             <span asp-validation-for="CustomerSettings.GenderEnabled"></span>
         </div>
     </div>
-	<div class="form-group row">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CustomerSettings.FirstNameEnabled" />
         </div>
@@ -356,5 +356,7 @@
         </div>
     </nop-nested-setting>
     @*render custom customer attributes*@
-    @await Html.PartialAsync("../CustomerAttribute/ListBlock.cshtml", Model.CustomerAttributeSearchModel)
+    @{
+        await Html.RenderPartialAsync("../CustomerAttribute/ListBlock.cshtml", Model.CustomerAttributeSearchModel);
+    }
 </div>

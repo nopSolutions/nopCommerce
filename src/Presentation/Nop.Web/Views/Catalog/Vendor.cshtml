@@ -21,7 +21,9 @@
 }
 
 @section CatalogFilters {
-    @await Html.PartialAsync("_CatalogFilters", Model.CatalogProductsModel)
+    @{
+        await Html.RenderPartialAsync("_CatalogFilters", Model.CatalogProductsModel);
+        }
 }
 
 <div class="page vendor-page">
@@ -44,12 +46,14 @@
                 <button type="button" class="button-2 contact-vendor-button" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')">@T("ContactVendor")</button>
             </div>
         }
-        @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
         @{
             var catalogProductsViewData = new ViewDataDictionary(ViewData);
             catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("GetVendorProducts", "Catalog", new { vendorId = Model.Id }));
+
+            await Html.RenderPartialAsync("_CatalogSelectors", Model.CatalogProductsModel);
+            await Html.RenderPartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData);
         }
-        @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
+        
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.VendorDetailsBottom, additionalData = Model })
     </div>
 </div>

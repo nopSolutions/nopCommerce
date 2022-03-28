@@ -38,10 +38,26 @@
             <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Templates", Docs.Templates + Utm.OnAdmin)" />
 
             <nop-cards id="templates-cards">
-                <nop-card asp-name="templates-category" asp-icon="fas fa-sitemap" asp-title="@T("Admin.System.Templates.Category")" asp-hide-block-attribute-name="@hideCategoryBlockAttributeName" asp-hide="@hideCategoryBlock">@await Html.PartialAsync("_List.Category", Model)</nop-card>
-                <nop-card asp-name="templates-manufacturer" asp-icon="fas fa-industry" asp-title="@T("Admin.System.Templates.Manufacturer")" asp-hide-block-attribute-name="@hideManufacturerBlockAttributeName" asp-hide="@hideManufacturerBlock">@await Html.PartialAsync("_List.Manufacturer", Model)</nop-card>
-                <nop-card asp-name="templates-product" asp-icon="fas fa-cube" asp-title="@T("Admin.System.Templates.Product")" asp-hide-block-attribute-name="@hideProductBlockAttributeName" asp-hide="@hideProductBlock">@await Html.PartialAsync("_List.Product", Model)</nop-card>
-                <nop-card asp-name="templates-topic" asp-icon="fas fa-book" asp-title="@T("Admin.System.Templates.Topic")" asp-hide-block-attribute-name="@hideTopicBlockAttributeName" asp-hide="@hideTopicBlock">@await Html.PartialAsync("_List.Topic", Model)</nop-card>
+                <nop-card asp-name="templates-category" asp-icon="fas fa-sitemap" asp-title="@T("Admin.System.Templates.Category")" asp-hide-block-attribute-name="@hideCategoryBlockAttributeName" asp-hide="@hideCategoryBlock">
+                    @{
+                        await Html.RenderPartialAsync("_List.Category", Model);
+                    }
+                </nop-card>
+                <nop-card asp-name="templates-manufacturer" asp-icon="fas fa-industry" asp-title="@T("Admin.System.Templates.Manufacturer")" asp-hide-block-attribute-name="@hideManufacturerBlockAttributeName" asp-hide="@hideManufacturerBlock">
+                    @{
+                        await Html.RenderPartialAsync("_List.Manufacturer", Model);
+                    }
+                </nop-card>
+                <nop-card asp-name="templates-product" asp-icon="fas fa-cube" asp-title="@T("Admin.System.Templates.Product")" asp-hide-block-attribute-name="@hideProductBlockAttributeName" asp-hide="@hideProductBlock">
+                    @{
+                        await Html.RenderPartialAsync("_List.Product", Model);
+                    }
+                </nop-card>
+                <nop-card asp-name="templates-topic" asp-icon="fas fa-book" asp-title="@T("Admin.System.Templates.Topic")" asp-hide-block-attribute-name="@hideTopicBlockAttributeName" asp-hide="@hideTopicBlock">
+                    @{
+                        await Html.RenderPartialAsync("_List.Topic", Model);
+                    }
+                </nop-card>
 
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TemplatesDetailsBlock, additionalData = Model })
             </nop-cards>

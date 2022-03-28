@@ -107,54 +107,56 @@
                         <div class="card-body">
                             <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Log", Docs.Log + Utm.OnAdmin)" />
 
-                            @await Html.PartialAsync("Table", new DataTablesModel
-                            {
-                                Name = "log-grid",
-                                UrlRead = new DataUrl("LogList", "Log", null),
-                                SearchButtonId = "search-log",
-                                Length = Model.PageSize,
-                                LengthMenu = Model.AvailablePageSizes,
-                                Filters = new List<FilterParameter>
+                            @{
+                                await Html.RenderPartialAsync("Table", new DataTablesModel
                                 {
-                                    new FilterParameter(nameof(Model.CreatedOnFrom)),
-                                    new FilterParameter(nameof(Model.CreatedOnTo)),
-                                    new FilterParameter(nameof(Model.Message)),
-                                    new FilterParameter(nameof(Model.LogLevelId))
-                                },
-                                ColumnCollection = new List<ColumnProperty>
-                                {
-                                    new ColumnProperty(nameof(LogModel.Id))
+                                    Name = "log-grid",
+                                    UrlRead = new DataUrl("LogList", "Log", null),
+                                    SearchButtonId = "search-log",
+                                    Length = Model.PageSize,
+                                    LengthMenu = Model.AvailablePageSizes,
+                                    Filters = new List<FilterParameter>
                                     {
-                                        IsMasterCheckBox = true,
-                                        Render = new RenderCheckBox("checkbox_log"),
-                                        ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Width = "50"
+                                        new FilterParameter(nameof(Model.CreatedOnFrom)),
+                                        new FilterParameter(nameof(Model.CreatedOnTo)),
+                                        new FilterParameter(nameof(Model.Message)),
+                                        new FilterParameter(nameof(Model.LogLevelId))
                                     },
-                                    new ColumnProperty(nameof(LogModel.LogLevel))
+                                    ColumnCollection = new List<ColumnProperty>
                                     {
-                                        Title = T("Admin.System.Log.Fields.LogLevel").Text,
-                                        Width = "100"
-                                    },
-                                    new ColumnProperty(nameof(LogModel.ShortMessage))
-                                    {
-                                        Title = T("Admin.System.Log.Fields.ShortMessage").Text,
-                                        Encode = false
-                                    },
-                                    new ColumnProperty(nameof(LogModel.CreatedOn))
-                                    {
-                                        Title = T("Admin.System.Log.Fields.CreatedOn").Text,
-                                        Width = "200",
-                                        Render = new RenderDate()
-                                    },
-                                    new ColumnProperty(nameof(LogModel.Id))
-                                    {
-                                        Title = T("Admin.Common.View").Text,
-                                        Width = "100",
-                                        ClassName =  NopColumnClassDefaults.Button,
-                                        Render = new RenderButtonView(new DataUrl("View"))
+                                        new ColumnProperty(nameof(LogModel.Id))
+                                        {
+                                            IsMasterCheckBox = true,
+                                            Render = new RenderCheckBox("checkbox_log"),
+                                            ClassName =  NopColumnClassDefaults.CenterAll,
+                                            Width = "50"
+                                        },
+                                        new ColumnProperty(nameof(LogModel.LogLevel))
+                                        {
+                                            Title = T("Admin.System.Log.Fields.LogLevel").Text,
+                                            Width = "100"
+                                        },
+                                        new ColumnProperty(nameof(LogModel.ShortMessage))
+                                        {
+                                            Title = T("Admin.System.Log.Fields.ShortMessage").Text,
+                                            Encode = false
+                                        },
+                                        new ColumnProperty(nameof(LogModel.CreatedOn))
+                                        {
+                                            Title = T("Admin.System.Log.Fields.CreatedOn").Text,
+                                            Width = "200",
+                                            Render = new RenderDate()
+                                        },
+                                        new ColumnProperty(nameof(LogModel.Id))
+                                        {
+                                            Title = T("Admin.Common.View").Text,
+                                            Width = "100",
+                                            ClassName =  NopColumnClassDefaults.Button,
+                                            Render = new RenderButtonView(new DataUrl("View"))
+                                        }
                                     }
-                                }
-                            })
+                                });
+                            }
 
                             <script>
                                 $(document).ready(function() {

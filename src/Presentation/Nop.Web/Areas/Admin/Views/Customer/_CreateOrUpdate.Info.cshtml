@@ -252,7 +252,7 @@
     }
     @if (Model.CustomerAttributes.Count > 0)
     {
-        @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
+        await Html.RenderPartialAsync("_CustomerAttributes", Model.CustomerAttributes);
     }
     <div class="form-group row">
         <div class="col-md-3">
@@ -421,39 +421,41 @@
                 <nop-label asp-for="CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords" />
             </div>
             <div class="col-md-9">
-                @await Html.PartialAsync("Table", new DataTablesModel
-                {
-                    Name = "externalauthrecords-grid",
-                    Paging = false,
-                    ServerSide = false,
-                    Length = Model.CustomerAssociatedExternalAuthRecordsSearchModel.PageSize,
-                    LengthMenu = Model.CustomerAssociatedExternalAuthRecordsSearchModel.AvailablePageSizes,
-                    ColumnCollection = new List<ColumnProperty>
+                @{
+                    await Html.RenderPartialAsync("Table", new DataTablesModel
                     {
-                        new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.AuthMethodName))
+                        Name = "externalauthrecords-grid",
+                        Paging = false,
+                        ServerSide = false,
+                        Length = Model.CustomerAssociatedExternalAuthRecordsSearchModel.PageSize,
+                        LengthMenu = Model.CustomerAssociatedExternalAuthRecordsSearchModel.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
                         {
-                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName").Text,
-                            Width = "100"
+                            new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.AuthMethodName))
+                            {
+                                Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.Email))
+                            {
+                                Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.ExternalIdentifier))
+                            {
+                                Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier").Text,
+                                Width = "300"
+                            }
                         },
-                        new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.Email))
+                        Data = JsonConvert.SerializeObject(Model.CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords.Select(externalAuthRecord => new
                         {
-                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email").Text,
-                            Width = "100"
-                        },
-                        new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.ExternalIdentifier))
-                        {
-                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier").Text,
-                            Width = "300"
-                        }
-                    },
-                    Data = JsonConvert.SerializeObject(Model.CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords.Select(externalAuthRecord => new
-                    {
-                        //We must display this data encoded, since the data can contain Unicode characters or malicious exploits
-                        AuthMethodName = WebUtility.HtmlEncode(externalAuthRecord.AuthMethodName),
-                        Email = WebUtility.HtmlEncode(externalAuthRecord.Email),
-                        ExternalIdentifier = WebUtility.HtmlEncode(externalAuthRecord.ExternalIdentifier)
-                    }).ToList())
-                })
+                            //We must display this data encoded, since the data can contain Unicode characters or malicious exploits
+                            AuthMethodName = WebUtility.HtmlEncode(externalAuthRecord.AuthMethodName),
+                            Email = WebUtility.HtmlEncode(externalAuthRecord.Email),
+                            ExternalIdentifier = WebUtility.HtmlEncode(externalAuthRecord.ExternalIdentifier)
+                        }).ToList())
+                    });
+                }
             </div>
         </div>
     }

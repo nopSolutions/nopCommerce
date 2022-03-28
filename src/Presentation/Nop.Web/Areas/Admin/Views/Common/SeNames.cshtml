@@ -81,69 +81,71 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.SeoOptimization", Docs.SeoOptimization + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "sename-grid",
-                        UrlRead = new DataUrl("SeNames", "Common", null),
-                        SearchButtonId = "search-senames",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.SeName)),
-                            new FilterParameter(nameof(Model.LanguageId)),
-                            new FilterParameter(nameof(Model.IsActiveId))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(UrlRecordModel.Id))
+                            Name = "sename-grid",
+                            UrlRead = new DataUrl("SeNames", "Common", null),
+                            SearchButtonId = "search-senames",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                IsMasterCheckBox = true,
-                                Render = new RenderCheckBox("checkbox_senames"),
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Width = "50"
+                                new FilterParameter(nameof(Model.SeName)),
+                                new FilterParameter(nameof(Model.LanguageId)),
+                                new FilterParameter(nameof(Model.IsActiveId))
                             },
-                            new ColumnProperty(nameof(UrlRecordModel.Id))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.System.SeNames.Id").Text,
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Width = "50"
-                            },
-                            new ColumnProperty(nameof(UrlRecordModel.Name))
-                            {
-                                Title = T("Admin.System.SeNames.Name").Text
-                            },
-                            new ColumnProperty(nameof(UrlRecordModel.EntityId))
-                            {
-                                Title = T("Admin.System.SeNames.EntityId").Text,
-                                Width = "80"
-                            },
-                            new ColumnProperty(nameof(UrlRecordModel.EntityName))
-                            {
-                                Title = T("Admin.System.SeNames.EntityName").Text,
-                                Width = "100"
-                            },
-                            new ColumnProperty(nameof(UrlRecordModel.IsActive))
-                            {
-                                Title = T("Admin.System.SeNames.IsActive").Text,
-                                Width = "80",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(UrlRecordModel.Language))
-                            {
-                                Title = T("Admin.System.SeNames.Language").Text,
-                                Width = "100"
-                            },
-                            new ColumnProperty(nameof(UrlRecordModel.DetailsUrl))
-                            {
-                                Title = T("Admin.System.SeNames.Details").Text,
-                                Width = "100",
-                                ClassName = NopColumnClassDefaults.Button,
-                                Render = new RenderCustom("renderColumnDetailsUrl")
+                                new ColumnProperty(nameof(UrlRecordModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_senames"),
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Width = "50"
+                                },
+                                new ColumnProperty(nameof(UrlRecordModel.Id))
+                                {
+                                    Title = T("Admin.System.SeNames.Id").Text,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Width = "50"
+                                },
+                                new ColumnProperty(nameof(UrlRecordModel.Name))
+                                {
+                                    Title = T("Admin.System.SeNames.Name").Text
+                                },
+                                new ColumnProperty(nameof(UrlRecordModel.EntityId))
+                                {
+                                    Title = T("Admin.System.SeNames.EntityId").Text,
+                                    Width = "80"
+                                },
+                                new ColumnProperty(nameof(UrlRecordModel.EntityName))
+                                {
+                                    Title = T("Admin.System.SeNames.EntityName").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(UrlRecordModel.IsActive))
+                                {
+                                    Title = T("Admin.System.SeNames.IsActive").Text,
+                                    Width = "80",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(UrlRecordModel.Language))
+                                {
+                                    Title = T("Admin.System.SeNames.Language").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(UrlRecordModel.DetailsUrl))
+                                {
+                                    Title = T("Admin.System.SeNames.Details").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnDetailsUrl")
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
             </div>
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SenamesBottom, additionalData = Model })

@@ -25,58 +25,60 @@
                     <div class="card-body">
                         <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ExternalAuthentication", Docs.ExternalAuthentication + Utm.OnAdmin)" />
 
-                        @await Html.PartialAsync("Table", new DataTablesModel
-                        {
-                            Name = "authenticationmethods-grid",
-                            UrlRead = new DataUrl("ExternalMethods", "Authentication", null),
-                            UrlUpdate = new DataUrl("ExternalMethodUpdate", "Authentication", null),
-                            Length = Model.PageSize,
-                            LengthMenu = Model.AvailablePageSizes,
-                            ColumnCollection = new List<ColumnProperty>
-                                {
-                                    new ColumnProperty(nameof(ExternalAuthenticationMethodModel.FriendlyName))
+                        @{
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "authenticationmethods-grid",
+                                UrlRead = new DataUrl("ExternalMethods", "Authentication", null),
+                                UrlUpdate = new DataUrl("ExternalMethodUpdate", "Authentication", null),
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                ColumnCollection = new List<ColumnProperty>
                                     {
-                                        Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.FriendlyName").Text,
-                                        Width = "250"
-                                    },
-                                    new ColumnProperty(nameof(ExternalAuthenticationMethodModel.SystemName))
-                                    {
-                                        Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.SystemName").Text,
-                                        Width = "250"
-                                    },
-                                    new ColumnProperty(nameof(ExternalAuthenticationMethodModel.DisplayOrder))
-                                    {
-                                        Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.DisplayOrder").Text,
-                                        Width = "100",
-                                        ClassName = NopColumnClassDefaults.CenterAll,
-                                        Editable = true,
-                                        EditType = EditType.Number
-                                    },
-                                    new ColumnProperty(nameof(ExternalAuthenticationMethodModel.IsActive))
-                                    {
-                                        Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.IsActive").Text,
-                                        Width = "100",
-                                        ClassName = NopColumnClassDefaults.CenterAll,
-                                        Render = new RenderBoolean(),
-                                        Editable = true,
-                                        EditType = EditType.Checkbox
-                                    },
-                                    new ColumnProperty(nameof(ExternalAuthenticationMethodModel.SystemName))
-                                    {
-                                        Title = T("Admin.Configuration.Authentication.ExternalMethods.Configure").Text,
-                                        Width = "150",
-                                        ClassName =  NopColumnClassDefaults.Button,
-                                        Render = new RenderCustom("renderColumnConfigure")
-                                    },
-                                    new ColumnProperty(nameof(ExternalAuthenticationMethodModel.SystemName))
-                                    {
-                                        Title = T("Admin.Common.Edit").Text,
-                                        Width = "200",
-                                        ClassName =  NopColumnClassDefaults.Button,
-                                        Render = new RenderButtonsInlineEdit()
+                                        new ColumnProperty(nameof(ExternalAuthenticationMethodModel.FriendlyName))
+                                        {
+                                            Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.FriendlyName").Text,
+                                            Width = "250"
+                                        },
+                                        new ColumnProperty(nameof(ExternalAuthenticationMethodModel.SystemName))
+                                        {
+                                            Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.SystemName").Text,
+                                            Width = "250"
+                                        },
+                                        new ColumnProperty(nameof(ExternalAuthenticationMethodModel.DisplayOrder))
+                                        {
+                                            Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.DisplayOrder").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.CenterAll,
+                                            Editable = true,
+                                            EditType = EditType.Number
+                                        },
+                                        new ColumnProperty(nameof(ExternalAuthenticationMethodModel.IsActive))
+                                        {
+                                            Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.IsActive").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.CenterAll,
+                                            Render = new RenderBoolean(),
+                                            Editable = true,
+                                            EditType = EditType.Checkbox
+                                        },
+                                        new ColumnProperty(nameof(ExternalAuthenticationMethodModel.SystemName))
+                                        {
+                                            Title = T("Admin.Configuration.Authentication.ExternalMethods.Configure").Text,
+                                            Width = "150",
+                                            ClassName =  NopColumnClassDefaults.Button,
+                                            Render = new RenderCustom("renderColumnConfigure")
+                                        },
+                                        new ColumnProperty(nameof(ExternalAuthenticationMethodModel.SystemName))
+                                        {
+                                            Title = T("Admin.Common.Edit").Text,
+                                            Width = "200",
+                                            ClassName =  NopColumnClassDefaults.Button,
+                                            Render = new RenderButtonsInlineEdit()
+                                        }
                                     }
-                                }
-                        })
+                            });
+                        }
 
                         <script>
                             function renderColumnConfigure(data, type, row, meta) {

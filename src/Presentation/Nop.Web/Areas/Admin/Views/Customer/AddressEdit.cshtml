@@ -10,7 +10,7 @@
 <form asp-controller="Customer" asp-action="AddressEdit" method="post">
     <div class="content-header clearfix">
         <h1 class="float-left">
-            @T("Admin.Customers.Customers.Addresses.EditAddress") 
+            @T("Admin.Customers.Customers.Addresses.EditAddress")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="Edit" asp-route-id="@Model.CustomerId">@T("Admin.Customers.Customers.Addresses.BackToCustomer")</a>
@@ -24,5 +24,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerAddressDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdateAddress", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdateAddress", Model);
+    }
 </form>

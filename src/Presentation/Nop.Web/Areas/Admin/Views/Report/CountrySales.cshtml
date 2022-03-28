@@ -89,36 +89,38 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "countryreport-grid",
-                        UrlRead = new DataUrl("CountrySalesList", "Report", null),
-                        SearchButtonId = "search-countryreport",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
-                            new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
-                            new FilterParameter(nameof(Model.OrderStatusId)),
-                            new FilterParameter(nameof(Model.PaymentStatusId))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(CountryReportModel.CountryName))
+                            Name = "countryreport-grid",
+                            UrlRead = new DataUrl("CountrySalesList", "Report", null),
+                            SearchButtonId = "search-countryreport",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.Reports.Sales.Country.Fields.CountryName").Text
+                                new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.OrderStatusId)),
+                                new FilterParameter(nameof(Model.PaymentStatusId))
                             },
-                            new ColumnProperty(nameof(CountryReportModel.TotalOrders))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Reports.Sales.Country.Fields.TotalOrders").Text
-                            },
-                            new ColumnProperty(nameof(CountryReportModel.SumOrders))
-                            {
-                                Title = T("Admin.Reports.Sales.Country.Fields.SumOrders").Text
+                                new ColumnProperty(nameof(CountryReportModel.CountryName))
+                                {
+                                    Title = T("Admin.Reports.Sales.Country.Fields.CountryName").Text
+                                },
+                                new ColumnProperty(nameof(CountryReportModel.TotalOrders))
+                                {
+                                    Title = T("Admin.Reports.Sales.Country.Fields.TotalOrders").Text
+                                },
+                                new ColumnProperty(nameof(CountryReportModel.SumOrders))
+                                {
+                                    Title = T("Admin.Reports.Sales.Country.Fields.SumOrders").Text
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
             </div>
         </div>

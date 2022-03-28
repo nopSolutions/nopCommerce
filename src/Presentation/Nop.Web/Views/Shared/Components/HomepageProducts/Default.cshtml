@@ -9,7 +9,9 @@
             @foreach (var item in Model)
             {
                 <div class="item-box">
-                    @await Html.PartialAsync("_ProductBox", item)
+                    @{
+                        await Html.RenderPartialAsync("_ProductBox", item);
+                    }
                 </div>
             }
         </div>

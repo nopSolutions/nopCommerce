@@ -56,7 +56,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     @NopHtml.GenerateHeadCustom()
     @*This is used so that themes can inject content into the header*@
-    @await Html.PartialAsync("Head")
+    @{
+        await Html.RenderPartialAsync("Head");
+    }
 
     @NopHtml.GenerateCssFiles()
 
@@ -73,7 +75,6 @@
     @NopHtml.GenerateScripts(ResourceLocation.Head)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->
-    
     @Html.Raw(commonSettings.HeaderCustomHtml)
 </head>
 <body>
@@ -82,7 +83,7 @@
 
     @NopHtml.GenerateScripts(ResourceLocation.Footer)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
-    
+
     @Html.Raw(commonSettings.FooterCustomHtml)
 </body>
 </html>

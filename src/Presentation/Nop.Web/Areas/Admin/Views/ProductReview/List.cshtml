@@ -152,93 +152,95 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ProductReviews", Docs.ProductReviews + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "productreviews-grid",
-                        UrlRead = new DataUrl("List", "ProductReview", null),
-                        SearchButtonId = "search-productreviews",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.CreatedOnFrom)),
-                            new FilterParameter(nameof(Model.CreatedOnTo)),
-                            new FilterParameter(nameof(Model.SearchText)),
-                            new FilterParameter(nameof(Model.SearchStoreId)),
-                            new FilterParameter(nameof(Model.SearchProductId)),
-                            new FilterParameter(nameof(Model.SearchApprovedId))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(ProductReviewModel.Id))
+                            Name = "productreviews-grid",
+                            UrlRead = new DataUrl("List", "ProductReview", null),
+                            SearchButtonId = "search-productreviews",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                IsMasterCheckBox = true,
-                                Render = new RenderCheckBox("checkbox_product_reviews"),
-                                Visible = !Model.IsLoggedInAsVendor,
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Width = "50"
+                                new FilterParameter(nameof(Model.CreatedOnFrom)),
+                                new FilterParameter(nameof(Model.CreatedOnTo)),
+                                new FilterParameter(nameof(Model.SearchText)),
+                                new FilterParameter(nameof(Model.SearchStoreId)),
+                                new FilterParameter(nameof(Model.SearchProductId)),
+                                new FilterParameter(nameof(Model.SearchApprovedId))
                             },
-                            new ColumnProperty(nameof(ProductReviewModel.StoreName))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Catalog.ProductReviews.Fields.Store").Text,
-                                Visible = (await storeService.GetAllStoresAsync()).Count > 1 ? true : false,
-                                Width = "150"
-                            },
-                            new ColumnProperty(nameof(ProductReviewModel.ProductName))
-                            {
-                                Title = T("Admin.Catalog.ProductReviews.Fields.Product").Text,
-                                Width = "200",
-                                Render = new RenderLink(new DataUrl("~/Admin/Product/Edit", nameof(ProductReviewModel.ProductId)))
-                            },
-                            new ColumnProperty(nameof(ProductReviewModel.CustomerInfo))
-                            {
-                                Title = T("Admin.Catalog.ProductReviews.Fields.Customer").Text,
-                                Width = "200",
-                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(ProductReviewModel.CustomerId)))
-                            },
-                            new ColumnProperty(nameof(ProductReviewModel.Title))
-                            {
-                                Title = T("Admin.Catalog.ProductReviews.Fields.Title").Text,
-                                Width = "200"
-                            },
-                            new ColumnProperty(nameof(ProductReviewModel.ReviewText))
-                            {
-                                Title = T("Admin.Catalog.ProductReviews.Fields.ReviewText").Text,
-                                Encode = false
-                            },
-                            new ColumnProperty(nameof(ProductReviewModel.ReplyText))
-                            {
-                                Title = T("Admin.Catalog.ProductReviews.Fields.ReplyText").Text,
-                                Encode = false
-                            },
-                            new ColumnProperty(nameof(ProductReviewModel.Rating))
-                            {
-                                Title = T("Admin.Catalog.ProductReviews.Fields.Rating").Text,
-                                Width = "50",
-                                ClassName =  NopColumnClassDefaults.CenterAll
-                            },
-                            new ColumnProperty(nameof(ProductReviewModel.IsApproved))
-                            {
-                                Title = T("Admin.Catalog.ProductReviews.Fields.IsApproved").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(ProductReviewModel.CreatedOn))
-                            {
-                                Title = T("Admin.Catalog.ProductReviews.Fields.CreatedOn").Text,
-                                Width = "150",
-                                Render = new RenderDate()
-                            },
-                            new ColumnProperty(nameof(ProductReviewModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                new ColumnProperty(nameof(ProductReviewModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_product_reviews"),
+                                    Visible = !Model.IsLoggedInAsVendor,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "50"
+                                },
+                                new ColumnProperty(nameof(ProductReviewModel.StoreName))
+                                {
+                                    Title = T("Admin.Catalog.ProductReviews.Fields.Store").Text,
+                                    Visible = (await storeService.GetAllStoresAsync()).Count > 1 ? true : false,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ProductReviewModel.ProductName))
+                                {
+                                    Title = T("Admin.Catalog.ProductReviews.Fields.Product").Text,
+                                    Width = "200",
+                                    Render = new RenderLink(new DataUrl("~/Admin/Product/Edit", nameof(ProductReviewModel.ProductId)))
+                                },
+                                new ColumnProperty(nameof(ProductReviewModel.CustomerInfo))
+                                {
+                                    Title = T("Admin.Catalog.ProductReviews.Fields.Customer").Text,
+                                    Width = "200",
+                                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(ProductReviewModel.CustomerId)))
+                                },
+                                new ColumnProperty(nameof(ProductReviewModel.Title))
+                                {
+                                    Title = T("Admin.Catalog.ProductReviews.Fields.Title").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ProductReviewModel.ReviewText))
+                                {
+                                    Title = T("Admin.Catalog.ProductReviews.Fields.ReviewText").Text,
+                                    Encode = false
+                                },
+                                new ColumnProperty(nameof(ProductReviewModel.ReplyText))
+                                {
+                                    Title = T("Admin.Catalog.ProductReviews.Fields.ReplyText").Text,
+                                    Encode = false
+                                },
+                                new ColumnProperty(nameof(ProductReviewModel.Rating))
+                                {
+                                    Title = T("Admin.Catalog.ProductReviews.Fields.Rating").Text,
+                                    Width = "50",
+                                    ClassName =  NopColumnClassDefaults.CenterAll
+                                },
+                                new ColumnProperty(nameof(ProductReviewModel.IsApproved))
+                                {
+                                    Title = T("Admin.Catalog.ProductReviews.Fields.IsApproved").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(ProductReviewModel.CreatedOn))
+                                {
+                                    Title = T("Admin.Catalog.ProductReviews.Fields.CreatedOn").Text,
+                                    Width = "150",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(ProductReviewModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
 
                     <script>
                         $(document).ready(function() {

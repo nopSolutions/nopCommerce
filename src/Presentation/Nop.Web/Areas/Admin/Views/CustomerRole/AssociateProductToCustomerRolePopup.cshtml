@@ -108,44 +108,46 @@
                             </div>
                             <div class="card card-default">
                                 <div class="card-body">
-                                    @await Html.PartialAsync("Table", new DataTablesModel
-                                    {
-                                        Name = "products-grid",
-                                        UrlRead = new DataUrl("AssociateProductToCustomerRolePopupList", "CustomerRole", null),
-                                        SearchButtonId = "search-products",
-                                        Length = Model.PageSize,
-                                        LengthMenu = Model.AvailablePageSizes,
-                                        Filters = new List<FilterParameter>
+                                    @{
+                                        await Html.RenderPartialAsync("Table", new DataTablesModel
                                         {
-                                            new FilterParameter(nameof(Model.SearchProductName)),
-                                            new FilterParameter(nameof(Model.SearchCategoryId)),
-                                            new FilterParameter(nameof(Model.SearchManufacturerId)),
-                                            new FilterParameter(nameof(Model.SearchStoreId)),
-                                            new FilterParameter(nameof(Model.SearchVendorId)),
-                                            new FilterParameter(nameof(Model.SearchProductTypeId))
-                                        },
-                                        ColumnCollection = new List<ColumnProperty>
-                                        {
-                                            new ColumnProperty(nameof(ProductModel.Id))
+                                            Name = "products-grid",
+                                            UrlRead = new DataUrl("AssociateProductToCustomerRolePopupList", "CustomerRole", null),
+                                            SearchButtonId = "search-products",
+                                            Length = Model.PageSize,
+                                            LengthMenu = Model.AvailablePageSizes,
+                                            Filters = new List<FilterParameter>
                                             {
-                                                Title = T("Admin.Common.Select").Text,
-                                                Render = new RenderCustom("renderColumnSelectProduct"),
-                                                ClassName =  NopColumnClassDefaults.Button,
-                                                Width = "50",
+                                                new FilterParameter(nameof(Model.SearchProductName)),
+                                                new FilterParameter(nameof(Model.SearchCategoryId)),
+                                                new FilterParameter(nameof(Model.SearchManufacturerId)),
+                                                new FilterParameter(nameof(Model.SearchStoreId)),
+                                                new FilterParameter(nameof(Model.SearchVendorId)),
+                                                new FilterParameter(nameof(Model.SearchProductTypeId))
                                             },
-                                            new ColumnProperty(nameof(ProductModel.Name))
+                                            ColumnCollection = new List<ColumnProperty>
                                             {
-                                                Title = T("Admin.Catalog.Products.Fields.Name").Text
-                                            },
-                                            new ColumnProperty(nameof(ProductModel.Published))
-                                            {
-                                                Title = T("Admin.Catalog.Products.Fields.Published").Text,
-                                                Width = "100",
-                                                ClassName = NopColumnClassDefaults.CenterAll,
-                                                Render = new RenderBoolean()
+                                                new ColumnProperty(nameof(ProductModel.Id))
+                                                {
+                                                    Title = T("Admin.Common.Select").Text,
+                                                    Render = new RenderCustom("renderColumnSelectProduct"),
+                                                    ClassName =  NopColumnClassDefaults.Button,
+                                                    Width = "50",
+                                                },
+                                                new ColumnProperty(nameof(ProductModel.Name))
+                                                {
+                                                    Title = T("Admin.Catalog.Products.Fields.Name").Text
+                                                },
+                                                new ColumnProperty(nameof(ProductModel.Published))
+                                                {
+                                                    Title = T("Admin.Catalog.Products.Fields.Published").Text,
+                                                    Width = "100",
+                                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                                    Render = new RenderBoolean()
+                                                }
                                             }
-                                        }
-                                    })
+                                        });
+                                    }
                                     <script>
                                         function renderColumnSelectProduct(data, type, row, meta) {
                                             return '<button type="button" onclick="selectAssociatedProduct(' + row.Id + ' )" class="btn btn-default">@T("Admin.Common.Select").Text</button>';

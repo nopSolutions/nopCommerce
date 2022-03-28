@@ -114,54 +114,56 @@
                     <div class="card-body">
                         <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Categories", Docs.Categories + Utm.OnAdmin)" />
 
-                        @await Html.PartialAsync("Table", new DataTablesModel
-                        {
-                            Name = "categories-grid",
-                            UrlRead = new DataUrl("List", "Category", null),
-                            SearchButtonId = "search-categories",
-                            Length = Model.PageSize,
-                            LengthMenu = Model.AvailablePageSizes,
-                            Filters = new List<FilterParameter>
+                        @{
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
                             {
-                                new FilterParameter(nameof(Model.SearchCategoryName)),
-                                new FilterParameter(nameof(Model.SearchStoreId)),
-                                new FilterParameter(nameof(Model.SearchPublishedId))
-                            },
-                            ColumnCollection = new List<ColumnProperty>
-                            {
-                                 new ColumnProperty(nameof(CategoryModel.Id))
+                                Name = "categories-grid",
+                                UrlRead = new DataUrl("List", "Category", null),
+                                SearchButtonId = "search-categories",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
                                 {
-                                    IsMasterCheckBox = true,
-                                    Render = new RenderCheckBox("checkbox_categories"),
-                                    ClassName =  NopColumnClassDefaults.CenterAll,
-                                    Width = "50"
+                                    new FilterParameter(nameof(Model.SearchCategoryName)),
+                                    new FilterParameter(nameof(Model.SearchStoreId)),
+                                    new FilterParameter(nameof(Model.SearchPublishedId))
                                 },
-                                new ColumnProperty(nameof(CategoryModel.Breadcrumb))
+                                ColumnCollection = new List<ColumnProperty>
                                 {
-                                    Title = T("Admin.Catalog.Categories.Fields.Name").Text
-                                },
-                                new ColumnProperty(nameof(CategoryModel.Published))
-                                {
-                                    Title = T("Admin.Catalog.Categories.Fields.Published").Text,
-                                    Width = "100",
-                                    ClassName = NopColumnClassDefaults.CenterAll,
-                                    Render = new RenderBoolean()
-                                },
-                                new ColumnProperty(nameof(CategoryModel.DisplayOrder))
-                                {
-                                    Title = T("Admin.Catalog.Categories.Fields.DisplayOrder").Text,
-                                    Width = "150",
-                                    ClassName =  NopColumnClassDefaults.CenterAll
-                                },
-                                new ColumnProperty(nameof(CategoryModel.Id))
-                                {
-                                    Title = T("Admin.Common.Edit").Text,
-                                    Width = "100",
-                                    ClassName =  NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                     new ColumnProperty(nameof(CategoryModel.Id))
+                                    {
+                                        IsMasterCheckBox = true,
+                                        Render = new RenderCheckBox("checkbox_categories"),
+                                        ClassName =  NopColumnClassDefaults.CenterAll,
+                                        Width = "50"
+                                    },
+                                    new ColumnProperty(nameof(CategoryModel.Breadcrumb))
+                                    {
+                                        Title = T("Admin.Catalog.Categories.Fields.Name").Text
+                                    },
+                                    new ColumnProperty(nameof(CategoryModel.Published))
+                                    {
+                                        Title = T("Admin.Catalog.Categories.Fields.Published").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean()
+                                    },
+                                    new ColumnProperty(nameof(CategoryModel.DisplayOrder))
+                                    {
+                                        Title = T("Admin.Catalog.Categories.Fields.DisplayOrder").Text,
+                                        Width = "150",
+                                        ClassName =  NopColumnClassDefaults.CenterAll
+                                    },
+                                    new ColumnProperty(nameof(CategoryModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "100",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                    }
                                 }
-                            }
-                        })
+                            });
+                        }
 
                         <script>
                             $(document).ready(function () {

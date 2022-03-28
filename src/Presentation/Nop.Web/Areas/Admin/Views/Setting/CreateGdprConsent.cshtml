@@ -28,5 +28,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GdprConsentDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdateGdprConsent", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdateGdprConsent", Model);
+    }
 </form>

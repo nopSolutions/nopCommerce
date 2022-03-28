@@ -18,7 +18,9 @@
     <div class="page-title">
         <h1>@T("Account.Login.Welcome")</h1>
     </div>
-    @await Html.PartialAsync("_ExternalAuthentication.Errors")
+    @{
+        await Html.RenderPartialAsync("_ExternalAuthentication.Errors");
+    }
     <div class="page-body">
         <div class="customer-blocks">
             @if (Model.RegistrationType == UserRegistrationType.Disabled)

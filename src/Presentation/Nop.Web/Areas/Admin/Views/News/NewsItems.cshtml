@@ -75,70 +75,72 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.News", Docs.News + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "newsitem-grid",
-                        UrlRead = new DataUrl("List", "News", null),
-                        SearchButtonId = "search-newsitem",
-                        Length = Model.NewsItems.PageSize,
-                        LengthMenu = Model.NewsItems.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.NewsItems.SearchStoreId), nameof(Model.NewsItems)),
-                            new FilterParameter(nameof(Model.SearchTitle))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(NewsItemModel.Title))
+                            Name = "newsitem-grid",
+                            UrlRead = new DataUrl("List", "News", null),
+                            SearchButtonId = "search-newsitem",
+                            Length = Model.NewsItems.PageSize,
+                            LengthMenu = Model.NewsItems.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.ContentManagement.News.NewsItems.Fields.Title").Text
+                                new FilterParameter(nameof(Model.NewsItems.SearchStoreId), nameof(Model.NewsItems)),
+                                new FilterParameter(nameof(Model.SearchTitle))
                             },
-                            new ColumnProperty(nameof(NewsItemModel.LanguageName))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.ContentManagement.News.NewsItems.Fields.Language").Text,
-                                Width = "200"
-                            },
-                            new ColumnProperty(nameof(NewsItemModel.Id))
-                            {
-                                Title = T("Admin.ContentManagement.News.NewsItems.Fields.Comments").Text,
-                                Width = "200",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderCustom("renderColumnComments")
-                            },
-                            new ColumnProperty(nameof(NewsItemModel.StartDateUtc))
-                            {
-                                Title = T("Admin.ContentManagement.News.NewsItems.Fields.StartDate").Text,
-                                Width = "200",
-                                Render = new RenderDate()
-                            },
-                            new ColumnProperty(nameof(NewsItemModel.EndDateUtc))
-                            {
-                                Title = T("Admin.ContentManagement.News.NewsItems.Fields.EndDate").Text,
-                                Width = "200",
-                                Render = new RenderDate()
-                            },
-                            new ColumnProperty(nameof(NewsItemModel.Published))
-                            {
-                                Title = T("Admin.ContentManagement.News.NewsItems.Fields.Published").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(NewsItemModel.CreatedOn))
-                            {
-                                Title = T("Admin.ContentManagement.News.NewsItems.Fields.CreatedOn").Text,
-                                Width = "200",
-                                Render = new RenderDate()
-                            },
-                            new ColumnProperty(nameof(NewsItemModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("NewsItemEdit"))
+                                new ColumnProperty(nameof(NewsItemModel.Title))
+                                {
+                                    Title = T("Admin.ContentManagement.News.NewsItems.Fields.Title").Text
+                                },
+                                new ColumnProperty(nameof(NewsItemModel.LanguageName))
+                                {
+                                    Title = T("Admin.ContentManagement.News.NewsItems.Fields.Language").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(NewsItemModel.Id))
+                                {
+                                    Title = T("Admin.ContentManagement.News.NewsItems.Fields.Comments").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnComments")
+                                },
+                                new ColumnProperty(nameof(NewsItemModel.StartDateUtc))
+                                {
+                                    Title = T("Admin.ContentManagement.News.NewsItems.Fields.StartDate").Text,
+                                    Width = "200",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(NewsItemModel.EndDateUtc))
+                                {
+                                    Title = T("Admin.ContentManagement.News.NewsItems.Fields.EndDate").Text,
+                                    Width = "200",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(NewsItemModel.Published))
+                                {
+                                    Title = T("Admin.ContentManagement.News.NewsItems.Fields.Published").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(NewsItemModel.CreatedOn))
+                                {
+                                    Title = T("Admin.ContentManagement.News.NewsItems.Fields.CreatedOn").Text,
+                                    Width = "200",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(NewsItemModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("NewsItemEdit"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
 
                     <script>
                         function renderColumnComments(data, type, row, meta) {

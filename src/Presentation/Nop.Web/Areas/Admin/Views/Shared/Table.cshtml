@@ -57,7 +57,9 @@
 <script asp-location="Footer">
     $(document).ready(function () {
         $('#@Model.Name').DataTable({
-            @await Html.PartialAsync("_Table.Definition", Model)
+            @{
+                await Html.RenderPartialAsync("_Table.Definition", Model);
+            }
         });
 
         @if (!string.IsNullOrEmpty(Model.SearchButtonId))
@@ -388,7 +390,9 @@
                             row.child(getchild_@(tableName)(row.data())).show();
                             var classid = '#child' + row.data().@(curModel.PrimaryKeyColumn) + '_@(tableName)';
                             $(classid).DataTable({
-                                @await Html.PartialAsync("_Table.Definition", curModel.ChildTable)
+                            @{
+                                await Html.RenderPartialAsync("_Table.Definition", curModel.ChildTable);
+                            }
                             }).draw;
                             tr.addClass('shown');
                             tdi.first().removeClass('fa-caret-right');

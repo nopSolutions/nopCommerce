@@ -16,7 +16,7 @@
 }
 else
 {
-    @await Html.PartialAsync("~/Plugins/Shipping.EasyPost/Views/Pickup/_PickupButtons.cshtml", Model.PickupModel)
+    await Html.RenderPartialAsync("~/Plugins/Shipping.EasyPost/Views/Pickup/_PickupButtons.cshtml", Model.PickupModel);
     <div class="btn-group">
         <button type="button" class="btn btn-success">
             <i class="fa fa-download"></i>

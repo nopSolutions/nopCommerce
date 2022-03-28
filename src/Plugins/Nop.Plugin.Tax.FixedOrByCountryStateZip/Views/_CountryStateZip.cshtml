@@ -11,66 +11,68 @@
 <div class="cards-group advanced-setting">
     <div class="card card-default">
         <div class="card-body">
-            @await Html.PartialAsync("Table", new DataTablesModel
-           {
-               Name = "tax-countrystatezip-grid",
-               UrlRead = new DataUrl("RatesByCountryStateZipList", "FixedOrByCountryStateZip", null),
-               UrlUpdate = new DataUrl("UpdateRateByCountryStateZip", "FixedOrByCountryStateZip", null),
-               UrlDelete = new DataUrl("DeleteRateByCountryStateZip", "FixedOrByCountryStateZip", null),
-               Length = Model.PageSize,
-               LengthMenu = Model.AvailablePageSizes,
-               ColumnCollection = new List<ColumnProperty>
-               {
-                   new ColumnProperty(nameof(CountryStateZipModel.StoreName))
-                   {
-                       Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Store").Text,
-                       Width = "300"
-                   },
-                   new ColumnProperty(nameof(CountryStateZipModel.CountryName))
-                   {
-                       Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Country").Text,
-                       Width = "200"
-                   },
-                   new ColumnProperty(nameof(CountryStateZipModel.StateProvinceName))
-                   {
-                       Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.StateProvince").Text,
-                       Width = "200"
-                   },
-                   new ColumnProperty(nameof(CountryStateZipModel.Zip))
-                   {
-                       Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Zip").Text,
-                       Width = "200",
-                       Editable = true,
-                       EditType = EditType.String
-                   },
-                   new ColumnProperty(nameof(CountryStateZipModel.TaxCategoryName))
-                   {
-                       Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.TaxCategory").Text,
-                       Width = "200"
-                   },
-                   new ColumnProperty(nameof(CountryStateZipModel.Percentage))
-                   {
-                       Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Percentage").Text,
-                       Width = "100",
-                       Editable = true,
-                       EditType = EditType.Number
-                   },
-                   new ColumnProperty(nameof(CountryStateZipModel.Id))
-                   {
-                       Title = T("Admin.Common.Edit").Text,
-                       Width = "200",
-                       ClassName =  NopColumnClassDefaults.Button,
-                       Render = new RenderButtonsInlineEdit()
-                   },
-                   new ColumnProperty(nameof(CountryStateZipModel.Id))
-                   {
-                       Title = T("Admin.Common.Delete").Text,
-                       ClassName = NopColumnClassDefaults.Button,
-                       Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
-                       Width = "100"
-                   }
-               }
-           })
+            @{
+                await Html.RenderPartialAsync("Table", new DataTablesModel
+                {
+                    Name = "tax-countrystatezip-grid",
+                    UrlRead = new DataUrl("RatesByCountryStateZipList", "FixedOrByCountryStateZip", null),
+                    UrlUpdate = new DataUrl("UpdateRateByCountryStateZip", "FixedOrByCountryStateZip", null),
+                    UrlDelete = new DataUrl("DeleteRateByCountryStateZip", "FixedOrByCountryStateZip", null),
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(CountryStateZipModel.StoreName))
+                        {
+                            Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Store").Text,
+                            Width = "300"
+                        },
+                        new ColumnProperty(nameof(CountryStateZipModel.CountryName))
+                        {
+                            Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Country").Text,
+                            Width = "200"
+                        },
+                        new ColumnProperty(nameof(CountryStateZipModel.StateProvinceName))
+                        {
+                            Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.StateProvince").Text,
+                            Width = "200"
+                        },
+                        new ColumnProperty(nameof(CountryStateZipModel.Zip))
+                        {
+                            Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Zip").Text,
+                            Width = "200",
+                            Editable = true,
+                            EditType = EditType.String
+                        },
+                        new ColumnProperty(nameof(CountryStateZipModel.TaxCategoryName))
+                        {
+                            Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.TaxCategory").Text,
+                            Width = "200"
+                        },
+                        new ColumnProperty(nameof(CountryStateZipModel.Percentage))
+                        {
+                            Title = T("Plugins.Tax.FixedOrByCountryStateZip.Fields.Percentage").Text,
+                            Width = "100",
+                            Editable = true,
+                            EditType = EditType.Number
+                        },
+                        new ColumnProperty(nameof(CountryStateZipModel.Id))
+                        {
+                            Title = T("Admin.Common.Edit").Text,
+                            Width = "200",
+                            ClassName =  NopColumnClassDefaults.Button,
+                            Render = new RenderButtonsInlineEdit()
+                        },
+                        new ColumnProperty(nameof(CountryStateZipModel.Id))
+                        {
+                            Title = T("Admin.Common.Delete").Text,
+                            ClassName = NopColumnClassDefaults.Button,
+                            Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                            Width = "100"
+                        }
+                    }
+                });
+           }
         </div>
     </div>
 </div>

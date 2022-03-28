@@ -130,50 +130,52 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "salesreport-grid",
-                        UrlRead = new DataUrl("BestsellersList", "Report", null),
-                        SearchButtonId = "search-salesreport",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        FooterCallback = !Model.IsLoggedInAsVendor ? "bestsellerfootercallback" : null,
-                        FooterColumns = !Model.IsLoggedInAsVendor ? 4 : 0,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
-                            new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
-                            new FilterParameter(nameof(Model.StoreId)),
-                            new FilterParameter(nameof(Model.OrderStatusId)),
-                            new FilterParameter(nameof(Model.PaymentStatusId)),
-                            new FilterParameter(nameof(Model.CategoryId)),
-                            new FilterParameter(nameof(Model.ManufacturerId)),
-                            new FilterParameter(nameof(Model.BillingCountryId)),
-                            new FilterParameter(nameof(Model.VendorId))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(BestsellerModel.ProductName))
+                            Name = "salesreport-grid",
+                            UrlRead = new DataUrl("BestsellersList", "Report", null),
+                            SearchButtonId = "search-salesreport",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            FooterCallback = !Model.IsLoggedInAsVendor ? "bestsellerfootercallback" : null,
+                            FooterColumns = !Model.IsLoggedInAsVendor ? 4 : 0,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.Name").Text
+                                new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.StoreId)),
+                                new FilterParameter(nameof(Model.OrderStatusId)),
+                                new FilterParameter(nameof(Model.PaymentStatusId)),
+                                new FilterParameter(nameof(Model.CategoryId)),
+                                new FilterParameter(nameof(Model.ManufacturerId)),
+                                new FilterParameter(nameof(Model.BillingCountryId)),
+                                new FilterParameter(nameof(Model.VendorId))
                             },
-                            new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity").Text
-                            },
-                            new ColumnProperty(nameof(BestsellerModel.TotalAmount))
-                            {
-                                Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount").Text
-                            },
-                            new ColumnProperty(nameof(BestsellerModel.ProductId))
-                            {
-                                Title = T("Admin.Common.View").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                                new ColumnProperty(nameof(BestsellerModel.ProductName))
+                                {
+                                    Title = T("Admin.Reports.Sales.Bestsellers.Fields.Name").Text
+                                },
+                                new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
+                                {
+                                    Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity").Text
+                                },
+                                new ColumnProperty(nameof(BestsellerModel.TotalAmount))
+                                {
+                                    Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount").Text
+                                },
+                                new ColumnProperty(nameof(BestsellerModel.ProductId))
+                                {
+                                    Title = T("Admin.Common.View").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
 
                     <script>
 

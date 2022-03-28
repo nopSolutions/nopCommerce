@@ -23,5 +23,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PluginDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdatePlugin", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdatePlugin", Model);
+    }
 </form>

@@ -77,46 +77,48 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.VendorManagement", Docs.VendorManagement + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "vendors-grid",
-                        UrlRead = new DataUrl("List", "Vendor", null),
-                        SearchButtonId = "search-vendors",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.SearchName)),
-                            new FilterParameter(nameof(Model.SearchEmail))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(VendorModel.Name))
+                            Name = "vendors-grid",
+                            UrlRead = new DataUrl("List", "Vendor", null),
+                            SearchButtonId = "search-vendors",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.Vendors.Fields.Name").Text,
-                                Width = "300"
+                                new FilterParameter(nameof(Model.SearchName)),
+                                new FilterParameter(nameof(Model.SearchEmail))
                             },
-                            new ColumnProperty(nameof(VendorModel.Email))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Vendors.Fields.Email").Text,
-                                Width = "300"
-                            },
-                            new ColumnProperty(nameof(VendorModel.Active))
-                            {
-                                Title = T("Admin.Vendors.Fields.Active").Text,
-                                Width = "50",
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(VendorModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "50",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                new ColumnProperty(nameof(VendorModel.Name))
+                                {
+                                    Title = T("Admin.Vendors.Fields.Name").Text,
+                                    Width = "300"
+                                },
+                                new ColumnProperty(nameof(VendorModel.Email))
+                                {
+                                    Title = T("Admin.Vendors.Fields.Email").Text,
+                                    Width = "300"
+                                },
+                                new ColumnProperty(nameof(VendorModel.Active))
+                                {
+                                    Title = T("Admin.Vendors.Fields.Active").Text,
+                                    Width = "50",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(VendorModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "50",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
             </div>
         </div>

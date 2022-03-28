@@ -10,7 +10,7 @@
 <form asp-controller="CustomerAttribute" asp-action="Create" method="post" id="customerattribute-form">
     <div class="content-header clearfix">
         <h1 class="float-left">
-            @T("Admin.Customers.CustomerAttributes.AddNew") 
+            @T("Admin.Customers.CustomerAttributes.AddNew")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.Customers.CustomerAttributes.BackToList")</a>
@@ -28,5 +28,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdate", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdate", Model);
+    }
 </form>

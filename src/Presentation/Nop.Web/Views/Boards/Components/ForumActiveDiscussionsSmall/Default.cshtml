@@ -1,2 +1,4 @@
 ﻿@model ActiveDiscussionsModel
-@await Html.PartialAsync("_ActiveTopics", Model)
+@{
+    await Html.RenderPartialAsync("_ActiveTopics", Model);
+}

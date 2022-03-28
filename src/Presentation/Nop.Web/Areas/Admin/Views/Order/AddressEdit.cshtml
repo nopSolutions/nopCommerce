@@ -26,5 +26,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderAddressDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdateAddress", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdateAddress", Model);
+    }
 </form>

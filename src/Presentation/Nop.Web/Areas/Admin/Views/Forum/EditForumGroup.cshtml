@@ -32,6 +32,8 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ForumGroupDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdateForumGroup", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdateForumGroup", Model);
+    }
 </form>
-<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="forumgroup-delete" asp-action="DeleteForumGroup"/>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="forumgroup-delete" asp-action="DeleteForumGroup" />

@@ -56,57 +56,59 @@
                     @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TaxCategoryListButtons, additionalData = Model })
                     <div class="card card-default">
                         <div class="card-body">
-                            @await Html.PartialAsync("Table", new DataTablesModel
-                            {
-                                Name = "tax-categories-grid",
-                                UrlRead = new DataUrl("Categories", "AvalaraTax", null),
-                                UrlDelete = new DataUrl("CategoryDelete", "AvalaraTax", null),
-                                UrlUpdate = new DataUrl("TaxCategoryUpdate", "AvalaraTax", null),
-                                Length = Model.PageSize,
-                                LengthMenu = Model.AvailablePageSizes,
-                                ColumnCollection = new List<ColumnProperty>
+                            @{
+                                await Html.RenderPartialAsync("Table", new DataTablesModel
                                 {
-                                    new ColumnProperty(nameof(TaxCategoryModel.Name))
+                                    Name = "tax-categories-grid",
+                                    UrlRead = new DataUrl("Categories", "AvalaraTax", null),
+                                    UrlDelete = new DataUrl("CategoryDelete", "AvalaraTax", null),
+                                    UrlUpdate = new DataUrl("TaxCategoryUpdate", "AvalaraTax", null),
+                                    Length = Model.PageSize,
+                                    LengthMenu = Model.AvailablePageSizes,
+                                    ColumnCollection = new List<ColumnProperty>
                                     {
-                                        Title = T("Admin.Configuration.Tax.Categories.Fields.Name").Text,
-                                        Width = "300",
-                                        Editable = true,
-                                        EditType = EditType.String
-                                    },
-                                    new ColumnProperty(nameof(TaxCategoryModel.DisplayOrder))
-                                    {
-                                        Title = T("Admin.Configuration.Tax.Categories.Fields.DisplayOrder").Text,
-                                        Width = "100",
-                                        ClassName = NopColumnClassDefaults.CenterAll,
-                                        Editable = true,
-                                        EditType = EditType.Number
-                                    },
-                                    new ColumnProperty(nameof(TaxCategoryModel.Type))
-                                    {
-                                        Title = T("Plugins.Tax.Avalara.Fields.TaxCodeType").Text,
-                                        Width = "100",
-                                        ClassName = NopColumnClassDefaults.CenterAll
-                                    },
-                                    new ColumnProperty(nameof(TaxCategoryModel.Description))
-                                    {
-                                        Title = T("Plugins.Tax.Avalara.Fields.TaxCodeDescription").Text
-                                    },
-                                    new ColumnProperty(nameof(TaxCategoryModel.Id))
-                                    {
-                                        Title = T("Admin.Common.Edit").Text,
-                                        Width = "100",
-                                        ClassName = NopColumnClassDefaults.Button,
-                                        Render = new RenderButtonsInlineEdit()
-                                    },
-                                    new ColumnProperty(nameof(TaxCategoryModel.Id))
-                                    {
-                                        Title = T("Admin.Common.Delete").Text,
-                                        Width = "100",
-                                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
-                                        ClassName = NopColumnClassDefaults.Button
+                                        new ColumnProperty(nameof(TaxCategoryModel.Name))
+                                        {
+                                            Title = T("Admin.Configuration.Tax.Categories.Fields.Name").Text,
+                                            Width = "300",
+                                            Editable = true,
+                                            EditType = EditType.String
+                                        },
+                                        new ColumnProperty(nameof(TaxCategoryModel.DisplayOrder))
+                                        {
+                                            Title = T("Admin.Configuration.Tax.Categories.Fields.DisplayOrder").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.CenterAll,
+                                            Editable = true,
+                                            EditType = EditType.Number
+                                        },
+                                        new ColumnProperty(nameof(TaxCategoryModel.Type))
+                                        {
+                                            Title = T("Plugins.Tax.Avalara.Fields.TaxCodeType").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.CenterAll
+                                        },
+                                        new ColumnProperty(nameof(TaxCategoryModel.Description))
+                                        {
+                                            Title = T("Plugins.Tax.Avalara.Fields.TaxCodeDescription").Text
+                                        },
+                                        new ColumnProperty(nameof(TaxCategoryModel.Id))
+                                        {
+                                            Title = T("Admin.Common.Edit").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.Button,
+                                            Render = new RenderButtonsInlineEdit()
+                                        },
+                                        new ColumnProperty(nameof(TaxCategoryModel.Id))
+                                        {
+                                            Title = T("Admin.Common.Delete").Text,
+                                            Width = "100",
+                                            Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                            ClassName = NopColumnClassDefaults.Button
+                                        }
                                     }
-                                }
-                            })
+                                });
+                            }
 
                             <div class="card card-default">
                                 <div class="card-header">

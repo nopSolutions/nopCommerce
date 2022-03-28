@@ -175,14 +175,18 @@
                             });
                         </script>
                         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MenuBefore })
-                        @await Html.PartialAsync("Menu")
+                        @{
+                            await Html.RenderPartialAsync("Menu");
+                        }
 
                     </nav>
                 </div>
             </aside>
         }
         <div class="content-wrapper">
-            @await Html.PartialAsync("Notifications")
+            @{
+                await Html.RenderPartialAsync("Notifications");
+            }
             <nop-antiforgery-token />
             @RenderBody()
         </div>

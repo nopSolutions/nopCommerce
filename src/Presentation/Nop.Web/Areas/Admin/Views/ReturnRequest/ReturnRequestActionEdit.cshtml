@@ -34,12 +34,14 @@
         </div>
     </div>
 
-   <section class="content">
+    <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
-                @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestAction", Model)
+                @{
+                    await Html.RenderPartialAsync("_CreateOrUpdate.ReturnRequestAction", Model);
+                }
             </div>
         </div>
-   </section>
+    </section>
 </form>
-<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="returnrequestaction-delete" asp-action="ReturnRequestActionDelete"/>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="returnrequestaction-delete" asp-action="ReturnRequestActionDelete" />

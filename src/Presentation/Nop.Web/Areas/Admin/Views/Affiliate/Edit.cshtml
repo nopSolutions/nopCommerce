@@ -30,6 +30,8 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AffiliateDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdate", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdate", Model);
+    }
 </form>
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="affiliate-delete" />

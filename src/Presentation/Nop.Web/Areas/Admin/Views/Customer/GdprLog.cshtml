@@ -74,39 +74,41 @@
                             <div class="card-body">
                                 <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Gdpr", Docs.Gdpr + Utm.OnAdmin)" />
 
-                                @await Html.PartialAsync("Table", new DataTablesModel
-                                {
-                                    Name = "log-grid",
-                                    UrlRead = new DataUrl("GdprLogList", "Customer", null),
-                                    SearchButtonId = "search-log",
-                                    Length = Model.PageSize,
-                                    LengthMenu = Model.AvailablePageSizes,
-                                    Filters = new List<FilterParameter>
+                                @{
+                                    await Html.RenderPartialAsync("Table", new DataTablesModel
                                     {
-                                        new FilterParameter(nameof(Model.SearchRequestTypeId)),
-                                        new FilterParameter(nameof(Model.SearchEmail))
-                                    },
-                                    ColumnCollection = new List<ColumnProperty>
-                                    {
-                                        new ColumnProperty(nameof(GdprLogModel.CustomerInfo))
+                                        Name = "log-grid",
+                                        UrlRead = new DataUrl("GdprLogList", "Customer", null),
+                                        SearchButtonId = "search-log",
+                                        Length = Model.PageSize,
+                                        LengthMenu = Model.AvailablePageSizes,
+                                        Filters = new List<FilterParameter>
                                         {
-                                            Title = T("Admin.Customers.GdprLog.Fields.CustomerInfo").Text
+                                            new FilterParameter(nameof(Model.SearchRequestTypeId)),
+                                            new FilterParameter(nameof(Model.SearchEmail))
                                         },
-                                        new ColumnProperty(nameof(GdprLogModel.RequestType))
+                                        ColumnCollection = new List<ColumnProperty>
                                         {
-                                            Title = T("Admin.Customers.GdprLog.Fields.RequestType").Text
-                                        },
-                                        new ColumnProperty(nameof(GdprLogModel.RequestDetails))
-                                        {
-                                            Title = T("Admin.Customers.GdprLog.Fields.RequestDetails").Text
-                                        },
-                                        new ColumnProperty(nameof(GdprLogModel.CreatedOn))
-                                        {
-                                            Title = T("Admin.Customers.GdprLog.Fields.CreatedOn").Text,
-                                            Render = new RenderDate()
+                                            new ColumnProperty(nameof(GdprLogModel.CustomerInfo))
+                                            {
+                                                Title = T("Admin.Customers.GdprLog.Fields.CustomerInfo").Text
+                                            },
+                                            new ColumnProperty(nameof(GdprLogModel.RequestType))
+                                            {
+                                                Title = T("Admin.Customers.GdprLog.Fields.RequestType").Text
+                                            },
+                                            new ColumnProperty(nameof(GdprLogModel.RequestDetails))
+                                            {
+                                                Title = T("Admin.Customers.GdprLog.Fields.RequestDetails").Text
+                                            },
+                                            new ColumnProperty(nameof(GdprLogModel.CreatedOn))
+                                            {
+                                                Title = T("Admin.Customers.GdprLog.Fields.CreatedOn").Text,
+                                                Render = new RenderDate()
+                                            }
                                         }
-                                    }
-                                })
+                                    });
+                                }
                             </div>
                         </div>
                     </div>

@@ -13,53 +13,55 @@
 </div>
 
 <div class="card-body">
-    @await Html.PartialAsync("Table", new DataTablesModel
-    {
-        Name = "currentshoppingcart-grid",
-        UrlRead = new DataUrl("GetCartList", "Customer", new RouteValueDictionary { [nameof(Model.CustomerShoppingCartSearchModel.CustomerId)] = Model.CustomerShoppingCartSearchModel.CustomerId }),
-        Length = Model.CustomerShoppingCartSearchModel.PageSize,
-        LengthMenu = Model.CustomerShoppingCartSearchModel.AvailablePageSizes,
-        Filters = new List<FilterParameter>
+    @{
+        await Html.RenderPartialAsync("Table", new DataTablesModel
         {
-            new FilterParameter(nameof(CustomerShoppingCartSearchModel.ShoppingCartTypeId), nameof(CustomerShoppingCartSearchModel))
-        },
-        ColumnCollection = new List<ColumnProperty>
-        {
-            new ColumnProperty(nameof(ShoppingCartItemModel.ProductName))
+            Name = "currentshoppingcart-grid",
+            UrlRead = new DataUrl("GetCartList", "Customer", new RouteValueDictionary { [nameof(Model.CustomerShoppingCartSearchModel.CustomerId)] = Model.CustomerShoppingCartSearchModel.CustomerId }),
+            Length = Model.CustomerShoppingCartSearchModel.PageSize,
+            LengthMenu = Model.CustomerShoppingCartSearchModel.AvailablePageSizes,
+            Filters = new List<FilterParameter>
             {
-                Title = T("Admin.CurrentCarts.Product").Text,
-                Width = "500",
-                Render = new RenderCustom("renderProductName")
+                new FilterParameter(nameof(CustomerShoppingCartSearchModel.ShoppingCartTypeId), nameof(CustomerShoppingCartSearchModel))
             },
-            new ColumnProperty(nameof(ShoppingCartItemModel.Quantity))
+            ColumnCollection = new List<ColumnProperty>
             {
-                Title = T("Admin.CurrentCarts.Quantity").Text,
-                Width = "200"
-            },
-            new ColumnProperty(nameof(ShoppingCartItemModel.UnitPrice))
-            {
-                Title = T("Admin.CurrentCarts.UnitPrice").Text,
-                Width = "200"
-            },
-            new ColumnProperty(nameof(ShoppingCartItemModel.Total))
-            {
-                Title = T("Admin.CurrentCarts.Total").Text,
-                Width = "200"
-            },
-            new ColumnProperty(nameof(ShoppingCartItemModel.Store))
-            {
-                Title = T("Admin.CurrentCarts.Store").Text,
-                Width = "200",
-                Visible = (await storeService.GetAllStoresAsync()).Count > 1
-            },
-            new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
-            {
-                Title = T("Admin.CurrentCarts.UpdatedOn").Text,
-                Width = "200",
-                Render = new RenderDate()
+                new ColumnProperty(nameof(ShoppingCartItemModel.ProductName))
+                {
+                    Title = T("Admin.CurrentCarts.Product").Text,
+                    Width = "500",
+                    Render = new RenderCustom("renderProductName")
+                },
+                new ColumnProperty(nameof(ShoppingCartItemModel.Quantity))
+                {
+                    Title = T("Admin.CurrentCarts.Quantity").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ShoppingCartItemModel.UnitPrice))
+                {
+                    Title = T("Admin.CurrentCarts.UnitPrice").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ShoppingCartItemModel.Total))
+                {
+                    Title = T("Admin.CurrentCarts.Total").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ShoppingCartItemModel.Store))
+                {
+                    Title = T("Admin.CurrentCarts.Store").Text,
+                    Width = "200",
+                    Visible = (await storeService.GetAllStoresAsync()).Count > 1
+                },
+                new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
+                {
+                    Title = T("Admin.CurrentCarts.UpdatedOn").Text,
+                    Width = "200",
+                    Render = new RenderDate()
+                }
             }
-        }
-    })
+        });
+    }
 
     <script>
         $(document).ready(function() {

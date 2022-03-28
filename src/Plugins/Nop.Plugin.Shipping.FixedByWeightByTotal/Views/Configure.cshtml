@@ -8,7 +8,9 @@
     ViewBag.TourStep = TourStep.ShippingManual;
 }
 
-@await Html.PartialAsync("_AdminTour")
+@{
+    await Html.RenderPartialAsync("_AdminTour");
+}
 
 <div class="row pb-3">
     <div class="col-md-3">
@@ -76,5 +78,7 @@
 
 <nop-alert asp-alert-id="saveModeAlert" asp-alert-message="@T("Admin.Common.Alert.Save.Error")" />
 
-@await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_FixedRate.cshtml")
-@await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_ByWeightByTotal.cshtml", Model)
+@{
+    await Html.RenderPartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_FixedRate.cshtml");
+    await Html.RenderPartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_ByWeightByTotal.cshtml", Model);
+}

@@ -4,12 +4,14 @@
 {
     <div class="product-estimate-shipping">
         <a href="#estimate-shipping-popup-@Model.ProductId"
-           id="open-estimate-shipping-popup-@Model.ProductId"
-           class="open-estimate-shipping-popup"
-           data-effect="estimate-shipping-popup-zoom-in">
+       id="open-estimate-shipping-popup-@Model.ProductId"
+       class="open-estimate-shipping-popup"
+       data-effect="estimate-shipping-popup-zoom-in">
         </a>
         <div id="estimate-shipping-popup-@Model.ProductId" class="estimate-shipping-popup mfp-with-anim mfp-hide">
-            @await Html.PartialAsync("_EstimateShippingPopUp", Model)
+            @{
+                await Html.RenderPartialAsync("_EstimateShippingPopUp", Model);
+            }
         </div>
     </div>
 

@@ -1,7 +1,8 @@
 @model VendorModel
 
 <div class="card-body">    
-    @await Html.PartialAsync("Table", new DataTablesModel
+    @{
+        await Html.RenderPartialAsync("Table", new DataTablesModel
         {
             Name = "vendornotes-grid",
             UrlRead = new DataUrl("VendorNotesSelect", "Vendor", new RouteValueDictionary { [nameof(Model.VendorNoteSearchModel.VendorId)] = Model.VendorNoteSearchModel.VendorId }),
@@ -29,7 +30,8 @@
                     ClassName =  NopColumnClassDefaults.Button
                 }
             }
-        })
+        });
+    }
 
     <div class="card card-default">
         <div class="card-header">

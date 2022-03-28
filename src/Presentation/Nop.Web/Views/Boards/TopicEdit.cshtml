@@ -6,6 +6,8 @@
 }
 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicEditBefore, additionalData = Model })
 <form asp-route="TopicEdit" method="post">
-    @await Html.PartialAsync("_CreateUpdateTopic", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateUpdateTopic", Model);
+    }
 </form>
 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicEditAfter, additionalData = Model })

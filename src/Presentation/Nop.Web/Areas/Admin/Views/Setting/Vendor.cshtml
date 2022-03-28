@@ -41,9 +41,21 @@
                 <div asp-validation-summary="All"></div>
 
                 <nop-cards id="vendorsettings-cards">
-                    <nop-card asp-name="vendorsettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.Vendor.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Vendor.Common", Model)</nop-card>
-                    <nop-card asp-name="vendorsettings-catalog" asp-icon="fas fa-list" asp-title="@T("Admin.Configuration.Settings.Vendor.BlockTitle.Catalog")" asp-hide-block-attribute-name="@hideCatalogBlockAttributeName" asp-hide="@hideCatalogBlock" asp-advanced="false">@await Html.PartialAsync("_Vendor.Catalog", Model)</nop-card>
-                    <nop-card asp-name="vendorsettings-vendor-attributes" asp-icon="fas fa-paperclip" asp-title="@T("Admin.Vendors.VendorAttributes")" asp-hide-block-attribute-name="@hideVendorAttributeBlockAttributeName" asp-hide="@hideVendorAttributeBlock" asp-advanced="true">@await Html.PartialAsync("../VendorAttribute/ListBlock.cshtml", Model.VendorAttributeSearchModel)</nop-card>
+                    <nop-card asp-name="vendorsettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.Vendor.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">
+                        @{
+                            await Html.RenderPartialAsync("_Vendor.Common", Model);
+                        }
+                    </nop-card>
+                    <nop-card asp-name="vendorsettings-catalog" asp-icon="fas fa-list" asp-title="@T("Admin.Configuration.Settings.Vendor.BlockTitle.Catalog")" asp-hide-block-attribute-name="@hideCatalogBlockAttributeName" asp-hide="@hideCatalogBlock" asp-advanced="false">
+                        @{
+                            await Html.RenderPartialAsync("_Vendor.Catalog", Model);
+                        }
+                    </nop-card>
+                    <nop-card asp-name="vendorsettings-vendor-attributes" asp-icon="fas fa-paperclip" asp-title="@T("Admin.Vendors.VendorAttributes")" asp-hide-block-attribute-name="@hideVendorAttributeBlockAttributeName" asp-hide="@hideVendorAttributeBlock" asp-advanced="true">
+                        @{
+                            await Html.RenderPartialAsync("../VendorAttribute/ListBlock.cshtml", Model.VendorAttributeSearchModel);
+                        }
+                    </nop-card>
 
                     @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.VendorSettingsDetailsBlock, additionalData = Model })
                 </nop-cards>

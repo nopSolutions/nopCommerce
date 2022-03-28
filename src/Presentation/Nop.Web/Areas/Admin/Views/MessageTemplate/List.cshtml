@@ -72,49 +72,51 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.MessageTemplates", Docs.MessageTemplates + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "templates-grid",
-                        UrlRead = new DataUrl("List", "MessageTemplate", null),
-                        SearchButtonId = "search-templates",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.SearchKeywords)),
-                            new FilterParameter(nameof(Model.SearchStoreId))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(MessageTemplateModel.Name))
+                            Name = "templates-grid",
+                            UrlRead = new DataUrl("List", "MessageTemplate", null),
+                            SearchButtonId = "search-templates",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.ContentManagement.MessageTemplates.Fields.Name").Text
+                                new FilterParameter(nameof(Model.SearchKeywords)),
+                                new FilterParameter(nameof(Model.SearchStoreId))
                             },
-                            new ColumnProperty(nameof(MessageTemplateModel.Subject))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.ContentManagement.MessageTemplates.Fields.Subject").Text
-                            },
-                            new ColumnProperty(nameof(MessageTemplateModel.IsActive))
-                            {
-                                Title = T("Admin.ContentManagement.MessageTemplates.Fields.IsActive").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(MessageTemplateModel.ListOfStores))
-                            {
-                                Title = T("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores").Text,
-                                Width = "300"
-                            },
-                            new ColumnProperty(nameof(MessageTemplateModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                new ColumnProperty(nameof(MessageTemplateModel.Name))
+                                {
+                                    Title = T("Admin.ContentManagement.MessageTemplates.Fields.Name").Text
+                                },
+                                new ColumnProperty(nameof(MessageTemplateModel.Subject))
+                                {
+                                    Title = T("Admin.ContentManagement.MessageTemplates.Fields.Subject").Text
+                                },
+                                new ColumnProperty(nameof(MessageTemplateModel.IsActive))
+                                {
+                                    Title = T("Admin.ContentManagement.MessageTemplates.Fields.IsActive").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(MessageTemplateModel.ListOfStores))
+                                {
+                                    Title = T("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores").Text,
+                                    Width = "300"
+                                },
+                                new ColumnProperty(nameof(MessageTemplateModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
             </div>
         </div>

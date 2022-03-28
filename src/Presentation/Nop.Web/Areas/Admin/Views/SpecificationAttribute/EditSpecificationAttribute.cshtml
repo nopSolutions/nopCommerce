@@ -32,6 +32,8 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdateSpecificationAttribute", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdateSpecificationAttribute", Model);
+    }
 </form>
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="specificationattribute-delete" asp-action="DeleteSpecificationAttribute" />

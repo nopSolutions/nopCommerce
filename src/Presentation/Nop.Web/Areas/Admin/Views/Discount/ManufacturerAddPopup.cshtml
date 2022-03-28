@@ -61,39 +61,41 @@ else
 
                             <div class="card card-default">
                                 <div class="card-body">
-                                    @await Html.PartialAsync("Table", new DataTablesModel
-                                    {
-                                        Name = "manufacturers-grid",
-                                        UrlRead = new DataUrl("ManufacturerAddPopupList", "Discount", null),
-                                        SearchButtonId = "search-manufacturers",
-                                        Length = Model.PageSize,
-                                        LengthMenu = Model.AvailablePageSizes,
-                                        Filters = new List<FilterParameter>
+                                    @{
+                                        await Html.RenderPartialAsync("Table", new DataTablesModel
                                         {
-                                            new FilterParameter(nameof(Model.SearchManufacturerName))
-                                        },
-                                        ColumnCollection = new List<ColumnProperty>
-                                        {
-                                            new ColumnProperty(nameof(ManufacturerModel.Id))
+                                            Name = "manufacturers-grid",
+                                            UrlRead = new DataUrl("ManufacturerAddPopupList", "Discount", null),
+                                            SearchButtonId = "search-manufacturers",
+                                            Length = Model.PageSize,
+                                            LengthMenu = Model.AvailablePageSizes,
+                                            Filters = new List<FilterParameter>
                                             {
-                                                IsMasterCheckBox = true,
-                                                Render = new RenderCheckBox(nameof(AddManufacturerToDiscountModel.SelectedManufacturerIds)),
-                                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                                Width = "50"
+                                                new FilterParameter(nameof(Model.SearchManufacturerName))
                                             },
-                                            new ColumnProperty(nameof(ManufacturerModel.Name))
+                                            ColumnCollection = new List<ColumnProperty>
                                             {
-                                                Title = T("Admin.Catalog.Manufacturers.Fields.Name").Text
-                                            },
-                                            new ColumnProperty(nameof(ManufacturerModel.Published))
-                                            {
-                                                Title = T("Admin.Catalog.Manufacturers.Fields.Published").Text,
-                                                Width = "100",
-                                                ClassName = NopColumnClassDefaults.CenterAll,
-                                                Render = new RenderBoolean()
+                                                new ColumnProperty(nameof(ManufacturerModel.Id))
+                                                {
+                                                    IsMasterCheckBox = true,
+                                                    Render = new RenderCheckBox(nameof(AddManufacturerToDiscountModel.SelectedManufacturerIds)),
+                                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                                    Width = "50"
+                                                },
+                                                new ColumnProperty(nameof(ManufacturerModel.Name))
+                                                {
+                                                    Title = T("Admin.Catalog.Manufacturers.Fields.Name").Text
+                                                },
+                                                new ColumnProperty(nameof(ManufacturerModel.Published))
+                                                {
+                                                    Title = T("Admin.Catalog.Manufacturers.Fields.Published").Text,
+                                                    Width = "100",
+                                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                                    Render = new RenderBoolean()
+                                                }
                                             }
-                                        }
-                                    })
+                                        });
+                                    }
                                 </div>
                                 <div class="card-footer">
                                     <button type="submit" name="save" class="btn btn-primary">

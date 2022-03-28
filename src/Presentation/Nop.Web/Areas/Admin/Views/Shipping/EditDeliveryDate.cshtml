@@ -32,6 +32,8 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DeliveryDateDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdateDeliveryDate", Model)
+    @{
+        await Html.RenderPartialAsync("_CreateOrUpdateDeliveryDate", Model);
+    }
 </form>
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="delivery-date-delete" asp-action="DeleteDeliveryDate" />

@@ -122,7 +122,7 @@
                         </div>
                         @if (Model.ProductReviewReviewTypeMappingSearchModel.IsAnyReviewTypes)
                         {
-                            @await Html.PartialAsync("_ProductReviewReviewTypeMappingList", Model.ProductReviewReviewTypeMappingSearchModel)
+                            await Html.RenderPartialAsync("_ProductReviewReviewTypeMappingList", Model.ProductReviewReviewTypeMappingSearchModel);
                         }
                     </div>
                 </div>

@@ -64,49 +64,51 @@
 
                 <div class="card card-default">
                     <div class="card-body">
-                        @await Html.PartialAsync("Table", new DataTablesModel
-                        {
-                            Name = "batch-grid",
-                            UrlRead = new DataUrl("BatchList", "EasyPost", null),
-                            SearchButtonId = "search-batches",
-                            Length = Model.PageSize,
-                            LengthMenu = Model.AvailablePageSizes,
-                            Filters = new List<FilterParameter>
+                        @{
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
                             {
-                                new FilterParameter(nameof(Model.StatusId))
-                            },
-                            ColumnCollection = new List<ColumnProperty>
-                            {
-                                new ColumnProperty(nameof(BatchModel.Id))
+                                Name = "batch-grid",
+                                UrlRead = new DataUrl("BatchList", "EasyPost", null),
+                                SearchButtonId = "search-batches",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
                                 {
-                                    Title = "#",
-                                    Width = "60"
+                                    new FilterParameter(nameof(Model.StatusId))
                                 },
-                                new ColumnProperty(nameof(BatchModel.Status))
+                                ColumnCollection = new List<ColumnProperty>
                                 {
-                                    Title = T("Plugins.Shipping.EasyPost.Batch.Fields.Status").Text
-                                },
-                                new ColumnProperty(nameof(BatchModel.UpdatedOn))
-                                {
-                                    Title = T("Plugins.Shipping.EasyPost.Batch.Fields.UpdatedOn").Text,
-                                    Width = "200",
-                                    Render = new RenderDate()
-                                },
-                                new ColumnProperty(nameof(BatchModel.CreatedOn))
-                                {
-                                    Title = T("Plugins.Shipping.EasyPost.Batch.Fields.CreatedOn").Text,
-                                    Width = "200",
-                                    Render = new RenderDate()
-                                },
-                                new ColumnProperty(nameof(BatchModel.Id))
-                                {
-                                    Title = T("Admin.Common.Edit").Text,
-                                    Width = "100",
-                                    ClassName = NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonEdit(new DataUrl("~/Admin/EasyPost/BatchEdit/", false))
+                                    new ColumnProperty(nameof(BatchModel.Id))
+                                    {
+                                        Title = "#",
+                                        Width = "60"
+                                    },
+                                    new ColumnProperty(nameof(BatchModel.Status))
+                                    {
+                                        Title = T("Plugins.Shipping.EasyPost.Batch.Fields.Status").Text
+                                    },
+                                    new ColumnProperty(nameof(BatchModel.UpdatedOn))
+                                    {
+                                        Title = T("Plugins.Shipping.EasyPost.Batch.Fields.UpdatedOn").Text,
+                                        Width = "200",
+                                        Render = new RenderDate()
+                                    },
+                                    new ColumnProperty(nameof(BatchModel.CreatedOn))
+                                    {
+                                        Title = T("Plugins.Shipping.EasyPost.Batch.Fields.CreatedOn").Text,
+                                        Width = "200",
+                                        Render = new RenderDate()
+                                    },
+                                    new ColumnProperty(nameof(BatchModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonEdit(new DataUrl("~/Admin/EasyPost/BatchEdit/", false))
+                                    }
                                 }
-                            }
-                        })
+                            });
+                        }
                     </div>
                 </div>
             </div>

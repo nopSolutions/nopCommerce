@@ -33,7 +33,9 @@
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
-                @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestReason", Model)
+                @{
+                    await Html.RenderPartialAsync("_CreateOrUpdate.ReturnRequestReason", Model);
+                }
             </div>
         </div>
     </section>

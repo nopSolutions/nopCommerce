@@ -113,50 +113,52 @@
                         <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Affiliates", Docs.Affiliates + Utm.OnAdmin)" asp-add-wrapper="false"/>
                     </p>
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "affiliates-grid",
-                        UrlRead = new DataUrl("List", "Affiliate", null),
-                        SearchButtonId = "search-affiliates",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.SearchFirstName)),
-                            new FilterParameter(nameof(Model.SearchLastName)),
-                            new FilterParameter(nameof(Model.SearchFriendlyUrlName)),
-                            new FilterParameter(nameof(Model.LoadOnlyWithOrders), typeof(bool)),
-                            new FilterParameter(nameof(Model.OrdersCreatedFromUtc)),
-                            new FilterParameter(nameof(Model.OrdersCreatedToUtc))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty($"{nameof(AffiliateModel.Address)}.{nameof(AddressModel.FirstName)}")
+                            Name = "affiliates-grid",
+                            UrlRead = new DataUrl("List", "Affiliate", null),
+                            SearchButtonId = "search-affiliates",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.Address.Fields.FirstName").Text,
-                                Width = "200"
+                                new FilterParameter(nameof(Model.SearchFirstName)),
+                                new FilterParameter(nameof(Model.SearchLastName)),
+                                new FilterParameter(nameof(Model.SearchFriendlyUrlName)),
+                                new FilterParameter(nameof(Model.LoadOnlyWithOrders), typeof(bool)),
+                                new FilterParameter(nameof(Model.OrdersCreatedFromUtc)),
+                                new FilterParameter(nameof(Model.OrdersCreatedToUtc))
                             },
-                            new ColumnProperty($"{nameof(AffiliateModel.Address)}.{nameof(AddressModel.LastName)}")
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Address.Fields.LastName").Text,
-                                Width = "200"
-                            },
-                            new ColumnProperty(nameof(AffiliateModel.Active))
-                            {
-                                Title = T("Admin.Affiliates.Fields.Active").Text,
-                                Width = "100",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(AffiliateModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName = NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                new ColumnProperty($"{nameof(AffiliateModel.Address)}.{nameof(AddressModel.FirstName)}")
+                                {
+                                    Title = T("Admin.Address.Fields.FirstName").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty($"{nameof(AffiliateModel.Address)}.{nameof(AddressModel.LastName)}")
+                                {
+                                    Title = T("Admin.Address.Fields.LastName").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(AffiliateModel.Active))
+                                {
+                                    Title = T("Admin.Affiliates.Fields.Active").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(AffiliateModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
             </div>
         </div>

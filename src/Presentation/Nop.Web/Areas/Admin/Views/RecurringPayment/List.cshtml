@@ -28,71 +28,73 @@
                                 @T("Admin.RecurringPayments.Description")
                                 <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.RecurringPayments", Docs.RecurringPayments + Utm.OnAdmin)"  asp-add-wrapper="false"/>
                             </p>
-                            @await Html.PartialAsync("Table", new DataTablesModel
-                            {
-                                Name = "recurringpayments-grid",
-                                UrlRead = new DataUrl("List", "RecurringPayment", null),
-                                Length = Model.PageSize,
-                                LengthMenu = Model.AvailablePageSizes,
-                                ColumnCollection = new List<ColumnProperty>
+                            @{
+                                await Html.RenderPartialAsync("Table", new DataTablesModel
                                 {
-                                    new ColumnProperty(nameof(RecurringPaymentModel.Id))
-                                    {
-                                        Title = T("Admin.RecurringPayments.Fields.ID").Text,
-                                        Width = "50"
-                                    },
-                                    new ColumnProperty(nameof(RecurringPaymentModel.CustomerId))
-                                    {
-                                        Title = T("Admin.RecurringPayments.Fields.Customer").Text,
-                                        Width = "200",
-                                        Render = new RenderCustom("renderColumnCustomerInfo")
-                                    },
-                                    new ColumnProperty(nameof(RecurringPaymentModel.CycleLength))
-                                    {
-                                        Title = T("Admin.RecurringPayments.Fields.CycleLength").Text,
-                                        Width = "100"
-                                    },
-                                    new ColumnProperty(nameof(RecurringPaymentModel.CyclePeriodStr))
-                                    {
-                                        Title = T("Admin.RecurringPayments.Fields.CyclePeriod").Text,
-                                        Width = "100"
-                                    },
-                                    new ColumnProperty(nameof(RecurringPaymentModel.IsActive))
-                                    {
-                                        Title = T("Admin.RecurringPayments.Fields.IsActive").Text,
-                                        Width = "200",
-                                        ClassName = NopColumnClassDefaults.CenterAll,
-                                        Render = new RenderBoolean()
-                                    },
-                                    new ColumnProperty(nameof(RecurringPaymentModel.StartDate))
-                                    {
-                                        Title = T("Admin.RecurringPayments.Fields.StartDate").Text,
-                                        Width = "200"
-                                    },
-                                    new ColumnProperty(nameof(RecurringPaymentModel.NextPaymentDate))
-                                    {
-                                        Title = T("Admin.RecurringPayments.Fields.NextPaymentDate").Text,
-                                        Width = "200"
-                                    },
-                                    new ColumnProperty(nameof(RecurringPaymentModel.TotalCycles))
-                                    {
-                                        Title = T("Admin.RecurringPayments.Fields.TotalCycles").Text,
-                                        Width = "100"
-                                    },
-                                    new ColumnProperty(nameof(RecurringPaymentModel.CyclesRemaining))
-                                    {
-                                        Title = T("Admin.RecurringPayments.Fields.CyclesRemaining").Text,
-                                        Width = "100"
-                                    },
-                                    new ColumnProperty(nameof(RecurringPaymentModel.Id))
-                                    {
-                                        Title = T("Admin.Common.Edit").Text,
-                                        Width = "100",
-                                        ClassName = NopColumnClassDefaults.Button,
-                                        Render = new RenderButtonEdit(new DataUrl("Edit"))
-                                    }
-                                }
-                            })
+                                        Name = "recurringpayments-grid",
+                                        UrlRead = new DataUrl("List", "RecurringPayment", null),
+                                        Length = Model.PageSize,
+                                        LengthMenu = Model.AvailablePageSizes,
+                                        ColumnCollection = new List<ColumnProperty>
+                                        {
+                                            new ColumnProperty(nameof(RecurringPaymentModel.Id))
+                                            {
+                                                Title = T("Admin.RecurringPayments.Fields.ID").Text,
+                                                Width = "50"
+                                            },
+                                            new ColumnProperty(nameof(RecurringPaymentModel.CustomerId))
+                                            {
+                                                Title = T("Admin.RecurringPayments.Fields.Customer").Text,
+                                                Width = "200",
+                                                Render = new RenderCustom("renderColumnCustomerInfo")
+                                            },
+                                            new ColumnProperty(nameof(RecurringPaymentModel.CycleLength))
+                                            {
+                                                Title = T("Admin.RecurringPayments.Fields.CycleLength").Text,
+                                                Width = "100"
+                                            },
+                                            new ColumnProperty(nameof(RecurringPaymentModel.CyclePeriodStr))
+                                            {
+                                                Title = T("Admin.RecurringPayments.Fields.CyclePeriod").Text,
+                                                Width = "100"
+                                            },
+                                            new ColumnProperty(nameof(RecurringPaymentModel.IsActive))
+                                            {
+                                                Title = T("Admin.RecurringPayments.Fields.IsActive").Text,
+                                                Width = "200",
+                                                ClassName = NopColumnClassDefaults.CenterAll,
+                                                Render = new RenderBoolean()
+                                            },
+                                            new ColumnProperty(nameof(RecurringPaymentModel.StartDate))
+                                            {
+                                                Title = T("Admin.RecurringPayments.Fields.StartDate").Text,
+                                                Width = "200"
+                                            },
+                                            new ColumnProperty(nameof(RecurringPaymentModel.NextPaymentDate))
+                                            {
+                                                Title = T("Admin.RecurringPayments.Fields.NextPaymentDate").Text,
+                                                Width = "200"
+                                            },
+                                            new ColumnProperty(nameof(RecurringPaymentModel.TotalCycles))
+                                            {
+                                                Title = T("Admin.RecurringPayments.Fields.TotalCycles").Text,
+                                                Width = "100"
+                                            },
+                                            new ColumnProperty(nameof(RecurringPaymentModel.CyclesRemaining))
+                                            {
+                                                Title = T("Admin.RecurringPayments.Fields.CyclesRemaining").Text,
+                                                Width = "100"
+                                            },
+                                            new ColumnProperty(nameof(RecurringPaymentModel.Id))
+                                            {
+                                                Title = T("Admin.Common.Edit").Text,
+                                                Width = "100",
+                                                ClassName = NopColumnClassDefaults.Button,
+                                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                            }
+                                        }
+                                    });
+                            }
 
                             <script asp-location="Footer">
                                 function renderColumnCustomerInfo(data, type, row, meta) {

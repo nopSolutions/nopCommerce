@@ -6,59 +6,61 @@
         <p>
             @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Hint")
         </p>
-        @await Html.PartialAsync("Table", new DataTablesModel
-        {
-            Name = "productattributevalues-grid",
-            UrlRead = new DataUrl("PredefinedProductAttributeValueList", "ProductAttribute", new RouteValueDictionary { [nameof(Model.PredefinedProductAttributeValueSearchModel.ProductAttributeId)] = Model.PredefinedProductAttributeValueSearchModel.ProductAttributeId }),
-            UrlDelete = new DataUrl("PredefinedProductAttributeValueDelete", "ProductAttribute", null),
-            Length = Model.PredefinedProductAttributeValueSearchModel.PageSize,
-            LengthMenu = Model.PredefinedProductAttributeValueSearchModel.AvailablePageSizes,
-            ColumnCollection = new List<ColumnProperty>
+        @{
+            await Html.RenderPartialAsync("Table", new DataTablesModel
             {
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Name))
+                Name = "productattributevalues-grid",
+                UrlRead = new DataUrl("PredefinedProductAttributeValueList", "ProductAttribute", new RouteValueDictionary { [nameof(Model.PredefinedProductAttributeValueSearchModel.ProductAttributeId)] = Model.PredefinedProductAttributeValueSearchModel.ProductAttributeId }),
+                UrlDelete = new DataUrl("PredefinedProductAttributeValueDelete", "ProductAttribute", null),
+                Length = Model.PredefinedProductAttributeValueSearchModel.PageSize,
+                LengthMenu = Model.PredefinedProductAttributeValueSearchModel.AvailablePageSizes,
+                ColumnCollection = new List<ColumnProperty>
                 {
-                    Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name").Text,
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.PriceAdjustmentStr))
-                {
-                    Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment").Text,
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.WeightAdjustmentStr))
-                {
-                    Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment").Text,
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.IsPreSelected))
-                {
-                    Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.IsPreSelected").Text,
-                    Width = "100",
-                    ClassName = NopColumnClassDefaults.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.DisplayOrder))
-                {
-                    Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder").Text,
-                    Width = "100",
-                    ClassName = NopColumnClassDefaults.CenterAll
-                },
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Id))
-                {
-                    Title = T("Admin.Common.Edit").Text,
-                    Width = "100",
-                    ClassName =  NopColumnClassDefaults.Button,
-                    Render = new RenderCustom("renderColumnEdit")
-                },
-                new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Id))
-                {
-                    Title = T("Admin.Common.Delete").Text,
-                    Width = "100",
-                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
-                    ClassName =  NopColumnClassDefaults.Button
+                    new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Name))
+                    {
+                        Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name").Text,
+                        Width = "200"
+                    },
+                    new ColumnProperty(nameof(PredefinedProductAttributeValueModel.PriceAdjustmentStr))
+                    {
+                        Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment").Text,
+                        Width = "150"
+                    },
+                    new ColumnProperty(nameof(PredefinedProductAttributeValueModel.WeightAdjustmentStr))
+                    {
+                        Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment").Text,
+                        Width = "150"
+                    },
+                    new ColumnProperty(nameof(PredefinedProductAttributeValueModel.IsPreSelected))
+                    {
+                        Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.IsPreSelected").Text,
+                        Width = "100",
+                        ClassName = NopColumnClassDefaults.CenterAll,
+                        Render = new RenderBoolean()
+                    },
+                    new ColumnProperty(nameof(PredefinedProductAttributeValueModel.DisplayOrder))
+                    {
+                        Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder").Text,
+                        Width = "100",
+                        ClassName = NopColumnClassDefaults.CenterAll
+                    },
+                    new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Id))
+                    {
+                        Title = T("Admin.Common.Edit").Text,
+                        Width = "100",
+                        ClassName =  NopColumnClassDefaults.Button,
+                        Render = new RenderCustom("renderColumnEdit")
+                    },
+                    new ColumnProperty(nameof(PredefinedProductAttributeValueModel.Id))
+                    {
+                        Title = T("Admin.Common.Delete").Text,
+                        Width = "100",
+                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                        ClassName =  NopColumnClassDefaults.Button
+                    }
                 }
-            }
-        })
+            });
+        }
     
         <script>
             function renderColumnEdit(data, type, row, meta) {

@@ -374,7 +374,9 @@
                                     Render = new RenderButtonEdit(new DataUrl("Edit"))
                                 });
                             }
-                            @await Html.PartialAsync("Table", gridModel)
+                            @{
+                                await Html.RenderPartialAsync("Table", gridModel);
+                            }
                         </div>
                     </div>
                 </div>

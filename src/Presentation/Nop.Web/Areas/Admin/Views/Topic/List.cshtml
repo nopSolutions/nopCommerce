@@ -21,7 +21,9 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-@await Html.PartialAsync("_AdminTour")
+@{
+    await Html.RenderPartialAsync("_AdminTour");
+}
 
 <div class="content-header clearfix">
     <h1 class="float-left">
@@ -85,89 +87,91 @@
                 <div class="card-body" id="topics-area">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.TopicsPages", Docs.TopicsPages + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "topics-grid",
-                        RowIdBasedOnField = nameof(TopicModel.TopicName),
-                        UrlRead = new DataUrl("List", "Topic", null),
-                        SearchButtonId = "search-topics",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.SearchKeywords)),
-                            new FilterParameter(nameof(Model.SearchStoreId))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(TopicModel.TopicName))
+                            Name = "topics-grid",
+                            RowIdBasedOnField = nameof(TopicModel.TopicName),
+                            UrlRead = new DataUrl("List", "Topic", null),
+                            SearchButtonId = "search-topics",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.ContentManagement.Topics.Fields.TopicName").Text
+                                new FilterParameter(nameof(Model.SearchKeywords)),
+                                new FilterParameter(nameof(Model.SearchStoreId))
                             },
-                            new ColumnProperty(nameof(TopicModel.Published))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.ContentManagement.Topics.Fields.Published").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(TopicModel.IsPasswordProtected))
-                            {
-                                Title = T("Admin.ContentManagement.Topics.Fields.IsPasswordProtected").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(TopicModel.IncludeInSitemap))
-                            {
-                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInSitemap").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(TopicModel.IncludeInTopMenu))
-                            {
-                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn1))
-                            {
-                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll + " column-footer-column1",
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn2))
-                            {
-                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn3))
-                            {
-                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(TopicModel.DisplayOrder))
-                            {
-                                Title = T("Admin.ContentManagement.Topics.Fields.DisplayOrder").Text,
-                                Width = "100",
-                                ClassName = NopColumnClassDefaults.CenterAll
-                            },
-                            new ColumnProperty(nameof(TopicModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName = NopColumnClassDefaults.Button + " column-edit",
-                                Render = new RenderCustom("renderColumnEdit")
+                                new ColumnProperty(nameof(TopicModel.TopicName))
+                                {
+                                    Title = T("Admin.ContentManagement.Topics.Fields.TopicName").Text
+                                },
+                                new ColumnProperty(nameof(TopicModel.Published))
+                                {
+                                    Title = T("Admin.ContentManagement.Topics.Fields.Published").Text,
+                                    Width = "150",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(TopicModel.IsPasswordProtected))
+                                {
+                                    Title = T("Admin.ContentManagement.Topics.Fields.IsPasswordProtected").Text,
+                                    Width = "150",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(TopicModel.IncludeInSitemap))
+                                {
+                                    Title = T("Admin.ContentManagement.Topics.Fields.IncludeInSitemap").Text,
+                                    Width = "150",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(TopicModel.IncludeInTopMenu))
+                                {
+                                    Title = T("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu").Text,
+                                    Width = "150",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn1))
+                                {
+                                    Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1").Text,
+                                    Width = "150",
+                                    ClassName = NopColumnClassDefaults.CenterAll + " column-footer-column1",
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn2))
+                                {
+                                    Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2").Text,
+                                    Width = "150",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn3))
+                                {
+                                    Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3").Text,
+                                    Width = "150",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(TopicModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.ContentManagement.Topics.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll
+                                },
+                                new ColumnProperty(nameof(TopicModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.Button + " column-edit",
+                                    Render = new RenderCustom("renderColumnEdit")
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
             </div>
         </div>

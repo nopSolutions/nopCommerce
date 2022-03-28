@@ -221,38 +221,40 @@
                             </div>
                         }
 
-                        @await Html.PartialAsync("Table", new DataTablesModel
-                        {
-                            Name = "grid",
-                            UrlRead = new DataUrl("CustomEventList", "FacebookPixel", new RouteValueDictionary { [nameof(Model.CustomEventSearchModel.ConfigurationId)] = Model.Id }),
-                            UrlDelete = new DataUrl("CustomEventDelete", "FacebookPixel", new RouteValueDictionary { [nameof(Model.CustomEventSearchModel.ConfigurationId)] = Model.Id }),
-                            SearchButtonId = "search",
-                            Length = Model.CustomEventSearchModel.PageSize,
-                            LengthMenu = Model.CustomEventSearchModel.AvailablePageSizes,
-                            Filters = new List<FilterParameter>
+                        @{
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
                             {
-                                new FilterParameter(nameof(Model.CustomEventSearchModel.WidgetZone), nameof(CustomEventSearchModel))
-                            },
-                            ColumnCollection = new List<ColumnProperty>
-                            {
-                                new ColumnProperty(nameof(CustomEventModel.EventName))
+                                Name = "grid",
+                                UrlRead = new DataUrl("CustomEventList", "FacebookPixel", new RouteValueDictionary { [nameof(Model.CustomEventSearchModel.ConfigurationId)] = Model.Id }),
+                                UrlDelete = new DataUrl("CustomEventDelete", "FacebookPixel", new RouteValueDictionary { [nameof(Model.CustomEventSearchModel.ConfigurationId)] = Model.Id }),
+                                SearchButtonId = "search",
+                                Length = Model.CustomEventSearchModel.PageSize,
+                                LengthMenu = Model.CustomEventSearchModel.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
                                 {
-                                    Title = T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName").Text,
-                                    Width = "200"
+                                    new FilterParameter(nameof(Model.CustomEventSearchModel.WidgetZone), nameof(CustomEventSearchModel))
                                 },
-                                new ColumnProperty(nameof(CustomEventModel.WidgetZonesName))
+                                ColumnCollection = new List<ColumnProperty>
                                 {
-                                    Title = T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones").Text
-                                },
-                                new ColumnProperty(nameof(CustomEventModel.EventName))
-                                {
-                                    Title = T("Admin.Common.Delete").Text,
-                                    Width = "100",
-                                    ClassName =  NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                    new ColumnProperty(nameof(CustomEventModel.EventName))
+                                    {
+                                        Title = T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName").Text,
+                                        Width = "200"
+                                    },
+                                    new ColumnProperty(nameof(CustomEventModel.WidgetZonesName))
+                                    {
+                                        Title = T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones").Text
+                                    },
+                                    new ColumnProperty(nameof(CustomEventModel.EventName))
+                                    {
+                                        Title = T("Admin.Common.Delete").Text,
+                                        Width = "100",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                    }
                                 }
-                            }
-                        })
+                            });
+                        }
                     </div>
                     <div class="card-footer">
                         <div class="form-group row">

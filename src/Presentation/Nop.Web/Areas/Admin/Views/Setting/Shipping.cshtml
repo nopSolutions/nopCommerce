@@ -44,10 +44,26 @@
                 <div asp-validation-summary="All"></div>
 
                 <nop-cards id="product-cards">
-                    <nop-card asp-name="product-info" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.Shipping.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Shipping.Common", Model)</nop-card>
-                    <nop-card asp-name="product-notifications" asp-icon="fas fa-bell" asp-title="@T("Admin.Configuration.Settings.Shipping.BlockTitle.Notifications")" asp-hide-block-attribute-name="@hideNotificationsBlockAttributeName" asp-hide="@hideNotificationsBlock" asp-advanced="true">@await Html.PartialAsync("_Shipping.Notifications", Model)</nop-card>
-                    <nop-card asp-name="product-checkout" asp-icon="far fa-credit-card" asp-title="@T("Admin.Configuration.Settings.Shipping.BlockTitle.Checkout")" asp-hide-block-attribute-name="@hideCheckoutBlockAttributeName" asp-hide="@hideCheckoutBlock" asp-advanced="false">@await Html.PartialAsync("_Shipping.Checkout", Model)</nop-card>
-                    <nop-card asp-name="product-shipping-origin" asp-icon="fas fa-truck" asp-title="@T("Admin.Configuration.Settings.Shipping.ShippingOriginAddress")" asp-hide-block-attribute-name="@hideShippingOriginBlockAttributeName" asp-hide="@hideShippingOriginBlock" asp-advanced="false">@await Html.PartialAsync("_Shipping.ShippingOrigin", Model)</nop-card>
+                    <nop-card asp-name="product-info" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.Shipping.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">
+                        @{
+                            await Html.RenderPartialAsync("_Shipping.Common", Model);
+                        }
+                    </nop-card>
+                    <nop-card asp-name="product-notifications" asp-icon="fas fa-bell" asp-title="@T("Admin.Configuration.Settings.Shipping.BlockTitle.Notifications")" asp-hide-block-attribute-name="@hideNotificationsBlockAttributeName" asp-hide="@hideNotificationsBlock" asp-advanced="true">
+                        @{
+                            await Html.RenderPartialAsync("_Shipping.Notifications", Model);
+                        }
+                    </nop-card>
+                    <nop-card asp-name="product-checkout" asp-icon="far fa-credit-card" asp-title="@T("Admin.Configuration.Settings.Shipping.BlockTitle.Checkout")" asp-hide-block-attribute-name="@hideCheckoutBlockAttributeName" asp-hide="@hideCheckoutBlock" asp-advanced="false">
+                        @{
+                            await Html.RenderPartialAsync("_Shipping.Checkout", Model);
+                        }
+                    </nop-card>
+                    <nop-card asp-name="product-shipping-origin" asp-icon="fas fa-truck" asp-title="@T("Admin.Configuration.Settings.Shipping.ShippingOriginAddress")" asp-hide-block-attribute-name="@hideShippingOriginBlockAttributeName" asp-hide="@hideShippingOriginBlock" asp-advanced="false">
+                        @{
+                            await Html.RenderPartialAsync("_Shipping.ShippingOrigin", Model);
+                        }
+                    </nop-card>
 
                     @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShippingDetailsBlock, additionalData = Model })
                 </nop-cards>

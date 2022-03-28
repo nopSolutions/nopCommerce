@@ -60,59 +60,61 @@
 
     <div class="card">
         <div class="card-body">
-            @await Html.PartialAsync("Table", new DataTablesModel
-            {
-                Name = "orders-grid",
-                UrlRead = new DataUrl("AffiliatedOrderListGrid", "Affiliate", new RouteValueDictionary { [nameof(Model.AffiliatedOrderSearchModel.AffliateId)] = Model.AffiliatedOrderSearchModel.AffliateId }),
-                SearchButtonId = "search-orders",
-                Length = Model.AffiliatedOrderSearchModel.PageSize,
-                LengthMenu = Model.AffiliatedOrderSearchModel.AvailablePageSizes,
-                Filters = new List<FilterParameter>
+            @{
+                await Html.RenderPartialAsync("Table", new DataTablesModel
                 {
-                    new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.StartDate), nameof(AffiliatedOrderSearchModel)),
-                    new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.EndDate), nameof(AffiliatedOrderSearchModel)),
-                    new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.OrderStatusId), nameof(AffiliatedOrderSearchModel)),
-                    new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.PaymentStatusId), nameof(AffiliatedOrderSearchModel)),
-                    new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.ShippingStatusId), nameof(AffiliatedOrderSearchModel))
-                },
-                ColumnCollection = new List<ColumnProperty>
-                {
-                    new ColumnProperty(nameof(AffiliatedOrderModel.CustomOrderNumber))
+                    Name = "orders-grid",
+                    UrlRead = new DataUrl("AffiliatedOrderListGrid", "Affiliate", new RouteValueDictionary { [nameof(Model.AffiliatedOrderSearchModel.AffliateId)] = Model.AffiliatedOrderSearchModel.AffliateId }),
+                    SearchButtonId = "search-orders",
+                    Length = Model.AffiliatedOrderSearchModel.PageSize,
+                    LengthMenu = Model.AffiliatedOrderSearchModel.AvailablePageSizes,
+                    Filters = new List<FilterParameter>
                     {
-                        Title = T("Admin.Affiliates.Orders.CustomOrderNumber").Text,
-                        Width = "200"
+                        new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.StartDate), nameof(AffiliatedOrderSearchModel)),
+                        new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.EndDate), nameof(AffiliatedOrderSearchModel)),
+                        new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.OrderStatusId), nameof(AffiliatedOrderSearchModel)),
+                        new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.PaymentStatusId), nameof(AffiliatedOrderSearchModel)),
+                        new FilterParameter(nameof(Model.AffiliatedOrderSearchModel.ShippingStatusId), nameof(AffiliatedOrderSearchModel))
                     },
-                    new ColumnProperty(nameof(AffiliatedOrderModel.OrderStatus))
+                    ColumnCollection = new List<ColumnProperty>
                     {
-                        Title = T("Admin.Affiliates.Orders.OrderStatus").Text,
-                        Render = new RenderCustom("renderOrderStatus")
-                    },
-                    new ColumnProperty(nameof(AffiliatedOrderModel.PaymentStatus))
-                    {
-                        Title = T("Admin.Affiliates.Orders.PaymentStatus").Text
-                    },
-                    new ColumnProperty(nameof(AffiliatedOrderModel.ShippingStatus))
-                    {
-                        Title = T("Admin.Affiliates.Orders.ShippingStatus").Text
-                    },
-                    new ColumnProperty(nameof(AffiliatedOrderModel.OrderTotal))
-                    {
-                        Title = T("Admin.Affiliates.Orders.OrderTotal").Text
-                    },
-                    new ColumnProperty(nameof(AffiliatedOrderModel.CreatedOn))
-                    {
-                        Title = T("Admin.Affiliates.Orders.CreatedOn").Text,
-                        Render = new RenderDate()
-                    },
-                    new ColumnProperty(nameof(AffiliatedOrderModel.Id))
-                    {
-                        Title = T("Admin.Common.View").Text,
-                        Width = "150",
-                        ClassName = NopColumnClassDefaults.Button,
-                        Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit/", nameof(AffiliatedOrderModel.Id)))
+                        new ColumnProperty(nameof(AffiliatedOrderModel.CustomOrderNumber))
+                        {
+                            Title = T("Admin.Affiliates.Orders.CustomOrderNumber").Text,
+                            Width = "200"
+                        },
+                        new ColumnProperty(nameof(AffiliatedOrderModel.OrderStatus))
+                        {
+                            Title = T("Admin.Affiliates.Orders.OrderStatus").Text,
+                            Render = new RenderCustom("renderOrderStatus")
+                        },
+                        new ColumnProperty(nameof(AffiliatedOrderModel.PaymentStatus))
+                        {
+                            Title = T("Admin.Affiliates.Orders.PaymentStatus").Text
+                        },
+                        new ColumnProperty(nameof(AffiliatedOrderModel.ShippingStatus))
+                        {
+                            Title = T("Admin.Affiliates.Orders.ShippingStatus").Text
+                        },
+                        new ColumnProperty(nameof(AffiliatedOrderModel.OrderTotal))
+                        {
+                            Title = T("Admin.Affiliates.Orders.OrderTotal").Text
+                        },
+                        new ColumnProperty(nameof(AffiliatedOrderModel.CreatedOn))
+                        {
+                            Title = T("Admin.Affiliates.Orders.CreatedOn").Text,
+                            Render = new RenderDate()
+                        },
+                        new ColumnProperty(nameof(AffiliatedOrderModel.Id))
+                        {
+                            Title = T("Admin.Common.View").Text,
+                            Width = "150",
+                            ClassName = NopColumnClassDefaults.Button,
+                            Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit/", nameof(AffiliatedOrderModel.Id)))
+                        }
                     }
-                }
-            })
+                });
+            }
  
             <script>
                 var selectedIds = [];

@@ -65,7 +65,7 @@
                     <div class="section payment-method">
                         @if (Model.Providers.Count > 0)
                         {
-                            @await Html.PartialAsync("_MultiFactorAuthenticationProviders", Model.Providers)
+                            await Html.RenderPartialAsync("_MultiFactorAuthenticationProviders", Model.Providers);
                         }
                         else
                         {

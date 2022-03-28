@@ -20,7 +20,9 @@
 
     <div class="content">
         <div class="form-horizontal">
-            @await Html.PartialAsync("~/Plugins/Pickup.PickupInStore/Views/_CreateOrUpdate.cshtml", Model)
+            @{
+                await Html.RenderPartialAsync("~/Plugins/Pickup.PickupInStore/Views/_CreateOrUpdate.cshtml", Model);
+            }
         </div>
     </div>
 </form>

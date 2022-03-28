@@ -39,76 +39,78 @@
                         <strong>@T("Admin.System.ScheduleTasks.RestartApplication")</strong>
                     </p>
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "schedule-tasks-grid",
-                        UrlRead = new DataUrl("List", "ScheduleTask", null),
-                        UrlUpdate = new DataUrl("TaskUpdate", "ScheduleTask", null),
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        ColumnCollection = new List<ColumnProperty>
-                            {
-                                new ColumnProperty(nameof(ScheduleTaskModel.Name))
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "schedule-tasks-grid",
+                            UrlRead = new DataUrl("List", "ScheduleTask", null),
+                            UrlUpdate = new DataUrl("TaskUpdate", "ScheduleTask", null),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
                                 {
-                                    Title = T("Admin.System.ScheduleTasks.Name").Text,
-                                    Width = "300"
-                                },
-                                new ColumnProperty(nameof(ScheduleTaskModel.Seconds))
-                                {
-                                    Title = T("Admin.System.ScheduleTasks.Seconds").Text,
-                                    Width = "150",
-                                    Editable = true,
-                                    EditType = EditType.Number
-                                },
-                                new ColumnProperty(nameof(ScheduleTaskModel.Enabled))
-                                {
-                                    Title = T("Admin.System.ScheduleTasks.Enabled").Text,
-                                    Width = "100",
-                                    ClassName = NopColumnClassDefaults.CenterAll,
-                                    Render = new RenderBoolean(),
-                                    Editable = true,
-                                    EditType = EditType.Checkbox
-                                },
-                                new ColumnProperty(nameof(ScheduleTaskModel.StopOnError))
-                                {
-                                    Title = T("Admin.System.ScheduleTasks.StopOnError").Text,
-                                    Width = "100",
-                                    ClassName = NopColumnClassDefaults.CenterAll,
-                                    Render = new RenderBoolean(),
-                                    Editable = true,
-                                    EditType = EditType.Checkbox
-                                },
-                                new ColumnProperty(nameof(ScheduleTaskModel.LastStartUtc))
-                                {
-                                    Title = T("Admin.System.ScheduleTasks.LastStart").Text,
-                                    Width = "200"
-                                },
-                                new ColumnProperty(nameof(ScheduleTaskModel.LastEndUtc))
-                                {
-                                    Title = T("Admin.System.ScheduleTasks.LastEnd").Text,
-                                    Width = "200"
-                                },
-                                new ColumnProperty(nameof(ScheduleTaskModel.LastSuccessUtc))
-                                {
-                                    Title = T("Admin.System.ScheduleTasks.LastSuccess").Text,
-                                    Width = "200"
-                                },
-                                new ColumnProperty(nameof(ScheduleTaskModel.Id))
-                                {
-                                    Title = T("Admin.System.ScheduleTasks.RunNow").Text,
-                                    Width = "100",
-                                    ClassName =  NopColumnClassDefaults.Button,
-                                    Render = new RenderCustom("renderColumnRunNow")
-                                },
-                                new ColumnProperty(nameof(ScheduleTaskModel.Id))
-                                {
-                                    Title = T("Admin.Common.Edit").Text,
-                                    Width = "200",
-                                    ClassName =  NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonsInlineEdit()
+                                    new ColumnProperty(nameof(ScheduleTaskModel.Name))
+                                    {
+                                        Title = T("Admin.System.ScheduleTasks.Name").Text,
+                                        Width = "300"
+                                    },
+                                    new ColumnProperty(nameof(ScheduleTaskModel.Seconds))
+                                    {
+                                        Title = T("Admin.System.ScheduleTasks.Seconds").Text,
+                                        Width = "150",
+                                        Editable = true,
+                                        EditType = EditType.Number
+                                    },
+                                    new ColumnProperty(nameof(ScheduleTaskModel.Enabled))
+                                    {
+                                        Title = T("Admin.System.ScheduleTasks.Enabled").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean(),
+                                        Editable = true,
+                                        EditType = EditType.Checkbox
+                                    },
+                                    new ColumnProperty(nameof(ScheduleTaskModel.StopOnError))
+                                    {
+                                        Title = T("Admin.System.ScheduleTasks.StopOnError").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean(),
+                                        Editable = true,
+                                        EditType = EditType.Checkbox
+                                    },
+                                    new ColumnProperty(nameof(ScheduleTaskModel.LastStartUtc))
+                                    {
+                                        Title = T("Admin.System.ScheduleTasks.LastStart").Text,
+                                        Width = "200"
+                                    },
+                                    new ColumnProperty(nameof(ScheduleTaskModel.LastEndUtc))
+                                    {
+                                        Title = T("Admin.System.ScheduleTasks.LastEnd").Text,
+                                        Width = "200"
+                                    },
+                                    new ColumnProperty(nameof(ScheduleTaskModel.LastSuccessUtc))
+                                    {
+                                        Title = T("Admin.System.ScheduleTasks.LastSuccess").Text,
+                                        Width = "200"
+                                    },
+                                    new ColumnProperty(nameof(ScheduleTaskModel.Id))
+                                    {
+                                        Title = T("Admin.System.ScheduleTasks.RunNow").Text,
+                                        Width = "100",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderCustom("renderColumnRunNow")
+                                    },
+                                    new ColumnProperty(nameof(ScheduleTaskModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "200",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonsInlineEdit()
+                                    }
                                 }
-                            }
-                    })
+                        });
+                    }
 
                     <script>
                         function renderColumnRunNow(data, type, row, meta) {

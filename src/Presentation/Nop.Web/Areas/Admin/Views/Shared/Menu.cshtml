@@ -33,7 +33,7 @@
         //display menu items
         foreach (var item in rootNode.ChildNodes.Where(x => x.Visible))
         {
-            @await Html.PartialAsync("_MenuItem", item)
+            await Html.RenderPartialAsync("_MenuItem", item);
         }
     }
 </ul>

@@ -76,57 +76,59 @@
 
             <div class="card card-default">
                 <div class="card-body">
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "settings-grid",
-                        UrlRead = new DataUrl("AllSettings", "Setting", null),
-                        UrlUpdate = new DataUrl("SettingUpdate", "Setting", null),
-                        UrlDelete = new DataUrl("SettingDelete", "Setting", null),
-                        SearchButtonId = "search-settings",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.SearchSettingName)),
-                            new FilterParameter(nameof(Model.SearchSettingValue))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(SettingModel.Name))
+                            Name = "settings-grid",
+                            UrlRead = new DataUrl("AllSettings", "Setting", null),
+                            UrlUpdate = new DataUrl("SettingUpdate", "Setting", null),
+                            UrlDelete = new DataUrl("SettingDelete", "Setting", null),
+                            SearchButtonId = "search-settings",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.Configuration.Settings.AllSettings.Fields.Name").Text,
-                                Width = "300",
-                                Editable = true,
-                                EditType = EditType.String
+                                new FilterParameter(nameof(Model.SearchSettingName)),
+                                new FilterParameter(nameof(Model.SearchSettingValue))
                             },
-                            new ColumnProperty(nameof(SettingModel.Value))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.Configuration.Settings.AllSettings.Fields.Value").Text,
-                                Width = "300",
-                                Editable = true,
-                                EditType = EditType.String
-                            },
-                            new ColumnProperty(nameof(SettingModel.Store))
-                            {
-                                Title = T("Admin.Configuration.Settings.AllSettings.Fields.StoreName").Text,
-                                Width = "200"
-                            },
-                            new ColumnProperty(nameof(SettingModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "200",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonsInlineEdit()
-                            },
-                            new ColumnProperty(nameof(SettingModel.Id))
-                            {
-                                Title = T("Admin.Common.Delete").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                new ColumnProperty(nameof(SettingModel.Name))
+                                {
+                                    Title = T("Admin.Configuration.Settings.AllSettings.Fields.Name").Text,
+                                    Width = "300",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(SettingModel.Value))
+                                {
+                                    Title = T("Admin.Configuration.Settings.AllSettings.Fields.Value").Text,
+                                    Width = "300",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(SettingModel.Store))
+                                {
+                                    Title = T("Admin.Configuration.Settings.AllSettings.Fields.StoreName").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(SettingModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonsInlineEdit()
+                                },
+                                new ColumnProperty(nameof(SettingModel.Id))
+                                {
+                                    Title = T("Admin.Common.Delete").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
                 <div class="card card-default">
                     <div class="card-header">

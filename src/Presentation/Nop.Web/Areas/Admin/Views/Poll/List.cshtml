@@ -69,69 +69,71 @@
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Polls", Docs.Polls + Utm.OnAdmin)" />
 
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "polls-grid",
-                        UrlRead = new DataUrl("List", "Poll", null),
-                        SearchButtonId = "search-poll",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
                         {
-                            new FilterParameter(nameof(Model.SearchStoreId))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(PollModel.Name))
+                            Name = "polls-grid",
+                            UrlRead = new DataUrl("List", "Poll", null),
+                            SearchButtonId = "search-poll",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
                             {
-                                Title = T("Admin.ContentManagement.Polls.Fields.Name").Text
+                                new FilterParameter(nameof(Model.SearchStoreId))
                             },
-                            new ColumnProperty(nameof(PollModel.LanguageName))
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.ContentManagement.Polls.Fields.Language").Text,
-                                Width = "100"
-                            },
-                            new ColumnProperty(nameof(PollModel.DisplayOrder))
-                            {
-                                Title = T("Admin.ContentManagement.Polls.Fields.DisplayOrder").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll
-                            },
-                            new ColumnProperty(nameof(PollModel.Published))
-                            {
-                                Title = T("Admin.ContentManagement.Polls.Fields.Published").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(PollModel.ShowOnHomepage))
-                            {
-                                Title = T("Admin.ContentManagement.Polls.Fields.ShowOnHomepage").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(PollModel.StartDateUtc))
-                            {
-                                Title = T("Admin.ContentManagement.Polls.Fields.StartDate").Text,
-                                Width = "150",
-                                Render = new RenderDate()
-                            },
-                            new ColumnProperty(nameof(PollModel.EndDateUtc))
-                            {
-                                Title = T("Admin.ContentManagement.Polls.Fields.EndDate").Text,
-                                Width = "150",
-                                Render = new RenderDate()
-                            },
-                            new ColumnProperty(nameof(PollModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                new ColumnProperty(nameof(PollModel.Name))
+                                {
+                                    Title = T("Admin.ContentManagement.Polls.Fields.Name").Text
+                                },
+                                new ColumnProperty(nameof(PollModel.LanguageName))
+                                {
+                                    Title = T("Admin.ContentManagement.Polls.Fields.Language").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(PollModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.ContentManagement.Polls.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll
+                                },
+                                new ColumnProperty(nameof(PollModel.Published))
+                                {
+                                    Title = T("Admin.ContentManagement.Polls.Fields.Published").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(PollModel.ShowOnHomepage))
+                                {
+                                    Title = T("Admin.ContentManagement.Polls.Fields.ShowOnHomepage").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(PollModel.StartDateUtc))
+                                {
+                                    Title = T("Admin.ContentManagement.Polls.Fields.StartDate").Text,
+                                    Width = "150",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(PollModel.EndDateUtc))
+                                {
+                                    Title = T("Admin.ContentManagement.Polls.Fields.EndDate").Text,
+                                    Width = "150",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(PollModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
                             }
-                        }
-                    })
+                        });
+                    }
                 </div>
             </div>
         </div>

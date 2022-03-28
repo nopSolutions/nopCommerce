@@ -6,8 +6,8 @@
             <strong>@T("Polls.Title")</strong>
         </div>
         @foreach (var poll in Model)
-        { 
-            @await Html.PartialAsync("_Poll", poll)
+        {
+            await Html.RenderPartialAsync("_Poll", poll);
         }
     </div>
 }

@@ -18,7 +18,7 @@
 
             @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
             {
-                @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel)
+                await Html.RenderPartialAsync("_PickupPoints", Model.PickupPointsModel);
                 <script asp-location="Footer">
                     $(document).ready(function () {
                         $(document).on('checkout_toggle_pickup_in_store', function (e) {
@@ -168,7 +168,7 @@
                             @{
                                 var dataDictAddress = new ViewDataDictionary(ViewData);
                                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
-                                @await Html.PartialAsync("_CreateOrUpdateAddress", Model.ShippingNewAddress, dataDictAddress)
+                                await Html.RenderPartialAsync("_CreateOrUpdateAddress", Model.ShippingNewAddress, dataDictAddress);
                             }
                         </div>
                     </div>

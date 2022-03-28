@@ -37,28 +37,30 @@
         });
     </script>
     <div class="card-body">
-        @await Html.PartialAsync("Table", new DataTablesModel
-        {
-            Name = "search-term-report-grid",
-            UrlRead = new DataUrl("PopularSearchTermsReport", "Common", null),
-            Length = Model.PageSize,
-            LengthMenu = Model.AvailablePageSizes,
-            Dom = "<'row'<'col-md-12't>>" +
-                  "<'row margin-t-5'" +
-                    "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
-                    "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
-                  ">",
-            ColumnCollection = new List<ColumnProperty>
+        @{
+            await Html.RenderPartialAsync("Table", new DataTablesModel
             {
-                new ColumnProperty(nameof(PopularSearchTermModel.Keyword))
+                Name = "search-term-report-grid",
+                UrlRead = new DataUrl("PopularSearchTermsReport", "Common", null),
+                Length = Model.PageSize,
+                LengthMenu = Model.AvailablePageSizes,
+                Dom = "<'row'<'col-md-12't>>" +
+                      "<'row margin-t-5'" +
+                        "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
+                        "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
+                      ">",
+                ColumnCollection = new List<ColumnProperty>
                 {
-                    Title = T("Admin.SearchTermReport.Keyword").Text
-                },
-                new ColumnProperty(nameof(PopularSearchTermModel.Count))
-                {
-                    Title = T("Admin.SearchTermReport.Count").Text
+                    new ColumnProperty(nameof(PopularSearchTermModel.Keyword))
+                    {
+                        Title = T("Admin.SearchTermReport.Keyword").Text
+                    },
+                    new ColumnProperty(nameof(PopularSearchTermModel.Count))
+                    {
+                        Title = T("Admin.SearchTermReport.Count").Text
+                    }
                 }
-            }
-        })
+            });
+        }
     </div>
 </div>

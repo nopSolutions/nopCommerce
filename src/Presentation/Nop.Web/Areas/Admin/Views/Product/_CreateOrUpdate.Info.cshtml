@@ -399,51 +399,53 @@
                 </li>
             </ul>
 
-            @await Html.PartialAsync("Table", new DataTablesModel
-            {
-                Name = "associatedproducts-grid",
-                UrlRead = new DataUrl("AssociatedProductList", "Product", new RouteValueDictionary { [nameof(Model.AssociatedProductSearchModel.ProductId)] = Model.AssociatedProductSearchModel.ProductId }),
-                UrlDelete = new DataUrl("AssociatedProductDelete", "Product", null),
-                UrlUpdate = new DataUrl("AssociatedProductUpdate", "Product", null),
-                Length = Model.AssociatedProductSearchModel.PageSize,
-                LengthMenu = Model.AssociatedProductSearchModel.AvailablePageSizes,
-                ColumnCollection = new List<ColumnProperty>
-                    {
-					new ColumnProperty(nameof(AssociatedProductModel.ProductName))
+            @{
+                await Html.RenderPartialAsync("Table", new DataTablesModel
+                {
+                    Name = "associatedproducts-grid",
+                    UrlRead = new DataUrl("AssociatedProductList", "Product", new RouteValueDictionary { [nameof(Model.AssociatedProductSearchModel.ProductId)] = Model.AssociatedProductSearchModel.ProductId }),
+                    UrlDelete = new DataUrl("AssociatedProductDelete", "Product", null),
+                    UrlUpdate = new DataUrl("AssociatedProductUpdate", "Product", null),
+                    Length = Model.AssociatedProductSearchModel.PageSize,
+                    LengthMenu = Model.AssociatedProductSearchModel.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
                         {
-                            Title = T("Admin.Catalog.Products.AssociatedProducts.Fields.Product").Text
-                        },
-                        new ColumnProperty(nameof(AssociatedProductModel.DisplayOrder))
-                        {
-                            Title = T("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder").Text,
-                            Width = "150",
-                            ClassName = NopColumnClassDefaults.CenterAll,
-                            Editable = true,
-                            EditType = EditType.Number
-                        },
-                        new ColumnProperty(nameof(AssociatedProductModel.Id))
-                        {
-                            Title = T("Admin.Common.View").Text,
-                            Width = "150",
-                            ClassName = NopColumnClassDefaults.Button,
-                            Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/", nameof(AssociatedProductModel.Id)))
-                        },
-                        new ColumnProperty(nameof(AssociatedProductModel.Id))
-                        {
-                            Title = T("Admin.Common.Edit").Text,
-                            Width = "200",
-                            ClassName =  NopColumnClassDefaults.Button,
-                            Render = new RenderButtonsInlineEdit()
-                        },
-                        new ColumnProperty(nameof(AssociatedProductModel.Id))
-                        {
-                            Title = T("Admin.Common.Delete").Text,
-                            Width = "100",
-                            Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
-                            ClassName = NopColumnClassDefaults.Button
-                        }                               
-                    }
-                })
+					    new ColumnProperty(nameof(AssociatedProductModel.ProductName))
+                            {
+                                Title = T("Admin.Catalog.Products.AssociatedProducts.Fields.Product").Text
+                            },
+                            new ColumnProperty(nameof(AssociatedProductModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Editable = true,
+                                EditType = EditType.Number
+                            },
+                            new ColumnProperty(nameof(AssociatedProductModel.Id))
+                            {
+                                Title = T("Admin.Common.View").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/", nameof(AssociatedProductModel.Id)))
+                            },
+                            new ColumnProperty(nameof(AssociatedProductModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "200",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonsInlineEdit()
+                            },
+                            new ColumnProperty(nameof(AssociatedProductModel.Id))
+                            {
+                                Title = T("Admin.Common.Delete").Text,
+                                Width = "100",
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                ClassName = NopColumnClassDefaults.Button
+                            }                               
+                        }
+                    });
+                }
             </div>
             <div class="card-footer">
                 <button type="submit" id="btnAddNewAssociatedProduct" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form"}))', 800, 800, true); return false;" class="btn btn-primary">

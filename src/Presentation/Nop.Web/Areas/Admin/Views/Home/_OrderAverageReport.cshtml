@@ -34,40 +34,42 @@
         });
     </script>
     <div class="card-body" style="padding-bottom: 22px;">
-        @await Html.PartialAsync("Table", new DataTablesModel
-        {
-            Name = "average-order-report-grid",
-            UrlRead = new DataUrl("OrderAverageReportList", "Order", null),
-            Length = int.MaxValue,
-            Paging = false,
-            Info = false,
-            ColumnCollection = new List<ColumnProperty>
+        @{
+            await Html.RenderPartialAsync("Table", new DataTablesModel
             {
-                new ColumnProperty(nameof(OrderAverageReportModel.OrderStatus))
+                Name = "average-order-report-grid",
+                UrlRead = new DataUrl("OrderAverageReportList", "Order", null),
+                Length = int.MaxValue,
+                Paging = false,
+                Info = false,
+                ColumnCollection = new List<ColumnProperty>
                 {
-                    Title = T("Admin.SalesReport.Average.OrderStatus").Text
-                },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumTodayOrders))
-                {
-                    Title = T("Admin.SalesReport.Average.SumTodayOrders").Text
-                },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumThisWeekOrders))
-                {
-                    Title = T("Admin.SalesReport.Average.SumThisWeekOrders").Text
-                },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumThisMonthOrders))
-                {
-                    Title = T("Admin.SalesReport.Average.SumThisMonthOrders").Text
-                },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumThisYearOrders))
-                {
-                    Title = T("Admin.SalesReport.Average.SumThisYearOrders").Text
-                },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumAllTimeOrders))
-                {
-                    Title = T("Admin.SalesReport.Average.SumAllTimeOrders").Text
+                    new ColumnProperty(nameof(OrderAverageReportModel.OrderStatus))
+                    {
+                        Title = T("Admin.SalesReport.Average.OrderStatus").Text
+                    },
+                    new ColumnProperty(nameof(OrderAverageReportModel.SumTodayOrders))
+                    {
+                        Title = T("Admin.SalesReport.Average.SumTodayOrders").Text
+                    },
+                    new ColumnProperty(nameof(OrderAverageReportModel.SumThisWeekOrders))
+                    {
+                        Title = T("Admin.SalesReport.Average.SumThisWeekOrders").Text
+                    },
+                    new ColumnProperty(nameof(OrderAverageReportModel.SumThisMonthOrders))
+                    {
+                        Title = T("Admin.SalesReport.Average.SumThisMonthOrders").Text
+                    },
+                    new ColumnProperty(nameof(OrderAverageReportModel.SumThisYearOrders))
+                    {
+                        Title = T("Admin.SalesReport.Average.SumThisYearOrders").Text
+                    },
+                    new ColumnProperty(nameof(OrderAverageReportModel.SumAllTimeOrders))
+                    {
+                        Title = T("Admin.SalesReport.Average.SumAllTimeOrders").Text
+                    }
                 }
-            }
-        })
+            });
+        }
     </div>
 </div>

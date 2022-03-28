@@ -41,8 +41,16 @@
                 <div asp-validation-summary="All"></div>
 
                 <nop-cards id="rewardpointssettings-cards">
-                    <nop-card asp-name="rewardpointssettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.RewardPoints.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_RewardPoints.Common", Model)</nop-card>
-                    <nop-card asp-name="rewardpointssettings-earning-reward-points" asp-icon="fas fa-dollar-sign" asp-title="@T("Admin.Configuration.Settings.RewardPoints.Earning")" asp-hide-block-attribute-name="@hideEarningRewardPointsBlockAttributeName" asp-hide="@hideEarningRewardPointsBlock" asp-advanced="false">@await Html.PartialAsync("_RewardPoints.EarningRewardPoints", Model)</nop-card>
+                    <nop-card asp-name="rewardpointssettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.RewardPoints.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">
+                        @{
+                            await Html.RenderPartialAsync("_RewardPoints.Common", Model);
+                        }
+                    </nop-card>
+                    <nop-card asp-name="rewardpointssettings-earning-reward-points" asp-icon="fas fa-dollar-sign" asp-title="@T("Admin.Configuration.Settings.RewardPoints.Earning")" asp-hide-block-attribute-name="@hideEarningRewardPointsBlockAttributeName" asp-hide="@hideEarningRewardPointsBlock" asp-advanced="false">
+                        @{
+                            await Html.RenderPartialAsync("_RewardPoints.EarningRewardPoints", Model);
+                        }
+                    </nop-card>
 
                     @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.RewardPointsSettingsDetailsBlock, additionalData = Model })
                 </nop-cards>

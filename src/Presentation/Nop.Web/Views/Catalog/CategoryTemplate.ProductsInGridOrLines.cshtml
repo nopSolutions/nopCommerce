@@ -28,44 +28,48 @@
 {
     @if (Model.DisplayCategoryBreadcrumb)
     {
-        <div class="breadcrumb">
-            <ul itemscope itemtype="http://schema.org/BreadcrumbList">
-                <li>
-                    <a href="@Url.RouteUrl("Homepage")" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
-                    <span class="delimiter">@breadcrumbDelimiter</span>
-                </li>
-                @{ int position = 1; }
-                @foreach (var cat in Model.CategoryBreadcrumb)
-                {
-                    var isLastCategory = cat.Id == Model.Id;
-                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                        @if (isLastCategory)
-                        {
-                            <strong class="current-item" itemprop="name">@cat.Name</strong>
-                            <span itemprop="item" itemscope itemtype="http://schema.org/Thing"
-                                  id="@Url.RouteUrl("Category", new {SeName = cat.SeName})">
-                            </span>
-                        }
-                        else
-                        {
-                            <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name" itemprop="item">
-                                <span itemprop="name">@cat.Name</span>
-                            </a>
-                            <span class="delimiter">@breadcrumbDelimiter</span>
-                        }
-                        <meta itemprop="position" content="@position" />
-                    </li>
-                    position++;
-                }
-            </ul>
-        </div>
+<div class="breadcrumb">
+    <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+        <li>
+            <a href="@Url.RouteUrl("Homepage")" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
+            <span class="delimiter">@breadcrumbDelimiter</span>
+        </li>
+        @{
+            int position = 1;
+ }
+        @foreach (var cat in Model.CategoryBreadcrumb)
+        {
+        var isLastCategory = cat.Id == Model.Id;
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            @if (isLastCategory)
+            {
+            <strong class="current-item" itemprop="name">@cat.Name</strong>
+            <span itemprop="item" itemscope itemtype="http://schema.org/Thing"
+                  id="@Url.RouteUrl("Category", new {SeName = cat.SeName})">
+            </span>
+            }
+            else
+            {
+            <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name" itemprop="item">
+                <span itemprop="name">@cat.Name</span>
+            </a>
+            <span class="delimiter">@breadcrumbDelimiter</span>
+            }
+            <meta itemprop="position" content="@position" />
+        </li>
+        position++;
+        }
+    </ul>
+</div>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CategoryDetailsAfterBreadcrumb, additionalData = Model })
     }
 }
 
 @section CatalogFilters {
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CategoryDetailsBeforeFilters, additionalData = Model })
-    @await Html.PartialAsync("_CatalogFilters", Model.CatalogProductsModel)
+    @{
+        await Html.RenderPartialAsync("_CatalogFilters", Model.CatalogProductsModel);
+        }
 }
 
 <div class="page category-page">
@@ -119,20 +123,24 @@
                     @foreach (var item in Model.FeaturedProducts)
                     {
                         <div class="item-box">
-                            @await Html.PartialAsync("_ProductBox", item)
+                            @{
+                                await Html.RenderPartialAsync("_ProductBox", item);
+                            }
                         </div>
                     }
                 </div>
             </div>
         }
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CategoryDetailsAfterFeaturedProducts, additionalData = Model })
-        @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
+        @{
+            await Html.RenderPartialAsync("_CatalogSelectors", Model.CatalogProductsModel);
+        }
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CategoryDetailsBeforeProductList, additionalData = Model })
-        @{ 
+        @{
             var catalogProductsViewData = new ViewDataDictionary(ViewData);
             catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("GetCategoryProducts", "Catalog", new { categoryId = Model.Id }));
+            await Html.RenderPartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData);
         }
-        @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CategoryDetailsBottom, additionalData = Model })
     </div>
 </div>

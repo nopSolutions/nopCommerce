@@ -36,9 +36,11 @@
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
-                @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestReason", Model)
+                @{
+                    await Html.RenderPartialAsync("_CreateOrUpdate.ReturnRequestReason", Model);
+                }
             </div>
         </div>
     </section>
 </form>
-<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="returnrequestreason-delete" asp-action="ReturnRequestReasonDelete"/>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="returnrequestreason-delete" asp-action="ReturnRequestReasonDelete" />

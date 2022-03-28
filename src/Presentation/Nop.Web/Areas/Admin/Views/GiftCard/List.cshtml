@@ -86,59 +86,61 @@
                     <div class="card-body">
                         <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.GiftCards", Docs.GiftCards + Utm.OnAdmin)" />
 
-                        @await Html.PartialAsync("Table", new DataTablesModel
-                        {
-                            Name = "giftcards-grid",
-                            UrlRead = new DataUrl("GiftCardList", "GiftCard", null),
-                            SearchButtonId = "search-giftcards",
-                            Length = Model.PageSize,
-                            LengthMenu = Model.AvailablePageSizes,
-                            Filters = new List<FilterParameter>
+                        @{
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
                             {
-                                new FilterParameter(nameof(Model.ActivatedId)),
-                                new FilterParameter(nameof(Model.CouponCode)),
-                                new FilterParameter(nameof(Model.RecipientName))
-                            },
-                            ColumnCollection = new List<ColumnProperty>
-                            {
-                                new ColumnProperty(nameof(GiftCardModel.AmountStr))
+                                Name = "giftcards-grid",
+                                UrlRead = new DataUrl("GiftCardList", "GiftCard", null),
+                                SearchButtonId = "search-giftcards",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
                                 {
-                                    Title = T("Admin.GiftCards.Fields.Amount").Text
+                                    new FilterParameter(nameof(Model.ActivatedId)),
+                                    new FilterParameter(nameof(Model.CouponCode)),
+                                    new FilterParameter(nameof(Model.RecipientName))
                                 },
-                                new ColumnProperty(nameof(GiftCardModel.RemainingAmountStr))
+                                ColumnCollection = new List<ColumnProperty>
                                 {
-                                    Title = T("Admin.GiftCards.Fields.RemainingAmount").Text
-                                },
-                                new ColumnProperty(nameof(GiftCardModel.GiftCardCouponCode))
-                                {
-                                    Title = T("Admin.GiftCards.Fields.GiftCardCouponCode").Text
-                                },
-                                new ColumnProperty(nameof(GiftCardModel.RecipientName))
-                                {
-                                    Title = T("Admin.GiftCards.Fields.RecipientName").Text
-                                },
-                                new ColumnProperty(nameof(GiftCardModel.IsGiftCardActivated))
-                                {
-                                    Title = T("Admin.GiftCards.Fields.IsGiftCardActivated").Text,
-                                    Width = "200",
-                                    ClassName =  NopColumnClassDefaults.CenterAll,
-                                    Render = new RenderBoolean()
-                                },
-                                new ColumnProperty(nameof(GiftCardModel.CreatedOn))
-                                {
-                                    Title = T("Admin.GiftCards.Fields.CreatedOn").Text,
-                                    Width = "200",
-                                    Render = new RenderDate()
-                                },
-                                new ColumnProperty(nameof(GiftCardModel.Id))
-                                {
-                                    Title = T("Admin.Common.Edit").Text,
-                                    Width = "100",
-                                    ClassName =  NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                    new ColumnProperty(nameof(GiftCardModel.AmountStr))
+                                    {
+                                        Title = T("Admin.GiftCards.Fields.Amount").Text
+                                    },
+                                    new ColumnProperty(nameof(GiftCardModel.RemainingAmountStr))
+                                    {
+                                        Title = T("Admin.GiftCards.Fields.RemainingAmount").Text
+                                    },
+                                    new ColumnProperty(nameof(GiftCardModel.GiftCardCouponCode))
+                                    {
+                                        Title = T("Admin.GiftCards.Fields.GiftCardCouponCode").Text
+                                    },
+                                    new ColumnProperty(nameof(GiftCardModel.RecipientName))
+                                    {
+                                        Title = T("Admin.GiftCards.Fields.RecipientName").Text
+                                    },
+                                    new ColumnProperty(nameof(GiftCardModel.IsGiftCardActivated))
+                                    {
+                                        Title = T("Admin.GiftCards.Fields.IsGiftCardActivated").Text,
+                                        Width = "200",
+                                        ClassName =  NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean()
+                                    },
+                                    new ColumnProperty(nameof(GiftCardModel.CreatedOn))
+                                    {
+                                        Title = T("Admin.GiftCards.Fields.CreatedOn").Text,
+                                        Width = "200",
+                                        Render = new RenderDate()
+                                    },
+                                    new ColumnProperty(nameof(GiftCardModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "100",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                    }
                                 }
-                            }
-                        })
+                            });
+                        }
                     </div>
                 </div>
             </div>

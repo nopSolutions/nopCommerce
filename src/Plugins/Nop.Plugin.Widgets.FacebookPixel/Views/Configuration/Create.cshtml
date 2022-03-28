@@ -21,5 +21,7 @@
             </button>
         </div>
     </div>
-    @await Html.PartialAsync("~/Plugins/Widgets.FacebookPixel/Views/Configuration/_CreateOrUpdate.cshtml", Model)
+    @{
+        await Html.RenderPartialAsync("~/Plugins/Widgets.FacebookPixel/Views/Configuration/_CreateOrUpdate.cshtml", Model);
+     }
 </form>

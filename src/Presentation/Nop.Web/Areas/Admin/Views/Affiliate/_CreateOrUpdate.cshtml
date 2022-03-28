@@ -19,11 +19,23 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <nop-cards id="affiliate-cards">
-                <nop-card asp-name="affiliate-info" asp-icon="fas fa-info" asp-title="@T("Admin.Affiliates.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+                <nop-card asp-name="affiliate-info" asp-icon="fas fa-info" asp-title="@T("Admin.Affiliates.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock">
+                    @{
+                        await Html.RenderPartialAsync("_CreateOrUpdate.Info", Model);
+                    }
+                </nop-card>
                 @if (Model.Id > 0)
                 {
-                    <nop-card asp-name="affiliate-customers" asp-icon="fas fa-user" asp-title="@T("Admin.Affiliates.Customers")" asp-hide-block-attribute-name="@hideCustomersBlockAttributeName" asp-hide="@hideCustomersBlock">@await Html.PartialAsync("_CreateOrUpdate.Customers", Model)</nop-card>
-                    <nop-card asp-name="affiliate-orders" asp-icon="fas fa-cart-plus" asp-title="@T("Admin.Affiliates.Orders")" asp-hide-block-attribute-name="@hideOrdersBlockAttributeName" asp-hide="@hideOrdersBlock">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model)</nop-card>
+                    <nop-card asp-name="affiliate-customers" asp-icon="fas fa-user" asp-title="@T("Admin.Affiliates.Customers")" asp-hide-block-attribute-name="@hideCustomersBlockAttributeName" asp-hide="@hideCustomersBlock">
+                        @{
+                            await Html.RenderPartialAsync("_CreateOrUpdate.Customers", Model);
+                        }
+                    </nop-card>
+                    <nop-card asp-name="affiliate-orders" asp-icon="fas fa-cart-plus" asp-title="@T("Admin.Affiliates.Orders")" asp-hide-block-attribute-name="@hideOrdersBlockAttributeName" asp-hide="@hideOrdersBlock">
+                        @{
+                            await Html.RenderPartialAsync("_CreateOrUpdate.Orders", Model);
+                        }
+                    </nop-card>
                 }
 
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AffiliateDetailsBlock, additionalData = Model })

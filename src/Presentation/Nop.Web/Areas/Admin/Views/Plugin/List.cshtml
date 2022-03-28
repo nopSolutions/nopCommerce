@@ -175,54 +175,56 @@
                     <div class="card-body">
                         <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Plugins", Docs.Plugins + Utm.OnAdmin)" />
 
-                        @await Html.PartialAsync("Table", new DataTablesModel
-                        {
-                            Name = "plugins-local-grid",
-                            UrlRead = new DataUrl("ListSelect", "Plugin", null),
-                            SearchButtonId = "search-plugins-local",
-                            Length = Model.PageSize,
-                            LengthMenu = Model.AvailablePageSizes,
-                            Filters = new List<FilterParameter>
+                        @{
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
                             {
-                                new FilterParameter(nameof(Model.SearchFriendlyName)),
-                                new FilterParameter(nameof(Model.SearchGroup)),
-                                new FilterParameter(nameof(Model.SearchLoadModeId)),
-                                new FilterParameter(nameof(Model.SearchAuthor))
-                            },
-                            ColumnCollection = new List<ColumnProperty>
-                            {
-                                new ColumnProperty(nameof(PluginModel.Group))
+                                Name = "plugins-local-grid",
+                                UrlRead = new DataUrl("ListSelect", "Plugin", null),
+                                SearchButtonId = "search-plugins-local",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
                                 {
-                                    Title = T("Admin.Configuration.Plugins.Fields.Group").Text,
-                                    Width = "150"
+                                    new FilterParameter(nameof(Model.SearchFriendlyName)),
+                                    new FilterParameter(nameof(Model.SearchGroup)),
+                                    new FilterParameter(nameof(Model.SearchLoadModeId)),
+                                    new FilterParameter(nameof(Model.SearchAuthor))
                                 },
-                                new ColumnProperty(nameof(PluginModel.LogoUrl))
+                                ColumnCollection = new List<ColumnProperty>
                                 {
-                                    Title = T("Admin.Configuration.Plugins.Fields.Logo").Text,
-                                    Width = "200",
-                                    ClassName = NopColumnClassDefaults.CenterAll,
-                                    Render = new RenderPicture()
-                                },
-                                new ColumnProperty(nameof(PluginModel.Description))
-                                {
-                                    Title = T("Admin.Configuration.Plugins.Info").Text,
-                                    Width = "400",
-                                    Render = new RenderCustom("renderColumnDescription")
-                                },
-                                new ColumnProperty(nameof(PluginModel.FriendlyName))
-                                {
-                                    Title = T("Admin.Configuration.Plugins.AdditionalInfo").Text,
-                                    Render = new RenderCustom("renderColumnFriendlyName")
-                                },
-                                new ColumnProperty(nameof(PluginModel.Installed))
-                                {
-                                    Title = T("Admin.Configuration.Plugins.Fields.Installation").Text,
-                                    Width = "100",
-                                    ClassName =  NopColumnClassDefaults.Button,
-                                    Render = new RenderCustom("renderColumnInstalled")
+                                    new ColumnProperty(nameof(PluginModel.Group))
+                                    {
+                                        Title = T("Admin.Configuration.Plugins.Fields.Group").Text,
+                                        Width = "150"
+                                    },
+                                    new ColumnProperty(nameof(PluginModel.LogoUrl))
+                                    {
+                                        Title = T("Admin.Configuration.Plugins.Fields.Logo").Text,
+                                        Width = "200",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderPicture()
+                                    },
+                                    new ColumnProperty(nameof(PluginModel.Description))
+                                    {
+                                        Title = T("Admin.Configuration.Plugins.Info").Text,
+                                        Width = "400",
+                                        Render = new RenderCustom("renderColumnDescription")
+                                    },
+                                    new ColumnProperty(nameof(PluginModel.FriendlyName))
+                                    {
+                                        Title = T("Admin.Configuration.Plugins.AdditionalInfo").Text,
+                                        Render = new RenderCustom("renderColumnFriendlyName")
+                                    },
+                                    new ColumnProperty(nameof(PluginModel.Installed))
+                                    {
+                                        Title = T("Admin.Configuration.Plugins.Fields.Installation").Text,
+                                        Width = "100",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderCustom("renderColumnInstalled")
+                                    }
                                 }
-                            }
-                        })
+                            });
+                        }
 
                         <script asp-location="Footer">
                             var textRenderer = $.fn.dataTable.render.text().display;
