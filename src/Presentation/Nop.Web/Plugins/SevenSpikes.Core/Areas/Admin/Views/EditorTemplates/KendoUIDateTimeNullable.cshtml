@@ -1,0 +1,22 @@
+@using System.Globalization
+
+@model DateTime?
+
+@{
+    var inputFieldName = ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty);
+}
+
+<input id="@inputFieldName" />
+
+<script>
+    $(document).ready(function () {
+        // create TimePicker from input HTML element
+        $("#@inputFieldName").kendoDatePicker(
+            {
+                footer: "Today - #: kendo.toString(data, 'd') #",
+                format: "@CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern",
+                value: "@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToString(CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern) : null)"
+            }
+        );
+    });
+</script>

@@ -1,0 +1,27 @@
+﻿@using Nop.Core
+@using Nop.Core.Domain.Common
+@using Nop.Services.Configuration
+@using Nop.Web.Framework.Themes
+
+@inject IThemeContext themeContext
+@inject ISettingService settingService
+@inject IStoreContext storeContext
+@inject CommonSettings commonSettings
+
+@model string
+
+@{
+    Html.AddCssFileParts(Model);
+
+    // If the CSS bundling is enabled a fake CSS file is included to force nopCommerce change the CSS bundle file name (it is a hash of all css file names)
+    // when the theme Settings are changed.
+    if (commonSettings.EnableCssBundling)
+    {
+        var workingThemeName = await themeContext.GetWorkingThemeNameAsync();
+        int fileVersion = await settingService.GetSettingByKeyAsync($"{workingThemeName}themesettings.themeCustomCSSFileVersion", 0, (await storeContext.GetCurrentStoreAsync()).Id);
+
+        var fakeCssFile = string.Format("/{0}.css", fileVersion.ToString());
+
+        Html.AddCssFileParts(fakeCssFile);
+    }
+}

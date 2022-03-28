@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="PavilionThemeSettings.Preset">
+    <Value>f74258, 00a1b1</Value>
+  </Setting>
+  <Setting Name="PavilionThemeSettings.DefaultPreset">
+    <Value>f74258, 00a1b1</Value>
+  </Setting>
+  <Setting Name="PavilionThemeSettings.ShowLoginPopup">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="PavilionThemeSettings.IsLogoStickyOnMobileDevice">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="PavilionThemeSettings.ShowCategoriesInSideMenu">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="PavilionThemeSettings.StickyCategoryMenuFlyout">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="PavilionThemeSettings.NumberOfSubcategories">
+    <Value>5</Value>
+  </Setting>
+  <Setting Name="pavilionthemesettings.defaultproductimageproportion">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="pavilionthemesettings.defaultcategoryimageproportion">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="pavilionthemesettings.productimageproportion">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="pavilionthemesettings.categoryimageproportion">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="pavilionthemesettings.ProductAttributeId">
+    <Value>0</Value>
+  </Setting>
+  
+  <Setting Name="mediasettings.maximumimagesize">
+    <Value>1920</Value>
+  </Setting>
+  <Setting Name="mediasettings.defaultimagequality">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="mediasettings.associatedproductpicturesize">
+    <Value>300</Value>
+  </Setting>
+  <Setting Name="mediasettings.minicartthumbpicturesize">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="mediasettings.cartthumbpicturesize">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="mediasettings.categorythumbpicturesize">
+    <Value>450</Value>
+  </Setting>
+  <Setting Name="mediasettings.categorythumbpicturesize">
+    <Value>300</Value>
+  </Setting>
+  <Setting Name="mediasettings.manufacturerthumbpicturesize">
+    <Value>300</Value>
+  </Setting>
+  <Setting Name="mediasettings.productdetailspicturesize">
+    <Value>550</Value>
+  </Setting>
+  <Setting Name="mediasettings.productthumbpicturesize">
+    <Value>415</Value>
+  </Setting>
+
+  <Setting Name="catalogsettings.productsalsopurchasednumber">
+    <Value>5</Value>
+  </Setting>
+  <Setting Name="catalogsettings.numberofbestsellersonhomepage">
+    <Value>9</Value>
+  </Setting>
+
+  <Setting Name="NopAjaxCartSettings.ProductBoxAddToCartButtonSelector">
+    <Value>.product-box-add-to-cart-button</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.AddToWishlistButtonSelector">
+    <Value>.add-to-wishlist-button</Value>
+  </Setting>
+
+  <Setting Name="CloudZoomSettings.ZoomPosition">
+    <Value>inside</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.EnablePictureThumbnailsinCarousel">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.NumberOfPictureThumbnailsInCarousel-Pavilion">
+    <Value>5</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ResponsiveBreakpointsForThumbnailsCarousel-Pavilion">
+    <Value>[{"breakpoint":1001,"settings":{"slidesToShow":3, "slidesToScroll":3,"arrows":true,"dots":false}},{"breakpoint":769,"settings":{"slidesToShow":4,"slidesToScroll":4,"arrows":false,"dots":true}},{"breakpoint":400,"settings":{"slidesToShow":3,"slidesToScroll":3,"arrows":false,"dots":true}}]</Value>
+  </Setting>
+
+  <Setting Name="JCarouselGeneralSettings.ResponsiveBreakpointsForSlickSlider-Pavilion">
+    <Value>[{"breakpoint":890,"settings":{"slidesToShow":3}},{"breakpoint":711,"settings":{"slidesToShow":2}},{"breakpoint":425,"settings":{"slidesToShow":1}}]</Value>
+  </Setting>
+
+  <Setting Name="MegaMenuSettings.ShowCategoriesInASingleMenuItem">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfManufacturersPerRow">
+    <Value>5</Value>
+  </Setting>
+  
+  <Setting Name="QuickViewSettings.NumberOfAssociatedProductsPerRow">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.productItemSelectorChild">
+    <Value>.buttons-upper</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ProductDetailsPictureSize">
+    <Value>250</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ProductThumbPictureSize">
+    <Value>75</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ProductThumbPictureSize">
+    <Value>385</Value>
+  </Setting>
+  
+  <Setting Name="RichBlogSettings.BlogDetailsImageSize">
+    <Value>810</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.HomePageImageSize">
+    <Value>385</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.HomePageWidgetZone">
+    <Value>pavilion_home_page_richblog</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.NumberOfCharactersinBlogPostPreviewOnBlogListPage">
+    <Value>500</Value>
+  </Setting>
+  
+  <Setting Name="SmartProductCollectionsSettings.CategoryThumbImageSize">
+	  <Value>420</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.ProductThumbImageSize">
+	  <Value>320</Value>
+  </Setting>
+
+  <Setting Name="sevenspikescommonsettings.lazyloadimages">
+    <Value>True</Value>
+  </Setting>
+</Settings>

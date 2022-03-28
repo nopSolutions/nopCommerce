@@ -1,0 +1,13 @@
+﻿<div class="panel panel-default" id="panel-promo" style="margin-bottom: 10px; padding: 10px;"></div>
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            type: 'POST',
+            url: 'https://ellasoftware.com/promo',
+            success: function(html) {
+                $('#panel-promo').html(html);
+            },
+            error: function() {}
+        });
+    });
+</script>

@@ -1,0 +1,12 @@
+{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop Html Widgets",
+  "SystemName": "SevenSpikes.Nop.Plugins.HtmlWidgets",
+  "Version": "4.40",
+  "SupportedVersions": [ "4.40" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 1,
+  "FileName": "SevenSpikes.Nop.Plugins.HtmlWidgets.dll",
+  "Description": "This plugin allows you to add HTML content"
+}

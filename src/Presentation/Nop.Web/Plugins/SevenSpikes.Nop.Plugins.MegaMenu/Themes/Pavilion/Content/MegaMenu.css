@@ -1,0 +1,124 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.mega-menu,
+.menu-title {
+	display: none;
+}	
+.mega-menu .topic-wrapper {
+	display: none;
+}
+.mega-menu-responsive a,
+.mega-menu-responsive a + .plus-button {
+	border: none !important;
+}
+
+
+@media all and (min-width: 1025px) {
+
+.menu-title,
+.close-menu {
+	display: none;
+}
+.mega-menu {
+	display: block;
+	position: relative;
+}
+.mega-menu-responsive {
+	display: none !important;
+}
+.header-menu.categories-in-side-panel .category-menu-item,
+.header-menu.categories-in-side-panel .root-category-items {
+	display: none;
+}
+
+.category-navigation-list .inner-wrap,
+.root-category-items .inner-wrap {
+	float: left;
+	width: 75%;
+}
+.category-navigation-list .slider-wrapper,
+.root-category-items .slider-wrapper {
+	float: right;
+	width: 25%;
+	padding: 10px;
+}
+.category-navigation-list .inner-wrap:only-of-type,
+.root-category-items .inner-wrap:only-of-type {
+	float: none;
+	width: 100%;
+}
+
+.category-navigation-list > li > .sublist-wrap > .sublist .row,
+.header-menu > ul > li > .sublist-wrap > .sublist .row {
+	overflow: hidden;
+}
+.category-navigation-list > li > .sublist-wrap > .sublist .box,
+.header-menu > ul > li > .sublist-wrap > .sublist .box { /*this is a subcategory item (contains a list)*/
+	float: left;
+	width: 33.33333%;
+	padding: 10px;
+	font-size: 13px;
+}
+.category-navigation-list > li > .sublist-wrap > .sublist .inner-wrap:only-of-type .box,
+.header-menu > ul > li > .sublist-wrap > .sublist .inner-wrap:only-of-type .box {
+	width: 25%;
+}
+.manufacturers.fullWidth .box {
+	width: 20% !important; /*manufacturers with pictures to be 5 per row*/
+}
+.category-navigation-list > li > .sublist-wrap > .sublist .box .title,
+.header-menu > ul > li > .sublist-wrap > .sublist .box .title { /*this is a subcategory item title (list title)*/
+	display: block;
+	margin: 0 0 10px;
+	border-bottom: 3px solid #f74258;
+	padding: 0 0 5px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+.category-navigation-list > li > .sublist-wrap > .sublist .box .picture,
+.header-menu > ul > li > .sublist-wrap > .sublist .box .picture {
+	height: 100px;
+	margin: 0 0 15px;
+	overflow: hidden;
+	font-size: 0;
+}
+.header-menu > ul > li > .sublist-wrap > .sublist .box .picture {
+	height: auto;
+	max-height: 140px;
+}
+.header-menu > ul > li > .sublist-wrap.manufacturers > .sublist .box .picture,
+.header-menu > ul > li > .sublist-wrap.vendors > .sublist .box .picture  {
+	/*max-height: none;*/ /*uncomment to release picture's height*/
+}
+.category-navigation-list > li > .sublist-wrap > .sublist .box .picture a,
+.header-menu > ul > li > .sublist-wrap > .sublist .box .picture a {
+	display: block;
+}
+.category-navigation-list > li > .sublist-wrap > .sublist .box .picture img,
+.header-menu > ul > li > .sublist-wrap > .sublist .box .picture img {
+	width: 100%;
+}
+.category-navigation-list > li > .sublist-wrap > .sublist .box li,
+.header-menu > ul > li > .sublist-wrap > .sublist .box li { /*this is a sub-subcategory item*/
+	padding: 6px 0;
+}
+.category-navigation-list > li > .sublist-wrap > .sublist .box li a:hover,
+.header-menu > ul > li > .sublist-wrap > .sublist .box li a:hover {
+	color: #f74258;
+}
+
+}
+
+@media all and (min-width: 1281px) {
+
+.category-navigation-list > li > .sublist-wrap > .sublist .box .picture {
+	height: 120px;
+}
+.header-menu > ul > li > .sublist-wrap > .sublist .box .picture {
+	max-height: 180px;
+}
+
+}

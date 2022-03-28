@@ -1,0 +1,18 @@
+﻿@model TabUIModel
+
+<div class="productTabs-header">
+    <ul>
+        <li id="firstTabTitle"><a href="#quickTab-default">@Model.Tabs.First().Title</a></li>
+        @foreach (var tabInfo in Model.Tabs.Skip(1))
+        {
+            <li>
+                <a href="@tabInfo.AjaxUrl">@tabInfo.Title</a>
+            </li>
+        }
+    </ul>
+</div>
+<div class="productTabs-body">
+    <div id="quickTab-default">
+        @Html.Raw(Model.Tabs.First().Content)
+    </div>
+</div>

@@ -1,0 +1,16 @@
+﻿@model int[]
+
+<div class="callout no-margin cron-task-warning" style="font-size: 11px; display: none;">
+    Task is operated by <b>CRON Tasks</b> plugin.<br />
+    Enabling it may lead to conflicts.
+</div>
+
+<script>
+    $(document).ajaxStop(function () {
+        var cronTaskIds = [@string.Join(',', Model)];
+        $.each(cronTaskIds, function () {
+            var nameCell = $('a[href="/Admin/ScheduleTask/RunNow/' + this + '"]').closest('tr').children().first();
+            $('.cron-task-warning').clone().removeClass('cron-task-warning').appendTo($(nameCell)).show();
+        });
+    });
+</script>

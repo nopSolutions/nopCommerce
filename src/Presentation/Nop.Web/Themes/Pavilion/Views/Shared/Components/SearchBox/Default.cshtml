@@ -1,0 +1,47 @@
+@* ABC: ties in SLI *@
+
+@model SearchBoxModel
+@using Nop.Web.Models.Catalog;
+@using Nop.Web.Framework
+@using Nop.Web.Framework.UI
+@using Nop.Core
+@using Nop.Core.Infrastructure;
+@using Nop.Plugin.Misc.AbcFrontend.Services
+@using Nop.Web.Framework.Infrastructure
+@using Nop.Plugin.Misc.AbcCore.Services
+
+@inject FrontEndService frontEndService
+@* custom *@
+@inject IStoreContext storeContext
+
+@{
+    bool isClearanceStore = frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync());
+    bool isHawthorne = frontEndService.StoreIsHawthorne(await storeContext.GetCurrentStoreAsync());
+
+    string url = isHawthorne ?
+                "https://appliances.hawthorneonline.com/search?w=" :
+                "https://appliances.abcwarehouse.com/search?w=";
+
+    string action = isHawthorne ?
+        "//appliances.hawthorneonline.com/search" :
+        "//appliances.abcwarehouse.com/search";
+
+    string clearanceCookieName = isHawthorne ?
+        "HawthorneClearanceStore" :
+        "AbcClearanceStore";
+}
+<script type="text/javascript">
+    function ajaxsearchsubmit(form){
+        var search = encodeURIComponent(form.w.value);
+        document.activeElement.blur();
+        window.location="@url" +search;
+        return false;
+    }
+</script>
+
+<form action="@action" id="small-search-box-form" method="get" novalidate="novalidate" onsubmit="return ajaxsearchsubmit(this);">
+    <input type="text" class="search-box-text" id="sli_search_1" autocomplete="off" name="w" data-provide="rac" placeholder="What can we help you find?">
+    <input type="hidden" style="display:none;" id="sli_search_2" name="@clearanceCookieName" value="@isClearanceStore.ToString()" />
+    <input type="submit" class="button-1 search-box-button" value="Search">
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBox })
+</form>

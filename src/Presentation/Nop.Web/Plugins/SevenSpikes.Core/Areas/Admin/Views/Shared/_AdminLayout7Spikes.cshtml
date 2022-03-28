@@ -1,0 +1,17 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+@{
+    Html.AppendScriptParts("~/Plugins/SevenSpikes.Core/Areas/Admin/Content/Scripts/admin.core.min.js");    
+    Html.AppendScriptParts("~/Plugins/SevenSpikes.Core/Scripts/lib/kendo/2020.1.406/js/kendo.all.min.js");
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Core/Areas/Admin/Content/Styles/adminstyles.css");
+}
+
+<div class="spikes-admin-wrapper">
+    <div class="seven-spikes-settings">
+        @RenderBody()
+    </div>
+</div>
+

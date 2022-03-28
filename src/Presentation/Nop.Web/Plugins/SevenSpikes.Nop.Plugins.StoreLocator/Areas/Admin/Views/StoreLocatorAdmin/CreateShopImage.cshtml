@@ -1,0 +1,36 @@
+﻿@model ShopImageAdminModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    if (ViewBag.RefreshPage == true || ViewBag.isTrialVersion == true)
+    {
+        <script type="text/javascript">
+            try {
+                var gridElement = window.opener.document.getElementById("@ViewBag.btnId");
+                $(gridElement).click();
+            }
+            catch (e) {
+                console.log("@ViewBag.btnId");
+            }
+            window.close();
+        </script>
+    }
+}
+
+<form method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.Plugins.StoreLocator.Admin.ShopImage.AddNew")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+    <input type="hidden" name="refreshButtonId" value="btnRefreshImgs" />
+
+    @await Html.PartialAsync(AdminViews.ShopImageCreateOrUpdate, Model)
+</form>

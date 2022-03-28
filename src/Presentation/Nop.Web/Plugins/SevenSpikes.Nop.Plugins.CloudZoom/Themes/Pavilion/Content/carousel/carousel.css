@@ -1,0 +1,100 @@
+/*
+* Copyright 2016 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.picture-thumbs.in-carousel {
+    max-width: 600px;
+    margin: 10px auto 0;
+    text-align: center;
+}
+.picture-thumbs .picture-thumbs-list {
+    margin: 0 -5px;
+}
+.picture-thumbs .picture-thumbs-item {
+    padding: 0 5px;
+}
+.picture-thumbs.in-carousel .picture-thumbs-list {
+    margin: 0;
+}
+.picture-thumbs button + .slick-list {
+    margin: 0 25px;
+}
+
+/* arrows nav */
+
+.picture-thumbs .slick-prev,
+.picture-thumbs .slick-next {
+    position: absolute;
+    top: 50%;
+    width: 15px;
+    height: 22px;
+	margin-top: -11px;
+	border: none;
+    background-color: transparent;
+    background-position: left center;
+	background-repeat: no-repeat;
+    font-size: 0;
+	cursor: pointer;
+    transition: all .2s ease;
+}
+.picture-thumbs .slick-prev {
+    left: 0;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMBAMAAABcu7ojAAAALVBMVEUAAABmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmaTgChpAAAAD3RSTlMA6+QxJN6reW9mW1E8SkmTKKYaAAAALElEQVQI12NgYOBLABIbDzAwcAkDGZMMGBg4VICMUgcIAeZCJMBKoIoZeBMA15MHPhiEPR8AAAAASUVORK5CYII=);
+}
+.picture-thumbs .slick-next {
+    right: 0;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMBAMAAABcu7ojAAAALVBMVEUAAABmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmaTgChpAAAAD3RSTlMA6+QxJN6reW9mW1E8SkmTKKYaAAAAKUlEQVQI12PIZQCCgxuABLMUiGk0AUiwaICYrgVgAsQFS4CUwBTnATEA244HPpGnGTQAAAAASUVORK5CYII=);
+    background-position: right center;
+}
+.picture-thumbs .slick-prev.slick-disabled,
+.picture-thumbs .slick-next.slick-disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+/* dots nav */
+
+.slick-dots {
+    margin: 0;
+    padding: 18px 20px;
+}
+.slick-dots button {
+    background-color: #c9c9c9;
+    width: 10px;
+    height: 10px;
+	border: none;
+    border-radius: 50%;
+	font-size: 0;
+}
+.slick-dots li {
+    display: inline-block;
+    margin: 0 5px;
+}
+.slick-dots .slick-active button {
+    background: #f74258;
+}
+
+/* items */
+
+.picture-thumbs a.cloudzoom-gallery {
+    display: block !important;
+    margin: 0 !important;
+    float: none !important;
+    width: auto !important;
+    height: auto !important;
+}
+.picture-thumbs a.cloudzoom-gallery:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+}
+
+
+@media all and (max-width: 769px) {
+
+    .picture-thumbs.in-carousel {
+        max-width: 440px;
+    }
+
+}

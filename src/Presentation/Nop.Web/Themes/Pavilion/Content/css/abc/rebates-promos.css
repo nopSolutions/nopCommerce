@@ -1,0 +1,23 @@
+.abc-container {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.abc-item {
+    margin: 5px auto;
+    background: #fff;
+    line-height: 25px;
+    padding: 1rem;
+    flex: 0 0 16rem;
+}
+
+.abc-item a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.abc-item a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,89 @@
+﻿@model ShopAdminModel
+
+<div class="cards-group">
+    <div class="card card-default">
+        <div class="card-header">
+			<div class="card-title">
+				@T("SevenSpikes.StoreLocator.Admin.Shop.ShopSeo.Title")
+			</div>
+        </div>
+        <div class="panel-body">
+            @(await Html.LocalizedEditorAsync<ShopAdminModel, ShopLocalizedModel>("shop-seo-localized",
+                  @<div>
+                      <div class="form-group row">
+                          <div class="col-md-3">
+                              <nop-label asp-for="@Model.Locales[item].MetaTitle" />
+                          </div>
+                          <div class="col-md-9">
+                              <nop-editor asp-for="@Model.Locales[item].MetaTitle" />
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <div class="col-md-3">
+                              <nop-label asp-for="@Model.Locales[item].MetaKeywords" />
+                          </div>
+                          <div class="col-md-9">
+                              <nop-editor asp-for="@Model.Locales[item].MetaKeywords" />
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <div class="col-md-3">
+                              <nop-label asp-for="@Model.Locales[item].MetaDescription" />
+                          </div>
+                          <div class="col-md-9">
+                              <nop-editor asp-for="@Model.Locales[item].MetaDescription" />
+                          </div>
+                      </div>
+                      <div>
+                          <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                      </div>
+                      <div class="form-group row">
+                          <div class="col-md-3">
+                              <nop-label asp-for="@Model.Locales[item].SeName" />
+                          </div>
+                          <div class="col-md-9">
+                              <nop-editor asp-for="@Model.Locales[item].SeName" />
+                              @Html.ValidationMessageFor(model => model.Locales[item].SeName)
+                          </div>
+                      </div>
+                  </div>
+                  ,
+                  @<div>
+                      <div class="form-group row">
+                          <div class="col-md-3">
+                              <nop-label asp-for="MetaTitle" />
+                          </div>
+                          <div class="col-md-9">
+                              <nop-editor asp-for="MetaTitle" />
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <div class="col-md-3">
+                              <nop-label asp-for="MetaKeywords" />
+                          </div>
+                          <div class="col-md-9">
+                              <nop-editor asp-for="MetaKeywords" />
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <div class="col-md-3">
+                              <nop-label asp-for="MetaDescription" />
+                          </div>
+                          <div class="col-md-9">
+                              <nop-editor asp-for="MetaDescription" />
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <div class="col-md-3">
+                              <nop-label asp-for="SeName" />
+                          </div>
+                          <div class="col-md-9">
+                              <nop-editor asp-for="SeName" />
+                              <span asp-validation-for="SeName"></span>
+                          </div>
+                      </div>
+                  </div>
+                    ))
+        </div>
+    </div>
+</div>

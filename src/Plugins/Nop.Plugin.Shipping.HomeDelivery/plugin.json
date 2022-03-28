@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Shipping rate computation",
+  "FriendlyName": "Home Delivery",
+  "SystemName": "Shipping.HomeDelivery",
+  "Version": "4.40.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "X By 2",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Shipping.HomeDelivery.dll",
+  "Description": "This plugin offers shipping rates by FedEx and Home Delivery"
+}

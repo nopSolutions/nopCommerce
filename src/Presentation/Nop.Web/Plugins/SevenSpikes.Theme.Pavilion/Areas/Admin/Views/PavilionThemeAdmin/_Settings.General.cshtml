@@ -1,0 +1,72 @@
+﻿@model PavilionThemeSettingsModel
+
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox  asp-for="PinterestUrl_OverrideForStore" asp-input="PinterestUrl" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="PinterestUrl" />                    
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PinterestUrl" />                   
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox  asp-for="VimeoUrl_OverrideForStore" asp-input="VimeoUrl" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="VimeoUrl" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="VimeoUrl" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="InstagramUrl_OverrideForStore" asp-input="InstagramUrl" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="InstagramUrl" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="InstagramUrl" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="RemoveCopyright_OverrideForStore" asp-input="RemoveCopyright" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="RemoveCopyright" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="RemoveCopyright" />
+            <p><em>@T("SevenSpikes.Themes.Admin.Settings.RemoveCopyright.Hint.Link")</em></p>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="RemoveDesignedBy_OverrideForStore" asp-input="RemoveDesignedBy" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="RemoveDesignedBy" />                   
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="RemoveDesignedBy" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="LogoImageId_OverrideForStore" asp-input="LogoImageId" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="LogoImageId" />                      
+        </div>
+        <div class="col-md-9">
+            <div id="logo-image">
+                <nop-editor asp-for="LogoImageId" />
+                <span asp-validation-for="LogoImageId"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CustomHeadStyles_OverrideForStore" asp-input="CustomHeadStyles" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CustomHeadStyles" />                    
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="CustomHeadStyles" style="height: 450px;"/>                
+        </div>
+    </div>
+</div>

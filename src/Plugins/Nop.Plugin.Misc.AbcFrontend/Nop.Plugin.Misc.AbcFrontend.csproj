@@ -1,0 +1,229 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <!-- warns against potential bugs, updates to latest possible -->
+    <AnalysisLevel>latest</AnalysisLevel>
+    <Authors>Dave Farinelli</Authors>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <RepositoryType>Git</RepositoryType>
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Misc.AbcFrontend</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+    <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.
+    You need to set this parameter to true if your plugin has a nuget package 
+    to ensure that the dlls copied from the NuGet cache to the output of your project-->
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="logo.png" />
+    <None Remove="plugin.json" />
+    <None Remove="Views\Components\ProductTabs\_ProductTabsWithoutAjax.cshtml" />
+    <None Remove="Views\Components\ProductTabs\ProductTabs.cshtml" />
+    <None Remove="Views\Components\MegaMenuCategory\CategoryMenuTemplate.WithPictures.cshtml" />
+    <None Remove="Views\CustomCheckout\Warranty.cshtml" />
+    <None Remove="Views\CustomCheckout\WarrantySelection.cshtml" />
+    <None Remove="Views\CustomCheckout\PaymentMethod.cshtml" />
+    <None Remove="Images\abc\BestDeal.jpg" />
+    <None Remove="Images\abc\CallUs.jpg" />
+    <None Remove="Images\abc\InStore.jpg" />
+    <None Remove="Images\abc\MapDiscount.jpg" />
+    <None Remove="Images\abc\Online.jpg" />
+    <None Remove="Images\abc\OnlineOnlyFreeShipping.jpg" />
+    <None Remove="Images\abc\OrLess.jpg" />
+    <None Remove="Images\haw\BestDeal.jpg" />
+    <None Remove="Images\haw\CallUs.jpg" />
+    <None Remove="Images\haw\InStore.jpg" />
+    <None Remove="Images\haw\MapDiscount.jpg" />
+    <None Remove="Images\haw\Online.jpg" />
+    <None Remove="Images\haw\OnlineOnlyFreeShipping.jpg" />
+    <None Remove="Images\haw\OrLess.jpg" />
+    <None Remove="Images\BackButtonABCclearance.png" />
+    <None Remove="Images\BackButtonHAWclearance.png" />
+    <None Remove="Images\clearance_banner.png" />
+    <None Remove="Images\ClearanceTagButton.png" />
+    <None Remove="Images\Default.png" />
+    <None Remove="Images\deferredPricing.PNG" />
+    <None Remove="Images\HawthHome.png" />
+    <None Remove="Images\HawthStore.png" />
+    <None Remove="Images\HawthWeeklyAD.png" />
+    <None Remove="Images\HomeButton.png" />
+    <None Remove="Images\LocationsButton.png" />
+    <None Remove="Images\mobile-menu.png" />
+    <None Remove="Images\mobile-menu-haw.png" />
+    <None Remove="Images\mobile-sprite.png" />
+    <None Remove="Images\SaleAdButton.png" />
+    <None Remove="Images\search-button.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Components\MegaMenuCategory\CategoryMenuTemplate.WithPictures.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Components\ProductTabs\_ProductTabsWithoutAjax.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Components\ProductTabs\ProductTabs.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\CustomCheckout\Warranty.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\CustomCheckout\WarrantySelection.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\CustomCheckout\PaymentMethod.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\abc\BestDeal.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\abc\CallUs.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\abc\InStore.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\abc\MapDiscount.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\abc\Online.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\abc\OnlineOnlyFreeShipping.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\abc\OrLess.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\haw\BestDeal.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\haw\CallUs.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\haw\InStore.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\haw\MapDiscount.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\haw\Online.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\haw\OnlineOnlyFreeShipping.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\haw\OrLess.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\BackButtonABCclearance.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\BackButtonHAWclearance.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\clearance_banner.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ClearanceTagButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Default.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\deferredPricing.PNG">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\HawthHome.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\HawthStore.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\HawthWeeklyAD.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\HomeButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\LocationsButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\mobile-menu.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\mobile-menu-haw.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\mobile-sprite.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SaleAdButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\search-button.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+    <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj" />
+    <ProjectReference Include="..\..\Libraries\Nop.Data\Nop.Data.csproj" />
+    <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj" />
+    <ProjectReference Include="..\Nop.Plugin.Misc.AbcCore\Nop.Plugin.Misc.AbcCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SevenSpikes.Nop.Plugins.HtmlWidgets">
+      <HintPath>..\..\Presentation\Nop.Web\Plugins\SevenSpikes.Nop.Plugins.HtmlWidgets\SevenSpikes.Nop.Plugins.HtmlWidgets.dll</HintPath>
+    </Reference>
+    <Reference Include="SevenSpikes.Nop.Plugins.NopQuickTabs">
+      <HintPath>..\..\Presentation\Nop.Web\Plugins\SevenSpikes.Nop.Plugins.NopQuickTabs\SevenSpikes.Nop.Plugins.NopQuickTabs.dll</HintPath>
+    </Reference>
+    <Reference Include="SevenSpikes.Nop.Plugins.StoreLocator">
+      <HintPath>..\..\Presentation\Nop.Web\Plugins\SevenSpikes.Nop.Plugins.StoreLocator\SevenSpikes.Nop.Plugins.StoreLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="SevenSpikes.Nop.Framework">
+      <HintPath>..\..\Presentation\Nop.Web\Plugins\SevenSpikes.Core\SevenSpikes.Nop.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="SevenSpikes.Nop.Conditions">
+      <HintPath>..\..\Presentation\Nop.Web\Plugins\SevenSpikes.Core\SevenSpikes.Nop.Conditions.dll</HintPath>
+    </Reference>
+    <Reference Include="SevenSpikes.Nop.Scheduling">
+      <HintPath>..\..\Presentation\Nop.Web\Plugins\SevenSpikes.Core\SevenSpikes.Nop.Scheduling.dll</HintPath>
+    </Reference>
+    <Reference Include="SevenSpikes.Nop.Mappings">
+      <HintPath>..\..\Presentation\Nop.Web\Plugins\SevenSpikes.Core\SevenSpikes.Nop.Mappings.dll</HintPath>
+    </Reference>
+    <Reference Include="SevenSpikes.Nop.EntitySettings">
+      <HintPath>..\..\Presentation\Nop.Web\Plugins\SevenSpikes.Core\SevenSpikes.Nop.EntitySettings.dll</HintPath>
+    </Reference>
+    <Reference Include="SevenSpikes.Theme.Pavilion">
+      <HintPath>..\..\Presentation\Nop.Web\Plugins\SevenSpikes.Theme.Pavilion\SevenSpikes.Theme.Pavilion.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <!-- This target execute after "Build" target -->
+  <Target Name="NopTarget" AfterTargets="Build">
+    <!-- Delete unnecessary libraries from plugins path -->
+    <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
+  </Target>
+
+</Project>

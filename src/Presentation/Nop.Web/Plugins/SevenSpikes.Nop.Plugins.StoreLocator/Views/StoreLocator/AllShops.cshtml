@@ -1,0 +1,104 @@
+﻿@using Nop.Services
+@model AllShopsModel
+@inject IWebHelper webHelper
+@inject StoreLocatorSettings storeLocatorSettings
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title, meta
+    Html.AddTitleParts(T("SevenSpikes.StoreLocator.Public.AllShops.PageTitle").Text);
+    Html.AddMetaDescriptionParts(T("SevenSpikes.StoreLocator.Public.AllShops.PageMetaDescription").Text);
+    Html.AddMetaKeywordParts(T("SevenSpikes.StoreLocator.Public.AllShops.PageMetaKeywords").Text);
+
+    var themeName = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+    var supportRtl = await ShouldUseRtlThemeAsync();
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Themes/" + themeName + "/Content/StoreLocator.css");
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Themes/" + themeName + "/Content/StoreLocator.rtl.css");
+    }
+        
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/jquery.json-2.4.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Scripts/StoreLocatorCore.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Scripts/StoreLocatorAllShops.min.js");
+
+    string units = (storeLocatorSettings.UnitsSystem == UnitsSystems.Metric ? T("SevenSpikes.StoreLocator.Public.Units.Kilometers") : T("SevenSpikes.StoreLocator.Public.Units.Miles")).ToString();
+
+    var storeLocation = webHelper.GetStoreLocation();
+}
+<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+
+<div class="page all-shops-page">
+    <div class="page-title">
+        <h1>@T("SevenSpikes.StoreLocator.Public.Title")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.Shops.Count > 0)
+        {
+            <div class="map-controls current-location-wrap">
+                <a class="getUserGeoLocation" id="get-current-location">@T("SevenSpikes.StoreLocator.Public.UseMyLocation")</a>
+                <span class="additional-info"></span>
+            </div>
+            <div class="map-wrapper">
+                <div class="map store-locator-map-holder" id="all-shops-map-holder"></div>
+                <input id="shop-address-input" type="text" style="display: none" placeholder="@T("SevenSpikes.StoreLocator.Public.SearchMyLocation")" />
+            </div>
+            <div class="directions-wrapper">
+                <div class="directions-panel" id="directions-panel">
+                    <a id="backToResults">@T("SevenSpikes.StoreLocator.Public.BackToResults")</a>
+                </div>
+            </div>
+            <input type="hidden" class="shop-resources"
+                   data-searchshopsurl="@(Url.Action("SearchShops", "StoreLocator"))"
+                   data-markersdata="@Model.MapModel.ShopMarkersJson"
+                   data-youarehere="@T("SevenSpikes.StoreLocator.Public.YouAreHere")"
+                   data-accuracy="@T("SevenSpikes.StoreLocator.Public.Accuracy")"
+                   data-geolocationdenied="@T("SevenSpikes.StoreLocator.Public.BrowserGeolocationDeniedAllShops")"
+                   data-unabletoshowdirections="@T("SevenSpikes.StoreLocator.Public.UnableToShowDirections")"
+                   data-pathtoimages="@storeLocation@Plugin.PathToImagesFolder"
+                   data-defaultdistanceradius="@storeLocatorSettings.DefaultDistanceRadius"
+                   data-shopslistpagesize="@storeLocatorSettings.ShopsListPageSize"
+                   data-units="@storeLocatorSettings.UnitsSystem.ToString()"
+                   data-googleapikey="@storeLocatorSettings.GoogleApiKey"
+                   data-manuallysetmapbounds="@storeLocatorSettings.ManuallySetMapBounds.ToString().ToLowerInvariant()"
+                   data-latitude="@storeLocatorSettings.Latitude"
+                   data-longitude="@storeLocatorSettings.Longitude"
+                   data-mapzoomlevel="@storeLocatorSettings.MapZoomLevel"
+                   data-mapstyles="@Model.MapModel.CustomMapStyles"
+                   data-maplanguagecode="@Model.MapModel.MapLanguageCode"
+                   value="1" />
+            if (Model.Shops.Count > 1)
+            {
+                <div class="shops-sorting-filtering-wrapper">
+                    <div class="shops-sorting-options">
+                        <label for="sortingSelect">@T("SevenSpikes.StoreLocator.Public.Sortby")</label>
+                        <nop-select id="sortingSelect" asp-for="SortOptions" asp-items="@await Model.SortOptions.ToSelectListAsync()" />
+                    </div>
+                    <div class="radiusFilterWrapper" id="searchRadiusWrapper">
+                        <label>@T("SevenSpikes.StoreLocator.Public.SortMethod.SearchForShopInRadius")</label>
+                        <input type="number" value="@storeLocatorSettings.DefaultDistanceRadius" id="searchRadius" />
+                        <span class="units">@units</span>
+                    </div>
+                    <div class="searchbytags-wrapper">
+                        <label for="searchByTagsInput">@T("SevenSpikes.StoreLocator.Public.SearchByTag")</label>
+                        <input type="text" value="" id="searchByTagsInput" />
+                    </div>
+                </div>
+            }
+            <div class="shops-list-wrapper">
+                <ul class="shops-list">
+                    @await Html.PartialAsync(Views.ShopsList, Model.Shops)
+                </ul>
+
+                <div id="all-shops-list-panel-loader" class="shops-list-loader" style="display: none"></div>
+                <div id="all-shops-infinite-scroll-loader" class="infinite-scroll-loader" style="display: none"></div>
+                <div class="no-results no-shops-after-filtering">@T("SevenSpikes.StoreLocator.Public.NoShopsAfterFiltering")</div>
+            </div>
+        }
+        else
+        {
+            <div class="no-results">@T("SevenSpikes.StoreLocator.Public.NoShops")</div>
+        }
+    </div>
+</div>

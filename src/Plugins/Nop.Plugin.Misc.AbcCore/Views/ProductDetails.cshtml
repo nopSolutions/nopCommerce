@@ -1,0 +1,38 @@
+@using Nop.Plugin.Misc.AbcCore.Models;
+
+@model ABCProductDetailsModel
+
+<nop-card id="AbcProductDetails" asp-name="abc-product-details" asp-icon="fas fa-info" asp-title="ABC Product Details" asp-hide-block-attribute-name="AbcProductDetails" asp-hide="false">
+    <div class="card-body">
+        <div class="card card-default">
+            <div class="card-body">
+                @if (Model.ProductId > 0)
+                {
+                    <section class="content">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.PLPDescription" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.PLPDescription" />
+                                <span asp-validation-for="@Model.PLPDescription"></span>
+                            </div>
+                        </div>
+                    </section>
+                }
+                else
+                {
+                    @T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.SaveBeforeEdit")
+                }
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var element = document.getElementById('AbcProductDetails');
+            var parent = document.getElementById('product-cards');
+
+            parent.prepend(element);
+        });
+	</script> 
+</nop-card>

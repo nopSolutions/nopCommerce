@@ -1,0 +1,21 @@
+﻿@model CategoryNavigationModel.CategoryLineModel
+
+@if (Model.Category.Id == Model.CurrentCategoryId)
+{
+    foreach (var subCategory in Model.Category.SubCategories)
+    {
+        @await Html.PartialAsync("_CategoryLine.Navigation.ListItem", subCategory)
+    }
+}
+else
+{
+    foreach (var subCategory in Model.Category.SubCategories)
+    {
+        var categoryLineModel = new CategoryNavigationModel.CategoryLineModel
+        {
+            CurrentCategoryId = Model.CurrentCategoryId,
+            Category = subCategory
+        };
+        @await Html.PartialAsync("_CategoryLine.Navigation", categoryLineModel)
+    }
+}

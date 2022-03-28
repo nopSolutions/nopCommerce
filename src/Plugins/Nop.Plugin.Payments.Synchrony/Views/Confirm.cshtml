@@ -1,0 +1,148 @@
+﻿@model Nop.Plugin.Payments.Synchrony.Models.CustomCheckoutConfirmModel
+
+@using Nop.Plugin.Misc.AbcFrontend.Models;
+@using Nop.Web.Framework.Infrastructure;
+@using Nop.Web;
+@using Nop.Web.Extensions;
+@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Checkout
+
+@{
+	Layout = "_ColumnsOne";
+
+	//title
+	Html.AddTitleParts(T("PageTitle.Checkout").Text);
+	//page class
+	Html.AppendPageCssClassParts("html-checkout-page");
+	Html.AppendPageCssClassParts("html-order-confirm-page");
+
+	if (Model.SynchronyAuthTokenResponse.Integration)
+	{
+		// demo URLs
+		<script src="https://ubuy.syf.com/digitalbuy/js/merchant_ff.js"></script>
+	}
+	else
+	{
+		// Live URLs
+		<script src="https://buy.syf.com/digitalbuy/js/merchant_ff.js"></script>
+	}
+
+	// This allows for pop-up to work while not removing the remainder of
+	// NOP's referrer policy
+	Html.AddHeadCustomParts("<meta name=\"referrer\" content=\"strict-origin-when-cross-origin\">");
+}
+
+<link href="~/Plugins/Payments.Synchrony/Contents/css/Style.css" rel="stylesheet" />
+
+<div class="page checkout-page order-confirm-page">
+	@await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Confirm })
+	<div class="page-title">
+		<h1>@T("Checkout.ConfirmYourOrder")</h1>
+	</div>
+	<div class="page-body checkout-data">
+		@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutConfirmTop })
+		<div class="section confirm-order">
+			<form name="dbuyform2" id="dbuyform2">
+				<input type="hidden" name="processInd" value="2" />
+				<input type="hidden" name="tokenId" value="@Model.SynchronyAuthTokenResponse.clientToken" />
+				<input type="hidden" name="merchantID" value="@Model.SynchronyAuthTokenResponse.MerchantId" />
+				<input type="hidden" name="clientTransId" value="@Model.SynchronyAuthTokenResponse.ClientTransactionID" />
+				<input type="hidden" name="custFirstName" value="@Model.SynchronyAuthTokenResponse.FirstName" />
+				<input type="hidden" name="custLastName" value="@Model.SynchronyAuthTokenResponse.LastName" />
+				<input type="hidden" name="cardNumber" value="" />
+				<input type="hidden" name="custAddress1" value="@Model.SynchronyAuthTokenResponse.Address1" />
+				<input type="hidden" name="StatusMessage" value="@Model.SynchronyAuthTokenResponse.StatusMessage" />
+				<input type="hidden" name="custAddress2" value="" />
+				<input type="hidden" name="custCity" value="@Model.SynchronyAuthTokenResponse.City" />
+				<input type="hidden" name="custState" value="@Model.SynchronyAuthTokenResponse.State" />
+				<input type="hidden" name="custZipCode" value="@Model.SynchronyAuthTokenResponse.ZipCode" />
+				<input type="hidden" name="transPromo1" value="@Model.SynchronyAuthTokenResponse.PromoCode" />
+				<input type="hidden" name="transAmount1" value="@Model.SynchronyAuthTokenResponse.TransactionAmount" />
+				<input type="hidden" name="transPromo2" value="" />
+				<input type="hidden" name="transAmount2" value="" />
+				<input type="hidden" name="transPromo3" value="" />
+				<input type="hidden" name="transAmount3" value="" />
+				<input type="hidden" name="defaultPromoCode" value="" />
+				<div class="buttons">
+					<button type="button" id="btnModal2" class="button-1" data-toggle="modal" data-target="#digBuyModal" onclick="syfDBuy.calldBuyProcess(this.form)">@T("Plugins.Payments.Synchrony.button.Confirm")</button>
+				</div>
+			</form>
+
+			<div id="dbuyThirdModel" />
+
+			<form action="/checkout/confirm" id="confirm-order-form" method="post" novalidate="novalidate"></form>
+		</div>
+
+		@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutConfirmBottom })
+		<div class="section order-summary">
+			@await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
+		</div>
+
+	</div>
+</div>
+
+<div id="spinner" class="spinner" style="display:none;">
+	<img id="img-spinner" src="~/Plugins/Payments.Synchrony/Contents/loader.gif" alt="Loading" height="50" width="50" />
+</div>
+
+<script type="text/javascript">
+	window.dbuy = "Confirm"
+	window.addEventListener("message", function (event) {
+
+		if (typeof event.data == 'string' && (event.data == 'Close Model' || event.data == 'Return To Merchant Shipping')) {
+			$("#spinner").css("display", "block");
+			$("#btnModal2").css("display", "none");
+
+			if (window.dbuy == "Confirm") {
+				$.ajax({
+					cache: false,
+					type: 'Post',
+					url: '@Url.RouteUrl("Nop.Plugin.Payments.Synchrony.PaymentPostInfoStatus")',
+					data: null,
+					dataType: 'json',
+					success: function (response) {
+						// bind response into view to display response
+						if (response.update_section != undefined) {
+							//hide second popup and display current response popup
+							$("#spinner").css("display", "none");
+							$("#dbuyform2").css("display", "none");
+							$("#dbuyThirdModel").html(response.update_section.html);
+						}
+						if (response.success == 1) {
+							// if success
+							// save payment detail
+							$.ajax({
+								cache: false,
+								type: 'Post',
+								url: '@Url.RouteUrl("Nop.Plugin.Payments.Synchrony.SavePaymentInfo")',
+								data: null,
+								dataType: 'json',
+								success: function (response1) {
+									if (response1.status != undefined) {
+										if (response1.status == true) {
+											// if payment detail save sucsses fully then trigger order confirm button
+											//  -- trigger button for confirm order
+											//$(".confirm-order-next-step-button").trigger("click");
+											$('#confirm-order-form').submit();
+										} else {
+											// payment detail not found then diaply response
+											// hide second popup and display current response popup
+											$("#dbuyform2").css("display", "none");
+											$("#spinner").css("display", "none");
+											$("#dbuyThirdModel").html(response1.update_section.html);
+										}
+									}
+								}
+							});
+						}
+					},
+					failure: function () {
+						alert('@T("Plugins.Payments.Synchrony.alert.Fail")');
+					}
+				});
+			}
+		}
+	});
+
+</script>

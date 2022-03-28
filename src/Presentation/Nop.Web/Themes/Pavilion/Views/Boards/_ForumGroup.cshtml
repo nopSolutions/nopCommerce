@@ -1,0 +1,67 @@
+﻿@model ForumGroupModel
+<div class="forums-table-section forum-group">
+    <div class="forums-table-section-title">
+        @Html.RouteLink(Model.Name, "ForumGroupSlug", new { id = Model.Id, slug = Model.SeName })
+    </div>
+    <div class="forums-table-section-body">
+        <div class="table-wrapper">
+            <table class="forum-table">
+                <colgroup>
+                    <col width="1" />
+                    <col width="1" />
+                    <col />
+                    <col width="1" />
+                    <col width="1" />
+                    <col width="1" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>
+                            <span class="item-count">#</span>
+                        </th>
+                        <th class="forum-details" colspan="2">
+                            @T("Forum.Forum")
+                        </th>
+                        <th class="topics" data-hide="w410, w480, w580">
+                            @T("Forum.Topics")
+                        </th>
+                        <th class="posts" data-hide="w410, w480, w580">
+                            @T("Forum.Posts")
+                        </th>
+                        <th class="latest-post" data-hide="w410, w480, w580, w768">
+                            @T("Forum.LatestPost")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{var counter = 0;}
+                    @foreach (var forum in Model.Forums)
+                    {
+                        counter++;
+                        <tr>
+                            <td>
+                                <span class="item-count">@counter</span>
+                            </td>
+                            <td class="image">
+                                <div class="post"></div>
+                            </td>
+                            <td class="forum-details">
+                                <div class="forum-title">
+                                    @Html.RouteLink(forum.Name, "ForumSlug", new { id = forum.Id, slug = forum.SeName })
+                                </div>
+                                <div class="forum-description">
+                                    @forum.Description
+                                </div>
+                            </td>
+                            <td class="topics">@forum.NumTopics</td>
+                            <td class="posts">@forum.NumPosts</td>
+                            <td class="latest-post">
+                                @await Component.InvokeAsync("ForumLastPost", new {forumPostId = forum.LastPostId, showTopic = true})
+                            </td>
+                        </tr>            
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

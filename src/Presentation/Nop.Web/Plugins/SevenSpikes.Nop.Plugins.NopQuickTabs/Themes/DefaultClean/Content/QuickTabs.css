@@ -1,0 +1,45 @@
+/* GLOBAL STYLES */
+
+.ui-tabs .full-description {
+    display: block;
+    border: 0;
+    margin-bottom: 0;
+    padding: 0;
+    color: #222;
+    overflow: hidden;
+}
+
+.ui-tabs input,
+.ui-tabs select,
+.ui-tabs textarea {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+
+/* TABS STYLES */
+
+.productTabs {
+    margin: 0 0 40px;
+}
+.ui-tabs-nav li.ui-state-active a {
+    background-color: #f6f6f6;
+}
+.productTabs .product-specs-box {
+    display: block;
+}
+
+.productTabs .write-review {
+    background-color: #f9f9f9;
+    padding: 30px 15px;
+    margin-top: -30px;
+}
+.productTabs .write-review .title {
+    display: none;
+}
+.productTabs .write-review .form-fields {
+    border-top: 0;
+    padding: 0;
+}
+.productTabs .write-review .buttons {
+	margin: 20px 0 0;
+}

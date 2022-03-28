@@ -1,0 +1,76 @@
+﻿@model VendorMappingListModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "vendors-grid",
+            UrlRead = new DataUrl("GridList", "VendorMappingsAdmin", new RouteValueDictionary { ["entityType"] = Model.EntityType, ["entityId"] = Model.EntityId }),
+            UrlUpdate = new DataUrl("Update", "VendorMappingsAdmin", null),
+            UrlDelete = new DataUrl("Delete", "VendorMappingsAdmin", null),
+            Length = defaultGridPageSize,
+            LengthMenu = gridPageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(VendorMappingModel.VendorName))
+                {
+                    Title = T("Admin.Vendors.Fields.Name").Text
+                },
+                new ColumnProperty(nameof(VendorMappingModel.DisplayOrder))
+                {
+                    Title = T("SevenSpikes.Mappings.AdditionalVendors.DisplayOrder").Text,
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(VendorMappingModel.Id))
+                {
+                    Width = "100",
+                    Title = T("Admin.Common.View").Text,
+                    Render = new RenderCustom("renderVendorViewLink")
+                },
+                new ColumnProperty(nameof(VendorMappingModel.Id))
+                {
+                    Width = "100",
+                    Render = new RenderButtonsInlineEdit()
+                },
+                new ColumnProperty(nameof(VendorMappingModel.Id))
+                {
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                }
+            }
+        })
+    <script>
+
+        function renderVendorViewLink(data, type, row, meta) {
+                    
+            return '<a class="btn btn-default" href="/Admin/Vendor/Edit/' + row.VendorId + '" >' + '@T("Admin.Common.View")' + '</a>';
+        }
+    </script>
+</div>
+<div class="card-footer">
+    <button type="submit" id="btnAddNewVendor"
+            onclick="javascript:OpenWindow('@(Url.Action("VendorAddPopup", "VendorMappingsAdmin", new { entityId = Model.EntityId, entityType = Model.EntityType, btnId = "btnRefreshVendorMappings" }))', 800, 800, true); return false;"
+            class="btn btn-primary">
+        @T("Admin.Common.AddNew")
+    </button>
+    <input type="submit" id="btnRefreshVendorMappings" style="display: none" />
+    <script type="text/javascript">
+        $('#btnRefreshVendorMappings').click(function (e) {
+            //refresh grid
+            e.preventDefault(); //don't reload the page
+
+            var vendorsGrid = $("#vendors-grid").DataTable();
+            vendorsGrid .ajax.reload();
+
+            //return false to don't reload a page
+            return false;
+        });
+    </script>
+</div>

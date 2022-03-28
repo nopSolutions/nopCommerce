@@ -1,0 +1,260 @@
+﻿div#pr-reviewsnippet {
+    margin-bottom: 1rem;
+}
+
+/*general styling*/
+
+/*overview*/
+.header {
+    margin-bottom: 20px;
+}
+
+.product-name.product-name.product-name h1 {
+    color: #4f4f4f;
+    font-size: 1rem;
+    display: inline-block;
+}
+
+.product-name .product-name__isam-id:before {
+    content: ' - #';
+}
+
+.manufacturers.manufacturers.manufacturers {
+    display: none;
+}
+
+.product-name .product-name__isam-id {
+    font-size: .9rem;
+    color: #4f4f4f;
+}
+
+.overview .short-description.short-description {
+    margin: -5px 0px;
+}
+
+/*below overview stuff: prices, add to cart, etc*/
+
+.qty-label {
+    display: none;
+}
+
+.qty-input {
+    display: none;
+}
+
+div.markdown-message {
+    font-size: 1.0rem;
+    color: green;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.overview .add-to-cart-button {
+    background-image: url(/Themes/Pavilion/Content/img/flyout-cart.png);
+    background-repeat: no-repeat;
+    background-position-x: 20px;
+    background-position-y: center;
+}
+
+.clearance-or-less {
+    display: none;
+}
+
+@media all and (min-width: 768px) {
+    .product-social-buttons {
+        float: right;
+    }
+}
+
+/*clearance store specific*/
+
+div.clearance-msg-block.clearance-msg-block.clearance-msg-block {
+    display: none;
+}
+
+.clearance-msg {
+    font-size: 1.0rem;
+    color: #12659B;
+    font-weight: bold;
+    margin-right: 7px;
+}
+
+.clearance-msg-additional {
+    font-size: 0.8rem;
+    color: #4f4f4f;
+}
+
+.abc-clearance .clearance-msg-block.clearance-msg-block.clearance-msg-block {
+    display: block;
+}
+
+.abc-clearance .product-price.product-price.product-price span[itemprop="price"] {
+    color: red;
+    text-decoration: line-through;
+    font-weight: normal;
+}
+
+.abc-clearance .overview-buttons {
+    display: none;
+}
+
+.abc-clearance .add-to-cart {
+    display: none;
+}
+
+.abc-clearance span.corner-picture {
+    display: inline;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: inline-block;
+}
+
+.abc-clearance .old-product-price.old-product-price.old-product-price {
+    display: none;
+}
+
+.abc-clearance .prices div.you-save-amt {
+    display: none;
+}
+
+.abc-clearance label.price-sale-label {
+    display: none;
+}
+
+.abc-clearance span.clearance-or-less {
+    display: inline-block;
+    margin-left: 8px;
+    font-weight: bold;
+    color: #949494;
+    text-transform: uppercase;
+    font-style: italic;
+}
+
+.corner-picture img {
+    width: 120px;
+    height: 120px;
+}
+
+span.corner-picture {
+    display: none;
+    z-index: 5;
+}
+
+.abc-clearance .product-price-block {
+    margin-bottom: 20px;
+}
+
+.abc-clearance .view-availability {
+	color: #446588;
+	border: 2px solid #446588;
+	padding: 0.4rem 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+	background-color: #fff;
+}
+
+/*tightening up whitespace*/
+.product-essential {
+    margin: 0px 0px 20px 0px;
+    position: relative;
+}
+
+.ui-tabs {
+    margin: 0 0 20px;
+}
+
+.product-details-page-body .center-1.center-1.center-1 {
+    margin: 0 0 20px;
+}
+
+.product-sources {
+    display: none;
+}
+
+/*short description*/
+
+img.manufacturer-logo {
+    /*width: auto;
+    height: 60px;*/
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.short-description br {
+    display: none;
+}
+
+.short-description img {
+    width: auto;
+    height: auto;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.short-description table {
+    width: 100% !important;
+}
+
+.short-description table td strong span {
+    font-size: 1.2rem;
+    color: black;
+}
+
+.short-description table tr td div {
+    display: none;
+}
+
+.short-description table td span {
+    color: #4e4e4e;
+    font-size: 0.95rem;
+}
+
+/*full description*/
+.full-description span.description-feature {
+    margin: 0px 0px;
+    margin-left: 10px;
+    text-align: left;
+}
+
+h4.description-category {
+    margin: 10px 0px;
+    font-size: .92rem;
+    text-align: left;
+    color: black;
+}
+.description-feature-wrapper {
+    text-align: left;
+}
+
+.full-description .description-block {
+    text-align: left;
+}
+
+.short-description > * {
+  font-weight: initial;
+  color: initial;
+  font-size:initial;
+}
+
+
+.short-description {
+  font-weight: bold;
+  color:black;
+  font-size:19.2px;
+}
+
+.short-description > i:nth-child(1) {
+  font-style: normal;
+  font-size: 15.2px;
+}
+
+
+
+@media all and (min-width: 768px) {
+    .description-col {
+        width: 49%;
+        display: inline-block;
+        vertical-align: top;
+    }
+}

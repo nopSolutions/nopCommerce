@@ -1,0 +1,108 @@
+﻿@model Nop.Plugin.Payments.Synchrony.Models.AuthenticationTokenResponse
+
+@using Nop.Web;
+@using Nop.Web.Extensions;
+@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI;
+@{
+	Layout = "";
+
+	// This allows for pop-up to work while not removing the remainder of
+	// NOP's referrer policy
+	Html.AddHeadCustomParts("<meta name=\"referrer\" content=\"strict-origin-when-cross-origin\">");
+}
+
+<link href="~/Plugins/Payments.Synchrony/Contents/css/Style.css" rel="stylesheet" />
+<form name="dbuyform1" id="dbuyform1">
+	<input type="hidden" name="processInd" value="1">
+	<input type="hidden" name="authenticationSuccessUrl" value="authenticationSuccess.do">
+	<input type="hidden" name="authenticationFailUrl" value="authenticationFail.do">
+	<input type="hidden" name="transactionSuccessUrl" value="transactionSuccess.do">
+	<input type="hidden" name="transactionFailUrl" value="transactionFail.do">
+	<input type="hidden" name="tokenId" value="@Model.clientToken">
+	<input type="hidden" name="merchantID" value="@Model.MerchantId">
+	<input type="hidden" name="clientTransId" value="@Model.clientTransId">
+	<input type="hidden" name="custFirstName" value="">
+	<input type="hidden" name="custLastName" value="">
+	<input type="hidden" name="custZipCode" value="">
+	<input type="hidden" name="cardNumber" value="">
+	<input type="hidden" name="expMonth" value="">
+	<input type="hidden" name="expYear" value="">
+	<input type="hidden" name="iniPurAmt" value="">
+	<input type="hidden" name="custAddress1" value="">
+	<input type="hidden" name="custAddress2" value="">
+	<input type="hidden" name="phoneNumber" value="">
+	<input type="hidden" name="emailAddress" value="">
+	<input type="hidden" name="custCity" value="">
+	<input type="hidden" name="custState" value="">
+	<div class="row">
+		<div class="col-xs-12 text-center">
+			<button type="button" id="btnModal1" class="button-1" data-toggle="modal" data-target="#digBuyModal" onclick="syfDBuy.calldBuyProcess(this.form)" style="display:none;">@T("Plugins.Payments.Synchrony.button.SynchronyPayment")</button>
+		</div>
+	</div>
+</form>
+
+<div id="dbuySecondModel"></div>
+<div id="spinner" class="spinner" style="display:none;">
+	<img id="img-spinner" src="~/Plugins/Payments.Synchrony/Contents/loader.gif" alt="Loading" height="50" width="50" />
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#spinner").bind("ajaxSend", function () {
+			$(this).show();
+			$(this).css("display", "block")
+		}).bind("ajaxStop", function () {
+			$(this).hide();
+		}).bind("ajaxError", function () {
+			$(this).hide();
+		});
+
+		$("#payment-info-buttons-container").hide();
+		$(".payment-info-next-step-button").hide();
+	});
+
+	var flag = '@Model.Integration';
+	var syfLibURL = '';
+	if (flag == '@Boolean.TrueString') {
+		syfLibURL = "https://ubuy.syf.com/digitalbuy/js/merchant_ff.js"
+	} else {
+		syfLibURL = "https://buy.syf.com/digitalbuy/js/merchant_ff.js"
+	}
+	$.when(
+		// load jscript
+		$.getScript(syfLibURL),
+		$.Deferred(function (deferred) {
+			$(deferred.resolve);
+		})).done(function () {
+			// trigger on checkout button
+			$('#btnModal1').trigger("click");
+		}
+	);
+
+	window.dbuy = "PaymentInfo";
+	window.addEventListener("message", function (event) {
+
+		if (typeof event.data == 'string' && (event.data == 'Close Model' || event.data == 'Return To Merchant Shipping')) {
+			// Begin loop to check for response
+			if (window.dbuy == "PaymentInfo") {
+				$("#dbuyform1").hide();
+
+				$.ajax({
+					cache: false,
+					type: 'Post',
+					url: '@Url.RouteUrl("Nop.Plugin.Payments.Synchrony.PaymentPostInfo")',
+					data: null,
+					dataType: 'json',
+					success: function (response) {
+						$("#dbuySecondModel").html(response.update_section.html);
+					},
+					failure: function () {
+						alert('@T("Plugins.Payments.Synchrony.alert.Fail")');
+					}
+				});
+			}
+
+		}
+
+	});
+</script>

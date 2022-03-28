@@ -1,0 +1,418 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.header-menu,
+.back-button {
+    display: none !important;
+}
+
+
+@media all and (max-width: 1000px) {
+
+.mega-menu {
+	display: none !important;
+}
+
+/* menu button */
+
+.menu-title {
+    width: 600px;
+    margin: 0 auto 40px;
+    max-width: 100%;
+	background: #4ab2f1 url('images/menu-icon.png') right center no-repeat;
+	padding: 15px;
+	font-size: 15px;
+	font-weight: bold;
+	color: #fff;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+.menu-title span {
+	display: block;
+}
+
+/* responsive menu */
+
+.mega-menu-responsive ~ .master-column-wrapper {
+    margin-top: 40px !important;
+}
+.mega-menu-responsive {
+    display: none;
+    width: 600px;
+    max-width: 100%;
+    margin: -40px auto 40px;
+	background-color: transparent !important;
+}
+.mega-menu-responsive > li {
+	position: relative;
+	margin: 1px 0;
+	background-color: #f6f6f6;
+}
+.mega-menu-responsive > li > a,
+.mega-menu-responsive > li > span {
+	display: block;
+	min-height: 55px;
+	padding: 18px;
+	font-size: 15px;
+	color: #555;
+}
+.plus-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 55px;
+	height: 55px;
+	border-left: 1px solid #fff;
+	background: url(images/toggle-black.png) center no-repeat;
+	padding: 15px;
+	font-size: 15px;
+	font-weight: bold;
+	color: #fff;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+.mega-menu-responsive .sublist-wrap {
+    display: none;
+}
+.mega-menu-responsive .sublist-wrap.active {
+	display: block;
+}
+.mega-menu-responsive .sublist {
+	background-color: #fff;
+	padding: 5px 0;
+}
+.mega-menu-responsive .sublist li {
+	position: relative;
+	margin: 1px 0 1px 20px;
+}
+.mega-menu-responsive .sublist li a {
+	display: block;
+	padding: 15px 65px 15px 18px !important;
+	font-size: 15px;
+}
+.mega-menu-responsive .sublist .plus-button {
+	height: 49px;
+}
+
+}
+
+
+@media all and (min-width: 1001px) {
+
+/* RESETS */
+
+.menu-title,
+.plus-button,
+.mega-menu-responsive {
+    display: none !important;
+}
+
+/* main level */
+
+.mega-menu {
+	position: relative;
+	z-index: 5;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #f1f1f1;
+    color: #555;
+    text-align: center;
+    margin: 0 0 30px;
+    font-size: 0;
+}
+.mega-menu:after {
+	display: block;
+	clear: both;
+	content: "";
+}
+.mega-menu > li {
+    display: inline-block;
+}
+.mega-menu > li > a,
+.mega-menu > li > span {
+    position: relative;
+    display: block;
+    font-size: 17px;
+    line-height: 1;
+    padding: 29px 26px;
+}
+.mega-menu > li > a:before,
+.mega-menu > li > span:before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 1px;
+	height: 25px;
+	background: #ddd;
+	margin: auto;
+}
+.mega-menu > li:first-child > a:before,
+.mega-menu > li:first-child > span:before {
+	display: none;
+}
+.mega-menu > li:hover > a,
+.mega-menu > li:hover > span {
+    color: #4ab2f1;
+    cursor: pointer;
+}
+
+
+
+/* sublist */
+
+.mega-menu .sublist-wrap {
+    display: none;
+    position: absolute;
+    width: 200px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    background-color: #fff;
+    padding: 10px 0;
+    text-align: left;
+    border-top: 1px solid #f1f1f1;
+    z-index: 1;
+}
+.mega-menu .sublist-wrap.active {
+    display: block;
+}
+.mega-menu .sublist li {
+    position: relative;
+}
+.mega-menu .sublist li a {
+	display: block;
+	position: relative;
+	padding: 10px 20px 10px 30px;
+	font-size: 14px;
+	color: #444;
+}
+.mega-menu .sublist li a:before {
+	content: "";
+	position: absolute;
+	top: 17px;
+	left: 15px;
+	width: 5px;
+	height: 5px;
+	background-color: #ddd;
+}
+.mega-menu .sublist li:hover > a {
+	background-color: #f6f6f6;
+}
+.mega-menu .sublist-wrap .sublist-wrap {
+	top: -10px;
+	left: 100% !important;
+}
+
+
+
+/* dropdown */
+
+.mega-menu .dropdown {
+    display: none;
+    position: absolute;
+    text-align: left;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    border-top: 1px solid #f1f1f1;
+    z-index: 1;
+}
+.mega-menu .dropdown.active {
+	display: block;
+}
+.mega-menu .box {
+    float: left;
+    padding: 15px;
+    position: relative;
+}
+
+.mega-menu .boxes-1 .box {
+    width: 100%;
+}
+
+.mega-menu .boxes-2 .box {
+    width: 50%;
+}
+
+.mega-menu .boxes-3 .box {
+    width: 33.333%;
+}
+
+.mega-menu .boxes-4 .box {
+    width: 25%;
+}
+
+.mega-menu .boxes-5 .box {
+    width: 20%;
+}
+
+.mega-menu .boxes-6 .box {
+    width: 16.666%;
+}
+
+.mega-menu .boxes-7 .box {
+    width: 14.28%;
+}
+
+.mega-menu .boxes-8 .box {
+    width: 12.5%;
+}
+
+.mega-menu .box .picture-title-wrap {
+    position: relative;
+    margin: 0 0 5px;
+}
+.mega-menu .box .title {
+    color: #444;
+    font-size: 18px;
+    margin: 0 0 10px;
+}
+
+.mega-menu .box li a {
+    display: block;
+    position: relative;
+    padding: 7px 0 7px 14px;
+    font-size: 14px;
+    color: #777;
+}
+.mega-menu .box li a:before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 5px;
+	height: 5px;
+	margin-top: -2px;
+	background-color: #ddd;
+}
+.mega-menu .box li a:hover {
+	color: #4ab2f1;
+}
+.mega-menu .box li a.vendor {
+    padding: 0;
+}
+.mega-menu .box li a.vendor:before {
+    display: none;
+}
+
+.mega-menu .dropdown.fullWidth {
+    left: 0;
+    width: 100%;
+}
+.mega-menu .fullWidth.categories .row {
+    overflow: hidden;
+}
+.mega-menu .fullWidth.categories .box {
+    min-width: 0;
+    padding: 10px 5px;
+}
+.mega-menu .fullWidth.categories .box .picture > a {
+	display: block;
+	line-height: 0;
+	font-size: 0;
+    overflow: hidden;
+}
+.mega-menu .fullWidth.categories .box .picture img {
+	max-width: 100%;
+}
+.mega-menu .fullWidth.categories .box .title {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0;
+	background: rgba(255,255,255,.85);
+    z-index: 1;
+}
+.mega-menu .fullWidth.categories .box .title a {
+	display: block;
+	padding: 10px;
+}
+
+.mega-menu .fullWidth.manufacturers,
+.mega-menu .fullWidth.vendors {
+    padding: 25px;
+}
+.mega-menu .fullWidth.manufacturers .box,
+.mega-menu .fullWidth.vendors .box {
+    min-width: 0;
+    padding: 10px;
+    text-align: center;
+}
+.mega-menu .fullWidth.manufacturers .box .title,
+.mega-menu .fullWidth.vendors .box .title {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    line-height: 1.2;
+    height: 24px;
+    overflow: hidden;
+}
+.mega-menu .fullWidth.manufacturers .box .picture a:before,
+.mega-menu .fullWidth.vendors .box .picture a:before {
+    display: none;
+}
+.mega-menu .fullWidth.manufacturers .manufacturer,
+.mega-menu .fullWidth.vendors .vendor {
+	padding: 0;
+}
+.mega-menu .fullWidth.manufacturers .picture,
+.mega-menu .fullWidth.vendors .picture {
+	margin-bottom: 38px;
+}
+.mega-menu .fullWidth.manufacturers .picture .manufacturer,
+.mega-menu .fullWidth.vendors .picture .vendor {
+	display: block;
+	position: relative;
+	border: 1px solid #eee;
+	margin: 0 0 15px;        
+}
+.mega-menu .fullWidth.manufacturers .picture img,
+.mega-menu .fullWidth.vendors .picture img {
+	max-width: 100%;
+	max-height: 100%;
+}
+.mega-menu .fullWidth.manufacturers .title,
+.mega-menu .fullWidth.vendors .title {
+	margin: 0;
+	font-size: 20px;
+	text-align: center;
+}
+.mega-menu .fullWidth.manufacturers .title:hover,
+.mega-menu .fullWidth.vendors .title:hover {
+	color: #4ab2f1;
+}
+
+}
+
+
+@media all and (min-width: 1367px) {
+
+.mega-menu > li > a,
+.mega-menu > li > span {
+	padding: 29px 31px;
+	font-size: 18px;
+}
+
+}
+
+/* Vertical Menu */
+
+@media all and (min-width: 1001px) {
+    .mega-menu.vertical {
+        padding-left: 15px;
+        text-align: left;
+    }
+    .mega-menu.vertical > li {
+        display: block;
+    }
+    .mega-menu.vertical > li > a,
+    .mega-menu.vertical > li > span {
+	    padding: 10px 0;
+    }
+    .mega-menu.vertical > li > a:before, 
+    .mega-menu.vertical > li > span:before {
+        display: none;
+    }
+}

@@ -1,0 +1,33 @@
+@model HtmlWidgetModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        <nop-tabs id="htmlwidget-create-or-edit">
+            <nop-tab asp-name="tab-settings" asp-default="true" asp-title="@T("SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.SettingsTabTitle")">
+                @await Html.PartialAsync(Views.HtmlWidgetSettings, @Model)
+            </nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-widgets" asp-title="@T("SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.HtmlWidgetToWidgetZoneTabTitle")">
+                    @await Component.InvokeAsync("WidgetMappingsAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id, pluginFolderName = Plugin.FolderName })
+                </nop-tab>
+                <nop-tab asp-name="tab-scheduling" asp-title="@T("SevenSpikes.Scheduling.Admin.Schedule.TabTitle")">
+                    @await Component.InvokeAsync("ScheduleAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id })
+                </nop-tab>
+                <nop-tab asp-name="tab-conditions" asp-title="@T("SevenSpikes.Conditions.Admin.Condition.TabTitle")">
+                    @await Component.InvokeAsync("ConditionsAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id, availableConditionTypes = Plugin.AvailableConditionTypes, active = true, defaultGroupState = true })
+                </nop-tab>
+                <nop-tab asp-name="tab-product" asp-title="@T("SevenSpikes.Conditions.Admin.ProductOverrides.TabTitle")">
+                    @await Component.InvokeAsync("ProductOverridesAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id })
+                </nop-tab>
+                <nop-tab asp-name="tab-customer" asp-title="@T("SevenSpikes.Conditions.Admin.CustomerOverrides.TabTitle")">
+                    @await Component.InvokeAsync("CustomerOverridesAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id })
+                </nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</section>

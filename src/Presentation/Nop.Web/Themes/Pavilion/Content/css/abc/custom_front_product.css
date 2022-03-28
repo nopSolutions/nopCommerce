@@ -1,0 +1,26 @@
+.p-w-r {
+	margin: 0 !important;
+}
+
+.p-w-r .pr-category-snippet {
+    margin: 0;
+    display: table-cell !important;
+}
+
+.p-w-r .pr-category-snippet__total {
+	display: none !important;
+}
+
+.topic-block .product-item a, .topic-page .product-item a {
+    text-decoration: none !important;
+}
+
+.topic-page .product-item p {
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 20px !important;
+}
+
+.topic-page .page-body .spc.spc-products {
+    line-height: 20px !important;
+}

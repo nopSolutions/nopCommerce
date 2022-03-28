@@ -1,0 +1,188 @@
+﻿@model ProductSearchModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = "";
+
+    var entityType = Model.CustomProperties.ContainsKey("EntityType") ? Model.CustomProperties["EntityType"] : null;
+    var entityId = Model.CustomProperties.ContainsKey("EntityId") ? Model.CustomProperties["EntityId"] : 0;
+
+    var prefix = string.Format("prefix{0}", entityId);
+
+    ViewData.TemplateInfo.HtmlFieldPrefix = prefix;
+
+    string productsGroupId = string.Format("products-grid-{0}", entityId);
+    string productsGroupSelector = string.Format("#{0}", productsGroupId);
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var popupGridPageSize = adminAreaSettings.PopupGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="card card-default" style="margin: 20px;" data-identity="product-mappings-@(entityType)-@(entityId)">
+	<div class="card-header">
+		<div class="card-title">
+			@T("Admin.Catalog.Manufacturers.Products.AddNew")
+		</div>
+	</div>
+	<form action="@(Html.Raw(Url.Action("ProductAddPopup", "ProductMappingsAdmin", new { entityId = entityId, entityType = entityType })))" method="post">
+		@Html.AntiForgeryToken()
+		<div class="card-body">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="row">
+						<div class="form-group product-mapping row">
+							<div class="col-md-4">
+								<nop-label asp-for="SearchProductName" />
+							</div>
+							<div class="col-md-8">
+								<nop-editor asp-for="SearchProductName" />
+							</div>
+						</div>
+						<div class="form-group product-mapping row">
+							<div class="col-md-4">
+								<nop-label asp-for="SearchCategoryId" />
+							</div>
+							<div class="col-md-8">
+								<nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+							</div>
+						</div>
+						<div class="form-group product-mapping row" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+							<div class="col-md-4">
+								<nop-label asp-for="SearchManufacturerId" />
+							</div>
+							<div class="col-md-8">
+								<nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
+							</div>
+						</div>
+						<div class="form-group product-mapping row" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+							<div class="col-md-4">
+								<nop-label asp-for="SearchVendorId" />
+							</div>
+							<div class="col-md-8">
+								<nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
+							</div>
+						</div>
+						<div class="form-group product-mapping row" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+							<div class="col-md-4">
+								<nop-label asp-for="SearchStoreId" />
+							</div>
+							<div class="col-md-8">
+								<nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+							</div>
+						</div>
+						<div class="form-group product-mapping row" @(Model.AvailableWarehouses.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+							<div class="col-md-4">
+								<nop-label asp-for="SearchWarehouseId" />
+							</div>
+							<div class="col-md-8">
+								<nop-select asp-for="SearchWarehouseId" asp-items="Model.AvailableWarehouses" />
+							</div>
+						</div>
+						<div class="form-group product-mapping row">
+							<div class="col-md-4">
+								<nop-label asp-for="SearchProductTypeId" />
+							</div>
+							<div class="col-md-8">
+								<nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
+							</div>
+						</div>
+						<div class="form-group product-mapping row">
+							<div class="col-md-4">
+								<nop-label asp-for="SearchPublishedId" />
+							</div>
+							<div class="col-md-8">
+								<nop-select asp-for="SearchPublishedId" asp-items="Model.AvailablePublishedOptions" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12" style="text-align: center;">
+							<button type="button" id="search-products-@prefix" class="btn btn-primary btn-search search-products">
+								<i class="fa fa-search"></i>
+								@T("Admin.Common.Search")
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					@await Html.PartialAsync("Table", new DataTablesModel
+					{
+						Name = productsGroupId,
+						UrlRead = new DataUrl("ProductAddPopupList", "ProductMappingsAdmin", new RouteValueDictionary { ["entityType"] = entityType, ["entityId"] = entityId }),
+						Length = defaultGridPageSize,
+						LengthMenu = gridPageSizes,
+						SearchButtonId = "search-products-" + prefix,
+						Filters = new List<FilterParameter>
+						{
+							new FilterParameter(nameof(Model.SearchProductName), prefix),
+							new FilterParameter(nameof(Model.SearchCategoryId), prefix),
+							new FilterParameter(nameof(Model.SearchManufacturerId), prefix),
+							new FilterParameter(nameof(Model.SearchStoreId), prefix),
+							new FilterParameter(nameof(Model.SearchVendorId), prefix),
+							new FilterParameter(nameof(Model.SearchWarehouseId), prefix),
+							new FilterParameter(nameof(Model.SearchProductTypeId), prefix),
+							new FilterParameter(nameof(Model.SearchPublishedId), prefix)
+						},
+						ColumnCollection = new List<ColumnProperty>
+						{
+							new ColumnProperty(nameof(ProductModel.Id))
+							{
+								Width = "50",
+								Render = new RenderCustom("renderSelectedCheckBox")
+							},
+							new ColumnProperty(nameof(ProductModel.Name))
+							{
+								Title = T("Admin.Catalog.Products.Fields.Name").Text
+							},
+							new ColumnProperty(nameof(ProductModel.Published))
+							{
+								Title = T("Admin.Catalog.Products.Fields.Published").Text,
+								Render = new RenderCustom("renderPublished")
+							}
+						}
+					})
+
+					<script>
+						function renderPublished(data, type, row, meta) {
+
+							if (row.Published){
+
+								return '<i class="fa fa-check true-icon"></i>';
+							} else {
+
+								return '<i class="fa fa-close false-icon"></i>';
+							}
+						}
+
+						function renderSelectedCheckBox(data, type, row, meta) {
+
+							console.log(row.CustomProperties.Selected)
+
+							var checked = row.CustomProperties.Selected ? 'checked' : '';
+
+							return '<input type="checkbox" id="SelectedProductIds" name="SelectedProductIds" value="' + row.Id + '" class="checkboxGroups" ' + checked + '>';
+						}
+
+						$(document).ready(function () {
+
+							$('#@productsGroupId').addClass('homepage-products-mappings-grid');
+
+							$("#@Html.IdFor(model => model.SearchProductName)").keydown(function (event) {
+								if (event.keyCode == 13) {
+									$("#search-products-@prefix").click();
+									return false;
+								}
+							});
+						});
+					</script>
+				</div>
+				<button type="submit" name="save" class="btn bg-primary save-btn">
+					<i class="far fa-save"></i>
+					@T("Admin.Common.Save")
+				</button>
+			</div>
+		</div>
+	</form>
+</div>

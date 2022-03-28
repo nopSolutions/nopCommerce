@@ -1,0 +1,13 @@
+﻿@{
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/jquery.json-2.4.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/color-squares.min.js");
+}
+
+<div id="color-squares-info"
+     data-retrieve-color-squares-url="@Url.Action("RetrieveColorSquares", "PavilionTheme")"
+     data-product-attribute-change-url="@Url.Action("ProductDetails_AttributeChange", "ShoppingCart")"
+     data-productbox-selector=".product-item"
+     data-productbox-container-selector=".attribute-squares-wrapper"
+     data-productbox-price-selector=".prices .actual-price">
+</div>

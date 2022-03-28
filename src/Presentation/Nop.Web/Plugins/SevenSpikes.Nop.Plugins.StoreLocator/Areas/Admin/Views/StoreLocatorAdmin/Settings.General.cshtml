@@ -1,0 +1,188 @@
+﻿@model StoreLocatorSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Enabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Enabled" />
+            <span asp-validation-for="Enabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HeaderMenuIntegration_OverrideForStore" asp-input="HeaderMenuIntegration" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HeaderMenuIntegration" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="HeaderMenuIntegration" asp-items="Model.AvailableWidgetZonesForHeaderMenu" />
+            <span asp-validation-for="HeaderMenuIntegration"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HomePageIntegration_OverrideForStore" asp-input="HomePageIntegration" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HomePageIntegration" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="HomePageIntegration" asp-items="Model.AvailableWidgetZonesForHomePage" />
+            <span asp-validation-for="HomePageIntegration"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ContactUsPageIntegration_OverrideForStore" asp-input="ContactUsPageIntegration" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ContactUsPageIntegration" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="ContactUsPageIntegration" asp-items="Model.AvailableWidgetZonesForContactUsPage" />
+            <span asp-validation-for="ContactUsPageIntegration"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="UnitsSystem_OverrideForStore" asp-input="UnitsSystem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="UnitsSystem" />
+        </div>
+        <div class="col-md-9 units-system-holder">
+            <nop-select asp-for="UnitsSystem" asp-items="Model.AvailableUnitSystems" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DefaultDistanceRadius_OverrideForStore" asp-input="DefaultDistanceRadius" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DefaultDistanceRadius" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DefaultDistanceRadius" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="GoogleApiKey_OverrideForStore" asp-input="GoogleApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="GoogleApiKey" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="GoogleApiKey" />
+            <span asp-validation-for="GoogleApiKey"></span>
+        </div>
+    </div>
+    @(await Html.LocalizedEditorAsync<StoreLocatorSettingsModel, StoreLocatorLocalizedModel>("store-locator-localized",
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].LanguageCode" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].LanguageCode" />
+                <div>@T("SevenSpikes.StoreLocator.Admin.Settings.LanguageCode.Info")</div>
+            </div>
+        </div>
+        <div>
+            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+        </div>
+    </div>
+    ,
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="LanguageCode" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="LanguageCode" />
+                <div>@T("SevenSpikes.StoreLocator.Admin.Settings.LanguageCode.Info")</div>
+            </div>
+        </div>
+    </div>
+    ))
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ManuallySetMapBounds_OverrideForStore" asp-input="ManuallySetMapBounds" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ManuallySetMapBounds" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ManuallySetMapBounds" />
+            <span asp-validation-for="ManuallySetMapBounds"></span>
+        </div>
+    </div>
+    <div class="form-group row manually-set-bounds">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Latitude_OverrideForStore" asp-input="Latitude" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Latitude" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Latitude" />
+            <span asp-validation-for="Latitude"></span>
+        </div>
+    </div>
+    <div class="form-group row manually-set-bounds">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Longitude_OverrideForStore" asp-input="Longitude" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Longitude" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Longitude" />
+            <span asp-validation-for="Longitude"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MapZoomLevel_OverrideForStore" asp-input="MapZoomLevel" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MapZoomLevel" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MapZoomLevel" />
+            <span asp-validation-for="MapZoomLevel"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DefaultShopImageId_OverrideForStore" asp-input="DefaultShopImageId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DefaultShopImageId" />
+        </div>
+        <div class="col-md-9 default-shop-image-holder">
+            <nop-editor asp-for="DefaultShopImageId" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllShopsPageImageSize_OverrideForStore" asp-input="AllShopsPageImageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllShopsPageImageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllShopsPageImageSize" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShopDetailsPageImageSize_OverrideForStore" asp-input="ShopDetailsPageImageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShopDetailsPageImageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShopDetailsPageImageSize" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CustomMapStyles_OverrideForStore" asp-input="CustomMapStyles" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CustomMapStyles" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="CustomMapStyles" style="Height: 450px;" />
+        </div>
+    </div>
+    <div class="adminHint">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-9">
+            <div class="summary">To generate the <strong>Custom Map Styles</strong> do the following:</div>
+            <ul>
+                <li>Go to Google Maps Styling Wizard: <a href="https://mapstyle.withgoogle.com/" target="_blank">https://mapstyle.withgoogle.com/</a>.</li>
+                <li>Customize colors, roads, labels of the map.</li>
+                <li>Click on <strong>Finish</strong> and copy the <strong>JSON</strong> from the pop-up.</li>
+            </ul>
+        </div>
+    </div>
+</div>

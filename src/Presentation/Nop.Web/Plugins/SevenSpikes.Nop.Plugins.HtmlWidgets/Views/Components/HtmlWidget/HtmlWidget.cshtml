@@ -1,0 +1,22 @@
+@using SevenSpikes.Nop.Plugins.HtmlWidgets.Models;
+
+@model HtmlWidgetsPublicFullModel
+
+@{
+    if (Model.HtmlWidgets.Count > 0)
+    {
+        foreach (var htmlwidget in Model.HtmlWidgets)
+        {
+            if (htmlwidget.UseJavaScript)
+            {
+                @Html.Raw(htmlwidget.JavaScriptContent)
+            }
+            else
+            {
+                <div class="html-widget">
+                    @Html.Raw(htmlwidget.HtmlContent)
+                </div>
+            }
+        }
+    }
+}

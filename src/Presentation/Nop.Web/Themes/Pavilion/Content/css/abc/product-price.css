@@ -1,0 +1,218 @@
+﻿.overview .prices div {
+    display: block;
+}
+
+.overview .old-product-price {
+    text-decoration: none;
+}
+
+.overview .prices .product-price {
+    color: #B70000;
+}
+
+.you-save-amt {
+    font-size: 0.93rem;
+    font-weight: bold;
+    color: black;
+}
+
+.old-product-price label {
+    font-size: 0.9rem;
+}
+
+.old-product-price span {
+    font-size: 0.9rem;
+}
+
+.overview .prices.prices.prices {
+    display: inline-block;
+    margin: 0px;
+}
+
+.prices-right-flag {
+	display: inline-block;
+}
+
+.map-text {
+    font-size: 12px;
+}
+
+/*-------------------------
+	Inline help tip
+--------------------------*/
+
+a.tooltip {outline:none; }
+a.tooltip strong {line-height:18px; color: #336797}
+a.tooltip:hover {text-decoration:none;} 
+a.tooltip span {
+    z-index:10;display:none; padding:3px 7px;
+    width:250px; line-height:13px;
+    font-size: 10px;
+}
+
+a.tooltip:hover span{
+    display:inline; position:absolute; color:#111;
+    border:1px solid #336799; background:#F6F6F6;top:95px; left: 130px}
+.callout {z-index:20;position:absolute;top:30px;border:0;left:-12px;}
+
+a.tooltip.open-box:hover span {
+	top: 185px;
+}
+
+@-moz-document url-prefix() {
+    a.tooltip:hover span {
+        left: 135px;
+        top: 100px;
+    }
+
+}
+
+@media (max-width: 1280px) {
+    a.tooltip:hover span {
+        top: 145px;
+    }
+	
+	a.tooltip.open-box:hover span {
+        top: 220px;
+    }
+
+    @-moz-document url-prefix() {
+        a.tooltip:hover span {
+            top: 150px;
+        }
+    }
+}
+
+@media (max-width: 784px) {
+    a.tooltip:hover span {
+        top: 175px;
+        left: 110px;
+    }
+	
+	a.tooltip.open-box:hover span {
+        top: 185px;
+    }
+
+    @-moz-document url-prefix() {
+        a.tooltip:hover span {
+            top: 180px;
+            left: 115px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    a.tooltip:hover span {
+        top: 125px;
+        left: 400px;
+    }
+	
+	a.tooltip.open-box:hover span {
+        top: 185px;
+    }
+
+    @-moz-document url-prefix() {
+        a.tooltip:hover span {
+            top: 130px;
+            left: 405px;
+        }
+    }
+}
+
+@media (max-width: 414px) {
+    a.tooltip:hover span {
+        top: 160px;
+		left: 45px;
+    }
+	
+	a.tooltip.open-box:hover span {
+        top: 260px;
+    }
+
+    @-moz-document url-prefix() {
+        a.tooltip:hover span {
+            top: 165px;
+    left:50px;
+        }
+    }
+}
+
+@media (max-width: 320px) {
+    a.tooltip:hover span {
+        top: 200px;
+		left: 0px;
+    }
+	
+	a.tooltip.open-box:hover span {
+        top: 260px;
+    }
+
+    @-moz-document url-prefix() {
+        a.tooltip:hover span {
+            top: 205px;
+    left: 5px;
+        }
+    }
+}
+
+/*--------------------
+	Open Box Price Page
+	-----------------*/
+
+.open-box-price-page {
+    border: 1px solid lightgrey;
+	padding: 0.25rem;
+	margin-bottom: 1rem;
+}
+
+@media (min-width: 1001px) {
+	.open-box-price-page {
+		margin: 1rem 0;
+		border: 0
+	}
+	
+	.open-box-price-page-text {
+		border: 1px solid lightgrey;
+		padding: 0.25rem;
+	}
+	
+	.open-box-price-page-text br {
+		display: none;
+	}
+}
+
+/*--------------------
+	Open Box Tooltip
+	-----------------*/
+.open-box-price-page
+	
+.open-box-tooltip {
+  position: relative;
+  display: inline;
+}
+
+/* Tooltip text */
+.open-box-tooltip .tooltiptext {
+  visibility: hidden;
+  width: 240px;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  color:#111;
+  border:1px solid #336799;
+  background:#F6F6F6;
+ 
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  /* Positions to bottom */
+  top: 135%;
+  left: -600%;
+  margin-left: -60px;
+  font-size: 1.1rem;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.open-box-tooltip:hover .tooltiptext {
+  visibility: visible;
+}

@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "ABC SLI Export",
+  "SystemName": "Misc.AbcSliExport",
+  "Version": "4.40.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "David Kolb",
+  "DisplayOrder": -1,
+  "FileName": "Nop.Plugin.Misc.AbcSliExport.dll",
+  "Description": "SLI Export functionality"
+}

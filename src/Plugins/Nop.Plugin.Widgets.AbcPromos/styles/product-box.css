@@ -1,0 +1,15 @@
+.product-box-specials {
+    word-wrap: unset;
+    overflow-wrap: unset;
+    font-weight: bold;
+    color: #1451b8;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    font-size: 12px;
+    line-height: 2ex;
+    max-height: 2ex;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}

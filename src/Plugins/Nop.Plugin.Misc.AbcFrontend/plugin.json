@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "AbcWarehouse Front End",
+  "SystemName": "Misc.AbcFrontend",
+  "Version": "4.40.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "David Latva",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.AbcFrontend.dll",
+  "Description": "Provides ABC Warehouse frontend changes"
+}

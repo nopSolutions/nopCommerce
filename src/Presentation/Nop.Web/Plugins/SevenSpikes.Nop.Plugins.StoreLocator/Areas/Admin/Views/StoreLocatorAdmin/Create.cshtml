@@ -1,0 +1,31 @@
+﻿@model ShopAdminModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.StoreLocator.Admin.Submenus.ManageShops");
+}
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Common.AddNew")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("SevenSpikes.StoreLocator.Admin.Shop.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary save-settings-button">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-primary save-settings-button">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+
+    @await Html.PartialAsync(AdminViews.ShopCreateOrUpdate, Model)
+</form>

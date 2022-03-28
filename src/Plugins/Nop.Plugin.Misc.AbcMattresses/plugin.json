@@ -1,0 +1,13 @@
+{
+ "Group": "Misc",
+ "FriendlyName": "ABC Mattresses",
+ "SystemName": "Misc.AbcMattresses",
+ "Version": "4.40.1",
+ "SupportedVersions": [
+  "4.40"
+ ],
+ "Author": "Dave Farinelli",
+ "DisplayOrder": -1,
+ "FileName": "Nop.Plugin.Misc.AbcMattresses.dll",
+ "Description": "Provides ABC Mattress functionality"
+}

@@ -1,0 +1,52 @@
+﻿@model MapModel
+@inject IWebHelper webHelper
+@inject StoreLocatorSettings storeLocatorSettings
+@{
+    var themeName = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+    var supportRtl = await ShouldUseRtlThemeAsync();
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Themes/" + themeName + "/Content/StoreLocator.css");
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Themes/" + themeName + "/Content/StoreLocator.rtl.css");
+    }
+    
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Scripts/StoreLocatorCore.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Scripts/StoreLocatorAnywhereMap.min.js");
+
+    var storeLocation = webHelper.GetStoreLocation();
+}
+<script asp-location="Footer" src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+
+<div class="anywhere-page-map">
+    <div class="map-title">
+        <strong>@T("SevenSpikes.StoreLocator.Public.AnywhereMap.Title")</strong>
+    </div>
+    <div class="map-body">
+        <div class="map-controls">
+            <span id="get-current-location" class="control-button getUserGeoLocation">@T("SevenSpikes.StoreLocator.Public.ShowMyLocation")</span>
+            <span class="control-button align-map-button">@T("SevenSpikes.StoreLocator.Public.AlignMap")</span>
+            <span class="additional-info"></span>
+        </div>
+        <div class="map-wrapper">
+            <div class="map store-locator-map-holder" id="anyhwere-map-holder"></div>
+            <input id="shop-address-input" type="text" style="display: none" placeholder="@T("SevenSpikes.StoreLocator.Public.SearchMyLocation")" />
+        </div>
+
+        <input type="hidden" class="shop-resources"
+               data-markersdata="@Model.ShopMarkersJson"
+               data-youarehere="@T("SevenSpikes.StoreLocator.Public.YouAreHere")"
+               data-accuracy="@T("SevenSpikes.StoreLocator.Public.Accuracy")"
+               data-geolocationdenied="@T("SevenSpikes.StoreLocator.Public.BrowserGeolocationDeniedAnywhereMap")"
+               data-pathtoimages="@storeLocation@Plugin.PathToImagesFolder"
+               data-units="@storeLocatorSettings.UnitsSystem.ToString()"
+               data-googleapikey="@storeLocatorSettings.GoogleApiKey"
+               data-manuallysetmapbounds="@storeLocatorSettings.ManuallySetMapBounds.ToString().ToLowerInvariant()"
+               data-latitude="@storeLocatorSettings.Latitude"
+               data-longitude="@storeLocatorSettings.Longitude"
+               data-mapzoomlevel="@storeLocatorSettings.MapZoomLevel"
+               data-mapstyles="@Model.CustomMapStyles"
+               data-maplanguagecode="@Model.MapLanguageCode"
+               value="1" />
+    </div>
+</div>

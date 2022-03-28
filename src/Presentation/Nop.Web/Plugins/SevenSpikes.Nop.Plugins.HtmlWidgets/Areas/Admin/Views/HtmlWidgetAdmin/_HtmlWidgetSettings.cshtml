@@ -1,0 +1,97 @@
+@model SevenSpikes.Nop.Plugins.HtmlWidgets.Areas.Admin.Models.HtmlWidgetModel
+
+<div class="raw clearfix">
+    <section class="content">
+        <div class="form-horizontal">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Name" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Name" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Visible" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Visible" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="UseJavaScript" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="UseJavaScript" />
+                            </div>
+                        </div>
+                        <div class="form-group row javascript-content">
+                            <div class="col-md-3">
+                                <nop-label asp-for="JavaScriptContent" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="JavaScriptContent" style="height=450px;" />
+                            </div>
+                        </div>
+                        <div class="html-content">
+                            @(await Html.LocalizedEditorAsync<HtmlWidgetModel, HtmlWidgetLocalizedModel>("htmlwidget-localized",
+                            @<div>
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="HtmlContent" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="@Model.Locales[item].HtmlContent" asp-template="RichEditor" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div>
+                                        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                                    </div>
+                                </div>
+                            </div>
+                            ,
+                            @<div>
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="HtmlContent" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="HtmlContent" asp-template="RichEditor" />
+                                    </div>
+                                </div>
+                            </div>
+                            ))
+                        </div>
+                    </div>
+                </div>
+            @await Html.PartialAsync(Views.StoreSettings, Model)
+    </section>
+</div>
+
+<script>
+
+    function toggleContent() {
+
+        var useJavaScript = $('#@Html.IdFor(model => model.UseJavaScript)');
+
+        if (useJavaScript.is(":checked")) {
+
+            $('.javascript-content').show();
+            $('.html-content').hide();
+        } else {
+
+            $('.html-content').show();
+            $('.javascript-content').hide();
+        }
+    }
+
+    $(document).ready(function () {
+
+        toggleContent();
+        $('#@Html.IdFor(model => model.UseJavaScript)').click(toggleContent);
+    });
+</script>

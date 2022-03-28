@@ -1,0 +1,56 @@
+﻿@model ShopAdminModel
+@inject IWorkContext workContext
+@inject ICustomerService customerService
+@inject ICountryService countryService
+@{
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Areas/Admin/Content/Scripts/StoreLocatorAdmin.min.js");
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Areas/Admin/Content/Styles/adminStyle.css");
+
+    var customerCity = string.Empty;
+    var customerCountry = string.Empty;
+
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var defaultAddress = (await customerService.GetAddressesByCustomerIdAsync(customer.Id)).FirstOrDefault();
+    if (defaultAddress != null)
+    {
+        customerCity = defaultAddress.City ?? string.Empty;
+
+        if (defaultAddress.CountryId != null)
+        {
+            var country = await countryService.GetCountryByIdAsync((int)defaultAddress.CountryId);
+
+            if (country != null)
+            {
+                customerCountry = country.Name;
+            }
+        }
+    }
+}
+
+<div class="card-body">
+    <div>@T("SevenSpikes.StoreLocator.Admin.Shop.Seo.PutStoreOnMap")</div>
+    <input id="shop-address-input" type="text" placeholder="Search Address" />
+    <div id="chooseLocationMap"></div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Latitude" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Latitude" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Longitude" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Longitude" />
+        </div>
+    </div>
+
+    <input type="hidden" value="@(customerCity), @(customerCountry)" id="customer-nop-address" />
+    <input type="hidden" class="shop-resources"
+            data-googleapikey="@Model.StoreLocatorSettings.GoogleApiKey"
+            data-mapstyles="@Model.StoreLocatorSettings.CustomMapStyles"
+            value="1" />
+</div>

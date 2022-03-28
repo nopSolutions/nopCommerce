@@ -1,0 +1,69 @@
+@using Nop.Plugin.Widgets.PowerReviews
+
+@model PowerReviewsSettings
+
+@{
+	Html.AppendScriptParts("~/lib_npm/jquery/jquery.min.js");
+    Html.AddHeadCustomParts("<script src=\"https://ui.powerreviews.com/stable/4.1/ui.js\" async></script>");
+}
+
+<script>
+	var currentlyDisplayedPrSnippets = [];
+
+	$(document).ready(function () {
+		updatePowerReviewsCategorySnippets()
+
+		$(document).ajaxComplete(function( event,request, settings ) {
+			updatePowerReviewsCategorySnippets()
+		});
+	});
+
+	function updatePowerReviewsCategorySnippets() {
+		var productGrid = $('.product-grid');
+		if (productGrid.length == 0 || productGrid.is(":hidden")) {	return;	}
+
+		var prSnippets = productGrid.find("[id^='pr_snippet_product_']");
+		if (areArraysEqual(prSnippets, currentlyDisplayedPrSnippets)) {	return;	}
+
+		currentlyDisplayedPrSnippets = prSnippets;
+
+		var powerReviewsRenderConfigs = [];
+		prSnippets.each(function(index, item){
+			var sku = $(item).find('.product-box-sku').text().replace(/[^0-9a-zA-Z-]/gi,'');
+
+			powerReviewsRenderConfigs.push({
+				page_id: sku,
+				api_key: "@Model.APIKey",
+				locale: "en_US",
+				merchant_group_id: "@Model.MerchantGroupId",
+				merchant_id: "@Model.MerchantId",
+				review_wrapper_url: `/write-a-review?pr_page_id={sku}`,
+				ENABLE_CLIENT_SIDE_STRUCTURED_DATA: false,
+				components: {
+					CategorySnippet: prSnippets[index].id
+				}
+			});
+		});		
+
+		window.pwr = window.pwr || function () {
+			(pwr.q = pwr.q || []).push(arguments); 
+		};
+		pwr("render", powerReviewsRenderConfigs);
+	}
+
+    function areArraysEqual(a1, a2) {
+		if (a1.length !== a2.length) {
+			return false;
+		}
+		for (var i = a1.length; i--;) {
+			if (a1[i] !== a2[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+</script>
+
+<style>
+	@Html.Raw(Model.CustomStyles)
+</style>

@@ -1,0 +1,48 @@
+﻿.shops-item.visible {
+margin: 2px;
+width: 15rem;
+  /*!  */
+  max-width: unset;
+}
+
+
+.shops-list {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.picture-wrap.picture-wrap.picture-wrap {
+  float: unset;
+  margin: auto;
+  height: 50%;
+  width: 70%;
+display: none;
+}
+.info-wrap.info-wrap.info-wrap {
+  float: unset;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  text-align: center;
+  width: 100%;
+}
+.info-wrap * {
+    width: 100%;
+}
+
+.info-wrap .short-description.short-description {
+    margin-bottom: 0px;
+}
+
+#all-shops-map-holder#all-shops-map-holder {
+    height: 400px;
+    margin-bottom: 40px;
+}
+
+.shops-sorting-filtering-wrapper.shops-sorting-filtering-wrapper {
+    display: none;
+}

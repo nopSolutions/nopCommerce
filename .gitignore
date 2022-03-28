@@ -24,7 +24,8 @@ x64/
 [Oo]ut/
 
 # Visual Studio Code files
-.vscode/
+# ABC: allowing for persistence
+# .vscode/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -197,3 +198,45 @@ src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/*
 !src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/en/*
 !src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/main.zip
 src/packages/*
+
+#######################
+## ABC specific
+###########
+src/Presentation/Nop.Web/Resources
+src/Presentation/Nop.Web/wwwroot/product_images
+src/Presentation/Nop.Web/wwwroot/promo_banners/*
+!src/Presentation/Nop.Web/wwwroot/promo_banners/placeholder.txt
+src/Presentation/Nop.Web/SliExport.xml
+src/Presentation/Nop.Web/wwwroot/bundle_images/
+src/Presentation/Nop.Web/wwwroot/energy_guides/
+src/Presentation/Nop.Web/wwwroot/product_specs/
+src/Presentation/Nop.Web/wwwroot/promotion_forms/
+src/Presentation/Nop.Web/wwwroot/rebate_images/
+src/Presentation/Nop.Web/wwwroot/css/Slick/
+src/Presentation/Nop.Web/ImageReport.xlsx
+src/Presentation/Nop.Web/wwwroot/ImageReport.xlsx
+src/Presentation/Nop.Web/NopCommerceSliExport.xml
+src/Presentation/Nop.Web/wwwroot/ContentAdmin/*
+src/Presentation/Nop.Web/Themes/**/Content/css/theme.custom*.css
+
+## Saved plugins
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Core/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.CloudZoom/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.HtmlWidgets/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.JCarousel/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.MegaMenu/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.NopQuickTabs/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.QuickView/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.RichBlog/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Theme.Pavilion/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Theme.Pacific/
+!src/Presentation/Nop.Web/Plugins/Shipping.Fedex/
+!src/Presentation/Nop.Web/Plugins/Widgets.AccessiBe/
+!src/Presentation/Nop.Web/Plugins/Widgets.Bronto/
+!src/Presentation/Nop.Web/Plugins/Widgets.Flixmedia/
+!src/Presentation/Nop.Web/Plugins/Widgets.GoogleAnalytics/
+!src/Presentation/Nop.Web/Plugins/Widgets.PowerReviews/

@@ -1,0 +1,199 @@
+﻿/* product-box.css */
+
+.item-box {
+	width: 49%;
+}
+
+.item-box:nth-child(2n) {
+	margin-left: 2%;
+}
+
+.item-box .product-title {
+	height: 3.5rem;
+	padding: 0.25rem 0.5rem 0 0.5rem;
+	font-size: 0.85rem;
+	line-height: 1.2;
+}
+
+.item-box .product-title span {
+	display: block;
+	font-weight: bold;
+}
+
+.item-box .product-title span.man-no {
+	font-weight: lighter;
+}
+
+.product-ribbon {
+	margin-left: 0.5rem;
+}
+
+.add-info {
+	margin: 0 0.5rem;
+}
+
+.item-box .picture img {
+    max-height: 100%;
+}
+
+.pr-snippet .pr-snippet-rating-decimal {
+    border: 1px solid #ccc;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    vertical-align: middle;
+    font-weight: 700;
+    display: inline-block;
+    background: #fff;
+    padding: 1px 6px;
+    height: 18px !important;
+    margin-right: 5px;
+    color: #666;
+    line-height: 1.5;
+    font-size: 12px;
+    box-sizing: content-box;
+}
+
+.pr-snippet-rating-decimal.pr-rounded {
+	display: none;
+}
+
+.item-box .prices {
+    height: 8.4rem;
+	padding: 0;
+	margin-bottom: 0;
+}
+
+.item-box .price.actual-price {
+	padding: 0;
+	color: #B70000;
+	display: inline-block;
+}
+
+.deferred-pricing {
+    font-size: 12px;
+    margin-bottom: 1em;
+    color: #4F4F4F;
+    height: 2rem;
+}
+
+.deferred-pricing span {
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.item-box .old-price {
+    white-space: nowrap;
+    padding: 0px;
+    text-decoration: none;
+    color: #595959;
+}
+
+.item-box .price {
+    font-size: 4vw;
+    display: block;
+}
+
+span.price.you-save {
+    font-weight: bold;
+    color: black;
+    vertical-align: middle;
+    font-size: 4vw;
+}
+
+.price-sale-tag, .item-box .price.actual-price {
+    vertical-align: middle;
+    font-size: 4.5vw;
+    font-weight: bold;
+    color: #B70000;
+    padding-right: .1em !important;
+}
+
+.open-box {
+    display: block;
+    font-variant: all-small-caps;
+    line-height: 1;
+    margin-top: 0.25rem;
+}
+
+.open-box-price {
+    color: #B70000;
+    font-weight: bold;
+    font-size: 22pt;
+}
+
+@media (min-width: 375px) {
+	.pr-snippet-rating-decimal.pr-rounded {
+		display: inline;
+	}
+
+    .item-box .price,
+    span.price.you-save {
+        font-size: 0.8rem;
+    }
+
+    .price-sale-tag,
+    .item-box .price.actual-price {
+        font-size: 0.9rem;
+    }
+}
+
+@media (min-width: 425px) {
+	.item-box .product-title {
+		padding: 0.25rem 1rem 0 1rem;
+	}
+	
+	.add-info {
+		margin: 0 1rem;
+	}
+
+    .item-box .price,
+    span.price.you-save {
+        font-size: 0.9rem;
+    }
+
+    .price-sale-tag,
+    .item-box .price.actual-price {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 769px) {
+	.item-box {
+		width: 32%;
+	}
+	
+	.item-box:nth-child(3n+1) {
+		margin-left: 0;
+	}
+
+    .open-box {
+        font-size: 1.05rem;
+    }
+}
+
+@media (min-width: 1001px) {
+	.product-item.product-item:not(.buttons-upper) {
+		height: 38.5rem;
+	}
+}
+
+@media (min-width: 1281px) {
+	.product-item.product-item:not(.buttons-upper) {
+		height: 37.5rem;
+	}
+}
+
+/* This modal stuff should be moved, I think */
+.modal-content {
+    text-align: left;
+}
+
+    .modal-content ul {
+        margin-left: 2rem;
+        list-style-type: circle;
+        font-size: 10px;
+    }
+
+    .modal-content b {
+        font-size: 10px;
+    }

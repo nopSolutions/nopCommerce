@@ -1,0 +1,108 @@
+@model PromoListingModel
+
+@using Nop.Core.Domain.Common
+@using Nop.Core.Domain.Seo
+@using Nop.Plugin.Misc.AbcCore.Services
+@using Microsoft.AspNetCore.Mvc.ViewComponents
+@using Nop.Web.Framework.Infrastructure
+@using Nop.Web.Extensions
+@using Nop.Plugin.Misc.AbcPromos.Models
+@using Nop.Plugin.Misc.AbcCore.Infrastructure
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+@using Nop.Services.Catalog;
+
+@inject Nop.Core.IWebHelper webHelper
+@inject SeoSettings seoSettings
+@inject CommonSettings commonSettings
+@inject IViewComponentSelector viewComponentSelector
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(Model.Name);
+
+    //page class
+    Html.AppendPageCssClassParts("html-promo-page");
+
+	// ABC: get the URL for widget
+	var path = @Context.Request.Path.Value;
+}
+
+<div class="page promo-page">
+	@if (Model.BannerImageUrl != null)
+	{
+		<p style="text-align: center">
+			<a href="@Model.PromoFormPopup">
+				<img src="@Model.BannerImageUrl" alt="@Model.Name" width="100%" />
+			</a>
+		</p>
+	}
+	@if (path.Contains("nextgen-tv-atsc-30"))
+	{
+		@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.PromoProductsBelowBanner, additionalData = Model })
+	}
+	<div class="page-body">
+		@if (Model.Products.Count > 0)
+		{
+			<div class="product-selectors">
+				@*DFar: open filters for mobile*@
+				<div id="mobile-filters-wrapper">
+					<button id="mobile-filters" onclick="toggleMobileFilters()"><i class="fas fa-filter"></i>Filters</button>
+				</div>
+
+				@*sorting*@
+				@if (Model.AllowProductSorting)
+				{
+					<div class="product-sorting">
+						<span>@T("Catalog.OrderBy")</span>
+						@Html.DropDownList("products-orderby", Model.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
+					</div>
+				}
+			</div>
+		}
+		@if (Model.Products.Count > 0)
+		{
+			<div class="product-grid">
+				<div class="item-grid">
+					@foreach (var product in Model.Products)
+					{
+						var index = product.Name.LastIndexOf(' ');
+						string man = "";
+						string manNo = "";
+						//Name does not conform to standard of [manufacturer] [sku]
+						if (index < 0)
+						{
+							manNo = product.Name;
+						}
+						else
+						{
+							man = product.Name.Substring(0, index);
+							manNo = product.Name.Substring(index);
+						}
+					<div class="item-box">
+						@Html.Partial("_ProductBox", product)
+					</div>
+					}
+				</div>
+			</div>
+		}
+		@{
+            var pager = Html.Pager(Model).QueryParam("pagenumber");
+        }
+        @if (!(await pager.IsEmpty()))
+        {
+            <div class="pager">
+                @pager
+            </div>
+        }
+		@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CategoryDetailsBottom, additionalData = Model })
+	</div>
+</div>
+@section AsidePageTitle
+{
+	<div class="page-title">
+		<h1>@Model.Name</h1>
+	</div>
+}

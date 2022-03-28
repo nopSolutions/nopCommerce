@@ -1,0 +1,213 @@
+﻿@{
+    Layout = AdminViewLocations.AdminPopupLayoutViewPath;
+}
+
+@model ManufacturerSearchModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try
+            {
+                var gridElement = window.opener.document.getElementById("@ViewBag.btnId");
+                $(gridElement).click();
+            }
+            catch (e){}
+            window.close();
+        </script>
+
+        return;
+    }
+    
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var popupGridPageSize = adminAreaSettings.PopupGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Manufacturers.AddNew").Text;
+    
+    var entityType = Model.CustomProperties.ContainsKey("EntityType") ? Model.CustomProperties["EntityType"] : null;
+    var entityId = Model.CustomProperties.ContainsKey("EntityId") ? Model.CustomProperties["EntityId"] : 0;
+}
+
+<form method="post">
+    <nop-antiforgery-token />
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Catalog.Manufacturers.AddNew")
+        </h1>
+        <div class="float-right">
+            &nbsp;
+        </div>
+    </div>
+
+
+    <section class="content">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search card-search-popup card-popup">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-4">
+                                        <nop-label asp-for="SearchManufacturerName" />
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <nop-editor asp-for="SearchManufacturerName" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-4">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="button" id="search-manufacturers" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "manufacturers-grid",
+                            UrlRead = new DataUrl("ManufacturerAddPopupList", "ManufacturerMappingsAdmin", new RouteValueDictionary { ["entityType"] = entityType, ["entityId"] = entityId }),
+                            Length = defaultGridPageSize,
+                            LengthMenu = gridPageSizes,
+                            SearchButtonId = "search-manufacturers",
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchManufacturerName)),
+                                new FilterParameter(nameof(Model.SearchStoreId))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ManufacturerModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Width = "100",
+                                    Render = new RenderCustom("renderSelectedCheckBox")
+                                },
+                                new ColumnProperty(nameof(ManufacturerModel.Name))
+                                {
+                                    Width = "100",
+                                    Title = T("Admin.Catalog.Manufacturers.Fields.Name").Text
+                                },
+                                new ColumnProperty(nameof(ManufacturerModel.Published))
+                                {
+                                    Title = T("Admin.Catalog.Manufacturers.Fields.Published").Text,
+                                    Width = "100",
+                                    Render = new RenderCustom("renderPublished")
+                                }
+                            }
+                        })
+
+                        <script>
+
+                            function renderPublished(data, type, row, meta) {
+
+                                if (row.Published) {
+
+                                    return '<i class="fa fa-check true-icon"></i>';
+                                }
+                                else {
+
+                                    return '<i class="fa fa-close false-icon"></i>';
+                                }
+                            }
+
+                            function renderSelectedCheckBox(data, type, row, meta) {
+
+                                console.log(row.CustomProperties.Selected)
+
+                                var checked = row.CustomProperties.Selected ? 'checked' : '';
+
+                                return '<input type="checkbox" id="SelectedManufacturerIds" name="SelectedManufacturerIds" value="' + row.Id + '" class="checkboxGroups" ' + checked + '>';
+                            }
+                                                                
+                            function updateMasterCheckbox() {
+                                var numChkBoxes = $('#manufacturers-grid input[type=checkbox][id!=mastercheckbox]').length;
+                                var numChkBoxesChecked = $('#manufacturers-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+                                $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                            }
+                                
+                            function onDataBound(e) {
+                                $('#manufacturers-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+                                    var currentId = $(this).val();
+                                    var checked = jQuery.inArray(currentId, selectedIds);
+                                    //set checked based on if current checkbox's value is in selectedIds.
+                                    $(this).attr('checked', checked > -1);
+                                });
+
+                                updateMasterCheckbox();
+                            }
+
+                            var selectedIds = [];
+                            
+                            $(document).ready(function () {
+
+                                $("#@Html.IdFor(model => model.SearchManufacturerName)").keydown(function (event) {
+
+                                    if (event.keyCode == 13) {
+                                        $("#search-manufacturers").click();
+                                        return false;
+                                    }
+                                });
+
+                                $('#mastercheckbox').click(function () {
+                                    $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                                });
+
+                                //wire up checkboxes.
+                                $('#manufacturers-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+                                    var $check = $(this);
+                                    if ($check.is(":checked") == true) {
+                                        var checked = jQuery.inArray($check.val(), selectedIds);
+                                        if (checked == -1) {
+                                            //add id to selectedIds.
+                                            selectedIds.push($check.val());
+                                        }
+                                    }
+                                    else {
+                                        var checked = jQuery.inArray($check.val(), selectedIds);
+                                        if (checked > -1) {
+                                            //remove id from selectedIds.
+                                            selectedIds = $.grep(selectedIds, function (item, index) {
+                                                return item != $check.val();
+                                            });
+                                        }
+                                    }
+                                    updateMasterCheckbox();
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" name="save" class="btn bg-primary">
+                            <i class="far fa-save"></i>
+                            @T("Admin.Common.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

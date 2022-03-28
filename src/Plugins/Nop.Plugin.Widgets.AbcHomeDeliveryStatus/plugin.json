@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "ABC Home Delivery Status Widget",
+  "SystemName": "Widgets.AbcHomeDeliveryStatus",
+  "Version": "4.40.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "X By 2",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.AbcHomeDeliveryStatus.dll",
+  "Description": "This widget displays home delivery status based on invoice # and zip code"
+}

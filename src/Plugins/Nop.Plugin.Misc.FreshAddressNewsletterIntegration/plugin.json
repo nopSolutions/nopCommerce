@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "FreshAddress Newsletter Integration",
+  "SystemName": "Misc.FreshAddressNewsletterIntegration",
+  "Version": "4.40.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "Dave Farinelli",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.FreshAddressNewsletterIntegration.dll",
+  "Description": "Integrates FreshAddress into the newsletter signup"
+}

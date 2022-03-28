@@ -1,0 +1,489 @@
+﻿@* ABC: lots of changes here *@
+
+@model ProductOverviewModel
+
+@using Nop.Core
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Orders
+@using Nop.Core.Domain.Tax
+
+@* ABC: custom *@
+@using Microsoft.AspNetCore.Mvc.ViewComponents
+@using Nop.Plugin.Misc.AbcCore.Domain
+@using Nop.Plugin.Misc.AbcCore.Extensions
+@using Nop.Plugin.Misc.AbcCore.Infrastructure
+@using Nop.Plugin.Misc.AbcCore.Services
+@using Nop.Services.Catalog
+@using Nop.Services.Common
+@using Nop.Web.Extensions
+@using Nop.Web.Framework.Infrastructure
+@using Nop.Web.Models.Catalog
+
+@inject CatalogSettings catalogSettings
+@inject IWorkContext workContext
+@inject IViewComponentSelector viewComponentSelector
+@* ABC: custom *@
+@inject FrontEndService frontEndService
+@inject IGenericAttributeService genericAttributeService
+@inject IProductAttributeService productAttributeService
+@inject IProductService productService
+@inject IStoreContext storeContext
+
+@{
+    //prepare "Add to cart" AJAX link
+    var addtocartlink = "";
+    var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
+    var quantity = 1;
+    if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+    }
+    else
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity });
+    }
+
+    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
+    var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
+
+    // ABC: custom code
+    var itemNumber = "";
+    var itemNumberDisplay = "";
+    ProductFlag productFlag = frontEndService.GetProductFlag(Model.Id);
+    bool isOpenBox = productFlag != null &&
+                     !(frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync()) || frontEndService.StoreIsHawthorneClearance(await storeContext.GetCurrentStoreAsync())) ?
+                        productFlag.IsOpenBox() : false;
+    decimal openBoxPrice = 0.0M;
+    if (isOpenBox)
+    {
+        openBoxPrice = productFlag.CalculateOpenBoxPrice(Model.ProductPrice.PriceValue);
+    }
+
+    bool isHawthorne = frontEndService.StoreIsHawthorne(await storeContext.GetCurrentStoreAsync());
+    string equalPaymentsModalStoreName = isHawthorne ? "Hawthorne" : "ABC Warehouse";
+
+    if (frontEndService.ProductIsAbc(Model.Id))
+    {
+        var pad = frontEndService.GetProductAbcDescriptionByProductId(Model.Id);
+
+        if (pad != null)
+        {
+            itemNumber = pad.AbcItemNumber;
+            itemNumberDisplay = itemNumber + (productFlag != null && productFlag.IsSpecialOrder() ? "+" : "");
+        }
+    }
+
+    bool isPopupItem = frontEndService.IsProductPopup(Model.Id);
+
+    var product = await productService.GetProductByIdAsync(Model.Id);
+
+    var priceStr = Model.ProductPrice.Price?.Replace(".00", "");
+
+    // custom: if product is mattress, use "Build Package"
+    var isMattress = false;
+    var pams = await productAttributeService.GetProductAttributeMappingsByProductIdAsync(Model.Id);
+
+    foreach (var pam in pams)
+    {
+        var pa = await productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
+        if (pa.Name == "Mattress Size")
+        {
+            isMattress = true;
+            break;
+        }
+    }
+
+    var mattressSize = "";
+    var productUrl = @Url.RouteUrl("Product", new { SeName = Model.SeName });
+    if (isMattress)
+    {
+        // custom: add URL query params for mattress if applicable:
+        var path = @Context.Request.Path.Value;
+        if (path == "/getFilteredProducts")
+        {
+            path = @Context.Request.Headers["Referer"];
+            path = path.Substring(path.LastIndexOf("/"));
+        }
+        switch (path)
+        {
+            case "/twin-mattress":
+                mattressSize = "twin-mattress";
+                break;
+            case "/twin-extra-long-mattress":
+                mattressSize = "twinxl-mattress";
+                break;
+            case "/full-mattress":
+                mattressSize = "full-mattress";
+                break;
+            case "/queen-mattress":
+                mattressSize = "queen-mattress";
+                break;
+            case "/king-mattress":
+                mattressSize = "king-mattress";
+                break;
+            case "/california-king-mattress":
+                mattressSize = "california-king-mattress";
+                break;
+        }   
+    }
+
+    if (!string.IsNullOrWhiteSpace(mattressSize))
+    {
+        productUrl = $"{productUrl}?size={mattressSize}";
+    }
+
+    //**************************************************************************
+    bool usesCartPricing = await product.IsAddToCartAsync() || await product.IsAddToCartWithUserInfoAsync();
+    var miniDesc = "";
+
+    bool usesPairPricing = false;
+    var plpDescription = await genericAttributeService.GetAttributeAsync<string>(
+        product, "PLPDescription");
+    if (!string.IsNullOrWhiteSpace(plpDescription))
+    {
+        miniDesc = plpDescription;
+    }
+    else if (frontEndService.ProductIsAbc(Model.Id))
+    {
+        var pad = frontEndService.GetProductAbcDescriptionByProductId(Model.Id);
+        if (pad != null)
+        {
+            usesPairPricing = pad.UsesPairPricing;
+            miniDesc = pad.AbcDescription;
+        }
+    }
+    else
+    {
+        miniDesc = Model.ShortDescription;
+    }
+
+    if (usesPairPricing)
+    {
+        if (!string.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+        {
+            Model.ProductPrice.OldPrice = "$" + string.Format("{0:0.00}", decimal.Parse(Model.ProductPrice.OldPrice.Substring(1)) / 2);
+        }
+        if (!string.IsNullOrEmpty(Model.ProductPrice.Price))
+        {
+            Model.ProductPrice.Price = "$" + string.Format("{0:0.00}", decimal.Parse(Model.ProductPrice.Price.Substring(1)) / 2);
+        }
+    }
+
+    //**************************************************************************
+
+    var index = Model.Name.LastIndexOf(' ');
+    string man = "";
+    string manNo = "";
+    //Name does not conform to standard of [manufacturer] [sku]
+    if (index < 0)
+    {
+        manNo = Model.Name;
+    }
+    else
+    {
+        man = Model.Name.Substring(0, index);
+        manNo = Model.Name.Substring(index);
+    }
+}
+
+@* ABC: both style and script should be moved *@
+<style>
+	.picture.picture {
+		margin: 5px;
+	}
+
+	.product-box-description {
+		padding-right: 5px;
+		word-wrap: break-word;
+		font-weight: 600;
+		color: #4F4F4F;
+		line-height: 2.5ex;
+		height: 7.5ex;
+		overflow: hidden;
+	}
+
+		.product-box-description * {
+			display: none;
+		}
+
+	.item-number-style {
+		font-size: 11px;
+		padding: 0 5px 0 0;
+	}
+
+	.no-cart-image::before {
+		display: none;
+	}
+
+	.no-cart-image.no-cart-image.no-cart-image {
+		padding: 0px;
+	}
+
+	.no-cart-image::after {
+		display: none;
+	}
+
+	.item-box .buttons-lower button span {
+		color: #4F4F4F;
+	}
+
+	/* Removes Product Sources from Item Desc. - since I can't seem to find how to programmatically remove. */
+	.product-sources {
+		display: none;
+	}
+</style>
+<script>
+    function isEmail(email) {
+        var regex = /^([a-zA-Z0-9_.+-])+\@@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regex.test(email);
+    }
+
+    $(function () {
+        /* modal functionality */
+        $('form#modalForm > input').keyup(function() {
+
+            var empty = false;
+            var count = 0;
+            $('form#modalForm > input').each(function() {
+                if ($(this).val() == '') {
+                    empty = true;
+                }
+
+                if (count == 2 && !isEmail($(this).val())) {
+                    empty = true;
+                }
+                count++;
+            });
+
+            if (empty) {
+                $('#modalButton').attr('disabled', 'disabled');
+            } else {
+                $('#modalButton').removeAttr('disabled');
+            }
+        });
+
+        var isModalOpen = false;
+        $('#product-box-add-to-cart-button-@Model.Id').on('click', function () {
+            var productNeedsInfo = @isPopupItem.ToString().ToLower();
+            if (productNeedsInfo && !isModalOpen) {
+                var modal = document.getElementById('myModal');
+                // When the user clicks anywhere outside of the modal, close it
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        isModalOpen = false;
+                        modal.style.display = "none";
+                    }
+                }
+
+                var modalButton = document.getElementById('modalButton');
+                modalButton.onclick = function(event) {
+                    AjaxCart.addproducttocart_catalog('@addtocartlink');return false;
+                }
+
+                isModalOpen = true;
+                modal.style.display = "block";
+                return false;
+            } else {
+                AjaxCart.addproducttocart_catalog('@addtocartlink');
+                return false;
+            }
+        });
+    });
+
+
+</script>
+<div class="product-item" data-productid="@Model.Id">
+    <!-- ABC: product name is above image -->
+    <h2 class="product-title">
+        <a href="@productUrl"><span>@man</span><span class="man-no">@manNo</span></a>
+    </h2>
+    <div class="picture">
+        <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
+            @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+            {
+                @await Component.InvokeAsync("LazyLoadImage", new(string Key, string Value)[] 
+                {
+                    ("src", Model.DefaultPictureModel.ImageUrl),
+                    ("alt", Model.DefaultPictureModel.AlternateText),
+                    ("title", Model.DefaultPictureModel.Title)
+                })
+            }
+            else
+            {
+                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+            }
+        </a>
+    </div>
+    <div class="details">
+        @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+        {
+            var ratingPercent = 0;
+            if (Model.ReviewOverviewModel.TotalReviews != 0)
+            {
+                ratingPercent = ((Model.ReviewOverviewModel.RatingSum*100)/Model.ReviewOverviewModel.TotalReviews)/5;
+            }
+            <div class="product-rating-box" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
+                <div class="rating">
+                    <div style="width: @(ratingPercent)%">
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="attribute-squares-wrapper"></div>
+		@if (catalogSettings.ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
+        {
+            <div class="sku">
+                @Model.Sku
+            </div>
+        }
+        <div class="add-info">
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBoxAddinfoBefore, additionalData = Model })
+            
+            <!-- ABC: adds mini description to product box -->
+            @if (!string.IsNullOrEmpty(miniDesc))
+            {
+                <p class="product-box-description">@Html.Raw(miniDesc)</p>
+            }
+            else
+            {
+                <p class="product-box-description">&nbsp;</p>
+            }
+            @if (!string.IsNullOrEmpty(itemNumberDisplay))
+            {
+                <p class="item-number item-number-style">#@itemNumberDisplay</p>
+            }
+            else
+            {
+                <p class="item-number item-number-style">&nbsp;</p>
+            }
+
+            <!-- ABC: custom - adds widget zone for reviews -->
+            @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ProductBoxAddinfoReviews, additionalData = Model })
+
+            <!-- ABC: allow for add to cart -->
+
+            @if (!usesCartPricing)
+            {
+                <div class="prices">
+                    @{decimal? savedPrice = null; }
+                    @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+                    {
+                        string oldPriceStr = "Reg. Price " + Model.ProductPrice.OldPrice.Replace(".00", "");
+                        <span class="price old-price">@oldPriceStr</span>
+                        savedPrice = decimal.Parse(Model.ProductPrice.OldPrice.Substring(1)) - decimal.Parse(Model.ProductPrice.Price.Substring(1));
+                    }
+                    else
+                    {
+                        <span class="price old-price">&nbsp</span>
+                    }
+                    @if (savedPrice.HasValue && savedPrice.Value > 0)
+                    {
+                        var saveStr = "You Save $" + savedPrice.Value.ToString().Replace(".00", "");
+                        <span class="price you-save">@saveStr</span>
+                    }
+                    else
+                    {
+                        <span class="price you-save">&nbsp</span>
+                    }
+                    @if (savedPrice.HasValue && savedPrice.Value > 0)
+                    {
+                        <span class="price-sale-tag">Sale</span>
+                    }
+                    <span class="price actual-price">@priceStr</span>
+                    @if (usesPairPricing)
+                    {
+                        <span class="pair-price-disclaimer">*each</span>
+                    }
+                    @if (Model.ProductPrice.DisplayTaxShippingInfo)
+                    {
+                        var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+                        //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+                        //of course, you can modify appropriate locales to include VAT info there
+                        <span class="tax-shipping-info">
+                            @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("shippinginfo") }))
+                        </span>
+                    }
+                    @if (!String.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
+                    {
+                        <span class="price base-price">@Model.ProductPrice.BasePricePAngV</span>
+                    }
+                    @if (isOpenBox)
+                    {
+                        <span class="open-box">Open box from <span class="open-box-price">$@openBoxPrice</span> Available at select locations.</span>
+                    }
+                </div>
+                }
+            else if (!Model.ProductPrice.DisableBuyButton)
+            {
+                <div class="prices">
+                    <span class="price old-price">&nbsp</span>
+                    <span class="price you-save">&nbsp</span>
+                    <span class="price actual-price">Add to cart to see price</span>
+                </div>
+            }
+            else
+            {
+                <div class="prices">
+                    <span class="price old-price">&nbsp</span>
+                    <span class="price you-save">&nbsp</span>
+                    <span class="price actual-price">&nbsp</span>
+                </div>
+            }
+            @if (!usesCartPricing)
+            {
+                @Model.ProductPrice.BasePricePAngV
+            }
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBoxAddinfoMiddle, additionalData = Model })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBoxAddinfoAfter, additionalData = Model })
+        </div>
+        <div class="buttons-upper">
+            @if (!Model.ProductPrice.DisableAddToCompareListButton)
+            {
+                <button type="button" class="button-2 add-to-compare-list-button" title="@T("ShoppingCart.AddToCompareList")" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">@T("ShoppingCart.AddToCompareList")</button>
+            }
+            @if (!Model.ProductPrice.DisableWishlistButton)
+            {
+                <button type="button" class="button-2 add-to-wishlist-button" title="@T("ShoppingCart.AddToWishlist")" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;">@T("ShoppingCart.AddToWishlist")</button>
+            }
+        </div>
+        <div class="buttons-lower">
+            @* ABC: add mattress messaging *@
+            @if (productFlag != null && productFlag.IsInStoreOnly())
+            {
+                <form action="@productUrl">
+                    <button type="submit" class="button-2 product-box-add-to-cart-button"><span class="no-cart-image">In Store Only</span></button>
+                </form>
+            }
+            else if (isMattress)
+            {
+                <form action="@productUrl">
+                    <button type="submit" class="button-2 product-box-add-to-cart-button"><span class="no-cart-image">Build Package</span></button>
+                    <input type="hidden" name="size" value="@mattressSize" /> 
+                </form>
+            }
+            @* end custom *@
+            else if (!Model.ProductPrice.DisableBuyButton)
+            {
+                var addToCartText = T("ShoppingCart.AddToCart").Text;
+
+                if (Model.ProductPrice.IsRental)
+                {
+                    addToCartText = T("ShoppingCart.Rent").Text;
+                }
+                if (Model.ProductPrice.AvailableForPreOrder)
+                {
+                    addToCartText = T("ShoppingCart.PreOrder").Text;
+                }
+                <button type="button"
+                        id="product-box-add-to-cart-button-@Model.Id"
+                        class="button-2 product-box-add-to-cart-button"><span>@(addToCartText)</span></button>
+            }
+            else
+            {
+                <form action="@productUrl">
+                    <button type="submit" class="button-2 product-box-add-to-cart-button"><span class="no-cart-image">See Details</span></button>
+                </form>
+            }
+        </div>
+    </div>
+</div>

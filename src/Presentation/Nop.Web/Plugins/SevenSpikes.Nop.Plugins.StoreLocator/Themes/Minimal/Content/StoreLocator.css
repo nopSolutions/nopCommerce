@@ -1,0 +1,669 @@
+﻿
+/* anywhere page map */
+
+.anywhere-page-map {
+    margin: 0 0 30px;
+}
+.anywhere-page-map .map-title {
+	position: relative;
+    margin: 0 0 25px;
+	padding: 10px;
+	text-align: center;
+	font-family: "Playfair Display", Times New Roman, serif;
+	font-size: 30px;
+	color: #000;
+}
+.anywhere-page-map .map-title:after {
+	content: "";
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 1px;
+	margin: auto;
+	background: url('images/title-dots-decoration.png') repeat-x;
+}
+.anywhere-page-map .map-title strong {
+    font-weight: normal;
+}
+.anywhere-page-map .map-wrapper {
+	margin: 0 0 30px;
+}
+.anywhere-page-map .align-map-button {
+	display: none;
+}
+
+/* cross-page map elements */
+
+.map-wrapper .map {
+    height: 400px;
+}
+.map-wrapper .map img {
+    max-width: none;
+    max-height: none;
+}
+#shop-address-input {
+    top: 10px !important;
+	width: 180px;
+	height: 30px;
+	border: none;
+	border-radius: 2px;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+	background-color: #fff;
+	font-size: 11px;
+}
+.getUserGeoLocation {
+	display: inline-block;
+    background: url('images/current-location.png') left center no-repeat;
+	padding: 0 0 0 25px;
+	font: normal 17px "Playfair Display", Times New Roman, serif;
+	color: #c49169;
+	cursor: pointer;
+}
+
+
+/* ALL SHOPS PAGE */
+
+.directions-wrapper {
+    display: none;
+	margin: 30px 0 0;
+}
+.directions-shown {
+    display: block;
+}
+.directions-panel {
+	position: relative;
+    overflow-y: auto;
+	text-align: left;
+}
+.directions-panel .adp-text {
+	padding: 0 15px;
+}
+.directions-panel .adp-step,
+.directions-panel .adp-substep {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.directions-panel .adp-substep:nth-child(3) {
+	word-break: break-all; /*fix for Chrome horizontal scroll issue*/
+}
+.current-location-wrap {
+	margin: 45px 0;
+}
+
+.shops-sorting-filtering-wrapper {
+	padding: 20px;
+    overflow: hidden;
+	background-color: #fff;
+}
+.shops-sorting-filtering-wrapper > div {
+	margin: 25px 0;
+}
+.shops-sorting-filtering-wrapper label {
+	display: block;
+	margin: 0 0 5px;
+	color: #000;
+}
+.shops-sorting-filtering-wrapper .select-wrap {
+	width: 80%;
+	max-width: 450px;
+}
+.shops-sorting-filtering-wrapper .input-wrap {
+	display: inline-block;
+	position: relative;
+	width: 80%;
+	max-width: 450px;
+}
+.shops-sorting-filtering-wrapper .input-wrap:before,
+.shops-sorting-filtering-wrapper .input-wrap:after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	height: 10px;
+	width: 2px;
+	background-color: #d9d9d9;
+}
+.shops-sorting-filtering-wrapper .input-wrap:before {
+	left: 0;
+}
+.shops-sorting-filtering-wrapper .input-wrap:after {
+	right: 0;
+}
+.shops-sorting-filtering-wrapper select,
+.shops-sorting-filtering-wrapper input {
+	width: 100%;
+    height: 40px;
+    border-width: 0 0 2px;
+	border-style: solid;
+	border-color: #d9d9d9;
+    padding: 0 10px;
+    vertical-align: middle;
+	color: #666;
+}
+.radiusFilterWrapper span.units {
+	display: inline-block;
+	width: 20px;
+	margin: 0 -20px 0 0;
+}
+.filter-shops-button {
+	width: 80%;
+	max-width: 450px;
+	height: 50px;
+	margin: 15px 0 0;
+    border: 2px solid #c49169;
+	background-color: transparent;
+    padding: 0 15px;
+}
+.filter-shops-button:hover {
+	background-color: #c49169;
+	color: #fff;
+}
+.clear-filtered-shops {
+    display: none;
+	margin: 10px 0;
+}
+
+.shops-list {
+	margin: 30px 0 0;
+}
+.shops-item {
+	max-width: 450px;
+    margin: 50px auto;
+	overflow: hidden;
+	background-color: #fff;
+}
+.shops-item .picture-wrap {
+	font-size: 0;
+}
+.shops-item .picture-link {
+    display: inline-block;
+	width: 100%;
+}
+.shops-item .picture-img {
+	width: 100%;
+    max-width: 100%;
+}
+.shops-item .info-wrap {
+	padding: 30px;
+}
+.shops-item .shop-name {  
+    margin: 10px 0 25px;
+	font: normal 24px "Playfair Display", Times New Roman, serif;
+}
+.shops-item .shop-name a {
+	color: #000 !important;
+}
+.shops-item .short-description {
+    margin: 0 0 15px;
+	line-height: 24px;
+}
+.shops-item .short-description .setter {
+	display: block;
+	margin: 15px 0 5px;
+	font-weight: bold;
+	color: #666;
+}
+.shops-item .tags,
+.shop-page .tags {
+    margin: 0 0 25px;
+}
+.shops-item .tags-label,
+.shop-page .tags-label {
+    display: inline-block;
+    margin: 0 0 5px;
+	font-weight: bold;
+	color: #666;
+}
+.shops-item .tag-item,
+.shop-page .tag-item {
+    display: inline-block;
+	line-height: 24px;
+}
+.shops-item .tag-item:after,
+.shop-page .tag-item:after {
+    content: ",";
+    margin: 0 10px 0 0;
+}
+.shops-item .tag-item:last-child:after,
+.shop-page .tag-item:last-child:after {
+    display: none;
+}
+.shops-item .distance-line {
+	margin: 0 0 30px;
+}
+.shops-item .distance-line div {
+    margin: 0 0 10px;
+	font: normal 16px "Playfair Display", Times New Roman, serif;
+}
+.shops-item .show-directions {
+    display: inline-block;
+    background: url('images/location-marker.png') left center no-repeat;
+	padding: 0 0 0 16px;
+}
+.shops-item .read-more {
+    display: inline-block;
+	min-width: 150px;
+	border: 2px solid #c49169;
+    background-color: transparent;
+    padding: 10px 15px;
+	text-align: center;
+	font: normal 18px "Playfair Display", Times New Roman, serif;
+	color: #000;
+}
+.shops-item .read-more:hover {
+	background-color: #c49169;
+	color: #fff;
+}
+.no-shops-after-filtering {
+    display: none;
+	margin: 30px 0 0;
+	padding: 20px;
+}
+
+
+/* SHOP PAGE */
+
+.back-to-all-shops {
+	display: none;
+}
+.shop-page .main-picture {
+    margin: 0 0 20px;
+	font-size: 0;
+}
+.shop-page .main-picture-link {
+    display: inline-block;
+}
+.shop-page .main-picture-img {
+    max-width: 100%;
+}
+.all-shop-images {
+	font-size: 0;
+}
+.all-shop-images li {
+	display: inline-block;
+    margin: 0 0 5% 5%;
+    width: 30%;
+}
+.all-shop-images li:nth-child(3n+1) {
+    margin-left: 0;
+}
+.all-shop-images a {
+    display: block;
+}
+.all-shop-images img {
+    max-width: 100%;
+}
+
+.shop-map-images {
+	max-width: 480px;
+	margin: 50px auto 40px;
+}
+.shop-map-images .inner-wrapper {
+	background-color: #fff;
+	padding: 15px;
+}
+.shop-map-images .map-controls {
+	padding: 20px 0 10px;
+}
+.shop-map-images .map-controls a {
+}
+.shop-map-images .directions-wrapper {
+	float: none;
+    width: 100%;
+	margin: 10px 0 0;
+}
+
+.shop-info {
+	padding: 0 5%;
+}
+.shop-full-description {
+    margin: 0 0 30px;
+}
+.shop-full-description p {
+	margin: 10px 0;
+}
+.shop-full-description strong {
+	color: #666;
+}
+.shop-full-description td {
+	background: url('images/title-dots-decoration.png') bottom repeat-x;
+	padding: 10px 15px;
+	text-align: left;
+}
+.shop-full-description ul { /*theme specific*/
+	margin: 12px 0;
+	padding: 0 0 0 36px;
+	list-style: disc;
+}
+.shop-full-description ol { /*theme specific*/
+	margin: 12px 0;
+	padding: 0 0 0 36px;
+	list-style: decimal;
+}
+.shops-list-wrapper {
+    position: relative;
+}
+.shops-list-loader,
+.infinite-scroll-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1009;
+    width: 32px;
+    height: 32px;
+    margin: -16px 0 0 -16px;
+    background: url(images/loading.gif) center no-repeat;
+}
+.infinite-scroll-loader {
+    bottom: -50px;
+    top: auto;
+}
+
+
+@media all and (min-width: 481px) {
+    #shop-address-input {
+	width: 220px;
+}
+
+}
+
+@media all and (min-width: 769px) {
+
+.anywhere-page-map .map-title {
+    margin-bottom: 30px;
+	font-size: 36px;
+}
+.anywhere-page-map .map-title:after {
+    top: 3px;
+}
+.anywhere-page-map .map-title strong {
+    position: relative;
+    z-index: 1;
+    background-color: #f8f8f8;
+	padding: 0 30px;
+	line-height: 1em;
+}
+
+.directions-wrapper {
+	float: left;
+	width: 40%;
+	height: 400px;
+	margin: 0;
+}
+.directions-panel {
+	height: 100%;
+	padding: 0 10px 0 0;
+}
+.directions-panel > div {
+	margin: 0 0 10px;
+}
+.directions-panel #backToResults {
+	display: none;
+}
+.directions-panel table {
+	margin-top: 0;
+}
+.map-wrapper.directions-shown {
+	float: right;
+	width: 60%;
+}
+.shops-sorting-filtering-wrapper {
+	clear: both;
+	font-size: 0;
+}
+.shops-sorting-filtering-wrapper > div {
+	display: inline-block;
+	width: 28%;
+	margin: 0 0 5px;
+	padding: 0 20px;
+	vertical-align: bottom;
+	font-size: 12px; /*reset zeroing*/
+}
+.shops-sorting-filtering-wrapper > div:first-child {
+	padding-left: 0;
+}
+.shops-sorting-filtering-wrapper > div:last-child {
+	width: 16%;
+	padding: 0;
+	text-align: center;
+}
+.shops-sorting-filtering-wrapper label {
+	text-align: left;
+}
+.shops-sorting-filtering-wrapper .select-wrap,
+.shops-sorting-filtering-wrapper .input-wrap {
+	width: 100%;
+}
+div.radiusFilterWrapper {
+	padding: 0 25px 0 15px;
+	white-space: nowrap;
+}
+.radiusFilterWrapper span.units {
+	margin: 0;
+	text-align: right;
+	vertical-align: middle;
+}
+.clear-filtered-shops {
+	margin: 0 0 5px;
+}
+.filter-shops-button {
+	min-width: 120px;
+	height: 42px;
+	margin: 0;
+	padding: 0 0 1px;
+}
+.shops-list {
+	margin: 0;
+	padding: 0 1.5%;
+	text-align: left;
+	font-size: 0;
+}
+.shops-item {
+	display: inline-block;
+	position: relative;
+	width: 97%;
+	max-width: none;
+	margin: 4% 1.5% 0;
+	vertical-align: top;
+	font-size: 14px; /*reset zeroing*/
+}
+.shops-item .picture-wrap {
+	float: left;
+	width: 50%;
+	text-align: center;
+}
+.shops-item .picture-link {
+	max-width: 460px;
+}
+.shops-item .info-wrap {
+	float: right;
+	width: 50%;
+	padding-bottom: 75px;
+	text-align: left;
+}
+.shops-item .distance-line {
+	position: absolute;
+	right: 30px;
+	bottom: 30px;
+	margin: 0 0 15px;
+	text-align: right;
+}
+.shops-item .read-more {
+	position: absolute;
+	bottom: 30px;
+}
+
+.shop-page .page-body {
+	padding: 30px 20px;
+}
+.shop-page .inner-wrapper {
+	display: inline-block;
+	max-width: 600px;
+}
+.shop-map-images {
+	float: left;
+	width: 50%;
+	max-width: none;
+	margin: 0;
+	padding: 0 15px 0 0;
+	text-align: right;
+}
+.shop-map-images + .shop-info {
+	float: right;
+	width: 50%;
+	padding: 0 0 0 15px;
+	text-align: left;
+}
+.shop-map-images .map-controls {
+	border: none;
+	text-align: left;
+}
+.all-shop-images {
+	text-align: left;
+}
+
+}
+
+@media all and (min-width: 1025px) {
+
+.shops-sorting-filtering-wrapper {
+	text-align: left;
+}
+.shops-sorting-filtering-wrapper > div {
+	width: auto !important;
+	margin: 0;
+	padding: 0 10px;
+}
+div.shops-filtering-buttons:last-child {
+	float: right;
+}
+.shops-sorting-filtering-wrapper label {
+	display: inline-block;
+	margin: 0 5px 0 0;
+}
+.shops-sorting-filtering-wrapper select,
+.shops-sorting-filtering-wrapper input {
+	width: 160px;
+}
+.shops-sorting-filtering-wrapper .select-wrap,
+.shops-sorting-filtering-wrapper .input-wrap {
+	width: auto;
+}
+.shops-sorting-filtering-wrapper #searchRadius {
+	width: 120px;
+}
+.shops-sorting-filtering-wrapper .clear-filtered-shops {
+	margin: 0 10px 0 0;
+	padding-bottom: 0;
+}
+.shops-sorting-filtering-wrapper .button-wrap {
+	display: inline-block;
+}
+.shop-page .page-body {
+	padding: 30px;
+}
+
+}
+
+@media all and (min-width: 1152px) {
+
+.shops-sorting-filtering-wrapper > div {
+	padding: 0 20px;
+}
+.shops-sorting-filtering-wrapper select,
+.shops-sorting-filtering-wrapper input {
+	width: 200px;
+}
+.shops-item .info-wrap {
+	padding-left: 0;
+}
+
+}
+
+@media all and (min-width: 1281px) {
+
+.current-location-wrap {
+	margin: -25px 0 45px;
+}
+.shops-sorting-filtering-wrapper {
+	padding: 20px 30px;
+}
+.shops-sorting-filtering-wrapper > div {
+	padding: 0 30px;
+}
+.shops-sorting-filtering-wrapper select,
+.shops-sorting-filtering-wrapper input {
+	width: 230px;
+}
+.shop-page .page-body {
+	padding-top: 0;
+}
+.shop-map-images {
+	padding: 0 20px 0 0;
+}
+.shop-map-images .inner-wrapper {
+	padding: 20px;
+}
+.shop-map-images + .shop-info {
+	padding: 0 0 0 20px;
+}
+.shops-item {
+	width: 47%;
+}
+.shops-item .info-wrap {
+	padding-left: 30px;
+}
+.shops-item .distance-line {
+	position: static;
+	margin: 0 0 30px;
+	text-align: left;
+}
+
+}
+
+@media all and (min-width: 1347px) {
+
+.anywhere-page-map .map-title {
+    margin: 0 0 50px;
+    font-size: 42px;
+    letter-spacing: 2px;
+}
+.anywhere-page-map .map-title strong {
+	padding: 0 70px;
+}
+
+}
+
+@media all and (min-width: 1601px) {
+
+.shops-sorting-filtering-wrapper {
+	padding: 20px 50px;
+}
+.shops-sorting-filtering-wrapper select,
+.shops-sorting-filtering-wrapper input {
+	width: 300px;
+}	
+.shop-map-images {
+	padding: 0 30px 0 0;
+}
+.shop-map-images + .shop-info {
+	padding: 0 0 0 30px;
+}
+.shops-item .distance-line {
+	position: absolute;
+	margin: 0 0 15px;
+	text-align: right;
+}
+
+}
+
+@media all and (min-width: 1901px) {
+
+.anywhere-page-map .map-title {
+    font-size: 46px;
+}
+.anywhere-page-map .map-title strong {
+	padding: 0 90px;
+}
+
+}

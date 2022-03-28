@@ -1,0 +1,25 @@
+﻿@using Nop.Web.Framework.UI;
+@using Nop.Plugin.Widgets.AbcBonusBundle.Models;
+@model IList<AbcBonusBundleModel>
+
+@foreach (var bundle in Model)
+{
+    <div style="margin-top: 1rem;">
+        @if (bundle.PopupCommand != null)
+        {
+            <a href="@bundle.PopupCommand">
+                <b style="color: #B70000">@bundle.StoreName Bonus Bundle! Ends @bundle.EndDate</b><br />
+                @bundle.BundleDescription<br />
+                Call @bundle.PhoneNumber or see store to claim this offer!
+            </a>
+        }
+        else
+        {
+            <span>
+                <b style="color: #B70000">@bundle.StoreName Bonus Bundle! Ends @bundle.EndDate</b><br />
+                @bundle.BundleDescription<br />
+                Call @bundle.PhoneNumber or see store to claim this offer!
+            </span>
+        }
+    </div>
+}

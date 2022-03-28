@@ -1,0 +1,39 @@
+﻿.stock-table thead td span {
+    color: #000000;
+    font-size: 17px;
+    font-style: bold;
+}
+
+.start-col {
+    text-align: left;
+}
+
+.center-col {
+    text-align: center;
+}
+
+.end-col {
+    text-align: right;
+}
+
+.white-row {
+    background-color: #FFFFFF;
+}
+
+.stock-table td {
+    padding: 10px 30px;
+}
+
+    .stock-table td span {
+        font-size: 16px;
+    }
+
+.stock-table {
+    margin: 15px 0px;
+}
+
+@media (max-width: 767px) {
+    .end-col {
+        display: none;
+    }
+}

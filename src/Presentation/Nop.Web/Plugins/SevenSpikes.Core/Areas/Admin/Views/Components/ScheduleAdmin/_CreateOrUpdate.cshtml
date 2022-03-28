@@ -1,0 +1,124 @@
+﻿@using Nop.Services
+@model SevenSpikes.Nop.Scheduling.Areas.Admin.Models.ScheduleModel
+
+<div asp-validation-summary="All"></div>
+
+<input id="schedule-id" type="hidden" value="@Model.Id">
+<input id="update-schedule-url" type="hidden" value="@Url.Action("UpdateSchedule", "ScheduleAdmin")">
+<input id="delete-schedule-url" type="hidden" value="@Url.Action("DeleteSchedule", "ScheduleAdmin")">
+
+@{
+    IList<SelectListItem> allDays = new List<SelectListItem>();
+
+    for (int i = 1; i <= 31; i++)
+    {
+        allDays.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString() });
+    }
+}
+
+<div class="cards-group">
+    <div class="card card-default">
+		<div class="card-header">
+			<div class="card-title">
+				@T("SevenSpikes.Scheduling.Admin.Schedule")
+			</div>
+		</div>
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="EntityFromDate" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EntityFromDate" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="EntityToDate" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EntityToDate" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default">
+        <div class="card-header">
+			<div class="card-title">
+				@T("SevenSpikes.Scheduling.Admin.SchedulePattern")
+			</div>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="SchedulePatternType" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="SchedulePatternType" asp-items="@await (((SchedulePatternType)Model.SchedulePatternType).ToSelectListAsync())" />
+                </div>
+            </div>
+            <div class="form-group row exactDay">
+                <div class="col-md-3">
+                    <nop-label asp-for="ExactDayValue" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="ExactDayValue" asp-items="allDays" />
+                </div>
+            </div>
+
+            <div class="form-group row everyMonth">
+                <div class="col-md-3">
+                    <div class="label-wrapper">
+                        <label class="control-label" title="@T("SevenSpikes.Scheduling.Admin.SchedulePattern.EveryMonth")">@T("SevenSpikes.Scheduling.Admin.SchedulePattern.EveryMonth")</label>
+                        <div class="ico-help" title="@T("SevenSpikes.Scheduling.Admin.SchedulePattern.EveryMonth.Hint")">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div>
+                        <div class="form-text-row">@T("SevenSpikes.Scheduling.Admin.SchedulePattern.EveryMonth.From")</div>
+                        <nop-select asp-for="EveryMonthFromDayValue" asp-items="allDays" />
+                    </div>
+                    <div>
+                        <div class="form-text-row">@T("SevenSpikes.Scheduling.Admin.SchedulePattern.EveryMonth.To")</div>
+                        <nop-select asp-for="EveryMonthToDayValue" asp-items="allDays" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="SchedulePatternFromTime" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="SchedulePatternFromTime" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="SchedulePatternToTime" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="SchedulePatternToTime" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default">
+		<div class="card-header">
+			<div class="card-title">
+				Summary
+			</div>
+		</div>
+        <div class="card-body">
+            <div id="sceduleSummary">
+                Occurs {<span id="patternType"></span>} between {<span id="timeFrom"></span>} and {<span id="timeTo"></span>}.
+                Schedule will be used between {<span id="dateFrom"></span>} and {<span id="dateTo"></span>}.
+            </div>
+            <div>
+                <strong>NOTE:</strong> Store time zone: <strong>@Model.StoreTimeZone.DisplayName</strong>. Current time: <strong>@TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, Model.StoreTimeZone).ToString("F")</strong>
+            </div>
+        </div>
+    </div>
+</div>

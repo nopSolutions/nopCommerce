@@ -1,0 +1,39 @@
+﻿@model IDictionary<Nop.Core.Domain.Orders.ShoppingCartItem, List<Nop.Core.Domain.Catalog.ProductAttributeValue>>
+@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI;
+
+<div class="checkout-data">
+    @Html.Widget("op_checkout_warranty_top")
+    <div class="section warranty-selection">
+        @{ int warrGroupIdentifier = 0; }
+        @foreach (var keyValue in Model)
+        {
+            string noWarranty = "No Additional Warranty ($0)";
+            string baseId = "WarrantyOption_";
+            int option = 1;
+
+            string radioId = baseId + option + "_" + warrGroupIdentifier;
+
+            <h3>@keyValue.Key.Product.Name</h3>
+            <ul class="option-list">
+                @foreach (var value in keyValue.Value)
+                {
+                    string displayText = @value.Name + " ($" + Math.Round(value.PriceAdjustment, 2) + ")";
+
+                    <li>
+                        <input id="@radioId" type="radio" name="@keyValue.Key.Id" value="@value.Id" />
+                        <label for="@radioId"> @displayText </label>
+                    </li>
+                    ++option;
+                    radioId = baseId + option + "_" + warrGroupIdentifier;
+                }
+                <li>
+                    <input id="@radioId" type="radio" name="@keyValue.Key.Id" value="NoWarranty" checked="checked" />
+                    <label for="@radioId"> @noWarranty </label>
+                </li>
+            </ul>
+            warrGroupIdentifier++;
+        }
+    </div>
+    @Html.Widget("op_checkout_warranty_bottom")
+</div>

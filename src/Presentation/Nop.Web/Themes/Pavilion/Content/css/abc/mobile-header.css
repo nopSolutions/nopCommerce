@@ -1,0 +1,172 @@
+﻿/* adjust admin header */
+.admin-header-links {
+    position: relative;
+}
+.admin-header-links ~ .responsive-nav-wrapper-parent {
+    top: 0;
+}
+
+/* sets up flex for centering */
+.responsive-nav-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0 0.5rem;
+}
+
+/* vertically center logo */
+.responsive-nav-wrapper > div > a.logo {
+    height: auto;
+}
+.responsive-nav-wrapper > div > a.logo img {
+    width: 140px;
+}
+
+/* need to revert Pavilion CSS, used for mobile logo */
+.responsive-nav-wrapper > div:first-child {
+    border-left: 0;
+    background: transparent;
+}
+.responsive-nav-wrapper > div {
+    border-right: 0;
+    background-image: url(/Plugins/Misc.AbcFrontend/Images/mobile-sprite.png);
+}
+
+/* phone number gets special rules */
+.responsive-nav-wrapper > div.phone {
+    margin-left: auto;
+    background-image: none;
+    background-color: transparent;
+}
+.responsive-nav-wrapper > div.phone > a {
+    font-size: 0.75rem;
+    width: auto;
+    height: auto;
+}
+
+/* hides provided header logo for mobile */
+.header-logo {
+    display: none;
+}
+.responsive-nav-wrapper-parent {
+    position: relative;
+}
+.master-wrapper-content {
+    margin-top: 0;
+}
+
+/* quantity for mobile shopping cart */
+div.mobile-cart-qty {
+    width: 15px;
+    line-height: 10px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 10px;
+    border: 2px solid red;
+    background: red;
+    color: #fff;
+    font-weight: bold;
+    position: absolute;
+    right: 5px;
+    top: 10px;
+}
+
+/* set up categories/search bar */
+.mobile-header-content-row {
+    clear: both;
+    background-color: #336799;
+    height: 50px;
+}
+.mobile-header-content-row div.mobile-menu {
+    float: left;
+    background-image: url(/Plugins/Misc.AbcFrontend/Images/mobile-menu.png);
+    background-size: 52px;
+    width: 52px;
+    height: 50px;
+}
+.mobile-header-content-row div span {
+    display: block;
+    height: 50px;
+    font-size: 0;
+}
+.mobile-header-content-row input.search-box-text {
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    margin-top: 7px;
+    margin-left: 3px;
+    width: calc(100% - 61px);
+    padding: 0 12px;
+    z-index: 0;
+}
+.mobile-search-button {
+    width: 47px;
+    height: 47px;
+    border: none;
+    background: url(/Plugins/Misc.AbcFrontend/Images/search-button.png) center no-repeat;
+    vertical-align: middle;
+    font-size: 0;
+    outline: 1px solid transparent;
+    transition: all .2s ease;
+    position: relative;
+    top: -41px;
+    left: calc(100% - 102px);
+    z-index: 0;
+}
+
+/* fixes margin issue for home page */
+.two-columns-area,
+.admin-header-links ~ .two-columns-area {
+    margin: 0;
+}
+
+/* SLI search bar */
+div.search-box.store-search-box {
+    width: calc(100% - 290px);
+    margin-top: 1.5px;
+}
+div.search-box.store-search-box form#small-search-box-form {
+    width: 100%;
+    padding-left: 10px;
+}
+div.search-box.store-search-box form#small-search-box-form input#sli_search_1 {
+    border-radius: 20px;
+    background: #fff;
+    color: #4f4f4f;
+    width: 100%;
+}
+div.search-box.store-search-box form#small-search-box-form input.button-1.search-box-button {
+    position: absolute;
+    top: -1px;
+    right: 0;
+    z-index: 10;
+    background: url(/Plugins/Misc.AbcFrontend/Images/search-button.png) center no-repeat;
+    outline: 0;
+}
+input#sli_search_1::-webkit-input-placeholder {
+    color: gray;
+}
+
+@media (min-width: 769px) {
+    .responsive-nav-wrapper > div > a.logo img {
+        width: 200px;
+    }
+
+    .responsive-nav-wrapper > div.phone > a {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 1025px) {
+    .header {
+        margin: 0 0 25px;
+    }
+
+    .header-logo {
+        display: table-cell;
+    }
+
+    .mobile-header-content-row {
+        display: none;
+    }
+}

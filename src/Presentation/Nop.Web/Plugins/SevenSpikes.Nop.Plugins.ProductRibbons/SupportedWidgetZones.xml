@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <!--<WidgetZone>categorydetails_after_breadcrumb</WidgetZone>
+  <WidgetZone>productdetails_before_pictures</WidgetZone>-->
+  <WidgetZone>content_before</WidgetZone>
+</SupportedWidgetZones>

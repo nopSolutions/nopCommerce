@@ -1,0 +1,94 @@
+@model AbcPromoSearchModel
+
+@using Nop.Plugin.Misc.AbcCore.Areas.Admin.Models
+
+@{
+    //page title
+    ViewBag.PageTitle = "Promos";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ABCWarehouse.Promos");
+
+    Layout = "_AdminLayout";
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        Promos
+    </h1>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "abcpromos-grid",
+                        UrlRead = new DataUrl("List", "AbcPromo", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(AbcPromoModel.Name))
+                            {
+                                Title = "Name",
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(AbcPromoModel.Description))
+                            {
+                                Title = "Description",
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(AbcPromoModel.StartDate))
+                            {
+                                Title = "Start Date",
+                                Width = "100",
+                                Render = new RenderDate() {
+                                    Format = "MM/DD/YYYY"
+                                }
+                            },
+                            new ColumnProperty(nameof(AbcPromoModel.EndDate))
+                            {
+                                Title = "End Date",
+                                Width = "100",
+                                Render = new RenderDate() {
+                                    Format = "MM/DD/YYYY"
+                                }
+                            },
+                            new ColumnProperty(nameof(AbcPromoModel.IsActive))
+                            {
+                                Title = "Active",
+                                Width = "50",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(AbcPromoModel.Manufacturer))
+                            {
+                                Title = "Manufacturer",
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(AbcPromoModel.Slug))
+                            {
+                                Title = "Slug",
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(AbcPromoModel.ProductCount))
+                            {
+                                Title = "Products",
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(AbcPromoModel.Id))
+                            {
+                                Title = "View Products",
+                                Width = "50",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonView(new DataUrl("~/Admin/AbcPromo/Products/"))
+                            }
+                        }
+                    })                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

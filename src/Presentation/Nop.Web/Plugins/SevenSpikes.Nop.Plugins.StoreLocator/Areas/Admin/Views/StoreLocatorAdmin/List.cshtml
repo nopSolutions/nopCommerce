@@ -1,0 +1,136 @@
+﻿@model StoreLocatorSettingsModel
+@inject AdminAreaSettings adminAreaSettings
+@inject IWebHelper webHelper
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.StoreLocator.Admin.Submenus.ManageShops");
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    var storeLocation = webHelper.GetStoreLocation().TrimEnd('/');
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.Plugins.StoreLocator.Admin.Menu.MenuName")
+    </h1>
+    <div class="float-right">
+
+        <a href="@Html.Raw(Url.Action("Create", "StoreLocatorAdmin"))" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("SevenSpikes.StoreLocator.Admin.Shop.AddNew")
+        </a>
+
+    </div>
+</div>
+
+<nop-antiforgery-token />
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "stores-grid",
+                        UrlRead = new DataUrl("List", "StoreLocatorAdmin", null),
+                        UrlDelete = new DataUrl("DeleteShop", "StoreLocatorAdmin", null),
+                        Length = defaultGridPageSize,
+                        LengthMenu = gridPageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ShopAdminModel.Name))
+                            {
+                                Title = T("SevenSpikes.StoreLocator.Admin.Stores.ShopName").Text
+                            },
+                            new ColumnProperty(nameof(ShopAdminModel.Id))
+                            {
+                                Title = T("SevenSpikes.StoreLocator.Admin.Stores.ShopCoordinates").Text,
+                                Render = new RenderCustom("renderStoreCoordinates")
+                            },
+                            new ColumnProperty(nameof(ShopAdminModel.IsVisible))
+                            {
+                                Title = T("SevenSpikes.StoreLocator.Admin.Stores.ShopIsVisible").Text,
+                                Width = "100",
+                                Render = new RenderCustom("renderIsVisible")
+                            },
+                            new ColumnProperty(nameof(ShopAdminModel.ShopPickupPoint.UseAsPickupPoint))
+                            {
+                                Title = T("SevenSpikes.StoreLocator.Admin.Stores.ShopIsPickupPoint").Text,
+                                Width = "100",
+                                Render = new RenderCustom("renderIsPickupPoint")
+                            },
+                            new ColumnProperty(nameof(ShopAdminModel.DisplayOrder))
+                            {
+                                Title = T("SevenSpikes.StoreLocator.Admin.Shop.DisplayOrder").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ShopAdminModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                Render = new RenderCustom("renderEditButton")
+                            },
+                            new ColumnProperty(nameof(ShopAdminModel.Id))
+                            {
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                Width = "100"
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    
+    function renderStoreCoordinates(data, type, row, meta) {
+
+        if (row.PictureId > 0) {
+
+            return row.Latitude + ', ' + row.Longitude;
+        }
+        else {
+
+            return 'n/a';
+        }
+    }
+    
+    function renderIsVisible(data, type, row, meta) {
+
+        if (row.IsVisible) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-close false-icon"></i>';
+        }
+    }
+    
+    function renderIsPickupPoint(data, type, row, meta) {
+
+        if (row.ShopPickupPoint.UseAsPickupPoint) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-close false-icon"></i>';
+        }
+    }
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<a class="btn btn-default" href="Edit/' + data + '" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</a>';
+    }
+</script>

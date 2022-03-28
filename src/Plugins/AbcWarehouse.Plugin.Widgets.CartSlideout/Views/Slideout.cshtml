@@ -1,0 +1,44 @@
+@*
+    Starting point comes from https://www.w3schools.com/howto/howto_js_sidenav.asp
+*@
+
+@{
+    Html.AddCssFileParts("https://use.fontawesome.com/releases/v5.3.1/css/all.css", "", true);
+    Html.AddCssFileParts("~/Plugins/Widgets.CartSlideout/styles/cart-slideout.css");
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Widgets.CartSlideout/scripts/cart-slideout.js");
+}
+
+<div id="cart-slideout-overlay"></div>
+<div id="cart-slideout">
+  <a href="javascript:void(0)" id="cart-slideout__back" onclick="back()">
+      <i class="fas fa-arrow-left"></i>
+  </a>
+  <a href="javascript:void(0)" class="cart-slideout__close" onclick="hideCartSlideout()">&times;</a>
+  <div class="cart-slideout__title">
+      <i class="fas fa-check-circle" style="color: "></i> Item Added to Cart
+  </div>
+  <div id="cart-slideout__product-info"></div>
+  <hr style="clear: both; margin-bottom: 1rem" />
+  <div id="cart-slideout__delivery-input">
+      <div id="cart-slideout__delivery-zip-code">
+          <label for="cart-slideout__delivery-zip-code">Enter Zip Code:</label>
+          <input id="cart-slideout__delivery-zip-code-input" />
+      </div>
+      <button id="cart-slideout__check-delivery-options"
+              class="cart-slideout-btn"
+              onclick="checkDeliveryShippingAvailabilityAsync()"
+              disabled>
+            Check Delivery/Shipping Availability
+      </button>
+  </div>
+  <div id="cart-slideout__delivery-not-available">
+      Home Delivery Shipping is not available for the given zip code.
+  </div>
+  <div id="cart-slideout__attributes"></div>
+  <div id="cart-slideout__buttons">
+      <div id="cart-slideout__subtotal"></div>
+      <a href="/cart">Go To Cart</a>
+      <a onclick="hideCartSlideout()">Continue Shopping</a>
+  </div>
+</div>

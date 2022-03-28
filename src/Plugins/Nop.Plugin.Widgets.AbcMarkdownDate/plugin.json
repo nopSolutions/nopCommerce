@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "ABCWarehouse Markdown Date",
+  "SystemName": "Widgets.AbcMarkdownDate",
+  "Version": "4.40.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "X By 2",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.AbcMarkdownDate.dll",
+  "Description": "Displays the date that the promoted markdown date will end."
+}

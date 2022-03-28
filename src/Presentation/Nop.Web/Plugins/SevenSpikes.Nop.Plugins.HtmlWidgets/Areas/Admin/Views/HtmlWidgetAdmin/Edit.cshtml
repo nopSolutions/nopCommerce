@@ -1,0 +1,43 @@
+@model SevenSpikes.Nop.Plugins.HtmlWidgets.Areas.Admin.Models.HtmlWidgetModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.Plugins.HtmlWidgets.Admin.Submenus.ManageHtmlWidgets");
+}
+
+<form method="post" id="html-widgets-form">
+    <nop-antiforgery-token />
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.EditHtmlWidgetDetails")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink("(" + T("SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary save-settings-button">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-primary save-settings-button">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <button type="button" name="copyentity" class="btn bg-olive" data-toggle="modal" data-target="#copyentity-window">
+                <i class="fa fa-clone"></i>
+                @T("SevenSpikes.Plugins.Admin.Copy")
+            </button>
+            @if (Model.Id > 0)
+            {
+                <span id="html-widgets-delete" class="btn bg-danger">
+                    <i class="far fa-trash-alt"></i>
+                    @T("Admin.Common.Delete")
+                </span>
+            }
+        </div>
+    </div>
+
+    @await Html.PartialAsync(Views.CreateOrUpdate, Model)
+</form>
+
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="html-widgets-delete" />
+@await Html.CopyEntityDialogAsync()

@@ -1,0 +1,56 @@
+﻿* {
+    position: relative;
+}
+
+/*stock styling*/
+
+.in-stock-msg {
+	color: #2ECC40;
+}
+
+.out-of-stock-msg {
+	color: #FF4136;
+}
+
+/*input styling*/
+/*#zipcode_submit_btn :disabled {
+  background-color: #777;
+}
+*/
+#zipcode_submit_btn{
+  background-color: #fff;
+}
+
+/*store styling*/
+
+.store-table {
+	table-layout: fixed;
+	width: 100%;
+}
+
+.store-outer-block {
+	text-align: center;
+	width: 100%;
+}
+
+.store-block {
+  display: inline-block;
+  padding: 15px 15px;
+  text-align: left;
+}
+
+.shop-name {
+	color: #000;
+}
+
+.selected-store {
+  background-color: #CCCCCC;
+}
+
+.select-store-btn {
+	background-color:#fff;
+}
+
+.select-store-btn:hover {
+	color: #f74258;
+}

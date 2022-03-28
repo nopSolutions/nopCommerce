@@ -1,0 +1,110 @@
+
+.directions-panel {
+	text-align: right;
+}
+.radiusFilterWrapper span.units {
+	margin: 0 0 0 -20px;
+}
+.clear-filtered-shops {
+	background-position: left center;
+}
+.shops-item .distance-line {
+	margin: 0 0 20px 5px;
+}
+.shops-item .show-directions {
+	margin: 0 5px 20px 0;
+}
+.shops-item .tag-item:after,
+.shop-page .tag-item:after {
+	margin: 0 0 0 10px;
+}
+.all-shop-images {
+	text-align: right;
+}
+.all-shop-images li {
+	margin: 0 4% 5% 0;
+}
+.all-shop-images li:nth-child(4n+1) {
+	margin-right: 0;
+}
+.shop-full-description td {
+	text-align: right;
+}
+.shop-full-description a {
+	display: inline-block;
+}
+.shop-full-description ul {
+	padding: 0 36px 0 0;
+}
+.shop-full-description ol {
+	padding: 0 36px 0 0;
+}
+.anywhere-page-map .additional-info {
+    margin: 0 0 0 20px;
+}
+
+
+@media all and (min-width: 769px) {
+	
+.directions-wrapper {
+	float: right;
+}
+.directions-panel {
+	padding: 0 0 0 10px;
+}
+.map-wrapper.directions-shown {
+	float: left;
+}
+.shops-sorting-filtering-wrapper > div:first-child {
+	padding: 0 0 0 20px;
+}
+.shops-sorting-filtering-wrapper > div:last-child {
+	text-align: left;
+}
+.shops-sorting-filtering-wrapper label {
+	text-align: right;
+}
+div.radiusFilterWrapper {
+	padding: 0 15px 0 25px;
+}
+.radiusFilterWrapper span.units {
+	text-align: left;
+}
+.clear-filtered-shops {
+	padding: 0 15px 0 5px;
+}
+.shops-item .info-wrap {
+	text-align: right;
+}
+.shop-map-images {
+	float: right;
+}
+.shop-map-images + .shop-info {
+	float: left;
+	text-align: right;
+}
+.shop-map-images .map-controls {
+	text-align: right;
+}
+
+}
+
+@media all and (min-width: 1025px) {
+	
+div.shops-filtering-buttons:last-child {
+	float: left;
+}
+.shops-sorting-filtering-wrapper label {
+	margin: 0 0 0 5px;
+}
+.shops-sorting-filtering-wrapper .clear-filtered-shops {
+	margin: 0 0 0 10px;
+}
+.shop-map-images .main-picture {
+	float: right;
+}
+.shop-map-images .all-shop-images {
+	float: left;
+}
+
+}

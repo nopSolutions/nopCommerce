@@ -1,0 +1,18 @@
+﻿@model BasePageRibbonModel
+
+    @if (!string.IsNullOrEmpty(Model.RibbonPictureModel.PictureUrl))
+    {
+        <img id="ribbon-picture-@Model.ProductRibbonId-@Model.ProductId-@Model.PictureId" style="@Model.ImageStyle" src="@Model.RibbonPictureModel.PictureUrl"/>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Text))
+    {
+        if (string.IsNullOrEmpty(Model.RibbonPictureModel.PictureUrl))
+        {
+            <label class="ribbon-text" style="@Model.TextStyle">@Model.Text</label>
+        }
+        else
+        {
+            <label class="ribbon-image-text" style="@Model.TextStyle">@Model.Text</label>
+        }
+    }

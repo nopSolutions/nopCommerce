@@ -1,0 +1,74 @@
+﻿@using Nop.Web.Framework.UI;
+@using Nop.Web.Framework;
+@using Nop.Plugin.Widgets.AbcHomeDeliveryStatus.Models;
+@model HomeDeliveryStatusModel
+
+
+@if (Model != null && Model.StatusInfo != null)
+{
+    if (string.IsNullOrEmpty(Model.StatusInfo.ErrorMessage))
+    {
+        <br />
+        <table>
+            <thead>
+                <tr>
+                    <td class="left-col"><b>Customer Name</b></td>
+                    <td><b>Shipping Address</b></td>
+                    <td><b>Truck Loaded</b></td>
+                    <td><b>DeliveryTime</b></td>
+                    <td><b>Stop Number</b></td>
+                    <td class="right-col"><b>Store Phone Number</b></td>
+                </tr>
+            </thead>
+            <tr class="white-background">
+                <td class="left-col">@Model.StatusInfo.CustomerName</td>
+                <td>@Html.Raw(Model.StatusInfo.ShippingAddress.Replace("\\n", "<br/>"))</td>
+                <td>@Model.StatusInfo.TruckLoaded</td>
+                <td>@Model.StatusInfo.DeliveryTime</td>
+                <td>@Model.StatusInfo.StopNumber</td>
+                <td class="right-col">@Model.StatusInfo.StorePhoneNumber</td>
+            </tr>
+        </table>
+        <br />
+        <br />
+
+        <table>
+            <thead>
+                <tr>
+                    <td class="left-col"><b>Product Id</b></td>
+                    <td><b>Brand</b></td>
+                    <td><b>Product Name</b></td>
+                    <td><b>Scheduled Delivery Date</b></td>
+                    <td class="right-col"><b>Comment</b></td>
+                </tr>
+            </thead>
+            @{
+                int i = 0;
+            }
+            @foreach (var item in Model.StatusInfo.ItemStatuses)
+            {
+                string whiteClass = "";
+                if (i % 2 == 0) {
+                    whiteClass = "white-background";
+                }
+                if (!string.IsNullOrEmpty(item.ScheduledDeliveryDate))
+                {
+                    <tr class="@whiteClass">
+                        <td class="left-col">@item.Model</td>
+                        <td>@item.Brand</td>
+                        <td>@Html.Raw(item.Name.Replace("\\n", "<br/>"))</td>
+                        <td>@item.ScheduledDeliveryDate</td>
+                        <td class="right-col">@Html.Raw(item.Comment.Replace("\\n", "<br/>"))</td>
+                    </tr>
+                }
+                i++;
+            }
+        </table>
+    }
+    @*Display an error message if some error happened*@
+    else
+    {
+        <br />
+        <h3>@Model.StatusInfo.ErrorMessage</h3>
+    }
+}

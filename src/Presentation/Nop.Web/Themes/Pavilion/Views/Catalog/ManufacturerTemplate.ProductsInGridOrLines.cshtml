@@ -1,0 +1,167 @@
+﻿@model ManufacturerModel
+
+@using Nop.Core.Domain.Seo
+@using Nop.Web.Models.Catalog
+@using Nop.Web.Framework.Infrastructure
+@using Nop.Plugin.Misc.AbcCore.Infrastructure
+@using Nop.Web.Extensions
+
+@inject Nop.Core.IWebHelper webHelper
+@inject SeoSettings seoSettings
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    //meta
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    //page class
+    Html.AppendPageCssClassParts("html-manufacturer-page");
+
+    if (seoSettings.CanonicalUrlsEnabled)
+    {
+        var manufacturerUrl = Url.RouteUrl("Manufacturer", new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol().ToLowerInvariant());
+        Html.AddCanonicalUrlParts(manufacturerUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
+    }
+}
+<style>
+    .filtersPanel div.specificationFilterPanel7Spikes:nth-of-type(n + 3) {
+        display: none;
+    }
+
+    .filter-item-name {
+        white-space: pre;
+    }
+
+    .viewmode-icon.list.viewmode-icon.list {
+        display: none;
+    }
+</style>
+<script>
+    $(function () {
+        // check if filter applied
+        var hash = window.location.hash;
+
+        var hasLandingContent = $(".top-widget-unfiltered div:nth-child(1)").html().length > 1 ||
+            $(".top-widget-unfiltered div:nth-child(2)").html().length > 1 ||
+            $(".top-widget-unfiltered div:nth-child(3)").html().length > 1 ||
+            $(".top-widget-unfiltered div:nth-child(4)").html().length > 1;
+
+        // if there is not filter applied
+        if (hasLandingContent && (!hash || hash.indexOf('noFilterApplied') != -1)) {
+            // hide normal items
+            $('.product-selectors').hide();
+            $('.nop7SpikesAjaxFiltersGrid').hide();
+            $('.pager').hide();
+            $('.featured-product-grid').show();
+
+            // show unfiltered widget
+            $('.top-widget-filtered').hide();
+            $('.top-widget-unfiltered').show();
+        } else {
+            // show normal items, hide featured items
+            $('.product-selectors').show();
+            $('.nop7SpikesAjaxFiltersGrid').show();
+            $('.pager').show();
+            // hide featured products
+            $('.featured-product-grid').hide();
+
+            $('.top-widget-filtered').show();
+            $('.top-widget-unfiltered').hide();
+        }
+
+
+
+        $('.filter-item-name').click(function () {
+            //show filtered items
+            $('.product-selectors').show();
+            $('.nop7SpikesAjaxFiltersGrid').show();
+            $('.pager').show();
+
+            // hide featured products
+            $('.featured-product-grid').hide();
+
+            // hide current widget, show different widget
+            $('.top-widget-filtered').show();
+            $('.top-widget-unfiltered').hide();
+        });
+
+        var categoryDrop = $('div>a:contains("Category")');
+        if (categoryDrop !== null) {
+            var isClosed = categoryDrop.hasClass('closed');
+            if (typeof isClosed !== typeof undefined && isClosed !== false) {
+                categoryDrop.trigger("click");
+            }
+        }
+    });
+
+</script>
+
+<div class="page manufacturer-page">
+    <div class="page-title">
+        <h1>@Model.Name</h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsTop, additionalData = Model })
+        <div class="top-widget-unfiltered">
+            <div class="widget-min">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ManufacturerDetailsTopBelow480px, additionalData = Model })</div>
+            <div class="widget-480">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ManufacturerDetailsTopMin480px, additionalData = Model })</div>
+            <div class="widget-768">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ManufacturerDetailsTopMin768px, additionalData = Model })</div>
+            <div class="widget-1000">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ManufacturerDetailsTopAbove1000px, additionalData = Model })</div>
+        </div>
+
+        <div class="top-widget-filtered">
+            <div class="widget-min">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ManufacturerDetailsTopFilteredBelow480px, additionalData = Model })</div>
+            <div class="widget-480">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ManufacturerDetailsTopFilteredMin480px, additionalData = Model })</div>
+            <div class="widget-768">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ManufacturerDetailsTopFilteredMin768px, additionalData = Model })</div>
+            <div class="widget-1000">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ManufacturerDetailsTopFilteredAbove1000px, additionalData = Model })</div>
+        </div>
+        @*description*@
+        @if (!String.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="manufacturer-description">
+                @Html.Raw(Model.Description)
+            </div>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsBeforeFeaturedProducts, additionalData = Model })
+        @*featured products*@
+        @if (Model.FeaturedProducts.Count > 0)
+        {
+            <div class="product-grid featured-product-grid">
+                <div class="title">
+                    <strong>@T("Products.FeaturedProducts")</strong>
+                </div>
+                <div class="item-grid">
+                    @foreach (var product in Model.FeaturedProducts)
+                    {
+                        <div class="item-box">
+                            @await Html.PartialAsync("_ProductBox", product)
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsAfterFeaturedProducts, additionalData = Model })
+        @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsBeforeProductList, additionalData = Model })
+        @{
+            var catalogProductsViewData = new ViewDataDictionary(ViewData);
+            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("GetManufacturerProducts", "Catalog", new { manufacturerId = Model.Id }));
+        }
+        @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsBottom, additionalData = Model })
+        <div class="widget-min">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ManufacturerDetailsBottomBelow480px, additionalData = Model })</div>
+        <div class="widget-480">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ManufacturerDetailsBottomMin480px, additionalData = Model })</div>
+        <div class="widget-768">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ManufacturerDetailsBottomMin768px, additionalData = Model })</div>
+        <div class="widget-1000">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ManufacturerDetailsBottomAbove1000px, additionalData = Model })</div>
+    </div>
+</div>
+
+@section AsidePageTitle
+{
+    <div class="page-title">
+        <h1>@Model.Name</h1>
+    </div>
+}

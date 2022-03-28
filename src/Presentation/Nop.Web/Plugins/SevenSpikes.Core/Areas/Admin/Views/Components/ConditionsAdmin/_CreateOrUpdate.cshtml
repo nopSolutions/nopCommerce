@@ -1,0 +1,21 @@
+﻿@using SevenSpikes.Nop.Conditions;
+
+@model SevenSpikes.Nop.Conditions.Areas.Admin.Models.ConditionModel
+
+<input type="hidden" id="conditionResources"
+       data-conditionGroupType="@T("SevenSpikes.Conditions.Admin.Condition.ConditionGroupGrid.Type")"
+       data-conditionGroupProperty="@T("SevenSpikes.Conditions.Admin.Condition.ConditionGroupGrid.Property")"
+       data-conditionGroupOperator="@T("SevenSpikes.Conditions.Admin.Condition.ConditionGroupGrid.Operator")"
+       data-conditionGroupValue="@T("SevenSpikes.Conditions.Admin.Condition.ConditionGroupGrid.Value")"
+       data-conditionGroupSelectType="@T("SevenSpikes.Conditions.Admin.Condition.ConditionGroupGrid.SelectType")"
+       data-conditionGroupSelectProperty="@T("SevenSpikes.Conditions.Admin.Condition.ConditionGroupGrid.SelectProperty")"
+       data-conditionGroupSelectOperator="@T("SevenSpikes.Conditions.Admin.Condition.ConditionGroupGrid.SelectOperator")"
+       data-conditionGroupSelectValue="@T("SevenSpikes.Conditions.Admin.Condition.ConditionGroupGrid.SelectValue")"
+       data-createConditionGroupFail="@T("SevenSpikes.Conditions.Admin.Condition.Alert.CreateConditionGroupFail")"
+       data-deleteConditionGroupFail="@T("SevenSpikes.Conditions.Admin.Condition.Alert.DeleteConditionGroupFail")"
+       data-updateConditionFail="@T("SevenSpikes.Conditions.Admin.Condition.Alert.UpdateConditionFail")"
+       data-updateConditionStatementFail="@T("SevenSpikes.Conditions.Admin.Condition.Alert.UpdateConditionStatementFail")"
+       data-invalidEntry="@T("SevenSpikes.Conditions.Admin.Condition.Alert.InvalidEntry")" />
+
+<div asp-validation-summary="All"></div>
+<nop-editor asp-for="@Model" asp-template="@Constants.ViewAdminCondition" />

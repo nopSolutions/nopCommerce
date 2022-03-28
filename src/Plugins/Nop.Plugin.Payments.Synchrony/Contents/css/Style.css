@@ -1,0 +1,32 @@
+﻿.spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px; /* half width of the spinner gif */
+    margin-top: -50px; /* half height of the spinner gif */
+    text-align: center;
+    z-index: 1234;
+    overflow: auto;
+    width: 100px; /* width of the spinner gif */
+    height: 102px; /*hight of the spinner gif +2px to fix IE8 issue */
+}
+.retrypayment {
+	text-align: right;
+}
+.paymenterror {    
+    color: red;
+}
+.master-wrapper-content {
+	z-index: unset !important;
+	z-index: 1000;
+}
+
+.inputs input, .inputs select {
+    font-size: 14px !important;
+}
+
+@media screen and (min-width: 576px){
+    .modal-content {
+        width: 650px !important;
+    }
+}

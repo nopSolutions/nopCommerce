@@ -1,0 +1,13 @@
+{
+ "Group": "Widgets",
+ "FriendlyName": "ABC Promos",
+ "SystemName": "Widgets.AbcPromos",
+ "Version": "4.40.0",
+ "SupportedVersions": [
+  "4.40"
+ ],
+ "Author": "Dave Farinelli",
+ "DisplayOrder": 3,
+ "FileName": "Nop.Plugin.Widgets.AbcPromos.dll",
+ "Description": "ABC Promo functionality."
+}

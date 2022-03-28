@@ -1,0 +1,95 @@
+﻿@model ShopAdminModel
+
+<input type="hidden" asp-for="@Model.ShopPickupPoint.AddressId" />
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#@Html.IdFor(model => model.ShopPickupPoint.Address.CountryId)").change(function(){
+            var selectedItem = $(this).val();
+            var ddlStates = $("#@Html.IdFor(model => model.ShopPickupPoint.Address.StateProvinceId)");
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                data: { "countryId": selectedItem},
+                success: function(data) {
+                    ddlStates.html('');
+                    $.each(data, function(id, option) {
+                        ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                    });
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert('Failed to retrieve states.');
+                }
+            });
+        });
+    });
+</script>
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ShopPickupPoint.UseAsPickupPoint" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShopPickupPoint.UseAsPickupPoint" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ShopPickupPoint.Address.CountryId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="ShopPickupPoint.Address.CountryId" asp-items="Model.ShopPickupPoint.Address.AvailableCountries" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3">
+            <nop-label asp-for="ShopPickupPoint.Address.StateProvinceId" />
+        </div>
+        <div class="col-sm-9">
+            <nop-select asp-for="ShopPickupPoint.Address.StateProvinceId" asp-items="Model.ShopPickupPoint.Address.AvailableStates" />
+            <span asp-validation-for="ShopPickupPoint.Address.StateProvinceId"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ShopPickupPoint.Address.City" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShopPickupPoint.Address.City" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ShopPickupPoint.Address.Address1" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShopPickupPoint.Address.Address1" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ShopPickupPoint.Address.ZipPostalCode" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShopPickupPoint.Address.ZipPostalCode" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ShopPickupPoint.PickupFee" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShopPickupPoint.PickupFee" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ShopPickupPoint.OpeningHours" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShopPickupPoint.OpeningHours" />
+        </div>
+    </div>
+</div>

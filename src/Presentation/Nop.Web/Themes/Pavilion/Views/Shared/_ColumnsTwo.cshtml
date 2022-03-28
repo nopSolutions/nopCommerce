@@ -1,0 +1,132 @@
+﻿@{
+    Layout = "_Root";
+
+    var controllerName = Url.ActionContext.RouteData.Values["controller"].ToString();
+    var actionName = Url.ActionContext.RouteData.Values["action"].ToString();
+
+    var isCatalogController = controllerName.Equals("catalog", StringComparison.InvariantCultureIgnoreCase);
+    var isProductController = controllerName.Equals("product", StringComparison.InvariantCultureIgnoreCase);
+
+    //current category ID
+    var currentCategoryId = 0;
+    if (isCatalogController && actionName.Equals("category", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentCategoryId = Convert.ToInt32(Url.ActionContext.RouteData.Values["categoryId"].ToString());
+    }
+
+    //current manufacturer ID
+    var currentManufacturerId = 0;
+    if (isCatalogController && actionName.Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentManufacturerId = Convert.ToInt32(Url.ActionContext.RouteData.Values["manufacturerId"].ToString());
+    }
+
+    //current product ID
+    var currentProductId = 0;
+    if (isProductController && actionName.Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentProductId = Convert.ToInt32(Url.ActionContext.RouteData.Values["productId"].ToString());
+    }
+
+    var isAccountPage = controllerName.Equals("customer", StringComparison.InvariantCultureIgnoreCase) ||
+        controllerName.Equals("pricematch", StringComparison.InvariantCultureIgnoreCase) ||
+        controllerName.Equals("helpdesk", StringComparison.InvariantCultureIgnoreCase) ||
+        (controllerName.Equals("backinstocksubscription", StringComparison.InvariantCultureIgnoreCase) &&
+                        actionName.Equals("customersubscriptions", StringComparison.InvariantCultureIgnoreCase)) ||
+        (controllerName.Equals("order", StringComparison.InvariantCultureIgnoreCase) &&
+                        actionName.Equals("customerorders", StringComparison.InvariantCultureIgnoreCase)) ||
+        (controllerName.Equals("order", StringComparison.InvariantCultureIgnoreCase) &&
+                        actionName.Equals("customerrewardpoints", StringComparison.InvariantCultureIgnoreCase)) ||
+        (controllerName.Equals("boards", StringComparison.InvariantCultureIgnoreCase) &&
+                        actionName.Equals("customerforumsubscriptions", StringComparison.InvariantCultureIgnoreCase)) ||
+        (controllerName.Equals("returnrequest", StringComparison.InvariantCultureIgnoreCase) &&
+                        actionName.Equals("customerreturnrequests", StringComparison.InvariantCultureIgnoreCase)) ||
+        (controllerName.Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
+                        actionName.Equals("CustomerProductReviews", StringComparison.InvariantCultureIgnoreCase)) ||
+        (controllerName.Equals("vendor", StringComparison.InvariantCultureIgnoreCase) &&
+                        actionName.Equals("info", StringComparison.InvariantCultureIgnoreCase));
+}
+
+@await RenderSectionAsync("Breadcrumb", false)
+
+@if (!isAccountPage)
+{
+    <div class="center-2">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MainColumnBefore })
+        @RenderBody()
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MainColumnAfter })
+    </div>
+}
+
+<div class="side-2">
+    @if (IsSectionDefined("left"))
+    {
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnBefore })
+        @await RenderSectionAsync("left")
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnAfter })
+    }
+    else
+    {
+        var isManufacturerPage = currentManufacturerId != 0 || (isCatalogController && actionName.Equals("ManufacturerAll", StringComparison.InvariantCultureIgnoreCase));
+        var isVendorPage = isCatalogController && (actionName.Equals("Vendor", StringComparison.InvariantCultureIgnoreCase) || actionName.Equals("VendorAll", StringComparison.InvariantCultureIgnoreCase));
+        var isCategoryPage = isCatalogController && (actionName.Equals("Category", StringComparison.InvariantCultureIgnoreCase));
+        var isPopularTagsPage = isCatalogController && (actionName.Equals("ProductTagsAll", StringComparison.InvariantCultureIgnoreCase) || actionName.Equals("ProductsByTag", StringComparison.InvariantCultureIgnoreCase));
+        var isRecentlyViewedProductsPage = isProductController && actionName.Equals("RecentlyViewedProducts", StringComparison.InvariantCultureIgnoreCase);
+
+        if (IsSectionDefined("AsidePageTitle"))
+        {
+            @RenderSection("AsidePageTitle")
+        }
+
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnBefore })
+        @await RenderSectionAsync("CatalogFilters", false)
+
+        if (isCategoryPage)
+        {
+            @await Component.InvokeAsync("CategoryNavigation", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnAfterCategoryNavigation })
+            @await Component.InvokeAsync("ManufacturerNavigation", new { currentManufacturerId = currentManufacturerId })
+            @await Component.InvokeAsync("VendorNavigation")
+        }
+        else if (isManufacturerPage)
+        {
+            @await Component.InvokeAsync("ManufacturerNavigation", new { currentManufacturerId = currentManufacturerId })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_category_navigation" })
+            @await Component.InvokeAsync("VendorNavigation")
+        }
+        else if (isVendorPage)
+        {
+            @await Component.InvokeAsync("VendorNavigation")
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_category_navigation" })
+            @await Component.InvokeAsync("ManufacturerNavigation", new { currentManufacturerId = currentManufacturerId })
+        }
+        else
+        {
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_category_navigation" })
+            @await Component.InvokeAsync("ManufacturerNavigation", new { currentManufacturerId = currentManufacturerId })
+            @await Component.InvokeAsync("VendorNavigation")
+        }
+
+        if (!isRecentlyViewedProductsPage)
+        {
+            @await Component.InvokeAsync("RecentlyViewedProductsBlock", new { productThumbPictureSize = 64 })
+        }
+
+        if (!isPopularTagsPage)
+        {
+            @await Component.InvokeAsync("PopularProductTags")
+        }
+
+        @await Component.InvokeAsync("PollBlock", new { systemKeyword = "LeftColumnPoll" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnAfter })
+    }
+</div>
+
+@if (isAccountPage)
+{
+    <div class="center-2">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MainColumnBefore })
+        @RenderBody()
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MainColumnAfter })
+    </div>
+}

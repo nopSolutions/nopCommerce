@@ -1,0 +1,357 @@
+﻿@media all and (min-width: 375px) {
+
+	.item-box {
+		width: 49%; /*two per row*/
+		margin-left: 2%;
+	}
+	.item-box:nth-child(2n+1) {
+		clear: both;
+		margin-left: 0;
+	}
+	.sub-category-grid .item-box,
+	.manufacturer-grid .item-box {
+		margin-bottom: 2.5%;
+	}
+	.vendor-list li {
+		margin-bottom: 2.5%;
+	}
+}
+
+@media all and (min-width: 481px) {
+	
+/* GLOBAL STYLES */
+/* GLOBAL FORMS */
+
+/*.fieldset .title,
+.section .title {
+	padding: 25px 45px;
+}*/
+.inputs input[type="text"],
+.inputs input[type="password"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
+.inputs select {
+	height: 40px;
+	padding: 0 12px;
+}
+.inputs textarea {
+	padding: 12px;
+}
+
+/* GLOBAL TABLES */
+
+.cart .product-picture img {
+	max-width: none;
+}
+.forums-table-section th,
+.forums-table-section td {
+	padding: 20px 30px;
+}
+
+/* NOTIFICATIONS & POPUPS */
+
+.eu-cookie-bar-notification {
+    width: 450px;
+    max-width: 95%;
+    margin-left: -225px;
+}
+
+/* HEADER */
+
+.mini-shopping-cart .items {
+	display: block;
+}
+.search-box input.search-box-text {
+	width: 390px;
+}
+.ui-autocomplete {
+	position: absolute;
+	z-index: 1070;
+	width: 390px; /*default = txtfield + button*/
+	max-width: 100%;
+	box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	background-color: #fff;
+	text-align: left;
+}
+.ui-autocomplete li {
+	border-top: 1px solid #f6f6f6;
+}
+.ui-autocomplete li:first-child {
+	border-top: none;
+}
+.ui-autocomplete a {
+	display: block;
+	padding: 15px;
+	font-size: 14px;
+	color: #333;
+}
+.ui-autocomplete a.ui-state-focus {
+	background: #f9f9f9;
+}
+.ui-autocomplete img {
+	display: none;
+	margin-right: 5px;
+	vertical-align: middle;
+}
+
+/* FOOTER */
+
+.newsletter-email input[type="text"] {
+	width: 300px;
+}
+
+/* LEFT/RIGHT COLUMN */
+
+.block {
+	float: left;
+	width: 48%;
+	margin: 0 1% 2%;
+	text-align: left;
+}
+.block:nth-of-type(2n+1) {
+	clear: both;
+}
+.block .sublist {
+	padding: 0 0 0 20px;
+}
+.block .tags li,
+.product-tags-all-page li {
+	margin: 0 10px 0 0;
+}
+.block .poll-options li,
+.block .poll-results li {
+	display: block;
+	margin: 5px 0;
+}
+.block .poll .buttons,
+.block .poll-total-votes {
+	text-align: left;
+}
+
+/* CATEGORY PAGE & GRIDS */
+
+.home-page-category-grid + .slider-wrapper {
+	display: block;
+}
+.sub-category-grid {
+	margin: 0 0 20px;
+}
+
+/* PRODUCT PAGE */
+
+.product-essential {
+	padding: 30px;
+}
+.overview .add-to-cart,
+.variant-overview .add-to-cart {
+	display: inline-block;
+	vertical-align: top;
+	margin: 0;
+}
+.overview-buttons,
+.variant-overview .add-to-wishlist {
+	display: inline-block;
+	margin: 0;
+	padding: 4px 2px;
+	vertical-align: top;
+}
+.overview-bottom .delivery,
+.variant-overview .delivery {
+	margin: 40px -30px -30px;
+}
+.overview-bottom .delivery > div,
+.variant-overview .delivery > div {
+	margin: 8px 125px;
+}
+.product-tags-list {
+	padding: 25px 30px;
+}
+.product-variant-line {
+	padding: 30px;
+}
+.ui-tabs .ui-tabs-panel {
+	padding: 33px 35px;
+}
+
+/* REVIEW PAGE */
+
+.write-review form {
+	padding: 30px 45px;
+}
+
+/* WISHLIST & COMPARE LIST */
+
+.update-wishlist-button,
+.wishlist-add-to-cart-button {
+	width: auto;
+	min-width: 180px;
+	margin: 0;
+	padding: 0 28px 0 48px;
+}
+.update-wishlist-button {
+	float: left;
+}
+.wishlist-add-to-cart-button {
+	float: right;
+}
+
+/* TOPICS */
+
+.topic-password {
+	padding: 30px 45px;
+}
+
+/* CONTACT PAGE & EMAILaFRIEND */
+
+.contact-page form,
+.email-a-friend-page form,
+.apply-vendor-page form,
+.contact-page .result,
+.email-a-friend-page .result,
+.apply-vendor-page .result {
+	padding: 30px 45px;
+}
+
+/* REGISTRATION, LOGIN, MY ACCOUNT */
+
+.registration-page .form-fields,
+.login-page .inner-wrapper,
+.external-authentication,
+.password-recovery-page .page-body,
+.registration-page .message-error,
+.account-page .message-error {
+	padding: 30px 45px;
+}
+.login-page .page-body {
+	padding: 52px 0 0;
+}
+.login-page .customer-blocks .title {
+	top: -52px;
+	width: 49%;
+	height: 52px;
+}
+.login-page .new-wrapper .title {
+	left: -1px;
+}
+.login-page .returning-wrapper .title {
+	right: -1px;
+}
+.account-page .fieldset .title,
+.account-page .section .title {
+	padding: 40px 45px 0;
+}
+.account-page .form-fields,
+.account-page .buttons,
+.account-page .add-button,
+.account-page .edit-address,
+.account-page ul.info,
+.account-page ul.details,
+.account-page .description,
+.reward-points-overview,
+.account-page .no-data {
+	padding: 30px 45px;
+}
+.account-page .table-wrapper {
+	padding: 0 45px;
+}
+.avatar-page input[type="file"] {
+	max-width: none;
+}
+
+/* SHOPPING CART & CHECKOUT */
+
+.common-buttons:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+.common-buttons .update-cart-button,
+.common-buttons .continue-shopping-button {
+	width: auto;
+	max-width: 50%;
+	margin: 0;
+	padding: 0 28px 0 48px;
+}
+.common-buttons .update-cart-button {
+	float: left;
+}
+.common-buttons .continue-shopping-button {
+	float: right;
+}
+.checkout-page .address-grid,
+.checkout-page .enter-address,
+.checkout-page .ship-to-same-address,
+.checkout-page .pickup-in-store {
+	padding: 30px 45px;
+}
+.section.shipping-method,
+.section.payment-method,
+.section.payment-info,
+.section.confirm-order,
+.section.order-completed {
+	padding: 40px;
+}
+.payment-method .payment-logo img {
+	max-width: none;
+}
+.order-review-data ul,
+.order-details-area ul,
+.shipment-details-area ul {
+	padding: 40px 45px;
+}
+.return-request-page .fieldset
+.form-fields, .opc .step {
+	padding: 30px 45px;
+}
+
+#opc-confirm_order .table-wrapper {
+	margin: 0;
+}
+
+/* SEARCH PAGE & SITEMAP */
+
+.search-input {
+	padding: 40px 45px;
+}
+.advanced-search .price-range input {
+	width: 80px;
+}
+.sitemap-page .entity-body {
+	padding: 30px 45px;
+}
+
+/* BLOG & NEWS */
+
+.blog-page .post,
+.news-items .news-item,
+.blogpost-page .post,
+.news-item-page .news-item,
+.comment-list .comment,
+.new-comment .form-fields {
+	padding: 30px 45px;
+}
+
+/* FORUM & PROFILE */
+
+.forums-table-section .image {
+	padding: 20px 30px;
+}
+.forums-table-section-title .link-rss {
+	display: block;
+	position: absolute;
+	top: 21px;
+	right: 30px;
+	box-shadow: inset 0 0 5px 5px #f9f9f9;
+}
+.forum-edit-page .form-fields,
+.move-topic-page .form-fields,
+.private-message-send-page .form-fields,
+.private-message-view-page .view-message {
+	padding: 30px 45px;
+}
+.private-messages-page .ui-tabs-panel {
+	padding: 45px 50px;
+}
+
+}

@@ -1,0 +1,115 @@
+
+/* 35 of 258 CSS properties converted by rtl.daskhat.ir 
+ These properties should be override originals. 
+ just load rtl css file after original css file.*/ 
+
+.getUserGeoLocation {
+    margin: 0 0 0 20px;
+    background-position: right center;
+    padding: 0 25px 0 0;
+}
+.directions-panel {
+    text-align: right;
+}
+.radiusFilterWrapper span.units {
+    margin: 0 0 0 -20px;
+}
+.shops-item .show-directions {
+    padding-right: 16px;
+	padding-left: 0;
+    background-position: right center;
+}
+.shops-item .tag-item:after,
+.shop-page .tag-item:after {
+    margin: 0 0 0 5px;
+}
+.all-shop-images li {
+    margin: 0 5% 5% 0;
+}
+.all-shop-images li:nth-child(3n+1) {
+    margin-right: 0;
+}
+.shop-full-description td {
+    text-align: right;
+}
+.shop-full-description ul {
+    padding: 0 36px 0 0;
+}
+.shop-full-description ol {
+    padding: 0 36px 0 0;
+}
+
+
+@media all and (min-width: 481px) {
+
+.anywhere-page-map .additional-info {
+	margin: 0 20px 0 0;
+}
+
+}
+
+@media all and (min-width: 769px) {
+
+.directions-wrapper {
+	float: right;
+}
+.directions-panel {
+	padding: 0 0 0 10px;
+}
+.map-wrapper.directions-shown {
+	float: left;
+}
+.shops-sorting-filtering-wrapper > div:first-child {
+	padding-right: 0;
+	padding-left: 15px;
+}
+.shops-sorting-filtering-wrapper > div:last-child {
+	text-align: left;
+}
+.shops-sorting-filtering-wrapper label {
+	text-align: right;
+}
+div.radiusFilterWrapper {
+	padding: 0 10px 0 20px;
+}
+.radiusFilterWrapper span.units {
+	right: auto;
+	left: -3px;
+	text-align: left;
+}
+.shops-item .picture-wrap {
+	float: right;
+}
+.shops-item .info-wrap {
+	float: left;
+	text-align: right;
+}
+.shop-map-images {
+	float: right;
+}
+.shop-map-images + .shop-info {
+	float: left;
+	text-align: right;
+}
+
+}
+
+@media all and (min-width: 1025px) {
+
+.anywhere-page-map .getUserGeoLocation {
+	margin-right: -10px;
+}
+
+div.shops-filtering-buttons:last-child {
+	float: left;
+}
+
+.shops-sorting-filtering-wrapper label {
+	margin: 0 0 0 5px;
+}
+
+.shops-sorting-filtering-wrapper .clear-filtered-shops {
+	margin: 0 0 0 10px;
+}
+
+}

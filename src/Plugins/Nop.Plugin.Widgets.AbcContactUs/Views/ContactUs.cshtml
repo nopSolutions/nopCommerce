@@ -1,0 +1,188 @@
+﻿@using Nop.Plugin.Widgets.AbcContactUs.Models;
+@using Nop.Web;
+@using Nop.Web.Extensions;
+@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Framework.Security.Captcha;
+@model ContactUsModel
+<div class="contact-us-form">
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script>
+
+        $(document).ready(function () {
+            $("#Reason").change(function () {
+                if ($(this).val() == "Complaint" || $(this).val() == "Comment")
+                    $("#storeDropDown").css("display", "block");
+                else
+                    $("#storeDropDown").css("display", "none");
+            });
+
+            $('#contact-us-submit').on('click', submit);
+        });
+
+        function submit() {
+            var name = $('#Name').val();
+            var email = $('#Email').val();
+            if (!email.replace(/\s/g, '').length)
+            {
+                alert('Email is required.');
+                return;
+            }
+            var phone = $('#PhoneNumber').val();
+            if (!phone.replace(/\s/g, '').length) {
+                alert('Phone number is required.');
+                return;
+            }
+            var reason = $('#Reason').val();
+            var selectedStore = $('#SelectedStore').val();
+            var comments = $('#Comments').val();
+            if (!comments.replace(/\s/g, '').length)
+            {
+                alert('Comments are required.');
+                return;
+            }
+            var gRecaptchaResponse = $('#g-recaptcha-response').val();
+
+            $('#contact-us-submit').prop('disabled', true);
+            $.ajax({
+                cache: false,
+                url: '/AbcContactUs/DisplayContactUs',
+                data: {
+                    "Name": name,
+                    "Email": email,
+                    "PhoneNumber": phone,
+                    "Reason": reason,
+                    "SelectedStore": selectedStore,
+                    "Comments": comments,
+                    "GRecaptchaResponse": gRecaptchaResponse
+                },
+                type: 'post',
+                success: successFunc,
+                error: errorFunc
+            });
+        }
+
+        function successFunc(data) {
+            $('#contact-us-submit').prop('disabled', false);
+            window.location.href = "/thank-you";
+        }
+
+        function errorFunc() {
+            $('#contact-us-submit').prop('disabled', false);
+            alert('CAPTCHA failed. Please try again and select the CAPTCHA checkbox near the bottom.');
+        }
+    </script>
+    <style>
+        .form-group > div > * > * > * {
+            width: 100%;
+        }
+
+        .contact-us-header {
+            font-weight: bolder;
+        }
+
+        .alert {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            position: relative;
+            padding: .75rem 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: .25rem;
+        }
+
+        #Comments {
+            width: 100%;
+        }
+
+        .captcha-box {
+            text-align: left;
+        }
+    </style>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div>
+
+                            @if (Model.ErrorMessages != null && Model.ErrorMessages.Any())
+                            {
+                                <div class="alert">
+                                    @Model.ErrorMessages.First()
+                                </div>
+                            }
+
+                            <div style="display:inline-block; width:33%; min-width: 480px;">
+                                <div class="contact-us-header">
+                                    Name
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="Name" />
+                                </div>
+                            </div>
+
+                            <div style="display:inline-block; width:32%; min-width: 480px;">
+                                <div class="contact-us-header">
+                                    Email
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Email)
+                                </div>
+                            </div>
+
+                            <div style="display:inline-block; width:33%; min-width: 480px;">
+                                <div class="contact-us-header">
+                                    Phone
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="PhoneNumber" />
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Email)
+
+
+                        </div>
+
+                        <div>
+                            <div class="contact-us-header">
+                                Reason For Contact
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="Reason" asp-items="Model.ReasonsForContact" />
+                                @Html.ValidationMessageFor(model => model.Reason)
+                            </div>
+                        </div>
+                        <div id="storeDropDown">
+                            <div class="contact-us-header">
+                                Store
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="SelectedStore" asp-items="Model.Stores" />
+                            </div>
+                        </div>
+                        <div>
+                            <div class="contact-us-header">
+                                Comments
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="Comments" />
+                                @Html.ValidationMessageFor(model => model.Comments)
+                            </div>
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <nop-captcha />
+                        }
+                        <div class="col-md-9">
+                            <input id="contact-us-submit" type="submit" name="submit" value="Submit" style="border: 2px none rgb(228, 227, 227);
+                                        background: rgb(231, 231, 231) none repeat scroll 0% 0%;
+                                        padding: 3px 10px;
+                                        font-weight: bolder;
+                                        color: rgb(102, 102, 102);" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>

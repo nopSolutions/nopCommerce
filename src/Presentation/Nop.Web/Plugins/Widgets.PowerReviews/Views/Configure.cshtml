@@ -1,0 +1,93 @@
+@model Nop.Plugin.Widgets.PowerReviews.Models.PowerReviewsConfigModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<form asp-controller="PowerReviews" asp-action="Configure" method="post">
+	<section class="content">
+		<div class="container-fluid">			
+				<div class="card card-default">
+					<div class="card-body">
+						<div class="form-group row">
+							<div class="col-md-3">
+								<nop-label asp-for="APIKey" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="APIKey" />
+								<span asp-validation-for="APIKey"></span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-3">
+								<nop-label asp-for="MerchantGroupId" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="MerchantGroupId" />
+								<span asp-validation-for="MerchantGroupId"></span>
+							</div>
+						</div>
+                        <div class="form-group row">
+							<div class="col-md-3">
+								<nop-label asp-for="MerchantId" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="MerchantId" />
+								<span asp-validation-for="MerchantId"></span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-3">
+								<nop-label asp-for="ProductListingWidgetZone" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="ProductListingWidgetZone" />
+								<span asp-validation-for="ProductListingWidgetZone"></span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-3">
+								<nop-label asp-for="ProductDetailWidgetZone" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="ProductDetailWidgetZone" />
+								<span asp-validation-for="ProductDetailWidgetZone"></span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-3">
+								<nop-label asp-for="ProductDetailReviewsWidgetZone" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="ProductDetailReviewsWidgetZone" />
+								<span asp-validation-for="ProductDetailReviewsWidgetZone"></span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-3">
+								<nop-label asp-for="CustomStyles" />
+							</div>
+							<div class="col-md-9">
+								<nop-textarea asp-for="CustomStyles" />
+								<span asp-validation-for="CustomStyles"></span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-3">
+								<nop-label asp-for="OnReadReviewsClickCode" />
+							</div>
+							<div class="col-md-9">
+								<nop-textarea asp-for="OnReadReviewsClickCode" />
+								<span asp-validation-for="OnReadReviewsClickCode"></span>
+							</div>
+						</div>
+						<div class="form-group row">
+                            <div class="col-md-9 offset-md-3">
+                                <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                            </div>
+						</div>
+					</div>
+				</div>			
+		</div>
+	</section>
+</form>

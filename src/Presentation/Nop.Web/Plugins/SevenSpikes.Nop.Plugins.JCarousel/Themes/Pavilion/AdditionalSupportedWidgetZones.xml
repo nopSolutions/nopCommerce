@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>homepage_sidebar_after</WidgetZone>
+  <WidgetZone>homepage_slider_after</WidgetZone>
+  <WidgetZone>homepage_content_after</WidgetZone>
+  <WidgetZone>productpage_after_collateral</WidgetZone>
+</SupportedWidgetZones>

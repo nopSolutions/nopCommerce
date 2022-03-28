@@ -1,0 +1,11 @@
+@using Nop.Plugin.Misc.AbcCore.Domain
+@model IEnumerable<AbcPromo>
+
+@{
+    Html.AddCssFileParts("~/Plugins/Widgets.AbcPromos/styles/product-details.css");
+}
+
+@foreach (var promo in Model)
+{
+    <a href="@promo.GetPopupCommand()" class="prices-bottom-message promo-rebate-message">@promo.Description</a>
+}

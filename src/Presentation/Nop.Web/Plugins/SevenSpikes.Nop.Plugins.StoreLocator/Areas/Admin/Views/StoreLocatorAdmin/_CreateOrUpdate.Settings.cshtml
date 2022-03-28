@@ -1,0 +1,135 @@
+﻿@model ShopAdminModel
+
+@{
+    //resources for product tags input
+    Html.AppendCssFileParts("~/lib/tagEditor/jquery.tag-editor.css");
+    Html.AppendScriptParts("~/lib/tagEditor/jquery.tag-editor.min.js");
+    Html.AppendScriptParts("~/lib/tagEditor/jquery.caret.min.js");
+}
+
+<div class="raw clearfix">
+    <div class="card-body">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="IsVisible" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="IsVisible" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ShowOnHomePage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ShowOnHomePage" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Tags" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Tags" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="DisplayOrder" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DisplayOrder" />
+            </div>
+        </div>
+
+        @(await Html.LocalizedEditorAsync<ShopAdminModel, ShopLocalizedModel>("shop-name-localized",
+        @<div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.Locales[item].Name" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.Locales[item].Name" />
+                    <span asp-validation-for="@Model.Locales[item].Name"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.Locales[item].ShortDescription" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.Locales[item].ShortDescription" asp-template="RichEditor" />
+                    <span asp-validation-for="@Model.Locales[item].ShortDescription"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.Locales[item].FullDescription" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.Locales[item].FullDescription" asp-template="RichEditor" />
+                    <span asp-validation-for="@Model.Locales[item].FullDescription"></span>
+                </div>
+            </div>
+            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+        </div>
+        ,
+        @<div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="Name" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Name" />
+                    <span asp-validation-for="Name"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ShortDescription" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ShortDescription" asp-template="RichEditor" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="FullDescription" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="FullDescription" asp-template="RichEditor" />
+                </div>
+            </div>
+        </div>
+        ))
+    </div>
+</div>
+
+@if (Model.Id > 0)
+{
+    @await Html.PartialAsync(AdminViews.ShopTabStoreSettings, @Model)
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var shopTagsField = $("#@Html.IdFor(model => model.Tags)");
+
+        var tags = [];
+
+        var loadedTags = shopTagsField.val();
+
+        if (loadedTags != '') {
+            tags = loadedTags.split(',');
+        }
+
+        $("#@Html.IdFor(model => model.Tags)").tagEditor({
+            autocomplete: {
+                delay: 0,
+                position: { collision: 'flip' },
+                source: tags
+            },
+            delimiter: ',',
+            placeholder: 'Enter tags ...'
+        });
+    });
+</script>

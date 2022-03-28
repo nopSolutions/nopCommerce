@@ -1,0 +1,92 @@
+﻿@using Nop.Plugin.Misc.AbcSliExport.Models
+
+@model SliExportModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<form asp-controller="SliExport" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                SLI Export Settings
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="XMLFilename" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="XMLFilename" />
+                        <span asp-validation-for="XMLFilename"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ExportAbcWarehouse" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ExportAbcWarehouse" />
+                        <span asp-validation-for="ExportAbcWarehouse"></span>
+                    </div>
+                </div> 
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ExportHawthorne" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ExportHawthorne" />
+                        <span asp-validation-for="ExportHawthorne"></span>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                FTP Settings
+            </div>
+            <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="FTPUsername" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="FTPUsername" />
+                        <span asp-validation-for="FTPUsername"></span>
+                    </div>
+                </div> 
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="FTPPassword" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="FTPPassword" />
+                        <span asp-validation-for="FTPPassword"></span>
+                    </div>
+                </div> 
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="FTPServer" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="FTPServer" />
+                        <span asp-validation-for="FTPServer"></span>
+                    </div>
+                </div> 
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="FTPPath" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="FTPPath" />
+                        <span asp-validation-for="FTPPath"></span>
+                    </div>
+                </div> 
+            <div class="form-group">
+                <div class="col-md-9 col-md-offset-3">
+                    <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

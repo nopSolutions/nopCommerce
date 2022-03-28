@@ -1,0 +1,74 @@
+@model CatalogProductsModel
+
+@* custom *@
+@using Nop.Web.Models.Catalog;
+@using Nop.Web.Extensions;
+
+@if (!string.IsNullOrEmpty(Model.WarningMessage))
+{
+    <div class="warning">
+        @Model.WarningMessage
+    </div>
+}
+
+@if (Model.Products.Count > 0)
+{
+    <div class="@(Model.ViewMode == "list" ? "product-list" : "product-grid")">
+        <div class="item-grid">
+            @foreach (var product in Model.Products)
+            {
+                <div class="item-box">
+                    @await Html.PartialAsync("_ProductBox", product)
+                </div>
+            }
+        </div>
+    </div>
+
+    var pager = Html.Pager(Model)
+        .QueryParam("pagenumber")
+        // for search page
+        .BooleanParameterName("advs")
+        .BooleanParameterName("isc")
+        .BooleanParameterName("sid")
+        .RenderEmptyParameters(true);
+
+    @if (!await pager.IsEmpty())
+    {
+		<div id="view-all"><a onclick="viewAll();">View All</a></div>
+        <div class="pager">
+            @pager
+        </div>
+    }
+}
+else if (!string.IsNullOrEmpty(Model.NoResultMessage))
+{
+    <div class="no-result">
+        @Model.NoResultMessage
+    </div>
+}
+<script>
+    function viewAll() {
+        var url = window.location.href;
+        var hasFilters = url.indexOf("#")!==-1;
+
+        if (hasFilters){
+            var newUrl = url.replace("pageSize=20","pageSize=1000");
+
+            var pageNumIdxStart = newUrl.indexOf("pageNumber=");
+            var pageNumIdxEnd = newUrl.indexOf("&", pageNumIdxStart);
+            if (pageNumIdxEnd === -1){
+                pageNumIdxEnd = newUrl.length;
+            }
+            newUrl = newUrl.replace(newUrl.substring(pageNumIdxStart,pageNumIdxEnd), "pageNumber=1");
+            window.location.href = newUrl;
+        }
+        else{
+            var separator = (url.indexOf("?")===-1)?"?":"&";
+            var newParam = separator + "pagesize=1000";
+            var newUrl2 = url.replace(newParam,"");
+            newUrl2 += newParam;
+
+            window.location.href = newUrl2;
+        }
+    }
+</script>

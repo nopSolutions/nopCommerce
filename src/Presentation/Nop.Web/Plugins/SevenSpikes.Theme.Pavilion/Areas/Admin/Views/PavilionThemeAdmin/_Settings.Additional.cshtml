@@ -1,0 +1,121 @@
+﻿@model PavilionThemeSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductAttributeId_OverrideForStore" asp-input="ProductAttributeId" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductAttributeId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="ProductAttributeId" asp-items="Model.AvailableProductAttributes" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="IsHomePageMainSliderFullWidth_OverrideForStore" asp-input="IsHomePageMainSliderFullWidth" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="IsHomePageMainSliderFullWidth" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsHomePageMainSliderFullWidth" />
+            <span asp-validation-for="IsHomePageMainSliderFullWidth"></span>
+        </div>
+    </div>
+    <div class="form-group row theme-color">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Preset_OverrideForStore" asp-input="Preset" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Preset" />                   
+        </div>
+        <div class="col-md-9 adminData">
+            @Html.NopRadioButtonsForPresets(Model.Presets, Model.Preset)
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowLoginPopup_OverrideForStore" asp-input="ShowLoginPopup" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowLoginPopup" />                    
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowLoginPopup" />
+            <span asp-validation-for="ShowLoginPopup"></span>                   
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-9 col-md-offset-3">
+            <div class="callout bg-gray-light no-margin">
+                <div style="padding: 0; margin: 0; list-style: none;">
+                    @T("SevenSpikes.Themes.Pavilion.Admin.AdditionalSettings.ShowLoginPopupHint")
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="IsLogoStickyOnMobileDevice_OverrideForStore" asp-input="IsLogoStickyOnMobileDevice" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="IsLogoStickyOnMobileDevice" />   
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsLogoStickyOnMobileDevice" />
+            <span asp-validation-for="IsLogoStickyOnMobileDevice"></span>   
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowCategoriesInSideMenu_OverrideForStore" asp-input="ShowCategoriesInSideMenu" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowCategoriesInSideMenu" />   
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowCategoriesInSideMenu" />
+            <span asp-validation-for="ShowCategoriesInSideMenu"></span>   
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="StickyCategoryMenuFlyout_OverrideForStore" asp-input="StickyCategoryMenuFlyout" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="StickyCategoryMenuFlyout" />   
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StickyCategoryMenuFlyout" />
+            <span asp-validation-for="StickyCategoryMenuFlyout"></span>   
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EnableFeaturedProducts_OverrideForStore" asp-input="EnableFeaturedProducts" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EnableFeaturedProducts" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EnableFeaturedProducts" />
+            <span asp-validation-for="EnableFeaturedProducts"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductImageProportion_OverrideForStore" asp-input="ProductImageProportion" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductImageProportion" />   
+        </div>
+        <div class="col-md-9">                 
+            <nop-editor asp-for="ProductImageProportion" />
+            <span asp-validation-for="ProductImageProportion"></span>   
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CategoryImageProportion_OverrideForStore" asp-input="CategoryImageProportion" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CategoryImageProportion" />   
+        </div>
+        <div class="col-md-9">                   
+            <nop-editor asp-for="CategoryImageProportion" />
+            <span asp-validation-for="CategoryImageProportion"></span>   
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">                    
+            <nop-override-store-checkbox asp-for="NumberOfSubcategories_OverrideForStore" asp-input="NumberOfSubcategories" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NumberOfSubcategories" />   
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NumberOfSubcategories" />
+            <span asp-validation-for="NumberOfSubcategories"></span>   
+        </div>
+    </div>
+</div>

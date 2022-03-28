@@ -1,0 +1,33 @@
+﻿@** Copyright 2017 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model MenuItemModel
+
+@{
+    var hasSublist = Model.SubItems.Count > 0;
+    var hasSublistClass = hasSublist ? "has-sublist" : string.Empty;
+    var withSubcategoriesClass = hasSublist ? "with-subcategories" : string.Empty;
+    var itemUrl = Plugin.PredefinedPageTypes.Contains(Model.Type) ? Url.RouteUrl(Model.Type.ToString()) : Model.Url;
+}
+<li class="@Model.CssClass @hasSublistClass">
+
+    <a href="@itemUrl" class="@withSubcategoriesClass" title="@Model.Title" @if (Model.OpenInNewWindow) { <text> target="_blank" </text> }><span> @Model.Title</span></a>
+
+    @if (hasSublist)
+    {
+        <div class="plus-button"></div>
+        <div class="sublist-wrap">
+            <ul class="sublist">
+                <li class="back-button">
+                    <span>@T("SevenSpikes.MegaMenu.ResponsiveBackButton")</span>
+                </li>
+                @foreach (var subItem in Model.SubItems)
+                {
+                    @await Component.InvokeAsync("MegaMenuMenuItem", new { menuItem = subItem })
+                }
+            </ul>
+        </div>
+    }
+</li>
+

@@ -1,0 +1,61 @@
+﻿@model ShopImageAdminModel
+    
+<div asp-validation-summary="All"></div>
+<input type="hidden" asp-for="@Model.Id" />
+<input type="hidden" asp-for="@Model.ShopId" />
+
+<section class="content">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default card-popup">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="PictureId" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="PictureId" />
+                            <span asp-validation-for="PictureId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="Visible" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="Visible" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="DisplayOrder" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="DisplayOrder" />
+                            <span asp-validation-for="DisplayOrder"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-5">
+                            <nop-label asp-for="Alt" />
+                        </div>
+                        <div class="col-sm-7">
+                            <nop-editor asp-for="Alt" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnRefreshImgs').on("click", function (e) {
+            //refresh grid
+            var optionsGrid = $("#shop-images-grid");
+            optionsGrid.data('kendoGrid').dataSource.read();
+            e.preventDefault(); //don't reload the page
+        });
+    });
+</script>

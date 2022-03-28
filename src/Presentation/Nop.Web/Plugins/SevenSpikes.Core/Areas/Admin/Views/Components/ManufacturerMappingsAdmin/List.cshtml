@@ -1,0 +1,80 @@
+﻿@model ManufacturerMappingListModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "manufacturers-grid",
+            UrlRead = new DataUrl("GridList", "ManufacturerMappingsAdmin", new RouteValueDictionary { ["entityType"] = Model.EntityType, ["entityId"] = Model.EntityId }),
+            UrlUpdate = new DataUrl("Update", "ManufacturerMappingsAdmin", null),
+            UrlDelete = new DataUrl("Delete", "ManufacturerMappingsAdmin", null),
+            Length = defaultGridPageSize,
+            LengthMenu = gridPageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ManufacturerMappingModel.ManufacturerName))
+                {
+                    Title = T("Admin.Catalog.Manufacturers.Fields.Name").Text
+                },
+                new ColumnProperty(nameof(ManufacturerMappingModel.DisplayOrder))
+                {
+                    Title = T("Admin.Catalog.Manufacturers.Fields.DisplayOrder").Text,
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(ManufacturerMappingModel.Id))
+                {
+                    Width = "100",
+                    Title = T("Admin.Common.View").Text,
+                    Render = new RenderCustom("renderManufacturerViewLink")
+                },
+                new ColumnProperty(nameof(ManufacturerMappingModel.Id))
+                {
+                    Width = "100",
+                    Render = new RenderButtonsInlineEdit()
+                },
+                new ColumnProperty(nameof(ManufacturerMappingModel.Id))
+                {
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                }
+            }
+        })
+    <script>
+
+        function renderManufacturerViewLink(data, type, row, meta) {
+                    
+            console.log(data);
+            console.log(row);
+
+            return '<a class="btn btn-default" href="/Admin/Manufacturer/Edit/' + row.ManufacturerId + '" >' + '@T("Admin.Common.View")' + '</a>';
+        }
+    </script>
+</div>
+<div class="card-footer">
+    <button type="submit" id="btnAddNewManufacturer"
+            onclick="javascript:OpenWindow('@(Url.Action("ManufacturerAddPopup", "ManufacturerMappingsAdmin", new { entityId = Model.EntityId, entityType = Model.EntityType, btnId = "btnRefreshManufacturerMappings" }))', 800, 800, true); return false;"
+            class="btn btn-primary">
+        @T("Admin.Catalog.Manufacturers.AddNew")
+    </button>
+    <input type="submit" id="btnRefreshManufacturerMappings" style="display: none" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefreshManufacturerMappings').click(function (e) {
+                //refresh grid
+                e.preventDefault(); //don't reload the page
+
+                var manufacturersGrid = $("#manufacturers-grid").DataTable();
+                manufacturersGrid.ajax.reload();
+
+                //return false to don't reload a page
+                return false;
+            });
+        });
+    </script>
+</div>

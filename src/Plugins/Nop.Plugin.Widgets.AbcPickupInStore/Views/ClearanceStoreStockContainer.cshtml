@@ -1,0 +1,57 @@
+﻿@using Nop.Web.Framework.UI;
+@using Nop.Web.Framework;
+@using Nop.Plugin.Misc.AbcCore
+@{
+    Layout = "";
+    Html.AddCssFileParts("~/Plugins/Widgets.AbcPickupInStore/styles/loading.css");
+    Html.AddCssFileParts("~/Plugins/Widgets.AbcPickupInStore/styles/ClearanceStock.css");
+}
+<script>
+    $(function () {
+        $.ajax({
+            cache : false,
+            url : '/PickStore/DisplayClearanceStock',
+            data : {'productId': @Model},
+            type : 'post',
+            success : success,
+            error : error
+        });
+
+        function success(data) {
+            $('.shops-spinner').hide();
+            $('#clearance_stock_container').html(data);
+        }
+
+        function error() {
+            $('.additional-information').text('Sorry, there was an error getting the stock information. Please reload the page to try again');
+            $('.shops-spinner').hide();
+        }
+    });
+</script>
+<style>
+    div.clearance-stock-header {
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 30px 0;
+		padding: 0.25rem 2em;
+		background-color: #@await HtmlHelpers.GetPavilionPrimaryColorAsync();
+		color: #fff;
+    }
+
+    .shops-spinner > div {
+        background-color: #@await HtmlHelpers.GetPavilionPrimaryColorAsync();
+    }
+</style>
+<div id="clearance_stock_widget">
+    <div class="clearance-stock-header">Product Availability</div>
+    <div class="additional-information"></div>
+    <div class="shops-spinner">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+    </div>
+    <div id="clearance_stock_container">
+    </div>
+</div>

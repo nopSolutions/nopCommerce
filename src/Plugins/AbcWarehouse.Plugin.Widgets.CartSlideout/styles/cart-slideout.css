@@ -1,0 +1,129 @@
+#cart-slideout-overlay {
+    height: 100%;
+    width: 100%;
+    z-index: 100000;
+    position: fixed;
+    background-color: black;
+    opacity: 0.9;
+    display: none;
+}
+
+#cart-slideout {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 100000;
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    overflow-x: hidden; /* Disable horizontal scroll */
+}
+
+#cart-slideout__back {
+    position: absolute;
+    top: 13px;
+    right: 280px;
+    font-size: 20px;
+    display: none;
+}
+
+#cart-slideout .cart-slideout__close {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+#cart-slideout .cart-slideout__title {
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+#cart-slideout .cart-slideout__title i {
+    color: #4bd37b;
+}
+
+#cart-slideout__product-info {
+    padding: 1rem 0 3rem 0;
+}
+
+#cart-slideout__product-name {
+    font-size: 0.75rem;
+}
+
+#cart-slideout__delivery-zip-code {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0 0.5rem 0;
+    align-items: center;
+}
+
+#cart-slideout__delivery-zip-code input {
+    width: 50%;
+    height: 2rem;
+    font-size: 1rem;
+}
+
+#cart-slideout__buttons {
+    position: absolute;
+    bottom: 1rem;
+}
+
+#cart-slideout__subtotal {
+    text-align: right;
+    color: #bb1b1b;
+    font-size: 1.25rem;
+}
+
+#cart-slideout__buttons a {
+    width: 100%;
+    background-color: white;
+    border: 2px solid #e1e1e1;
+    font-weight: bold;
+    padding: 1rem;
+    margin-top: 0.25rem;
+    display: inline-block;
+    text-align: center;
+}
+
+.cart-slideout-btn {
+    font-size: 0.75rem;
+    background-color: white;
+    border: 2px solid #e1e1e1;
+    margin-top: 0.25rem;
+    text-align: center;
+    padding: 0.5rem;
+    float: right;
+}
+
+.cart-slideout-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+
+/* Delivery Options */
+#cart-slideout__delivery-not-available {
+    display: none;
+    color: #f74258;
+}
+
+#cart-slideout__delivery {
+    display: none;
+}
+
+#cart-slideout__delivery-options {
+    display: none;
+}
+
+#cart-slideout__attributes .text-prompt {
+    font-size: 1.25rem;
+}
+
+/* copied over from Pavilion theme to allow consistency */
+.scrollYRemove {
+    overflow: hidden !important;
+    -ms-touch-action: none !important;
+    touch-action: none !important;
+    -webkit-overflow-scrolling: touch !important;
+}

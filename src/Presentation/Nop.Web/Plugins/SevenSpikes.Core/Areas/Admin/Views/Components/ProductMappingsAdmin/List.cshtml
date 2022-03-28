@@ -1,0 +1,87 @@
+﻿@using Nop.Core
+ 
+@model ProductMappingListModel
+
+@inject AdminAreaSettings adminAreaSettings
+@inject IStoreContext storeContext 
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+	var storeUrl = (await storeContext.GetCurrentStoreAsync()).Url;
+	var productEditUrl = string.Format("{0}Admin/Product/Edit/", storeUrl);
+}
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+{
+	Name = "products-grid",
+	UrlRead = new DataUrl("GridList", "ProductMappingsAdmin", new RouteValueDictionary { ["entityType"] = Model.EntityType, ["entityId"] = Model.EntityId }),
+	UrlUpdate = new DataUrl("Update", "ProductMappingsAdmin", null),
+	UrlDelete = new DataUrl("Delete", "ProductMappingsAdmin", null),
+	Length = defaultGridPageSize,
+	LengthMenu = gridPageSizes,
+	ColumnCollection = new List<ColumnProperty>
+		{
+			new ColumnProperty(nameof(ProductMappingModel.ProductName))
+			{
+				Title = T("Admin.Catalog.Manufacturers.Products.Fields.Product").Text
+			},
+			new ColumnProperty(nameof(ProductMappingModel.DisplayOrder))
+			{
+				Title = T("Admin.Catalog.Manufacturers.Products.Fields.DisplayOrder").Text,
+				Editable = true,
+				EditType = EditType.Number
+			},
+			new ColumnProperty(nameof(ProductMappingModel.Id))
+			{
+				Width = "100",
+				Title = T("Admin.Common.View").Text,
+				Render = new RenderCustom("renderProductViewLink")
+			},
+			new ColumnProperty(nameof(ProductMappingModel.Id))
+			{
+				Width = "100",
+
+				Render = new RenderButtonsInlineEdit()
+			},
+			new ColumnProperty(nameof(ProductMappingModel.Id))
+			{
+				Width = "100",
+				Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+			}
+		}
+})
+
+    <script>
+
+        function renderProductViewLink(data, type, row, meta) {
+
+            return '<a class="btn btn-default" href="@productEditUrl' + row.ProductId + '" >' + '@T("Admin.Common.View")' + '</a>';
+        }
+
+    </script>
+</div>
+<div class="card-footer">
+    <button type="submit" id="btnAddNewProduct"
+            onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "ProductMappingsAdmin", new { entityId = Model.EntityId, entityType = Model.EntityType, btnId = "btnRefreshProductMappings" }))', 800, 800, true); return false;"
+            class="btn btn-primary">
+        @T("Admin.Catalog.Manufacturers.Products.AddNew")
+    </button>
+    <input type="submit" id="btnRefreshProductMappings" name="btnRefreshProductMappings" style="display: none" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefreshProductMappings').click(function (e) {
+                //refresh grid
+                e.preventDefault(); //don't reload the page
+
+                var productsGrid = $("#products-grid").DataTable();
+                productsGrid.ajax.reload();
+
+                //return false to don't reload a page
+                return false;
+            });
+        });
+    </script>
+</div>

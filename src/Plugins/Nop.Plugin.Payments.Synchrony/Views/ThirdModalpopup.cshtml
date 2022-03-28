@@ -1,0 +1,60 @@
+﻿@model Nop.Plugin.Payments.Synchrony.Models.AuthenticationTokenResponse
+@using Nop.Web.Framework.UI;
+@using Nop.Core.Infrastructure;
+@using Nop.Core;
+@using Nop.Services.Configuration;
+
+@inject ISettingService settingService;
+@inject IStoreContext storeContext;
+
+@{
+    Layout = "";
+    bool onepagecheckoutenabled = await settingService.GetSettingByKeyAsync(
+        "ordersettings.onepagecheckoutenabled",
+        true,
+        (await storeContext.GetCurrentStoreAsync()).Id,
+        true
+    );
+}
+
+@Html.HiddenFor(model => model.MerchantId)
+@Html.HiddenFor(model => model.clientToken)
+@Html.HiddenFor(model => model.transactionId)
+@Html.HiddenFor(model => model.responseCode)
+@Html.HiddenFor(model => model.responseDesc)
+@Html.HiddenFor(model => model.StatusCode)
+@Html.HiddenFor(model => model.StatusMessage)
+@Html.HiddenFor(model => model.AccountNumber)
+@Html.HiddenFor(model => model.TransactionAmount)
+@Html.HiddenFor(model => model.TransactionDate)
+@Html.HiddenFor(model => model.TransactionDescription)
+@Html.HiddenFor(model => model.AuthCode)
+@Html.HiddenFor(model => model.PromoCode)
+@Html.HiddenFor(model => model.PostbackId)
+
+<script>
+    if ('@onepagecheckoutenabled' == 'True') {
+        $(document).ready(function () {
+            $("#payment-info-buttons-container").show();
+            $(".back-link").hide();
+            $(".payment-info-next-step-button").trigger("click");
+        });
+    }
+    else {
+        $.ajax({
+            cache: false,
+            type: 'Post',
+            url: '@Url.RouteUrl("CustomCheckoutPaymentInfo")',
+            data: { "nextstep": "confirm", "is_ajax_call": "true" },
+            dataType: 'json',
+            complete: function (response) {
+                if (response.status === 200) {
+                    window.location = 'confirm/synchrony';
+                }
+            },
+            failure: function () {
+                alert('@T("Plugins.Payments.Synchrony.alert.Fail")');
+            }
+        });
+    }
+</script>

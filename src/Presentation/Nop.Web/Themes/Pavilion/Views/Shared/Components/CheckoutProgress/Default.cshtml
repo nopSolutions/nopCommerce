@@ -1,0 +1,58 @@
+@*
+    ABC: Provides extra 'Warranty' step.
+*@
+
+@model CheckoutProgressModel
+
+@using Nop.Web.Models.Checkout
+@using Nop.Plugin.Misc.AbcFrontend.Services
+@using Nop.Services.Orders
+@using Nop.Core
+@using Nop.Core.Domain.Orders
+@using Nop.Web.Framework.Infrastructure
+
+@inject IWorkContext workContext;
+@inject IStoreContext storeContext;
+@inject IShoppingCartService shoppingCartService;
+@inject IWarrantyService warrantyService;
+
+@{
+    var cart = await shoppingCartService.GetShoppingCartAsync(
+                await workContext.GetCurrentCustomerAsync(),
+                ShoppingCartType.ShoppingCart,
+                (await storeContext.GetCurrentStoreAsync()).Id);
+    var hasWarranties = await warrantyService.CartContainsWarrantiesAsync(cart);
+}
+
+<div class="order-progress">
+    <ul>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutProgressBefore })
+        <li class="active-step">
+            <a @(Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw($" href=\"{Url.RouteUrl("ShoppingCart")}\"") : null)>@T("Checkout.Progress.Cart")</a>
+        </li>
+        <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Warranty || Model.CheckoutProgressStep == CheckoutProgressStep.Address || Model.CheckoutProgressStep == CheckoutProgressStep.Shipping || Model.CheckoutProgressStep == CheckoutProgressStep.Payment || Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
+            <a @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw($" href=\"{Url.RouteUrl("CheckoutBillingAddress")}\"") : null)>@T("Checkout.Progress.Address")</a>
+        </li>
+        <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Warranty || Model.CheckoutProgressStep == CheckoutProgressStep.Shipping || Model.CheckoutProgressStep == CheckoutProgressStep.Payment || Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
+            <a @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw($" href=\"{Url.RouteUrl("CheckoutShippingMethod")}\"") : null)>@T("Checkout.Progress.Shipping")</a>
+        </li>
+        @if (hasWarranties)
+        {
+            <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Warranty || Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete || Model.CheckoutProgressStep == CheckoutProgressStep.Payment ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
+                <a @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\"", Url.RouteUrl("WarrantySelection"))) : null)>
+                    Warranty
+                </a>
+            </li>
+        }
+        <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Payment || Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
+            <a @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw($" href=\"{Url.RouteUrl("CheckoutPaymentMethod")}\"") : null)>@T("Checkout.Progress.Payment")</a>
+        </li>
+        <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
+            <a @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Payment && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw($" href=\"{Url.RouteUrl("CheckoutConfirm")}\"") : null)>@T("Checkout.Progress.Confirm")</a>
+        </li>
+        <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
+            <a>@T("Checkout.Progress.Complete")</a>
+        </li>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutProgressAfter })
+    </ul>
+</div>

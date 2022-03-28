@@ -1,0 +1,79 @@
+﻿@using Nop.Core
+
+@inject IWorkContext workContext
+@{
+    @* ABC: custom, putting these on top overrides everything below *@
+    // Only needed for warranty selector, won't be needed after slideout
+    Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/abc/checkout-warranty-section.css");
+
+    Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/abc/custom_front_product.css");
+    Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/abc/mobile-categories.css");
+    Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/abc/pavilion-styles.css");
+    Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/abc/mobile-header.css");
+
+    // Could be add this to _ProductBox.cshtml?
+    Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/abc/product-box.css");
+
+    // Can exist in ProductTemplate.Simple.cshtml
+    Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/abc/product-details-template.css");
+    
+    // After promo categories are made, this only needs to be in CategoryTemplate.ProductsInGridOrLines.cshtml
+    Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/abc/product-listings.css");
+
+    // _ProductPrice and OrderSummary/Default.cshtml?
+    Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/abc/product-price.css");
+
+    // Only needed for TopicDetails.cshtml
+    Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/abc/rebates-promos.css");
+
+    // Only needed for _ProductPrice
+    Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/abc/tooltip.css");
+
+    // ProductTemplate.Simple.cshtml
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Themes/Pavilion/Content/scripts/abc/mattress.js");
+
+    // CategoryTemplate, Promo Listing (to become just category template)
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Themes/Pavilion/Content/scripts/abc/mobileFilters.js");
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Themes/Pavilion/Content/scripts/abc/mobileMenu.js");
+
+    @* ABC: base functionality is below *@
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+
+    Html.AppendCssFileParts("~/Plugins/SevenSpikes.Core/Styles/perfect-scrollbar.min.css");
+
+    if (supportRtl)
+    {
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/1280.rtl.css");
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/1024.rtl.css");
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/768.rtl.css");
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/480.rtl.css");
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/mobile.rtl.css");
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/tables.rtl.css");
+    }
+    else
+    {
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/1280.css");
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/1024.css");
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/768.css");
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/480.css");
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/mobile.css");
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/tables.css");
+    }
+
+    if (supportRtl)
+    {
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/styles.rtl.css");
+    }
+    else
+    {
+        Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/styles.css");
+    }
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/footable.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/perfect-scrollbar.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.theme.ex.min.js");
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Themes/Pavilion/Content/scripts/pavilion.js");
+}

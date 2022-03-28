@@ -1,0 +1,56 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.209.6/containers/dotnet-mssql
+{
+	"name": "C# (.NET) and MS SQL",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"mssql.connections": [
+			{
+				"server": "localhost,1433",
+				"database": "",
+				"authenticationType": "SqlLogin",
+				"user": "sa",
+				"password": "P@ssw0rd",
+				"emptyPasswordInput": false,
+				"savePassword": false,
+				"profileName": "mssql-container"
+			}
+		]
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"ms-dotnettools.csharp",
+		"ms-mssql.mssql"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [5000, 5001],
+
+	// [Optional] To reuse of your local HTTPS dev cert:
+	//
+	// 1. Export it locally using this command:
+	//    * Windows PowerShell:
+	//        dotnet dev-certs https --trust; dotnet dev-certs https -ep "$env:USERPROFILE/.aspnet/https/aspnetapp.pfx" -p "SecurePwdGoesHere"
+	//    * macOS/Linux terminal:
+	//        dotnet dev-certs https --trust; dotnet dev-certs https -ep "${HOME}/.aspnet/https/aspnetapp.pfx" -p "SecurePwdGoesHere"
+	// 
+	// 2. Uncomment these 'remoteEnv' lines:
+	//    "remoteEnv": {
+	// 	      "ASPNETCORE_Kestrel__Certificates__Default__Password": "SecurePwdGoesHere",
+	//        "ASPNETCORE_Kestrel__Certificates__Default__Path": "/home/vscode/.aspnet/https/aspnetapp.pfx",
+	//    },
+	//
+	// 3. Next, copy your certificate into the container:
+	//      1. Start the container
+	//      2. Drag ~/.aspnet/https/aspnetapp.pfx into the root of the file explorer
+	//      3. Open a terminal in VS Code and run "mkdir -p /home/vscode/.aspnet/https && mv aspnetapp.pfx /home/vscode/.aspnet/https"
+
+	// postCreateCommand.sh parameters: $1=SA password, $2=dacpac path, $3=sql script(s) path
+	"postCreateCommand": "bash .devcontainer/mssql/postCreateCommand.sh 'P@ssw0rd' './bin/Debug/' './.devcontainer/mssql/' && dotnet restore src/NopCommerce.sln"
+
+}

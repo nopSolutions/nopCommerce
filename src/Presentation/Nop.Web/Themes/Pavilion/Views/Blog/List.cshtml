@@ -1,0 +1,78 @@
+﻿@model BlogPostListModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Blog").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-blog-page");
+
+    var isFirstPage = Model.PagingFilteringContext.PageNumber == 1;
+    var firstPostList = new List<BlogPostModel>();
+    IList<BlogPostModel> allBlogPosts;
+    
+    if (isFirstPage)
+    {
+        firstPostList = Model.BlogPosts.Take(1).ToList();
+        allBlogPosts = Model.BlogPosts.Skip(1).ToList();
+    }
+    else
+    {
+        allBlogPosts = Model.BlogPosts;
+    }
+}
+
+@section left {
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnBlogBefore })
+    @await Component.InvokeAsync("BlogMonths")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnAfterBlogArchive })
+    @await Component.InvokeAsync("BlogTags")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnBlogAfter })
+}
+<div class="page blog-page">
+    <div class="page-title">
+        <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("Blog.RSS.Hint")">@T("Blog.RSS")</a>
+        <h1>
+            @if (string.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
+            {
+                if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
+                {
+                    @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"))
+                }
+                else
+                {
+                    @T("Blog")
+                }
+            }
+            else
+            {
+                @*@String.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag)*@
+                @T("Blog")
+            }
+        </h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogListPageBeforePosts })
+        <div class="blog-posts">
+            @if (isFirstPage)
+            {
+                <div class="first-blog-post">
+                    @await Html.PartialAsync("_BlogListItem", firstPostList)
+                </div>
+            }
+            <div class="blog-posts-list">
+                @await Html.PartialAsync("_BlogListItem", allBlogPosts)
+            </div>
+        </div>
+        @{
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+        }
+        @if (!(await pager.IsEmpty()))
+        {
+            <div class="pager">
+                @pager
+            </div>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogListPageAfterPosts })
+    </div>
+</div>

@@ -1,0 +1,32 @@
+﻿@model RichBlogSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NumberOfBlogPostsToShow_OverrideForStore" asp-input="NumberOfBlogPostsToShow" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NumberOfBlogPostsToShow" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NumberOfBlogPostsToShow" />
+            <span asp-validation-for="NumberOfBlogPostsToShow"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HomePageWidgetZone_OverrideForStore" asp-input="HomePageWidgetZone" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HomePageWidgetZone" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="HomePageWidgetZone" asp-items="Model.AvailableHomePageWidgetZones" />
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HomePageImageSize_OverrideForStore" asp-input="HomePageImageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HomePageImageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="HomePageImageSize" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text"/>
+        </div>
+    </div>
+</div>

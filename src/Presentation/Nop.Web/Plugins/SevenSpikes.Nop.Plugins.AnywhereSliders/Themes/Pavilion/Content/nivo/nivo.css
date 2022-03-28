@@ -1,0 +1,136 @@
+/*
+Skin Name: Nivo Slider Default Theme - modified for navigation inside
+Skin URI: http://nivo.dev7studios.com
+Description: The default skin for the Nivo Slider.
+Version: 1.3
+Author: Gilbert Pellegrom
+Author URI: http://dev7studios.com
+Supports Thumbs: true
+*/
+
+.nivoSlider {
+	position: relative;
+	/*background: #fff url('loading.gif') no-repeat 50% 50%;*/ /*no gif loader*/
+}
+.nivoSlider img {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.nivoSlider a {
+	display: block;
+}
+.nivo-directionNav a {
+	display: block;
+    top: 50%;
+	width: 30px;
+	height: 50px;
+    margin-top: -25px;
+    font-size: 0;
+	opacity: 0;
+	transition: all 0.2s ease;
+}
+.nivoSlider:hover .nivo-directionNav a {
+	opacity: 1;
+}
+.nivo-directionNav a.nivo-prevNav {
+    background: rgba(0,0,0,0.5) url('arrow-left.png') no-repeat center;
+}
+.nivo-directionNav a.nivo-nextNav {
+    background: rgba(0,0,0,0.5) url('arrow-right.png') no-repeat center;
+}
+.nivo-directionNav a:hover {
+	background-color: #f74258;
+}
+
+.nivo-controlNav {
+    position: relative;
+    z-index: 10;
+	height: 0;
+	overflow: visible;
+	padding: 0;
+	text-align: center;
+}
+.nivo-controlNav a {
+	display: inline-block;
+	position: relative;
+	top: -38px;
+	width: 10px;
+	height: 10px;
+	margin: 0 4px;
+	border-radius: 50%;
+    background-color: #a3a3a3;
+	font-size: 0;
+	transition: all 0.2s ease;
+}
+.nivo-controlNav a:hover,
+.nivo-controlNav a.active {
+	background-color: #f74258;
+}
+.nivo-controlNav.nivo-thumbs-enabled {
+	display: none !important;
+}
+
+.nivo-caption {
+	display: none !important;
+    top: 0;
+    bottom: auto;
+	width: auto;
+    background-color: #fff;
+    padding: 12px 20px;
+	font-size: 15px;
+	color: #333;
+	text-transform: uppercase;
+	opacity: 1;
+}
+.nivo-caption p {
+	margin: 0;
+	padding: 0;
+}
+.nivo-caption:empty {
+	display: none !important;
+}
+
+.theme-banner-small {
+	margin: 0 0 30px;
+}
+.theme-banner-small ~ .jcarousel {
+	margin-top: 60px;
+}
+
+@media all and (min-width: 481px) {
+
+.homepage-bottom-wrapper {
+	overflow: hidden;
+}	
+.theme-banner-small {
+	float: left;
+	width: 49%;
+	margin: 0 0 60px 2%;
+}
+.theme-banner-small:nth-of-type(1) {
+	margin-left: 0;
+}
+.theme-banner-small:nth-of-type(3) {
+	display: none;
+}
+.theme-banner-small ~ .jcarousel {
+	clear: both;
+}
+
+}
+
+@media all and (min-width: 1025px) {
+	
+.home-page .slider-wrapper {
+    margin-bottom: 60px;
+}
+.theme-banner-small {
+	width: 32%;
+}
+.theme-banner-small:nth-of-type(3) {
+	display: block;
+}
+	
+}

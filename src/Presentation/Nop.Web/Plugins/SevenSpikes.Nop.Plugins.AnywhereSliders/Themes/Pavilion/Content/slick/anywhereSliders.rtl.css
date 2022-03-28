@@ -1,0 +1,22 @@
+
+.anywhere-slider .slick-prev {
+    right: 0;
+    left: auto;
+    background-image: url('images/arrow-right.png');
+}
+.anywhere-slider .slick-next {
+    right: auto;
+    left: 0;
+    background-image: url('images/arrow-left.png');
+}
+
+@media all and (min-width: 481px) {
+	
+.theme-banner-small {
+	float: right;
+	margin: 0 2% 60px 0;
+}
+.theme-banner-small:nth-of-type(1) {
+	margin-right: 0;
+}
+}

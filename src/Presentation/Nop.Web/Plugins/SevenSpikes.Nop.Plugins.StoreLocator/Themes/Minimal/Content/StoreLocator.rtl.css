@@ -1,0 +1,148 @@
+
+.getUserGeoLocation {
+	background: url('images/current-location.png') right center no-repeat;
+	padding: 0 25px 0 0;
+}
+.directions-panel {
+	text-align: right;
+}
+.radiusFilterWrapper span.units {
+	margin: 0 0 0 -20px;
+}
+.shops-item .tag-item:after,
+.shop-page .tag-item:after {
+	margin: 0 0 0 10px;
+}
+.shops-item .show-directions {
+	background: url('images/location-marker.png') right center no-repeat;
+	padding: 0 16px 0 0;
+}
+.all-shop-images li {
+	margin: 0 5% 5% 0;
+}
+.all-shop-images li:nth-child(3n+1) {
+	margin-right: 0;
+}
+.shop-full-description td {
+	text-align: right;
+}
+.shop-full-description ul {
+	padding: 0 36px 0 0;
+}
+.shop-full-description ol {
+	padding: 0 36px 0 0;
+}
+
+
+@media all and (min-width: 769px) {
+	
+.directions-wrapper {
+	float: right;
+}
+.directions-panel {
+	padding: 0 0 0 10px;
+}
+.map-wrapper.directions-shown {
+	float: left;
+}
+.shops-sorting-filtering-wrapper > div:first-child {
+	padding: 0 0 0 20px;
+}
+.shops-sorting-filtering-wrapper label {
+	text-align: right;
+}
+div.radiusFilterWrapper {
+	padding: 0 15px 0 25px;
+}
+.radiusFilterWrapper span.units {
+	text-align: left;
+}
+.shops-list {
+	text-align: right;
+}
+.shops-item .picture-wrap {
+	float: right;
+}
+.shops-item .info-wrap {
+	float: left;
+	text-align: right;
+}
+.shops-item .distance-line {
+	left: 30px;
+	right: auto;
+	text-align: left;
+}
+.shop-map-images {
+	float: right;
+	padding: 0 0 0 15px;
+	text-align: left;
+}
+.shop-map-images + .shop-info {
+	float: left;
+	padding: 0 15px 0 0;
+	text-align: right;
+}
+.shop-map-images .map-controls {
+	text-align: right;
+}
+.all-shop-images {
+	text-align: right;
+}
+
+}
+
+@media all and (min-width: 1025px) {
+	
+.shops-sorting-filtering-wrapper {
+	text-align: right;
+}
+div.shops-filtering-buttons:last-child {
+	float: left;
+}
+.shops-sorting-filtering-wrapper label {
+	margin: 0 0 0 5px;
+}
+.shops-sorting-filtering-wrapper .clear-filtered-shops {
+	margin: 0 0 0 10px;
+}
+
+}
+
+@media all and (min-width: 1152px) {
+	
+.shops-item .info-wrap {
+	padding-right: 0;
+	padding-left: 30px;
+}
+}
+
+@media all and (min-width: 1281px) {
+	
+.shop-map-images {
+	padding: 0 0 0 20px;
+}
+.shop-map-images + .shop-info {
+	padding: 0 20px 0 0;
+}
+.shops-item .info-wrap {
+	padding-right: 30px;
+}
+.shops-item .distance-line {
+	text-align: right;
+}
+
+}
+
+@media all and (min-width: 1601px) {
+	
+.shop-map-images {
+	padding: 0 0 0 30px;
+}
+.shop-map-images + .shop-info {
+	padding: 0 30px 0 0;
+}
+.shops-item .distance-line {
+	text-align: left;
+}
+
+}

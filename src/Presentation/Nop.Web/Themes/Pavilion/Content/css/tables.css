@@ -1,0 +1,62 @@
+﻿
+
+/* FOOTABLE CUSTOM CSS */
+
+.footable-first-column {
+	text-align: center;
+}
+td.footable-first-column {
+	position: relative;
+	background: transparent !important; /*Firefox relative cell bug fix*/
+}
+
+.footable-first-column .item-count {
+	font-size: 13px !important;
+}
+
+.footable.breakpoint > tbody > tr > td > span.footable-toggle {
+	position: absolute;
+	/*top: 50%;*/ /*doesn't work in IE*/
+	left: 50%;
+	width: 32px;
+	height: 32px;
+	/*margin: -16px 0 0 -16px;*/
+	margin: -5px 0 0 -16px; /*IE hack*/
+	overflow: hidden;
+	background-color: #f93b54;
+	background-image: url('../img/table-sprite.png');
+	background-repeat: no-repeat;
+}
+.footable-toggle {
+	background-position: center 0;
+}
+.footable-detail-show .footable-toggle {
+	background-position: center -32px;
+}
+.footable-toggle:before {
+	display: none !important;
+}
+
+.footable-row-detail {
+	text-align: left;
+}
+.footable-row-detail-cell {
+	text-align: left !important;
+}
+.footable-row-detail-row {
+	margin: 0 0 10px;
+    display: table-row;
+}
+.footable-row-detail-name {
+	display: table-cell;
+    padding: 10px;
+}
+.footable-row-detail-value {
+    display: table-cell;
+	padding: 10px;
+}
+
+.go-to-page {
+	display: inline-block !important;
+	font-size: 13px !important;
+}

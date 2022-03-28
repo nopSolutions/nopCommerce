@@ -1,0 +1,134 @@
+﻿@model SevenSpikes.Nop.Conditions.Areas.Admin.Models.ConditionModel
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<nop-antiforgery-token />
+<input type="hidden" asp-for="ConditionId" />
+<input type="hidden" asp-for="DefaultConditionStatementId" />
+
+<input id="defaultGridPageSize" type="hidden" value="@defaultGridPageSize">
+<input id="gridPageSizes" type="hidden" value="@gridPageSizes">
+
+<input id="available-condition-types" type="hidden" value="@Model.AvailableConditionTypesCommaSeparated">
+
+<input id="condition-id" type="hidden" value="@Model.ConditionId">
+<input id="condition-groups" type="hidden" value="@Model.ConditionGroups">
+<input id="read-condition-group-url" type="hidden" value="@Url.Action("GetConditionGroup", "ConditionsAdmin")">
+<input id="update-condition-url" type="hidden" value="@Url.Action("UpdateCondition", "ConditionsAdmin")">
+<input id="update-condition-statement-url" type="hidden" value="@Url.Action("UpdateConditionStatement", "ConditionsAdmin")">
+<input id="update-default-condition-group-statement-url" type="hidden" value="@Url.Action("UpdateDefaultConditionGroupStatement", "ConditionsAdmin")">
+<input id="destroy-condition-statement-url" type="hidden" value="@Url.Action("DeleteConditionStatement", "ConditionsAdmin")">
+<input id="create-condition-group-url" type="hidden" value="@Url.Action("CreateConditionGroup", "ConditionsAdmin")">
+<input id="create-condition-statement-url" type="hidden" value="@Url.Action("CreateConditionStatement", "ConditionsAdmin")">
+<input id="delete-condition-group-url" type="hidden" value="@Url.Action("DeleteConditionGroup", "ConditionsAdmin")">
+<input id="delete-unused-condition-groups-url" type="hidden" value="@Url.Action("DeleteUnusedConditionGroups", "ConditionsAdmin")">
+<input id="get-condition-type-url" type="hidden" value="@Url.Action("GetConditionTypes", "ConditionsAdmin")">
+<input id="get-condition-properties-url" type="hidden" value="@Url.Action("GetConditionProperties", "ConditionsAdmin")">
+<input id="get-condition-property-operators-url" type="hidden" value="@Url.Action("GetOperators", "ConditionsAdmin")">
+<input id="get-condition-property-values-url" type="hidden" value="@Url.Action("GetValues", "ConditionsAdmin")">
+<input id="get-condition-property-value-type-url" type="hidden" value="@Url.Action("GetValueType", "ConditionsAdmin")">
+
+<div id="condition" class="cards-group">
+    <div class="card card-default">
+        <div class="card-header">
+			<div class="card-title">
+				@T("SevenSpikes.Conditions.Admin.Condition.AboutCondtionGroups")
+			</div>
+        </div>
+        <div class="card-body">
+            <p>@T("SevenSpikes.Conditions.Admin.Condition.Description")</p>
+        </div>
+    </div>
+    <div class="card card-default">
+        <div class="card-header">
+			<div class="card-title">
+				@T("SevenSpikes.Conditions.Admin.Condition")
+			</div>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ConditionName" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ConditionName" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="Active" />
+                </div>
+                <div class="col-md-9">
+                    <div class="editor-field">
+                        <nop-editor asp-for="Active"/>
+                    </div>
+                </div>
+            </div>
+            <div id="default-condition-group" class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="DefaultConditionValue" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="DefaultConditionValue" asp-items="Model.AvailableDefaultConditionValues" />
+                </div>
+            </div>
+            <div class="callout bg-gray-light no margin">@T("SevenSpikes.Conditions.Admin.Condition.DefaultConditionValue.Hint")</div>
+        </div>
+    </div>
+    <div class="card card-default condition-groups-panel">
+        <div class="card-header">
+			<div class="card-title">
+				@T("SevenSpikes.Conditions.Admin.Condition.CondtionGroupsTitle")
+			</div>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <a class="btn bg-blue add-condition-group">
+                        <i class="fa fa-plus-square"></i>
+                        @T("SevenSpikes.Conditions.Admin.Condition.AddConditionGroup")
+                    </a>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div id="condition-groups-wrapper" class="col-md-12"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="popup_editor" type="text/x-kendo-template">
+    <div id="editor">
+        <div class="k-edit-label">
+            <label for="condition-type">@T("SevenSpikes.Conditions.Admin.Condition.ConditionType")</label>
+        </div>
+        <div class="k-edit-field">
+            <input id="condition-type" name="Type" data-bind="value: ConditionType" required="required" style="width: 230px" />
+        </div>
+        <div class="k-edit-label">
+            <label for="condition-property">@T("SevenSpikes.Conditions.Admin.Condition.ConditionProperty")</label>
+        </div>
+        <div class="k-edit-field">
+            <input id="condition-property" name="Property" data-bind="value: ConditionProperty" required="required" style="width: 230px" />
+        </div>
+        <div class="k-edit-label">
+            <label for="condition-property-operator">@T("SevenSpikes.Conditions.Admin.Condition.Operator")</label>
+        </div>
+        <div class="k-edit-field">
+            <input id="condition-property-operator" name="Operator" data-bind="value: ConditionPropertyOperator" required="required" style="width: 230px" />
+            <input id="condition-property-value-type" name="Operator" data-bind="value: ConditionPropertyValueType" />
+        </div>
+        <div class="k-edit-label">
+            <label for="condition-property-value">@T("SevenSpikes.Conditions.Admin.Condition.Value")</label>
+        </div>
+        <div class="k-edit-field" id="condition-property-value-container">
+        </div>
+    </div>
+
+</script>

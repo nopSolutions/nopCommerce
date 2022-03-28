@@ -1,0 +1,84 @@
+﻿@{
+    Layout = "_ConfigurePlugin";
+}
+@model ConfigurationModel
+@using Nop.Plugin.Payments.Synchrony.Models;
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+<form asp-controller="SynchronyPayment" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="MerchantId_OverrideForStore"
+                                                     asp-input="MerchantId"
+                                                     asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="MerchantId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MerchantId" />
+                        <span asp-validation-for="MerchantId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="MerchantPassword_OverrideForStore"
+                                                     asp-input="MerchantPassword"
+                                                     asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="MerchantPassword" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MerchantPassword" />
+                        <span asp-validation-for="MerchantPassword"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Integration_OverrideForStore"
+                                                     asp-input="Integration"
+                                                     asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Integration" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Integration" />
+                        <span asp-validation-for="Integration"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="WhitelistDomain_OverrideForStore"
+                                                     asp-input="WhitelistDomain"
+                                                     asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="WhitelistDomain" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="WhitelistDomain" />
+                        <span asp-validation-for="WhitelistDomain"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="IsDebugMode_OverrideForStore"
+                                                     asp-input="IsDebugMode"
+                                                     asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="IsDebugMode" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="IsDebugMode" />
+                        <span asp-validation-for="IsDebugMode"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

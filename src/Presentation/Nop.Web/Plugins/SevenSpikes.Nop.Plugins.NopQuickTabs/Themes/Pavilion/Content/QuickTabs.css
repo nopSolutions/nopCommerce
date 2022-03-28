@@ -1,0 +1,19 @@
+﻿
+.ui-tabs .message-error {
+	margin: 20px 0;
+	text-align: center;
+}
+.ui-tabs .form-fields {
+	max-width: 600px;
+	margin: 30px auto;
+}
+.ui-tabs .form-fields:first-child {
+	margin-top: 15px;
+}
+
+@media all and (min-width: 769px) and (max-width: 1024px) {
+
+	.ui-tabs .review-content {
+		margin-top: 15px;
+	}
+}

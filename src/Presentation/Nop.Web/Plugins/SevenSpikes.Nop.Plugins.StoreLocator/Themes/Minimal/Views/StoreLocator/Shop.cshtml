@@ -1,0 +1,119 @@
+﻿@model ShopModel
+@inject IWebHelper webHelper
+@inject StoreLocatorSettings storeLocatorSettings
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title, meta
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+    Html.AddCssFileParts("~/lib_npm/magnific-popup/magnific-popup.css");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/lib_npm/magnific-popup/jquery.magnific-popup.min.js");
+
+    var themeName = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+    var supportRtl = await ShouldUseRtlThemeAsync();
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Themes/" + themeName + "/Content/StoreLocator.css");
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Themes/" + themeName + "/Content/StoreLocator.rtl.css");
+    }
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Scripts/StoreLocatorCore.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Scripts/StoreLocatorShop.min.js");
+
+    bool doesShopHasCoordinates = !string.IsNullOrWhiteSpace(Model.Latitude) && !string.IsNullOrWhiteSpace(@Model.Longitude);
+    bool doesShopHasImage = Model.ShopImages.Count > 0;
+    var storeLocation = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
+}
+
+<div class="page shop-page">
+    <div class="page-title">
+        <h1>@Model.Name</h1>
+    </div>
+    <div class="page-body">
+        <div class="back-to-all-shops">
+            <a href="@Url.RouteUrl(Plugin.AllShopsRouteName)" title="@T("SevenSpikes.StoreLocator.Public.AllShops.PageTitle")">
+                <span>@T("SevenSpikes.StoreLocator.Public.BackToAllShops")</span>
+            </a>
+        </div>
+        @if (doesShopHasImage || doesShopHasCoordinates)
+        {
+            <div class="shop-map-images">
+                <div class="inner-wrapper">
+                    @if (doesShopHasImage)
+                    {
+                        var mainImage = Model.ShopImages[0];
+                    
+                        <div class="main-picture">
+                            <a class="main-picture-link" href="@mainImage.FullSizePictureSrc" title="@mainImage.Alt">
+                                <img class="main-picture-img" src="@mainImage.PictureSrc" alt="@mainImage.Alt" title="@mainImage.Alt" />
+                            </a>
+                        </div>
+                        <ul class="all-shop-images">
+                            @foreach (var image in Model.ShopImages.Skip(1))
+                            {
+                                <li>
+                                    <a href="@image.FullSizePictureSrc" title="@image.Alt">
+                                        <img src="@image.PictureSrc" alt="@image.Alt" title="@image.Alt" />
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    @if (doesShopHasCoordinates)
+                    {
+                        <div class="map-wrapper">
+                            <div class="map" id="shop-map-holder"></div>
+                        </div>
+                        <div class="map-controls">
+                            <a id="show-directions-to-shop" class="get-directions-to-shop"><span>@T("SevenSpikes.StoreLocator.Public.ShowDirections")</span></a>
+                            <span class="additional-info"></span>
+                        </div>
+                        <div class="directions-wrapper">
+                            <div class="directions-panel" id="directions-panel"></div>
+                        </div>
+                        <input type="hidden" class="shop-resources" 
+                               data-youarehere="@T("SevenSpikes.StoreLocator.Public.YouAreHere")" 
+                               data-accuracy="@T("SevenSpikes.StoreLocator.Public.Accuracy")"
+                               data-geolocationdenied="@T("SevenSpikes.StoreLocator.Public.BrowserGeolocationDeniedShopDetails")" 
+                               data-unabletoshowdirections="@T("SevenSpikes.StoreLocator.Public.UnableToShowDirections")"
+                               data-pathtoimages = "@storeLocation@Plugin.PathToImagesFolder"
+                               data-units="@storeLocatorSettings.UnitsSystem.ToString()"
+                               data-googleapikey="@storeLocatorSettings.GoogleApiKey"
+                               data-mapstyles="@Model.CustomMapStyles"
+                               data-maplanguagecode="@Model.MapLanguageCode"
+                               data-shoplatitude="@Model.Latitude"
+                               data-shoplongitude="@Model.Longitude"
+                               data-shopname="@Model.Name"
+                               data-manuallysetmapbounds="@true.ToString().ToLowerInvariant()"
+                               value="1" />
+                    }
+                </div>
+            </div>
+        }
+        <div class="shop-info">
+            <div class="inner-wrapper">
+                @if (!string.IsNullOrWhiteSpace(Model.FullDescription))
+                {
+                    <div class="shop-full-description">@Html.Raw(Model.FullDescription)</div>
+                }
+
+                @if (Model.TagsList.Count > 0)
+                {
+                    <div class="tags">
+                        <label class="tags-label">@T("SevenSpikes.StoreLocator.Public.TagsTitle")</label>
+                        <ul class="tag-list">
+                            @foreach (var tag in Model.TagsList)
+                            {
+                                <li class="tag-item">@tag</li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

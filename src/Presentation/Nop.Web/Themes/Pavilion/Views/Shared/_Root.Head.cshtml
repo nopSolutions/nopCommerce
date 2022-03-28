@@ -1,0 +1,293 @@
+﻿@using Nop.Core
+@using Nop.Core.Configuration
+@using Nop.Core.Events
+@using StackExchange.Profiling
+@using Nop.Core.Domain.Common
+@using Nop.Core.Domain.Seo
+@using Nop.Services.Events
+@using Nop.Services.Security
+@using Nop.Web.Framework.Events
+@* custom *@
+@using Nop.Plugin.Misc.AbcFrontend.Services
+@using Nop.Plugin.Misc.AbcCore
+@using Nop.Plugin.Misc.AbcCore.Services
+@using Nop.Web.Framework.Infrastructure
+
+@inject CommonSettings commonSettings
+@inject IEventPublisher eventPublisher
+@inject IPermissionService permissionService
+@inject IWorkContext workContext
+@inject SeoSettings seoSettings
+@inject AppSettings appSettings
+@inject Nop.Services.Localization.ILanguageService languageService
+@* Custom injects *@
+@inject FrontEndService frontEndService
+@inject IStoreContext storeContext
+@{
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
+    // ABC: Using custom AjaxCart implementation
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/Themes/Pavilion/Content/scripts/abc/public.ajaxcart.js");
+
+    //when jQuery migrate script logging is active you will see the log in the browser console
+
+    var iosFixFilePath = "~/Plugins/SevenSpikes.Core/Scripts/iOS-12-array-reverse-fix.min.js";
+    var iosFixContentFilePath = CommonHelper.DefaultFileProvider.MapPath(iosFixFilePath);
+
+    if (System.IO.File.Exists(iosFixContentFilePath))
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, iosFixFilePath);
+    }
+
+    if (commonSettings.JqueryMigrateScriptLoggingActive)
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.js");
+    }
+    else
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.min.js");
+    }
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation/jquery.validate.min.js");
+    // ABC: changed to head to work with SLI
+    Html.AppendScriptParts(ResourceLocation.Head, "~/lib_npm/jquery/jquery.min.js");
+
+    //custom tag(s);
+    if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
+    {
+        Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
+    }
+
+    var displayMiniProfiler = appSettings.CommonConfig.MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
+
+    var isAndroid23Class = "notAndroid23";
+    var userAgent = Url.ActionContext.HttpContext.Request.Headers["User-Agent"];
+    if (!string.IsNullOrWhiteSpace(userAgent) && userAgent.ToString().IndexOf("Android 2.", StringComparison.InvariantCultureIgnoreCase) > 0)
+    {
+        isAndroid23Class = "android23";
+    }
+
+    var currentPageClass = (await (await Html.PartialAsync("_CurrentPageClass")).RenderHtmlContentAsync()).Trim();
+
+    var supportRtl = await this.ShouldUseRtlThemeAsync();
+    
+    //event    
+    await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
+
+    // ABC: custom stuff
+    bool isClearanceStore = frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync());
+    string clearanceClass = isClearanceStore ? "abc-clearance" : "";
+
+    Url.ActionContext.HttpContext.Response.Cookies.Append("AbcClearanceStore", isClearanceStore.ToString());
+
+    bool isHawthorne = frontEndService.StoreIsHawthorne(await storeContext.GetCurrentStoreAsync());
+    string sliRacConfig = isHawthorne ?
+                        "https://hawthorneonline.resultspage.com/autocomplete/custom/sli-rac.config.js" :
+                        "https://abcwarehouse.resultspage.com/autocomplete/sli-rac.config.js";
+
+    string equalPaymentModalTextColor = isHawthorne ?
+        "gray" :
+        await HtmlHelpers.GetPavilionPrimaryColorAsync();
+}
+<!DOCTYPE html>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())" @(await this.ShouldUseRtlThemeAsync() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
+<head>
+    <title>@Html.NopTitle()</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@(Html.NopMetaDescription())" />
+    <meta name="keywords" content="@(Html.NopMetaKeywords())" />
+    <meta name="generator" content="nopCommerce" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700&display=swap' rel='stylesheet' type='text/css'>
+    
+    @* ABC: link SLI stylesheet based on store *@
+    @if (!isClearanceStore && !isHawthorne)
+    {
+        <link rel="stylesheet" type="text/css" href="//abcwarehouse.resultspage.com/autocomplete/sli-rac.css">
+    }
+    @if (!isClearanceStore && isHawthorne)
+    {
+        <link rel="stylesheet" type="text/css" href="//hawthorneonline.resultspage.com/autocomplete/sli-rac.css">
+    }
+    
+    @Html.NopHeadCustom()
+    @*This is used so that themes can inject content into the header*@
+    @await Html.PartialAsync("Head")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
+    @await Component.InvokeAsync("Widget", new { widgetZone = "head_html_tag_after_css_files_pavilion" })
+
+    @Html.NopCssFiles(ResourceLocation.Head)
+    @Html.NopScripts(ResourceLocation.Head)
+    @Html.NopCanonicalUrls()
+    @await Component.InvokeAsync("NewsRssHeaderLink")
+    @await Component.InvokeAsync("BlogRssHeaderLink")
+    @*Insert favicon and app icons head code*@
+    @await Component.InvokeAsync("Favicon")
+    @if (displayMiniProfiler)
+    {
+        <mini-profiler />
+    }
+    @Html.NopInlineScripts(ResourceLocation.Head)
+    <!--Powered by nopCommerce - https://www.nopCommerce.com-->
+</head>
+<body class="@isAndroid23Class @currentPageClass @if (supportRtl){<text>rtl</text>} @clearanceClass">
+    @* ABC: A bunch of custom styles *@
+    <style>
+        .flyout-cart-wrapper:hover .flyout-cart {
+            z-index: 1001;
+        }
+        .abc-clearance .price.you-save, .abc-clearance .you-save-amt {
+            display: none;
+        }
+        .abc-clearance .price.old-price, .abc-clearance .price.old-product-price {
+            display: none;
+        }
+        .abc-clearance .price.actual-price {
+            text-decoration: line-through;
+        }
+        .abc-clearance .price.actual-price:after {
+            display: inline-block;
+            padding-left: .5em;
+            content: ' OR LESS!';
+            color: #949494;
+            font-style: italic;
+        }
+        .abc-clearance .product-item.product-item.product-item {
+            min-height: 390px;
+        }
+        .abc-clearance .price-sale-tag {
+            display: none;
+        }
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1050; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 2px solid #@await HtmlHelpers.GetPavilionPrimaryColorAsync();
+            width: 300px;
+        }
+        #dbuymodel2 .modal-content {
+            width: 100%;
+        }
+        .modal-content p {
+            font-size: 10px;
+        }
+        .modal-content input {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+        .modal-content form label {
+            width: 9em;
+            text-align: right;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+        .modal-content form {
+            margin: 0.5em 0;
+        }
+        .modal-content form input {
+            width: 145px;
+            margin: 6px 0;
+        }
+        .modal-content form .required {
+            color: red;
+        }
+        .modal-content .required-text {
+            color: red;
+            font-style: italic;
+            text-align: right;
+        }
+        .modal-content button {
+            float: right;
+            background-color: #31699C;
+            color: white;
+            border: 0;
+            padding: 6px 30px;
+            margin: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+        }
+        .modal-content button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+        .modal-content h3 {
+            clear: both;
+        }
+        .month-count {
+            font-size: 7em;
+            font-weight: 700;
+            float: left;
+        }
+        .months-text {
+            font-size: 3em;
+            font-weight: 600;
+            text-decoration: underline;
+            margin-top: 0.5em;
+        }
+    </style>
+    @if (!isHawthorne)
+    {
+        <style>
+            @@media (min-width: 1265px) and (max-width: 1280px) {
+                .search-box-text.search-box-text.search-box-text {
+                    width: 669px;
+                }
+            }
+        </style>
+    }
+    @if (!isClearanceStore)
+    {
+        <script type="text/javascript" src="@sliRacConfig"></script>
+    }
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <h2>What's the Price?</h2>
+            <p>
+                Please provide the following information to see the pricing details and continue the
+                checkout process.  You can delete the item from your cart at any time.
+            </p>
+
+            <form id="modalForm">
+                <label>First Name<span class="required">*</span></label>
+                <input type="text" /><br />
+                <label>Last Name<span class="required">*</span></label>
+                <input type="text" /><br />
+                <label>E-Mail Address<span class="required">*</span></label>
+                <input type="text" /><br />
+            </form>
+
+            <button id="modalButton" disabled="disabled">Continue</button><br />
+            <h3>Why is the price not shown?</h3>
+            <p>
+                Because our price on this item may be lower than specific manufacturers allow us to show,
+                we need you to input the above information first.  Thank you!
+            </p>
+            <p class="required-text">* - Required</p>
+        </div>
+    </div>
+    @RenderBody()
+    @Html.NopCssFiles(ResourceLocation.Footer)
+    @Html.NopScripts(ResourceLocation.Footer)
+    <div id="goToTop"></div>
+    @Html.NopInlineScripts(ResourceLocation.Footer)
+</body>
+</html>

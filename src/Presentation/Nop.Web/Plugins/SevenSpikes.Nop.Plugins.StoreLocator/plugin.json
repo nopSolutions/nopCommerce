@@ -1,0 +1,12 @@
+﻿{
+	"Group": "7Spikes",
+	"FriendlyName": "Nop Store Locator",
+	"SystemName": "SevenSpikes.Nop.Plugins.StoreLocator",
+	"Version": "4.4",
+	"SupportedVersions": [ "4.40" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+	"Author": "Seven Spikes Ltd",
+	"DisplayOrder": 1,
+	"FileName": "SevenSpikes.Nop.Plugins.StoreLocator.dll",
+	"Description": "With the Nop Store Locator plugin for nopCommerce you can get your stores found in the blink of an eye."
+}

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="JCarouselEntitySettings.NumberOfItems">
+    <Value>10</Value>
+  </Setting>
+  <Setting Name="JCarouselEntitySettings.NumberOfVisibleItems">
+    <Value>4</Value>
+  </Setting>
+  <Setting Name="JCarouselEntitySettings.ShowTitle">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="JCarouselEntitySettings.StartIndex">
+    <Value>1</Value>
+  </Setting>
+  <Setting Name="JCarouselEntitySettings.ScrollItems">
+    <Value>1</Value>
+  </Setting>
+  <Setting Name="JCarouselGeneralSettings.Enable">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="JCarouselEntitySettings.AutoscrollHoverPause">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="JCarouselEntitySettings.LoopItems">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="JCarouselEntitySettings.NavigationDots">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="JCarouselEntitySettings.NavigationArrows">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="JCarouselGeneralSettings.DefaultArrowsContainer">
+    <Value>.carousel-title</Value>
+  </Setting>
+  <Setting Name="JCarouselGeneralSettings.DefaultResponsiveBreakpointsForSlickSlider">
+    <Value>[{"breakpoint":876,"settings":{"slidesToShow":3}},{"breakpoint":648,"settings":{"slidesToShow":2}},{"breakpoint":480,"settings":{"slidesToShow":1}}]</Value>
+  </Setting>
+</Settings>

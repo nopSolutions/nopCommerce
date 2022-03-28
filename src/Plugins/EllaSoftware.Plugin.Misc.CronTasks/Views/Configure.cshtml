@@ -1,0 +1,250 @@
+﻿@model CronTasksSettingsModel
+
+@using EllaSoftware.Plugin.Misc.CronTasks.Models;
+@using EllaSoftware.Plugin.Misc.CronTasks.Domain;
+
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = T("EllaSoftware.Plugin.Misc.CronTasks.Settings.Title").Text;
+
+    Html.SetActiveMenuItemSystemName("CRONTasks");
+}
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @ViewBag.Title
+        </h1>
+    </div>
+    <div asp-validation-summary="All"></div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                @await Html.PartialAsync("~/Plugins/EllaSoftware.CronTasks/Views/Shared/_EllaSoftwarePromo.cshtml")
+                @await Component.InvokeAsync("StoreScopeConfiguration")
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a data-toggle="collapse" href="#collapse1" aria-expanded="false">Instruction</a>
+                    </div>
+                    <div id="collapse1" class="panel-collapse collapse" aria-expanded="false">
+                        <div class="panel-body">
+                            <p>
+                                <b>After plugin installation follow these steps to configure CRON tasks:</b>
+                                <ol>
+                                    <li>On <i>Admin -> System -> Schedule tasks</i>, disable all schedule tasks that you would like to move to CRON tasks.</li>
+                                    <li>Restart the application</li>
+                                    <li>Navigate to <i>Admin -> Ella Software -> CRON Tasks</i> and find a CRON expression format rules on "CRON Format" tab</li>
+                                    <li>Configure CRON tasks appropriately</li>
+                                </ol>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a data-toggle="collapse" href="#collapse2" aria-expanded="false">CRON Format</a>
+                    </div>
+                    <div id="collapse2" class="panel-collapse collapse" aria-expanded="false">
+                        <div class="panel-body">
+                            <p>
+                                A cron expression is a string comprised of 6 or 7 fields separated by white space. Fields can contain any of the allowed values, along with various combinations of the allowed special characters for that field. The fields are as follows:<br />
+                                <img style="max-width: 500px;" src="@Url.Content("~/Plugins/EllaSoftware.CronTasks/Content/images/cron-format-explained.png")" />
+                            </p>
+                            <p>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Expression</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><i>0 */5 * * * ? *</i></td>
+                                            <td>Fire every 5 minutes</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i>0 0 16 ? * WED *</i></td>
+                                            <td>Run once a week on Wednesday at 4 PM</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i>0 15 10 ? * *</i></td>
+                                            <td>Fire at 10:15am every day</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i>0 * 14 * * ?</i></td>
+                                            <td>Fire every minute starting at 2pm and ending at 2:59pm, every day</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i>0 10,44 14 ? 3 WED</i></td>
+                                            <td>Fire at 2:10pm and at 2:44pm every Wednesday in the month of March.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i>0 15 10 15 * ?</i></td>
+                                            <td>Fire at 10:15am on the 15th day of every month</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i>0 11 11 11 11 ?</i></td>
+                                            <td>Fire every November 11th at 11:11am.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i>40 20 23 ? * 6L 2002-2005</i></td>
+                                            <td>FFire at 23:20:40 on every last friday of every month during the years 2002, 2003, 2004 and 2005</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br />
+                                For advanced CRON format rules please follow <a href="https://www.quartz-scheduler.net/documentation/quartz-3.x/tutorial/crontrigger.html" target="_blank">this link</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("EllaSoftware.Plugin.Misc.CronTasks.Title")
+                    </div>
+                    <div class="panel-body">
+                        
+                <div class="panel panel-default no-margin">
+                    <div class="panel-heading">
+                        @T("Admin.Common.AddNewRecord")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.CronTaskSearchModel.AddCronTaskModel.ScheduleTaskId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="@Model.CronTaskSearchModel.AddCronTaskModel.ScheduleTaskId" asp-items="@Model.CronTaskSearchModel.AddCronTaskModel.AvailableScheduleTasks" />
+                                <span asp-validation-for="@Model.CronTaskSearchModel.AddCronTaskModel.ScheduleTaskId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.CronTaskSearchModel.AddCronTaskModel.CronExpression" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.CronTaskSearchModel.AddCronTaskModel.CronExpression" />
+                                <span asp-validation-for="@Model.CronTaskSearchModel.AddCronTaskModel.CronExpression"></span>
+                                <sup>
+                                    <a href="http://www.cronmaker.com/" target="_blank" style="font-size: 12px;">@T("EllaSoftware.Plugin.Misc.CronTasks.GenerateCron")</a>
+                                </sup>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <button type="button" id="addCronTask" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $(document).ready(function () {
+                            $('#addCronTask').click(function () {
+                                $('#addCronTask').attr('disabled', true);
+                                var postData = {
+                                    ScheduleTaskId: $("#@Html.IdFor(model => model.CronTaskSearchModel.AddCronTaskModel.ScheduleTaskId)").val(),
+                                    CronExpression: $("#@Html.IdFor(model => model.CronTaskSearchModel.AddCronTaskModel.CronExpression)").val()
+                                };
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@Html.Raw(Url.Action("InsertCronTask", "CronTasks"))",
+                                    data: postData,
+                                    success: function (data, textStatus, jqXHR) {
+                                        if (data.Result) {
+                                            //reload grid
+                                            updateTable('#cron-task-grid');
+
+                                            //clear input value
+                                            $("#@Html.IdFor(model => model.CronTaskSearchModel.AddCronTaskModel.ScheduleTaskId)").val('');
+                                            $("#@Html.IdFor(model => model.CronTaskSearchModel.AddCronTaskModel.CronExpression)").val('');
+                                        } else {
+                                            //display errors if returned
+                                            display_nop_error(data);
+                                        }
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        $('#addCronTask').attr('disabled', false);
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                </div>
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "cron-task-grid",
+                            UrlRead = new DataUrl("CronTaskList", "CronTasks"),
+                            UrlUpdate = new DataUrl("UpdateCronTask", "CronTasks", null),
+                            UrlDelete = new DataUrl("DeleteCronTask", "CronTasks", null),
+                            SearchButtonId = "search-resources",
+                            Paging = false,
+                            ColumnCollection = new List<ColumnProperty>
+                                            {
+                                    new ColumnProperty($"{nameof(CronTaskModel.ScheduleTaskModel)}.{nameof(CronTaskModel.ScheduleTaskModel.Name)}")
+                                    {
+                                        Title = T("Admin.System.ScheduleTasks.Name").Text,
+                                        Editable = false,
+                                        Render = new RenderCustom("renderScheduleTaskName")
+                                    },
+                                    new ColumnProperty(nameof(CronTaskModel.CronExpression))
+                                    {
+                                        Title = T("EllaSoftware.Plugin.Misc.CronTasks.CronTask.CronExpression").Text,
+                                        Editable = true,
+                                        EditType = EditType.String
+                                    },
+                                    new ColumnProperty($"{nameof(CronTaskModel.ScheduleTaskModel)}.{nameof(CronTaskModel.ScheduleTaskModel.LastStartUtc)}")
+                                    {
+                                        Title = T("Admin.System.ScheduleTasks.LastStart").Text,
+                                        Editable = false
+                                    },
+                                    new ColumnProperty($"{nameof(CronTaskModel.ScheduleTaskModel)}.{nameof(CronTaskModel.ScheduleTaskModel.LastSuccessUtc)}")
+                                    {
+                                        Title = T("Admin.System.ScheduleTasks.LastSuccess").Text,
+                                        Editable = false
+                                    },
+                                    new ColumnProperty(nameof(CronTaskModel.CronNextOccurrence))
+                                    {
+                                        Title = T("EllaSoftware.Plugin.Misc.CronTasks.CronTask.CronNextOccurrence").Text,
+                                        Editable = false
+                                    },
+                                    new ColumnProperty(nameof(CronTaskModel.ScheduleTaskId))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonsInlineEdit()
+                                    },
+                                    new ColumnProperty(nameof(CronTaskModel.ScheduleTaskId))
+                                    {
+                                        Title = T("Admin.Common.Delete").Text,
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                    }
+                                }
+                        })
+                    <script>
+                            function renderScheduleTaskName(data, type, row, meta) {
+                                var statusLabel = '';
+                                switch (row.ExecutionStatusString) {
+                                    case '@CronTaskExecutionStatus.Running.ToString()':
+                                        statusLabel = '<span class="label label-success" style="margin-right: 5px;">' + row.ExecutionStatusString + '</span>';
+                                        break;
+                                    case '@CronTaskExecutionStatus.Waiting.ToString()':
+                                        statusLabel = '<span class="label label-warning" style="margin-right: 5px;">' + row.ExecutionStatusString + '</span>';
+                                        break;
+                                    case '@CronTaskExecutionStatus.NotFound.ToString()':
+                                        statusLabel = '<span class="label label-danger" style="margin-right: 5px;">Not Found</span>';
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                return statusLabel + data;
+                            }
+                    </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

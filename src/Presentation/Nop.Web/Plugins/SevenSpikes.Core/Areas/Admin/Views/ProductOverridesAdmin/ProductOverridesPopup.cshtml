@@ -1,0 +1,228 @@
+﻿@{
+    Layout = AdminViewLocations.AdminPopupLayoutViewPath;
+}
+
+@model ProductOverridesModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try
+            {
+                var gridElement = window.opener.document.getElementById("@ViewBag.btnId");
+                $(gridElement).click();
+            }
+            catch (e){}
+            window.close();
+        </script>
+
+        return;
+    }
+}
+
+@{
+    var popupGridPageSize = adminAreaSettings.PopupGridPageSize;
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<form method="post">
+    <nop-antiforgery-token />
+    <input type="hidden" asp-for="ConditionId" />
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.Conditions.Admin.ProductOverrides.AddNew")
+        </h1>
+        <div class="pull-right">
+            &nbsp;
+        </div>
+    </div>
+    <section class="content">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchProductName" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchProductName" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchCategoryId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchManufacturerId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                                <div class="form-group row" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchVendorId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="text-align: center">
+                                <button type="submit" id="search-products" value="search-products" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-default">
+                    <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "products-grid",
+                        UrlRead = new DataUrl("ProductOverridesPopupList", "ProductOverridesAdmin", new RouteValueDictionary { ["conditionId"] = Model.ConditionId }),
+                        Length = defaultGridPageSize,
+                        LengthMenu = gridPageSizes,
+                        SearchButtonId = "search-products",
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchProductName)),
+                            new FilterParameter(nameof(Model.SearchCategoryId)),
+                            new FilterParameter(nameof(Model.SearchManufacturerId)),
+                            new FilterParameter(nameof(Model.SearchStoreId)),
+                            new FilterParameter(nameof(Model.SearchVendorId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(OverridedProductModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Width = "20",
+                                Render = new RenderCustom("renderSelectedCheckBox")
+                            },
+                            new ColumnProperty(nameof(OverridedProductModel.ProductName))
+                            {
+                                Title = T("SevenSpikes.Conditions.Admin.ProductOverrides.ProductName").Text
+                            }
+                        }
+                    })
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" name="save" class="btn bg-primary">
+                            <i class="far fa-save"></i>
+                            @T("Admin.Common.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<script>
+
+    function renderSelectedCheckBox(data, type, row, meta) {
+
+        var checked = row.CustomProperties.Selected ? 'checked' : '';
+
+        return '<input type="checkbox" id="SelectedProductIds" name="SelectedProductIds" value="' + row.ProductId + '" class="checkboxGroups" ' + checked + '>';
+    }
+
+    var selectedIds = [];
+
+    $(document).ready(function () {
+        $('#search-products').click(function (e) {
+            //refresh grid
+            e.preventDefault(); //don't reload the page
+
+            var productOverridesGrid = $("#products-grid").DataTable();
+            productOverridesGrid.ajax.reload();
+
+            //return false to don't reload a page
+            return false;
+        });
+
+        $('#mastercheckbox').click(function () {
+            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+        });
+
+        //wire up checkboxes.
+        $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+            var $check = $(this);
+            if ($check.is(":checked") == true) {
+                var checked = jQuery.inArray($check.val(), selectedIds);
+                if (checked == -1) {
+                    //add id to selectedIds.
+                    selectedIds.push($check.val());
+                }
+            }
+            else {
+                var checked = jQuery.inArray($check.val(), selectedIds);
+                if (checked > -1) {
+                    //remove id from selectedIds.
+                    selectedIds = $.grep(selectedIds, function (item, index) {
+                        return item != $check.val();
+                    });
+                }
+            }
+            updateMasterCheckbox();
+        });
+    });
+
+    function onDataBound(e) {
+        $('#products-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+            var currentId = $(this).val();
+            var checked = jQuery.inArray(currentId, selectedIds);
+            //set checked based on if current checkbox's value is in selectedIds.
+            $(this).attr('checked', checked > -1);
+        });
+
+        updateMasterCheckbox();
+    }
+
+    function updateMasterCheckbox() {
+        var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox]').length;
+        var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+    }
+
+    $("#@Html.IdFor(model => model.SearchProductName)").keydown(function (event) {
+        if (event.keyCode == 13) {
+            $("#search-products").click();
+            return false;
+        }
+    });
+
+    function GetAntiForgeryToken() {
+
+        var token = $("input[name=__RequestVerificationToken]:first").val();
+        return token;
+    };
+</script>

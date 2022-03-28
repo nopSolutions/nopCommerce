@@ -1,0 +1,96 @@
+﻿@model NopAjaxFiltersSettingsModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableAjaxFilters_OverrideForStore" asp-input="EnableAjaxFilters" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableAjaxFilters" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableAjaxFilters" />
+                    <span asp-validation-for="EnableAjaxFilters"></span>
+                </div>
+            </div>
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="CategoriesWithoutFilters_OverrideForStore" asp-input="CategoriesWithoutFilters" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="CategoriesWithoutFilters" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CategoriesWithoutFilters" />
+                    <span asp-validation-for="CategoriesWithoutFilters"></span>
+                </div>
+            </div>
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="TrailingZeroesSeparator_OverrideForStore" asp-input="TrailingZeroesSeparator" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="TrailingZeroesSeparator" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="TrailingZeroesSeparator" />
+                    <span asp-validation-for="TrailingZeroesSeparator"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="WidgetZone_OverrideForStore" asp-input="WidgetZone" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="WidgetZone" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="WidgetZone" asp-items="Model.SupportedWidgetZones" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="FiltersUIMode_OverrideForStore" asp-input="FiltersUIMode" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="FiltersUIMode" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="FiltersUIMode" asp-items="Model.AvailableFiltersUIModes" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="EnableInfiniteScroll_OverrideForStore" asp-input="EnableInfiniteScroll" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableInfiniteScroll" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableInfiniteScroll" />
+                    <span asp-validation-for="EnableInfiniteScroll"></span>
+                </div>
+            </div>
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ScrollToElementOnThePageAfterFiltration_OverrideForStore" asp-input="ScrollToElementOnThePageAfterFiltration" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ScrollToElementOnThePageAfterFiltration" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ScrollToElementOnThePageAfterFiltration" />
+                    <span asp-validation-for="ScrollToElementOnThePageAfterFiltration"></span>
+                </div>
+            </div>
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ScrollToElementOnThePageAfterFiltrationMobile_OverrideForStore" asp-input="ScrollToElementOnThePageAfterFiltrationMobile" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ScrollToElementOnThePageAfterFiltrationMobile" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ScrollToElementOnThePageAfterFiltrationMobile" />
+                    <span asp-validation-for="ScrollToElementOnThePageAfterFiltrationMobile"></span>
+                </div>
+            </div>
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="CloseFiltersPanelAfterFiltrationInMobile_OverrideForStore" asp-input="CloseFiltersPanelAfterFiltrationInMobile" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="CloseFiltersPanelAfterFiltrationInMobile" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CloseFiltersPanelAfterFiltrationInMobile" />
+                    <span asp-validation-for="CloseFiltersPanelAfterFiltrationInMobile"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

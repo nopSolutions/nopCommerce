@@ -1,0 +1,54 @@
+﻿@model CategoryNavigationModel
+
+@functions{
+
+    public bool DoesCurrentCategoryHasSubcategories(IList<CategorySimpleModel> categories)
+    {
+        foreach (var category in categories)
+        {
+            if (category.Id == Model.CurrentCategoryId && category.SubCategories.Count > 0)
+            {
+                return true;
+            }
+
+            if (DoesCurrentCategoryHasSubcategories(category.SubCategories))
+            {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+}
+
+@if (Model.Categories.Count > 0)
+{
+    var controllerName = Url.ActionContext.RouteData.Values["controller"].ToString();
+    var actionName = Url.ActionContext.RouteData.Values["action"].ToString();
+
+    var isCategoryPage = controllerName.Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+            actionName.Equals("category", StringComparison.InvariantCultureIgnoreCase);
+
+    if (isCategoryPage && DoesCurrentCategoryHasSubcategories(Model.Categories))
+    {
+        <div class="block block-category-navigation">
+            <div class="title subcategories-title">
+                <strong>@T("SevenSpikes.Themes.Pavilion.Catalog.Subcategories")</strong>
+            </div>
+            <div class="listbox category-page-navigation">
+                <ul class="list">
+                    @foreach (var category in Model.Categories)
+                    {
+	                    var categoryLineModel = new CategoryNavigationModel.CategoryLineModel
+	                    {
+	                        CurrentCategoryId = Model.CurrentCategoryId,
+	                        Category = category
+	                    };
+	                    @await Html.PartialAsync("_CategoryLine.Navigation", categoryLineModel)
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+}

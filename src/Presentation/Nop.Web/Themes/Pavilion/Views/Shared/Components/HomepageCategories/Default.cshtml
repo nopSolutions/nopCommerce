@@ -1,0 +1,123 @@
+@* ABC: changes style *@
+
+@model IList<CategoryModel>
+@using Nop.Web;
+@using Nop.Web.Extensions;
+@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI;
+@using SevenSpikes.Theme.Pavilion.Domain;
+@using Nop.Web.Models.Catalog;
+@using Nop.Plugin.Misc.AbcCore
+
+@{
+    var primaryColor = await HtmlHelpers.GetPavilionPrimaryColorAsync();
+}
+
+<style>
+	.category-item .title {
+		position: static;
+	}
+
+	.category-item .title a {
+		padding: 0;
+	}
+
+	.category-item:hover .title a {
+		color: #fff;
+	}
+
+	.home-page-category-grid .item-box {
+		width: 48%;
+		background-color: #fff;
+	}
+
+	.home-page-category-grid .item-box:nth-child(2n) {
+		margin-left: 4%;
+	}
+
+	.home-page-category-grid .title {
+		height: 2.5rem;
+		background: #fff;
+		color: #595959;
+		text-align: center;
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		padding: 0.25rem;
+	}
+
+	.home-page-category-grid .item-box .picture img {
+		width: 100%
+	}
+
+	@@media (min-width: 375px) {
+		.home-page-category-grid .title {
+			font-size: 1rem;
+			height: 3.5rem;
+		}
+	}
+
+	@@media (min-width: 769px) {
+		.home-page-category-grid .item-box {
+			width: 32%;
+		}
+
+		.home-page-category-grid .item-box:nth-child(2n),
+		.home-page-category-grid .item-box:nth-child(2n+1) {
+			margin-left: 2%;
+		}
+
+		.home-page-category-grid .item-box:nth-child(3n+1) {
+			margin-left: 0;
+		}
+
+		.home-page-category-grid .title {
+			background-color: #@primaryColor;
+			color: #fff;
+		}
+	}
+
+	@@media (min-width: 900px) {
+		.home-page-category-grid .title {
+			height: auto;
+		}
+	}
+
+	@@media (min-width: 1281px) {
+		.home-page-category-grid .item-box {
+			width: 23.5%;
+		}
+
+		.home-page-category-grid .item-box:nth-child(3n+1) {
+			margin-left: 2%;
+		}
+
+		.home-page-category-grid .item-box:nth-child(4n+1) {
+			margin-left: 0;
+		}
+	}
+</style>
+
+@if (Model.Count > 0)
+{
+    <div class="category-grid home-page-category-grid">
+        <div class="item-grid">
+            @foreach (var item in Model)
+            {
+                <div class="item-box">
+                    <div class="category-item">
+                        <h2 class="title">
+                            <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                @item.Name
+                            </a>
+                        </h2>
+                        <div class="picture">
+                            <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,80 @@
+/*
+* Copyright 2012 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.jCarouselMainWrapper .slick-prev {
+	right: 0;
+	left: auto;
+    background-image: url('images/horizontal-next.png');
+	background-position: left center;
+}
+.jCarouselMainWrapper .slick-next {
+	left: 0;
+	right: auto;
+    background-image: url('images/horizontal-prev.png');
+	background-position: right center;
+}
+.jCarouselMainWrapper .slick-prev:hover {
+	background-position: right center;
+}
+.jCarouselMainWrapper .slick-next:hover {
+	background-position: left center;
+}
+.nop-jcarousel .slick-prev.slick-disabled,
+.nop-jcarousel .slick-prev.slick-disabled:hover {
+	background-position: left center;
+}
+.nop-jcarousel .slick-next.slick-disabled,
+.nop-jcarousel .slick-next.slick-disabled:hover {
+	background-position: right center;
+}
+
+
+
+@media all and (min-width: 1025px) {
+	
+.nop-jcarousel .carousel-title {
+	text-align: right;
+}
+.jCarouselMainWrapper .slick-prev {
+	left: 37px;
+	right: auto;
+}
+.side-2 .jCarouselMainWrapper .slick-prev {
+	right: 10px;
+	left: auto;
+}
+.side-2 .jCarouselMainWrapper .slick-next {
+	left: 10px;
+	right: auto;
+}
+.two-column-wrapper .ui-tabs {
+	float: right;
+}
+.two-column-wrapper .jCarouselMainWrapper {
+	float: left;
+}
+.two-column-wrapper .jCarouselMainWrapper .slick-prev {
+	left: auto;
+	right: 8px;
+}
+.two-column-wrapper .jCarouselMainWrapper .slick-next {
+	left: 8px;
+	right: auto;
+}
+.two-column-wrapper .nop-jcarousel .picture {
+	float: right;
+	padding: 20px 20px 20px 10px;
+}
+.two-column-wrapper .nop-jcarousel .details {
+	float: left;
+	padding: 20px 10px 20px 20px;
+	text-align: right;
+}
+.two-column-wrapper .nop-jcarousel .slick-dots {
+	right: 0;
+	left: 0;
+}
+
+}

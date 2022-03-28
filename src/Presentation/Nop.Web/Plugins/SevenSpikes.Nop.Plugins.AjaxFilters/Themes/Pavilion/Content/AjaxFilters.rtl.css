@@ -1,0 +1,130 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.clearFilterOptionsAll {
+	float: left;
+}
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter {
+	left: 4px;
+	right: auto;
+}
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+	float: right;
+	padding: 5px 0 5px 18px;
+	margin: 0 0 0 15px;
+}
+.selected-options-list > li span:after {
+	left: 0;
+	right: auto;
+}
+
+.priceRangeMinPanel,
+.specification-min-panel {
+	float: right;
+}
+.priceRangeMaxPanel,
+.specification-max-panel {
+	float: left;
+}
+.priceRangeMinPanel span,
+.specification-min-panel span,
+.priceRangeMaxPanel span,
+.specification-max-panel span {
+    display: inline-block;
+}
+.currentMinPrice, .current-min-value {
+	float: right;
+}
+.currentMaxPrice, .current-max-value {
+	float: left;
+}
+
+.filtersGroupPanel li .filter-item-name {
+	padding: 8px 50px 8px 25px;
+	text-align: right;
+}
+.filtersGroupPanel li .filter-item-name:before {
+	right: 25px;
+	left: auto;
+}
+
+.colorOptions.filtersGroupPanel li {
+	float: right;
+	margin: 0 2.5% 10px 0;
+}
+.colorOptions.filtersGroupPanel li:nth-child(5n+1) {
+	margin-right: 0;
+	margin-left: 0;
+}
+.colorOptions.filtersGroupPanel li .color:before {
+	left: 0 !important;
+	right: auto !important;
+}
+.colorOptions.filtersGroupPanel li .filter-item-name {
+	right: 0;
+	left: auto;
+}
+.colorOptions.filtersGroupPanel li .filter-item-name:after {
+	right: 14px;
+	left: auto;
+}
+
+.productPanelAjaxBusy:before,
+.infinite-scroll-loader:before {
+	right: 50%;
+	left: auto;
+	margin: -25px -25px 0 0;
+}
+.productPanelAjaxBusy:after,
+.infinite-scroll-loader:after {
+	right: 50%;
+	left: auto;
+	margin: 35px -25px 0 0;
+}
+
+.ajaxFilters .k-window-titlebar span {
+	float: right;
+}
+.ajaxFilters .k-window-actions {
+	left: 0;
+	right: auto;
+}
+
+
+@media all and (max-width: 1024px) {
+	
+.nopAjaxFilters7Spikes {
+	right: 0; left: auto;
+	-webkit-transform: translate(320px);
+	-ms-transform: translate(320px);
+	transform: translate(320px);
+}
+.nopAjaxFilters7Spikes .close-filters span {
+	background-position: left center;
+}
+
+}
+
+@media all and (min-width: 1281px) {
+
+.filtersGroupPanel li .filter-item-name {
+	padding: 8px 60px 8px 35px;
+}
+.filtersGroupPanel li .filter-item-name:before {
+	right: 35px;
+	left: auto;
+}
+.colorOptions.filtersGroupPanel li .filter-item-name:after {
+	right: 16px;
+	left: auto;
+}
+
+}
+

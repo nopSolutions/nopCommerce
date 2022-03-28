@@ -1,0 +1,16 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Flixmedia",
+  "SupportedVersions": [
+    "4.40"
+  ],
+  "Author": "Dave Farinelli",
+  "DisplayOrder": 1,
+  "FileName": "DFar.Plugin.Widgets.Flixmedia.dll",
+  "Description": "Integrates with Flixmedia to provide product content syndication.",
+  "LimitedToStores": [],
+  "LimitedToCustomerRoles": [],
+  "DependsOnSystemNames": [],
+  "SystemName": "Widgets.Flixmedia",
+  "Version": "4.40.0"
+}

@@ -1,0 +1,187 @@
+﻿/*
+    Overwrites styles.css for the Pavilion theme.
+*/
+
+/* Display home page category boxes */
+.home-page-category-grid {
+    display: block;
+    margin-top: 1rem;
+}
+
+/* Merges My Account (logged in user) into main column */
+.header-upper {
+    height: 0;
+}
+.header-upper .center {
+    position: relative;
+}
+.header-links-wrapper {
+    position: absolute;
+    top: 16px;
+    right: 0;
+    z-index: 10;
+}
+#flyout-cart {
+    width: auto;
+    float: right;
+    margin-right: 115px;
+}
+
+/* Have logo match category width - other header logo fixes */
+.header-logo {
+    width: 250px;
+    padding: 0;
+}
+.header-logo a img {
+    background-color: transparent !important;
+}
+@media (min-width: 1281px)
+{
+    .header-logo {
+        width: 290px;
+    }
+}
+
+/******************************************************************************/
+/* _ProductBox.cshtml */
+/******************************************************************************/
+
+div.item-box div.product-item {
+  text-align: left;
+}
+
+div.buttons-upper {
+  text-align: center;
+}
+
+/* fixes issues relating to space for logged in users */
+
+.admin-header-links ~ .master-wrapper-content {
+	margin-top: 0;
+}
+
+body {
+    color: #4f4f4f;
+}
+
+.category-item .title, .manufacturer-item .title, .vendor-item .title {
+    position: static;
+}
+
+.category-item .title a, .sub-category-item .title a, .manufacturer-item .title a, .vendor-item .title a {
+    padding: 0;
+}
+
+.category-item:hover .title a, .sub-category-item:hover .title a, .manufacturer-item:hover .title  {
+    color: inherit;
+}
+
+.sub-category-item .title > a {
+    padding-top: 0.5rem;
+}
+
+/* Footer */
+
+.footer-block {
+    text-align: center;
+}
+
+.accepted-payments li {
+    /* uses the uploaded payment-sprite file in root folder */
+    background: url('../../../payment-sprite.png');
+    background-repeat: no-repeat;
+}
+
+.accepted-payments .method5 {
+    background-position: -200px 0;
+}
+
+.accepted-payments .method6 {
+    background-position: -250px 0;
+}
+
+/* Customer Info page */
+.customer-info a {
+    background-color: #1f2021 !important;
+}
+
+/* Estimate Shipping from Cart page */
+.mfp-container .apply-shipping-button {
+    background-color: #000 !important;
+}
+
+/* 
+    Used for the account credit card section on the customer Account page,
+    this is an HTML Widget that can't being it it's own style rules.
+
+    These rules supersede the Pavilion theme, so some weird settings required
+    to make everything work.
+*/
+
+#account-credit-card {
+    padding: 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#account-credit-card-img {
+    flex-basis: 100%;
+}
+
+#account-credit-card a:before {
+    display: none !important;
+}
+
+#account-credit-card a {
+    display: inline;
+    background-color: transparent;
+    color: #336799 !important;
+    font-size: 1rem;
+    max-width: none;
+    text-decoration: underline;
+    padding: 0 0.5rem;
+    flex-shrink: 0;
+}
+
+#account-credit-card a:hover {
+    background-color: transparent;
+    padding: 0 0.5rem;
+}
+
+/* hides brand slider when in mobile */
+.home-page-body .nop-jcarousel.manufacturer-grid {
+    display: none;
+}
+
+@media (min-width: 576px) {
+    #account-credit-card-img {
+        flex-basis: auto;
+        padding-right: 0.5rem;
+    }
+}
+
+@media (min-width: 1001px) {
+    /* moves admin header links when logged in */
+    .admin-header-links {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background: #b3aea9;
+        z-index: 100;
+    }
+
+    .admin-header-links a:hover {
+        color: white;
+    }
+
+    #account-credit-card {
+        justify-content: flex-start;
+    }
+
+    .home-page-body .nop-jcarousel.manufacturer-grid {
+        display: block;
+    }
+}
+

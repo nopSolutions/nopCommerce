@@ -1,0 +1,42 @@
+﻿@model IList<BlogPostModel>
+
+@foreach (var item in Model)
+{
+	@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogListPageBeforePost, additionalData = item })
+    <div class="post">
+        <div class="post-head">
+			@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogListPageBeforePostBody, additionalData = item })
+        </div>
+        <div class="post-body">
+            <span class="post-date">@item.CreatedOn.ToString("ddd"), @item.CreatedOn.ToString("MMM") @item.CreatedOn.Day, @item.CreatedOn.Year</span>
+            @if (item.AllowComments)
+            {
+                <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})" class="read-comments">@item.NumberOfComments</a>
+            }
+            <a class="post-title" href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})">@item.Title</a>
+            <div class="post-preview">
+                @Html.Raw(!String.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
+            </div>
+			@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogListPageInsidePost, additionalData = item })
+        </div>
+		@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogListPageAfterPostBody, additionalData = item })
+        @if (item.Tags.Count > 0)
+        {
+            <div class="tags">
+                <label>@T("Blog.Tags"):</label>
+                <ul>
+                    @for (int i = 0; i < item.Tags.Count; i++)
+                    {
+                        var tag = item.Tags[i];
+                        <li><a href="@Url.RouteUrl("BlogByTag", new {tag = tag})">@tag</a></li>
+                        if (i != item.Tags.Count - 1)
+                        {
+                            <li class="separator">,</li>
+                        }
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+	@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogListPageAfterPost, additionalData = item })
+}

@@ -1,0 +1,20 @@
+﻿@model ShopAdminModel
+
+<div asp-validation-summary="All"></div>
+<input type="hidden" asp-for="@Model.Id" />
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model.StoreLocatorSettings.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        <nop-tabs id="shop-create-or-edit">
+            <nop-tab asp-name="tab-settings" asp-title="@T("SevenSpikes.StoreLocator.Admin.Shop.TabTitle.Settings")" asp-default="true">@await Html.PartialAsync(AdminViews.ShopTabSettings, Model)</nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-location" asp-title="@T("SevenSpikes.StoreLocator.Admin.Shop.TabTitle.MapLocation")">@await Html.PartialAsync(AdminViews.ShopTabMapLocation, Model)</nop-tab>
+                <nop-tab asp-name="tab-pickup-point" asp-title="@T("SevenSpikes.StoreLocator.Admin.Shop.TabTitle.PickupPoint")">@await Html.PartialAsync(AdminViews.ShopTabPickupPoint, Model)</nop-tab>
+                <nop-tab asp-name="tab-images" asp-title="@T("SevenSpikes.StoreLocator.Admin.Shop.TabTitle.Pictures")">@await Html.PartialAsync(AdminViews.ShopTabImages, Model)</nop-tab>
+            }
+            <nop-tab asp-name="tab-seo" asp-title="@T("SevenSpikes.StoreLocator.Admin.Shop.TabTitle.Seo")">@await Html.PartialAsync(AdminViews.ShopTabSeo, Model)</nop-tab>
+        </nop-tabs>
+    </div>
+</section>

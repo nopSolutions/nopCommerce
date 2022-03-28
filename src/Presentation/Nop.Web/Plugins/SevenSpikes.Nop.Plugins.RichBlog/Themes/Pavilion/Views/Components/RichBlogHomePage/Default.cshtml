@@ -1,0 +1,56 @@
+﻿@model  IList<BlogPostModel7Spikes>
+@inject IViewComponentSelector viewComponentSelector
+
+@{ 
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Core/Styles/slick-slider-1.6.0.css");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/swipeEvents.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/slick-slider-1.6.0.min.js");
+}
+
+<div class="rich-blog-homepage">
+    <div class="title">
+        <strong>@T("SevenSpikes.RichBlog.Public.LatestFromBlog")</strong>
+    </div>
+    <div class="blog-posts">
+        @foreach (var post in Model)
+        {
+            <div class="blog-post">
+                @if (!string.IsNullOrWhiteSpace(post.HomePagePictureUrl))
+                {
+                    <div class="post-picture">
+                        <a href="@Url.RouteUrl("BlogPost", new { SeName = post.SeName })">
+                            @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+                            {
+                                @await Component.InvokeAsync("LazyLoadImage", new (string Key, string Value)[]
+                                {
+                                    ("src", post.HomePagePictureUrl),
+                                    ("alt", post.Title),
+                                    ("title", post.Title)
+                                })
+                            }
+                            else
+                            {
+                                <img src="@post.HomePagePictureUrl" alt="@post.Title" title="@post.Title" />
+                            }                        </a>
+                    </div>
+                }
+                <div class="post-details">
+                    <span class="post-date">@post.CreatedOn</span>
+                    @if (post.AllowComments)
+                    {
+                        <a href="@Url.RouteUrl("BlogPost", new { SeName = post.SeName })" class="read-comments">@post.NumberOfComments</a>
+                    }
+                    <h3 class="post-title"><a href="@Url.RouteUrl("BlogPost", new { SeName = post.SeName })">@post.Title</a></h3>
+                    <div class="post-description">
+                        @Html.Raw(!string.IsNullOrEmpty(post.BodyOverview) ? post.BodyOverview : post.Body)
+                    </div>
+                    @*<a class="read-more" href="@Url.RouteUrl("BlogPost", new { SeName = post.SeName })">@T("SevenSpikes.RichBlog.Public.ReadMore")</a>*@
+                </div>
+            </div>
+        }
+    </div>
+    <div class="view-all">
+        <a href="@Url.RouteUrl("Blog")">@T("SevenSpikes.RichBlog.Public.ViewAllBlogPosts")</a>
+    </div>
+</div>

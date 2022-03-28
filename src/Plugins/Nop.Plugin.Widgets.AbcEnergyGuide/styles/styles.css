@@ -1,0 +1,12 @@
+.energy-guide {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+#energy_guide_img {
+    cursor: pointer;
+    height: 70px;
+    width: auto;
+}

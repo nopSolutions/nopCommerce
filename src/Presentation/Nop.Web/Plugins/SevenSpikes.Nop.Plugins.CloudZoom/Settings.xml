@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="CloudZoomSettings.Enable">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.EnableClickToZoom">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.EnablePictureThumbnailsInCarousel">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ZoomPosition">
+    <Value>element</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ZoomAutoInside">
+    <Value>850</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ZoomWidth">
+    <Value>244</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ZoomHeight">
+    <Value>257</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.AdjustX">
+    <Value>-6</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.AdjustY">
+    <Value>0</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.EnableTint">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.TintColor">
+    <Value>#444444</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.TintOpacity">
+    <Value>0.5</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.SmoothMove">
+    <Value>3</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.TouchStartDelay">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ShowTitle">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ElementId">
+    <Value>cloudZoomWindowElement</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.SelectorOfTheParentElementOfTheCloudZoomWindow">
+    <Value>.overview</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.DefaultImageContainerSelector">
+    <Value>.product-essential .gallery</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.DefaultResponsiveBreakpointsForThumbnailsCarousel">
+    <Value>[{"breakpoint":1001,"settings":{"arrows":false,"dots":true}},{"breakpoint":600,"settings":{"slidesToShow":4,"slidesToScroll":4,"arrows":false,"dots":true}},{"breakpoint":400,"settings":{"slidesToShow":3,"slidesToScroll":3,"arrows":false,"dots":true}}]</Value>
+  </Setting> 
+  <Setting Name="CloudZoomSettings.EnableSliderDots">
+    <Value>false</Value>
+  </Setting>  
+  <Setting Name="CloudZoomSettings.EnableSliderArrows">
+    <Value>true</Value>
+  </Setting>
+</Settings>

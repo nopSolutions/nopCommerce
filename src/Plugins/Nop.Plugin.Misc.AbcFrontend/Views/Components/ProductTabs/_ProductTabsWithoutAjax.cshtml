@@ -1,0 +1,131 @@
+﻿@*
+    Provides a lot of customization including energy guides, addl tabs,
+    and more. This actually creates new tabs, so I don't think there's a way to
+    do this with widgets.
+*@
+
+@using Nop.Core;
+@using System.Linq;
+@using Nop.Data;
+@using Nop.Core.Infrastructure
+@using Nop.Web.Framework
+@using Nop.Web.Framework.UI
+@using Nop.Plugin.Misc.AbcCore.Services
+@using Nop.Plugin.Misc.AbcCore.Infrastructure
+@using Nop.Plugin.Misc.AbcCore
+
+@inject FrontEndService frontEndService
+@inject CoreSettings coreSettings
+
+@model SevenSpikes.Nop.Plugins.NopQuickTabs.Models.TabUIModel
+@{
+    var addnlDocumentContent = "";
+    int productId = Model.ProductModel.Id;
+
+    if (frontEndService.ProductHasDocuments(productId))
+    {
+        addnlDocumentContent = frontEndService.GetDocumentsByProductId(productId);
+    }
+
+    string itemNumber = "";
+    if (frontEndService.ProductIsAbc(productId))
+    {
+        itemNumber = frontEndService.GetProductAbcDescriptionByProductId(productId).AbcItemNumber;
+    }
+
+    // Try to remove this down the road
+    var manufacturer = Model.ProductModel.ProductManufacturers.FirstOrDefault();
+}
+
+<div class="productTabs-header">
+    <ul>
+        @foreach (var tabInfo in Model.Tabs)
+        {
+            <li>
+                <a href="#quickTab-@tabInfo.TabKey">@tabInfo.Title</a>
+            </li>
+        }
+        <!-- custom: reviews quicktab -->
+        <li><a id="quickTab-reviews" href="#quickTab-Reviews">Reviews</a></li>
+        @if (!string.IsNullOrEmpty(addnlDocumentContent))
+        {
+            <li><a href="#quickTab-AdditionalDocuments">Additional Documents</a> </li>
+        }
+    </ul>
+</div>
+@if (!string.IsNullOrEmpty(itemNumber) && manufacturer != null)
+{
+    <script type="text/javascript" async="" src="https://cdn.cnetcontent.com/jsc/h.js"></script>
+    <script type="text/javascript">
+        var ccs_cc_args = ccs_cc_args || [];
+
+        // Test Script
+        ccs_cc_args.push(['mf', '@manufacturer.Name']);
+        ccs_cc_args.push(['pn', '@Model.ProductModel.Sku']);
+        ccs_cc_args.push(['upcean', '@itemNumber']);
+        ccs_cc_args.push(['lang', 'en']);
+        ccs_cc_args.push(['market', 'US']);
+
+        (function () {
+            var o = ccs_cc_args; o.push(['_SKey', '1d3bb542']); o.push(['_ZoneId', 'b3ba127b45']);
+            var sc = document.createElement('script'); sc.type = 'text/javascript'; sc.async = true;
+            sc.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.cnetcontent.com/jsc/h.js';
+            var n = document.getElementsByTagName('script')[0]; n.parentNode.insertBefore(sc, n);
+        })();
+    </script>
+}
+<div class="productTabs-body">
+    @foreach (var tabInfo in Model.Tabs)
+    {
+        <div id="quickTab-@tabInfo.TabKey">
+            <div class="overview-boxes-wrapper">
+                @if (tabInfo.TabKey.Trim().ToLower() == "description")
+                {
+                    // custom: top of description tab
+                    @await Component.InvokeAsync(
+                        "Widget",
+                        new {
+                            widgetZone = CustomPublicWidgetZones.ProductDetailsDescriptionTabTop,
+                            additionalData = Model
+                        }
+                    )
+                    <div id="wc-power-page"></div>
+                    <div id="ccs-inline-content" style="position: relative; top: 69px;"></div>
+                    <div id="sp_inline"></div>
+                }
+                @Html.Raw(tabInfo.Content)
+            </div>
+
+        </div>
+    }
+    <!-- custom: reviews quicktab -->
+    <div id="quickTab-Reviews">
+        @await Component.InvokeAsync(
+            "Widget",
+            new {
+                widgetZone = CustomPublicWidgetZones.ProductDetailsReviewsTabContent,
+                additionalData = Model
+            }
+        )
+    </div>
+    @if (!string.IsNullOrEmpty(addnlDocumentContent))
+    {
+        <div id="quickTab-AdditionalDocuments">
+            @Html.Raw(addnlDocumentContent)
+        </div>
+    }
+</div>
+
+<script src="//scontent.webcollage.net/api/v2/product-content"></script>
+<script>Webcollage.loadContent('abcw', '@Model.ProductModel.Sku', { autoPlayAndStop: true });</script>
+
+<!-- OmniTag -->
+<script type="text/javascript">
+    (function (se, ll, p, oin, ts) {
+        oin = se.createElement(ll); oin.type = 'text/java' + ll;
+        oin.async = true; oin.src = p + Math.floor(Date.now() / 86400000);
+        ts = se.getElementsByTagName(ll)[0]; ts.parentNode.insertBefore(oin, ts);
+    }
+   (document, 'script', '//a.sellpoint.net/c/4765/sp.js?cv='));
+</script>
+<script type="text/javascript"> var SPWORLD = SPWORLD || []; SPWORLD.push('@Model.ProductModel.Sku'); </script> 

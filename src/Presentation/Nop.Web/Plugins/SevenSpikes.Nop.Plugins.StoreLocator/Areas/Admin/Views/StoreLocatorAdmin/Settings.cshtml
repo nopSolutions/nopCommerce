@@ -1,0 +1,93 @@
+﻿@model StoreLocatorSettingsModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    Html.SetActiveMenuItemSystemName("SevenSpikes.StoreLocator.Admin.Submenus.Settings");
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var manuallySetBounds = "#@Html.IdFor(model => model.ManuallySetMapBounds)";
+        var manuallySetBoundsClass = ".manually-set-bounds";
+
+        toggleSetting(manuallySetBounds, manuallySetBoundsClass);
+
+        $(manuallySetBounds).change(function () {
+            toggleSetting(manuallySetBounds, manuallySetBoundsClass);
+        });
+    });
+
+    function toggleSetting(setting, element) {
+        if ($(setting).is(':checked') == true) {
+            $(element).addClass('opened').removeClass('closed').show();
+        } else {
+            $(element).addClass('closed').removeClass('opened').hide();
+        }
+    }
+</script>
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.StoreLocator.Admin.Settings.Common")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            <nop-tabs id="storelocator-settings-edit">
+                <nop-tab asp-name="tab-general" asp-default="true" asp-title="@T("SevenSpikes.StoreLocator.Admin.Settings.General")">
+                    @await Html.PartialAsync("Settings.General", Model)
+                </nop-tab>
+                <nop-tab asp-name="tab-seo" asp-title="@T("SevenSpikes.StoreLocator.Admin.Settings.AllShopsSEO")">
+                    @await Html.PartialAsync("Settings.Seo", Model)
+                </nop-tab>
+            </nop-tabs>
+        </div>
+    </section>
+</form>
+
+<script type="text/javascript">
+    function enableCustomOverlay(overrideSelector, parentOfOverlaySelector) {
+        var parent = $(parentOfOverlaySelector);
+
+        if (parent.css('position') == 'static') {
+            parent.css('position', 'relative');
+        }
+
+        $('#' + overrideSelector).change(function () {
+            customFieldOverrideChangedShowOverlay(overrideSelector, parentOfOverlaySelector);
+        });
+        customFieldOverrideChangedShowOverlay(overrideSelector, parentOfOverlaySelector);
+
+        $('.store-scope-configuration .checkbox input').change(function () {
+            customFieldOverrideChangedShowOverlay(overrideSelector, parentOfOverlaySelector);
+        });
+    }
+
+    function customFieldOverrideChangedShowOverlay(overrideSelector, parentOfOverlaySelector) {
+        if ($('#' + overrideSelector).length == 0) {
+            return;
+        }
+
+        if ($('#' + overrideSelector).is(':checked') == true) {
+            $('.overlay-for-' + overrideSelector).remove();
+        } else {
+            $(parentOfOverlaySelector).append('<div class="custom-fields-overlay overlay-for-' + overrideSelector + '"></div>');
+        }
+    }
+
+    $(document).ready(function () {
+        enableCustomOverlay('@Html.IdFor(model => model.DefaultShopImageId_OverrideForStore)', '.default-shop-image-holder');
+        enableCustomOverlay('@Html.IdFor(model => model.UnitsSystem_OverrideForStore)', '.units-system-holder');
+    });
+</script>

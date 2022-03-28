@@ -1,0 +1,12 @@
+﻿@using Nop.Plugin.Widgets.AbcPromos.Models;
+@model IList<BannerModel>
+
+@foreach (var banner in Model)
+{
+    <p style="text-align: center">
+        <a href="@banner.PromoFormPopup">
+            <img src="@banner.BannerImageUrl" alt="@banner.AltText" width="80%" />
+        </a>
+    </p>
+}
+

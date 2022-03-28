@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Enhanced Logging",
+  "SystemName": "Misc.EnhancedLogging",
+  "Version": "4.40.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "Dave Farinelli",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.EnhancedLogging.dll",
+  "Description": "Provides extra logging capabilities"
+}

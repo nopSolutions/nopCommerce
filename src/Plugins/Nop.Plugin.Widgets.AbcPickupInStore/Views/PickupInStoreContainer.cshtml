@@ -1,0 +1,188 @@
+﻿@using Nop.Plugin.Misc.AbcCore;
+@using Nop.Plugin.Misc.AbcCore.Services;
+@using Nop.Web.Framework.UI
+@using Nop.Core
+@using Nop.Core.Infrastructure
+
+@inject FrontEndService frontEndService;
+@inject IStoreContext storeContext;
+
+@{
+    Layout = "";
+
+    Html.AddScriptParts("~/Plugins/Widgets.AbcPickupInStore/Scripts/jquery.unobtrusive-ajax.js");
+    Html.AddCssFileParts("~/Plugins/Widgets.AbcPickupInStore/styles/loading.css");
+    Html.AddCssFileParts("~/Plugins/Widgets.AbcPickupInStore/styles/SelectStoreForPickup.css");
+
+    var currentStore = await storeContext.GetCurrentStoreAsync();
+    bool isHawthorne = frontEndService.StoreIsHawthorne(currentStore);
+
+    string storeSpecificColor = isHawthorne ? await HtmlHelpers.GetPavilionPrimaryColorAsync() : await HtmlHelpers.GetPavilionAccentColorAsync();
+
+    string primaryColor = "#" + await HtmlHelpers.GetPavilionPrimaryColorAsync();
+    string accentColor = "#" + storeSpecificColor;
+}
+<style>
+    .shops-spinner > div {
+        background-color: @primaryColor;
+    }
+
+    span.title-text {
+        font-size: 1.1rem;
+        color: white;
+        font-weight: bolder;
+    }
+
+    span.title-subtext {
+        margin-left: 25px;
+        color: black;
+        font-size: 1rem;
+    }
+
+    div.title-background {
+        background-color: @primaryColor;
+        padding: 5px 25px;
+    }
+
+    button#zipcode_submit_btn {
+        background: @accentColor;
+        outline: 1px solid transparent;
+        padding: 8px 15px;
+        border: none;
+        color: white;
+        margin-left: 10px;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    button#zipcode_submit_btn:hover {
+        outline-color: @accentColor;
+    }
+</style>
+@if (!string.IsNullOrWhiteSpace(Model.GoogleMapsAPIKey))
+{
+    var googleMapsApiKey = @Model.GoogleMapsAPIKey;
+    <script src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey"></script>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#home-delivery-radio').prop("checked", true);
+        var currentUrl = window.location.href;
+        if (currentUrl.includes('updatecartitemid')) {
+            $('#pickup-radio').prop("checked", true);
+            $('#zipcode-input-container').show();
+            location.hash = 'store_selector_widget';
+        }
+
+        var geocoder = new google.maps.Geocoder();
+        bindSelectStoreBtns();
+
+        // binds all "select store" buttons to call controller to bind shop data
+        // on success, display
+        function bindSelectStoreBtns() {
+            $('.select-store-btn').click(function () {
+                $.ajax({
+                    cache: false,
+                    url: '/PickStore/StoreSelected',
+                    data: { 'shopId': $(this).attr('value') },
+                    type: 'post',
+                    success: storeSelectionSuccess,
+                    error: error
+                });
+                return false;
+            });
+        }
+
+        function addPickupProductToCart() {
+            const productId = @Model.ProductId;
+            AjaxCart.addproducttocart_details(`/addproducttocart/pickup/${productId}/1`, '#product-details-form');
+            return false;
+        }
+
+        function storeSelectionSuccess(data, status) {
+            addPickupProductToCart();
+
+            $('#display_store_text').empty();
+            $('#display_store_text').append(data['Name']);
+            $('#display_store_pretext').empty();
+            $('#display_store_pretext').append('Pickup In Store: ');
+        }
+
+        $('#zipcode_submit_btn').click(function() {
+            startLoading();
+            var zip = $('#zipcode_input').val();
+            if (!isEmptyOrSpaces(zip)) {
+                // Geocode the address
+                geocoder.geocode({'address': zip}, function(results, status){
+                    if (status === 'OK') {
+                        var location = results[0].geometry.location;
+
+                        $.ajax({
+                            cache: false,
+                            url: '/PickStore/FilterClosestStores',
+                            data: {'lat': location.lat, 'lng': location.lng, 'productId': @Model.ProductId},
+                            type: 'post',
+                            success: filterClosestStoresSuccess,
+                            error: error
+                        });
+                    } else {
+                        $('#zipcode_submit_btn').prop('disabled', false);
+                    }
+                });
+            }
+
+            return false;
+        });
+
+        function filterClosestStoresSuccess(data, status) {
+            $('#pickup_shop_list').html(data);
+
+            // rebind the buttons
+            bindSelectStoreBtns();
+            endLoading();
+        }
+
+        function error() {
+            alert('ERROR');
+            endLoading();
+        }
+
+        function isEmptyOrSpaces(str) {
+            return str === null || str.match(/^\s*$/) !== null;
+        }
+
+        function startLoading() {
+            $('#zipcode_submit_btn').prop('disabled', true);
+            $('#zipcode_input').prop('disabled', true);
+            $('.shops-spinner').removeClass('hidden-loading');
+        }
+
+        function endLoading() {
+            $('#zipcode_submit_btn').prop('disabled', false);
+            $('#zipcode_input').prop('disabled', false);
+            $('.shops-spinner').addClass('hidden-loading');
+        }
+    });
+</script>
+<div id="store_selector_widget" class="store-selector-widget">
+    <div class="title-background">
+        <span class="title-text">Product Availability</span>
+    </div>
+    <br />
+
+    @*this part is for selecting the closest 6 stores*@
+    <div class="shops-spinner hidden-loading">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+    </div>
+
+    <div id="pickup_shop_list">
+
+    </div>
+
+    <br />
+</div>

@@ -1,0 +1,107 @@
+.header-menu {
+    background-color: #fff;
+    /* allows for scrolling */
+    overflow-y: auto;
+}
+
+/* icons */
+.header-menu .mobile-sidebar-category.first {
+    position: fixed;
+    display: flex;
+    width: 100%;
+    padding-top: 10px;
+    background-color: #fff;
+}
+.header-menu .mobile-sidebar-category.first li {
+    text-align: center;
+    display: block;
+}
+.header-menu .mobile-sidebar-category.first li > a {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    background-repeat: no-repeat;
+    background-position: center top;
+    height: 80px;
+}
+.header-menu .mobile-sidebar-category.first li > a > span {
+    font-size: 12px;
+    line-height: 110px;
+}
+
+/* title */
+.header-menu .mobile-sidebar-title {
+    position: fixed;
+    top: 160px;
+    color: #333;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #fff;
+    text-align: center;
+    padding: 5px 0 0;
+    width: 100%;
+    z-index: 100;
+    text-transform: uppercase;
+}
+.header-menu #select_category_item {
+    display: block;
+    padding: 0 40px;
+    height: 55px;
+}
+
+/* back button */
+.header-menu .mobile-sidebar-title .back-button {
+    width: 50px;
+    margin-left: 18px;
+    font-size: 12px;
+    background-color: #fff;
+}
+.header-menu .hidden {
+    opacity: 0;
+}
+
+/* categories */
+.header-menu .mobile-sidebar-category.second {
+    margin-top: 195px !important;
+}
+.header-menu > ul li > .with-subcategories {
+    width: 260px;
+}
+
+/* secondary menu */
+.header-menu .mega-menu-categories .sublist-wrap {
+    top: 225px;
+    overflow: unset;
+    background-color: #fff;
+}
+.header-menu .sublist-wrap {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 100%;
+    background-color: #f6f6f6;
+    box-shadow: 1px 0 5px rgba(0,0,0,0.5);
+    overflow: hidden;
+    transition: all 0.5s ease;
+    -webkit-transform: translate(-320px);
+    -ms-transform: translate(-320px);
+    transform: translate(-320px);
+}
+.header-menu .mobile-sidebar-category .has-sublist .sublist-wrap .sublist li:first-child {
+    display: none;
+}
+.header-menu .mobile-sidebar-category .has-sublist .sublist-wrap {
+    box-shadow: unset;
+    width: 100% !important;
+}
+.header-menu .mega-menu-categories .sublist-wrap ul .sublist-wrap {
+    top: 0;
+}
+
+@media (min-width: 1025px) {
+    .header-menu .mobile-sidebar-title {
+        display: none !important;
+    }
+}

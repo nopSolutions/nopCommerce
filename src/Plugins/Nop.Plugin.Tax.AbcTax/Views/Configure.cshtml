@@ -1,0 +1,57 @@
+﻿@model Nop.Plugin.Tax.AbcTax.Models.ConfigurationModel
+@using Nop.Web.Framework.Models.AdminAreaTour
+
+@{
+    Layout = "_ConfigurePlugin";
+
+    //tour step
+    ViewBag.TourStep = TourStep.TaxManual;
+}
+
+@await Html.PartialAsync("_AdminTour")
+
+<form asp-controller="AbcTax" asp-action="Configure" method="post">
+    <section class="content">
+		<div class="container-fluid">			
+				<div class="card card-default">
+					<div class="card-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="TaxJarAPIToken" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="TaxJarAPIToken" />
+                                <span asp-validation-for="TaxJarAPIToken"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                &nbsp;
+                            </div>
+                            <div class="col-md-9">
+                                <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </section>
+</form>
+@if (Model.AvailableTaxCategories.Any())
+{
+    <div class="form-group row">
+        <div class="col-md-12">
+            <div class="float-right">
+                <a asp-controller="Tax" asp-action="Categories" class="btn btn-primary" id="manage-tax-categories-button">
+                    @T("Plugins.Tax.AbcTax.Tax.Categories.Manage")
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @await Html.PartialAsync("~/Plugins/Tax.AbcTax/Views/_CountryStateZip.cshtml", Model)
+}
+else
+{
+    <h3>@Html.Raw(Model.TaxCategoriesCanNotLoadedError)</h3>
+}

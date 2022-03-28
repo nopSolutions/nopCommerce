@@ -1,0 +1,13 @@
+﻿@model RichBlogSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="BlogListImageWidgetZone_OverrideForStore" asp-input="BlogListImageWidgetZone" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="BlogListImageWidgetZone" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="BlogListImageWidgetZone" asp-items="Model.AvailableBlogListImageWidgetZones" />
+        </div>
+    </div>
+</div>

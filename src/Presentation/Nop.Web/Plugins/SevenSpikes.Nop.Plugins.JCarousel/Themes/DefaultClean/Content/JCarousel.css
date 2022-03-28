@@ -1,0 +1,189 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.nop-jcarousel {
+    position: relative;
+    margin: 0 0 80px;
+}
+.nop-jcarousel .carousel-title {
+    margin: 0 0 20px;
+    border-bottom: 1px solid #ddd;
+    font-size: 24px;
+    font-weight: normal;
+    text-align: center;
+    padding: 10px 45px 10px;
+    position: relative;
+}
+.nop-jcarousel .carousel-title strong {
+    font-weight: normal;
+    color: #444;
+}
+.side-2 .jCarouselMainWrapper  {
+    max-width: 600px;
+    margin: auto;
+}
+.side-2 .nop-jcarousel .carousel-title {
+    margin: 0 0 20px;
+    border-bottom: 1px solid #ddd;
+    background: #f6f6f6;
+    padding: 12px 40px;
+    font-size: 20px;
+    color: #444;
+    text-align: center;
+}
+.side-2 .jCarouselMainWrapper .slick-next,
+.side-2 .jCarouselMainWrapper .slick-prev {
+	width: 35px;
+	height: 35px;
+    top: 0;
+    bottom: 0;
+    left: auto;
+    margin: auto;
+}
+.side-2 .jCarouselMainWrapper .slick-next {
+    right: 5px;
+    background: url(images/jcarousel-right-small.png) no-repeat center;
+}
+.side-2 .jCarouselMainWrapper .slick-prev {
+    left: 5px;
+    background: url(images/jcarousel-left-small.png) no-repeat center;
+}
+
+.slick-carousel .item-box {
+    width: 100% !important;
+    padding: 0 5px !important;
+    margin: 0 !important;
+}
+
+.carousel-item .ribbon-position {
+    -webkit-transform: translateZ(0) scale(1.0, 1.0); /*Fix for delayed ribbon load on swipe*/
+}
+
+
+/*Arrows*/
+
+.jCarouselMainWrapper .slick-next,
+.jCarouselMainWrapper .slick-prev {    
+    position: absolute;
+    top: 0;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    -webkit-transform: translateZ(0) scale(1.0, 1.0);
+    width: 35px;
+    height: 35px;
+    background-color: #f3f3f3;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    border: none;
+    font-size: 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.jCarouselMainWrapper .slick-next {
+    right: 0;
+    background-image: url(images/jcarousel-right.png);
+}
+.jCarouselMainWrapper .slick-prev {
+    left: 0;
+    background-image: url(images/jcarousel-left.png);
+}
+
+.jCarouselMainWrapper .slick-disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+
+/* Dots */
+
+.jCarouselMainWrapper .slick-dotted.slick-slider
+{
+    margin-bottom: 30px;
+}
+
+.jCarouselMainWrapper .slick-dots {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 30px 0 0;
+    list-style: none;
+    text-align: center;
+}
+
+.jCarouselMainWrapper .slick-dots li {
+	display: inline-block;
+    margin: 0 5px;
+}
+
+.jCarouselMainWrapper .slick-dots li button {
+    background: #eaeaea;
+    border: none;
+	width: 13px;
+	height: 13px;
+    font-size: 0;
+}
+
+.jCarouselMainWrapper .slick-dots .slick-active button {
+	background: #53bbfa;
+}
+
+@media all and (min-width: 769px) {
+
+.nop-jcarousel .carousel-title {
+	margin: 0 0 30px;
+	font-size: 30px;
+	padding: 10px 55px 15px;
+}
+
+.jCarouselMainWrapper .slick-next,
+.jCarouselMainWrapper .slick-prev {
+	width: 45px;
+	height: 45px;
+}
+.center-2 .nop-jcarousel .carousel-title {
+	font-size: 26px;
+}
+
+}
+
+@media all and (min-width: 1001px) {
+
+.center-2 .nop-jcarousel .carousel-title {
+	text-align: left;
+	padding: 0 80px 10px 10px;
+}
+.side-2 .nop-jcarousel .carousel-title {
+    background: none;
+    padding: 12px 75px 12px 10px;
+    text-align: left;
+}
+.side-2 .nop-jcarousel .carousel-title strong {
+    font-weight: bold;
+}
+.side-2 .jCarouselMainWrapper .slick-next {
+    right: 0;
+    background-image: url(images/jcarousel-right.png);
+}
+.side-2 .jCarouselMainWrapper .slick-prev {
+    left: auto;
+    right: 40px;
+    background-image: url(images/jcarousel-left.png);
+}
+.center-2 .jCarouselMainWrapper .slick-next,
+.center-2 .jCarouselMainWrapper .slick-prev {
+	width: 35px;
+	height: 35px;
+    background-color: transparent;
+}
+.center-2 .jCarouselMainWrapper .slick-prev {
+	left: auto;
+	right: 40px;
+}
+
+}

@@ -1,0 +1,25 @@
+﻿@model LazyLoadImageModel
+
+
+@if (Model.IsLazyLoadingEnabled)
+{
+    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+        @foreach(var property in Model.ImageElementParameters)
+        {
+            var key = property.Key;
+
+            if(property.Key.Equals("src", StringComparison.InvariantCultureIgnoreCase))
+            {
+                key = "data-lazyloadsrc";
+            }
+
+            <text> @key="@property.Value"</text>
+        }/>
+}
+else
+{
+    <img @foreach(var property in Model.ImageElementParameters)
+         {
+             <text> @property.Key="@property.Value"</text>
+         }/>        
+}

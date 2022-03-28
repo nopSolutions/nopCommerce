@@ -1,0 +1,88 @@
+﻿.synchrony-payments-modal-outer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10000;
+
+    /* dim outside of modal */
+    background-color: rgba(0,0,0,0.4);
+
+    /* initially hide */
+    display: none;
+}
+
+.synchrony-payments-modal-middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.synchrony-payments-modal-inner {
+    margin-left: auto;
+    margin-right: auto;
+    width: 650px;
+    border: 1px solid;
+    background-color: #fff;
+    padding: 0;
+}
+
+.synchrony-payment {
+    font-size: 0.8rem;
+    height: 3rem;
+}
+
+.synchrony-payment-detail {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    height: auto !important;
+}
+
+.synchrony-payment-detail a {
+    text-decoration: underline;
+    color: #1451b8;
+}
+
+table.min-payment-table {
+    border-collapse: separate;
+    font-size: 0.75rem;
+}
+
+tr.min-payment-table-labels td {
+    background-color: #336799;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    width: 25%;
+    text-align: center;
+    font-weight: bold;
+}
+
+tr.min-payment-table-data td {
+    background-color: #cfd5eb;
+    color: #000;
+    font-weight: bold;
+    text-align: center;
+    padding: 0.5rem;
+}
+
+div.min-payment-content {
+    padding: 0.5rem;
+    color: #000;
+    font-size: 0.75rem;
+}
+
+div.min-payment-content ul li {
+    list-style: disc;
+    margin-left: 1rem;
+}
+
+div.min-payment-content ul li ul li {
+    list-style: circle;
+    margin-left: 2rem;
+}
+
+@media (min-width: 576px) {
+    .synchrony-payment {
+        height: 2rem;
+    }
+}

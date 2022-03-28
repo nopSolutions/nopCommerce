@@ -1,0 +1,13 @@
+.prices-bottom-message.promo-rebate-message {
+    display: block;
+}
+
+.promo-rebate-message {
+    color: #1451b8 !important;
+}
+
+.prices-bottom-message {
+    margin-bottom: 2px;
+    font-size: .92rem;
+    font-weight: bold;
+}

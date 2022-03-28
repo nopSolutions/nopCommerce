@@ -1,0 +1,136 @@
+﻿@using Nop.Core
+@using Nop.Services.Configuration
+
+@inject IStoreContext storeContext
+@inject ISettingService settingService
+
+@{
+    var controllerName = Url.ActionContext.RouteData.Values["controller"].ToString();
+    var actionName = Url.ActionContext.RouteData.Values["action"].ToString();
+    var isHomePage = controllerName.Equals("home", StringComparison.InvariantCultureIgnoreCase) &&
+                        actionName.Equals("index", StringComparison.InvariantCultureIgnoreCase);
+
+    var currentStore = await storeContext.GetCurrentStoreAsync();
+    int storeId = currentStore.Id;
+    bool isHomeSliderFullWidth = await settingService.GetSettingByKeyAsync("pavilionthemesettings.ishomepagemainsliderfullwidth", false, storeId, true);
+    bool stickyCategoryMenuFlyout = await settingService.GetSettingByKeyAsync("pavilionthemesettings.StickyCategoryMenuFlyout", true, storeId, true);
+    bool showCategoriesInSideMenu = await settingService.GetSettingByKeyAsync("pavilionthemesettings.ShowCategoriesInSideMenu", true, storeId, true);
+}
+
+<div class="header">
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header" })
+
+    <div class="header-upper">
+        <div class="center">
+            @await Component.InvokeAsync("AdminHeaderLinks")
+            @{
+                var taxTypeSelectorHtml = await Component.InvokeAsync("TaxTypeSelector");
+                var currencySelectorHtml = await Component.InvokeAsync("CurrencySelector");
+                var languageSelectorHtml = await Component.InvokeAsync("LanguageSelector");
+                var headerSelectorWidgetHtml = await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" });
+            }
+
+            @if (!String.IsNullOrEmpty(await taxTypeSelectorHtml.RenderHtmlContentAsync()) ||
+                 !String.IsNullOrEmpty(await currencySelectorHtml.RenderHtmlContentAsync()) ||
+                 !String.IsNullOrEmpty(await languageSelectorHtml.RenderHtmlContentAsync()) ||
+                 !String.IsNullOrEmpty(await headerSelectorWidgetHtml.RenderHtmlContentAsync()))
+            {
+                <div class="header-selectors-wrapper">
+                    <label>@T("SevenSpikes.Themes.Pavilion.Header.Preferences")</label>
+                    <div class="header-selectors">
+                        @taxTypeSelectorHtml
+                        @currencySelectorHtml
+                        @languageSelectorHtml
+                        @headerSelectorWidgetHtml
+                    </div>
+                </div>
+                <div class="header-selector-widget" style="display: none;">@headerSelectorWidgetHtml</div>
+            }
+            <div class="header-links-wrapper">
+                <label>@T("SevenSpikes.Themes.Pavilion.Header.MyAccount")</label>
+                @await Component.InvokeAsync("HeaderLinks")
+            </div>
+        </div>
+    </div>
+
+    <div class="header-middle">
+        <div class="center">
+            <div class="header-logo">
+                @await Component.InvokeAsync("Logo")
+            </div>
+            <div class="header-menu-parent">
+                <div class="header-menu @if (showCategoriesInSideMenu){<text>categories-in-side-panel</text>}">
+                    <div class="close-menu">
+                        <span>@T("SevenSpikes.Themes.Common.CloseMenu")</span>
+                    </div>
+                    @{
+                        var menuHtml = await Component.InvokeAsync("Widget", new { widgetZone = "theme_header_menu" });
+                    }
+                    @if (!String.IsNullOrEmpty(await menuHtml.RenderHtmlContentAsync()))
+                    {
+                        @menuHtml
+                    }
+                    else
+                    {
+                        @await Component.InvokeAsync("TopMenu")
+                    }
+                </div>
+            </div>
+            @await Component.InvokeAsync("FlyoutShoppingCart")
+        </div>
+    </div>
+    
+    <div class="header-lower">
+        <div class="center">
+            @if (showCategoriesInSideMenu)
+            {
+                <span class="category-navigation-title">@T("SevenSpikes.Themes.Pavilion.Header.AllCategories")</span>
+
+                if (!isHomePage || isHomeSliderFullWidth)
+                {
+                    <div class="category-navigation-list-wrapper">
+                        <ul class="category-navigation-list @if (stickyCategoryMenuFlyout){<text>sticky-flyout</text>}"></ul>
+                    </div>
+                }
+            }
+            <div class="search-box store-search-box @if (!showCategoriesInSideMenu){<text>full-width</text>}">
+                @await Component.InvokeAsync("SearchBox")
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@if (isHomePage)
+{
+    var homePageSliderCss = isHomeSliderFullWidth ? "slider-fullwidth" : "slider-right-column";
+
+    <div class="two-columns-area @homePageSliderCss">
+        @if (isHomeSliderFullWidth)
+        {
+            @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_main_slider" });
+            @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_search_widget" })
+        }
+
+        <div class="center">
+            <div class="two-columns-area-left">
+                @if (showCategoriesInSideMenu && !isHomeSliderFullWidth)
+                {
+                    <div class="category-navigation-list-wrapper">
+                        <ul class="category-navigation-list @if (stickyCategoryMenuFlyout){<text>sticky-flyout</text>}"></ul>
+                    </div>
+                }
+                @await Component.InvokeAsync("Widget", new { widgetZone = "homepage_sidebar_after" })
+            </div>
+            <div class="two-columns-area-right">
+                @if (!isHomeSliderFullWidth)
+                {
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_main_slider" });
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_search_widget" })
+
+                }
+                @await Component.InvokeAsync("Widget", new { widgetZone = "homepage_slider_after" })
+            </div>
+        </div>
+    </div>
+}

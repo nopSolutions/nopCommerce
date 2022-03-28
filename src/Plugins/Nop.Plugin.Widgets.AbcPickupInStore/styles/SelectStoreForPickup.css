@@ -1,0 +1,81 @@
+﻿.pickup-selection-table thead tr td div {
+    font-weight: bold;
+    color: black;
+}
+
+td div.store-col-block {
+    margin: 15px 25px;
+}
+
+.pickup-selection-table {
+    width: 100%;
+}
+
+.pickup-selection-table div.mid-col-block {
+    text-align: center;
+}
+
+.pickup-selection-table div.last-col-block {
+    text-align: center;
+}
+
+.pickup-selection-table tbody {
+    background-color: white;
+}
+
+.pickup-selection-table td {
+    width: 33%;
+}
+
+
+span.no-stock-text {
+    font-style: italic;
+    color: red;
+}
+
+.button-column {
+    text-align: center;
+}
+
+.mobile-btn-row {
+    display: none;
+}
+
+@media all and (max-width: 768px) {
+    .shop-description {
+        display: none;
+    }
+}
+
+@media all and (max-width: 450px) {
+    .store-col-1 {
+        width: 50%;
+    }
+
+    .store-col-2 {
+        width: 50%;
+    }
+
+    .store-col-3 {
+        display: none;
+    }
+
+    .mobile-btn-row {
+        display: table-row;
+        border-bottom-style: solid;
+        border-bottom-color: #f6f6f6;
+        border-bottom-width: thick;
+    }
+
+    .store-col-span {
+        width: 100%;
+    }
+
+    .mobile-btn-row button.add-to-cart-btn-custom {
+        width: 100%;
+    }
+
+    .home-delivery-table .title-subtext-background {
+        margin-bottom: 10px;
+    }
+}

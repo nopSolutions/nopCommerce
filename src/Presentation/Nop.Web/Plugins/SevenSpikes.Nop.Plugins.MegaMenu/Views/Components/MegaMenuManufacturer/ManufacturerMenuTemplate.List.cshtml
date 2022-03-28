@@ -1,0 +1,46 @@
+﻿@** Copyright 2017 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using Nop.Web.Models.Catalog
+@using SevenSpikes.Nop.Plugins.MegaMenu.Models
+
+@model MenuItemManufacturerModel
+
+@{
+    var hasManufacturers = Model.Manufacturers.Count > 0;
+    var hasSublistClass = hasManufacturers ? "has-sublist" : string.Empty;
+    var withSubcategoriesClass = hasManufacturers ? "with-subcategories" : string.Empty;
+}
+
+<li class="@hasSublistClass @Model.Item.CssClass">
+
+    <a class="@withSubcategoriesClass" href="@Url.RouteUrl("ManufacturerList")" title="@Model.Item.Title"><span>@Model.Item.Title</span></a>
+
+    @if (hasManufacturers)
+    {
+        <div class="plus-button"></div>
+        <div class="sublist-wrap">
+            <ul class="sublist">
+                <li class="back-button">
+                    <span>@T("SevenSpikes.MegaMenu.ResponsiveBackButton")</span>
+                </li>
+                @foreach (ManufacturerModel manufacturer in Model.Manufacturers)
+                {
+                    <li>
+                        <a href="@Url.RouteUrl("Manufacturer", new { manufacturer.SeName })" title="@manufacturer.Name"><span>@manufacturer.Name</span></a>
+                    </li>
+                }
+
+                @if (Model.ShouldShowViewAllLink)
+                {
+                    <li>
+                        <a class="view-all" href="@Url.RouteUrl("ManufacturerList")" title="@T("SevenSpikes.MegaMenu.ViewAllManufacturers")">
+                            <span>@T("SevenSpikes.MegaMenu.ViewAllManufacturers")</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</li>

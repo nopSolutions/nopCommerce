@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "accessiBe",
+  "SystemName": "Widgets.AccessiBe",
+  "Version": "1.12",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.AccessiBe.dll",
+  "Description": "This plugin integrates with accessiBe - The #1 Fully Automated Web Accessibility Solution for ADA & WCAG Compliance"
+}

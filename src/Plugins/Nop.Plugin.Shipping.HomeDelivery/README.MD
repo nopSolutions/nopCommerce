@@ -1,0 +1,1 @@
+Remember to get the compatible DLL for the FedEx plugin at https://www.nopcommerce.com/en/shipping-plugin-for-fedex

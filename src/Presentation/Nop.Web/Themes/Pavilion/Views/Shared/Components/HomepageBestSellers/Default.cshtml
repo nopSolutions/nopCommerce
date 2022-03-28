@@ -1,0 +1,40 @@
+﻿@model IList<ProductOverviewModel>
+
+@if (Model.Count > 0)
+{
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Core/Styles/slick-slider-1.6.0.css");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/swipeEvents.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/slick-slider-1.6.0.min.js");
+
+    <div class="product-grid bestsellers @if (Model.Count > 6){<text>carousel</text>}">
+        <div class="title">
+            <strong>@T("Bestsellers")</strong>
+        </div>
+        <div class="item-grid">
+            @for (int a = 0; a < Model.Count; a += 3)
+            {
+                <div class="three-items-holder">
+                    @if (Model.Count > a)
+                    {
+                        <div class="item-box">
+                            @await Html.PartialAsync("_ProductBox", Model[a])
+                        </div>
+                    }
+                    @if (Model.Count > a + 1)
+                    {
+                        <div class="item-box">
+                            @await Html.PartialAsync("_ProductBox", Model[a + 1])
+                        </div>
+                    }
+                    @if (Model.Count > a + 2)
+                    {
+                        <div class="item-box">
+                            @await Html.PartialAsync("_ProductBox", Model[a + 2])
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "ABCWarehouse Pick Up In Store",
+  "SystemName": "Widgets.AbcPickupInStore",
+  "Version": "4.40.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "X By 2",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.AbcPickupInStore.dll",
+  "Description": "Provides Pick Up In Store functionality"
+}

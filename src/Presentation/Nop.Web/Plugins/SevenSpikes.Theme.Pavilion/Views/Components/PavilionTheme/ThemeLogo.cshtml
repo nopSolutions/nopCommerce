@@ -1,0 +1,12 @@
+﻿@model string
+@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Services.Localization
+@inject IStoreContext storeContext
+@inject ILocalizationService localizationService
+
+@{
+    string storeName = await localizationService.GetLocalizedAsync(await storeContext.GetCurrentStoreAsync(), x => x.Name);
+}
+
+<img alt="@storeName" src="@Model" />

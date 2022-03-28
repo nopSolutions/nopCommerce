@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language Name="English">
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.RedirectionTip">
+    <Value>You will be redirected to  site to complete the order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.Integration">
+    <Value>Integration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.Integration.hint">
+    <Value>Enable to Connect with Demo Server and Disable to Connect with live server.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.MerchantId">
+    <Value>MerchantId</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.MerchantId.hint">
+    <Value>Specify your Synchrony MerchantID.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.TokenNumber">
+    <Value>TokenNumber</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.TokenNumber.hint">
+    <Value>Specify Synchrony identity token.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.MerchantPassword">
+    <Value>MerchantPassword</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.MerchantPassword.hint">
+    <Value>Specify your Synchrony MerchantPassword.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.WhitelistDomain">
+    <Value>WhitelistDomain</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.WhitelistDomain.hint">
+    <Value>WhitelistDomain.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.EndPoint">
+    <Value>EndPoint</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.EndPoint.hint">
+    <Value>EndPoint.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.authorizationEndPoint_Demo">
+    <Value>authorizationEndPoint_Demo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.Fields.authorizationEndPoint_Demo.hint">
+    <Value>authorizationEndPoint_Demo URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="synchrony.Finalcial.payment.success">
+    <Value>Payment Successfully Done.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.button.SynchronyPayment">
+    <Value>Synchrony Payment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.button.Confirm">
+    <Value>Confirm</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.PleaseRetry">
+    <Value>Please Retry your Payment Process...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.button.RetryPayment">
+    <Value>Retry Payment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.alert.Fail">
+    <Value>Fail</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Synchrony.paymentInfonotFound">
+    <Value>PaymentInfo not Found.</Value>
+  </LocaleResource>
+</Language>

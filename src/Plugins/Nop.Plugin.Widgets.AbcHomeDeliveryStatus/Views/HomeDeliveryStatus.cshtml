@@ -1,0 +1,216 @@
+﻿@using Nop.Web.Framework.UI;
+@using Nop.Web.Framework;
+@using Nop.Web.Extensions;
+@using Nop.Plugin.Misc.AbcCore;
+@using Nop.Plugin.Widgets.AbcHomeDeliveryStatus.Models;
+
+@model HomeDeliveryStatusModel
+
+@{ 
+    Html.AddCssFileParts("~/Plugins/AbcWarehouse.HomeDeliveryStatusWidget/Content/loading.css");
+    string autoFillScript = "";
+}
+
+<style>
+    .validation-message{
+        display: none;
+        color: red;
+    }
+
+    .hd-status-input {
+    	display: inline-block;
+    	padding-left: 20px;
+    }
+
+    .hd-input-label {
+    	font-weight: bold;
+    	color: black;
+    	display: inline-block;
+    	width: 70px;
+    }
+
+    .input-block {
+    	margin-bottom: 20px;
+    }
+
+    input#hd_status_submit {
+    	outline: 1px solid transparent;
+    	padding: 8px 15px;
+    	border: none;
+    	color: white;
+    	font-weight: bold;
+    	background: #@await HtmlHelpers.GetPavilionAccentColorAsync();
+    }
+
+    input#hd_status_submit:hover {
+    	outline-color: #@await HtmlHelpers.GetPavilionAccentColorAsync();
+    }
+
+    .spinner > div {
+    	background-color: #@await HtmlHelpers.GetPavilionPrimaryColorAsync();
+    }
+
+    .hd-submit-block {
+    	text-align: center;
+    }
+
+    /*Home Delivery Results*/
+    div#hd_results {
+    	color: black;
+    }
+
+    div#hd_results table tr td {
+    	vertical-align: top;
+    } 
+
+    .white-background {
+    	background-color: white;
+    }
+
+    td.left-col {
+    	padding-left: 20px;
+    }
+
+    td.right-col {
+    	padding-right: 20px;
+    }
+
+</style>
+
+<script>
+	function submitHomeDelivery() {
+		var invoice = $('#Invoice').val();
+		var zipcode = $('#Zipcode').val();
+
+		var validInvoice = validateInvoice(invoice);
+		var validZipcode = validateZipcode(zipcode);
+
+		if (validInvoice && validZipcode) {
+			$('.spinner').show();
+			$('#hd_status_submit').prop('disabled', true);
+			$.ajax({
+				cache: false,
+				url: '/HomeDeliveryStatus/DisplayHomeDeliveryStatus',
+				data: { 'invoice': invoice, 'zipcode': zipcode },
+				type: 'post',
+				success: successFunc,
+				error: errorFunc
+			});
+		}
+	}
+
+	// keycode event 13 = <Enter>
+	function submitHdRequestOnEnter(event) {
+		if (event.keyCode == 13) {
+			$('#hd_status_submit').click();
+		}
+	}
+
+	function successFunc(data) {
+		$('#hd_status_submit').prop('disabled', false);
+		$('.spinner').hide();
+		$('#hd_results').empty();
+		$('#hd_results').html(data);
+	}
+
+	function errorFunc() {
+		$('#hd_status_submit').prop('disabled', false);
+		$('.spinner').hide();
+		alert('error');
+	}
+
+	function validateInvoice(invoice) {
+		var errorElement = $('#invoice_error');
+		if (invoice) {
+			$(errorElement).hide();
+			return true;
+		}
+		else {
+
+			$(errorElement).show();
+			return false;
+		}
+	}
+
+	function validateZipcode(zipcode) {
+		var errorElement = $('#zipcode_error');
+		$(errorElement).empty();
+		if (!zipcode) {
+			$(errorElement).append('Please enter a zip code');
+			$(errorElement).show();
+			return false;
+		}
+
+		if (zipcode.length < 5 || zipcode.length > 10) {
+			$(errorElement.append('Please enter a zip code of valid length (5-10 characters)'));
+			$(errorElement).show();
+			return false;
+		}
+
+		if (!(/^\d{5}(-\d{4})?$/.test(zipcode))) {
+			$(errorElement.append('Please enter a valid zip code'));
+			$(errorElement).show();
+			return false;
+		}
+
+		$(errorElement).hide();
+		return true;
+	}
+	
+	$(function () {
+		$('#hd_status_submit').on('click', submitHomeDelivery);
+
+		// keycode #13 is the enter button
+		$('#Invoice').keyup(submitHdRequestOnEnter);
+		$('#Zipcode').keyup(submitHdRequestOnEnter);
+		
+        @if(@Context.Request.Query.Any())
+        {
+            string autoSubmit = @Context.Request.Query["Submit"];
+            string invoice = @Context.Request.Query["Invoice"];
+            string zip = @Context.Request.Query["Zipcode"];
+
+            if (!string.IsNullOrEmpty(invoice))
+            {
+                autoFillScript += "$('#Invoice').val(\"" + invoice + "\");";
+            }
+
+            if (!string.IsNullOrEmpty(zip))
+            {
+                autoFillScript += "$('#Zipcode').val(\"" + zip + "\");";
+            }
+
+            if (!string.IsNullOrEmpty(autoSubmit) && autoSubmit.ToUpper() == "TRUE")
+            {
+                autoFillScript += "$('#hd_status_submit').trigger(\"click\");";
+            }
+        }
+        @Html.Raw(autoFillScript)
+	});
+</script>
+
+<div class="hd-status-model">
+	<div class="hd-status-input">
+		<div class="input-block">
+			<div class="hd-input-label">Invoice:&nbsp;</div><nop-editor asp-for="Invoice" />
+			<div id="invoice_error" class="validation-message hidden">Please enter the invoice number found at the top of your receipt</div>
+		</div>
+		<div class="input-block">
+			<div class="hd-input-label">Zipcode:&nbsp;</div><nop-editor asp-for="Zipcode" />
+			<div id="zipcode_error" class="validation-message hidden"></div>
+		</div>
+		<div class="hd-submit-block">
+			<input id="hd_status_submit" type="submit" class="btn bg-blue" value="Submit" />
+		</div>
+	</div>
+	<div class="spinner hidden-loading">
+    	<div class="rect1"></div>
+    	<div class="rect2"></div>
+    	<div class="rect3"></div>
+    	<div class="rect4"></div>
+    	<div class="rect5"></div>
+    </div>
+
+    <div id="hd_results">
+    </div>
+</div>

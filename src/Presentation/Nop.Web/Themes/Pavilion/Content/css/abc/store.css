@@ -1,0 +1,12 @@
+﻿#shop-address-input {
+    margin-top: 8px;
+    width: 70%;
+}
+
+.get-directions-to-shop {
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #4f4f4f;
+    transition: all 0.2s ease;
+}

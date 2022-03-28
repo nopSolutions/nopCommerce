@@ -1,0 +1,21 @@
+@model string
+
+@{
+    Html.AddCssFileParts("~/Plugins/Widgets.AbcEnergyGuide/styles/styles.css");
+}
+
+<div class="energy-guide">
+    <img id="energy_guide_img" src="~/Plugins/Widgets.AbcEnergyGuide/Images/energy-guide.jpg" />
+</div>
+
+<script>
+    function openEnergyGuide() {
+        window.open('@Model', 'Energy Guide',
+            'toolbar=no, location=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=500, height=750');
+        return false;
+    }
+
+    $(function () {
+        $('#energy_guide_img').on('click', openEnergyGuide);
+    });
+</script>

@@ -1,0 +1,136 @@
+﻿@model ShopAdminModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+    var gridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<input type="hidden" asp-for="@Model.Id" />
+<div class="card-body">
+    <div id="shop-images-grid">
+    </div>
+</div>
+<div class="card-footer">
+    <div id="add-new-image-template">
+        <input type="submit" id="btnAddNewImg" name="btnAddNewImg" value="@T("SevenSpikes.StoreLocator.Admin.Shop.AddNew")"
+                onclick="javascript:OpenWindow('@(Url.Action("ShopImageCreate", "StoreLocatorAdmin", new {shopId = Model.Id}))',
+800,    700,    true); return false;"
+                class="btn btn-primary" />
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#shop-images-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("ShopImageList", "StoreLocatorAdmin", new { shopId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    update: {
+                        url: "@Html.Raw(Url.Action("ShopImageUpdate", "StoreLocatorAdmin"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("ShopImageDelete", "StoreLocatorAdmin"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            PictureId: { editable: false, type: "number" },
+                            Url: { editable: true, type: "string" },
+                            Alt: { editable: true, type: "string" },
+                            DisplayOrder: { editable: true, type: "number" },
+                            Visible: { editable: true, type: "boolean" }
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(gridPageSize)
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            editable: {
+                confirmation: true,
+                mode: "popup"
+            },
+            filterable: false,
+            sortable: true,
+            scrollable: false,
+            columns: [{
+                field: "PictureId",
+                title: "@T("SevenSpikes.StoreLocator.Admin.ShopImage.Picture")",
+                template: '<img alt="#= Alt #" src="#= PictureSrc #" style="max-width: 300px; max-height: 250px;" />'
+            }, {
+                field: "Alt",
+                title: "@T("SevenSpikes.StoreLocator.Admin.ShopImage.Alt")"
+            }, {
+                field: "DisplayOrder",
+                title: "@T("SevenSpikes.StoreLocator.Admin.ShopImage.DisplayOrder")",
+                format: "{0:0}"
+            }, {
+                field: "Visible",
+                title: "@T("SevenSpikes.StoreLocator.Admin.ShopImage.Visible")"
+            }, {
+                title: "@T("Admin.Common.Edit")",
+                command: [{
+                    name: "editImg",
+                    text: "@T("Admin.Common.Edit")",
+                    imageClass: "k-icon k-edit",
+                    click: function(e) {
+                        // Recommended way by Kendo to get the Id
+                        var tr = $(e.target).closest("tr");
+                        var data = this.dataItem(tr);
+                        OpenWindow('@Url.Action("ShopImageUpdate", "StoreLocatorAdmin")/' + data.id, 800, 700, true);
+                    }
+                }],
+                width: 140
+            }, {
+                title: "@T("Admin.Common.Delete")",
+                command: [{
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                }],
+                width: 140
+            }]
+        });
+    });
+</script>
+
+<input type="submit" id="btnRefreshImgs" name="btnRefreshImgs" style="display: none" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnRefreshImgs').on("click", function (e) {
+            //refresh grid
+            var optionsGrid = $("#shop-images-grid");
+            optionsGrid.data('kendoGrid').dataSource.read();
+
+            e.preventDefault(); //don't reload the page
+        });
+    });
+</script>

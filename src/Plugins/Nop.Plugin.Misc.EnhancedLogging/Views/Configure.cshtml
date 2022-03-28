@@ -1,0 +1,33 @@
+﻿@model EnhancedLoggingConfigModel
+
+@using Nop.Plugin.Misc.EnhancedLogging.Models
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<form asp-controller="EnhancedLogging" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Enhanced Logging Settings
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DaysToKeepLogs" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DaysToKeepLogs" />
+                        <span asp-validation-for="DaysToKeepLogs"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

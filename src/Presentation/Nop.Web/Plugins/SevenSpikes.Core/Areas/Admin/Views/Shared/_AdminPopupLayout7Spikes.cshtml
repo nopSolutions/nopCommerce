@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "_AdminPopupLayout";
+}
+
+@{
+    // TODO: Upgrade 4.30 - Fix any styling issues in the Grid
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Scripts/lib/kendo/2020.1.406/js/kendo.all.min.js");
+
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Areas/Admin/Content/Scripts/admin.core.min.js");    
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Core/Areas/Admin/Content/Styles/adminstyles.css");
+}
+
+@* TODO: Upgrade 4.3 - Not sure if we will need to wrap and specify a specific class *@
+@*<div class="spikes-admin-wrapper">
+    <div class="seven-spikes-settings">*@
+        @RenderBody()
+    @*</div>
+</div>*@
+

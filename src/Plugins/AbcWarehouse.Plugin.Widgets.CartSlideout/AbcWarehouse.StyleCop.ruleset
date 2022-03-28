@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<RuleSet Name="StyleCop.Analyzers rules with default action" Description="StyleCop.Analyzers with default action. Rules with IsEnabledByDefault = false are disabled." ToolsVersion="14.0">
+    <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.SpecialRules">
+        <Rule Id="SA0001"  Action="None" />             <!-- XML comment analysis disabled -->
+    </Rules>
+    <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.SpacingRules">
+    </Rules>
+   
+    <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.ReadabilityRules">
+        <Rule Id="SA1101"  Action="None" />             <!-- Prefix local calls with this -->
+        <Rule Id="SX1101"  Action="Warning" />          <!-- Do not prefix local calls with 'this.' -->
+    </Rules>
+	
+    <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.OrderingRules">
+        <Rule Id="SA1200"  Action="None" />             <!-- Using directives should be placed correctly -->
+    </Rules>
+
+    <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.NamingRules">
+        <Rule Id="SA1309"  Action="None" />             <!-- Field names should not begin with underscore -->
+        <Rule Id="SX1309"  Action="Warning" />          <!-- Field names should begin with underscore -->
+    </Rules>
+
+    <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.MaintainabilityRules">
+    </Rules>
+	
+    <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.LayoutRules">
+    </Rules>
+	
+    <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.DocumentationRules">
+        <Rule Id="SA1633"  Action="None" />             <!-- File should have header -->
+    </Rules>
+</RuleSet>

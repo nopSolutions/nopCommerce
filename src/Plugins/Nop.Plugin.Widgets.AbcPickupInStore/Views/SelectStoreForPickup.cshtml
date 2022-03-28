@@ -1,0 +1,137 @@
+﻿@model StockResponse
+@using Nop.Plugin.Misc.AbcCore.Models;
+@using Nop.Plugin.Misc.AbcCore;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Extensions;
+@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI;
+
+@{
+    string accentColor = "#" + await HtmlHelpers.GetPavilionAccentColorAsync();
+    string primaryColor = "#" + await HtmlHelpers.GetPavilionPrimaryColorAsync();
+}
+
+<style>
+.pickup-selection-table .accented-text {
+    color: @primaryColor;
+    font-weight: bold;
+}
+
+.add-to-cart-btn-custom {
+    background: @accentColor url(/Themes/Pavilion/Content/img/flyout-cart.png) no-repeat 20px center;
+    font-weight: bold;
+    outline: 1px solid transparent;
+    border: none;
+    padding: 13px 30px;
+    padding-left: 50px;
+    color: white;
+}
+
+.add-to-cart-btn-custom:hover {
+    outline-color: @accentColor;
+}
+</style>
+
+<br/>
+
+<div class="title-background"> 
+    <span class="title-text">Get it with free in store pickup</span>
+</div>
+
+<br />
+
+<div class="subtext-background">
+    <span class="title-subtext">Purchase online and pickup product at your local store</span>
+</div>
+
+<br />
+
+<div>
+    @if (Model != null && Model.ProductStocks.Any())
+    {
+    <table class="pickup-selection-table">
+        <thead>
+            <tr>
+                <td class="store-col-1"><div class="store-col-block">Store Location</div></td>
+                <td class="store-col-2"><div class="store-col-block mid-col-block">Availability</div></td>
+                <td class="store-col-3"></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ProductStock productStock in Model.ProductStocks)
+            {
+                <tr>
+                    <td class="store-col-1">
+                        <div class="store-col-block">
+                            <span class="accented-text shop-name">@productStock.Shop.Name</span>
+                            <div class="shop-description">
+                                @Html.Raw(productStock.Shop.ShortDescription)
+                            </div>
+                        </div>
+                    </td>
+
+                    <td class="store-col-2">
+                        <div class="store-col-block mid-col-block">
+                            <span class="accented-text">@productStock.Message</span>
+                        </div>
+                    </td>
+                    <td class="store-col-3">
+                        <div class="store-col-block last-col-block">
+                            @if(productStock.Available)
+                            {
+                                <button class="select-store-btn add-to-cart-btn-custom" value="@productStock.Shop.Id" type="submit">Pickup In Store</button>
+                            }
+                        </div>
+                    </td>
+                </tr>
+                if (productStock.Available)
+                {
+                    <tr class="mobile-btn-row">
+                        <td class="store-col-span" colspan="2">
+                            <div class="store-col-block last-col-block">
+                                <button class="select-store-btn add-to-cart-btn-custom" value="@productStock.Shop.Id" type="submit">Pickup In Store</button>
+                            </div>
+                        </td>
+                        <td class="store-col-3"></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    }
+    else
+    {
+        <div class="title-subtext-background">
+            <span class="title-subtext no-stock-text">No stock found for this item</span>
+        </div>
+    }
+</div>
+
+<br/>
+
+<div class="title-background"> 
+    <span class="title-text">Have It Shipped</span>
+</div>
+
+<br />
+
+<table class="home-delivery-table">
+    <tr>
+        <td colspan="2">
+            <div class="title-subtext-background">
+                <span class="title-subtext">Add to cart to calculate shipping cost</span>
+            </div>
+        </td>
+        <td class="button-column store-col-3">
+            <button class="add-to-cart-btn-custom" onclick="AjaxCart.addproducttocart_details('/addproducttocart/details/@Model.ProductId/1', '#product-details-form');return false;">Add to Cart</button>
+        </td>
+    </tr>
+    <tr class="mobile-btn-row">
+        <td class="store-col-span" colspan="2">
+            <div class="store-col-block last-col-block">
+                <button class="add-to-cart-btn-custom" onclick="AjaxCart.addproducttocart_details('/addproducttocart/details/@Model.ProductId/1', '#product-details-form');return false;">Add to Cart</button>
+            </div>
+        </td>
+        <td class="store-col-3"></td>
+    </tr>
+</table>

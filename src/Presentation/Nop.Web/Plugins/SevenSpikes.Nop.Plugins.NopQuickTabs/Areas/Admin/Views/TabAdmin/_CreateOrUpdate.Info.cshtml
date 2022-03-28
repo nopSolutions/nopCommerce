@@ -1,0 +1,130 @@
+﻿@model SevenSpikes.Nop.Plugins.NopQuickTabs.Areas.Admin.Models.TabModel
+
+<div class="cards-group">
+    <div class="card card-default">
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="SystemName" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="SystemName" />
+                    <span asp-validation-for="SystemName"></span>
+                </div>
+            </div>
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="TabMode" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="TabMode" asp-items="Model.AvailableTabModes" />
+                </div>
+            </div>
+            <div class="form-group row tabDisplayOrder advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="DisplayOrder" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="DisplayOrder" />
+                    <span asp-validation-for="DisplayOrder"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@(await Html.LocalizedEditorAsync<TabModel, TabLocalizedModel>("tab-localized",
+    @<div class="card-body">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].DisplayName" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].DisplayName" />
+                <span asp-validation-for="@Model.Locales[item].DisplayName"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].Description" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].Description" asp-template="RichEditor"/>
+                <span asp-validation-for="@Model.Locales[item].Description"></span>
+            </div>
+        </div>
+        <div>
+            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+        </div>
+    </div>
+    ,
+    @<div class="card-body">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="DisplayName" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DisplayName" />
+                <span asp-validation-for="DisplayName"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Description" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Description" asp-template="RichEditor"/>
+                <span asp-validation-for="Description"></span>
+            </div>
+        </div>
+    </div>
+    ))
+
+@if (Model.Id > 0 && !ViewBag.isPopup)
+{
+    <div class="cards-group advanced-setting">
+        <div class="card card-default  advanced-setting">
+            <div class="card-header">
+                <div class="card-title">
+                    @T("SevenSpikes.Plugins.QuickTabs.Admin.Settings.Mappings")
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="StoreMappingModel.SelectedStoreIds" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.StoreMappingModel.SelectedStoreIds, new { SelectList = Model.StoreMappingModel.AvailableStores })
+                                <script>
+                                        $(document).ready(function () {
+                                            var storesIdsInput = $('#@Html.IdFor(model => model.StoreMappingModel.SelectedStoreIds)').data("kendoMultiSelect");
+                                            storesIdsInput.setOptions({
+                                                autoClose: false
+                                            });
+
+                                            @if (Model.StoreMappingModel.AvailableStores.Count == 0)
+                                            {
+                                                <text>
+                                                    storesIdsInput.setOptions({
+                                                        enable: false,
+                                                        placeholder: 'No stores available'
+                                                    });
+                                                    storesIdsInput._placeholder();
+                                                    storesIdsInput._enable();
+                                                </text>
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @await Component.InvokeAsync("MultistoreDisabledWarning")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

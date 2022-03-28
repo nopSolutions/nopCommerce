@@ -1,0 +1,69 @@
+﻿@model IList<VendorModel>
+
+@inject IViewComponentSelector viewComponentSelector
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Vendors").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-vendor-list-page");
+}
+
+<div class="page vendor-list-page">
+    <div class="page-title">
+        <h1>@T("Vendors.List")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.Count > 0)
+        {
+            <ul class="vendor-list">
+                @foreach (var item in Model)
+                {
+                    <li class="item-box vendor-item">
+                        <h2 class="title">
+                            <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" class="vendor">
+                                @item.Name
+                            </a>
+                        </h2>
+                        <div class="picture">
+                            <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+                                {
+                                    @await Component.InvokeAsync("LazyLoadImage", new(string Key, string Value)[] 
+                                    {
+                                        ("src", item.PictureModel.ImageUrl),
+                                        ("alt", item.PictureModel.AlternateText),
+                                        ("title", item.PictureModel.Title)
+                                    })
+                                }
+                                else
+                                {
+                                    <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                                }
+                            </a>
+                        </div>
+                        <div class="vendor-details">
+                            <h2 class="inner-title">
+                                <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.Name">
+                                    @item.Name
+                                </a>
+                            </h2>
+                            <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.Name" class="view-all">
+                                @T("SevenSpikes.Themes.Pavilion.Vendors.ShowAllProducts")
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+@section AsidePageTitle
+{
+    <div class="page-title">
+        <h1>@T("Vendors.List")</h1>
+    </div>
+}

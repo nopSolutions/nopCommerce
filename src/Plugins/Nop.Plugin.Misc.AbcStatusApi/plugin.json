@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "ABC Status API",
+  "SystemName": "Misc.AbcStatusApi",
+  "Version": "4.40.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "X by 2",
+  "DisplayOrder": -1,
+  "FileName": "Nop.Plugin.Misc.AbcStatusApi.dll",
+  "Description": "This plugin adds API capability to update status of orders/shipping/payment"
+}

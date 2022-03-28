@@ -1,0 +1,45 @@
+﻿@model IList<RibbonPictureModel>
+
+@if (Model.Count == 0)
+{
+    @T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.NoPicture")
+}
+else
+{
+    <div id="dialog" title="@T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.SelectAPicture")" data-setRibbonPictureUrl="@Url.Action("SetRibbonPicture", "ProductRibbonsAdmin")">
+
+        <p>@string.Format(T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.ChooseFromPictures").ToString(), Model.Count)</p>
+           
+        <table class="select-ribbon-pictures" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr class="ribbon-pictures-header">
+                    <th class="ribbon-picture">
+                        @T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureUrl")
+                    </th>
+                    <th class="ribbon-parameters">
+                        @T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureHeight")
+                    </th>
+                    <th class="ribbon-parameters">
+                        @T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureWidth")
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ribbonPicture in Model)
+                {
+                    <tr data-ribbonPictureId="@ribbonPicture.Id">
+                        <td class="ribbon-picture">
+                            <img alt='@ribbonPicture.Id' src='@ribbonPicture.PictureUrl' />
+                        </td>
+                        <td class="ribbon-parameters">
+                            @ribbonPicture.PictureHeight
+                        </td>
+                        <td class="ribbon-parameters">
+                            @ribbonPicture.PictureWidth
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

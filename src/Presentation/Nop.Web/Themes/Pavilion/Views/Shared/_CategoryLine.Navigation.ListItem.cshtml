@@ -1,0 +1,21 @@
+﻿@model CategorySimpleModel
+
+<li>
+    <a href="@Url.RouteUrl("Category", new { SeName = Model.SeName })">@Model.Name
+    @if (Model.NumberOfProducts.HasValue)
+        {
+            <text> </text>@T("Categories.TotalProducts", Model.NumberOfProducts.Value)
+        }
+    </a>
+
+    @if (Model.SubCategories.Count > 0)
+    {
+        <ul class="sublist">
+            @foreach (var subCategory in Model.SubCategories)
+            {
+                @await Html.PartialAsync("_CategoryLine.Navigation.ListItem", subCategory)
+            }
+        </ul>
+    }
+</li>
+   

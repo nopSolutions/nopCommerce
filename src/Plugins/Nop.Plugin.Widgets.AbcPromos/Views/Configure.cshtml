@@ -1,0 +1,33 @@
+﻿@model ConfigModel
+
+@using Nop.Plugin.Widgets.AbcPromos.Models
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<form asp-controller="AbcPromos" asp-action="Configure" method="post">
+    <div class="content-header clearfix">
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="IncludeExpiredPromosOnRebatesPromosPage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="IncludeExpiredPromosOnRebatesPromosPage" />
+                        <span asp-validation-for="IncludeExpiredPromosOnRebatesPromosPage"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

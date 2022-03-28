@@ -1,0 +1,38 @@
+﻿@model StockResponse
+@using Nop.Plugin.Misc.AbcCore.Models
+@using Nop.Web.Framework.UI
+@using Nop.Web.Framework;
+@using Nop.Web.Extensions;
+@if (Model == null || !Model.ProductStocks.Any())
+{
+    <script>
+        $(function () {
+            $('.clearance-stock-header').text('Sorry, this item is not in stock');
+        })
+    </script>
+}
+else
+{
+    <table class="stock-table">
+        <thead>
+            <tr>
+                <td class="start-col"> <span><b>Store Location</b></span> </td>
+                <td class="center-col"> <span><b>Currently Available</b></span> </td>
+                <td class="end-col"> <span><b>Store Details</b></span> </td>
+            </tr>
+        </thead>
+        <tbody>
+            @*create a row per stock object*@
+            @for (int i = 0; i < Model.ProductStocks.Count; i++)
+            {
+                string rowClass = (i % 2 == 0) ? "white-row" : "";
+                <tr class="@rowClass">
+                    <td class="start-col"> <span> <a style="text-decoration: underline" href="/@Model.ProductStocks[i].ShopUrl">  @Model.ProductStocks[i].Shop.Name </a></span></td>
+                    <td class="center-col"> <span> @Model.ProductStocks[i].Quantity </span></td>
+                    <td class="end-col"> <span> <a style="text-decoration: underline" href="/@Model.ProductStocks[i].ShopUrl"> Display Address & Map </a></span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}

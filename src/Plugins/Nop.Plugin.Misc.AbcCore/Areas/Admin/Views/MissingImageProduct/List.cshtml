@@ -1,0 +1,54 @@
+@model MissingImageProductSearchModel
+
+@using Nop.Plugin.Misc.AbcCore.Areas.Admin.Models
+
+@{
+    //page title
+    ViewBag.PageTitle = "Missing Image Products";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("ABCWarehouse.MissingImageProduct");
+
+    Layout = "_AdminLayout";
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        Products with Missing Images
+    </h1>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "missingimageproducts-grid",
+                        UrlRead = new DataUrl("List", "MissingImageProduct", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(MissingImageProductModel.ItemNumber))
+                            {
+                                Title = "Item Number",
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(MissingImageProductModel.Sku))
+                            {
+                                Title = "Sku",
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(MissingImageProductModel.Name))
+                            {
+                                Title = "Name",
+                                Width = "100"
+                            }
+                        }
+                    })                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

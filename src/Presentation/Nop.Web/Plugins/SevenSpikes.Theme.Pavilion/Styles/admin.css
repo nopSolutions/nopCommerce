@@ -1,0 +1,118 @@
+﻿.theme-color input.multi-store-override-option {
+    display: inline-block;
+}
+.theme-color .adminData {
+    position: relative;
+}
+.theme-color .upload-image-overlay {
+    position: absolute !important;
+}
+.theme-color .upload-image-overlay:before {
+    display: none !important;
+}
+.theme-color .upload-image-overlay:hover {
+    cursor: auto;
+}
+.theme-color .adminData div {
+    position: relative;
+    float: left;
+    margin: 10px 5px;
+    font-size: 0;
+    cursor: pointer;
+}
+.theme-color .adminData div label {
+    display: block;
+    padding: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 45px 45px 0 0;
+    border-color: transparent;
+    cursor: pointer;
+}
+.theme-color .adminData div label {
+    position: relative;
+    top: 0;
+    border-width: 45px 45px 0 0;
+    z-index: 2;
+}
+.theme-color .adminData div label ~ label {
+    position: absolute;
+    right: 0;
+    border-width: 0 0 45px 45px;
+    z-index: 1;
+}
+.theme-color .color-picker-icon {
+    content: "";
+    position: absolute;
+    right: -15px;
+    bottom: 7px;
+    width: 31px;
+    height: 31px;
+    background: url('../Images/color-picker.png') no-repeat;
+    z-index: 3;
+}
+.theme-color .adminData div:last-child .k-widget {
+    visibility: hidden; /*kendo fix*/
+}
+
+.theme-color .adminData div span.before {
+    content: " ";
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 50%;
+    left: 50%;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    -webkit-transition: all .15s ease-in-out;
+    -moz-transition: all .15s ease-in-out;
+    transition: all .15s ease-in-out;
+}
+.theme-color .adminData div.active span.before,
+.theme-color .adminData div:hover span.before {
+    width: 53px;
+    height: 53px;
+    top: -4px;
+    left: -4px;
+    border-color: #999;
+}
+.theme-color .adminData div .k-widget {
+    width: 0!important;
+    height: 0;
+}
+.theme-color .adminData div .k-picker-wrap.k-state-default {
+    height: auto;
+}
+.k-selected-color-display .k-color-value {
+    font-size:  13px;
+}
+
+.theme-color input {
+    display: none;
+}
+
+.theme-color .radionButton:last-of-type label {
+    position: absolute;
+    border: none;
+    width: 64px;
+    height: 64px;
+    max-width: none;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    top: -32px;
+    left: -32px;
+}
+.theme-color .radionButton:last-of-type label ~ label {
+    top: 13px;
+    left: 13px;
+}
+.theme-color .adminData .radionButtonInner {
+    margin: 0;
+    width: 45px;
+    height: 45px;
+    overflow: hidden;
+}

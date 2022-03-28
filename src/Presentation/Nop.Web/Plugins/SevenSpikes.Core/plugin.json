@@ -1,0 +1,11 @@
+﻿{
+  "Group": "7Spikes",
+  "FriendlyName": "Seven Spikes Core",
+  "SystemName": "SevenSpikes.Core",
+  "Version": "4.4",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": -1,
+  "FileName": "SevenSpikes.Nop.Plugins.Core.dll",
+  "Description": "This plugin is required in order to use any other Seven Spikes plugins"
+}

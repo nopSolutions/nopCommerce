@@ -1,0 +1,78 @@
+﻿@using System.Linq;
+@using SevenSpikes.Nop.Conditions.Domain;
+@inject AdminAreaSettings adminAreaSettings
+
+@model dynamic
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "product-overrides-grid",
+        UrlRead = new DataUrl("ProductOverridesList", "ProductOverridesAdmin", new RouteValueDictionary { ["entityType"] = Model.EntityType, ["entityId"] = Model.EntityId }),
+        UrlUpdate = new DataUrl("ProductOverridesUpdate", "ProductOverridesAdmin", null),
+        UrlDelete = new DataUrl("ProductOverridesDelete", "ProductOverridesAdmin", null),
+        Length = defaultGridPageSize,
+        LengthMenu = gridPageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(OverridedProductModel.ProductName))
+            {
+                Title = T("SevenSpikes.Conditions.Admin.ProductOverrides.ProductName").Text
+            },
+            new ColumnProperty(nameof(OverridedProductModel.Included))
+            {
+                Title = T("SevenSpikes.Conditions.Admin.ProductOverrides.ProductState").Text,
+                Render = new RenderCustom("includedProductStateRender"),
+                Editable = true,
+                EditType = EditType.Checkbox
+            },
+            new ColumnProperty(nameof(OverridedProductModel.Id))
+            {
+                Width = "100",
+                Render = new RenderButtonsInlineEdit()
+            },
+            new ColumnProperty(nameof(OverridedProductModel.Id))
+            {
+                Width = "100",
+                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+            }
+        }
+    })
+
+</div>
+<script>
+    function includedProductStateRender(data, type, row, meta) {
+        return '<p nop-value="' + row.Included + '">' + row.ProductState + '</p>';
+    }
+</script>
+
+<div class="card-footer">
+    <button type="submit" id="btnAddNewProduct" name="btnAddNewProduct"
+            onclick="javascript:OpenWindow('@(Url.Action("ProductOverridesPopup", "ProductOverridesAdmin", new { entityType = Model.EntityType, entityId = Model.EntityId, btnId = "btnRefreshProducts" }))', 800, 700, true); return false;"
+            class="btn btn-primary">
+        @T("SevenSpikes.Conditions.Admin.ProductOverrides.AddNew")
+    </button>
+    <input type="submit" id="btnRefreshProducts" name="btnRefreshProducts" style="display: none" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefreshProducts').click(function (e) {
+                //refresh grid
+                e.preventDefault(); //don't reload the page
+
+                var productOverridesGrid = $("#product-overrides-grid").DataTable();
+                productOverridesGrid.ajax.reload();
+
+                //return false to don't reload a page
+                return false;
+            });
+        });
+    </script>
+</div>
+
+
+

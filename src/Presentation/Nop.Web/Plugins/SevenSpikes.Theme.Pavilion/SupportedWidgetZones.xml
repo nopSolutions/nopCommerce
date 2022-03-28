@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>pavilion_color_squares</WidgetZone>
+  <WidgetZone>pavilion_theme_logo</WidgetZone>
+  <WidgetZone>head_html_tag_after_css_files_pavilion</WidgetZone>
+  <WidgetZone>subcategories_itembox_end</WidgetZone>
+</SupportedWidgetZones>

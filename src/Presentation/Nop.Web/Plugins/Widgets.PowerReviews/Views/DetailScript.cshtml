@@ -1,0 +1,67 @@
+@using Nop.Plugin.Widgets.PowerReviews.Models;
+@using Nop.Core;
+
+@inject IWebHelper webHelper
+
+@model DetailModel
+
+@{
+    Html.AddHeadCustomParts("<script src=\"https://ui.powerreviews.com/stable/4.1/ui.js\" async></script>");
+}
+
+<script type="text/javascript">
+	window.pwr = window.pwr || function () {
+  		(pwr.q = pwr.q || []).push(arguments);
+	}; 
+ 	
+	pwr("render", {
+		api_key: '@Model.Settings.APIKey',
+		locale: 'en_US',
+		merchant_group_id: '@Model.Settings.MerchantGroupId',
+		merchant_id: '@Model.Settings.MerchantId',
+		page_id: "@Model.ProductSku",
+		review_wrapper_url: '/write-a-review?pr_page_id=@Model.ProductSku',
+		on_read_reviews_click: function () {
+			@Html.Raw(Model.Settings.OnReadReviewsClickCode)
+		},
+		product:{
+            name: '@Model.FeedlessProduct.Name',
+            url: '@Model.FeedlessProduct.Url',
+            image_url: '@Model.FeedlessProduct.ImageUrl',
+            description: '@Model.FeedlessProduct.Description',
+            category_name: '@Model.FeedlessProduct.CategoryName',
+            manufacturer_id: '@Model.FeedlessProduct.ManufacturerId',
+            upc: '@Model.FeedlessProduct.Upc',
+            brand_name: '@Model.FeedlessProduct.BrandName',
+            price: '@Model.FeedlessProduct.Price',
+            in_stock: '@Model.FeedlessProduct.InStock'
+   		},
+		subject: {
+			"@@context": "https://schema.org",
+			"@@type": "Product",
+			name: "@Model.FeedlessProduct.Name",
+			description: "@Model.FeedlessProduct.Description",
+			url: "@Model.FeedlessProduct.Url",
+			image: "@Model.FeedlessProduct.ImageUrl",
+			sku: "@Model.ProductSku",
+			brand: "@Model.FeedlessProduct.BrandName",
+			upc: '@Model.FeedlessProduct.Upc',
+			offers: {
+				"@@type": "Offer",
+				priceCurrency: "USD",
+				url: "@Model.FeedlessProduct.Url",
+				price: "@Model.FeedlessProduct.Price",
+				priceValidUntil: "@Model.PriceValidUntil.ToShortDateString()",
+				availability: "https://schema.org/InStock"
+			}
+		},	
+		components: {
+			ReviewSnippet: 'pr-reviewsnippet',
+			ReviewDisplay: 'pr-reviewdisplay'
+		}
+	});
+</script>
+
+<style>
+	@Html.Raw(Model.Settings.CustomStyles)
+</style>

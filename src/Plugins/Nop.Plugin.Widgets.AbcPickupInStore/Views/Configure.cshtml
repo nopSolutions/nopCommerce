@@ -1,0 +1,30 @@
+﻿@model Nop.Plugin.Widgets.AbcPickupInStore.Models.PickupInStoreModel
+@using Nop.Web.Framework;
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.PickupInStoreText)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PickupInStoreText)
+                        @Html.ValidationMessageFor(model => model.PickupInStoreText)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

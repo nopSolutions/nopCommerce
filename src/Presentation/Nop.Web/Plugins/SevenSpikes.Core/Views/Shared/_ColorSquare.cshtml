@@ -1,0 +1,47 @@
+﻿@using Nop.Core.Domain.Catalog
+@using Nop.Web.Models.Catalog;
+
+@model IList<ProductDetailsModel.ProductAttributeModel>
+
+@if (Model.Count > 0)
+{
+    foreach (ProductDetailsModel.ProductAttributeModel attribute in Model)
+    {
+        string controlId = string.Format("product_attribute_{0}", attribute.Id);
+
+        string attributeType = "color-squares";
+
+        if (attribute.AttributeControlType == AttributeControlType.ImageSquares)
+        {
+            attributeType = "image-squares";
+        }
+
+        <ul class="option-list attribute-squares @(attributeType)" id="@(attributeType)-@(attribute.Id)" data-productid="@(attribute.ProductId)">
+            @foreach (ProductDetailsModel.ProductAttributeValueModel attributeValue in attribute.Values)
+            {
+                string attributeName = attributeValue.Name;
+
+                if (!string.IsNullOrEmpty(attributeValue.PriceAdjustment))
+                {
+                    attributeName = T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment, string.Empty).Text;
+                }
+
+                <li>
+                    <label>
+                        <span class="attribute-square-container" title="@attributeName">
+                            @if (attribute.AttributeControlType == AttributeControlType.ColorSquares)
+                            {
+                                <span class="attribute-square" style="background-color: @(attributeValue.ColorSquaresRgb);">&nbsp;</span>
+                            }
+                            else if (attribute.AttributeControlType == AttributeControlType.ImageSquares)
+                            {
+                                <span class="attribute-square" style="background-image: url(@attributeValue.ImageSquaresPictureModel.ImageUrl);">&nbsp;</span>
+                            }
+                        </span>
+                        <input class="product-box-attribute-square @if (attributeValue.IsPreSelected) {<text>preselected</text>}" type="radio" name="@(controlId)" value="@attributeValue.Id" />
+                    </label>
+                </li>
+            }
+        </ul>
+    }
+}

@@ -1,0 +1,13 @@
+{
+ "Group": "Widgets",
+ "FriendlyName": "ABC Energy Guide",
+ "SystemName": "Widgets.AbcEnergyGuide",
+ "Version": "4.40.0",
+ "SupportedVersions": [
+  "4.40"
+ ],
+ "Author": "Dave Farinelli",
+ "DisplayOrder": -1,
+ "FileName": "Nop.Plugin.Widgets.AbcEnergyGuide.dll",
+ "Description": "Adds product energy guide to product detail page"
+}
