@@ -1076,6 +1076,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        // ABC: This fixes a 400 error coming from Synchrony
+        [IgnoreAntiforgeryToken]
         [HttpPost, ActionName("Confirm")]
         public virtual async Task<IActionResult> ConfirmOrder()
         {
