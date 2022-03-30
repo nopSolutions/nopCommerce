@@ -58,6 +58,7 @@ namespace Nop.Plugin.Misc.AbcCore.Infrastructure
             services.AddScoped<IImportUtilities, ImportUtilities>();
             services.AddScoped<ICustomManufacturerService, CustomManufacturerService>();
             services.AddScoped<ICustomNopDataProvider, CustomMsSqlDataProvider>();
+            services.AddScoped<ArchiveService>();
         }
     }
 }
