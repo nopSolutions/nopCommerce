@@ -12,5 +12,8 @@ namespace Nop.Plugin.Misc.AbcCore.Models
 
         [NopResourceDisplayName(CoreLocales.IsDebugMode)]
         public bool IsDebugMode { get; set; }
+
+        [NopResourceDisplayName(CoreLocales.MobilePhoneNumber)]
+        public string MobilePhoneNumber { get; set; }
     }
 }

@@ -7,42 +7,53 @@
 }
 
 <form asp-controller="AbcCore" asp-action="Configure" method="post">
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-label asp-for="BackendDbConnectionString" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="BackendDbConnectionString" />
-                        <span asp-validation-for="BackendDbConnectionString"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-label asp-for="AreExternalCallsSkipped" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="AreExternalCallsSkipped" />
-                        <span asp-validation-for="AreExternalCallsSkipped"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-label asp-for="IsDebugMode" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="IsDebugMode" />
-                        <span asp-validation-for="IsDebugMode"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-9 col-md-offset-3">
-                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<section class="content">
+		<div class="container-fluid">			
+				<div class="card card-default">
+					<div class="card-body">
+						<div class="form-group row">
+							<div class="col-md-3">
+								<nop-label asp-for="BackendDbConnectionString" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="BackendDbConnectionString" />
+								<span asp-validation-for="BackendDbConnectionString"></span>
+							</div>
+						</div>
+                        <div class="form-group row">
+							<div class="col-md-3">
+								<nop-label asp-for="AreExternalCallsSkipped" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="AreExternalCallsSkipped" />
+								<span asp-validation-for="AreExternalCallsSkipped"></span>
+							</div>
+						</div>
+                        <div class="form-group row">
+							<div class="col-md-3">
+								<nop-label asp-for="IsDebugMode" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="IsDebugMode" />
+								<span asp-validation-for="IsDebugMode"></span>
+							</div>
+						</div>
+                        <div class="form-group row">
+							<div class="col-md-3">
+								<nop-label asp-for="MobilePhoneNumber" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="MobilePhoneNumber" />
+								<span asp-validation-for="MobilePhoneNumber"></span>
+							</div>
+						</div>
+						<div class="form-group row">
+                            <div class="col-md-9 offset-md-3">
+                                <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                            </div>
+						</div>
+					</div>
+				</div>			
+		</div>
+	</section>
 </form>

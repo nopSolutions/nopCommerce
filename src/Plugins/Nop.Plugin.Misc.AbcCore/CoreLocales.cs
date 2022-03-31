@@ -23,5 +23,10 @@ namespace Nop.Plugin.Misc.AbcCore
             Base + "PLPDescription";
         public const string PLPDescriptionHint =
             PLPDescription + ".Hint";
+
+        public const string MobilePhoneNumber =
+            Base + "MobilePhoneNumber";
+        public const string MobilePhoneNumberHint =
+            MobilePhoneNumber + ".Hint";
     }
 }

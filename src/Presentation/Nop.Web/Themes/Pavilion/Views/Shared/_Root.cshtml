@@ -28,6 +28,9 @@
         customer,
         ShoppingCartType.ShoppingCart
     )).Count();
+
+    @* ABC: Get mobile phone number *@
+    string mobilePhoneNumber = await settingService.GetSettingByKeyAsync("coresettings.mobilephonenumber", "800-981-3866");
 }
 
 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyStartHtmlTagAfter })
@@ -42,7 +45,7 @@
             <div id="mobile-header-logo">
                 @await Component.InvokeAsync("Logo")
             </div>
-            <div class="phone"><a href="/contact-us">800-981-3866</a></div>
+            <div class="phone"><a href="/contact-us">@mobilePhoneNumber</a></div>
             <div class="personal-button" id="header-links-opener">
                 <span>@T("SevenSpikes.Themes.Common.Personal")</span>
             </div>

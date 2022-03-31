@@ -141,7 +141,9 @@ namespace Nop.Plugin.Misc.AbcCore
                     [CoreLocales.AreExternalCallsSkipped] = "Skip External Calls",
                     [CoreLocales.AreExternalCallsSkippedHint] = "Skips calls to ISAM API, useful for local development.",
                     [CoreLocales.PLPDescription] = "PLP Description",
-                    [CoreLocales.PLPDescriptionHint] = "Description displayed for PLP (Product Box)."
+                    [CoreLocales.PLPDescriptionHint] = "Description displayed for PLP (Product Box).",
+                    [CoreLocales.MobilePhoneNumber] = "Mobile Phone Header",
+                    [CoreLocales.MobilePhoneNumberHint] = "The phone number used on the mobile header."
                 }
             );
         }

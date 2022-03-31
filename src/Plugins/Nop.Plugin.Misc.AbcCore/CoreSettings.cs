@@ -10,6 +10,7 @@ namespace Nop.Plugin.Misc.AbcCore
         public string BackendDbConnectionString { get; private set; }
         public bool AreExternalCallsSkipped { get; private set; }
         public bool IsDebugMode { get; private set; }
+        public string MobilePhoneNumber { get; private set; }
 
         public static CoreSettings FromModel(ConfigurationModel model)
         {
@@ -17,7 +18,8 @@ namespace Nop.Plugin.Misc.AbcCore
             {
                 BackendDbConnectionString = model.BackendDbConnectionString,
                 AreExternalCallsSkipped = model.AreExternalCallsSkipped,
-                IsDebugMode = model.IsDebugMode
+                IsDebugMode = model.IsDebugMode,
+                MobilePhoneNumber = model.MobilePhoneNumber
             };
         }
 
@@ -27,7 +29,8 @@ namespace Nop.Plugin.Misc.AbcCore
             {
                 BackendDbConnectionString = BackendDbConnectionString,
                 AreExternalCallsSkipped = AreExternalCallsSkipped,
-                IsDebugMode = IsDebugMode
+                IsDebugMode = IsDebugMode,
+                MobilePhoneNumber = MobilePhoneNumber
             };
         }
         public OdbcConnection GetBackendDbConnection()
