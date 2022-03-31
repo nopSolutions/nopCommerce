@@ -77,6 +77,7 @@ namespace Nop.Web.Factories
                 var attributeModel = new AddressAttributeModel
                 {
                     Id = attribute.Id,
+                    ControlId = string.Format(NopCommonDefaults.AddressAttributeControlName, attribute.Id),
                     Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,

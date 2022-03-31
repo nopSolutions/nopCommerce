@@ -210,30 +210,50 @@ var Billing = {
       type: "GET",
       url: url,
       data: {
-        "addressId": selectedItem
+        addressId: selectedItem,
       },
-      success: function(data, textStatus, jqXHR) {
-        $.each(data,
-          function(id, value) {
-            //console.log("id:" + id + "\nvalue:" + value);
-            if (value !== null) {
-              var val = $(`#${prefix}${id}`).val(value);
-              if (id.indexOf('CountryId') >= 0) {
-                val.trigger('change');
+      success: function (data, textStatus, jqXHR) {
+        $.each(data, function (id, value) {
+          if (value === null)
+            return;
+
+          if (id.indexOf("CustomAddressAttributes") >= 0 && Array.isArray(value)) {
+            $.each(value, function (i, customAttribute) {
+              if (customAttribute.DefaultValue) {
+                $(`#${customAttribute.ControlId}`).val(
+                  customAttribute.DefaultValue
+                );
+              } else {
+                $.each(customAttribute.Values, function (j, attributeValue) {
+                  if (attributeValue.IsPreSelected) {
+                    $(`#${customAttribute.ControlId}`).val(attributeValue.Id);
+                    $(
+                      `#${customAttribute.ControlId}_${attributeValue.Id}`
+                    ).prop("checked", attributeValue.Id);
+                  }
+                });
               }
-              if (id.indexOf('StateProvinceId') >= 0) {
-                Billing.setSelectedStateId(value);
-              }
-            }
-          });
+            });
+
+            return;
+          }
+
+          var val = $(`#${prefix}${id}`).val(value);
+          if (id.indexOf("CountryId") >= 0) {
+            val.trigger("change");
+          }
+          if (id.indexOf("StateProvinceId") >= 0) {
+            Billing.setSelectedStateId(value);
+          }
+        });
       },
-      complete: function(jqXHR, textStatus) {
-        $('#billing-new-address-form').show();
-        $('#edit-address-button').hide();
-        $('#delete-address-button').hide();
-        $('#save-address-button').show();
+      complete: function (jqXHR, textStatus) {
+        $("#billing-new-address-form").show();
+        $("#edit-address-button").hide();
+        $("#delete-address-button").hide();
+        $("#save-address-button").show();
       },
-      error: Checkout.ajaxFailure
+      error: Checkout.ajaxFailure,
     });
   },
 
