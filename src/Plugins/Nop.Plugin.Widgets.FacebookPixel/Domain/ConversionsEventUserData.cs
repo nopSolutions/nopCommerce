@@ -6,6 +6,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Domain
     public class ConversionsEventUserData
     {
         /// <summary>
+        /// Gets or sets the customer identifier
+        /// </summary>
+        [JsonIgnore]
+        public int Id { get; set; }
+        
+        /// <summary>
         /// Gets or sets the client ip address
         /// </summary>
         [JsonProperty(PropertyName = "client_ip_address")]

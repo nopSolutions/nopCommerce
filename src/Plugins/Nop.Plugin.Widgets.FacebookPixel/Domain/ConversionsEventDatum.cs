@@ -27,6 +27,18 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Domain
         /// </summary>
         [JsonProperty(PropertyName = "action_source")]
         public string ActionSource { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a store identifier
+        /// </summary>
+        [JsonIgnore]
+        public int? StoreId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the event is custom
+        /// </summary>
+        [JsonIgnore]
+        public bool IsCustomEvent { get; set; }
 
         /// <summary>
         /// Gets or sets a map that contains customer information data

@@ -37,6 +37,11 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// </summary>
         public static string CheckoutOnePageRouteName => "CheckoutOnePage";
 
+        /// <summary>
+        /// Gets the route name of area
+        /// </summary>
+        public static string AreaRouteName => "areaRoute";
+
         #region Caching
 
         /// <summary>
@@ -124,20 +129,24 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// </summary>
         public static string TrackedEventsSessionValue => "FacebookPixelTrackedEvents";
 
+        #endregion
+
+        #region Conversions API
+
         /// <summary>
         /// Gets the name of facebook conversions api base address to send tracked events
         /// </summary>
-        public const string FB_CONVERSIONS_API_BASE_ADDRESS = "https://graph.facebook.com";
-        
+        public static string FbConversionsApiBaseAddress = "https://graph.facebook.com";
+
         /// <summary>
         /// Gets the name of facebook conversions api version to send tracked events
         /// </summary>
-        public const string FB_CONVERSIONS_API_VERSION = "v13.0";
+        public static string FbConversionsApiVersion = "v13.0";
 
         /// <summary>
         /// Gets the name of facebook conversions api event endpoint to send tracked events
         /// </summary>
-        public const string FB_CONVERSIONS_API_EVENT_ENDPOINT = "events";
+        public static string FbConversionsApiEventEndpoint = "events";
 
         #endregion
     }

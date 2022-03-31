@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -26,6 +27,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Models
         public string PixelId { get; set; }
         
         [NopResourceDisplayName("Plugins.Widgets.FacebookPixel.Configuration.Fields.AccessToken")]
+        [DataType(DataType.Password)]
         public string AccessToken { get; set; }
 
         [NopResourceDisplayName("Plugins.Widgets.FacebookPixel.Configuration.Fields.DisableForUsersNotAcceptingCookieConsent")]
