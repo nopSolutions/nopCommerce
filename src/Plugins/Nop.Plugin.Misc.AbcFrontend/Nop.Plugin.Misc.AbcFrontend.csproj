@@ -51,6 +51,7 @@
     <None Remove="Images\LocationsButton.png" />
     <None Remove="Images\mobile-menu.png" />
     <None Remove="Images\mobile-menu-haw.png" />
+    <None Remove="Images\mobile-menu-mic.png" />
     <None Remove="Images\mobile-sprite.png" />
     <None Remove="Images\SaleAdButton.png" />
     <None Remove="Images\search-button.png" />
@@ -160,6 +161,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\mobile-menu-haw.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\mobile-menu-mic.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\mobile-sprite.png">
