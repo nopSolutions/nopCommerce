@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Nop.Data.Mapping
 {
@@ -10,6 +10,7 @@ namespace Nop.Data.Mapping
         }
 
         public string EntityName { get; set; }
+        public string SchemaName { get; set; }
         public ICollection<NopEntityFieldDescriptor> Fields { get; set; }
     }
 }
