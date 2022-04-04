@@ -380,6 +380,7 @@ namespace Nop.Tests
             services.AddTransient<ITaxPluginManager, TaxPluginManager>();
 
             services.AddTransient<IPictureService, TestPictureService>();
+            services.AddScoped<IVideoService, VideoService>();
 
             //register all settings
             var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();

@@ -16,8 +16,8 @@
     const string hideInventoryBlockAttributeName = "ProductPage.HideInventoryBlock";
     var hideInventoryBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hideInventoryBlockAttributeName);
 
-    const string hidePicturesBlockAttributeName = "ProductPage.HidePicturesBlock";
-    var hidePicturesBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hidePicturesBlockAttributeName);
+    const string hideMultimediaBlockAttributeName = "ProductPage.hideMultimediaBlock";
+    var hideMultimediaBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hideMultimediaBlockAttributeName);
 
     const string hideProductAttributesBlockAttributeName = "ProductPage.HideProductAttributesBlock";
     var hideProductAttributesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductAttributesBlockAttributeName, defaultValue: true);
@@ -79,7 +79,7 @@
                 <nop-card asp-name="product-price" asp-icon="fas fa-dollar-sign" asp-title="@T("Admin.Catalog.Products.Price")" asp-hide-block-attribute-name="@hidePricesBlockAttributeName" asp-hide="@hidePricesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Prices", Model)</nop-card>
                 <nop-card asp-name="product-shipping" asp-icon="fas fa-truck" asp-title="@T("Admin.Catalog.Products.Shipping")" asp-hide-block-attribute-name="@hideShippingBlockAttributeName" asp-hide="@hideShippingBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Shipping", Model)</nop-card>
                 <nop-card asp-name="product-inventory" asp-icon="fas fa-sitemap" asp-title="@T("Admin.Catalog.Products.Inventory")" asp-hide-block-attribute-name="@hideInventoryBlockAttributeName" asp-hide="@hideInventoryBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Inventory", Model)</nop-card>
-                <nop-card asp-name="product-pictures" asp-icon="far fa-images" asp-title="@T("Admin.Catalog.Products.Pictures")" asp-hide-block-attribute-name="@hidePicturesBlockAttributeName" asp-hide="@hidePicturesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Pictures", Model)</nop-card>
+                <nop-card asp-name="product-multimedia" asp-icon="fas fa-photo-video" asp-title="@T("Admin.Catalog.Products.Multimedia")" asp-hide-block-attribute-name="@hideMultimediaBlockAttributeName" asp-hide="@hideMultimediaBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Multimedia", Model)</nop-card>
                 <nop-card asp-name="product-product-attributes" asp-icon="fas fa-paperclip" asp-title="@T("Admin.Catalog.Products.ProductAttributes")" asp-hide-block-attribute-name="@hideProductAttributesBlockAttributeName" asp-hide="@hideProductAttributesBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.ProductAttributes)">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes", Model)</nop-card>
                 <nop-card asp-name="product-specification-attributes" asp-icon="fas fa-cog" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes")" asp-hide-block-attribute-name="@hideSpecificationAttributeBlockAttributeName" asp-hide="@hideSpecificationAttributeBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.SpecificationAttributes)">@await Html.PartialAsync("_CreateOrUpdate.SpecificationAttributes", Model)</nop-card>
                 <nop-card asp-name="product-giftcard" asp-icon="fas fa-gift" asp-title="@T("Admin.Catalog.Products.GiftCard")" asp-hide-block-attribute-name="@hideGiftCardBlockAttributeName" asp-hide="@hideGiftCardBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.IsGiftCard)">@await Html.PartialAsync("_CreateOrUpdate.GiftCard", Model)</nop-card>

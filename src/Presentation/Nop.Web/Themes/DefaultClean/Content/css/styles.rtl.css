@@ -2066,7 +2066,8 @@ label, label + * {
 }
 
 .gallery .picture img,
-.gallery .picture-thumbs img,
+.picture-gallery .picture-thumbs img,
+.video-gallery .video-thumbs iframe,
 .variant-picture img {
   position: absolute;
   top: 0;
@@ -2078,12 +2079,12 @@ label, label + * {
   margin: auto;
 }
 
-.gallery .picture-thumbs {
+.picture-gallery .picture-thumbs {
   overflow: hidden;
   font-size: 0;
 }
 
-.gallery .picture-thumbs .thumb-item {
+.picture-gallery .picture-thumbs .thumb-item {
   display: inline-block;
   position: relative;
   width: 100px;
@@ -2091,6 +2092,13 @@ label, label + * {
   margin: 0 5px 10px;
   overflow: hidden;
   cursor: pointer;
+}
+
+.video-gallery .video-thumbs .thumb-item {
+  display: inline-block;
+  position: relative;
+  margin: 0 5px 10px;
+  overflow: hidden;
 }
 
 .overview {
@@ -8287,7 +8295,12 @@ pre {
     width: 46%;
   }
 
-  .gallery .picture {
+  .picture-gallery .picture {
+    width: auto;
+  }
+
+  .video-gallery {
+    float: right;
     width: auto;
   }
 

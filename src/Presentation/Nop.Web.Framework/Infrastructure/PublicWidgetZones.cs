@@ -161,8 +161,10 @@
         public static string ProductDetailsAddInfo => "productdetails_add_info";
         public static string ProductDetailsAfterBreadcrumb => "productdetails_after_breadcrumb";
         public static string ProductDetailsAfterPictures => "productdetails_after_pictures";
+        public static string ProductDetailsAfterVideos => "productdetails_after_videos";
         public static string ProductDetailsBeforeCollateral => "productdetails_before_collateral";
         public static string ProductDetailsBeforePictures => "productdetails_before_pictures";
+        public static string ProductDetailsBeforeVideos => "productdetails_before_videos";
         public static string ProductDetailsBottom => "productdetails_bottom";
         public static string ProductDetailsEssentialBottom => "productdetails_essential_bottom";
         public static string ProductDetailsEssentialTop => "productdetails_essential_top";

@@ -13,8 +13,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Copy.Name")]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Copy.CopyImages")]
-        public bool CopyImages { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Copy.CopyMultimedia")]
+        public bool CopyMultimedia { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Copy.Published")]
         public bool Published { get; set; }

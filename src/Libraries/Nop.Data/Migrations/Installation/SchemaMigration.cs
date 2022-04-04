@@ -120,6 +120,8 @@ namespace Nop.Data.Migrations.Installation
             Create.TableFor<Picture>();
             Create.TableFor<PictureBinary>();
             Create.TableFor<ProductPicture>();
+            Create.TableFor<Video>();
+            Create.TableFor<ProductVideo>();
             Create.TableFor<Setting>();
             Create.TableFor<Discount>();
             Create.TableFor<DiscountCategoryMapping>();

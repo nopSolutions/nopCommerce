@@ -105,6 +105,27 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 mediaSettings.OrderThumbPictureSize = 80;
                 settingService.SaveSettingAsync(mediaSettings, settings => settings.OrderThumbPictureSize).Wait();
             }
+
+            //#7
+            if (!settingService.SettingExistsAsync(mediaSettings, settings => settings.VideoIframeAllow).Result)
+            {
+                mediaSettings.VideoIframeAllow = "fullscreen";
+                settingService.SaveSettingAsync(mediaSettings, settings => settings.VideoIframeAllow).Wait();
+            }
+
+            //#7
+            if (!settingService.SettingExistsAsync(mediaSettings, settings => settings.VideoIframeWidth).Result)
+            {
+                mediaSettings.VideoIframeWidth = 300;
+                settingService.SaveSettingAsync(mediaSettings, settings => settings.VideoIframeWidth).Wait();
+            }
+
+            //#7
+            if (!settingService.SettingExistsAsync(mediaSettings, settings => settings.VideoIframeHeight).Result)
+            {
+                mediaSettings.VideoIframeHeight = 150;
+                settingService.SaveSettingAsync(mediaSettings, settings => settings.VideoIframeHeight).Wait();
+            }
         }
 
         public override void Down()
