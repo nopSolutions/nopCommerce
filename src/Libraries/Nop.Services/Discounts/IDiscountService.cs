@@ -209,7 +209,7 @@ namespace Nop.Services.Discounts
         /// </returns>
         Task<IPagedList<DiscountUsageHistory>> GetAllDiscountUsageHistoryAsync(int? discountId = null,
             int? customerId = null, int? orderId = null,
-            int pageIndex = 0, int pageSize = int.MaxValue);
+            int pageIndex = 0, int pageSize = int.MaxValue, bool includeCancelledOrders = true);
 
         /// <summary>
         /// Insert discount usage history record
