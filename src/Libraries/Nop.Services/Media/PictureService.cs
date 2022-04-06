@@ -13,6 +13,7 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
+using Nop.Services.Logging;
 using Nop.Services.Seo;
 using SkiaSharp;
 using Svg;
@@ -29,6 +30,7 @@ namespace Nop.Services.Media
 
         private readonly IDownloadService _downloadService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IRepository<Picture> _pictureRepository;
@@ -45,6 +47,7 @@ namespace Nop.Services.Media
 
         public PictureService(IDownloadService downloadService,
             IHttpContextAccessor httpContextAccessor,
+            ILogger logger,
             INopFileProvider fileProvider,
             IProductAttributeParser productAttributeParser,
             IRepository<Picture> pictureRepository,
@@ -57,6 +60,7 @@ namespace Nop.Services.Media
         {
             _downloadService = downloadService;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
             _fileProvider = fileProvider;
             _productAttributeParser = productAttributeParser;
             _pictureRepository = pictureRepository;
@@ -848,7 +852,7 @@ namespace Nop.Services.Media
             seoFilename = CommonHelper.EnsureMaximumLength(seoFilename, 100);
 
             if (validateBinary)
-                pictureBinary = await ValidatePictureAsync(pictureBinary, mimeType);
+                pictureBinary = await ValidatePictureAsync(pictureBinary, mimeType, seoFilename);
 
             var picture = new Picture
             {
@@ -987,7 +991,7 @@ namespace Nop.Services.Media
             seoFilename = CommonHelper.EnsureMaximumLength(seoFilename, 100);
 
             if (validateBinary)
-                pictureBinary = await ValidatePictureAsync(pictureBinary, mimeType);
+                pictureBinary = await ValidatePictureAsync(pictureBinary, mimeType, seoFilename);
 
             var picture = await GetPictureByIdAsync(pictureId);
             if (picture == null)
@@ -1092,11 +1096,12 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
+        /// <param name="fileName">Name of file</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the picture binary or throws an exception
         /// </returns>
-        public virtual Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType)
+        public virtual async Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType, string fileName)
         {
             try
             {
@@ -1108,11 +1113,12 @@ namespace Nop.Services.Media
                     var format = GetImageFormatByMimeType(mimeType);
                     pictureBinary = ImageResize(image, format, _mediaSettings.MaximumImageSize);
                 }
-                return Task.FromResult(pictureBinary);
+                return pictureBinary;
             }
-            catch
+            catch (Exception exc)
             {
-                return Task.FromResult(pictureBinary);
+                await _logger.ErrorAsync($"Cannot decode picture binary (file name: {fileName})", exc);
+                return pictureBinary;
             }
         }
 
