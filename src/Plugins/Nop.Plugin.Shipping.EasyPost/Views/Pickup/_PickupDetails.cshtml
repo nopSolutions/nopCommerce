@@ -1,0 +1,63 @@
+﻿@model PickupModel
+
+<input asp-for="PickupId" type="hidden" />
+<input asp-for="ShipmentId" type="hidden" />
+<input asp-for="BatchId" type="hidden" />
+@if (!Model.Created || !Model.Purchased)
+{
+    <div class="card card-default no-margin">
+        <div class="card-header">
+            @T("Plugins.Shipping.EasyPost.Pickup")
+        </div>
+        <div class="card-body">
+            <p>
+                Creating a pickup allows you to schedule a pickup from your carrier from your customer's residence or place of business.<br />
+                After a pickup is successfully created, it will automatically fetch rates for each carrier that supports scheduled pickups. Then a rate must be selected and purchased before the pickup can be successfully scheduled.
+            </p>
+            @if (!Model.Created)
+            {
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Instructions" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Instructions" />
+                        <span asp-validation-for="Instructions"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="MinDate" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MinDate" />
+                        <span asp-validation-for="MinDate"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="MaxDate" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MaxDate" />
+                        <span asp-validation-for="MaxDate"></span>
+                    </div>
+                </div>
+                <nop-editor asp-for="PickupAddress" asp-template="Address" />
+            }
+
+            @if (Model.Created && !Model.Purchased)
+            {
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PickupRateId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="PickupRateId" asp-items="Model.AvailablePickupRates" />
+                        <span asp-validation-for="PickupRateId"></span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

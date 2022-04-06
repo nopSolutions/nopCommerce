@@ -29,8 +29,8 @@ namespace Nop.Services.Html
         private static readonly Regex regexBold = new(@"\[b\](.+?)\[/b\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex regexItalic = new(@"\[i\](.+?)\[/i\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex regexUnderLine = new(@"\[u\](.+?)\[/u\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex regexUrl1 = new(@"\[url\=([^\]]+)\]([^\]]+)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex regexUrl2 = new(@"\[url\](.+?)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex regexUrl1 = new(@"\[url\=(https?:.+?)\]([^\]]+)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex regexUrl2 = new(@"\[url\](https?:.+?)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex regexQuote = new(@"\[quote=(.+?)\](.+?)\[/quote\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex regexImg = new(@"\[img\](.+?)\[/img\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 

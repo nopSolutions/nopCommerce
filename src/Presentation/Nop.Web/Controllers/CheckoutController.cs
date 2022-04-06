@@ -25,6 +25,7 @@ using Nop.Web.Extensions;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Models.Checkout;
+using Nop.Web.Models.Common;
 
 namespace Nop.Web.Controllers
 {
@@ -35,7 +36,8 @@ namespace Nop.Web.Controllers
 
         private readonly AddressSettings _addressSettings;
         private readonly CustomerSettings _customerSettings;
-        private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IAddressAttributeParser _addressAttributeParser;        
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
         private readonly ICheckoutModelFactory _checkoutModelFactory;
         private readonly ICountryService _countryService;
@@ -65,6 +67,7 @@ namespace Nop.Web.Controllers
         public CheckoutController(AddressSettings addressSettings,
             CustomerSettings customerSettings,
             IAddressAttributeParser addressAttributeParser,
+            IAddressModelFactory addressModelFactory,
             IAddressService addressService,
             ICheckoutModelFactory checkoutModelFactory,
             ICountryService countryService,
@@ -90,6 +93,7 @@ namespace Nop.Web.Controllers
             _addressSettings = addressSettings;
             _customerSettings = customerSettings;
             _addressAttributeParser = addressAttributeParser;
+            _addressModelFactory = addressModelFactory;
             _addressService = addressService;
             _checkoutModelFactory = checkoutModelFactory;
             _countryService = countryService;
@@ -320,7 +324,16 @@ namespace Nop.Web.Controllers
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
 
-            var json = JsonConvert.SerializeObject(address, Formatting.Indented,
+            var addressModel = new AddressModel();
+
+            await _addressModelFactory.PrepareAddressModelAsync(addressModel,
+                address: address,
+                excludeProperties: false,
+                addressSettings: _addressSettings,
+                prePopulateWithCustomerFields: true,
+                customer: customer);
+
+            var json = JsonConvert.SerializeObject(addressModel, Formatting.Indented,
                 new JsonSerializerSettings
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
@@ -335,7 +348,7 @@ namespace Nop.Web.Controllers
         /// <param name="model"></param>
         /// <param name="opc"></param>
         /// <returns></returns>
-        public virtual async Task<IActionResult> SaveEditAddress(CheckoutBillingAddressModel model, bool opc = false)
+        public virtual async Task<IActionResult> SaveEditAddress(CheckoutBillingAddressModel model, IFormCollection form, bool opc = false)
         {
             try
             {
@@ -350,7 +363,18 @@ namespace Nop.Web.Controllers
                 if (address == null)
                     throw new Exception("Address can't be loaded");
 
+                //custom address attributes
+                var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+                var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
+
+                if(customAttributeWarnings.Any())
+                {
+                    return Json(new { error = 1, message = customAttributeWarnings });
+                }
+
                 address = model.BillingNewAddress.ToEntity(address);
+                address.CustomAttributes = customAttributes;
+
                 await _addressService.UpdateAddressAsync(address);
 
                 customer.BillingAddressId = address.Id;
@@ -1752,6 +1776,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> OpcSavePaymentInfo(IFormCollection form)
         {
             try

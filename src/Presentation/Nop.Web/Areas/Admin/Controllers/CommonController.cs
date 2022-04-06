@@ -262,6 +262,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var action = Request.Form["action"];
 
             var fileName = Request.Form["backupFileName"];
+            fileName = _fileProvider.GetFileName(_fileProvider.GetAbsolutePath(fileName));
+
             var backupPath = _maintenanceService.GetBackupPath(fileName);
 
             try

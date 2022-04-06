@@ -23,7 +23,7 @@
                 @T("Admin.Customers.ActivityLog.Clear")
             </button>
             <nop-action-confirmation asp-button-id="clearall" />
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityLogListButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ActivityLogListButtons, additionalData = Model })
         </form>
     </div>
 

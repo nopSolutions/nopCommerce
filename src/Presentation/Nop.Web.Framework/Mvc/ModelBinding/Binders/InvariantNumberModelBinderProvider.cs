@@ -43,10 +43,10 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
                 return null;
 
             if (_floatingPointTypes.Contains(modelType))
-                return new InvariantNumberModelBinder(NumberStyles.Float | NumberStyles.AllowThousands, new FloatingPointTypeModelBinderProvider().GetBinder(context));
+                return new InvariantNumberModelBinder(NumberStyles.Float, new FloatingPointTypeModelBinderProvider().GetBinder(context));
 
             if (_integerTypes.Contains(modelType))
-                return new InvariantNumberModelBinder(NumberStyles.Integer | NumberStyles.AllowThousands, new SimpleTypeModelBinderProvider().GetBinder(context));
+                return new InvariantNumberModelBinder(NumberStyles.Integer, new SimpleTypeModelBinderProvider().GetBinder(context));
 
             return null;
         }

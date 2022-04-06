@@ -127,6 +127,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.FacebookLink.Should().Be(_storeInformationSettings.FacebookLink);
             model.TwitterLink.Should().Be(_storeInformationSettings.TwitterLink);
             model.YoutubeLink.Should().Be(_storeInformationSettings.YoutubeLink);
+            model.InstagramLink.Should().Be(_storeInformationSettings.InstagramLink);
             model.WorkingLanguageId.Should().Be(1);
             model.NewsEnabled.Should().Be(_newsSettings.Enabled);
         }

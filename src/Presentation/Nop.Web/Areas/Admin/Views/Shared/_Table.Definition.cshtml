@@ -361,7 +361,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@buttonCustom.ClassName" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ');">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
+                            return '<a class="@buttonCustom.ClassName" onclick="@buttonCustom.OnClickFunctionName' + '(\'' + data + '\');">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
                         },
                         </text>
                     }

@@ -5,5 +5,5 @@
 }
 @foreach (var authenticationMethod in Model)
 {
-    @await Component.InvokeAsync(authenticationMethod.ViewComponentName)
+    @await Component.InvokeAsync(authenticationMethod.ViewComponent)
 }

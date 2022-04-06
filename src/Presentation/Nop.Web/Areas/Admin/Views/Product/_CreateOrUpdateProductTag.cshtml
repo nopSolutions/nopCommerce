@@ -16,7 +16,7 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="cards-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTagDetailsTop, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductTagDetailsTop, additionalData = Model })
                 <div class="card card-default card-popup">
                     <div class="card-body">
                         @(await Html.LocalizedEditorAsync<ProductTagModel, ProductTagLocalizedModel>("producttag-localized",
@@ -47,7 +47,7 @@
         ))
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTagDetailsBottom, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductTagDetailsBottom, additionalData = Model })
             </div>
         </div>
     </div>

@@ -37,7 +37,7 @@
     <Value>Ülke</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Ülkenizi seçin</Value>
+    <Value>Ülkenizi seçin...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Veritabanı yok ise oluştur</Value>

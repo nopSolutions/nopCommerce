@@ -195,7 +195,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var message = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
                 _notificationService.SuccessNotification(message);
 
-                return View("RestartApplication", Url.Action("List", "Plugin"));
+                if (themeDescriptors.Any())
+                    return View("RestartApplication", Url.Action("List", "Plugin"));
             }
             catch (Exception exc)
             {

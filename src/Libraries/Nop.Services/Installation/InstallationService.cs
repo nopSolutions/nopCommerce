@@ -828,31 +828,13 @@ namespace Nop.Services.Installation
 
             secondUser.BillingAddressId = defaultSecondUserAddress.Id;
             secondUser.ShippingAddressId = defaultSecondUserAddress.Id;
+            secondUser.FirstName = defaultSecondUserAddress.FirstName;
+            secondUser.LastName = defaultSecondUserAddress.LastName;
 
             await InsertInstallationDataAsync(secondUser);
 
             await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = secondUser.Id, AddressId = defaultSecondUserAddress.Id });
             await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = secondUser.Id, CustomerRoleId = crRegistered.Id });
-
-            //set default customer name
-            await InsertInstallationDataAsync(new GenericAttribute
-            {
-                EntityId = secondUser.Id,
-                Key = NopCustomerDefaults.FirstNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultSecondUserAddress.FirstName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            },
-            new GenericAttribute
-            {
-                EntityId = secondUser.Id,
-                Key = NopCustomerDefaults.LastNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultSecondUserAddress.LastName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            });
 
             //set customer password
             await InsertInstallationDataAsync(new CustomerPassword
@@ -896,31 +878,13 @@ namespace Nop.Services.Installation
 
             thirdUser.BillingAddressId = defaultThirdUserAddress.Id;
             thirdUser.ShippingAddressId = defaultThirdUserAddress.Id;
+            thirdUser.FirstName = defaultThirdUserAddress.FirstName;
+            thirdUser.LastName = defaultThirdUserAddress.LastName;
 
             await InsertInstallationDataAsync(thirdUser);
 
             await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = thirdUser.Id, AddressId = defaultThirdUserAddress.Id });
             await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = thirdUser.Id, CustomerRoleId = crRegistered.Id });
-
-            //set default customer name
-            await InsertInstallationDataAsync(new GenericAttribute
-            {
-                EntityId = thirdUser.Id,
-                Key = NopCustomerDefaults.FirstNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultThirdUserAddress.FirstName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            },
-            new GenericAttribute
-            {
-                EntityId = thirdUser.Id,
-                Key = NopCustomerDefaults.LastNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultThirdUserAddress.LastName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            });
 
             //set customer password
             await InsertInstallationDataAsync(new CustomerPassword
@@ -963,31 +927,13 @@ namespace Nop.Services.Installation
 
             fourthUser.BillingAddressId = defaultFourthUserAddress.Id;
             fourthUser.ShippingAddressId = defaultFourthUserAddress.Id;
+            fourthUser.FirstName = defaultFourthUserAddress.FirstName;
+            fourthUser.LastName = defaultFourthUserAddress.LastName;
 
             await InsertInstallationDataAsync(fourthUser);
 
             await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = fourthUser.Id, AddressId = defaultFourthUserAddress.Id });
             await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = fourthUser.Id, CustomerRoleId = crRegistered.Id });
-
-            //set default customer name
-            await InsertInstallationDataAsync(new GenericAttribute
-            {
-                EntityId = fourthUser.Id,
-                Key = NopCustomerDefaults.FirstNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultFourthUserAddress.FirstName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            },
-            new GenericAttribute
-            {
-                EntityId = fourthUser.Id,
-                Key = NopCustomerDefaults.LastNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultFourthUserAddress.LastName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            });
 
             //set customer password
             await InsertInstallationDataAsync(new CustomerPassword
@@ -1031,31 +977,13 @@ namespace Nop.Services.Installation
 
             fifthUser.BillingAddressId = defaultFifthUserAddress.Id;
             fifthUser.ShippingAddressId = defaultFifthUserAddress.Id;
+            fifthUser.FirstName = defaultFifthUserAddress.FirstName;
+            fifthUser.LastName = defaultFifthUserAddress.LastName;
 
             await InsertInstallationDataAsync(fifthUser);
 
             await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = fifthUser.Id, AddressId = defaultFifthUserAddress.Id });
             await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = fifthUser.Id, CustomerRoleId = crRegistered.Id });
-
-            //set default customer name
-            await InsertInstallationDataAsync(new GenericAttribute
-            {
-                EntityId = fifthUser.Id,
-                Key = NopCustomerDefaults.FirstNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultFifthUserAddress.FirstName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            },
-            new GenericAttribute
-            {
-                EntityId = fifthUser.Id,
-                Key = NopCustomerDefaults.LastNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultFifthUserAddress.LastName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            });
 
             //set customer password
             await InsertInstallationDataAsync(new CustomerPassword
@@ -1099,31 +1027,13 @@ namespace Nop.Services.Installation
 
             sixthUser.BillingAddressId = defaultSixthUserAddress.Id;
             sixthUser.ShippingAddressId = defaultSixthUserAddress.Id;
+            sixthUser.FirstName = defaultSixthUserAddress.FirstName;
+            sixthUser.LastName = defaultSixthUserAddress.LastName;
 
             await InsertInstallationDataAsync(sixthUser);
 
             await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = sixthUser.Id, AddressId = defaultSixthUserAddress.Id });
             await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = sixthUser.Id, CustomerRoleId = crRegistered.Id });
-
-            //set default customer name
-            await InsertInstallationDataAsync(new GenericAttribute
-            {
-                EntityId = sixthUser.Id,
-                Key = NopCustomerDefaults.FirstNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultSixthUserAddress.FirstName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            },
-            new GenericAttribute
-            {
-                EntityId = sixthUser.Id,
-                Key = NopCustomerDefaults.LastNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = defaultSixthUserAddress.LastName,
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            });
 
             //set customer password
             await InsertInstallationDataAsync(new CustomerPassword
@@ -1225,6 +1135,8 @@ namespace Nop.Services.Installation
 
             adminUser.BillingAddressId = defaultAdminUserAddress.Id;
             adminUser.ShippingAddressId = defaultAdminUserAddress.Id;
+            adminUser.FirstName = defaultAdminUserAddress.FirstName;
+            adminUser.LastName = defaultAdminUserAddress.LastName;
 
             await InsertInstallationDataAsync(adminUser);
 
@@ -1234,26 +1146,6 @@ namespace Nop.Services.Installation
                 new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crAdministrators.Id },
                 new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crForumModerators.Id },
                 new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crRegistered.Id });
-
-            //set default customer name
-            await InsertInstallationDataAsync(new GenericAttribute
-            {
-                EntityId = adminUser.Id,
-                Key = NopCustomerDefaults.FirstNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = "John",
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            },
-            new GenericAttribute
-            {
-                EntityId = adminUser.Id,
-                Key = NopCustomerDefaults.LastNameAttribute,
-                KeyGroup = nameof(Customer),
-                Value = "Smith",
-                StoreId = 0,
-                CreatedOrUpdatedDateUTC = DateTime.UtcNow
-            });
 
             //set hashed admin password
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
@@ -2903,7 +2795,9 @@ namespace Nop.Services.Installation
                 UseResponseCompression = true,
                 FaviconAndAppIconsHeadCode = "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/icons/icons_0/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/icons/icons_0/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"/icons/icons_0/android-chrome-192x192.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/icons/icons_0/favicon-16x16.png\"><link rel=\"manifest\" href=\"/icons/icons_0/site.webmanifest\"><link rel=\"mask-icon\" href=\"/icons/icons_0/safari-pinned-tab.svg\" color=\"#5bbad5\"><link rel=\"shortcut icon\" href=\"/icons/icons_0/favicon.ico\"><meta name=\"msapplication-TileColor\" content=\"#2d89ef\"><meta name=\"msapplication-TileImage\" content=\"/icons/icons_0/mstile-144x144.png\"><meta name=\"msapplication-config\" content=\"/icons/icons_0/browserconfig.xml\"><meta name=\"theme-color\" content=\"#ffffff\">",
                 EnableHtmlMinification = true,
-                RestartTimeout = NopCommonDefaults.RestartTimeout
+                RestartTimeout = NopCommonDefaults.RestartTimeout,
+                HeaderCustomHtml = string.Empty,
+                FooterCustomHtml = string.Empty
             });
 
             await settingService.SaveSettingAsync(new SeoSettings
@@ -2954,6 +2848,7 @@ namespace Nop.Services.Installation
 
             await settingService.SaveSettingAsync(new GdprSettings
             {
+                DeleteInactiveCustomersAfterMonths = 36,
                 GdprEnabled = false,
                 LogPrivacyPolicyConsent = true,
                 LogNewsletterConsent = true,
@@ -2990,8 +2885,10 @@ namespace Nop.Services.Installation
                 AllowAnonymousUsersToEmailAFriend = false,
                 RecentlyViewedProductsNumber = 3,
                 RecentlyViewedProductsEnabled = true,
-                NewProductsNumber = 6,
                 NewProductsEnabled = true,
+                NewProductsPageSize = 6,
+                NewProductsAllowCustomersToSelectPageSize = true,
+                NewProductsPageSizeOptions = "6, 3, 9",
                 CompareProductsEnabled = true,
                 CompareProductsNumber = 4,
                 ProductSearchAutoCompleteEnabled = true,
@@ -3057,7 +2954,11 @@ namespace Nop.Services.Installation
                 EnableManufacturerFiltering = true,
                 EnablePriceRangeFiltering = true,
                 EnableSpecificationAttributeFiltering = true,
-                AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay
+                DisplayFromPrices = false,
+                AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay,
+                AllowCustomersToSearchWithCategoryName = true,
+                AllowCustomersToSearchWithManufacturerName = true,
+                DisplayAllPicturesOnCatalogPages = false
             });
 
             await settingService.SaveSettingAsync(new LocalizationSettings
@@ -3176,6 +3077,7 @@ namespace Nop.Services.Installation
                 ManufacturerThumbPictureSize = 420,
                 VendorThumbPictureSize = 450,
                 CartThumbPictureSize = 80,
+                OrderThumbPictureSize = 80,
                 MiniCartThumbPictureSize = 70,
                 AutoCompleteSearchThumbPictureSize = 20,
                 ImageSquarePictureSize = 32,
@@ -3197,6 +3099,7 @@ namespace Nop.Services.Installation
                 FacebookLink = "https://www.facebook.com/nopCommerce",
                 TwitterLink = "https://twitter.com/nopCommerce",
                 YoutubeLink = "https://www.youtube.com/user/nopCommerce",
+                InstagramLink = "https://www.instagram.com/nopcommerce_official",
                 HidePoweredByNopCommerce = false
             });
 
@@ -3310,6 +3213,7 @@ namespace Nop.Services.Installation
                 CustomOrderNumberMask = "{ID}",
                 ExportWithProducts = true,
                 AllowAdminsToBuyCallForPriceProducts = true,
+                ShowProductThumbnailInOrderDetailsPage = true,
                 DisplayCustomerCurrencyOnOrders = false,
                 DisplayOrderSummary = true
             });
@@ -7959,7 +7863,7 @@ namespace Nop.Services.Installation
                     LanguageId = defaultLanguage.Id,
                     Title = "Why your online store needs a wish list",
                     BodyOverview = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p>",
-                    Body = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p><p>Does every e-Commerce store needs a wish list? The answer to this question in most cases is yes, because of the following reasons:</p><p><strong>Understanding the needs of your customers</strong> - A wish list is a great way to know what is in your customer&rsquo;s mind. Try to think the purchase history as a small portion of the customer&rsquo;s preferences. But, the wish list is like a wide open door that can give any online business a lot of valuable information about their customer and what they like or desire.</p><p><strong>Shoppers like to share their wish list with friends and family</strong> - Providing your customers a way to email their wish list to their friends and family is a pleasant way to make online shopping enjoyable for the shoppers. It is always a good idea to make the wish list sharable by a unique link so that it can be easily shared though different channels like email or on social media sites.</p><p><strong>Wish list can be a great marketing tool</strong> &ndash; Another way to look at wish list is a great marketing tool because it is extremely targeted and the recipients are always motivated to use it. For example: when your younger brother tells you that his wish list is on a certain e-Commerce store. What is the first thing you are going to do? You are most likely to visit the e-Commerce store, check out the wish list and end up buying something for your younger brother.</p><p>So, how a wish list is a marketing tool? The reason is quite simple, it introduce your online store to new customers just how it is explained in the above example.</p><p><strong>Encourage customers to return to the store site</strong> &ndash; Having a feature of wish list on the store site can increase the return traffic because it encourages customers to come back and buy later. Allowing the customers to save the wish list to their online accounts gives them a reason return to the store site and login to the account at any time to view or edit the wish list items.</p><p><strong>Wish list can be used for gifts for different occasions like weddings or birthdays. So, what kind of benefits a gift-giver gets from a wish list?</strong></p><ul><li>It gives them a surety that they didn&rsquo;t buy a wrong gift</li><li>It guarantees that the recipient will like the gift</li><li>It aasync Tasks any awkward moments when the recipient unwraps the gift and as a gift-giver you got something that the recipient do not want</li></ul><p><strong>Wish list is a great feature to have on a store site &ndash; So, what kind of benefits a business owner gets from a wish list</strong></p><ul><li>It is a great way to advertise an online store as many people do prefer to shop where their friend or family shop online</li><li>It allows the current customers to return to the store site and open doors for the new customers</li><li>It allows store admins to track what&rsquo;s in customers wish list and run promotions accordingly to target specific customer segments</li></ul><p><a href=\"https://www.nopcommerce.com/\">nopCommerce</a> offers the feature of wish list that allows customers to create a list of products that they desire or planning to buy in future.</p>",
+                    Body = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p><p>Does every e-Commerce store needs a wish list? The answer to this question in most cases is yes, because of the following reasons:</p><p><strong>Understanding the needs of your customers</strong> - A wish list is a great way to know what is in your customer&rsquo;s mind. Try to think the purchase history as a small portion of the customer&rsquo;s preferences. But, the wish list is like a wide open door that can give any online business a lot of valuable information about their customer and what they like or desire.</p><p><strong>Shoppers like to share their wish list with friends and family</strong> - Providing your customers a way to email their wish list to their friends and family is a pleasant way to make online shopping enjoyable for the shoppers. It is always a good idea to make the wish list sharable by a unique link so that it can be easily shared though different channels like email or on social media sites.</p><p><strong>Wish list can be a great marketing tool</strong> &ndash; Another way to look at wish list is a great marketing tool because it is extremely targeted and the recipients are always motivated to use it. For example: when your younger brother tells you that his wish list is on a certain e-Commerce store. What is the first thing you are going to do? You are most likely to visit the e-Commerce store, check out the wish list and end up buying something for your younger brother.</p><p>So, how a wish list is a marketing tool? The reason is quite simple, it introduce your online store to new customers just how it is explained in the above example.</p><p><strong>Encourage customers to return to the store site</strong> &ndash; Having a feature of wish list on the store site can increase the return traffic because it encourages customers to come back and buy later. Allowing the customers to save the wish list to their online accounts gives them a reason return to the store site and login to the account at any time to view or edit the wish list items.</p><p><strong>Wish list can be used for gifts for different occasions like weddings or birthdays. So, what kind of benefits a gift-giver gets from a wish list?</strong></p><ul><li>It gives them a surety that they didn&rsquo;t buy a wrong gift</li><li>It guarantees that the recipient will like the gift</li><li>It avoids any awkward moments when the recipient unwraps the gift and as a gift-giver you got something that the recipient do not want</li></ul><p><strong>Wish list is a great feature to have on a store site &ndash; So, what kind of benefits a business owner gets from a wish list</strong></p><ul><li>It is a great way to advertise an online store as many people do prefer to shop where their friend or family shop online</li><li>It allows the current customers to return to the store site and open doors for the new customers</li><li>It allows store admins to track what&rsquo;s in customers wish list and run promotions accordingly to target specific customer segments</li></ul><p><a href=\"https://www.nopcommerce.com/\">nopCommerce</a> offers the feature of wish list that allows customers to create a list of products that they desire or planning to buy in future.</p>",
                     Tags = "e-commerce, nopCommerce, sample tag, money",
                     CreatedOnUtc = DateTime.UtcNow.AddSeconds(1)
                 }
@@ -8905,9 +8809,57 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "ImportNewsLetterSubscriptions",
+                    Enabled = true,
+                    Name = "Newsletter subscriptions were imported"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "ImportStates",
                     Enabled = true,
                     Name = "States were imported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportCustomers",
+                    Enabled = true,
+                    Name = "Customers were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportCategories",
+                    Enabled = true,
+                    Name = "Categories were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportManufacturers",
+                    Enabled = true,
+                    Name = "Manufacturers were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportProducts",
+                    Enabled = true,
+                    Name = "Products were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportOrders",
+                    Enabled = true,
+                    Name = "Orders were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportStates",
+                    Enabled = true,
+                    Name = "States were exported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportNewsLetterSubscriptions",
+                    Enabled = true,
+                    Name = "Newsletter subscriptions were exported"
                 },
                 new ActivityLogType
                 {
@@ -9195,6 +9147,15 @@ namespace Nop.Services.Installation
                     Type = "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services",
                     Enabled = true,
                     LastEnabledUtc = lastEnabledUtc,
+                    StopOnError = false
+                },
+                new ScheduleTask
+                {
+                    Name = "Delete inactive customers (GDPR)",
+                    //24 hours
+                    Seconds = 86400,
+                    Type = "Nop.Services.Gdpr.DeleteInactiveCustomersTask, Nop.Services",
+                    Enabled = false,
                     StopOnError = false
                 }
             };

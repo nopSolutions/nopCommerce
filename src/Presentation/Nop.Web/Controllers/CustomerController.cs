@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -55,9 +56,9 @@ namespace Nop.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
-        private readonly IDownloadService _downloadService;
         private readonly ForumSettings _forumSettings;
         private readonly GdprSettings _gdprSettings;
+        private readonly HtmlEncoder _htmlEncoder;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
@@ -70,6 +71,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerModelFactory _customerModelFactory;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICustomerService _customerService;
+        private readonly IDownloadService _downloadService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IExportManager _exportManager;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
@@ -104,9 +106,9 @@ namespace Nop.Web.Controllers
             CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
-            IDownloadService downloadService,
             ForumSettings forumSettings,
             GdprSettings gdprSettings,
+            HtmlEncoder htmlEncoder,
             IAddressAttributeParser addressAttributeParser,
             IAddressModelFactory addressModelFactory,
             IAddressService addressService,
@@ -119,6 +121,7 @@ namespace Nop.Web.Controllers
             ICustomerModelFactory customerModelFactory,
             ICustomerRegistrationService customerRegistrationService,
             ICustomerService customerService,
+            IDownloadService downloadService,
             IEventPublisher eventPublisher,
             IExportManager exportManager,
             IExternalAuthenticationService externalAuthenticationService,
@@ -149,9 +152,9 @@ namespace Nop.Web.Controllers
             _captchaSettings = captchaSettings;
             _customerSettings = customerSettings;
             _dateTimeSettings = dateTimeSettings;
-            _downloadService = downloadService;
             _forumSettings = forumSettings;
             _gdprSettings = gdprSettings;
+            _htmlEncoder = htmlEncoder;
             _addressAttributeParser = addressAttributeParser;
             _addressModelFactory = addressModelFactory;
             _addressService = addressService;
@@ -164,6 +167,7 @@ namespace Nop.Web.Controllers
             _customerModelFactory = customerModelFactory;
             _customerRegistrationService = customerRegistrationService;
             _customerService = customerService;
+            _downloadService = downloadService;
             _eventPublisher = eventPublisher;
             _exportManager = exportManager;
             _externalAuthenticationService = externalAuthenticationService;
@@ -425,7 +429,7 @@ namespace Nop.Web.Controllers
             {
                 var fullName = await _customerService.GetCustomerFullNameAsync(customer);
                 var message = await _localizationService.GetResourceAsync("Account.Login.AlreadyLogin");
-                _notificationService.SuccessNotification(string.Format(message, fullName));
+                _notificationService.SuccessNotification(string.Format(message, _htmlEncoder.Encode(fullName)));
             }
 
             return View(model);
@@ -825,16 +829,15 @@ namespace Nop.Web.Controllers
                 {
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                    {
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.TimeZoneIdAttribute, model.TimeZoneId);
-                    }
+                        customer.TimeZoneId = model.TimeZoneId;
+
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
                     {
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.VatNumberAttribute, model.VatNumber);
+                        customer.VatNumber = model.VatNumber;
 
                         var (vatNumberStatus, _, vatAddress) = await _taxService.GetVatNumberStatusAsync(model.VatNumber);
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.VatNumberStatusIdAttribute, (int)vatNumberStatus);
+                        customer.VatNumberStatusId = (int)vatNumberStatus;
                         //send VAT number admin notification
                         if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
                             await _workflowMessageService.SendNewVatSubmittedStoreOwnerNotificationAsync(customer, model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
@@ -842,37 +845,37 @@ namespace Nop.Web.Controllers
 
                     //form fields
                     if (_customerSettings.GenderEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.GenderAttribute, model.Gender);
+                        customer.Gender = model.Gender;
                     if (_customerSettings.FirstNameEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
+                        customer.FirstName = model.FirstName;
                     if (_customerSettings.LastNameEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
+                        customer.LastName = model.LastName;
                     if (_customerSettings.DateOfBirthEnabled)
-                    {
-                        var dateOfBirth = model.ParseDateOfBirth();
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DateOfBirthAttribute, dateOfBirth);
-                    }
+                        customer.DateOfBirth = model.ParseDateOfBirth();
                     if (_customerSettings.CompanyEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CompanyAttribute, model.Company);
+                        customer.Company = model.Company;
                     if (_customerSettings.StreetAddressEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StreetAddressAttribute, model.StreetAddress);
+                        customer.StreetAddress = model.StreetAddress;
                     if (_customerSettings.StreetAddress2Enabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StreetAddress2Attribute, model.StreetAddress2);
+                        customer.StreetAddress2 = model.StreetAddress2;
                     if (_customerSettings.ZipPostalCodeEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.ZipPostalCodeAttribute, model.ZipPostalCode);
+                        customer.ZipPostalCode = model.ZipPostalCode;
                     if (_customerSettings.CityEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CityAttribute, model.City);
+                        customer.City = model.City;
                     if (_customerSettings.CountyEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CountyAttribute, model.County);
+                        customer.County = model.County;
                     if (_customerSettings.CountryEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CountryIdAttribute, model.CountryId);
+                        customer.CountryId = model.CountryId;
                     if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StateProvinceIdAttribute,
-                            model.StateProvinceId);
+                        customer.StateProvinceId = model.StateProvinceId;
                     if (_customerSettings.PhoneEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PhoneAttribute, model.Phone);
+                        customer.Phone = model.Phone;
                     if (_customerSettings.FaxEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.FaxAttribute, model.Fax);
+                        customer.Fax = model.Fax;
+
+                    //save customer attributes
+                    customer.CustomCustomerAttributesXML = customerAttributesXml;
+                    await _customerService.UpdateCustomerAsync(customer);
 
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
@@ -953,29 +956,26 @@ namespace Nop.Web.Controllers
                         }
                     }
 
-                    //save customer attributes
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
-
                     //insert default address (if possible)
                     var defaultAddress = new Address
                     {
-                        FirstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute),
-                        LastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute),
+                        FirstName = customer.FirstName,
+                        LastName = customer.LastName,
                         Email = customer.Email,
-                        Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute),
-                        CountryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute) > 0
-                            ? (int?)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute)
+                        Company = customer.Company,
+                        CountryId = customer.CountryId > 0
+                            ? (int?)customer.CountryId
                             : null,
-                        StateProvinceId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute) > 0
-                            ? (int?)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute)
+                        StateProvinceId = customer.StateProvinceId > 0
+                            ? (int?)customer.StateProvinceId
                             : null,
-                        County = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute),
-                        City = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute),
-                        Address1 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute),
-                        Address2 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute),
-                        ZipPostalCode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute),
-                        PhoneNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute),
-                        FaxNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute),
+                        County = customer.County,
+                        City = customer.City,
+                        Address1 = customer.StreetAddress,
+                        Address2 = customer.StreetAddress2,
+                        ZipPostalCode = customer.ZipPostalCode,
+                        PhoneNumber = customer.Phone,
+                        FaxNumber = customer.Fax,
                         CreatedOnUtc = customer.CreatedOnUtc
                     };
                     if (await _addressService.IsAddressValidAsync(defaultAddress))
@@ -1225,21 +1225,18 @@ namespace Nop.Web.Controllers
 
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                    {
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.TimeZoneIdAttribute,
-                            model.TimeZoneId);
-                    }
+                        customer.TimeZoneId = model.TimeZoneId;
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
                     {
-                        var prevVatNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
+                        var prevVatNumber = customer.VatNumber;
+                        customer.VatNumber = model.VatNumber;
 
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.VatNumberAttribute,
-                            model.VatNumber);
                         if (prevVatNumber != model.VatNumber)
                         {
                             var (vatNumberStatus, _, vatAddress) = await _taxService.GetVatNumberStatusAsync(model.VatNumber);
-                            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.VatNumberStatusIdAttribute, (int)vatNumberStatus);
+                            customer.VatNumberStatusId = (int)vatNumberStatus;
+
                             //send VAT number admin notification
                             if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
                                 await _workflowMessageService.SendNewVatSubmittedStoreOwnerNotificationAsync(customer,
@@ -1249,36 +1246,36 @@ namespace Nop.Web.Controllers
 
                     //form fields
                     if (_customerSettings.GenderEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.GenderAttribute, model.Gender);
+                        customer.Gender = model.Gender;
                     if (_customerSettings.FirstNameEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
+                        customer.FirstName = model.FirstName;
                     if (_customerSettings.LastNameEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
+                        customer.LastName = model.LastName;
                     if (_customerSettings.DateOfBirthEnabled)
-                    {
-                        var dateOfBirth = model.ParseDateOfBirth();
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DateOfBirthAttribute, dateOfBirth);
-                    }
+                        customer.DateOfBirth = model.ParseDateOfBirth();
                     if (_customerSettings.CompanyEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CompanyAttribute, model.Company);
+                        customer.Company = model.Company;
                     if (_customerSettings.StreetAddressEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StreetAddressAttribute, model.StreetAddress);
+                        customer.StreetAddress = model.StreetAddress;
                     if (_customerSettings.StreetAddress2Enabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StreetAddress2Attribute, model.StreetAddress2);
+                        customer.StreetAddress2 = model.StreetAddress2;
                     if (_customerSettings.ZipPostalCodeEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.ZipPostalCodeAttribute, model.ZipPostalCode);
+                        customer.ZipPostalCode = model.ZipPostalCode;
                     if (_customerSettings.CityEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CityAttribute, model.City);
+                        customer.City = model.City;
                     if (_customerSettings.CountyEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CountyAttribute, model.County);
+                        customer.County = model.County;
                     if (_customerSettings.CountryEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CountryIdAttribute, model.CountryId);
+                        customer.CountryId = model.CountryId;
                     if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.StateProvinceIdAttribute, model.StateProvinceId);
+                        customer.StateProvinceId = model.StateProvinceId;
                     if (_customerSettings.PhoneEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PhoneAttribute, model.Phone);
+                        customer.Phone = model.Phone;
                     if (_customerSettings.FaxEnabled)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.FaxAttribute, model.Fax);
+                        customer.Fax = model.Fax;
+
+                    customer.CustomCustomerAttributesXML = customerAttributesXml;
+                    await _customerService.UpdateCustomerAsync(customer);
 
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
@@ -1316,10 +1313,6 @@ namespace Nop.Web.Controllers
 
                     if (_forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled)
                         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SignatureAttribute, model.Signature);
-
-                    //save customer attributes
-                    await _genericAttributeService.SaveAttributeAsync(customer,
-                        NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
 
                     //GDPR
                     if (_gdprSettings.GdprEnabled)
@@ -1644,7 +1637,15 @@ namespace Nop.Web.Controllers
                 if (changePasswordResult.Success)
                 {
                     _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
-                    return string.IsNullOrEmpty(returnUrl)  ? View(model) : new RedirectResult(returnUrl);
+
+                    if (string.IsNullOrEmpty(returnUrl))
+                        return View(model);
+
+                    //prevent open redirection attack
+                    if (!Url.IsLocalUrl(returnUrl))
+                        returnUrl = Url.RouteUrl("Homepage");
+
+                    return new RedirectResult(returnUrl);
                 }
 
                 //errors
@@ -1685,6 +1686,11 @@ namespace Nop.Web.Controllers
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
 
+            var contentType = uploadedFile.ContentType.ToLowerInvariant();
+
+            if (!contentType.Equals("image/jpeg") && !contentType.Equals("image/gif"))
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Avatar.UploadRules"));
+
             if (ModelState.IsValid)
             {
                 try
@@ -1698,9 +1704,9 @@ namespace Nop.Web.Controllers
 
                         var customerPictureBinary = await _downloadService.GetDownloadBitsAsync(uploadedFile);
                         if (customerAvatar != null)
-                            customerAvatar = await _pictureService.UpdatePictureAsync(customerAvatar.Id, customerPictureBinary, uploadedFile.ContentType, null);
+                            customerAvatar = await _pictureService.UpdatePictureAsync(customerAvatar.Id, customerPictureBinary, contentType, null);
                         else
-                            customerAvatar = await _pictureService.InsertPictureAsync(customerPictureBinary, uploadedFile.ContentType, null);
+                            customerAvatar = await _pictureService.InsertPictureAsync(customerPictureBinary, contentType, null);
                     }
 
                     var customerAvatarId = 0;

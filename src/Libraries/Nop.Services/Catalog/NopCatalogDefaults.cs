@@ -273,6 +273,24 @@ namespace Nop.Services.Catalog
         /// </remarks>
         public static string ProductPricePrefix => "Nop.totals.productprice.{0}";
 
+        /// <summary>
+        /// Gets a key for product multiple prices
+        /// </summary>
+        /// <remarks>
+        /// {0} : product id
+        /// {1} : customer role ids
+        /// {2} : store id
+        /// </remarks>
+        public static CacheKey ProductMultiplePriceCacheKey => new("Nop.totals.productprice.multiple.{0}-{1}-{2}", ProductMultiplePricePrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        /// <remarks>
+        /// {0} : product id
+        /// </remarks>
+        public static string ProductMultiplePricePrefix => "Nop.totals.productprice.multiple.{0}";
+
         #endregion
 
         #region Product attributes

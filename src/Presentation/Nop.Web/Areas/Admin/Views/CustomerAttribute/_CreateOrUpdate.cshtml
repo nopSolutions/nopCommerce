@@ -19,7 +19,7 @@
                 <nop-card asp-name="customerattribute-info" asp-icon="fas fa-info" asp-title="@T("Admin.Customers.CustomerAttributes.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
                 <nop-card asp-name="customerattribute-values" asp-icon="fas fa-check-square" asp-title="@T("Admin.Customers.CustomerAttributes.Values")" asp-hide-block-attribute-name="@hideValuesBlockAttributeName" asp-hide="@hideValuesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-card>
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

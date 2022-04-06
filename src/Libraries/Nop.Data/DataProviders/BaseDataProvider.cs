@@ -195,6 +195,7 @@ namespace Nop.Data.DataProviders
                 return new NopEntityDescriptor
                 {
                     EntityName = tableName,
+                    SchemaName = builder.Expression.SchemaName,
                     Fields = builder.Expression.Columns.Select(column => new NopEntityFieldDescriptor
                     {
                         Name = column.Name,

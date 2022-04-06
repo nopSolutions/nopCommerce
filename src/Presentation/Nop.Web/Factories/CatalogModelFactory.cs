@@ -700,7 +700,7 @@ namespace Nop.Web.Factories
             //view mode
             await PrepareViewModesAsync(model, command);
             //page size
-            await PreparePageSizeOptionsAsync(model, command, category.AllowCustomersToSelectPageSize, 
+            await PreparePageSizeOptionsAsync(model, command, category.AllowCustomersToSelectPageSize,
                 category.PageSizeOptions, category.PageSize);
 
             var categoryIds = new List<int> { category.Id };
@@ -786,7 +786,7 @@ namespace Nop.Web.Factories
 
             return model;
         }
-        
+
         /// <summary>
         /// Prepare category (simple) models
         /// </summary>
@@ -902,7 +902,7 @@ namespace Nop.Web.Factories
                 return XDocument.Parse(xml);
             });
         }
-        
+
         #endregion
 
         #region Manufacturers
@@ -1542,6 +1542,44 @@ namespace Nop.Web.Factories
 
         #endregion
 
+        #region New products
+
+        /// <summary>
+        /// Prepare new products model
+        /// </summary>
+        /// <param name="command">Model to get the catalog products</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the new products model
+        /// </returns>
+        public virtual async Task<CatalogProductsModel> PrepareNewProductsModelAsync(CatalogProductsCommand command)
+        {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
+            var model = new CatalogProductsModel
+            {
+                UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading
+            };
+
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+
+            //page size
+            await PreparePageSizeOptionsAsync(model, command, _catalogSettings.NewProductsAllowCustomersToSelectPageSize,
+                _catalogSettings.NewProductsPageSizeOptions, _catalogSettings.NewProductsPageSize);
+
+            //products
+            var products = await _productService.GetProductsMarkedAsNewAsync(storeId: currentStore.Id,
+                pageIndex: command.PageNumber - 1,
+                pageSize: command.PageSize);
+
+            await PrepareCatalogProductsAsync(model, products);
+
+            return model;
+        }
+
+        #endregion
+
         #region Searching
 
         /// <summary>
@@ -1679,7 +1717,7 @@ namespace Nop.Web.Factories
                 : searchModel.q.Trim();
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
-            // only search if query string search keyword is set (used to aasync Task searching or displaying search term min length error message on /search page load)
+            //only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
             //we don't use "!string.IsNullOrEmpty(searchTerms)" in cases of "ProductSearchTermMinimumLength" set to 0 but searching by other parameters (e.g. category or price filter)
             var isSearchTermSpecified = _httpContextAccessor.HttpContext.Request.Query.ContainsKey("q");
             if (isSearchTermSpecified)
@@ -1850,7 +1888,7 @@ namespace Nop.Web.Factories
         #endregion
 
         #region Common
-        
+
         /// <summary>
         /// Prepare sorting options
         /// </summary>
@@ -1998,7 +2036,7 @@ namespace Nop.Web.Factories
 
             return Task.CompletedTask;
         }
-        
+
         #endregion
     }
 }

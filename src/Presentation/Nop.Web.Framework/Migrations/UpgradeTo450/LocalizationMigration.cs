@@ -45,7 +45,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             {
                 //#5696
                 ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords"] = "Search keywords",
-                ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint"] = "Search message template(s) by specific keywords.",
+                ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint"] = "Keywords to search by name, body, or subject.",
 
 				//New configurations to forward proxied headers
                 ["Admin.Configuration.AppSettings.Hosting.ForwardedForHeaderName"] = "The header used to retrieve the originating client IP",
@@ -72,7 +72,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Admin.Common.Alert.NothingSelected"] = "Please select at least one record.",
 
                 //#5316
-                ["Account.Login.AlreadyLogin"] = "You are already logged in as {0}. You may log in to another account.",
+                ["Account.Login.AlreadyLogin"] = "You are already logged in as {0}. You may log in with another account.",
 
                 //#5511
                 ["Admin.Configuration.AppSettings.Data"] = "Data configuration",
@@ -144,7 +144,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
                 //#5204
                 ["Admin.Configuration.Settings.Shipping.ShippingSorting"] = "Sort shipping methods by",
-                ["Admin.Configuration.Settings.Shipping.ShippingSorting.Hint"] = "Select the field to sort the shipping by.",
+                ["Admin.Configuration.Settings.Shipping.ShippingSorting.Hint"] = "Select the field to sort shipping methods by.",
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.Position"] = "Position",
                 ["Enums.Nop.Core.Domain.Shipping.ShippingSortingEnum.ShippingCost"] = "Shipping Cost",
                 //#5138
@@ -164,7 +164,22 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 //#4905
                 ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate"] = "Maximum redeemed rate",
                 ["Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate.Hint"] = "Limit the maximum order total that could be paid by reward points (in percent). For example, if set to 0.6, then only 60% of order total could be paid using reward points, but not more than the 'Maximum reward points to use per order'. Set to 0 if you do not want to use this setting.",
-                ["Checkout.UseRewardPoints"] = "Use my reward points, {0} of {1} reward points ({2}) available for this order"
+                ["Checkout.UseRewardPoints"] = "Use my reward points, {0} of {1} reward points ({2}) available for this order",
+
+                //#6007
+                ["Admin.System.Templates.NotDeleteOnlyOne"] = "It's not allowed to delete the only one template.",
+
+                //#6034
+                ["Checkout.EditAddress"] = "Edit address",
+
+                //#6052
+                ["Account.Login.NewCustomerText"] = "By creating an account on our website, you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made.",
+
+                ["Permission.SalesSummaryReport"] = "Admin area. Access sales summary report",
+                ["Permission.ManageAppSettings"] = "Admin area. Manage App Setting",
+                ["Permission.ManageExternalAuthenticationMethods"] = "Admin area. Manage External Authentication Methods",
+                ["Permission.ManageMultifactorAuthenticationMethods"] = "Admin area. Manage Multifactor Authentication Methods",
+                ["Permission.AccessProfiling"] = "Public store. Access MiniProfiler results"
             }, languageId).Wait();
 
             // rename locales

@@ -50,7 +50,7 @@ namespace Nop.Web.Factories
                 .LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), store.Id))
                 .Select(authenticationMethod => new ExternalAuthenticationMethodModel
                 {
-                    ViewComponentName = authenticationMethod.GetPublicViewComponentName()
+                    ViewComponent = authenticationMethod.GetPublicViewComponent()
                 })
                 .ToList();
         }

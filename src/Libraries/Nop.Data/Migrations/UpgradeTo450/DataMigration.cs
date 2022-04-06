@@ -99,6 +99,32 @@ namespace Nop.Data.Migrations.UpgradeTo450
                 Alter.Table(returnRequestTableName)
                     .AddColumn(returnedQuantityColumnName).AsInt32().NotNullable().SetExistingRowsTo(0);
             }
+
+            //#6053
+            if (!_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "ManageAppSettings", StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                var manageConnectionStringPermission = _dataProvider.InsertEntity(
+                    new PermissionRecord
+                    {
+                        Name = "Admin area. Manage App Settings",
+                        SystemName = "ManageAppSettings",
+                        Category = "Configuration"
+                    }
+                );
+
+                //add it to the Admin role by default
+                var adminRole = _dataProvider
+                    .GetTable<CustomerRole>()
+                    .FirstOrDefault(x => x.IsSystemRole && x.SystemName == NopCustomerDefaults.AdministratorsRoleName);
+
+                _dataProvider.InsertEntity(
+                    new PermissionRecordCustomerRoleMapping
+                    {
+                        CustomerRoleId = adminRole.Id,
+                        PermissionRecordId = manageConnectionStringPermission.Id
+                    }
+                );
+            }
         }
 
         public override void Down()
