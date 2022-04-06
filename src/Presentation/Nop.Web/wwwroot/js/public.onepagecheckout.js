@@ -573,13 +573,15 @@ var ConfirmOrder = {
     form: false,
     saveUrl: false,
     isSuccess: false,
+    recaptchaPublicKey: "",
 
-    init: function (saveUrl, successUrl) {
+    init: function (saveUrl, successUrl, recaptchaPublicKey) {
         this.saveUrl = saveUrl;
         this.successUrl = successUrl;
+        this.recaptchaPublicKey = recaptchaPublicKey;
     },
 
-  save: function () {
+  save: async function () {
         if (Checkout.loadWaiting !== false) return;
 
         //terms of service
@@ -593,16 +595,18 @@ var ConfirmOrder = {
                 termOfServiceOk = true;
             }
         }
-        var captchaValid = true;
-        if ($('.captcha-box').length > 0) {
-            if (grecaptcha.getResponse().length == 0) {
-              captchaValid = false;
-            }
-        }
         if (termOfServiceOk) {
-            Checkout.setLoadWaiting('confirm-order');
-          var postData = { "captchaValid": captchaValid };
-          console.log(postData);
+          Checkout.setLoadWaiting('confirm-order');
+          var postData = {};
+          if ($(".captcha-box").length > 0) {
+            postData = { "g-recaptcha-response": grecaptcha.getResponse() };
+          }
+          else if ($("[name='g-recaptcha-response']").length > 0) {
+            var recaptchaToken = await this.getCaptchaToken();
+            postData = { "g-recaptcha-response": recaptchaToken };
+            console.log(recaptchaToken);
+          }
+
             addAntiForgeryToken(postData);
             $.ajax({
                 cache: false,
@@ -616,6 +620,19 @@ var ConfirmOrder = {
         } else {
             return false;
         }
+    },
+
+    getCaptchaToken: async function () {
+      var recaptchaToken = "";
+      grecaptcha.ready(() => {
+        grecaptcha.execute(this.recaptchaPublicKey, { action: 'OpcConfirmOrder' }).then((token) => {
+          recaptchaToken = token;
+        });
+      });
+      while (recaptchaToken == '') {
+        await new Promise(t => setTimeout(t, 100));
+      }
+      return recaptchaToken;
     },
 
     resetLoadWaiting: function (transport) {

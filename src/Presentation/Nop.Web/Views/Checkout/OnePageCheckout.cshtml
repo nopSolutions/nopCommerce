@@ -1,9 +1,11 @@
 ﻿@model OnePageCheckoutModel
 @using Nop.Core
+@using Nop.Core.Domain.Security
 @using Nop.Services.Customers
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
 @inject ICustomerService _customerService
+@inject CaptchaSettings captchaSettings
 @{
     Layout = "_ColumnsOne";
 
@@ -200,7 +202,7 @@
                         @*confirm order content will be loaded here*@
                     </div>
                     <script asp-location="Footer">
-                        ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@Url.RouteUrl("CheckoutCompleted")');
+                        ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@Url.RouteUrl("CheckoutCompleted")', '@captchaSettings.ReCaptchaPublicKey');
                     </script>
                     <div class="buttons" id="confirm-order-buttons-container">
                         <p class="back-link">

@@ -74,6 +74,10 @@
                             }
                         </div>
                     }
+                    @if(Model.ShowCaptcha)
+                    {
+                        <nop-captcha />
+                    }
                     <div class="buttons">
                         <button type="submit" name="nextstep" class="button-1 confirm-order-next-step-button">@T("Checkout.ConfirmButton")</button>
                     </div>

@@ -25,6 +25,7 @@ using Nop.Services.Shipping;
 using Nop.Web.Extensions;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Checkout;
 using Nop.Web.Models.Common;
 
@@ -1130,7 +1131,8 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Confirm")]
-        public virtual async Task<IActionResult> ConfirmOrder()
+        [ValidateCaptcha]
+        public virtual async Task<IActionResult> ConfirmOrder(bool captchaValid)
         {
             //validation
             if (_orderSettings.CheckoutDisabled)
@@ -1151,6 +1153,14 @@ namespace Nop.Web.Controllers
 
             //model
             var model = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnGuestCheckout && await _customerService.IsGuestAsync(customer) && !captchaValid)
+            {
+                model.Warnings.Add(await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+                return View(model);
+            }
+
             try
             {
                 //prevent 2 orders being placed within an X seconds time frame
@@ -1852,6 +1862,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateCaptcha]
         public virtual async Task<IActionResult> OpcConfirmOrder(bool captchaValid)
         {
             try
