@@ -604,7 +604,6 @@ var ConfirmOrder = {
           else if ($("[name='g-recaptcha-response']").length > 0) {
             var recaptchaToken = await this.getCaptchaToken();
             postData = { "g-recaptcha-response": recaptchaToken };
-            console.log(recaptchaToken);
           }
 
             addAntiForgeryToken(postData);
