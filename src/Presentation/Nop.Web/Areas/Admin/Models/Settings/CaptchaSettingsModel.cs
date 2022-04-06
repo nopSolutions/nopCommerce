@@ -61,6 +61,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ShowOnForum { get; set; }
         public bool ShowOnForum_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnGuestCheckout")]
+        public bool ShowOnGuestCheckout { get; set; }
+        public bool ShowOnGuestCheckout_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
         public string ReCaptchaPublicKey { get; set; }
         public bool ReCaptchaPublicKey_OverrideForStore { get; set; }

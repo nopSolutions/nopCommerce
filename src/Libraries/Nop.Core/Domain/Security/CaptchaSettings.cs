@@ -73,6 +73,11 @@ namespace Nop.Core.Domain.Security
         public bool ShowOnForum { get; set; }
 
         /// <summary>
+        /// A value indicating whether CAPTCHA should be displayed on the checkout page for guests
+        /// </summary>
+        public bool ShowOnGuestCheckout { get; set; }
+
+        /// <summary>
         /// The base reCAPTCHA API URL
         /// </summary>
         public string ReCaptchaApiUrl { get; set; }

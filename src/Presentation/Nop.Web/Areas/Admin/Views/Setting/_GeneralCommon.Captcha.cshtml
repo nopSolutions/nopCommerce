@@ -144,6 +144,16 @@
                 <span asp-validation-for="CaptchaSettings.ShowOnForum"></span>
             </div>
         </div>
+        <div class="form-group row" id="ssCaptchaShowOnGuestCheckout">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnGuestCheckout_OverrideForStore" asp-input="CaptchaSettings.ShowOnGuestCheckout" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnGuestCheckout" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnGuestCheckout" />
+                <span asp-validation-for="CaptchaSettings.ShowOnGuestCheckout"></span>
+            </div>
+        </div>
         <div class="form-group row" id="ssReCaptchaPublicKeypnl">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPublicKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -195,6 +205,7 @@
             $('#ssCaptchaShowOnProductReviewPagepnl').showElement();
             $('#ssCaptchaShowOnApplyVendorPagepnl').showElement();
             $('#ssCaptchaShowOnForumpnl').showElement();
+            $('#ssCaptchaShowOnGuestCheckout').showElement();
             $('#ssReCaptchaPublicKeypnl').showElement();
             $('#ssReCaptchaPrivateKeypnl').showElement();
             toggleReCaptchaV3ScoreThreshold();
@@ -212,6 +223,7 @@
             $('#ssCaptchaShowOnProductReviewPagepnl').hideElement();
             $('#ssCaptchaShowOnApplyVendorPagepnl').hideElement();
             $('#ssCaptchaShowOnForumpnl').hideElement();
+            $('#ssCaptchaShowOnGuestCheckout').hideElement();
             $('#ssReCaptchaPublicKeypnl').hideElement();
             $('#ssReCaptchaPrivateKeypnl').hideElement();
         }

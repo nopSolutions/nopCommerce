@@ -7248,6 +7248,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnRegistrationPage.Hint">
     <Value>Check to show CAPTCHA on registration page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnGuestCheckout">
+      <Value>Show on Confirm Checkout for guests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnGuestCheckout.Hint">
+      <Value>Check to show CAPTCHA on Confirm Checkout page for guests.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaType">
     <Value>Type of reCAPTCHA</Value>
   </LocaleResource>

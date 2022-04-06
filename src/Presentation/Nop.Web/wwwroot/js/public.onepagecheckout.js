@@ -593,9 +593,16 @@ var ConfirmOrder = {
                 termOfServiceOk = true;
             }
         }
+        var captchaValid = true;
+        if ($('.captcha-box').length > 0) {
+            if (grecaptcha.getResponse().length == 0) {
+              captchaValid = false;
+            }
+        }
         if (termOfServiceOk) {
             Checkout.setLoadWaiting('confirm-order');
-            var postData = {};
+          var postData = { "captchaValid": captchaValid };
+          console.log(postData);
             addAntiForgeryToken(postData);
             $.ajax({
                 cache: false,

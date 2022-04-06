@@ -8,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -57,6 +58,7 @@ namespace Nop.Web.Factories
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly CaptchaSettings _captchaSettings;
 
         #endregion
 
@@ -89,7 +91,8 @@ namespace Nop.Web.Factories
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            CaptchaSettings captchaSettings)
         {
             _addressSettings = addressSettings;
             _commonSettings = commonSettings;
@@ -119,6 +122,7 @@ namespace Nop.Web.Factories
             _paymentSettings = paymentSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _captchaSettings = captchaSettings;
         }
 
         #endregion
@@ -567,7 +571,9 @@ namespace Nop.Web.Factories
             {
                 //terms of service
                 TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage,
-                TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks
+                TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks,
+                ShowCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnGuestCheckout &&
+                    await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()),
             };
             //min order amount validation
             var minOrderTotalAmountOk = await _orderProcessingService.ValidateMinOrderTotalAmountAsync(cart);
@@ -636,7 +642,7 @@ namespace Nop.Web.Factories
             {
                 ShippingRequired = await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart),
                 DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && (await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).Any(),
-                BillingAddress = await PrepareBillingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true)
+                BillingAddress = await PrepareBillingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true),
             };
             return model;
         }

@@ -10,6 +10,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Http.Extensions;
 using Nop.Services.Catalog;
@@ -59,6 +60,7 @@ namespace Nop.Web.Controllers
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly CaptchaSettings _captchaSettings;
 
         #endregion
 
@@ -88,7 +90,8 @@ namespace Nop.Web.Controllers
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            CaptchaSettings captchaSettings)
         {
             _addressSettings = addressSettings;
             _customerSettings = customerSettings;
@@ -115,6 +118,7 @@ namespace Nop.Web.Controllers
             _paymentSettings = paymentSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _captchaSettings = captchaSettings;
         }
 
         #endregion
@@ -1848,7 +1852,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> OpcConfirmOrder()
+        public virtual async Task<IActionResult> OpcConfirmOrder(bool captchaValid)
         {
             try
             {
@@ -1868,6 +1872,25 @@ namespace Nop.Web.Controllers
 
                 if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
+
+                CheckoutConfirmModel confirmOrderModel;
+
+                //validate CAPTCHA
+                if (_captchaSettings.Enabled && _captchaSettings.ShowOnGuestCheckout
+                    && await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !captchaValid)
+                {
+                    confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
+                    confirmOrderModel.Warnings.Add(await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+                    return Json(new
+                    {
+                        update_section = new UpdateSectionJsonModel
+                        {
+                            name = "confirm-order",
+                            html = await RenderPartialViewToStringAsync("OpcConfirmOrder", confirmOrderModel)
+                        },
+                        goto_section = "confirm_order"
+                    });
+                }
 
                 //prevent 2 orders being placed within an X seconds time frame
                 if (!await IsMinimumOrderPlacementIntervalValidAsync(customer))
@@ -1925,7 +1948,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //error
-                var confirmOrderModel = new CheckoutConfirmModel();
+                confirmOrderModel = new CheckoutConfirmModel();
                 foreach (var error in placeOrderResult.Errors)
                     confirmOrderModel.Warnings.Add(error);
 
