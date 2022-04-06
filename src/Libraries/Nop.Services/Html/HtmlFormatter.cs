@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Net;
 using System.Text.RegularExpressions;
 
@@ -38,7 +38,7 @@ namespace Nop.Services.Html
             {
                 var tag = text[(m[i].Index + 1)..(m[i].Index + m[i].Length)].Trim().ToLower();
 
-                if (!IsValidTag(tag, allowedTags)) 
+                if (!IsValidTag(tag, allowedTags))
                     text = text.Remove(m[i].Index, m[i].Length);
             }
 
