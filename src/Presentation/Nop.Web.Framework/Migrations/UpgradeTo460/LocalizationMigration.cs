@@ -158,6 +158,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#6101
                 ["Admin.System.Warnings.PluginNotInstalled.HelpText"] = "You may delete the plugins you don't use in order to decrease startup time",
 
+                //#6111
+                ["Admin.ReturnRequests.Fields.ReturnedQuantity.Hint"] = "The quantity to be returned to the stock.",
+
             }, languageId).Wait();
 
             #endregion

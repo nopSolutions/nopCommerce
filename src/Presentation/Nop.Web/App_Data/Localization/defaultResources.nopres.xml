@@ -14641,7 +14641,7 @@
     <Value>The quantity to be returned to stock cannot be less than quantity already returned: {0}.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity.Hint">
-    <Value>The quantity already returned to stock.</Value>
+    <Value>The quantity to be returned to the stock.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeEqualOrGreaterThanZero">
     <Value>The quantity to be returned to stock must be equal or greater than zero.</Value>
