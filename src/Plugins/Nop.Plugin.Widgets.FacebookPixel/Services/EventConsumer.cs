@@ -1,11 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
 using Nop.Services.Events;
 using Nop.Services.Messages;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Models;
 using Nop.Web.Models.Catalog;
@@ -27,14 +29,17 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         #region Fields
 
         private readonly FacebookPixelService _facebookPixelService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 
         #region Ctor
 
-        public EventConsumer(FacebookPixelService facebookPixelService)
+        public EventConsumer(FacebookPixelService facebookPixelService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _facebookPixelService = facebookPixelService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -85,7 +90,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             if (routeName == FacebookPixelDefaults.CheckoutRouteName || routeName == FacebookPixelDefaults.CheckoutOnePageRouteName)
                 await _facebookPixelService.SendInitiateCheckoutEventAsync();
 
-            if (string.IsNullOrEmpty(routeName) || !routeName.Equals(FacebookPixelDefaults.AreaRouteName, StringComparison.OrdinalIgnoreCase))
+            if (_httpContextAccessor.HttpContext.GetRouteValue("area") is not string area || area != AreaNames.Admin)
                 await _facebookPixelService.SendPageViewEventAsync();
         }
 

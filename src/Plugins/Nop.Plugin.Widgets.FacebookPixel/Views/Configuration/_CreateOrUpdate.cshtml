@@ -4,23 +4,23 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <p>
-            To configure the Facebook Pixel you will need your pixel's ID, which you can find in the <a href="https://business.facebook.com/events_manager" target="_blank">Ads Manager &gt; Events Manager</a>. If you have not created a pixel, <a href="https://www.facebook.com/business/help/952192354843755" target="_blank">follow these instructions</a> to create one - all you will need is the pixel's ID.<br />
-            <br />
-            Standard events are predefined visitor actions that correspond to common, conversion-related activities, such as searching for a product, viewing a product, or purchasing a product.<br />
-            You can configure tracking of these events by enabling the appropriate settings below.<br />
-            <em>Note: As an additional parameter, some events include product SKU or product combination SKU; make sure that they are filled out correctly in your catalog.</em><br />
-            <br />
-            If predefined standard events aren't suitable for your needs, you can track your own custom events, which also can be used to define custom audiences for ad optimization.<br />
-            You can configure them below. Specify the name and choose widget zones in which the custom event will be tracked. If you don't know which zone to use for your custom event, you can ask about it in <a href="@Nop.Services.Common.NopLinksDefaults.OfficialSite.Boards" target="_blank">our forums</a>.<br />
-            <br />
-            The General Data Protection Regulation (GDPR) took effect on May 25, 2018, and creates consistent data protection rules across Europe. Businesses who advertise with the Facebook companies can continue to use Facebook platforms and solutions in the same way they do today.<br />
-            If you already enabled the <a href="@Url.Action("GeneralCommon", "Setting", new { area = AreaNames.Admin })" target="_blank">settings</a> to display Cookie Consent for users, you can pause sending pixel fires to Facebook for users who have not accepted Cookie Consent by enabling the appropriate settings below.<br />
-            See also <a href="https://developers.facebook.com/docs/facebook-pixel/support#pixelcollect" target="_blank">What data does the Facebook pixel collect?</a><br />
-        </p>
         <div class="cards-group">
             <div class="card card-default">
                 <div class="card-body">
+                    <p>
+                        To configure the Facebook Pixel you will need your pixel's ID, which you can find in the <a href="https://business.facebook.com/events_manager" target="_blank">Ads Manager &gt; Events Manager</a>. If you have not created a pixel, <a href="https://www.facebook.com/business/help/952192354843755" target="_blank">follow these instructions</a> to create one - all you will need is the pixel's ID.<br />
+                        <br />
+                        Standard events are predefined visitor actions that correspond to common, conversion-related activities, such as searching for a product, viewing a product, or purchasing a product.<br />
+                        You can configure tracking of these events by enabling the appropriate settings below.<br />
+                        <em>Note: As an additional parameter, some events include product SKU or product combination SKU; make sure that they are filled out correctly in your catalog.</em><br />
+                        <br />
+                        If predefined standard events aren't suitable for your needs, you can track your own custom events, which also can be used to define custom audiences for ad optimization.<br />
+                        You can configure them below. Specify the name and choose widget zones in which the custom event will be tracked. If you don't know which zone to use for your custom event, you can ask about it in <a href="@Nop.Services.Common.NopLinksDefaults.OfficialSite.Boards" target="_blank">our forums</a>.<br />
+                        <br />
+                        The General Data Protection Regulation (GDPR) took effect on May 25, 2018, and creates consistent data protection rules across Europe. Businesses who advertise with the Facebook companies can continue to use Facebook platforms and solutions in the same way they do today.<br />
+                        If you already enabled the <a href="@Url.Action("GeneralCommon", "Setting", new { area = AreaNames.Admin })" target="_blank">settings</a> to display Cookie Consent for users, you can pause sending pixel fires to Facebook for users who have not accepted Cookie Consent by enabling the appropriate settings below.<br />
+                        See also <a href="https://developers.facebook.com/docs/facebook-pixel/support#pixelcollect" target="_blank">What data does the Facebook pixel collect?</a><br />
+                    </p>
                     <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="PixelScriptEnabled" />
@@ -41,7 +41,7 @@
                             }
                             else
                             {
-                                <nop-editor asp-for="PixelId" asp-required="true" html-attributes="@(new { disabled = true, value =  Model.PixelId })"/>
+                                <nop-editor asp-for="PixelId" asp-required="true" html-attributes="@(new { disabled = true, value =  Model.PixelId })" />
                                 <input asp-for="PixelId" type="hidden" />
                             }
                             <span asp-validation-for="PixelId"></span>
@@ -68,7 +68,7 @@
                                 }
                                 else
                                 {
-                                    <nop-editor asp-for="AccessToken" asp-required="true" html-attributes="@(new { disabled = true, value =  Model.AccessToken })"/>
+                                    <nop-editor asp-for="AccessToken" asp-required="true" html-attributes="@(new { disabled = true, value =  Model.AccessToken })" />
                                     <input asp-for="AccessToken" type="hidden" />
                                 }
                                 <span asp-validation-for="AccessToken"></span>

@@ -47,7 +47,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                         FacebookPixelDefaults.FbConversionsApiEventEndpoint
                     }) + $"?access_token=" + facebookPixelConfiguration.AccessToken;
 
-            var jsonString = JsonConvert.SerializeObject(conversionsEvent);
+            var jsonString = JsonConvert.SerializeObject(conversionsEvent, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             var requestContent = new StringContent(jsonString, Encoding.UTF8, MimeTypes.ApplicationJson);
             var result = await _httpClient.PostAsync(urlString, requestContent);
             var response = result.EnsureSuccessStatusCode();
