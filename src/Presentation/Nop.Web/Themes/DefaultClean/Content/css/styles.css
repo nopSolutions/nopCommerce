@@ -6464,12 +6464,6 @@ label, label + * {
 
 /* BB codes */
 
-pre {
-  white-space: pre-wrap;
-  white-space: normal;
-  word-wrap: break-word;
-}
-
 .csharpcode {
   margin: 10px 0;
   border: 1px dashed #ccc;
@@ -6477,6 +6471,9 @@ pre {
   padding: 10px;
   font-family: "Courier New", Courier, monospace;
   color: #000;
+
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .csharpcode .rem {

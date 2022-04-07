@@ -31,10 +31,10 @@
                 cityEl: '#@Html.IdFor(model => model.City)',
                 requestDelay: @Model.RequestDelay,
                 localizedData: {
-                    noShippingOptionsMessage: '@T("Shipping.EstimateShippingPopUp.NoShippingOptions")',
-                    countryErrorMessage: '@T("Shipping.EstimateShipping.Country.Required")',
-                    zipPostalCodeErrorMessage: '@T("Shipping.EstimateShipping.ZipPostalCode.Required")',
-                    cityErrorMessage: '@T("Shipping.EstimateShipping.City.Required")',
+                    noShippingOptionsMessage: '@JavaScriptEncoder.Default.Encode(T("Shipping.EstimateShippingPopUp.NoShippingOptions").Text)',
+                    countryErrorMessage: '@JavaScriptEncoder.Default.Encode(T("Shipping.EstimateShipping.Country.Required").Text)',
+                    zipPostalCodeErrorMessage: '@JavaScriptEncoder.Default.Encode(T("Shipping.EstimateShipping.ZipPostalCode.Required").Text)',
+                    cityErrorMessage: '@JavaScriptEncoder.Default.Encode(T("Shipping.EstimateShipping.City.Required").Text)',
                 },
                 urlFactory: function (address) {
                     var params = $.param({
@@ -62,7 +62,7 @@
                     load: function () {
                         if (!$.magnificPopup.instance.isOpen) {
                             var shippingTitle = $('<div/>').addClass('shipping-title')
-                                .append($('<span/>').addClass('shipping-price-title').text('@T("Products.EstimateShipping.PriceTitle")'))
+                                .append($('<span/>').addClass('shipping-price-title').text('@JavaScriptEncoder.Default.Encode(T("Products.EstimateShipping.PriceTitle").Text)'))
                                 .append($('<span/>').addClass('shipping-loading'));
                             $('#open-estimate-shipping-popup-@Model.ProductId').html(shippingTitle);
                         }
@@ -83,22 +83,22 @@
                             var shippingContent = $('#open-estimate-shipping-popup-@Model.ProductId');
 
                             var shippingTitle = $('<div/>').addClass('shipping-title')
-                                .append($('<span/>').addClass('shipping-price-title').text('@T("Products.EstimateShipping.PriceTitle")'))
+                                .append($('<span/>').addClass('shipping-price-title').text('@JavaScriptEncoder.Default.Encode(T("Products.EstimateShipping.PriceTitle").Text)'))
                                 .append($('<span/>').addClass('shipping-price').text(option.price));
                             shippingContent.html(shippingTitle);
 
                             var estimatedDelivery = $('<div/>').addClass('estimated-delivery')
                                 .append($('<div/>').addClass('shipping-address')
-                                    .append($('<span/>').text('@T("Products.EstimateShipping.ToAddress") ' + option.address.countryName + ', ' + (option.address.stateProvinceName ? option.address.stateProvinceName + ', ' : '') + (popUp.settings.useCity ? option.address.city : option.address.zipPostalCode) + ' @T("Products.EstimateShipping.ViaProvider") ' + option.provider))
+                                    .append($('<span/>').text('@JavaScriptEncoder.Default.Encode(T("Products.EstimateShipping.ToAddress").Text) ' + option.address.countryName + ', ' + (option.address.stateProvinceName ? option.address.stateProvinceName + ', ' : '') + (popUp.settings.useCity ? option.address.city : option.address.zipPostalCode) + ' @JavaScriptEncoder.Default.Encode(T("Products.EstimateShipping.ViaProvider").Text) ' + option.provider))
                                     .append($('<i/>').addClass('arrow-down')));
 
                             if (option.deliveryDate && option.deliveryDate !== '-')
-                                estimatedDelivery.append($('<div/>').addClass('shipping-date').text('@T("Products.EstimateShipping.EstimatedDeliveryPrefix") ' + option.deliveryDate));
+                                estimatedDelivery.append($('<div/>').addClass('shipping-date').text('@JavaScriptEncoder.Default.Encode(T("Products.EstimateShipping.EstimatedDeliveryPrefix").Text) ' + option.deliveryDate));
 
                             shippingContent.append(estimatedDelivery);
                         } else {
                             $('#open-estimate-shipping-popup-@Model.ProductId')
-                                .html($('<span/>').text('@T("Products.EstimateShipping.NoSelectedShippingOption")'))
+                                .html($('<span/>').text('@JavaScriptEncoder.Default.Encode(T("Products.EstimateShipping.NoSelectedShippingOption").Text)'))
                                 .append($('<i/>').addClass('arrow-down'));
                         }
                     }

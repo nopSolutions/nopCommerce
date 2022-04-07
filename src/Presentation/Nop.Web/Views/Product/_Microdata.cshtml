@@ -22,7 +22,9 @@
     <meta itemprop="image" content="@Model.DefaultPictureModel.ImageUrl"/>
     @foreach (var manufacturer in Model.ProductManufacturers)
     {
-        <meta itemprop="brand" content="@manufacturer.Name"/>
+        <div itemprop="brand" itemtype="https://schema.org/Brand" itemscope>
+            <meta itemprop="name" content="@manufacturer.Name" />
+        </div>
     }
     @if (Model.ProductReviewOverview.TotalReviews > 0)
     {
@@ -49,7 +51,9 @@
     @if (Model.ProductReviewOverview.AllowCustomerReviews)
     {
         <div itemprop="review" itemscope itemtype="http://schema.org/Review">
-            <meta itemprop="author" content="ALL"/>
+            <div itemprop="author" itemtype="https://schema.org/Person" itemscope>
+                <meta itemprop="name" content="ALL" />
+            </div>
             <meta itemprop="url" content="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductReviewOverview.ProductId })"/>
         </div>
     }
