@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
@@ -48,7 +49,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         public async Task HandleEventAsync(EntityInsertedEvent<ShoppingCartItem> eventMessage)
         {
             if (eventMessage?.Entity != null)
-                await _facebookPixelService.PrepareAddToCartScriptAsync(eventMessage.Entity);
+                await _facebookPixelService.SendAddToCartEventAsync(eventMessage.Entity);
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
         {
             if (eventMessage?.Order != null)
-                await _facebookPixelService.PreparePurchaseScriptAsync(eventMessage.Order);
+                await _facebookPixelService.SendPurchaseEventAsync(eventMessage.Order);
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
         {
             if (eventMessage?.Model is ProductDetailsModel productDetailsModel)
-                await _facebookPixelService.PrepareViewContentScriptAsync(productDetailsModel);
+                await _facebookPixelService.SendViewContentEventAsync(productDetailsModel);
         }
 
         /// <summary>
@@ -82,7 +83,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         {
             var routeName = eventMessage.GetRouteName() ?? string.Empty;
             if (routeName == FacebookPixelDefaults.CheckoutRouteName || routeName == FacebookPixelDefaults.CheckoutOnePageRouteName)
-                await _facebookPixelService.PrepareInitiateCheckoutScriptAsync();
+                await _facebookPixelService.SendInitiateCheckoutEventAsync();
+
+            if (string.IsNullOrEmpty(routeName) || !routeName.Equals(FacebookPixelDefaults.AreaRouteName, StringComparison.OrdinalIgnoreCase))
+                await _facebookPixelService.SendPageViewEventAsync();
         }
 
         /// <summary>
@@ -92,8 +96,8 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(ProductSearchEvent eventMessage)
         {
-            if (!string.IsNullOrEmpty(eventMessage?.SearchTerm))
-                await _facebookPixelService.PrepareSearchScriptAsync(eventMessage.SearchTerm);
+            if (eventMessage?.SearchTerm != null)
+                await _facebookPixelService.SendSearchEventAsync(eventMessage.SearchTerm);
         }
 
         /// <summary>
@@ -104,7 +108,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         public async Task HandleEventAsync(MessageTokensAddedEvent<Token> eventMessage)
         {
             if (eventMessage?.Message?.Name == MessageTemplateSystemNames.ContactUsMessage)
-                await _facebookPixelService.PrepareContactScriptAsync();
+                await _facebookPixelService.SendContactEventAsync();
         }
 
         /// <summary>
@@ -115,7 +119,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         public async Task HandleEventAsync(CustomerRegisteredEvent eventMessage)
         {
             if (eventMessage?.Customer != null)
-                await _facebookPixelService.PrepareCompleteRegistrationScriptAsync();
+                await _facebookPixelService.SendCompleteRegistrationEventAsync();
         }
 
         #endregion

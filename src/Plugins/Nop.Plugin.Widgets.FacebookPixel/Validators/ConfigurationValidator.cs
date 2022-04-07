@@ -18,6 +18,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Validators
             RuleFor(model => model.PixelId)
                 .NotEmpty()
                 .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId.Required"));
+            RuleFor(model => model.AccessToken)
+                .NotEmpty()
+                .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Widgets.FacebookPixel.Configuration.Fields.AccessToken.Required"))
+                .When(model => model.ConversionsApiEnabled);
             RuleFor(model => model.UseAdvancedMatching)
                 .NotEqual(true)
                 .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Widgets.FacebookPixel.Configuration.Fields.UseAdvancedMatching.Forbidden"))
