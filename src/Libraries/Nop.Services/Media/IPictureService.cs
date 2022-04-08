@@ -219,11 +219,12 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
+        /// <param name="fileName">Name of file</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the picture binary or throws an exception
         /// </returns>
-        Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType);
+        Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType, string fileName);
 
         /// <summary>
         /// Gets or sets a value indicating whether the images should be stored in data base.
