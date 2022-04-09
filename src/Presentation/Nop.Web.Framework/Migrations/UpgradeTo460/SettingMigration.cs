@@ -1,6 +1,8 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
@@ -37,6 +39,46 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(catalogSettings, settings => settings.AllowCustomersToSearchWithCategoryName).Wait();
             }
 
+            //#1933
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.DisplayAllPicturesOnCatalogPages).Result)
+            {
+                catalogSettings.DisplayAllPicturesOnCatalogPages = false;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.DisplayAllPicturesOnCatalogPages).Wait();
+            }
+            
+            //#3511
+            var newProductsNumber = settingService.GetSettingAsync("catalogsettings.newproductsnumber").Result;
+            if (newProductsNumber is not null && int.TryParse(newProductsNumber.Value, out var newProductsPageSize))
+            {
+                catalogSettings.NewProductsPageSize = newProductsPageSize;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsPageSize).Wait();
+                settingService.DeleteSettingAsync(newProductsNumber).Wait();
+            }
+            else if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.NewProductsPageSize).Result)
+            {
+                catalogSettings.NewProductsPageSize = 6;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsPageSize).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.NewProductsAllowCustomersToSelectPageSize).Result)
+            {
+                catalogSettings.NewProductsAllowCustomersToSelectPageSize = false;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsAllowCustomersToSelectPageSize).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.NewProductsPageSizeOptions).Result)
+            {
+                catalogSettings.NewProductsPageSizeOptions = "6, 3, 9";
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.NewProductsPageSizeOptions).Wait();
+            }
+
+            //#29
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.DisplayFromPrices).Result)
+            {
+                catalogSettings.DisplayFromPrices = false;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.DisplayFromPrices).Wait();
+            }
+
             //#385
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.EnableProductUrlWithCategoryBreadcrumb).Result)
             {
@@ -51,6 +93,21 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             {
                 storeInformationSettings.InstagramLink = "";
                 settingService.SaveSettingAsync(storeInformationSettings, settings => settings.InstagramLink).Wait();
+            }
+
+            var commonSettings = settingService.LoadSettingAsync<CommonSettings>().Result;
+
+            //#5802
+            if (!settingService.SettingExistsAsync(commonSettings, settings => settings.HeaderCustomHtml).Result)
+            {
+                commonSettings.HeaderCustomHtml = "";
+                settingService.SaveSettingAsync(commonSettings, settings => settings.HeaderCustomHtml).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(commonSettings, settings => settings.FooterCustomHtml).Result)
+            {
+                commonSettings.FooterCustomHtml = "";
+                settingService.SaveSettingAsync(commonSettings, settings => settings.FooterCustomHtml).Wait();
             }
 
             var orderSettings = settingService.LoadSettingAsync<OrderSettings>().Result;
@@ -69,6 +126,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             {
                 mediaSettings.OrderThumbPictureSize = 80;
                 settingService.SaveSettingAsync(mediaSettings, settings => settings.OrderThumbPictureSize).Wait();
+            }
+
+            var gdprSettings = settingService.LoadSettingAsync<GdprSettings>().Result;
+
+            //#5809
+            if (!settingService.SettingExistsAsync(gdprSettings, settings => settings.DeleteInactiveCustomersAfterMonths).Result)
+            {
+                gdprSettings.DeleteInactiveCustomersAfterMonths = 36;
+                settingService.SaveSettingAsync(gdprSettings, settings => settings.DeleteInactiveCustomersAfterMonths).Wait();
             }
         }
 

@@ -1,7 +1,7 @@
-﻿nopCommerce: free and open-source eCommerce solution[![Build Status](https://travis-ci.com/nopSolutions/nopCommerce.svg?branch=develop)](https://travis-ci.com/nopSolutions/nopCommerce)
+﻿nopCommerce: free and open-source eCommerce solution
 ===========
 
-[nopCommerce](https://www.nopcommerce.com/?utm_source=github&utm_medium=content&utm_campaign=homepage) is the best open-source eCommerce shopping cart solution. nopCommerce is free, and it is the most popular ASP.NET eCommerce platform.
+[nopCommerce](https://www.nopcommerce.com/?utm_source=github&utm_medium=content&utm_campaign=homepage) is the best open-source eCommerce platform. nopCommerce is free, and it is the most popular ASP.NET Core shopping cart.
 
 ![nopCommerce demo](https://www.nopcommerce.com/images/github/responsive_devices_codeplex.png#v1)
 
@@ -11,7 +11,7 @@ nopCommerce has been downloaded more than 3,000,000 times.
 
 The active developer community has more than 250,000 members.
 
-nopCommerce runs on ASP.NET Core 5 with an MS SQL 2012 (or higher) backend database.
+nopCommerce runs on .NET 6 with an MS SQL 2012 (or higher) backend database.
 
 nopCommerce is cross-platform, and you can run it on Windows, Linux, or Mac.
 

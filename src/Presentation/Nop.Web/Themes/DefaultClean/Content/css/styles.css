@@ -1591,13 +1591,9 @@ label, label + * {
   font-size: 0;
 }
 
-.product-filter + .product-filter {
-  margin-top: 20px;
-}
-
 .product-filter .filter-title {
   margin: 0 0 10px;
-  background-color: #f6f6f6;
+  background: #f6f6f6 url('../images/toggle-gray.png') right 10px no-repeat;
   padding: 10px;
   font-size: 17px;
   color: #444;
@@ -1610,6 +1606,7 @@ label, label + * {
 .product-filter .filter-content {
   padding: 10px;
   color: #444;
+  margin-bottom: 20px;
 }
 
 .product-filter .group {
@@ -6467,12 +6464,6 @@ label, label + * {
 
 /* BB codes */
 
-pre {
-  white-space: pre-wrap;
-  white-space: normal;
-  word-wrap: break-word;
-}
-
 .csharpcode {
   margin: 10px 0;
   border: 1px dashed #ccc;
@@ -6480,6 +6471,9 @@ pre {
   padding: 10px;
   font-family: "Courier New", Courier, monospace;
   color: #000;
+
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .csharpcode .rem {
@@ -8146,12 +8140,16 @@ pre {
   /*** COLUMN ***/
 
 
+  .product-filter .filter-title {
+    background: #f6f6f6;
+  }
+
   .block {
     float: none;
     width: auto;
     margin: 0 0 20px;
   }
-
+  
   .block .title {
     margin: 0;
     border-bottom: 1px solid #ddd;
@@ -8755,4 +8753,33 @@ pre {
     width: 930px;
     max-width: 100%;
   }
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.swiper-pagination-bullet-active {
+  padding: 5px;
+  background-color: #4ab2f1;
 }

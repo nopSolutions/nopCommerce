@@ -45,8 +45,9 @@
                             <td class="empty">&nbsp;</td>
                             @foreach (var product in Model.Products)
                             {
+                                var picture = product.PictureModels.FirstOrDefault();
                                 <td style="width: @columnWidth;">
-                                    <a class="picture" href="@Url.ProductRouteUrl(new { SeName = product.SeName })"><img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" /></a>
+                                    <a class="picture" href="@Url.ProductRouteUrl(new { SeName = product.SeName })"><img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" /></a>
                                 </td>
                             }
                         </tr>

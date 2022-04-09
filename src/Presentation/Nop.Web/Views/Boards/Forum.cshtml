@@ -14,7 +14,6 @@
     @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumId = Model.Id })
     @await Html.PartialAsync("_ForumHeader")
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumAfterHeader, additionalData = Model })
-    <nop-antiforgery-token />
     <div class="forum-info">
         <div class="forum-name">
             @if (Model.ForumFeedsEnabled)
@@ -66,7 +65,7 @@
                 ShowTotalSummary = false,
                 RouteActionName = "ForumSlugPaged",
                 UseRouteLinks = true,
-                RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+                RouteValues = new RouteValues { Id = Model.Id, Slug = Model.SeName }
             });
         }
         @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))

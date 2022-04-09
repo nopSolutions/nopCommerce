@@ -177,6 +177,27 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Get orders by guids
+        /// </summary>
+        /// <param name="orderGuids">Order guids</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the orders
+        /// </returns>
+        public virtual async Task<IList<Order>> GetOrdersByGuidsAsync(Guid[] orderGuids)
+        {
+            if (orderGuids == null)
+                return null;
+
+            var query = from o in _orderRepository.Table
+                        where orderGuids.Contains(o.OrderGuid)
+                        select o;
+            var orders = await query.ToListAsync();
+
+            return orders;
+        }
+
+        /// <summary>
         /// Gets an order
         /// </summary>
         /// <param name="orderGuid">The order identifier</param>

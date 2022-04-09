@@ -2795,7 +2795,9 @@ namespace Nop.Services.Installation
                 UseResponseCompression = true,
                 FaviconAndAppIconsHeadCode = "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/icons/icons_0/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/icons/icons_0/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"/icons/icons_0/android-chrome-192x192.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/icons/icons_0/favicon-16x16.png\"><link rel=\"manifest\" href=\"/icons/icons_0/site.webmanifest\"><link rel=\"mask-icon\" href=\"/icons/icons_0/safari-pinned-tab.svg\" color=\"#5bbad5\"><link rel=\"shortcut icon\" href=\"/icons/icons_0/favicon.ico\"><meta name=\"msapplication-TileColor\" content=\"#2d89ef\"><meta name=\"msapplication-TileImage\" content=\"/icons/icons_0/mstile-144x144.png\"><meta name=\"msapplication-config\" content=\"/icons/icons_0/browserconfig.xml\"><meta name=\"theme-color\" content=\"#ffffff\">",
                 EnableHtmlMinification = true,
-                RestartTimeout = NopCommonDefaults.RestartTimeout
+                RestartTimeout = NopCommonDefaults.RestartTimeout,
+                HeaderCustomHtml = string.Empty,
+                FooterCustomHtml = string.Empty
             });
 
             await settingService.SaveSettingAsync(new SeoSettings
@@ -2846,6 +2848,7 @@ namespace Nop.Services.Installation
 
             await settingService.SaveSettingAsync(new GdprSettings
             {
+                DeleteInactiveCustomersAfterMonths = 36,
                 GdprEnabled = false,
                 LogPrivacyPolicyConsent = true,
                 LogNewsletterConsent = true,
@@ -2882,8 +2885,10 @@ namespace Nop.Services.Installation
                 AllowAnonymousUsersToEmailAFriend = false,
                 RecentlyViewedProductsNumber = 3,
                 RecentlyViewedProductsEnabled = true,
-                NewProductsNumber = 6,
                 NewProductsEnabled = true,
+                NewProductsPageSize = 6,
+                NewProductsAllowCustomersToSelectPageSize = true,
+                NewProductsPageSizeOptions = "6, 3, 9",
                 CompareProductsEnabled = true,
                 CompareProductsNumber = 4,
                 ProductSearchAutoCompleteEnabled = true,
@@ -2949,9 +2954,11 @@ namespace Nop.Services.Installation
                 EnableManufacturerFiltering = true,
                 EnablePriceRangeFiltering = true,
                 EnableSpecificationAttributeFiltering = true,
+                DisplayFromPrices = false,
                 AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay,
                 AllowCustomersToSearchWithCategoryName = true,
                 AllowCustomersToSearchWithManufacturerName = true,
+                DisplayAllPicturesOnCatalogPages = false,
                 EnableProductUrlWithCategoryBreadcrumb = false
             });
 
@@ -9141,6 +9148,15 @@ namespace Nop.Services.Installation
                     Type = "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services",
                     Enabled = true,
                     LastEnabledUtc = lastEnabledUtc,
+                    StopOnError = false
+                },
+                new ScheduleTask
+                {
+                    Name = "Delete inactive customers (GDPR)",
+                    //24 hours
+                    Seconds = 86400,
+                    Type = "Nop.Services.Gdpr.DeleteInactiveCustomersTask, Nop.Services",
+                    Enabled = false,
                     StopOnError = false
                 }
             };

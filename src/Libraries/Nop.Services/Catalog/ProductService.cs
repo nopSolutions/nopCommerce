@@ -245,26 +245,42 @@ namespace Nop.Services.Catalog
                 var stockQuantity = combination.StockQuantity;
                 if (stockQuantity > 0)
                 {
-                    stockMessage = product.DisplayStockQuantity
+                    if (product.MinStockQuantity >= stockQuantity && product.LowStockActivity == LowStockActivity.Nothing)
+                    {
+                        stockMessage = product.DisplayStockQuantity
+                        ?
+                        //display "low stock" with stock quantity
+                        string.Format(await _localizationService.GetResourceAsync("Products.Availability.LowStockWithQuantity"), stockQuantity)
+                        :
+                        //display "low stock" without stock quantity
+                        await _localizationService.GetResourceAsync("Products.Availability.LowStock");
+                    }
+                    else
+                    {
+                        stockMessage = product.DisplayStockQuantity
                         ?
                         //display "in stock" with stock quantity
                         string.Format(await _localizationService.GetResourceAsync("Products.Availability.InStockWithQuantity"), stockQuantity)
                         :
                         //display "in stock" without stock quantity
                         await _localizationService.GetResourceAsync("Products.Availability.InStock");
-                }
-                else if (combination.AllowOutOfStockOrders)
-                {
-                    stockMessage = await _localizationService.GetResourceAsync("Products.Availability.InStock");
+                    }
                 }
                 else
                 {
-                    var productAvailabilityRange = await
-                        _dateRangeService.GetProductAvailabilityRangeByIdAsync(product.ProductAvailabilityRangeId);
-                    stockMessage = productAvailabilityRange == null
-                        ? await _localizationService.GetResourceAsync("Products.Availability.OutOfStock")
-                        : string.Format(await _localizationService.GetResourceAsync("Products.Availability.AvailabilityRange"),
-                            await _localizationService.GetLocalizedAsync(productAvailabilityRange, range => range.Name));
+                    if (combination.AllowOutOfStockOrders)
+                    {
+                        stockMessage = await _localizationService.GetResourceAsync("Products.Availability.InStock");
+                    }
+                    else
+                    {
+                        var productAvailabilityRange = await
+                            _dateRangeService.GetProductAvailabilityRangeByIdAsync(product.ProductAvailabilityRangeId);
+                        stockMessage = productAvailabilityRange == null
+                            ? await _localizationService.GetResourceAsync("Products.Availability.OutOfStock")
+                            : string.Format(await _localizationService.GetResourceAsync("Products.Availability.AvailabilityRange"),
+                                await _localizationService.GetLocalizedAsync(productAvailabilityRange, range => range.Name));
+                    }
                 }
             }
             else
@@ -325,15 +341,29 @@ namespace Nop.Services.Catalog
 
             var stockMessage = string.Empty;
             var stockQuantity = await GetTotalStockQuantityAsync(product);
+            
             if (stockQuantity > 0)
             {
-                stockMessage = product.DisplayStockQuantity
-                    ?
-                    //display "in stock" with stock quantity
-                    string.Format(await _localizationService.GetResourceAsync("Products.Availability.InStockWithQuantity"), stockQuantity)
-                    :
-                    //display "in stock" without stock quantity
-                    await _localizationService.GetResourceAsync("Products.Availability.InStock");
+                if (product.MinStockQuantity >= stockQuantity && product.LowStockActivity == LowStockActivity.Nothing)
+                {
+                    stockMessage = product.DisplayStockQuantity
+                        ?
+                        //display "low stock" with stock quantity
+                        string.Format(await _localizationService.GetResourceAsync("Products.Availability.LowStockWithQuantity"), stockQuantity)
+                        :
+                        //display "low stock" without stock quantity
+                        await _localizationService.GetResourceAsync("Products.Availability.LowStock");
+                }
+                else
+                {
+                    stockMessage = product.DisplayStockQuantity
+                        ?
+                        //display "in stock" with stock quantity
+                        string.Format(await _localizationService.GetResourceAsync("Products.Availability.InStockWithQuantity"), stockQuantity)
+                        :
+                        //display "in stock" without stock quantity
+                        await _localizationService.GetResourceAsync("Products.Availability.InStock");
+                }
             }
             else
             {
@@ -696,30 +726,30 @@ namespace Nop.Services.Catalog
         /// Gets products which marked as new
         /// </summary>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the list of new products
         /// </returns>
-        public virtual async Task<IList<Product>> GetProductsMarkedAsNewAsync(int storeId = 0)
+        public virtual async Task<IPagedList<Product>> GetProductsMarkedAsNewAsync(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            return await _productRepository.GetAllAsync(async query =>
-            {
-                //apply store mapping constraints
-                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
-
-                //apply ACL constraints
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                query = await _aclService.ApplyAcl(query, customer);
-
-                query = from p in query
+            var query = from p in _productRepository.Table
                         where p.Published && p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
                             DateTime.UtcNow >= (p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue) &&
                             DateTime.UtcNow <= (p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
-                        orderby p.CreatedOnUtc descending
                         select p;
 
-                return query.Take(_catalogSettings.NewProductsNumber);
-            });
+            //apply store mapping constraints
+            query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+            //apply ACL constraints
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            query = await _aclService.ApplyAcl(query, customer);
+
+            query = query.OrderByDescending(p => p.CreatedOnUtc);
+
+            return await query.ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -1696,6 +1726,29 @@ namespace Nop.Services.Catalog
                 .AnyAsync(p => productIds.Contains(p.Id) && p.IsRecurring);
         }
 
+        /// <summary>
+        /// Returns a list of sku of not existing products
+        /// </summary>
+        /// <param name="productSku">The sku of the products to check</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of sku not existing products
+        /// </returns>
+        public virtual async Task<string[]> GetNotExistingProductsAsync(string[] productSku)
+        {
+            if (productSku == null)
+                throw new ArgumentNullException(nameof(productSku));
+
+            var query = _productRepository.Table;
+            var queryFilter = productSku.Distinct().ToArray();
+            //filtering by SKU
+            var filter = await query.Select(p => p.Sku)
+                .Where(p => queryFilter.Contains(p))
+                .ToListAsync();
+
+            return queryFilter.Except(filter).ToArray();
+        }
+
         #endregion
 
         #region Inventory management methods
@@ -2545,7 +2598,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        public virtual async Task<Warehouse> GetWarehousesByIdAsync(int warehouseId)
+        public virtual async Task<Warehouse> GetWarehouseByIdAsync(int warehouseId)
         {
             return await _warehouseRepository.GetByIdAsync(warehouseId, cache => default);
         }

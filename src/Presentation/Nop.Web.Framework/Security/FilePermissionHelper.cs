@@ -9,7 +9,6 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Data;
 using Nop.Services.Plugins;
 
 namespace Nop.Web.Framework.Security
@@ -101,11 +100,6 @@ namespace Nop.Web.Framework.Security
 
             try
             {
-                if (!(fileProvider.FileExists(path) || fileProvider.DirectoryExists(path)))
-                {
-                    return true;
-                }
-
                 var current = WindowsIdentity.GetCurrent();
 
                 var readIsDeny = false;
@@ -236,6 +230,9 @@ namespace Nop.Web.Framework.Security
         /// <returns>Result</returns>
         public static bool CheckPermissions(this INopFileProvider fileProvider, string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
         {
+            if (!(fileProvider.FileExists(path) || fileProvider.DirectoryExists(path)))
+                return true;
+
             var result = false;
 
             switch (Environment.OSVersion.Platform)
@@ -266,7 +263,7 @@ namespace Nop.Web.Framework.Security
                 fileProvider.Combine(rootDir, "bin"),
                 fileProvider.Combine(rootDir, "logs"),
                 fileProvider.Combine(rootDir, "Plugins"),
-                fileProvider.Combine(rootDir, @"Plugins\bin"),
+                fileProvider.Combine(rootDir, @"Plugins\Uploaded"),
                 fileProvider.Combine(rootDir, @"wwwroot\bundles"),
                 fileProvider.Combine(rootDir, @"wwwroot\db_backups"),
                 fileProvider.Combine(rootDir, @"wwwroot\files\exportimport"),
@@ -288,7 +285,6 @@ namespace Nop.Web.Framework.Security
             return new List<string>
             {
                 fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath),
-                fileProvider.MapPath(NopDataSettingsDefaults.FilePath),
                 fileProvider.MapPath(NopConfigurationDefaults.AppSettingsFilePath)
             };
         }

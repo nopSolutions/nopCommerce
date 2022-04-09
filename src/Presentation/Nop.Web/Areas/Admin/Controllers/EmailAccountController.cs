@@ -269,6 +269,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _emailSender.SendEmailAsync(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, model.SendTestEmailTo, null);
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.SendTestEmail.Success"));
+
+                return RedirectToAction("Edit", new { id = emailAccount.Id });
             }
             catch (Exception exc)
             {

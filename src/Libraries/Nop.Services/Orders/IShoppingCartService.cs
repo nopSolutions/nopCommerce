@@ -80,6 +80,7 @@ namespace Nop.Services.Orders
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="ignoreConditionMet">A value indicating whether we should ignore filtering by "is condition met" property</param>
+        /// <param name="ignoreBundledProducts">A value indicating whether we should ignore bundled (associated) products</param>
         /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param> 
         /// <returns>
         /// A task that represents the asynchronous operation
@@ -91,7 +92,9 @@ namespace Nop.Services.Orders
             int quantity = 1,
             string attributesXml = "",
             bool ignoreNonCombinableAttributes = false,
-            bool ignoreConditionMet = false, int shoppingCartItemId = 0);
+            bool ignoreConditionMet = false,
+            bool ignoreBundledProducts = false,
+            int shoppingCartItemId = 0);
 
         /// <summary>
         /// Validates shopping cart item (gift card)

@@ -25,9 +25,37 @@
 }
 <div class="product-item" data-productid="@Model.Id">
     <div class="picture">
-        <a href="@Url.ProductRouteUrl(new {SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
-            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
-        </a>
+        @if (Model.PictureModels.Count > 1)
+        {
+            <div class="swiper" id="swiper-@Model.Id" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())">
+                <div class="swiper-wrapper">
+                    @foreach (var picture in Model.PictureModels)
+                    {
+                        <a class="swiper-slide" href="@Url.ProductRouteUrl(new { SeName = Model.SeName })" title="@picture.Title">
+                            <img alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title" />
+                        </a>
+                    }
+                </div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+            </div>
+            
+            <script asp-location="Footer">
+                new Swiper('#swiper-@(Model.Id)', {
+                    pagination: {
+                        clickable: true,
+                        el: '.swiper-pagination',
+                    },
+                });
+            </script>
+        }
+        else
+        {
+            var picture = Model.PictureModels.FirstOrDefault();
+            <a href="@Url.ProductRouteUrl(new { SeName = Model.SeName })" title="@picture?.Title">
+                <img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" />
+            </a>
+        }
     </div>
     <div class="details">
         <h2 class="product-title">

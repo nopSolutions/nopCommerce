@@ -10,6 +10,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
+using Nop.Core.Domain.ScheduleTasks;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
@@ -203,6 +204,22 @@ namespace Nop.Data.Migrations.UpgradeTo460
                         Name = "Newsletter subscriptions were exported"
                     }
                 );
+
+            //#5809
+            if (!_dataProvider.GetTable<ScheduleTask>().Any(st => string.Compare(st.Type, "Nop.Services.Gdpr.DeleteInactiveCustomersTask, Nop.Services", StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                var manageConnectionStringPermission = _dataProvider.InsertEntity(
+                    new ScheduleTask
+                    {
+                        Name = "Delete inactive customers (GDPR)",
+                        //24 hours
+                        Seconds = 86400,
+                        Type = "Nop.Services.Gdpr.DeleteInactiveCustomersTask, Nop.Services",
+                        Enabled = false,
+                        StopOnError = false
+                    }
+                );
+            }
         }
 
         public override void Down()

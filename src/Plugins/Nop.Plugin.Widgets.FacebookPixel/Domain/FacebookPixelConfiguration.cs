@@ -13,9 +13,19 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Domain
         public string PixelId { get; set; }
 
         /// <summary>
+        /// Gets or sets an access token
+        /// </summary>
+        public string AccessToken { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the Pixel is enabled
         /// </summary>
-        public bool Enabled { get; set; }
+        public bool PixelScriptEnabled { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether the Conversions API is enabled
+        /// </summary>
+        public bool ConversionsApiEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to disable Pixel for users not accepting Cookie Consent (due to GDPR)

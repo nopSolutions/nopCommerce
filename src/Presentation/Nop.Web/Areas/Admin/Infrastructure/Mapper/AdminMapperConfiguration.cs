@@ -339,7 +339,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.IncludeShortDescriptionInCompareProducts_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ManufacturersBlockItemsToDisplay_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NewProductsEnabled_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.NewProductsNumber_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.NewProductsPageSize_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.NewProductsAllowCustomersToSelectPageSize_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.NewProductsPageSizeOptions_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NotifyCustomerAboutProductReviewReply_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NumberOfBestsellersOnHomepage_OverrideForStore, options => options.Ignore())
@@ -392,6 +394,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.EnableManufacturerFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.EnablePriceRangeFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.EnableSpecificationAttributeFiltering_OverrideForStore, mo => mo.Ignore())
+                .ForMember(model => model.DisplayFromPrices_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.AttributeValueOutOfStockDisplayTypes, mo => mo.Ignore())
                 .ForMember(model => model.AttributeValueOutOfStockDisplayType_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.SortOptionSearchModel, options => options.Ignore())
@@ -399,6 +402,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
                 .ForMember(model => model.AllowCustomersToSearchWithManufacturerName_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AllowCustomersToSearchWithCategoryName_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.DisplayAllPicturesOnCatalogPages_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.EnableProductUrlWithCategoryBreadcrumb_OverrideForStore, options => options.Ignore());
             CreateMap<CatalogSettingsModel, CatalogSettings>()
                 .ForMember(settings => settings.AjaxProcessAttributeChange, options => options.Ignore())
@@ -1041,7 +1045,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.GdprEnabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.LogNewsletterConsent_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.LogPrivacyPolicyConsent_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.LogUserProfileChanges_OverrideForStore, options => options.Ignore());
+                .ForMember(model => model.LogUserProfileChanges_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.DeleteInactiveCustomersAfterMonths_OverrideForStore, options => options.Ignore());
             CreateMap<GdprSettingsModel, GdprSettings>();
 
             CreateMap<GdprConsent, GdprConsentModel>();

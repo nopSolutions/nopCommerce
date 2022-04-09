@@ -11,7 +11,7 @@ using Nop.Data;
 using Nop.Web.Models.Install;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.DataTests
+namespace Nop.Tests.Nop.Data.Tests
 {
     [TestFixture]
     public class NopDataProviderTests : BaseNopTest

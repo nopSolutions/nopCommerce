@@ -34,6 +34,7 @@ using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.Validators;
 using StackExchange.Profiling.Storage;
 using WebMarkupMin.AspNetCore6;
+using WebMarkupMin.Core;
 using WebMarkupMin.NUglify;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -378,6 +379,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 })
                 .AddHtmlMinification(options =>
                 {
+                    options.MinificationSettings.AttributeQuotesRemovalMode = HtmlAttributeQuotesRemovalMode.KeepQuotes;
+
                     options.CssMinifierFactory = new NUglifyCssMinifierFactory();
                     options.JsMinifierFactory = new NUglifyJsMinifierFactory();
                 })
