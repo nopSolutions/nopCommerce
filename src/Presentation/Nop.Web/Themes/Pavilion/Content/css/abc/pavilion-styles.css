@@ -2,6 +2,10 @@
     Overwrites styles.css for the Pavilion theme.
 */
 
+.header-middle {
+    padding: 10px 0;
+}
+
 /* Display home page category boxes */
 .home-page-category-grid {
     display: block;
@@ -9,6 +13,7 @@
 }
 
 /* Merges My Account (logged in user) into main column */
+
 .header-upper {
     height: 0;
 }
