@@ -89,7 +89,9 @@ div.mobile-cart-qty {
     height: 50px;
     font-size: 0;
 }
-.mobile-header-content-row input.search-box-text {
+
+/* styles search box input */
+input.search-box-text {
     -webkit-border-radius: 50px;
     -moz-border-radius: 50px;
     border-radius: 50px;
@@ -97,21 +99,6 @@ div.mobile-cart-qty {
     margin-left: 3px;
     width: calc(100% - 61px);
     padding: 0 12px;
-    z-index: 0;
-}
-.mobile-search-button {
-    width: 47px;
-    height: 47px;
-    border: none;
-    background: url(/Plugins/Misc.AbcFrontend/Images/search-button.png) center no-repeat;
-    vertical-align: middle;
-    font-size: 0;
-    outline: 1px solid transparent;
-    transition: all .2s ease;
-    position: relative;
-    top: -41px;
-    left: calc(100% - 102px);
-    z-index: 0;
 }
 
 /* fixes margin issue for home page */
@@ -135,13 +122,28 @@ div.search-box.store-search-box form#small-search-box-form input#sli_search_1 {
     color: #4f4f4f;
     width: 100%;
 }
-div.search-box.store-search-box form#small-search-box-form input.button-1.search-box-button {
-    position: absolute;
-    top: -1px;
-    right: 0;
+
+input.search-box-text {
+    background-color: white !important;
+}
+
+input.search-box-text::placeholder {
+    color: #4f4f4f;
+}
+
+.search-box-button {
+    background: url(/Plugins/Misc.AbcFrontend/Images/search-button.png) center no-repeat !important;
+    background-color: transparent !important;
+    vertical-align: middle;
+    font-size: 0;
+    position: relative;
+    top: -41px;
+    left: calc(100% - 102px);
     z-index: 10;
-    background: url(/Plugins/Misc.AbcFrontend/Images/search-button.png) center no-repeat;
-    outline: 0;
+    outline: none !important;
+    width: 47px;
+    height: 47px;
+    border: 0;
 }
 input#sli_search_1::-webkit-input-placeholder {
     color: gray;
@@ -168,5 +170,26 @@ input#sli_search_1::-webkit-input-placeholder {
 
     .mobile-header-content-row {
         display: none;
+    }
+
+    .search-box-button {
+        position: absolute;
+        top: -1px;
+        right: 0;
+        left: calc(100% - 48px);
+    }
+
+    input.search-box-text {
+        width: 100% !important;
+    }
+
+    .store-search-box {
+        width: calc(100% - 247px) !important;
+    }
+}
+
+@media (min-width: 1281px) {
+    .store-search-box {
+        width: calc(100% - 290px) !important;
     }
 }
