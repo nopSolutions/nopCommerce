@@ -573,14 +573,16 @@ var ConfirmOrder = {
     form: false,
     saveUrl: false,
     isSuccess: false,
+    isCaptchaEnabled: false,
 
-    init: function (saveUrl, successUrl) {
+    init: function (saveUrl, successUrl, isCaptchaEnabled) {
         this.saveUrl = saveUrl;
         this.successUrl = successUrl;
+        this.isCaptchaEnabled = isCaptchaEnabled;
     },
 
-  save: function () {
-        if (Checkout.loadWaiting !== false) return;
+    save: function () {
+      if (Checkout.loadWaiting !== false) return;
 
         //terms of service
         var termOfServiceOk = true;
@@ -596,6 +598,11 @@ var ConfirmOrder = {
         if (termOfServiceOk) {
             Checkout.setLoadWaiting('confirm-order');
             var postData = {};
+            if (ConfirmOrder.isCaptchaEnabled) {
+              var captchaData = $("#g-recaptcha-response").val()
+              postData['g-recaptcha-response'] = captchaData;
+            }
+
             addAntiForgeryToken(postData);
             $.ajax({
                 cache: false,

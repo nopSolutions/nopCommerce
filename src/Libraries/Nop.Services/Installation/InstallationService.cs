@@ -3447,6 +3447,7 @@ namespace Nop.Services.Installation
                 ShowOnNewsCommentPage = false,
                 ShowOnProductReviewPage = false,
                 ShowOnRegistrationPage = false,
+                ShowOnCheckoutPageForGuests = false,
             });
 
             await settingService.SaveSettingAsync(new MessagesSettings
