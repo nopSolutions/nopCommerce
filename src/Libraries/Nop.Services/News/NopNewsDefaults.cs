@@ -17,7 +17,7 @@ namespace Nop.Services.News
         /// {1} : store ID
         /// {2} : are only approved comments?
         /// </remarks>
-        public static CacheKey NewsCommentsNumberCacheKey => new CacheKey("Nop.newsitem.comments.number.{0}-{1}-{2}", NewsCommentsNumberPrefix);
+        public static CacheKey NewsCommentsNumberCacheKey => new("Nop.newsitem.comments.number.{0}-{1}-{2}", NewsCommentsNumberPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache

@@ -84,7 +84,7 @@ namespace Nop.Services.Catalog
             if (!product.HasDiscountsApplied) 
                 return allowedDiscounts;
 
-            //we use this property ("HasDiscountsApplied") for performance optimization to async Task unnecessary database calls
+            //we use this property ("HasDiscountsApplied") for performance optimization to avoid unnecessary database calls
             foreach (var discount in await _discountService.GetAppliedDiscountsAsync(product))
                 if (discount.DiscountType == DiscountType.AssignedToSkus &&
                     (await _discountService.ValidateDiscountAsync(discount, customer)).IsValid)
@@ -335,6 +335,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
+            var store = await _storeContext.GetCurrentStoreAsync();
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductPriceCacheKey, 
                 product,
                 overriddenProductPrice,
@@ -342,7 +343,7 @@ namespace Nop.Services.Catalog
                 includeDiscounts,
                 quantity,
                 await _customerService.GetCustomerRoleIdsAsync(customer),
-                await _storeContext.GetCurrentStoreAsync());
+                store);
 
             //we do not cache price if this not allowed by settings or if the product is rental product
             //otherwise, it can cause memory leaks (to store all possible date period combinations)
@@ -363,7 +364,7 @@ namespace Nop.Services.Catalog
                 var price = overriddenProductPrice ?? product.Price;
 
                 //tier prices
-                var tierPrice = await _productService.GetPreferredTierPriceAsync(product, customer, (await _storeContext.GetCurrentStoreAsync()).Id, quantity);
+                var tierPrice = await _productService.GetPreferredTierPriceAsync(product, customer, store.Id, quantity);
                 if (tierPrice != null)
                     price = tierPrice.Price;
 

@@ -13,7 +13,7 @@ namespace Nop.Tests.Nop.Services.Tests.Directory
 
         private MeasureDimension _measureDimensionInches, _measureDimensionFeet, _measureDimensionMeters, _measureDimensionMillimetres;
         private MeasureWeight _measureWeightOunce, _measureWeightLb, _measureWeightKg, _measureWeightGrams;
-        
+
         [OneTimeSetUp]
         public async Task SetUp()
         {
@@ -68,6 +68,42 @@ namespace Nop.Tests.Nop.Services.Tests.Directory
             //from kg(s) to gram(s)
             newWeight = await _measureService.ConvertWeightAsync(10, _measureWeightKg, _measureWeightGrams);
             newWeight.Should().Be(10000);
+        }
+
+
+        [Test]
+        public async Task TestMeasureDimensionCrud()
+        {
+            var insertItem = new MeasureDimension
+            {
+                Name = "Test name",
+                SystemKeyword = "test"
+            };
+
+            var updateItem = new MeasureDimension {
+                Name = "Test name 1",
+                SystemKeyword = "test"
+            };
+
+            await TestCrud(insertItem, _measureService.InsertMeasureDimensionAsync, updateItem, _measureService.UpdateMeasureDimensionAsync, _measureService.GetMeasureDimensionByIdAsync, (item, other) => item.Name.Equals(other.Name), _measureService.DeleteMeasureDimensionAsync);
+        }
+
+        [Test]
+        public async Task TestMeasureWeightCrud()
+        {
+            var insertItem = new MeasureWeight
+            {
+                Name = "Test name",
+                SystemKeyword = "test"
+            };
+
+            var updateItem = new MeasureWeight
+            {
+                Name = "Test name 1",
+                SystemKeyword = "test"
+            };
+
+            await TestCrud(insertItem, _measureService.InsertMeasureWeightAsync, updateItem, _measureService.UpdateMeasureWeightAsync, _measureService.GetMeasureWeightByIdAsync, (item, other) => item.Name.Equals(other.Name), _measureService.DeleteMeasureWeightAsync);
         }
     }
 }

@@ -127,6 +127,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.FacebookLink.Should().Be(_storeInformationSettings.FacebookLink);
             model.TwitterLink.Should().Be(_storeInformationSettings.TwitterLink);
             model.YoutubeLink.Should().Be(_storeInformationSettings.YoutubeLink);
+            model.InstagramLink.Should().Be(_storeInformationSettings.InstagramLink);
             model.WorkingLanguageId.Should().Be(1);
             model.NewsEnabled.Should().Be(_newsSettings.Enabled);
         }
@@ -287,7 +288,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         {
             var model = await _commonModelFactory.PrepareRobotsTextFileAsync();
             model.Should().NotBeNullOrEmpty();
-            model.Trim().Split("\r\n").Length.Should().Be(73);
+            model.Trim().Split("\r\n").Length.Should().Be(74);
         }
     }
 }

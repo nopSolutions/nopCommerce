@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.ContentManagement.News.NewsItems.EditNewsItemDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("News items");
+    NopHtml.SetActiveMenuItemSystemName("News items");
 }
 
 
@@ -34,7 +34,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.NewsDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

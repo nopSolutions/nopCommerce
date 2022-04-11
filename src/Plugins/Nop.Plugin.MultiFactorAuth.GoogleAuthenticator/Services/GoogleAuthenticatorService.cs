@@ -196,9 +196,11 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// </returns>
         public async Task<SetupCode> GenerateSetupCode(string secretkey)
         {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             return TwoFactorAuthenticator.GenerateSetupCode(
                 _googleAuthenticatorSettings.BusinessPrefix, 
-                (await _workContext.GetCurrentCustomerAsync()).Email, 
+                customer.Email, 
                 secretkey, false, _googleAuthenticatorSettings.QRPixelsPerModule);
         }
 

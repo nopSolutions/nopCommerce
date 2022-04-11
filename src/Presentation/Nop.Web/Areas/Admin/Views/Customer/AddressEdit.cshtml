@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Customers.Customers.Addresses.EditAddress").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Customers list");
+    NopHtml.SetActiveMenuItemSystemName("Customers list");
 }
 
 <form asp-controller="Customer" asp-action="AddressEdit" method="post">
@@ -21,7 +21,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAddressDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerAddressDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateAddress", Model)

@@ -127,19 +127,29 @@ namespace Nop.Services.Messages
         /// Gets all message templates
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="keywords">Keywords to search by name, body, or subject</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the message template list
         /// </returns>
-        public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplatesAsync(int storeId)
+        public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplatesAsync(int storeId, string keywords = null)
         {
-            return await _messageTemplateRepository.GetAllAsync(async query =>
+            var messageTemplates = await _messageTemplateRepository.GetAllAsync(async query =>
             {
                 //apply store mapping constraints
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                 return query.OrderBy(t => t.Name);
             }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId));
+
+            if (!string.IsNullOrWhiteSpace(keywords))
+            {
+                messageTemplates = messageTemplates.Where(x => (x.Subject?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)
+                    || (x.Body?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)
+                    || (x.Name?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)).ToList();
+            }
+
+            return messageTemplates;
         }
 
         /// <summary>

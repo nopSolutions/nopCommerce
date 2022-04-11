@@ -7,11 +7,10 @@ namespace Nop.Web.Framework
 {
     public class NullView : IView
     {
-        public static readonly NullView Instance = new NullView();
+        public static readonly NullView Instance = new();
 
         public string Path => string.Empty;
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public Task RenderAsync(ViewContext context)
         {
             if (context == null)

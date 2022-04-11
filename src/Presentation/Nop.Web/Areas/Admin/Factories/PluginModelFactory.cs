@@ -8,6 +8,7 @@ using Nop.Core.Caching;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Cms;
+using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
@@ -110,6 +111,10 @@ namespace Nop.Web.Areas.Admin.Factories
             model.CanChangeEnabled = true;
             switch (plugin)
             {
+                case IMiscPlugin:
+                    model.CanChangeEnabled = false;
+                    break;
+
                 case IPaymentMethod paymentMethod:
                     model.IsEnabled = _paymentPluginManager.IsPluginActive(paymentMethod);
                     break;
@@ -233,7 +238,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<PluginModel> PreparePluginModelAsync(PluginModel model, PluginDescriptor pluginDescriptor, bool excludeProperties = false)
         {
-            Action<PluginLocalizedModel, int> localizedModelConfiguration = null;
+            Func<PluginLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (pluginDescriptor != null)
             {
@@ -387,11 +392,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<IList<AdminNavigationPluginModel>> PrepareAdminNavigationPluginModelsAsync()
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopPluginDefaults.AdminNavigationPluginsCacheKey, await _workContext.GetCurrentCustomerAsync());
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopPluginDefaults.AdminNavigationPluginsCacheKey, customer);
             return await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 //get installed plugins
-                return (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.InstalledOnly, await _workContext.GetCurrentCustomerAsync()))
+                return (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.InstalledOnly, customer))
                     .Where(plugin => plugin.ShowInPluginsList)
                     .Select(plugin => new AdminNavigationPluginModel
                     {

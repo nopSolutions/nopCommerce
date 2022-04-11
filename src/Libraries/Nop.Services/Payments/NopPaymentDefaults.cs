@@ -6,7 +6,7 @@
     public static partial class NopPaymentDefaults
     {
         /// <summary>
-        /// Gets a setting name to store countries in which a payment method is now allowed
+        /// Gets a setting name to store countries in which a payment method is not allowed
         /// </summary>
         /// <remarks>
         /// {0} : payment method name

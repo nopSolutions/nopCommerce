@@ -97,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ReviewTypeModel> PrepareReviewTypeModelAsync(ReviewTypeModel model,
             ReviewType reviewType, bool excludeProperties = false)
         {
-            Action<ReviewTypeLocalizedModel, int> localizedModelConfiguration = null;
+            Func<ReviewTypeLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (reviewType != null)
             {

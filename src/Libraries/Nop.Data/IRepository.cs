@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Caching;
 
@@ -90,6 +89,9 @@ namespace Nop.Data
         Task<IList<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, Task<IQueryable<TEntity>>> func,
             Func<IStaticCacheManager, Task<CacheKey>> getCacheKey, bool includeDeleted = true);
 
+        /// <summary>
+        /// Get all entity entries
+        /// </summary>
         /// <param name="func">Function to select entries</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
@@ -102,6 +104,9 @@ namespace Nop.Data
         Task<IPagedList<TEntity>> GetAllPagedAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false, bool includeDeleted = true);
 
+        /// <summary>
+        /// Get all entity entries
+        /// </summary>
         /// <param name="func">Function to select entries</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
@@ -181,17 +186,6 @@ namespace Nop.Data
         /// The task result contains the copy of the passed entity entry
         /// </returns>
         Task<TEntity> LoadOriginalCopyAsync(TEntity entity);
-
-        /// <summary>
-        /// Executes SQL using System.Data.CommandType.StoredProcedure command type and returns results as collection of values of specified type
-        /// </summary>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the entity entries
-        /// </returns>
-        Task<IList<TEntity>> EntityFromSqlAsync(string procedureName, params DataParameter[] parameters);
 
         /// <summary>
         /// Truncates database table

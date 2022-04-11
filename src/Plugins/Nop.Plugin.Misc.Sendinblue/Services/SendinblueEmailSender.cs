@@ -65,8 +65,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             //add store identifier in email headers
             if (emailAccount.Id == _sendinblueSettings.EmailAccountId)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
                 headers ??= new Dictionary<string, string>();
-                headers.Add(SendinblueDefaults.EmailCustomHeader, (await _storeContext.GetCurrentStoreAsync()).Id.ToString());
+                headers.Add(SendinblueDefaults.EmailCustomHeader, store.Id.ToString());
             }
 
             await base.SendEmailAsync(emailAccount, subject, body, fromAddress, fromName, toAddress, toName, replyTo, replyToName, bcc, cc, attachmentFilePath, attachmentFileName, attachedDownloadId, headers);

@@ -1,4 +1,6 @@
-﻿@model ActiveDiscussionsModel
+﻿@using Nop.Services.Localization
+@model ActiveDiscussionsModel
+@inject ILocalizationService localizationService
 <div class="forums-table-section topic-group active-discussions">
     <div class="forums-table-section-title">
         @if (Model.ActiveDiscussionsFeedEnabled)
@@ -8,7 +10,7 @@
         <strong>@T("Forum.ActiveDiscussions")</strong>
     </div>
     @{
-        var pager = await Html.PagerAsync(new PagerModel
+        var pager = await Html.PagerAsync(new PagerModel(localizationService)
         {
             PageSize = Model.TopicPageSize,
             TotalRecords = Model.TopicTotalRecords,
@@ -104,7 +106,7 @@
                                     </td>
                                 }
                                 <td class="latest-post">
-                                    @await Component.InvokeAsync("ForumLastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                    @await Component.InvokeAsync(typeof(ForumLastPostViewComponent), new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }

@@ -1194,7 +1194,7 @@ label, label + * {
   background-position: -114px 0;
 }
 
-.follow-us .social .google-plus a {
+.follow-us .social .instagram a {
   background-position: -152px 0;
 }
 
@@ -2818,6 +2818,10 @@ label, label + * {
 
 .attribute-squares li input {
   display: none;
+}
+
+.attribute-squares-padding {
+  padding: 0 5px 0 0;
 }
 
 .tooltip-container {
@@ -6486,12 +6490,6 @@ label, label + * {
 
 /* BB codes */
 
-pre {
-  white-space: pre-wrap;
-  white-space: normal;
-  word-wrap: break-word;
-}
-
 .csharpcode {
   margin: 10px 0;
   border: 1px dashed #ccc;
@@ -6499,6 +6497,9 @@ pre {
   padding: 10px;
   font-family: "Courier New", Courier, monospace;
   color: #000;
+
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .csharpcode .rem {

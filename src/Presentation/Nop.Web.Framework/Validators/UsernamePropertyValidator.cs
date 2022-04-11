@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
+using FluentValidation;
 using FluentValidation.Validators;
 using Nop.Core.Domain.Customers;
 
@@ -8,9 +9,11 @@ namespace Nop.Web.Framework.Validators
     /// <summary>
     /// Username validator
     /// </summary>
-    public class UsernamePropertyValidator : PropertyValidator
+    public class UsernamePropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
     {
         private readonly CustomerSettings _customerSettings;
+
+        public override string Name => "UsernamePropertyValidator";
 
         /// <summary>
         /// Ctor
@@ -20,16 +23,14 @@ namespace Nop.Web.Framework.Validators
             _customerSettings = customerSettings;
         }
 
-        protected override string GetDefaultMessageTemplate() => "Username is not valid";
-
         /// <summary>
         /// Is valid?
         /// </summary>
         /// <param name="context">Validation context</param>
         /// <returns>Result</returns>
-        protected override bool IsValid(PropertyValidatorContext context)
+        public override bool IsValid(ValidationContext<T> context, TProperty value)
         {
-            return IsValid(context.PropertyValue as string, _customerSettings);
+            return IsValid(value as string, _customerSettings);
         }
 
         /// <summary>
@@ -50,5 +51,7 @@ namespace Nop.Web.Framework.Validators
                 ? Regex.IsMatch(username, customerSettings.UsernameValidationRule, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
                 : username.All(l => customerSettings.UsernameValidationRule.Contains(l));
         }
+
+        protected override string GetDefaultMessageTemplate(string errorCode) => "Username is not valid";
     }
 }

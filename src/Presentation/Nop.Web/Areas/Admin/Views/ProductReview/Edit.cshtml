@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.ProductReviews.EditProductReviewDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Product reviews");
+    NopHtml.SetActiveMenuItemSystemName("Product reviews");
 }
 
 <form asp-controller="ProductReview" asp-action="Edit" method="post">
@@ -33,7 +33,7 @@
                     @T("Admin.Common.Delete")
                 </span>
             }
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductReviewDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductReviewDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

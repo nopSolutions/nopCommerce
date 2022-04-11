@@ -111,5 +111,30 @@
         /// Gets or sets a value indicating whether "price adjustment" is specified as percentage
         /// </summary>
         public bool PriceAdjustmentUsePercentage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default value (for textbox and multiline textbox)
+        /// </summary>
+        public string DefaultValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the validation rule for minimum length (for textbox and multiline textbox)
+        /// </summary>
+        public int? ValidationMinLength { get; set; }
+
+        /// <summary>
+        /// Gets or sets the validation rule for maximum length (for textbox and multiline textbox)
+        /// </summary>
+        public int? ValidationMaxLength { get; set; }
+
+        /// <summary>
+        /// Gets or sets the validation rule for file allowed extensions (for file upload)
+        /// </summary>
+        public string ValidationFileAllowedExtensions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the validation rule for file maximum size in kilobytes (for file upload)
+        /// </summary>
+        public int? ValidationFileMaximumSize { get; set; }
     }
 }

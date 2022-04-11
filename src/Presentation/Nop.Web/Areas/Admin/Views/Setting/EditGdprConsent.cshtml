@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Settings.Gdpr.Consent.Edit").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("GDPR settings");
+    NopHtml.SetActiveMenuItemSystemName("GDPR settings");
 }
 
 <form asp-controller="Setting" asp-action="EditGdprConsent" method="post">
@@ -29,7 +29,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprConsentDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GdprConsentDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateGdprConsent", Model)

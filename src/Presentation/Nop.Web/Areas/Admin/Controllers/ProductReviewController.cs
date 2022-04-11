@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Events;
 using Nop.Services.Catalog;
-using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -25,8 +24,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
@@ -41,8 +40,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public ProductReviewController(CatalogSettings catalogSettings,
             ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
-            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             INotificationService notificationService,
             IPermissionService permissionService,
@@ -53,8 +52,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             _catalogSettings = catalogSettings;
             _customerActivityService = customerActivityService;
+            _customerService = customerService;
             _eventPublisher = eventPublisher;
-            _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _notificationService = notificationService;
             _permissionService = permissionService;
@@ -107,7 +106,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && (await _productService.GetProductByIdAsync(productReview.ProductId)).VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && (await _productService.GetProductByIdAsync(productReview.ProductId)).VendorId != currentVendor.Id)
                 return RedirectToAction("List");
 
             //prepare model
@@ -128,7 +128,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && (await _productService.GetProductByIdAsync(productReview.ProductId)).VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && (await _productService.GetProductByIdAsync(productReview.ProductId)).VendorId != currentVendor.Id)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -136,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var previousIsApproved = productReview.IsApproved;
 
                 //vendor can edit "Reply text" only
-                var isLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+                var isLoggedInAsVendor = currentVendor != null;
                 if (!isLoggedInAsVendor)
                 {
                     productReview.Title = model.Title;
@@ -150,8 +151,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (productReview.IsApproved && !string.IsNullOrEmpty(productReview.ReplyText)
                     && _catalogSettings.NotifyCustomerAboutProductReviewReply && !productReview.CustomerNotifiedOfReply)
                 {
-                    var customerLanguageId = await _genericAttributeService.GetAttributeAsync<Customer, int>(productReview.CustomerId,
-                        NopCustomerDefaults.LanguageIdAttribute, productReview.StoreId);
+                    var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId);
+                    var customerLanguageId = customer?.LanguageId ?? 0;
 
                     var queuedEmailIds = await _workflowMessageService.SendProductReviewReplyCustomerNotificationMessageAsync(productReview, customerLanguageId);
                     if (queuedEmailIds.Any())
@@ -229,8 +230,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (await _workContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("List");
 
-            if (selectedIds == null)
-                return Json(new { Result = true });
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
 
             //filter not approved reviews
             var productReviews = (await _productService.GetProductReviewsByIdsAsync(selectedIds.ToArray())).Where(review => !review.IsApproved);
@@ -262,8 +263,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (await _workContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("List");
 
-            if (selectedIds == null)
-                return Json(new { Result = true });
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
 
             //filter approved reviews
             var productReviews = (await _productService.GetProductReviewsByIdsAsync(selectedIds.ToArray())).Where(review => review.IsApproved);
@@ -292,8 +293,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (await _workContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("List");
 
-            if (selectedIds == null)
-                return Json(new { Result = true });
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
 
             var productReviews = await _productService.GetProductReviewsByIdsAsync(selectedIds.ToArray());
             var products = await _productService.GetProductsByIdsAsync(productReviews.Select(p => p.ProductId).Distinct().ToArray());

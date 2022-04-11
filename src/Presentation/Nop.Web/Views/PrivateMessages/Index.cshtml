@@ -3,10 +3,10 @@
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.PrivateMessages").Text);
+    NopHtml.AddTitleParts(T("PageTitle.PrivateMessages").Text);
     //page class
-    Html.AppendPageCssClassParts("html-private-messages");
-    Html.AppendPageCssClassParts("html-private-messages-page");
+    NopHtml.AppendPageCssClassParts("html-private-messages");
+    NopHtml.AppendPageCssClassParts("html-private-messages-page");
 }
 <div class="page private-messages private-messages-page">
     <div class="page-title">
@@ -27,10 +27,10 @@
                 <li><a href="#tabs-2">@T("PrivateMessages.SentItems")</a></li>
             </ul>
             <div id="tabs-1" class="tab-content">
-                @await Component.InvokeAsync("PrivateMessagesInbox", new { pageNumber = Model.InboxPage, tab = "inbox" })
+                @await Component.InvokeAsync(typeof(PrivateMessagesInboxViewComponent), new { pageNumber = Model.InboxPage, tab = "inbox" })
             </div>
             <div id="tabs-2" class="tab-content">
-                @await Component.InvokeAsync("PrivateMessagesSentItems", new { pageNumber = Model.SentItemsPage, tab = "sent" })
+                @await Component.InvokeAsync(typeof(PrivateMessagesSentItemsViewComponent), new { pageNumber = Model.SentItemsPage, tab = "sent" })
             </div>
         </div>
     </div>

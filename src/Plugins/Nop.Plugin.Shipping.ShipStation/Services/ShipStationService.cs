@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -32,8 +33,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         #region constants
 
         private const string API_URL = "https://ssapi.shipstation.com/";
-        private readonly CacheKey _carriersCacheKey = new CacheKey("Nop.plugins.shipping.shipstation.carrierscachekey");
-        private readonly CacheKey _serviceCacheKey = new CacheKey("Nop.plugins.shipping.shipstation.servicecachekey.{0}");
+        private readonly CacheKey _carriersCacheKey = new("Nop.plugins.shipping.shipstation.carrierscachekey");
+        private readonly CacheKey _serviceCacheKey = new("Nop.plugins.shipping.shipstation.servicecachekey.{0}");
 
         private const string CONTENT_TYPE = "application/json";
         private const string DATE_FORMAT = "MM/dd/yyyy HH:mm";
@@ -103,12 +104,10 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<string> SendGetRequestAsync(string apiUrl)
         {
-            var request = WebRequest.Create(apiUrl);
+            using var handler = new HttpClientHandler { Credentials = new NetworkCredential(_shipStationSettings.ApiKey, _shipStationSettings.ApiSecret) };
+            using var client = new HttpClient(handler);
+            using var rs = await client.GetStreamAsync(apiUrl);
 
-            request.Credentials = new NetworkCredential(_shipStationSettings.ApiKey, _shipStationSettings.ApiSecret);
-            var resp = await request.GetResponseAsync();
-
-            await using var rs = resp.GetResponseStream();
             if (rs == null) return string.Empty;
             using var sr = new StreamReader(rs);
 
@@ -257,15 +256,12 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                     Width = width
                 };
             }
+            
+            using var handler = new HttpClientHandler { Credentials = new NetworkCredential(_shipStationSettings.ApiKey, _shipStationSettings.ApiSecret) };
+            using var client = new HttpClient(handler);
 
-            using var client = new WebClient
-            {
-                Credentials = new NetworkCredential(_shipStationSettings.ApiKey, _shipStationSettings.ApiSecret)
-            };
-
-            client.Headers.Add("Content-Type", CONTENT_TYPE);
-
-            var data = client.UploadString($"{API_URL}{LIST_RATES_CMD}", JsonConvert.SerializeObject(postData));
+            var responseData = await client.PostAsync($"{API_URL}{LIST_RATES_CMD}", new StringContent(JsonConvert.SerializeObject(postData), Encoding.UTF8, CONTENT_TYPE));
+            var data = await responseData.Content.ReadAsStringAsync();
 
             return (await TryGetError(data)) ? new List<ShipStationServiceRate>() : JsonConvert.DeserializeObject<List<ShipStationServiceRate>>(data);
         }
@@ -321,7 +317,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             await writer.WriteElementStringAsync("Address2", address.Address2);
             await writer.WriteElementStringAsync("City", address.City);
             await writer.WriteElementStringAsync("State", (await _stateProvinceService.GetStateProvinceByAddressAsync(address))?.Name ?? string.Empty);
-            await writer.WriteElementStringAsync("PostalCode ", address.ZipPostalCode);
+            await writer.WriteElementStringAsync("PostalCode", address.ZipPostalCode);
             await writer.WriteElementStringAsync("Country", (await _countryService.GetCountryByAddressAsync(address)).TwoLetterIsoCode);
         }
 
@@ -405,7 +401,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             await writer.WriteElementStringAsync("OrderID", order.Id.ToString());
             await writer.WriteElementStringAsync("OrderNumber", order.OrderGuid.ToString());
             await writer.WriteElementStringAsync("OrderDate", order.CreatedOnUtc.ToString(DATE_FORMAT));
-            await writer.WriteElementStringAsync("OrderStatus ", GetOrderStatus(order));
+            await writer.WriteElementStringAsync("OrderStatus", GetOrderStatus(order));
             await writer.WriteElementStringAsync("LastModified", DateTime.Now.ToString(DATE_FORMAT));
             await writer.WriteElementStringAsync("OrderTotal", order.OrderTotal.ToString(CultureInfo.InvariantCulture));
             await writer.WriteElementStringAsync("ShippingAmount", (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax).ToString(CultureInfo.InvariantCulture));
@@ -563,12 +559,16 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             await writer.WriteStartDocumentAsync();
             await writer.WriteStartElementAsync("Orders");
 
-            foreach (var order in await _orderService.SearchOrdersAsync(createdFromUtc: startDate, createdToUtc: endDate, storeId: (await _storeContext.GetCurrentStoreAsync()).Id, pageIndex: pageIndex, pageSize: 200))
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            foreach (var order in await _orderService.SearchOrdersAsync(createdFromUtc: startDate, createdToUtc: endDate, storeId: store.Id, pageIndex: pageIndex, pageSize: 200))
             {
                 await WriteOrderToXmlAsync(writer, order);
             }
 
             await writer.WriteEndElementAsync();
+            await writer.WriteEndDocumentAsync();
+            await writer.FlushAsync();
 
             xml = Encoding.UTF8.GetString(stream.ToArray());
 

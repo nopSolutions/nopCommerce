@@ -8,17 +8,6 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
     public class GoogleAuthenticatorDefaults
     {
         /// <summary>
-        /// Gets a name of the view component to display GoogleAuthenticator settings
-        /// </summary>
-        public const string VIEW_COMPONENT_NAME = "GoogleAuthenticator.Auth";
-
-        /// <summary>
-        /// Gets a name of the view component to verification page
-        /// </summary>
-        public const string VERIFICATION_VIEW_COMPONENT_NAME = "GoogleAuthenticator.Verify";
-
-
-        /// <summary>
         /// Gets a plugin system name
         /// </summary>
         public static string SystemName = "MultiFactorAuth.GoogleAuthenticator";
@@ -41,7 +30,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
         /// <remarks>
         /// {0} : configuration identifier
         /// </remarks>
-        public static CacheKey ConfigurationCacheKey => new CacheKey("Nop.PluginMultiFactorAuth.GoogleAuthenticator.Configuration-{0}", PrefixCacheKey);
+        public static CacheKey ConfigurationCacheKey => new("Nop.PluginMultiFactorAuth.GoogleAuthenticator.Configuration-{0}", PrefixCacheKey);
 
         /// <summary>
         /// Gets the prefix key to clear cache

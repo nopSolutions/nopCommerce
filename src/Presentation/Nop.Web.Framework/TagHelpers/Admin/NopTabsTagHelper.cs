@@ -131,7 +131,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             output.Content.AppendHtml(await tabsTitlediv.RenderHtmlContentAsync());
             output.Content.AppendHtml(await tabsContentout.RenderHtmlContentAsync());
 
-            bool.TryParse(RenderSelectedTabInput, out var renderSelectedTabInput);
+            _ = bool.TryParse(RenderSelectedTabInput, out var renderSelectedTabInput);
             if (string.IsNullOrEmpty(RenderSelectedTabInput) || renderSelectedTabInput)
             {
                 //render input contains selected tab name
@@ -247,7 +247,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var viewContextAware = _htmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
-            bool.TryParse(IsDefault, out var isDefaultTab);
+            _ = bool.TryParse(IsDefault, out var isDefaultTab);
 
             //get name of the tab should be selected
             var tabNameToSelect = context.Items.ContainsKey("tabNameToSelect")

@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Plugin.Tax.Avalara.Models.Log;
 using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Tax.Avalara.Models.Configuration
@@ -10,7 +11,7 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
     /// <summary>
     /// Represents a configuration model
     /// </summary>
-    public class ConfigurationModel
+    public record ConfigurationModel : BaseNopModel, IAclSupportedModel
     {
         #region Ctor
 
@@ -20,11 +21,15 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
             Companies = new List<SelectListItem>();
             TaxOriginAddressTypes = new List<SelectListItem>();
             TaxTransactionLogSearchModel = new TaxTransactionLogSearchModel();
+            SelectedCustomerRoleIds = new List<int>();
+            AvailableCustomerRoles = new List<SelectListItem>();
         }
 
         #endregion
 
         #region Properties
+
+        #region Common
 
         public bool IsConfigured { get; set; }
 
@@ -42,21 +47,8 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
         [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.UseSandbox")]
         public bool UseSandbox { get; set; }
 
-        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.CommitTransactions")]
-        public bool CommitTransactions { get; set; }
-
-        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.ValidateAddress")]
-        public bool ValidateAddress { get; set; }
-
-        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.TaxOriginAddressType")]
-        public int TaxOriginAddressTypeId { get; set; }
-        public IList<SelectListItem> TaxOriginAddressTypes { get; set; }
-
         [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.EnableLogging")]
         public bool EnableLogging { get; set; }
-
-        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly")]
-        public bool GetTaxRateByAddressOnly { get; set; }
 
         public AddressModel TestAddress { get; set; }
 
@@ -67,6 +59,49 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
         public bool HideGeneralBlock { get; set; }
 
         public bool HideLogBlock { get; set; }
+
+        #endregion
+
+        #region Tax calculation
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.CommitTransactions")]
+        public bool CommitTransactions { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.ValidateAddress")]
+        public bool ValidateAddress { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.TaxOriginAddressType")]
+        public int TaxOriginAddressTypeId { get; set; }
+        public IList<SelectListItem> TaxOriginAddressTypes { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.UseTaxRateTables")]
+        public bool UseTaxRateTables { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly")]
+        public bool GetTaxRateByAddressOnly { get; set; }
+
+        #endregion
+
+        #region Certificates
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.EnableCertificates")]
+        public bool EnableCertificates { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.AutoValidateCertificate")]
+        public bool AutoValidateCertificate { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.AllowEditCustomer")]
+        public bool AllowEditCustomer { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.DisplayNoValidCertificatesMessage")]
+        public bool DisplayNoValidCertificatesMessage { get; set; }
+
+        //ACL (customer roles)
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.CustomerRoles")]
+        public IList<int> SelectedCustomerRoleIds { get; set; }
+        public IList<SelectListItem> AvailableCustomerRoles { get; set; }
+
+        #endregion
 
         #endregion
     }

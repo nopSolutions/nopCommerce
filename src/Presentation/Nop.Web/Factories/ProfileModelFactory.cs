@@ -138,7 +138,7 @@ namespace Nop.Web.Factories
             {
                 locationEnabled = true;
 
-                var countryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                var countryId = customer.CountryId;
                 var country = await _countryService.GetCountryByIdAsync(countryId);
                 if (country != null)
                 {
@@ -177,11 +177,10 @@ namespace Nop.Web.Factories
             var dateOfBirth = string.Empty;
             if (_customerSettings.DateOfBirthEnabled)
             {
-                var dob = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
-                if (dob.HasValue)
+                if (customer.DateOfBirth.HasValue)
                 {
                     dateOfBirthEnabled = true;
-                    dateOfBirth = dob.Value.ToString("D");
+                    dateOfBirth = customer.DateOfBirth.Value.ToString("D");
                 }
             }
 
@@ -230,7 +229,7 @@ namespace Nop.Web.Factories
 
             foreach (var forumPost in list)
             {
-                var posted = string.Empty;
+                string posted;
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
                 {
                     var languageCode = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
@@ -254,7 +253,7 @@ namespace Nop.Web.Factories
                 });
             }
 
-            var pagerModel = new PagerModel
+            var pagerModel = new PagerModel(_localizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,
@@ -262,7 +261,7 @@ namespace Nop.Web.Factories
                 ShowTotalSummary = false,
                 RouteActionName = "CustomerProfilePaged",
                 UseRouteLinks = true,
-                RouteValues = new RouteValues { pageNumber = page, id = customer.Id }
+                RouteValues = new RouteValues { PageNumber = page, Id = customer.Id }
             };
 
             var model = new ProfilePostsModel

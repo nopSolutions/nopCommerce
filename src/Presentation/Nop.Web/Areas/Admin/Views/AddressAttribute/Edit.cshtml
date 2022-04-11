@@ -3,7 +3,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Address.AddressAttributes.EditAttributeDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Customer and user settings");
+    NopHtml.SetActiveMenuItemSystemName("Customer and user settings");
 }
 
 <form asp-controller="AddressAttribute" asp-action="Edit" method="post" id="addressattribute-form">
@@ -28,7 +28,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AddressAttributeDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AddressAttributeDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

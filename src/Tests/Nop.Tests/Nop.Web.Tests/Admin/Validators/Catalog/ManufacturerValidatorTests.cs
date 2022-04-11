@@ -23,7 +23,7 @@ namespace Nop.Tests.Nop.Web.Tests.Admin.Validators.Catalog
             {
                 PageSizeOptions = "1, 2, 3, 5, 2"
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.PageSizeOptions, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.PageSizeOptions);
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace Nop.Tests.Nop.Web.Tests.Admin.Validators.Catalog
             {
                 PageSizeOptions = "1, 2, 3, 5, 9"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.PageSizeOptions, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.PageSizeOptions);
         }
 
         [Test]
@@ -43,9 +43,9 @@ namespace Nop.Tests.Nop.Web.Tests.Admin.Validators.Catalog
             {
                 PageSizeOptions = null
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.PageSizeOptions, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.PageSizeOptions);
             model.PageSizeOptions = string.Empty;
-            _validator.ShouldNotHaveValidationErrorFor(x => x.PageSizeOptions, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.PageSizeOptions);
         }
     }
 }

@@ -2,10 +2,11 @@
 
 @{
     const string hideInfoBlockAttributeName = "NewsItemPage.HideInfoBlock";
-    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
 
     const string hideSeoBlockAttributeName = "NewsItemPage.HideSeoBlock";
-    var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSeoBlockAttributeName, defaultValue: true);
+    var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSeoBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>
@@ -18,7 +19,7 @@
                 <nop-card asp-name="news-item-info" asp-icon="fas fa-info" asp-title="@T("Admin.ContentManagement.News.NewsItems.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
                 <nop-card asp-name="news-item-seo" asp-icon="fas fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsItemsDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.NewsItemsDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

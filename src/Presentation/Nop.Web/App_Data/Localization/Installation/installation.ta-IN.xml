@@ -67,7 +67,7 @@
     <Value>தரவு வழங்குநரைத் தெரிவுசெய்க</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>NopCommerce ஐ எவ்வாறு பயன்படுத்துவது என்பது குறித்த தகவல்களை பின்வரும் தளத்தில் பார்வையிடவும்</Value>
+    <Value>nopCommerce ஐ எவ்வாறு பயன்படுத்துவது என்பது குறித்த தகவல்களை பின்வரும் தளத்தில் பார்வையிடவும்</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
     <Value>nopCommerce.com இன் ஆவணப்படுத்தல் பிரிவு</Value>
@@ -79,7 +79,7 @@
     <Value>நிறுவு</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>NopCommerce ஐ நிறுவுகிறது...</Value>
+    <Value>nopCommerce ஐ நிறுவுகிறது...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
     <Value>ஒருங்கிணைந்த விண்டோஸ் அங்கீகாரத்தைப் பயன்படுத்தவும்</Value>

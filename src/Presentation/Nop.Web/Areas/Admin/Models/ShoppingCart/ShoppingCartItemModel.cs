@@ -24,12 +24,14 @@ namespace Nop.Web.Areas.Admin.Models.ShoppingCart
 
         [NopResourceDisplayName("Admin.CurrentCarts.UnitPrice")]
         public string UnitPrice { get; set; }
+        public decimal UnitPriceValue { get; set; }
 
         [NopResourceDisplayName("Admin.CurrentCarts.Quantity")]
         public int Quantity { get; set; }
 
         [NopResourceDisplayName("Admin.CurrentCarts.Total")]
         public string Total { get; set; }
+        public decimal TotalValue { get; set; }
 
         [NopResourceDisplayName("Admin.CurrentCarts.UpdatedOn")]
         public DateTime UpdatedOn { get; set; }

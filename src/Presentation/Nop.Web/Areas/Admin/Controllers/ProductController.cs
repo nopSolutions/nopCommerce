@@ -156,7 +156,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(Product product, ProductModel model)
         {
             foreach (var localized in model.Locales)
@@ -192,7 +191,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(ProductTag productTag, ProductTagModel model)
         {
             foreach (var localized in model.Locales)
@@ -207,7 +205,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(ProductAttributeMapping pam, ProductAttributeMappingModel model)
         {
             foreach (var localized in model.Locales)
@@ -223,7 +220,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(ProductAttributeValue pav, ProductAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
@@ -235,14 +231,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdatePictureSeoNamesAsync(Product product)
         {
             foreach (var pp in await _productService.GetProductPicturesByProductIdAsync(product.Id))
                 await _pictureService.SetSeoFilenameAsync(pp.PictureId, await _pictureService.GetPictureSeNameAsync(product.Name));
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveProductAclAsync(Product product, ProductModel model)
         {
             product.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
@@ -255,7 +249,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
-                    if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
+                    if (!existingAclRecords.Any(acl => acl.CustomerRoleId == customerRole.Id))
                         await _aclService.InsertAclRecordAsync(product, customerRole.Id);
                 }
                 else
@@ -268,7 +262,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveCategoryMappingsAsync(Product product, ProductModel model)
         {
             var existingProductCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true);
@@ -298,7 +291,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveManufacturerMappingsAsync(Product product, ProductModel model)
         {
             var existingProductManufacturers = await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id, true);
@@ -328,7 +320,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveDiscountMappingsAsync(Product product, ProductModel model)
         {
             var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true);
@@ -353,7 +344,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             await _productService.UpdateHasDiscountsAppliedAsync(product);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<string> GetAttributesXmlForProductAttributeCombinationAsync(IFormCollection form, List<string> warnings, int productId)
         {
             var attributesXml = string.Empty;
@@ -516,7 +506,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return result.ToArray();
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveProductWarehouseInventoryAsync(Product product, ProductModel model)
         {
             if (product == null)
@@ -541,7 +530,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (!formKey.Equals($"warehouse_qty_{warehouse.Id}", StringComparison.InvariantCultureIgnoreCase))
                         continue;
 
-                    int.TryParse(formData[formKey], out stockQuantity);
+                    _ = int.TryParse(formData[formKey], out stockQuantity);
                     break;
                 }
 
@@ -550,7 +539,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var formKey in formData.Keys)
                     if (formKey.Equals($"warehouse_reserved_{warehouse.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int.TryParse(formData[formKey], out reservedQuantity);
+                        _ = int.TryParse(formData[formKey], out reservedQuantity);
                         break;
                     }
 
@@ -559,7 +548,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var formKey in formData.Keys)
                     if (formKey.Equals($"warehouse_used_{warehouse.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int.TryParse(formData[formKey], out var tmp);
+                        _ = int.TryParse(formData[formKey], out var tmp);
                         used = tmp == warehouse.Id;
                         break;
                     }
@@ -615,7 +604,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveConditionAttributesAsync(ProductAttributeMapping productAttributeMapping,
             ProductAttributeConditionModel model, IFormCollection form)
         {
@@ -704,7 +692,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             await _productAttributeService.UpdateProductAttributeMappingAsync(productAttributeMapping);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task GenerateAttributeCombinationsAsync(Product product, IList<int> allowedAttributeIds = null)
         {
             var allAttributesXml = await _productAttributeParser.GenerateAllCombinationsAsync(product, true, allowedAttributeIds);
@@ -719,7 +706,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //new one
                 var warnings = new List<string>();
                 warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(await _workContext.GetCurrentCustomerAsync(),
-                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true, true));
+                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true, true, true));
                 if (warnings.Count != 0)
                     continue;
 
@@ -796,8 +783,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //validate maximum number of products per vendor
-            if (_vendorSettings.MaximumProductNumber > 0 && await _workContext.GetCurrentVendorAsync() != null
-                && await _productService.GetNumberOfProductsByVendorIdAsync((await _workContext.GetCurrentVendorAsync()).Id) >= _vendorSettings.MaximumProductNumber)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (_vendorSettings.MaximumProductNumber > 0 && currentVendor != null
+                && await _productService.GetNumberOfProductsByVendorIdAsync(currentVendor.Id) >= _vendorSettings.MaximumProductNumber)
             {
                 _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ExceededMaximumNumber"),
                     _vendorSettings.MaximumProductNumber));
@@ -810,9 +798,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             //show configuration tour
             if (showtour)
             {
-                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
-
-                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
 
                 if (!hideCard && !closeCard)
                     ViewBag.ShowTour = true;
@@ -828,8 +816,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //validate maximum number of products per vendor
-            if (_vendorSettings.MaximumProductNumber > 0 && await _workContext.GetCurrentVendorAsync() != null
-                && await _productService.GetNumberOfProductsByVendorIdAsync((await _workContext.GetCurrentVendorAsync()).Id) >= _vendorSettings.MaximumProductNumber)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (_vendorSettings.MaximumProductNumber > 0 && currentVendor != null
+                && await _productService.GetNumberOfProductsByVendorIdAsync(currentVendor.Id) >= _vendorSettings.MaximumProductNumber)
             {
                 _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ExceededMaximumNumber"),
                     _vendorSettings.MaximumProductNumber));
@@ -839,11 +828,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 //a vendor should have access only to his products
-                if (await _workContext.GetCurrentVendorAsync() != null)
-                    model.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                if (currentVendor != null)
+                    model.VendorId = currentVendor.Id;
 
                 //vendors cannot edit "Show on home page" property
-                if (await _workContext.GetCurrentVendorAsync() != null && model.ShowOnHomepage)
+                if (currentVendor != null && model.ShowOnHomepage)
                     model.ShowOnHomepage = false;
 
                 //product
@@ -914,7 +903,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List");
 
             //prepare model
@@ -935,7 +925,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List");
 
             //check if the product quantity has been changed while we were editing the product
@@ -950,12 +941,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 //a vendor should have access only to his products
-                if (await _workContext.GetCurrentVendorAsync() != null)
-                    model.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                if (currentVendor != null)
+                    model.VendorId = currentVendor.Id;
 
                 //we do not validate maximum number of products per vendor when editing existing products (only during creation of new products)
                 //vendors cannot edit "Show on home page" property
-                if (await _workContext.GetCurrentVendorAsync() != null && model.ShowOnHomepage != product.ShowOnHomepage)
+                if (currentVendor != null && model.ShowOnHomepage != product.ShowOnHomepage)
                     model.ShowOnHomepage = product.ShowOnHomepage;
 
                 //some previously used values
@@ -975,8 +966,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //remove associated products
                 if (previousProductType == ProductType.GroupedProduct && product.ProductType == ProductType.SimpleProduct)
                 {
-                    var storeId = (await _storeContext.GetCurrentStoreAsync())?.Id ?? 0;
-                    var vendorId = (await _workContext.GetCurrentVendorAsync())?.Id ?? 0;
+                    var store = await _storeContext.GetCurrentStoreAsync();
+                    var storeId = store?.Id ?? 0;
+                    var vendorId = currentVendor?.Id ?? 0;
 
                     var associatedProducts = await _productService.GetAssociatedProductsAsync(product.Id, storeId, vendorId);
                     foreach (var associatedProduct in associatedProducts)
@@ -1109,7 +1101,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List");
 
             await _productService.DeleteProductAsync(product);
@@ -1129,11 +1122,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
-            {
-                await _productService.DeleteProductsAsync(await (await _productService.GetProductsByIdsAsync(selectedIds.ToArray()))
-                    .WhereAwait(async p => await _workContext.GetCurrentVendorAsync() == null || p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync());
-            }
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
+
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            await _productService.DeleteProductsAsync((await _productService.GetProductsByIdsAsync(selectedIds.ToArray()))
+                .Where(p => currentVendor == null || p.VendorId == currentVendor.Id).ToList());
 
             return Json(new { Result = true });
         }
@@ -1150,7 +1144,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var originalProduct = await _productService.GetProductByIdAsync(copyModel.Id);
 
                 //a vendor should have access only to his products
-                if (await _workContext.GetCurrentVendorAsync() != null && originalProduct.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+                var currentVendor = await _workContext.GetCurrentVendorAsync();
+                if (currentVendor != null && originalProduct.VendorId != currentVendor.Id)
                     return RedirectToAction("List");
 
                 var newProduct = await _copyProductService.CopyProductAsync(originalProduct, copyModel.Name, copyModel.Published, copyModel.CopyImages);
@@ -1269,7 +1264,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
@@ -1289,10 +1285,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No related product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
                 var product = await _productService.GetProductByIdAsync(relatedProduct.ProductId1);
-                if (product != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+                if (product != null && product.VendorId != currentVendor.Id)
                     return Content("This is not your product");
             }
 
@@ -1315,10 +1312,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             var productId = relatedProduct.ProductId1;
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
                 var product = await _productService.GetProductByIdAsync(productId);
-                if (product != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+                if (product != null && product.VendorId != currentVendor.Id)
                     return Content("This is not your product");
             }
 
@@ -1361,10 +1359,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedProducts.Any())
             {
                 var existingRelatedProducts = await _productService.GetRelatedProductsByProductId1Async(model.ProductId, showHidden: true);
+                var currentVendor = await _workContext.GetCurrentVendorAsync();
                 foreach (var product in selectedProducts)
                 {
                     //a vendor should have access only to his products
-                    if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+                    if (currentVendor != null && product.VendorId != currentVendor.Id)
                         continue;
 
                     if (_productService.FindRelatedProduct(existingRelatedProducts, model.ProductId, product.Id) != null)
@@ -1399,7 +1398,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
@@ -1419,10 +1419,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No cross-sell product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
                 var product = await _productService.GetProductByIdAsync(crossSellProduct.ProductId1);
-                if (product != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+                if (product != null && product.VendorId != currentVendor.Id)
                     return Content("This is not your product");
             }
 
@@ -1465,10 +1466,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedProducts.Any())
             {
                 var existingCrossSellProducts = await _productService.GetCrossSellProductsByProductId1Async(model.ProductId, showHidden: true);
+                var currentVendor = await _workContext.GetCurrentVendorAsync();
                 foreach (var product in selectedProducts)
                 {
                     //a vendor should have access only to his products
-                    if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+                    if (currentVendor != null && product.VendorId != currentVendor.Id)
                         continue;
 
                     if (_productService.FindCrossSellProduct(existingCrossSellProducts, model.ProductId, product.Id) != null)
@@ -1502,7 +1504,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
@@ -1522,7 +1525,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No associated product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && associatedProduct.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && associatedProduct.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             associatedProduct.DisplayOrder = model.DisplayOrder;
@@ -1542,7 +1546,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No associated product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             product.ParentGroupedProductId = 0;
@@ -1595,7 +1600,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         continue;
 
                     //a vendor should have access only to his products
-                    if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+                    var currentVendor = await _workContext.GetCurrentVendorAsync();
+                    if (currentVendor != null && product.VendorId != currentVendor.Id)
                         continue;
 
                     product.ParentGroupedProductId = model.ProductId;
@@ -1627,47 +1633,55 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Product pictures
 
-        public virtual async Task<IActionResult> ProductPictureAdd(int pictureId, int displayOrder,
-            string overrideAltAttribute, string overrideTitleAttribute, int productId)
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> ProductPictureAdd(int productId, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            if (pictureId == 0)
+            if (productId == 0)
                 throw new ArgumentException();
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(productId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
+            var files = form.Files.ToList();
+            if (!files.Any())
+                return Json(new { success = false });
+
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List");
-
-            if ((await _productService.GetProductPicturesByProductIdAsync(productId)).Any(p => p.PictureId == pictureId))
-                return Json(new { Result = false });
-
-            //try to get a picture with the specified id
-            var picture = await _pictureService.GetPictureByIdAsync(pictureId)
-                ?? throw new ArgumentException("No picture found with the specified id");
-
-            await _pictureService.UpdatePictureAsync(picture.Id,
-                await _pictureService.LoadPictureBinaryAsync(picture),
-                picture.MimeType,
-                picture.SeoFilename,
-                overrideAltAttribute,
-                overrideTitleAttribute);
-
-            await _pictureService.SetSeoFilenameAsync(pictureId, await _pictureService.GetPictureSeNameAsync(product.Name));
-
-            await _productService.InsertProductPictureAsync(new ProductPicture
+            try
             {
-                PictureId = pictureId,
-                ProductId = productId,
-                DisplayOrder = displayOrder
-            });
+                foreach (var file in files)
+                {
+                    //insert picture
+                    var picture = await _pictureService.InsertPictureAsync(file);
 
-            return Json(new { Result = true });
+                    await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(product.Name));
+
+                    await _productService.InsertProductPictureAsync(new ProductPicture
+                    {
+                        PictureId = picture.Id,
+                        ProductId = product.Id,
+                        DisplayOrder = 0
+                    });
+                }
+            }
+            catch (Exception exc)
+            {
+                return Json(new 
+                    { 
+                        success = false, 
+                        message = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Pictures.Alert.PictureAdd")} {exc.Message}", 
+                    });
+            }
+            
+            return Json(new { success = true });
         }
 
         [HttpPost]
@@ -1681,7 +1695,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
@@ -1701,10 +1716,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product picture found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
                 var product = await _productService.GetProductByIdAsync(productPicture.ProductId);
-                if (product != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+                if (product != null && product.VendorId != currentVendor.Id)
                     return Content("This is not your product");
             }
 
@@ -1736,10 +1752,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product picture found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
                 var product = await _productService.GetProductByIdAsync(productPicture.ProductId);
-                if (product != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+                if (product != null && product.VendorId != currentVendor.Id)
                     return Content("This is not your product");
             }
 
@@ -1773,7 +1790,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
             {
                 return RedirectToAction("List");
             }
@@ -1845,7 +1863,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
@@ -1872,8 +1891,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null
-                && (await _productService.GetProductByIdAsync(psa.ProductId)).VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null
+                && (await _productService.GetProductByIdAsync(psa.ProductId)).VendorId != currentVendor.Id)
             {
                 _notificationService.ErrorNotification("This is not your product");
 
@@ -1977,7 +1997,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && (await _productService.GetProductByIdAsync(psa.ProductId)).VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && (await _productService.GetProductByIdAsync(psa.ProductId)).VendorId != currentVendor.Id)
             {
                 _notificationService.ErrorNotification("This is not your product");
                 return RedirectToAction("List", new { id = model.ProductId });
@@ -2041,11 +2062,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
-            {
-                var tags = await _productTagService.GetProductTagsByIdsAsync(selectedIds.ToArray());
-                await _productTagService.DeleteProductTagsAsync(tags);
-            }
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
+
+            var tags = await _productTagService.GetProductTagsByIdsAsync(selectedIds.ToArray());
+            await _productTagService.DeleteProductTagsAsync(tags);
 
             return Json(new { Result = true });
         }
@@ -2112,7 +2133,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
@@ -2133,9 +2155,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
-                model.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                model.SearchVendorId = currentVendor.Id;
             }
 
             var categoryIds = new List<int> { model.SearchCategoryId };
@@ -2189,9 +2212,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
-                model.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                model.SearchVendorId = currentVendor.Id;
             }
 
             var categoryIds = new List<int> { model.SearchCategoryId };
@@ -2248,9 +2272,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 products.AddRange(await _productService.GetProductsByIdsAsync(ids));
             }
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
-                products = await products.WhereAwait(async p => p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync();
+                products = products.Where(p => p.VendorId == currentVendor.Id).ToList();
             }
 
             try
@@ -2273,9 +2298,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
-                model.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                model.SearchVendorId = currentVendor.Id;
             }
 
             var categoryIds = new List<int> { model.SearchCategoryId };
@@ -2333,9 +2359,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 products.AddRange(await _productService.GetProductsByIdsAsync(ids));
             }
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
-                products = await products.WhereAwait(async p => p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync();
+                products = products.Where(p => p.VendorId == currentVendor.Id).ToList();
             }
 
             try
@@ -2401,7 +2428,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
@@ -2437,7 +2465,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             if (ModelState.IsValid)
@@ -2479,7 +2508,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //prepare model
@@ -2504,7 +2534,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             if (ModelState.IsValid)
@@ -2541,7 +2572,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             await _productService.DeleteTierPriceAsync(tierPrice);
@@ -2567,7 +2599,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
@@ -2586,7 +2619,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
             {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("This is not your product"));
                 return RedirectToAction("List");
@@ -2609,7 +2643,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
             {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("This is not your product"));
                 return RedirectToAction("List");
@@ -2689,7 +2724,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
             {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("This is not your product"));
                 return RedirectToAction("List");
@@ -2716,7 +2752,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
             {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("This is not your product"));
                 return RedirectToAction("List");
@@ -2769,7 +2806,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //check if existed combinations contains the specified attribute
@@ -2816,7 +2854,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
@@ -2839,7 +2878,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //prepare model
@@ -2864,7 +2904,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             if (productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares)
@@ -2931,7 +2972,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //prepare model
@@ -2961,7 +3003,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             if (productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares)
@@ -3026,8 +3069,25 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
+
+            //check if existed combinations contains the specified attribute value
+            var existedCombinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
+            if (existedCombinations?.Any() == true)
+            {
+                foreach (var combination in existedCombinations)
+                {
+                    var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(combination.AttributesXml);
+                    
+                    if (attributeValues.Where(attribute => attribute.Id == id).Any())
+                    {
+                        return Conflict(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination"),
+                            await _productAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), ", ")));
+                    }
+                }
+            }
 
             await _productAttributeService.DeleteProductAttributeValueAsync(productAttributeValue);
 
@@ -3070,7 +3130,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Content("Cannot load a product");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && associatedProduct.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && associatedProduct.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             ViewBag.RefreshPage = true;
@@ -3126,7 +3187,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model
@@ -3150,7 +3212,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             await _productAttributeService.DeleteProductAttributeCombinationAsync(combination);
@@ -3169,7 +3232,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List", "Product");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //prepare model
@@ -3190,7 +3254,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List", "Product");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //attributes
@@ -3247,7 +3312,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List", "Product");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //prepare model
@@ -3311,7 +3377,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List", "Product");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //prepare model
@@ -3337,7 +3404,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List", "Product");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             //attributes
@@ -3395,7 +3463,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             await GenerateAttributeCombinationsAsync(product);
@@ -3446,7 +3515,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return Content("This is not your product");
 
             //prepare model

@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.EditAttributeDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Specification attributes");
+    NopHtml.SetActiveMenuItemSystemName("Specification attributes");
 }
 
 <form asp-controller="SpecificationAttribute" asp-action="EditSpecificationAttribute" method="post" id="specificationattribute-form">
@@ -29,7 +29,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateSpecificationAttribute", Model)

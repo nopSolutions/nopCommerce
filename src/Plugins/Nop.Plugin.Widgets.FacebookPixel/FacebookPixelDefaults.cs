@@ -38,9 +38,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         public static string CheckoutOnePageRouteName => "CheckoutOnePage";
 
         /// <summary>
-        /// Gets the name of the view component to place Facebook Pixel into the page
+        /// Gets the route name of area
         /// </summary>
-        public const string VIEW_COMPONENT = "FacebookPixel";
+        public static string AreaRouteName => "areaRoute";
 
         #region Caching
 
@@ -50,7 +50,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <remarks>
         /// {0} : configuration identifier
         /// </remarks>
-        public static CacheKey ConfigurationCacheKey => new CacheKey("Nop.Plugin.Widgets.FacebookPixel.Configuration-{0}", PrefixCacheKey);
+        public static CacheKey ConfigurationCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.Configuration-{0}", PrefixCacheKey);
 
         /// <summary>
         /// Gets the cache key for configurations
@@ -58,17 +58,17 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <remarks>
         /// {0} : store identifier
         /// </remarks>
-        public static CacheKey ConfigurationsCacheKey => new CacheKey("Nop.Plugin.Widgets.FacebookPixel.Configurations-{0}", PrefixCacheKey);
+        public static CacheKey ConfigurationsCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.Configurations-{0}", PrefixCacheKey);
 
         /// <summary>
         /// Gets the cache key for custom events
         /// </summary>
-        public static CacheKey CustomEventsCacheKey => new CacheKey("Nop.Plugin.Widgets.FacebookPixel.CustomEvents-{0}", PrefixCacheKey);
+        public static CacheKey CustomEventsCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.CustomEvents-{0}", PrefixCacheKey);
 
         /// <summary>
         /// Gets the cache key for widget zones
         /// </summary>
-        public static CacheKey WidgetZonesCacheKey => new CacheKey("Nop.Plugin.Widgets.FacebookPixel.WidgetZones", PrefixCacheKey);
+        public static CacheKey WidgetZonesCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.WidgetZones", PrefixCacheKey);
 
         /// <summary>
         /// Gets the prefix key to clear cache
@@ -128,6 +128,25 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// Gets the name of a session value to store prepared scripts for tracked events
         /// </summary>
         public static string TrackedEventsSessionValue => "FacebookPixelTrackedEvents";
+
+        #endregion
+
+        #region Conversions API
+
+        /// <summary>
+        /// Gets the name of facebook conversions api base address to send tracked events
+        /// </summary>
+        public static string FbConversionsApiBaseAddress = "https://graph.facebook.com";
+
+        /// <summary>
+        /// Gets the name of facebook conversions api version to send tracked events
+        /// </summary>
+        public static string FbConversionsApiVersion = "v13.0";
+
+        /// <summary>
+        /// Gets the name of facebook conversions api event endpoint to send tracked events
+        /// </summary>
+        public static string FbConversionsApiEventEndpoint = "events";
 
         #endregion
     }

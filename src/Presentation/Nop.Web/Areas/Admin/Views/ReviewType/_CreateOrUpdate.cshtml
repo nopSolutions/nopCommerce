@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="cards-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductReviewTypeTop, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductReviewTypeTop, additionalData = Model })
                 <div class="card card-default">
                     <div class="card-body">
                         @(await Html.LocalizedEditorAsync<ReviewTypeModel, ReviewTypeLocalizedModel>("review-type-localized",
@@ -48,7 +48,14 @@
                                                             <nop-label asp-for="Description" />
                                                         </div>
                                                         <div class="col-md-9">
-                                                            <nop-editor asp-for="Description" asp-required="true" asp-template="RichEditor" />
+                                                            <div class="input-group-append input-group-required">
+                                                                <div class="input-group">
+                                                                    <nop-editor asp-for="Description" asp-template="RichEditor" />
+                                                                </div>
+                                                                <div class="input-group-btn">
+                                                                    <nop-required />
+                                                                </div>
+                                                            </div>
                                                             <span asp-validation-for="Description"></span>
                                                         </div>
                                                     </div>
@@ -83,7 +90,7 @@
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductReviewTypeBottom, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductReviewTypeBottom, additionalData = Model })
             </div>
         </div>
     </div>

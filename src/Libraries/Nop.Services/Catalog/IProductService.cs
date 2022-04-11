@@ -66,11 +66,13 @@ namespace Nop.Services.Catalog
         /// Gets products which marked as new
         /// </summary>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the list of new products
         /// </returns>
-        Task<IList<Product>> GetProductsMarkedAsNewAsync(int storeId = 0);
+        Task<IPagedList<Product>> GetProductsMarkedAsNewAsync(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets product
@@ -186,7 +188,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the products
         /// </returns>
-        Task<IPagedList<Product>> GetProductsByProductAtributeIdAsync(int productAttributeId,
+        Task<IPagedList<Product>> GetProductsByProductAttributeIdAsync(int productAttributeId,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -285,7 +287,6 @@ namespace Nop.Services.Catalog
         /// </returns>
         Task<int> GetNumberOfProductsByVendorIdAsync(int vendorId);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Parse "required product Ids" property
         /// </summary>
@@ -293,7 +294,6 @@ namespace Nop.Services.Catalog
         /// <returns>A list of required product IDs</returns>
         int[] ParseRequiredProductIds(Product product);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Get a value indicating whether a product is available now (availability dates)
         /// </summary>
@@ -302,7 +302,6 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         bool ProductIsAvailable(Product product, DateTime? dateTime = null);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Get a list of allowed quantities (parse 'AllowedQuantities' property)
         /// </summary>
@@ -328,7 +327,6 @@ namespace Nop.Services.Catalog
         /// </returns>
         Task<int> GetTotalStockQuantityAsync(Product product, bool useReservedQuantity = true, int warehouseId = 0);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Get number of rental periods (price ratio)
         /// </summary>
@@ -349,7 +347,6 @@ namespace Nop.Services.Catalog
         /// </returns>
         Task<string> FormatStockMessageAsync(Product product, string attributesXml);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats SKU
         /// </summary>
@@ -361,7 +358,6 @@ namespace Nop.Services.Catalog
         /// </returns>
         Task<string> FormatSkuAsync(Product product, string attributesXml = null);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats manufacturer part number
         /// </summary>
@@ -373,7 +369,6 @@ namespace Nop.Services.Catalog
         /// </returns>
         Task<string> FormatMpnAsync(Product product, string attributesXml = null);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats GTIN
         /// </summary>
@@ -385,7 +380,6 @@ namespace Nop.Services.Catalog
         /// </returns>
         Task<string> FormatGtinAsync(Product product, string attributesXml = null);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats start/end date for rental product
         /// </summary>
@@ -431,6 +425,16 @@ namespace Nop.Services.Catalog
         /// The task result contains the result
         /// </returns>
         Task<bool> HasAnyRecurringProductAsync(int[] productIds);
+
+        /// <summary>
+        /// Returns a list of sku of not existing products
+        /// </summary>
+        /// <param name="productSku">The sku of the products to check</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of sku not existing products
+        /// </returns>
+        Task<string[]> GetNotExistingProductsAsync(string[] productSku);
 
         #endregion
 
@@ -512,7 +516,6 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateRelatedProductAsync(RelatedProduct relatedProduct);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Finds a related product item by specified identifiers
         /// </summary>
@@ -570,9 +573,8 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the cross-sells
         /// </returns>
-        Task<IList<Product>> GetCrosssellProductsByShoppingCartAsync(IList<ShoppingCartItem> cart, int numberOfProducts);
+        Task<IList<Product>> GetCrossSellProductsByShoppingCartAsync(IList<ShoppingCartItem> cart, int numberOfProducts);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Finds a cross-sell product item by specified identifiers
         /// </summary>
@@ -838,7 +840,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        Task<Warehouse> GetWarehousesByIdAsync(int warehouseId);
+        Task<Warehouse> GetWarehouseByIdAsync(int warehouseId);
 
         /// <summary>
         /// Deletes a ProductWarehouseInventory

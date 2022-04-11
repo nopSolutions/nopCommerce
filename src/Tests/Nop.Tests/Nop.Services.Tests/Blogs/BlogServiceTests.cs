@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -175,6 +176,72 @@ namespace Nop.Tests.Nop.Services.Tests.Blogs
             var post = await _blogService.GetBlogPostByIdAsync(1);
             var count = await _blogService.GetBlogCommentsCountAsync(post);
             count.Should().Be(1);
+        }
+
+        [Test]
+        public async Task TestCRUD()
+        {
+            var post = new BlogPost
+            {
+                Title = string.Empty,
+                Body = string.Empty,
+                LanguageId = 1
+            };
+
+            await _blogService.InsertBlogPostAsync(post);
+
+            var postId = post.Id;
+
+            postId.Should().BeGreaterThan(0);
+
+            post.Body.Should().BeNullOrEmpty();
+            post.Body = "test body";
+            await _blogService.UpdateBlogPostAsync(post);
+            var testPost = await _blogService.GetBlogPostByIdAsync(postId);
+
+            testPost.Body.Should().NotBeEmpty();
+            testPost.Body.Should().BeEquivalentTo(post.Body);
+
+            var comment = new BlogComment {BlogPostId = postId, StoreId = 1, CustomerId = 1};
+
+            await _blogService.InsertBlogCommentAsync(comment);
+            var commentId = comment.Id;
+
+            commentId.Should().BeGreaterThan(0);
+            comment.CommentText.Should().BeNullOrEmpty();
+            comment.CommentText = "test comment";
+            await _blogService.UpdateBlogCommentAsync(comment);
+            var testComment = await _blogService.GetBlogCommentByIdAsync(commentId);
+
+            testComment.CommentText.Should().NotBeEmpty();
+            testComment.CommentText.Should().BeEquivalentTo(comment.CommentText);
+
+            await _blogService.DeleteBlogCommentAsync(comment);
+            testComment = await _blogService.GetBlogCommentByIdAsync(commentId);
+            testComment.Should().BeNull();
+            
+            var comments = new List<BlogComment>
+            {
+                new() {BlogPostId = postId, StoreId = 1, CustomerId = 1},
+                new() {BlogPostId = postId, StoreId = 1, CustomerId = 1},
+                new() {BlogPostId = postId, StoreId = 1, CustomerId = 1}
+            } as IList<BlogComment>;
+
+            foreach (var blogComment in comments) 
+                await _blogService.InsertBlogCommentAsync(blogComment);
+
+            comments = await _blogService.GetBlogCommentsByIdsAsync(comments.Select(p=>p.Id).ToArray());
+            comments.Count.Should().Be(3);
+
+            await _blogService.DeleteBlogCommentsAsync(comments);
+
+            comments = await _blogService.GetBlogCommentsByIdsAsync(comments.Select(p => p.Id).ToArray());
+            comments.Count.Should().Be(0);
+
+            await _blogService.DeleteBlogPostAsync(post);
+
+            testPost = await _blogService.GetBlogPostByIdAsync(postId);
+            testPost.Should().BeNull();
         }
     }
 }

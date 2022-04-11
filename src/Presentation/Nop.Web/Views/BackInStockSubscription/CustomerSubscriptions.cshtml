@@ -3,14 +3,14 @@
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.BackInStockSubscriptions").Text);
+    NopHtml.AddTitleParts(T("PageTitle.BackInStockSubscriptions").Text);
     //page class
-    Html.AppendPageCssClassParts("html-account-page");
-    Html.AppendPageCssClassParts("html-back-in-stock-subscription-list-page");
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-back-in-stock-subscription-list-page");
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
 }
 <div class="page account-page back-in-stock-subscription-list-page">
     <div class="page-title">

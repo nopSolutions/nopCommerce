@@ -10,10 +10,8 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Http.Extensions;
-using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
-using Nop.Services.Orders;
 
 namespace Nop.Services.Payments
 {
@@ -27,6 +25,7 @@ namespace Nop.Services.Payments
         private readonly ICustomerService _customerService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPaymentPluginManager _paymentPluginManager;
+        private readonly IPriceCalculationService _priceCalculationService;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
@@ -37,12 +36,14 @@ namespace Nop.Services.Payments
         public PaymentService(ICustomerService customerService,
             IHttpContextAccessor httpContextAccessor,
             IPaymentPluginManager paymentPluginManager,
+            IPriceCalculationService priceCalculationService,
             PaymentSettings paymentSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
             _customerService = customerService;
             _httpContextAccessor = httpContextAccessor;
             _paymentPluginManager = paymentPluginManager;
+            _priceCalculationService = priceCalculationService;
             _paymentSettings = paymentSettings;
             _shoppingCartSettings = shoppingCartSettings;
         }
@@ -166,8 +167,7 @@ namespace Nop.Services.Payments
             if (!_shoppingCartSettings.RoundPricesDuringCalculation)
                 return result;
 
-            var priceCalculationService = EngineContext.Current.Resolve<IPriceCalculationService>();
-            result = await priceCalculationService.RoundPriceAsync(result);
+            result = await _priceCalculationService.RoundPriceAsync(result);
 
             return result;
         }
@@ -297,7 +297,7 @@ namespace Nop.Services.Payments
             var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName);
             if (paymentMethod == null)
                 return RecurringPaymentType.NotSupported;
-            
+
             return paymentMethod.RecurringPaymentType;
         }
 
@@ -369,39 +369,7 @@ namespace Nop.Services.Payments
 
             return maskedChars + last4;
         }
-
-        /// <summary>
-        /// Calculate payment method fee
-        /// </summary>
-        /// <param name="cart">Shopping cart</param>
-        /// <param name="fee">Fee value</param>
-        /// <param name="usePercentage">Is fee amount specified as percentage or fixed value?</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the result
-        /// </returns>
-        public virtual async Task<decimal> CalculateAdditionalFeeAsync(IList<ShoppingCartItem> cart, decimal fee, bool usePercentage)
-        {
-            if (fee <= 0)
-                return fee;
-
-            decimal result;
-            if (usePercentage)
-            {
-                //percentage
-                var orderTotalCalculationService = EngineContext.Current.Resolve<IOrderTotalCalculationService>();
-                var orderTotalWithoutPaymentFee = (await orderTotalCalculationService.GetShoppingCartTotalAsync(cart, usePaymentMethodAdditionalFee: false)).shoppingCartTotal ?? 0;
-                result = (decimal)((float)orderTotalWithoutPaymentFee * (float)fee / 100f);
-            }
-            else
-            {
-                //fixed value
-                result = fee;
-            }
-
-            return result;
-        }
-
+        
         /// <summary>
         /// Serialize CustomValues of ProcessPaymentRequest
         /// </summary>

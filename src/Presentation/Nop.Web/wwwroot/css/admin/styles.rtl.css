@@ -894,7 +894,7 @@ table .btn {
 }
 
 .k-numeric-wrap.k-state-default {
-  padding-right: 20px;
+  padding-left: 28px;
 }
 
 .k-picker-wrap.k-state-hover {
@@ -941,6 +941,12 @@ table .btn {
   padding: 3px 0;
 }
 
+.k-numeric-wrap .k-input {
+  unicode-bidi: plaintext;
+  text-align: right;
+  padding-right: 25px;
+}
+
 .k-picker-wrap.k-state-focused.k-state-selected,
 .k-numeric-wrap.k-state-focused.k-state-selected,
 td.k-state-focused.k-state-selected {
@@ -971,7 +977,7 @@ td.k-state-focused.k-state-selected {
 .k-picker-wrap.k-state-focused,
 .k-numeric-wrap.k-state-focused {
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255/25%);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
   border-radius: 0;
   border: 1px solid #80bdff;
 }
@@ -979,6 +985,10 @@ td.k-state-focused.k-state-selected {
 .k-picker-wrap.k-state-focused .k-input,
 .k-numeric-wrap.k-state-focused .k-input {
   border: none;
+}
+.k-numeric-wrap.k-state-focused .k-input {
+  border: none;
+  padding-right: 28px;
 }
 
 .k-numerictextbox .k-link {
@@ -1141,7 +1151,7 @@ td.k-state-focused.k-state-selected {
   border-color: #80bdff;
   border-width: 0;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255/25%);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
   border-radius: 0;
 }
 
@@ -1600,7 +1610,7 @@ div.dataTables_wrapper div.dataTables_processing .fa {
 
 .form-group input[type=checkbox]:focus {
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255/25%);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
   border-radius: 0;
   border: 1px solid #80bdff;
 }

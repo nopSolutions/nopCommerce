@@ -4,33 +4,41 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
+using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
-using OfficeOpenXml;
 
 namespace Nop.Services.ExportImport
 {
@@ -39,30 +47,29 @@ namespace Nop.Services.ExportImport
     /// </summary>
     public partial class ImportManager : IImportManager
     {
-        #region Constants
-
-        //it's quite fast hash (to cheaply distinguish between objects)
-        private const string IMAGE_HASH_ALGORITHM = "SHA512";
-
-        private const string UPLOADS_TEMP_PATH = "~/App_Data/TempUploads";
-
-        #endregion
-
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly IAddressService _addressService;
+        private readonly IAffiliateService _affiliateService;
         private readonly ICategoryService _categoryService;
+        private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
         private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
+        private readonly ICustomNumberFormatter _customNumberFormatter;
         private readonly INopDataProvider _dataProvider;
         private readonly IDateRangeService _dateRangeService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
         private readonly IManufacturerService _manufacturerService;
         private readonly IMeasureService _measureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly INopFileProvider _fileProvider;
+        private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
@@ -80,6 +87,7 @@ namespace Nop.Services.ExportImport
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
+        private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -87,18 +95,26 @@ namespace Nop.Services.ExportImport
         #region Ctor
 
         public ImportManager(CatalogSettings catalogSettings,
+            IAddressService addressService,
+            IAffiliateService affiliateService,
             ICategoryService categoryService,
+            ICheckoutAttributeFormatter checkoutAttributeFormatter,
             ICountryService countryService,
             ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
+            ICustomNumberFormatter customNumberFormatter,
             INopDataProvider dataProvider,
             IDateRangeService dateRangeService,
+            IGenericAttributeService genericAttributeService,
             IHttpClientFactory httpClientFactory,
+            ILanguageService languageService,
             ILocalizationService localizationService,
             ILogger logger,
             IManufacturerService manufacturerService,
             IMeasureService measureService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             INopFileProvider fileProvider,
+            IOrderService orderService,
             IPictureService pictureService,
             IProductAttributeService productAttributeService,
             IProductService productService,
@@ -116,21 +132,30 @@ namespace Nop.Services.ExportImport
             IVendorService vendorService,
             IWorkContext workContext,
             MediaSettings mediaSettings,
+            TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
+            _addressService = addressService;
+            _affiliateService = affiliateService;
             _catalogSettings = catalogSettings;
             _categoryService = categoryService;
+            _checkoutAttributeFormatter = checkoutAttributeFormatter;
             _countryService = countryService;
             _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _customNumberFormatter = customNumberFormatter;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
+            _genericAttributeService = genericAttributeService;
             _httpClientFactory = httpClientFactory;
             _fileProvider = fileProvider;
+            _languageService = languageService;
             _localizationService = localizationService;
             _logger = logger;
             _manufacturerService = manufacturerService;
             _measureService = measureService;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _orderService = orderService;
             _pictureService = pictureService;
             _productAttributeService = productAttributeService;
             _productService = productService;
@@ -148,6 +173,7 @@ namespace Nop.Services.ExportImport
             _vendorService = vendorService;
             _workContext = workContext;
             _mediaSettings = mediaSettings;
+            _taxSettings = taxSettings;
             _vendorSettings = vendorSettings;
         }
 
@@ -155,7 +181,7 @@ namespace Nop.Services.ExportImport
 
         #region Utilities
 
-        private static ExportedAttributeType GetTypeOfExportedAttribute(ExcelWorksheet worksheet, PropertyManager<ExportProductAttribute> productAttributeManager, PropertyManager<ExportSpecificationAttribute> specificationAttributeManager, int iRow)
+        private static ExportedAttributeType GetTypeOfExportedAttribute(IXLWorksheet worksheet, PropertyManager<ExportProductAttribute> productAttributeManager, PropertyManager<ExportSpecificationAttribute> specificationAttributeManager, int iRow)
         {
             productAttributeManager.ReadFromXlsx(worksheet, iRow, ExportProductAttribute.ProducAttributeCellOffset);
 
@@ -175,7 +201,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private static async Task SetOutLineForSpecificationAttributeRowAsync(object cellValue, ExcelWorksheet worksheet, int endRow)
+        private static async Task SetOutLineForSpecificationAttributeRowAsync(object cellValue, IXLWorksheet worksheet, int endRow)
         {
             var attributeType = (cellValue ?? string.Empty).ToString();
 
@@ -193,16 +219,16 @@ namespace Nop.Services.ExportImport
             }
         }
 
-        private static void CopyDataToNewFile(ImportProductMetadata metadata, ExcelWorksheet worksheet, string filePath, int startRow, int endRow, int endCell)
+        private static void CopyDataToNewFile(ImportProductMetadata metadata, IXLWorksheet worksheet, string filePath, int startRow, int endRow, int endCell)
         {
             using var stream = new FileStream(filePath, FileMode.OpenOrCreate);
             // ok, we can run the real code of the sample now
-            using var xlPackage = new ExcelPackage(stream);
+            using var workbook = new XLWorkbook(stream);
             // uncomment this line if you want the XML written out to the outputDir
             //xlPackage.DebugMode = true; 
 
             // get handles to the worksheets
-            var outWorksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
+            var outWorksheet = workbook.Worksheets.Add(typeof(Product).Name);
             metadata.Manager.WriteCaption(outWorksheet);
             var outRow = 2;
             for (var row = startRow; row <= endRow; row++)
@@ -210,13 +236,13 @@ namespace Nop.Services.ExportImport
                 outWorksheet.Row(outRow).OutlineLevel = worksheet.Row(row).OutlineLevel;
                 for (var cell = 1; cell <= endCell; cell++)
                 {
-                    outWorksheet.Cells[outRow, cell].Value = worksheet.Cells[row, cell].Value;
+                    outWorksheet.Row(outRow).Cell(cell).Value = worksheet.Row(row).Cell(cell).Value;
                 }
 
                 outRow += 1;
             }
 
-            xlPackage.Save();
+            workbook.Save();
         }
 
         protected virtual int GetColumnIndex(string[] properties, string columnName)
@@ -267,7 +293,7 @@ namespace Nop.Services.ExportImport
                 {
                     var existingBinary = await _pictureService.LoadPictureBinaryAsync(existingPicture);
                     //picture binary after validation (like in database)
-                    var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType);
+                    var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType, name);
                     if (existingBinary.SequenceEqual(validatedPictureBinary) ||
                         existingBinary.SequenceEqual(newPictureBinary))
                     {
@@ -291,7 +317,7 @@ namespace Nop.Services.ExportImport
 
             var point = string.IsNullOrEmpty(extension) ? string.Empty : ".";
             var fileName = _fileProvider.FileExists(picturePath) ? $"{name}{point}{extension}" : string.Empty;
-            
+
             await _logger.ErrorAsync($"Insert picture failed (file name: {fileName})", ex);
         }
 
@@ -316,7 +342,7 @@ namespace Nop.Services.ExportImport
                         {
                             var existingBinary = await _pictureService.LoadPictureBinaryAsync(existingPicture);
                             //picture binary after validation (like in database)
-                            var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType);
+                            var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType, picturePath);
                             if (!existingBinary.SequenceEqual(validatedPictureBinary) &&
                                 !existingBinary.SequenceEqual(newPictureBinary))
                                 continue;
@@ -358,7 +384,11 @@ namespace Nop.Services.ExportImport
             //it will only be used if the images are stored in the SQL Server database (not compact)
             var trimByteCount = _dataProvider.SupportedLengthOfBinaryHash - 1;
             var productsImagesIds = await _productService.GetProductsImagesIdsAsync(allProductsBySku.Select(p => p.Id).ToArray());
-            var allPicturesHashes = await _pictureService.GetPicturesHashAsync(productsImagesIds.SelectMany(p => p.Value).ToArray());
+
+            var allProductPictureIds = productsImagesIds.SelectMany(p => p.Value);
+
+            var allPicturesHashes = allProductPictureIds.Any() ? await _dataProvider.GetFieldHashesAsync<PictureBinary>(p => allProductPictureIds.Contains(p.PictureId),
+                p => p.PictureId, p => p.BinaryData) : new Dictionary<int, string>();
 
             foreach (var product in productPictureMetadata)
             {
@@ -371,16 +401,18 @@ namespace Nop.Services.ExportImport
                         var mimeType = GetMimeTypeFromFilePath(picturePath);
                         var newPictureBinary = await _fileProvider.ReadAllBytesAsync(picturePath);
                         var pictureAlreadyExists = false;
+                        var seoFileName = await _pictureService.GetPictureSeNameAsync(product.ProductItem.Name);
+
                         if (!product.IsNew)
                         {
                             var newImageHash = HashHelper.CreateHash(
                                 newPictureBinary,
-                                IMAGE_HASH_ALGORITHM,
+                                ExportImportDefaults.ImageHashAlgorithm,
                                 trimByteCount);
 
                             var newValidatedImageHash = HashHelper.CreateHash(
-                                await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType), 
-                                IMAGE_HASH_ALGORITHM,
+                                await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType, seoFileName),
+                                ExportImportDefaults.ImageHashAlgorithm,
                                 trimByteCount);
 
                             var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
@@ -389,15 +421,15 @@ namespace Nop.Services.ExportImport
 
                             pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key))
                                 .Select(p => p.Value)
-                                .Any(p => 
-                                    p.Equals(newImageHash, StringComparison.OrdinalIgnoreCase) || 
+                                .Any(p =>
+                                    p.Equals(newImageHash, StringComparison.OrdinalIgnoreCase) ||
                                     p.Equals(newValidatedImageHash, StringComparison.OrdinalIgnoreCase));
                         }
 
                         if (pictureAlreadyExists)
                             continue;
 
-                        var newPicture = await _pictureService.InsertPictureAsync(newPictureBinary, mimeType, await _pictureService.GetPictureSeNameAsync(product.ProductItem.Name));
+                        var newPicture = await _pictureService.InsertPictureAsync(newPictureBinary, mimeType, seoFileName);
 
                         await _productService.InsertProductPictureAsync(new ProductPicture
                         {
@@ -534,7 +566,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task<(Category category, bool isNew, string curentCategoryBreadCrumb)> GetCategoryFromXlsxAsync(PropertyManager<Category> manager, ExcelWorksheet worksheet, int iRow, Dictionary<string, ValueTask<Category>> allCategories)
+        protected virtual async Task<(Category category, bool isNew, string curentCategoryBreadCrumb)> GetCategoryFromXlsxAsync(PropertyManager<Category> manager, IXLWorksheet worksheet, int iRow, Dictionary<string, ValueTask<Category>> allCategories)
         {
             manager.ReadFromXlsx(worksheet, iRow);
 
@@ -597,7 +629,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task SetOutLineForProductAttributeRowAsync(object cellValue, ExcelWorksheet worksheet, int endRow)
+        protected virtual async Task SetOutLineForProductAttributeRowAsync(object cellValue, IXLWorksheet worksheet, int endRow)
         {
             try
             {
@@ -669,7 +701,10 @@ namespace Nop.Services.ExportImport
                 await _productAttributeService.UpdateProductAttributeMappingAsync(productAttributeMapping);
             }
 
-            var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(productAttributeValueId);
+            var pav = (await _productAttributeService.GetProductAttributeValuesAsync(productAttributeMapping.Id))
+                .FirstOrDefault(p => p.Id == productAttributeValueId);
+
+            //var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(productAttributeValueId);
 
             var attributeControlType = (AttributeControlType)attributeControlTypeId;
 
@@ -681,6 +716,17 @@ namespace Nop.Services.ExportImport
                     case AttributeControlType.FileUpload:
                     case AttributeControlType.MultilineTextbox:
                     case AttributeControlType.TextBox:
+                        if (productAttributeMapping.ValidationRulesAllowed())
+                        {
+                            productAttributeMapping.ValidationMinLength = productAttributeManager.GetProperty("ValidationMinLength")?.IntValueNullable;
+                            productAttributeMapping.ValidationMaxLength = productAttributeManager.GetProperty("ValidationMaxLength")?.IntValueNullable;
+                            productAttributeMapping.ValidationFileMaximumSize = productAttributeManager.GetProperty("ValidationFileMaximumSize")?.IntValueNullable;
+                            productAttributeMapping.ValidationFileAllowedExtensions = productAttributeManager.GetProperty("ValidationFileAllowedExtensions")?.StringValue;
+                            productAttributeMapping.DefaultValue = productAttributeManager.GetProperty("DefaultValue")?.StringValue;
+
+                            await _productAttributeService.UpdateProductAttributeMappingAsync(productAttributeMapping);
+                        }
+
                         return;
                 }
 
@@ -756,14 +802,15 @@ namespace Nop.Services.ExportImport
 
             var isNew = productSpecificationAttribute == null;
 
-            if (isNew) productSpecificationAttribute = new ProductSpecificationAttribute();
+            if (isNew)
+                productSpecificationAttribute = new ProductSpecificationAttribute();
 
             if (attributeTypeId != (int)SpecificationAttributeType.Option)
                 //we allow filtering only for "Option" attribute type
                 allowFiltering = false;
 
             //we don't allow CustomValue for "Option" attribute type
-            if (attributeTypeId == (int)SpecificationAttributeType.Option) 
+            if (attributeTypeId == (int)SpecificationAttributeType.Option)
                 customValue = null;
 
             productSpecificationAttribute.AttributeTypeId = attributeTypeId;
@@ -793,7 +840,7 @@ namespace Nop.Services.ExportImport
                 return string.Empty;
 
             //ensure that temp directory is created
-            var tempDirectory = _fileProvider.MapPath(UPLOADS_TEMP_PATH);
+            var tempDirectory = _fileProvider.MapPath(ExportImportDefaults.UploadsTempPath);
             _fileProvider.CreateDirectory(tempDirectory);
 
             var fileName = _fileProvider.GetFileName(urlString);
@@ -805,7 +852,7 @@ namespace Nop.Services.ExportImport
             {
                 var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
                 var fileData = await client.GetByteArrayAsync(urlString);
-                await using (var fs = new FileStream(filePath, FileMode.OpenOrCreate)) 
+                await using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
                     fs.Write(fileData, 0, fileData.Length);
 
                 downloadedFiles?.Add(filePath);
@@ -820,7 +867,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<ImportProductMetadata> PrepareImportProductDataAsync(ExcelWorksheet worksheet)
+        private async Task<ImportProductMetadata> PrepareImportProductDataAsync(IXLWorksheet worksheet)
         {
             //the columns
             var properties = GetPropertiesByExcelCells<Product>(worksheet);
@@ -831,6 +878,11 @@ namespace Nop.Services.ExportImport
             {
                 new PropertyByName<ExportProductAttribute>("AttributeId"),
                 new PropertyByName<ExportProductAttribute>("AttributeName"),
+                new PropertyByName<ExportProductAttribute>("DefaultValue"),
+                new PropertyByName<ExportProductAttribute>("ValidationMinLength"),
+                new PropertyByName<ExportProductAttribute>("ValidationMaxLength"),
+                new PropertyByName<ExportProductAttribute>("ValidationFileAllowedExtensions"),
+                new PropertyByName<ExportProductAttribute>("ValidationFileMaximumSize"),
                 new PropertyByName<ExportProductAttribute>("AttributeTextPrompt"),
                 new PropertyByName<ExportProductAttribute>("AttributeIsRequired"),
                 new PropertyByName<ExportProductAttribute>("AttributeControlType"),
@@ -947,17 +999,17 @@ namespace Nop.Services.ExportImport
             while (true)
             {
                 var allColumnsAreEmpty = manager.GetProperties
-                    .Select(property => worksheet.Cells[endRow, property.PropertyOrderPosition])
+                    .Select(property => worksheet.Row(endRow).Cell(property.PropertyOrderPosition))
                     .All(cell => string.IsNullOrEmpty(cell?.Value?.ToString()));
 
                 if (allColumnsAreEmpty)
                     break;
 
-                if (new[] { 1, 2 }.Select(cellNum => worksheet.Cells[endRow, cellNum])
+                if (new[] { 1, 2 }.Select(cellNum => worksheet.Row(endRow).Cell(cellNum))
                         .All(cell => string.IsNullOrEmpty(cell?.Value?.ToString())) &&
                     worksheet.Row(endRow).OutlineLevel == 0)
                 {
-                    var cellValue = worksheet.Cells[endRow, attributeIdCellNum].Value;
+                    var cellValue = worksheet.Row(endRow).Cell(attributeIdCellNum).Value;
                     await SetOutLineForProductAttributeRowAsync(cellValue, worksheet, endRow);
                     await SetOutLineForSpecificationAttributeRowAsync(cellValue, worksheet, endRow);
                 }
@@ -979,7 +1031,7 @@ namespace Nop.Services.ExportImport
                         case ExportedAttributeType.ProductAttribute:
                             productAttributeManager.ReadFromXlsx(worksheet, endRow,
                                 ExportProductAttribute.ProducAttributeCellOffset);
-                            if (int.TryParse((worksheet.Cells[endRow, attributeIdCellNum].Value ?? string.Empty).ToString(), out var aid))
+                            if (int.TryParse((worksheet.Row(endRow).Cell(attributeIdCellNum).Value ?? string.Empty).ToString(), out var aid))
                             {
                                 allAttributeIds.Add(aid);
                             }
@@ -988,7 +1040,7 @@ namespace Nop.Services.ExportImport
                         case ExportedAttributeType.SpecificationAttribute:
                             specificationAttributeManager.ReadFromXlsx(worksheet, endRow, ExportProductAttribute.ProducAttributeCellOffset);
 
-                            if (int.TryParse((worksheet.Cells[endRow, specificationAttributeOptionIdCellNum].Value ?? string.Empty).ToString(), out var saoid))
+                            if (int.TryParse((worksheet.Row(endRow).Cell(specificationAttributeOptionIdCellNum).Value ?? string.Empty).ToString(), out var saoid))
                             {
                                 allSpecificationAttributeOptionIds.Add(saoid);
                             }
@@ -1002,7 +1054,7 @@ namespace Nop.Services.ExportImport
 
                 if (categoryCellNum > 0)
                 {
-                    var categoryIds = worksheet.Cells[endRow, categoryCellNum].Value?.ToString() ?? string.Empty;
+                    var categoryIds = worksheet.Row(endRow).Cell(categoryCellNum).Value?.ToString() ?? string.Empty;
 
                     if (!string.IsNullOrEmpty(categoryIds))
                         allCategories.AddRange(categoryIds
@@ -1012,7 +1064,7 @@ namespace Nop.Services.ExportImport
 
                 if (skuCellNum > 0)
                 {
-                    var sku = worksheet.Cells[endRow, skuCellNum].Value?.ToString() ?? string.Empty;
+                    var sku = worksheet.Row(endRow).Cell(skuCellNum).Value?.ToString() ?? string.Empty;
 
                     if (!string.IsNullOrEmpty(sku))
                         allSku.Add(sku);
@@ -1020,7 +1072,7 @@ namespace Nop.Services.ExportImport
 
                 if (manufacturerCellNum > 0)
                 {
-                    var manufacturerIds = worksheet.Cells[endRow, manufacturerCellNum].Value?.ToString() ??
+                    var manufacturerIds = worksheet.Row(endRow).Cell(manufacturerCellNum).Value?.ToString() ??
                                           string.Empty;
                     if (!string.IsNullOrEmpty(manufacturerIds))
                         allManufacturers.AddRange(manufacturerIds
@@ -1029,7 +1081,7 @@ namespace Nop.Services.ExportImport
 
                 if (limitedToStoresCellNum > 0)
                 {
-                    var storeIds = worksheet.Cells[endRow, limitedToStoresCellNum].Value?.ToString() ??
+                    var storeIds = worksheet.Row(endRow).Cell(limitedToStoresCellNum).Value?.ToString() ??
                                           string.Empty;
                     if (!string.IsNullOrEmpty(storeIds))
                         allStores.AddRange(storeIds
@@ -1091,7 +1143,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task ImportProductsFromSplitedXlsxAsync(ExcelWorksheet worksheet, ImportProductMetadata metadata)
+        private async Task ImportProductsFromSplitedXlsxAsync(IXLWorksheet worksheet, ImportProductMetadata metadata)
         {
             foreach (var path in SplitProductFile(worksheet, metadata))
             {
@@ -1113,7 +1165,7 @@ namespace Nop.Services.ExportImport
             }
         }
 
-        private IList<string> SplitProductFile(ExcelWorksheet worksheet, ImportProductMetadata metadata)
+        private IList<string> SplitProductFile(IXLWorksheet worksheet, ImportProductMetadata metadata)
         {
             var fileIndex = 1;
             var fileName = Guid.NewGuid().ToString();
@@ -1131,7 +1183,7 @@ namespace Nop.Services.ExportImport
                     ? metadata.ProductsInFile[curIndex - 1]
                     : metadata.EndRow;
 
-                var filePath = $"{_fileProvider.MapPath(UPLOADS_TEMP_PATH)}/{fileName}_part_{fileIndex}.xlsx";
+                var filePath = $"{_fileProvider.MapPath(ExportImportDefaults.UploadsTempPath)}/{fileName}_part_{fileIndex}.xlsx";
 
                 CopyDataToNewFile(metadata, worksheet, filePath, startRow, endRow, endCell);
 
@@ -1145,6 +1197,172 @@ namespace Nop.Services.ExportImport
             return filePaths;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task<ImportOrderMetadata> PrepareImportOrderDataAsync(IXLWorksheet worksheet)
+        {
+            //the columns
+            var properties = GetPropertiesByExcelCells<Order>(worksheet);
+
+            var manager = new PropertyManager<Order>(properties, _catalogSettings);
+
+            var orderItemProperties = new[]
+            {
+                new PropertyByName<OrderItem>("OrderItemGuid"),
+                new PropertyByName<OrderItem>("Name"),
+                new PropertyByName<OrderItem>("Sku"),
+                new PropertyByName<OrderItem>("PriceExclTax"),
+                new PropertyByName<OrderItem>("PriceInclTax"),
+                new PropertyByName<OrderItem>("Quantity"),
+                new PropertyByName<OrderItem>("DiscountExclTax"),
+                new PropertyByName<OrderItem>("DiscountInclTax"),
+                new PropertyByName<OrderItem>("TotalExclTax"),
+                new PropertyByName<OrderItem>("TotalInclTax")
+            };
+
+            var orderItemManager = new PropertyManager<OrderItem>(orderItemProperties, _catalogSettings);
+
+            var endRow = 2;
+            var allOrderGuids = new List<Guid>();
+
+            var tempProperty = manager.GetProperty("OrderGuid");
+            var orderGuidCellNum = tempProperty?.PropertyOrderPosition ?? -1;
+
+            tempProperty = manager.GetProperty("CustomerGuid");
+            var customerGuidCellNum = tempProperty?.PropertyOrderPosition ?? -1;
+
+            manager.SetSelectList("OrderStatus", await OrderStatus.Cancelled.ToSelectListAsync(useLocalization: false));
+            manager.SetSelectList("ShippingStatus", await ShippingStatus.Delivered.ToSelectListAsync(useLocalization: false));
+            manager.SetSelectList("PaymentStatus", await PaymentStatus.Authorized.ToSelectListAsync(useLocalization: false));
+
+            var allCustomerGuids = new List<Guid>();
+
+            var allOrderItemSkus = new List<string>();
+
+            var countOrdersInFile = 0;
+
+            //find end of data
+            while (true)
+            {
+                var allColumnsAreEmpty = manager.GetProperties
+                    .Select(property => worksheet.Row(endRow).Cell(property.PropertyOrderPosition))
+                    .All(cell => string.IsNullOrEmpty(cell?.Value?.ToString()));
+
+                if (allColumnsAreEmpty)
+                    break;
+
+                if (worksheet.Row(endRow).OutlineLevel != 0)
+                {
+                    orderItemManager.ReadFromXlsx(worksheet, endRow, 2);
+
+                    //skip caption row
+                    if (!orderItemManager.IsCaption)
+                    {
+                        allOrderItemSkus.Add(orderItemManager.GetProperty("Sku").StringValue);
+                    }
+
+                    endRow++;
+                    continue;
+                }
+
+                if (orderGuidCellNum > 0)
+                {
+                    var orderGuidString = worksheet.Row(endRow).Cell(orderGuidCellNum).Value?.ToString() ?? string.Empty;
+                    if (!string.IsNullOrEmpty(orderGuidString) && Guid.TryParse(orderGuidString, out var orderGuid))
+                        allOrderGuids.Add(orderGuid);
+                }
+
+                if (customerGuidCellNum > 0)
+                {
+                    var customerGuidString = worksheet.Row(endRow).Cell(customerGuidCellNum).Value?.ToString() ?? string.Empty;
+                    if (!string.IsNullOrEmpty(customerGuidString) && Guid.TryParse(customerGuidString, out var customerGuid))
+                        allCustomerGuids.Add(customerGuid);
+                }
+
+                //counting the number of orders
+                countOrdersInFile++;
+
+                endRow++;
+            }
+
+            //performance optimization, the check for the existence of the customers in one SQL request
+            var notExistingCustomerGuids = await _customerService.GetNotExistingCustomersAsync(allCustomerGuids.ToArray());
+            if (notExistingCustomerGuids.Any())
+            {
+                throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.CustomersDontExist"), string.Join(", ", notExistingCustomerGuids)));
+            }
+
+            //performance optimization, the check for the existence of the order items in one SQL request
+            var notExistingProductSkus = await _productService.GetNotExistingProductsAsync(allOrderItemSkus.ToArray());
+            if (notExistingProductSkus.Any())
+            {
+                throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.ProductsDontExist"), string.Join(", ", notExistingProductSkus)));
+            }
+
+            return new ImportOrderMetadata
+            {
+                EndRow = endRow,
+                Manager = manager,
+                Properties = properties,
+                CountOrdersInFile = countOrdersInFile,
+                OrderItemManager = orderItemManager,
+                AllOrderGuids = allOrderGuids,
+                AllCustomerGuids = allCustomerGuids
+            };
+        }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task ImportOrderItemAsync(PropertyManager<OrderItem> orderItemManager, Order lastLoadedOrder)
+        {
+            if (lastLoadedOrder == null || orderItemManager.IsCaption)
+                return;
+
+            var orderItemGuid = Guid.TryParse(orderItemManager.GetProperty("OrderItemGuid").StringValue, out var guidValue) ? guidValue : Guid.NewGuid();
+            var sku = orderItemManager.GetProperty("Sku").StringValue;
+            var priceExclTax = orderItemManager.GetProperty("PriceExclTax").DecimalValue;
+            var priceInclTax = orderItemManager.GetProperty("PriceInclTax").DecimalValue;
+            var quantity = orderItemManager.GetProperty("Quantity").IntValue;
+            var discountExclTax = orderItemManager.GetProperty("DiscountExclTax").DecimalValue;
+            var discountInclTax = orderItemManager.GetProperty("DiscountInclTax").DecimalValue;
+            var totalExclTax = orderItemManager.GetProperty("TotalExclTax").DecimalValue;
+            var totalInclTax = orderItemManager.GetProperty("TotalInclTax").DecimalValue;
+
+            var orderItemProduct = await _productService.GetProductBySkuAsync(sku);
+            var orderItem = (await _orderService.GetOrderItemsAsync(lastLoadedOrder.Id)).FirstOrDefault(f => f.OrderItemGuid == orderItemGuid);
+
+            if (orderItem == null)
+            {
+                //insert order item
+                orderItem = new OrderItem
+                {
+                    DiscountAmountExclTax = discountExclTax,
+                    DiscountAmountInclTax = discountInclTax,
+                    OrderId = lastLoadedOrder.Id,
+                    OrderItemGuid = orderItemGuid,
+                    PriceExclTax = totalExclTax,
+                    PriceInclTax = totalInclTax,
+                    ProductId = orderItemProduct.Id,
+                    Quantity = quantity,
+                    OriginalProductCost = orderItemProduct.ProductCost,
+                    UnitPriceExclTax = priceExclTax,
+                    UnitPriceInclTax = priceInclTax
+                };
+                await _orderService.InsertOrderItemAsync(orderItem);
+            }
+            else
+            {
+                //update order item
+                orderItem.DiscountAmountExclTax = discountExclTax;
+                orderItem.DiscountAmountInclTax = discountInclTax;
+                orderItem.OrderId = lastLoadedOrder.Id;
+                orderItem.PriceExclTax = totalExclTax;
+                orderItem.PriceInclTax = totalInclTax;
+                orderItem.Quantity = quantity;
+                orderItem.UnitPriceExclTax = priceExclTax;
+                orderItem.UnitPriceInclTax = priceInclTax;
+                await _orderService.UpdateOrderItemAsync(orderItem);
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -1155,7 +1373,7 @@ namespace Nop.Services.ExportImport
         /// <typeparam name="T">Type of object</typeparam>
         /// <param name="worksheet">Excel worksheet</param>
         /// <returns>Property list</returns>
-        public static IList<PropertyByName<T>> GetPropertiesByExcelCells<T>(ExcelWorksheet worksheet)
+        public static IList<PropertyByName<T>> GetPropertiesByExcelCells<T>(IXLWorksheet worksheet)
         {
             var properties = new List<PropertyByName<T>>();
             var poz = 1;
@@ -1163,7 +1381,7 @@ namespace Nop.Services.ExportImport
             {
                 try
                 {
-                    var cell = worksheet.Cells[1, poz];
+                    var cell = worksheet.Row(1).Cell(poz);
 
                     if (string.IsNullOrEmpty(cell?.Value?.ToString()))
                         break;
@@ -1187,9 +1405,9 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ImportProductsFromXlsxAsync(Stream stream)
         {
-            using var xlPackage = new ExcelPackage(stream);
+            using var workbook = new XLWorkbook(stream);
             // get the first worksheet in the workbook
-            var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
+            var worksheet = workbook.Worksheets.FirstOrDefault();
             if (worksheet == null)
                 throw new NopException("No worksheet found");
 
@@ -1204,14 +1422,15 @@ namespace Nop.Services.ExportImport
             }
 
             //performance optimization, load all products by SKU in one SQL request
-            var allProductsBySku = await _productService.GetProductsBySkuAsync(metadata.AllSku.ToArray(), (await _workContext.GetCurrentVendorAsync())?.Id ?? 0);
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var allProductsBySku = await _productService.GetProductsBySkuAsync(metadata.AllSku.ToArray(), currentVendor?.Id ?? 0);
 
             //validate maximum number of products per vendor
             if (_vendorSettings.MaximumProductNumber > 0 &&
-                await _workContext.GetCurrentVendorAsync() != null)
+                currentVendor != null)
             {
                 var newProductsCount = metadata.CountProductsInFile - allProductsBySku.Count;
-                if (await _productService.GetNumberOfProductsByVendorIdAsync((await _workContext.GetCurrentVendorAsync()).Id) + newProductsCount > _vendorSettings.MaximumProductNumber)
+                if (await _productService.GetNumberOfProductsByVendorIdAsync(currentVendor.Id) + newProductsCount > _vendorSettings.MaximumProductNumber)
                     throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
             }
 
@@ -1321,7 +1540,7 @@ namespace Nop.Services.ExportImport
                             break;
                         case "Vendor":
                             //vendor can't change this field
-                            if (await _workContext.GetCurrentVendorAsync() == null)
+                            if (currentVendor == null)
                                 product.VendorId = property.IntValue;
                             break;
                         case "ProductTemplate":
@@ -1329,12 +1548,12 @@ namespace Nop.Services.ExportImport
                             break;
                         case "ShowOnHomepage":
                             //vendor can't change this field
-                            if (await _workContext.GetCurrentVendorAsync() == null)
+                            if (currentVendor == null)
                                 product.ShowOnHomepage = property.BooleanValue;
                             break;
                         case "DisplayOrder":
                             //vendor can't change this field
-                            if (await _workContext.GetCurrentVendorAsync() == null)
+                            if (currentVendor == null)
                                 product.DisplayOrder = property.IntValue;
                             break;
                         case "MetaKeywords":
@@ -1586,8 +1805,8 @@ namespace Nop.Services.ExportImport
                     product.Published = true;
 
                 //sets the current vendor for the new product
-                if (isNew && await _workContext.GetCurrentVendorAsync() != null)
-                    product.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                if (isNew && currentVendor != null)
+                    product.VendorId = currentVendor.Id;
 
                 product.UpdatedOnUtc = DateTime.UtcNow;
 
@@ -1644,13 +1863,20 @@ namespace Nop.Services.ExportImport
                     //category mappings
                     var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? Array.Empty<int>() : allProductsCategoryIds[product.Id];
 
+                    var storesIds = product.LimitedToStores
+                        ? (await _storeMappingService.GetStoresIdsWithAccessAsync(product)).ToList()
+                        : new List<int>();
+
                     var importedCategories = await categoryList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(categoryName => new CategoryKey(categoryName))
+                        .Select(categoryName => new CategoryKey(categoryName, storesIds))
                         .SelectAwait(async categoryKey =>
                         {
-                            var rez = allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id;
+                            var rez = (allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id) ??
+                                      allCategories.FirstOrDefault(p =>
+                                    p.Key.Key.Equals(categoryKey.Key, StringComparison.InvariantCultureIgnoreCase))
+                                .Value?.Id;
 
-                            if (!rez.HasValue && int.TryParse(categoryKey.Key, out var id)) 
+                            if (!rez.HasValue && int.TryParse(categoryKey.Key, out var id))
                                 rez = id;
 
                             if (!rez.HasValue)
@@ -1677,9 +1903,9 @@ namespace Nop.Services.ExportImport
 
                     //delete product categories
                     var deletedProductCategories = await categories.Where(categoryId => !importedCategories.Contains(categoryId))
-                        .SelectAwait(async categoryId => (await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true)).FirstOrDefault(pc => pc.CategoryId == categoryId)).Where(pc=>pc != null).ToListAsync();
+                        .SelectAwait(async categoryId => (await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true)).FirstOrDefault(pc => pc.CategoryId == categoryId)).Where(pc => pc != null).ToListAsync();
 
-                    foreach (var deletedProductCategory in deletedProductCategories) 
+                    foreach (var deletedProductCategory in deletedProductCategories)
                         await _categoryService.DeleteProductCategoryAsync(deletedProductCategory);
                 }
 
@@ -1710,7 +1936,7 @@ namespace Nop.Services.ExportImport
                     //delete product manufacturers
                     var deletedProductsManufacturers = await manufacturers.Where(manufacturerId => !importedManufacturers.Contains(manufacturerId))
                         .SelectAwait(async manufacturerId => (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id)).First(pc => pc.ManufacturerId == manufacturerId)).ToListAsync();
-                    foreach (var deletedProductManufacturer in deletedProductsManufacturers) 
+                    foreach (var deletedProductManufacturer in deletedProductsManufacturers)
                         await _manufacturerService.DeleteProductManufacturerAsync(deletedProductManufacturer);
                 }
 
@@ -1810,7 +2036,8 @@ namespace Nop.Services.ExportImport
 
                     var isActive = true;
 
-                    var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+                    var store = await _storeContext.GetCurrentStoreAsync();
+                    var storeId = store.Id;
 
                     //"email" field specified
                     var email = tmp[0].Trim();
@@ -1849,6 +2076,9 @@ namespace Nop.Services.ExportImport
 
                     count++;
                 }
+
+            await _customerActivityService.InsertActivityAsync("ImportNewsLetterSubscriptions",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportNewsLetterSubscriptions"), count));
 
             return count;
         }
@@ -1936,9 +2166,9 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ImportManufacturersFromXlsxAsync(Stream stream)
         {
-            using var xlPackage = new ExcelPackage(stream);
+            using var workbook = new XLWorkbook(stream);
             // get the first worksheet in the workbook
-            var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
+            var worksheet = workbook.Worksheets.FirstOrDefault();
             if (worksheet == null)
                 throw new NopException("No worksheet found");
 
@@ -1953,7 +2183,7 @@ namespace Nop.Services.ExportImport
             while (true)
             {
                 var allColumnsAreEmpty = manager.GetProperties
-                    .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
+                    .Select(property => worksheet.Row(iRow).Cell(property.PropertyOrderPosition))
                     .All(cell => cell?.Value == null || string.IsNullOrEmpty(cell.Value.ToString()));
 
                 if (allColumnsAreEmpty)
@@ -2068,9 +2298,9 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ImportCategoriesFromXlsxAsync(Stream stream)
         {
-            using var xlPackage = new ExcelPackage(stream);
+            using var workboox = new XLWorkbook(stream);
             // get the first worksheet in the workbook
-            var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
+            var worksheet = workboox.Worksheets.FirstOrDefault();
             if (worksheet == null)
                 throw new NopException("No worksheet found");
 
@@ -2093,7 +2323,7 @@ namespace Nop.Services.ExportImport
             while (true)
             {
                 var allColumnsAreEmpty = manager.GetProperties
-                    .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
+                    .Select(property => worksheet.Row(iRow).Cell(property.PropertyOrderPosition))
                     .All(cell => string.IsNullOrEmpty(cell?.Value?.ToString()));
 
                 if (allColumnsAreEmpty)
@@ -2164,6 +2394,330 @@ namespace Nop.Services.ExportImport
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Categories.Import.CategoriesArentImported"), string.Join(", ", categoriesName)));
         }
 
+        /// <summary>
+        /// Import orders from XLSX file
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task ImportOrdersFromXlsxAsync(Stream stream)
+        {
+            using var workbook = new XLWorkbook(stream);
+            // get the first worksheet in the workbook
+            var worksheet = workbook.Worksheets.FirstOrDefault();
+            if (worksheet == null)
+                throw new NopException("No worksheet found");
+
+            var downloadedFiles = new List<string>();
+
+            var metadata = await PrepareImportOrderDataAsync(worksheet);
+
+            //performance optimization, load all orders by guid in one SQL request
+            var allOrdersByGuids = await _orderService.GetOrdersByGuidsAsync(metadata.AllOrderGuids.ToArray());
+
+            //performance optimization, load all customers by guid in one SQL request
+            var allCustomersByGuids = await _customerService.GetCustomersByGuidsAsync(metadata.AllCustomerGuids.ToArray());
+
+            Order lastLoadedOrder = null;
+
+            for (var iRow = 2; iRow < metadata.EndRow; iRow++)
+            {
+                //imports product attributes
+                if (worksheet.Row(iRow).OutlineLevel != 0)
+                {
+                    if (lastLoadedOrder == null)
+                        continue;
+
+                    metadata.OrderItemManager.ReadFromXlsx(worksheet, iRow, 2);
+
+                    //skip caption row
+                    if (!metadata.OrderItemManager.IsCaption)
+                    {
+                        await ImportOrderItemAsync(metadata.OrderItemManager, lastLoadedOrder);
+                    }
+                    continue;
+                }
+
+                metadata.Manager.ReadFromXlsx(worksheet, iRow);
+
+                var order = allOrdersByGuids.FirstOrDefault(p => p.OrderGuid == metadata.Manager.GetProperty("OrderGuid").GuidValue);
+
+                var isNew = order == null;
+
+                order ??= new Order();
+
+                Address orderBillingAddress = null;
+                Address orderAddress = null;
+
+                if (isNew)
+                    order.CreatedOnUtc = DateTime.UtcNow;
+                else
+                {
+                    orderBillingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+                    orderAddress = await _addressService.GetAddressByIdAsync((order.PickupInStore ? order.PickupAddressId : order.ShippingAddressId) ?? 0);
+                }
+
+                orderBillingAddress ??= new Address();
+                orderAddress ??= new Address();
+
+                var customer = allCustomersByGuids.FirstOrDefault(p => p.CustomerGuid.ToString() == metadata.Manager.GetProperty("CustomerGuid").StringValue);
+
+                foreach (var property in metadata.Manager.GetProperties)
+                {
+                    switch (property.PropertyName)
+                    {
+                        case "StoreId":
+                            if (await _storeService.GetStoreByIdAsync(property.IntValue) is Store orderStore)
+                                order.StoreId = property.IntValue;
+                            else
+                                order.StoreId = (await _storeContext.GetCurrentStoreAsync())?.Id ?? 0;
+                            break;
+                        case "OrderGuid":
+                            order.OrderGuid = property.GuidValue;
+                            break;
+                        case "CustomerId":
+                            order.CustomerId = customer?.Id ?? 0;
+                            break;
+                        case "OrderStatus":
+                            order.OrderStatus = (OrderStatus)property.PropertyValue;
+                            break;
+                        case "PaymentStatus":
+                            order.PaymentStatus = (PaymentStatus)property.PropertyValue;
+                            break;
+                        case "ShippingStatus":
+                            order.ShippingStatus = (ShippingStatus)property.PropertyValue;
+                            break;
+                        case "OrderSubtotalInclTax":
+                            order.OrderSubtotalInclTax = property.DecimalValue;
+                            break;
+                        case "OrderSubtotalExclTax":
+                            order.OrderSubtotalExclTax = property.DecimalValue;
+                            break;
+                        case "OrderSubTotalDiscountInclTax":
+                            order.OrderSubTotalDiscountInclTax = property.DecimalValue;
+                            break;
+                        case "OrderSubTotalDiscountExclTax":
+                            order.OrderSubTotalDiscountExclTax = property.DecimalValue;
+                            break;
+                        case "OrderShippingInclTax":
+                            order.OrderShippingInclTax = property.DecimalValue;
+                            break;
+                        case "OrderShippingExclTax":
+                            order.OrderShippingExclTax = property.DecimalValue;
+                            break;
+                        case "PaymentMethodAdditionalFeeInclTax":
+                            order.PaymentMethodAdditionalFeeInclTax = property.DecimalValue;
+                            break;
+                        case "PaymentMethodAdditionalFeeExclTax":
+                            order.PaymentMethodAdditionalFeeExclTax = property.DecimalValue;
+                            break;
+                        case "TaxRates":
+                            order.TaxRates = property.StringValue;
+                            break;
+                        case "OrderTax":
+                            order.OrderTax = property.DecimalValue;
+                            break;
+                        case "OrderTotal":
+                            order.OrderTotal = property.DecimalValue;
+                            break;
+                        case "RefundedAmount":
+                            order.RefundedAmount = property.DecimalValue;
+                            break;
+                        case "OrderDiscount":
+                            order.OrderDiscount = property.DecimalValue;
+                            break;
+                        case "CurrencyRate":
+                            order.CurrencyRate = property.DecimalValue;
+                            break;
+                        case "CustomerCurrencyCode":
+                            order.CustomerCurrencyCode = property.StringValue;
+                            break;
+                        case "AffiliateId":
+                            order.AffiliateId = property.IntValue;
+                            break;
+                        case "PaymentMethodSystemName":
+                            order.PaymentMethodSystemName = property.StringValue;
+                            break;
+                        case "ShippingPickupInStore":
+                            order.PickupInStore = property.BooleanValue;
+                            break;
+                        case "ShippingMethod":
+                            order.ShippingMethod = property.StringValue;
+                            break;
+                        case "ShippingRateComputationMethodSystemName":
+                            order.ShippingRateComputationMethodSystemName = property.StringValue;
+                            break;
+                        case "CustomValuesXml":
+                            order.CustomValuesXml = property.StringValue;
+                            break;
+                        case "VatNumber":
+                            order.VatNumber = property.StringValue;
+                            break;
+                        case "CreatedOnUtc":
+                            order.CreatedOnUtc = DateTime.TryParse(property.StringValue, out var createdOnUtc) ? createdOnUtc : DateTime.UtcNow;
+                            break;
+                        case "BillingFirstName":
+                            orderBillingAddress.FirstName = property.StringValue;
+                            break;
+                        case "BillingLastName":
+                            orderBillingAddress.LastName = property.StringValue;
+                            break;
+                        case "BillingPhoneNumber":
+                            orderBillingAddress.PhoneNumber = property.StringValue;
+                            break;
+                        case "BillingEmail":
+                            orderBillingAddress.Email = property.StringValue;
+                            break;
+                        case "BillingFaxNumber":
+                            orderBillingAddress.FaxNumber = property.StringValue;
+                            break;
+                        case "BillingCompany":
+                            orderBillingAddress.Company = property.StringValue;
+                            break;
+                        case "BillingAddress1":
+                            orderBillingAddress.Address1 = property.StringValue;
+                            break;
+                        case "BillingAddress2":
+                            orderBillingAddress.Address2 = property.StringValue;
+                            break;
+                        case "BillingCity":
+                            orderBillingAddress.City = property.StringValue;
+                            break;
+                        case "BillingCounty":
+                            orderBillingAddress.County = property.StringValue;
+                            break;
+                        case "BillingStateProvinceAbbreviation":
+                            if (await _stateProvinceService.GetStateProvinceByAbbreviationAsync(property.StringValue) is StateProvince billingState)
+                                orderBillingAddress.StateProvinceId = billingState.Id;
+                            break;
+                        case "BillingZipPostalCode":
+                            orderBillingAddress.ZipPostalCode = property.StringValue;
+                            break;
+                        case "BillingCountryCode":
+                            if (await _countryService.GetCountryByTwoLetterIsoCodeAsync(property.StringValue) is Country billingCountry)
+                                orderBillingAddress.CountryId = billingCountry.Id;
+                            break;
+                        case "ShippingFirstName":
+                            orderAddress.FirstName = property.StringValue;
+                            break;
+                        case "ShippingLastName":
+                            orderAddress.LastName = property.StringValue;
+                            break;
+                        case "ShippingPhoneNumber":
+                            orderAddress.PhoneNumber = property.StringValue;
+                            break;
+                        case "ShippingEmail":
+                            orderAddress.Email = property.StringValue;
+                            break;
+                        case "ShippingFaxNumber":
+                            orderAddress.FaxNumber = property.StringValue;
+                            break;
+                        case "ShippingCompany":
+                            orderAddress.Company = property.StringValue;
+                            break;
+                        case "ShippingAddress1":
+                            orderAddress.Address1 = property.StringValue;
+                            break;
+                        case "ShippingAddress2":
+                            orderAddress.Address2 = property.StringValue;
+                            break;
+                        case "ShippingCity":
+                            orderAddress.City = property.StringValue;
+                            break;
+                        case "ShippingCounty":
+                            orderAddress.County = property.StringValue;
+                            break;
+                        case "ShippingStateProvinceAbbreviation":
+                            if (await _stateProvinceService.GetStateProvinceByAbbreviationAsync(property.StringValue) is StateProvince shippingState)
+                                orderAddress.StateProvinceId = shippingState.Id;
+                            break;
+                        case "ShippingZipPostalCode":
+                            orderAddress.ZipPostalCode = property.StringValue;
+                            break;
+                        case "ShippingCountryCode":
+                            if (await _countryService.GetCountryByTwoLetterIsoCodeAsync(property.StringValue) is Country shippingCountry)
+                                orderAddress.CountryId = shippingCountry.Id;
+                            break;
+                    }
+                }
+
+                //check order address field values from excel
+                if (string.IsNullOrWhiteSpace(orderAddress.FirstName) && string.IsNullOrWhiteSpace(orderAddress.LastName) &&string.IsNullOrWhiteSpace(orderAddress.Email))
+                    orderAddress = null;
+
+                //insert or update billing address
+                if (orderBillingAddress.Id == 0)
+                {
+                    await _addressService.InsertAddressAsync(orderBillingAddress);
+                    order.BillingAddressId = orderBillingAddress.Id; 
+                }
+                else
+                    await _addressService.UpdateAddressAsync(orderBillingAddress);
+
+                //insert or update shipping/pickup address
+                if (orderAddress != null)
+                {
+                    if (orderAddress.Id == 0)
+                    {
+                        await _addressService.InsertAddressAsync(orderAddress);
+
+                        if (order.PickupInStore)
+                            order.PickupAddressId = orderAddress.Id;
+                        else
+                            order.ShippingAddressId = orderAddress.Id;
+                    }
+                    else
+                        await _addressService.UpdateAddressAsync(orderAddress);
+                }
+                else
+                    order.ShippingAddressId = null;
+
+                //set some default values if not specified
+                if (isNew)
+                {
+                    //customer language
+                    var customerLanguage = await _languageService.GetLanguageByIdAsync(customer?.LanguageId ?? 0);
+                    if (customerLanguage == null || !customerLanguage.Published)
+                        customerLanguage = await _workContext.GetWorkingLanguageAsync();
+                    order.CustomerLanguageId = customerLanguage.Id;
+
+                    //tax display type
+                    order.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
+
+                    //set other default values
+                    order.AllowStoringCreditCardNumber = false;
+                    order.AuthorizationTransactionCode = string.Empty;
+                    order.AuthorizationTransactionId = string.Empty;
+                    order.AuthorizationTransactionResult = string.Empty;
+                    order.CaptureTransactionId = string.Empty;
+                    order.CaptureTransactionResult = string.Empty;
+                    order.CardCvv2 = string.Empty;
+                    order.CardExpirationMonth = string.Empty;
+                    order.CardExpirationYear = string.Empty;
+                    order.CardName = string.Empty;
+                    order.CardNumber = string.Empty;
+                    order.CardType = string.Empty;
+                    order.CustomerIp = string.Empty;
+                    order.CustomOrderNumber = string.Empty;
+                    order.MaskedCreditCardNumber = string.Empty;
+                    order.RefundedAmount = decimal.Zero;
+                    order.SubscriptionTransactionId = string.Empty;
+
+                    await _orderService.InsertOrderAsync(order);
+
+                    //generate and set custom order number
+                    order.CustomOrderNumber = _customNumberFormatter.GenerateOrderCustomNumber(order);
+                    await _orderService.UpdateOrderAsync(order);
+                }
+                else
+                    await _orderService.UpdateOrderAsync(order);
+
+                lastLoadedOrder = order;
+            }
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ImportOrders", string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportOrders"), metadata.CountOrdersInFile));
+        }
+
         #endregion
 
         #region Nested classes
@@ -2183,13 +2737,13 @@ namespace Nop.Services.ExportImport
 
         public class CategoryKey
         {
-        /// <returns>A task that represents the asynchronous operation</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             public static async Task<CategoryKey> CreateCategoryKeyAsync(Category category, ICategoryService categoryService, IList<Category> allCategories, IStoreMappingService storeMappingService)
             {
-                var categoryKey = new CategoryKey(await categoryService.GetFormattedBreadCrumbAsync(category, allCategories), category.LimitedToStores ? (await storeMappingService.GetStoresIdsWithAccessAsync(category)).ToList() : new List<int>());
-                categoryKey.Category = category;
-
-                return categoryKey;
+                return new CategoryKey(await categoryService.GetFormattedBreadCrumbAsync(category, allCategories), category.LimitedToStores ? (await storeMappingService.GetStoresIdsWithAccessAsync(category)).ToList() : new List<int>())
+                {
+                    Category = category
+                };
             }
 
             public CategoryKey(string key, List<int> storesIds = null)

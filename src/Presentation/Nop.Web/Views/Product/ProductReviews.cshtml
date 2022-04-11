@@ -1,22 +1,22 @@
 ﻿@model ProductReviewsModel
 
-@using Nop.Core
+@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
 
 @{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(Model.ProductName);
-    Html.AddTitleParts(T("PageTitle.ProductReviews").Text);
+    NopHtml.AddTitleParts(Model.ProductName);
+    NopHtml.AddTitleParts(T("PageTitle.ProductReviews").Text);
     //page class
-    Html.AppendPageCssClassParts("html-product-reviews-page");
+    NopHtml.AppendPageCssClassParts("html-product-reviews-page");
 }
 <div class="page product-reviews-page">
     <div class="page-title">
         <h1>@T("Reviews.ProductReviewsFor") <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></h1>
     </div>
     <div class="page-body">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageTop, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductReviewsPageTop, additionalData = Model })
         @if (Model.AddProductReview.SuccessfullyAdded)
         {
             <div class="result">
@@ -58,12 +58,13 @@
                                 <div class="rating-wrapper">
                                     <div class="label first">@T("Reviews.Fields.Rating.Bad")</div>
                                     <div class="rating-options">
+                                        <input asp-for="AddProductReview.Rating" value="0" type="radio" id="addproductrating_0" style="display: none;"/>
                                         <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1" aria-label="@T("Reviews.Fields.Rating.Bad")" />
                                         <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2" aria-label="@T("Reviews.Fields.Rating.NotGood")" />
                                         <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3" aria-label="@T("Reviews.Fields.Rating.NotBadNotExcellent")" />
                                         <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4" aria-label="@T("Reviews.Fields.Rating.Good")" />
                                         <input asp-for="AddProductReview.Rating" value="5" type="radio" id="addproductrating_5" aria-label="@T("Reviews.Fields.Rating.Excellent")" />
-                                    </div>
+                                    </div>                                    
                                     <div class="label last">@T("Reviews.Fields.Rating.Excellent")</div>
                                 </div>
                             </div>
@@ -152,7 +153,7 @@
                                     </div>
                                 }
                                 <div class="text-body">
-                                    @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
+                                    @Html.Raw(htmlFormatter.FormatText(review.ReviewText, false, true, false, false, false, false))
                                 </div>
                             </div>
                             @foreach (var reviewType in review.AdditionalProductReviewList.Where(x => x.Rating > 0 && x.VisibleToAllCustomers))
@@ -189,7 +190,7 @@
                                 </span>
                             </div>
                             @await Html.PartialAsync("_ProductReviewHelpfulness", review.Helpfulness)
-                            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review })
+                            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review })
                             @if (!string.IsNullOrEmpty(review.ReplyText))
                             {
                                 <div class="reply">
@@ -197,7 +198,7 @@
                                         @T("Reviews.Reply")
                                     </div>
                                     <div class="reply-text">
-                                        @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReplyText, false, true, false, false, false, false))
+                                        @Html.Raw(htmlFormatter.FormatText(review.ReplyText, false, true, false, false, false, false))
                                     </div>
                                 </div>
                             }
@@ -206,6 +207,6 @@
                 }
             </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageBottom, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductReviewsPageBottom, additionalData = Model })
     </div>
 </div>

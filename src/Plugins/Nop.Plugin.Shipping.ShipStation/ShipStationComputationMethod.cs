@@ -42,10 +42,6 @@ namespace Nop.Plugin.Shipping.ShipStation
 
         #endregion
 
-        #region Utilities
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -112,6 +108,18 @@ namespace Nop.Plugin.Shipping.ShipStation
         }
 
         /// <summary>
+        /// Get associated shipment tracker
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment tracker
+        /// </returns>
+        public Task<IShipmentTracker> GetShipmentTrackerAsync()
+        {
+            return Task.FromResult<IShipmentTracker>(null);
+        }
+
+        /// <summary>
         /// Gets a configuration page URL
         /// </summary>
         public override string GetConfigurationPageUrl()
@@ -133,7 +141,7 @@ namespace Nop.Plugin.Shipping.ShipStation
             await _settingService.SaveSettingAsync(settings);
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByDimensions"] = "Pack by dimensions",
                 ["Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByVolume"] = "Pack by volume",
@@ -171,15 +179,6 @@ namespace Nop.Plugin.Shipping.ShipStation
 
             await base.UninstallAsync();
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets a shipment tracker
-        /// </summary>
-        public IShipmentTracker ShipmentTracker => null;
 
         #endregion
     }

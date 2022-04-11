@@ -112,7 +112,6 @@ namespace Nop.Services.Catalog
         /// </returns>
         Task<decimal> RoundPriceAsync(decimal value, Currency currency = null);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Round
         /// </summary>

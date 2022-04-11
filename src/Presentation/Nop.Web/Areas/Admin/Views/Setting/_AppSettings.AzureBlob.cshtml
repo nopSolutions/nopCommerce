@@ -47,7 +47,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="AzureBlobConfigModel.StoreDataProtectionKeys">
-        <div class="form-group row" id="azure-data-protection-container">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="AzureBlobConfigModel.DataProtectionKeysContainerName" />
             </div>
@@ -56,7 +56,7 @@
                 <span asp-validation-for="AzureBlobConfigModel.DataProtectionKeysContainerName"></span>
             </div>
         </div>
-        <div class="form-group row" id="azure-data-protection-vault">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="AzureBlobConfigModel.DataProtectionKeysVaultId" />
             </div>
@@ -67,19 +67,3 @@
         </div>
     </nop-nested-setting>
 </div>
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.AzureBlobConfigModel.StoreDataProtectionKeys)").click(toggleAzureDataProtection);
-        toggleAzureDataProtection();
-    });
-
-    function toggleAzureDataProtection() {
-        if ($('#@Html.IdFor(model => model.AzureBlobConfigModel.StoreDataProtectionKeys)').is(':checked')) {
-            $('#azure-data-protection-container').showElement();
-            $('#azure-data-protection-vault').showElement();
-        } else {
-            $('#azure-data-protection-container').hideElement();
-            $('#azure-data-protection-vault').hideElement();
-        }
-    }
-</script>

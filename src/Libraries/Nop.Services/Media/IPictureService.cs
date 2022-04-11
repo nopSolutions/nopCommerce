@@ -12,7 +12,6 @@ namespace Nop.Services.Media
     /// </summary>
     public partial interface IPictureService
     {
-        //TODO: migrate to an extension method
         /// <summary>
         /// Returns the file extension from mime type.
         /// </summary>
@@ -220,11 +219,12 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
+        /// <param name="fileName">Name of file</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the picture binary or throws an exception
         /// </returns>
-        Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType);
+        Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType, string fileName);
 
         /// <summary>
         /// Gets or sets a value indicating whether the images should be stored in data base.
@@ -238,16 +238,6 @@ namespace Nop.Services.Media
         /// <param name="isStoreInDb">A value indicating whether the images should be stored in data base</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task SetIsStoreInDbAsync(bool isStoreInDb);
-
-        /// <summary>
-        /// Get pictures hashes
-        /// </summary>
-        /// <param name="picturesIds">Pictures Ids</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the 
-        /// </returns>
-        Task<IDictionary<int, string>> GetPicturesHashAsync(int[] picturesIds);
 
         /// <summary>
         /// Get product picture (for shopping cart and order details pages)
@@ -269,5 +259,13 @@ namespace Nop.Services.Media
         /// The task result contains the picture binary
         /// </returns>
         Task<PictureBinary> GetPictureBinaryByPictureIdAsync(int pictureId);
+
+        /// <summary>
+        /// Convert image from SVG format to PNG
+        /// </summary>
+        /// <param name="filePath">SVG file path</param>
+        /// <returns>A task that represents the asynchronous operation
+        /// The task result contains the byte array</returns>
+        Task<byte[]> ConvertSvgToPngAsync(string filePath);
     }
 }

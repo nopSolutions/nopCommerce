@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Cms;
+using Nop.Plugin.Widgets.AccessiBe.Components;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -74,16 +75,16 @@ namespace Nop.Plugin.Widgets.AccessiBe
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying widget
+        /// Gets a type of a view component for displaying widget
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
-        /// <returns>View component name</returns>
-        public string GetWidgetViewComponentName(string widgetZone)
+        /// <returns>View component type</returns>
+        public Type GetWidgetViewComponent(string widgetZone)
         {
             if (widgetZone == null)
                 throw new ArgumentNullException(nameof(widgetZone));
 
-            return AccessiBeDefaults.VIEW_COMPONENT;
+            return typeof(AccessiBeViewComponent);
         }
 
         /// <summary>
@@ -97,7 +98,7 @@ namespace Nop.Plugin.Widgets.AccessiBe
                 WidgetZone = PublicWidgetZones.HeadHtmlTag
             });
 
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.AccessiBe.Fields.Enabled"] = "Enable",
                 ["Plugins.Widgets.AccessiBe.Fields.Enabled.Hint"] = "Check to activate this widget.",

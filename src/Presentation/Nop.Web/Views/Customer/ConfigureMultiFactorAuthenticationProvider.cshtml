@@ -10,16 +10,16 @@
     Layout = isRegisterCustomer ? "_ColumnsTwo" : "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.MultiFactorAuthentication").Text);
+    NopHtml.AddTitleParts(T("PageTitle.MultiFactorAuthentication").Text);
     //page class
-    Html.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-account-page");
 }
 
 @if (isRegisterCustomer)
 {
     @section left
     {
-        @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.MultiFactorAuthentication })
+        @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.MultiFactorAuthentication })
     }
 }
 
@@ -36,7 +36,7 @@
     </div>
     <div class="page-body">
         <div class="configure-provider">
-            @(await Component.InvokeAsync(Model.ViewComponentName)) 
+            @(await Component.InvokeAsync(Model.ViewComponent)) 
         </div>
     </div>
 </div>

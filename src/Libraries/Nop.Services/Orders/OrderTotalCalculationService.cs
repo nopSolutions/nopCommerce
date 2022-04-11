@@ -269,7 +269,7 @@ namespace Nop.Services.Orders
 
                 //uncomment here for the return unused reward points if new order total less redeemed reward points amount
                 //if (rewardPoints < -rewardPointsOfOrder.Points)
-                //    _rewardPointService.AddRewardPointsHistoryEntry(customer, -rewardPointsOfOrder.Points - rewardPoints, (await _storeContext.GetCurrentStoreAsync()).Id, "Return unused reward points");
+                //    _rewardPointService.AddRewardPointsHistoryEntry(customer, -rewardPointsOfOrder.Points - rewardPoints, store.Id, "Return unused reward points");
 
                 if (rewardPointsAmount != rewardPointsOfOrder.UsedAmount)
                 {
@@ -402,6 +402,8 @@ namespace Nop.Services.Orders
 
             var updatedOrder = updateOrderParameters.UpdatedOrder;
             var customer = await _customerService.GetCustomerByIdAsync(updatedOrder.CustomerId);
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
 
             if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(restoredCart))
             {
@@ -418,8 +420,7 @@ namespace Nop.Services.Orders
                             {
                                 var address = await _addressService.GetAddressByIdAsync(updatedOrder.BillingAddressId);
                                 var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(restoredCart, address,
-                                    customer, updatedOrder.ShippingRateComputationMethodSystemName,
-                                    (await _storeContext.GetCurrentStoreAsync()).Id);
+                                    customer, updatedOrder.ShippingRateComputationMethodSystemName, store.Id);
                                 if (pickupPointsResponse.Success)
                                 {
                                     var selectedPickupPoint =
@@ -441,7 +442,7 @@ namespace Nop.Services.Orders
                         {
                             //customer chose shipping to address, try to get chosen shipping option
                             var shippingAddress = await _addressService.GetAddressByIdAsync(updatedOrder.ShippingAddressId ?? 0);
-                            var shippingOptionsResponse = await _shippingService.GetShippingOptionsAsync(restoredCart, shippingAddress, customer, updatedOrder.ShippingRateComputationMethodSystemName, (await _storeContext.GetCurrentStoreAsync()).Id);
+                            var shippingOptionsResponse = await _shippingService.GetShippingOptionsAsync(restoredCart, shippingAddress, customer, updatedOrder.ShippingRateComputationMethodSystemName, store.Id);
                             if (shippingOptionsResponse.Success)
                             {
                                 var shippingOption = shippingOptionsResponse.ShippingOptions.FirstOrDefault(option =>
@@ -463,9 +464,7 @@ namespace Nop.Services.Orders
                         {
                             //try to get the cheapest pickup point
                             var address = await _addressService.GetAddressByIdAsync(updatedOrder.BillingAddressId);
-                            var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(restoredCart, address,
-                                await _workContext.GetCurrentCustomerAsync(),
-                                storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                            var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(restoredCart, address, currentCustomer, storeId: store.Id);
                             if (pickupPointsResponse.Success)
                             {
                                 updateOrderParameters.PickupPoint = pickupPointsResponse.PickupPoints
@@ -486,7 +485,7 @@ namespace Nop.Services.Orders
                             {
                                 var customerShippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
 
-                                var shippingOptionsResponse = await _shippingService.GetShippingOptionsAsync(restoredCart, customerShippingAddress, await _workContext.GetCurrentCustomerAsync(), storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                                var shippingOptionsResponse = await _shippingService.GetShippingOptionsAsync(restoredCart, customerShippingAddress, currentCustomer, storeId: store.Id);
                                 if (shippingOptionsResponse.Success)
                                 {
                                     var shippingOption = shippingOptionsResponse.ShippingOptions.OrderBy(option => option.Rate)
@@ -673,21 +672,30 @@ namespace Nop.Services.Orders
             if (!_rewardPointsSettings.Enabled)
                 return (redeemedRewardPoints, redeemedRewardPointsAmount);
 
+            var store = await _storeContext.GetCurrentStoreAsync();
             if (!useRewardPoints.HasValue)
-                useRewardPoints = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                useRewardPoints = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, store.Id);
 
             if (!useRewardPoints.Value)
                 return (redeemedRewardPoints, redeemedRewardPointsAmount);
 
-            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
-            rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
-
-            if (!CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
+            if (orderTotal <= decimal.Zero)
                 return (redeemedRewardPoints, redeemedRewardPointsAmount);
+
+            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
+
+            if (_rewardPointsSettings.MaximumRewardPointsToUsePerOrder > 0 && rewardPointsBalance > _rewardPointsSettings.MaximumRewardPointsToUsePerOrder)
+                rewardPointsBalance = _rewardPointsSettings.MaximumRewardPointsToUsePerOrder;
 
             var rewardPointsBalanceAmount = await ConvertRewardPointsToAmountAsync(rewardPointsBalance);
 
-            if (orderTotal <= decimal.Zero)
+            if (_rewardPointsSettings.MaximumRedeemedRate > 0 && _rewardPointsSettings.MaximumRedeemedRate < rewardPointsBalanceAmount / orderTotal)
+            {
+                rewardPointsBalance = ConvertAmountToRewardPoints(orderTotal * _rewardPointsSettings.MaximumRedeemedRate);
+                rewardPointsBalanceAmount = await ConvertRewardPointsToAmountAsync(rewardPointsBalance);
+            }
+
+            if (!CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 return (redeemedRewardPoints, redeemedRewardPointsAmount);
 
             if (orderTotal > rewardPointsBalanceAmount)
@@ -833,7 +841,8 @@ namespace Nop.Services.Orders
             //checkout attributes
             if (customer != null)
             {
-                var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, (await _storeContext.GetCurrentStoreAsync()).Id);
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, store.Id);
                 var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
                 if (attributeValues != null)
                 {
@@ -1012,10 +1021,11 @@ namespace Nop.Services.Orders
                 return (decimal.Zero, new List<Discount>());
 
             var customer = await _customerService.GetShoppingCartCustomerAsync(cart);
+            var store = await _storeContext.GetCurrentStoreAsync();
 
             //with additional shipping charges
             var pickupPoint = await _genericAttributeService.GetAttributeAsync<PickupPoint>(customer,
-                    NopCustomerDefaults.SelectedPickupPointAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    NopCustomerDefaults.SelectedPickupPointAttribute, store.Id);
 
             var adjustedRate = shippingRate;
 
@@ -1072,8 +1082,9 @@ namespace Nop.Services.Orders
                 return (decimal.Zero, taxRate, appliedDiscounts);
 
             ShippingOption shippingOption = null;
+            var store = await _storeContext.GetCurrentStoreAsync();
             if (customer != null)
-                shippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                shippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
 
             if (shippingOption != null)
             {
@@ -1087,7 +1098,7 @@ namespace Nop.Services.Orders
                 if (customer != null)
                     shippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
 
-                var shippingRateComputationMethods = await _shippingPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
+                var shippingRateComputationMethods = await _shippingPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), store.Id);
                 if (!shippingRateComputationMethods.Any() && !_shippingSettings.AllowPickupInStore)
                     throw new NopException("Shipping rate computation method could not be loaded");
 
@@ -1097,7 +1108,7 @@ namespace Nop.Services.Orders
 
                     var shippingOptionRequests = (await _shippingService.CreateShippingOptionRequestsAsync(cart,
                         shippingAddress,
-                        (await _storeContext.GetCurrentStoreAsync()).Id)).shipmentPackages;
+                        store.Id)).shipmentPackages;
 
                     decimal? fixedRate = null;
                     foreach (var shippingOptionRequest in shippingOptionRequests)
@@ -1185,12 +1196,13 @@ namespace Nop.Services.Orders
             var redeemedRewardPointsAmount = decimal.Zero;
 
             var customer = await _customerService.GetShoppingCartCustomerAsync(cart);
-
+            var store = await _storeContext.GetCurrentStoreAsync();
             var paymentMethodSystemName = string.Empty;
+
             if (customer != null)
             {
                 paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
-                    NopCustomerDefaults.SelectedPaymentMethodAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
             }
 
             //subtotal without tax
@@ -1268,6 +1280,27 @@ namespace Nop.Services.Orders
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 orderTotal = await _priceCalculationService.RoundPriceAsync(orderTotal);
             return (orderTotal, discountAmount, appliedDiscounts, appliedGiftCards, redeemedRewardPoints, redeemedRewardPointsAmount);
+        }
+
+        /// <summary>
+        /// Calculate payment method fee
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="fee">Fee value</param>
+        /// <param name="usePercentage">Is fee amount specified as percentage or fixed value?</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<decimal> CalculatePaymentAdditionalFeeAsync(IList<ShoppingCartItem> cart, decimal fee, bool usePercentage)
+        {
+            if (!usePercentage || fee <= 0) 
+                return fee;
+
+            var orderTotalWithoutPaymentFee = (await GetShoppingCartTotalAsync(cart, usePaymentMethodAdditionalFee: false)).shoppingCartTotal ?? 0;
+            var result = (decimal)((float)orderTotalWithoutPaymentFee * (float)fee / 100f);
+
+            return result;
         }
 
         /// <summary>

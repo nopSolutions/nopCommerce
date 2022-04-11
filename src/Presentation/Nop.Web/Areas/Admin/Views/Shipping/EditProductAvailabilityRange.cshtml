@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Shipping.ProductAvailabilityRanges.EditProductAvailabilityRangeDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Dates and ranges");
+    NopHtml.SetActiveMenuItemSystemName("Dates and ranges");
 }
 
 
@@ -30,7 +30,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAvailabilityRangeDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAvailabilityRangeDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateProductAvailabilityRange", Model)

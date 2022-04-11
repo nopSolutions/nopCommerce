@@ -23,9 +23,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.PrivateMessages
             {
                 Subject = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.Subject, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Subject);
             model.Subject = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.Subject, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Subject);
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.PrivateMessages
             {
                 Subject = "some comment"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Subject, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Subject);
         }
 
         [Test]
@@ -45,9 +45,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.PrivateMessages
             {
                 Message = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.Message, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Message);
             model.Message = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.Message, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Message);
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.PrivateMessages
             {
                 Message = "some comment"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Message, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Message);
         }
     }
 }

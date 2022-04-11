@@ -10,7 +10,6 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
     /// <summary>
     /// Represents view component to embed tracking script on pages
     /// </summary>
-    [ViewComponent(Name = SendinblueDefaults.TRACKING_VIEW_COMPONENT_NAME)]
     public class WidgetsSendinblueViewComponent : NopViewComponent
     {
         #region Fields
@@ -54,8 +53,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
                 return Content(trackingScript);
 
             //get customer email
-            var customerEmail = !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync())
-                ? (await _workContext.GetCurrentCustomerAsync()).Email?.Replace("'", "\\'")
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerEmail = !await _customerService.IsGuestAsync(customer)
+                ? customer.Email?.Replace("'", "\\'")
                 : string.Empty;
 
             //prepare tracking script

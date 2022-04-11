@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Settings.Order.ReturnRequestActions.EditDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Order settings");
+    NopHtml.SetActiveMenuItemSystemName("Order settings");
 }
 
 
@@ -30,7 +30,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestActionDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ReturnRequestActionDetailsButtons, additionalData = Model })
         </div>
     </div>
 

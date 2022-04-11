@@ -1,6 +1,5 @@
 ﻿@model CustomerSearchModel
 
-@using System.Globalization;
 @using Nop.Core.Domain.Media
 
 @inject MediaSettings _mediaSettings
@@ -9,7 +8,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Customers.Customers").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Customers list");
+    NopHtml.SetActiveMenuItemSystemName("Customers list");
 }
 
 @{
@@ -65,7 +64,7 @@
                 </ul>
 
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerListButtons })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerListButtons, additionalData = Model })
         </div>
     </div>
 
@@ -150,8 +149,40 @@
                                                 </div>
                                             </div>
                                         }
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchRegistrationDateFrom" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchRegistrationDateFrom" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchRegistrationDateTo" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchRegistrationDateTo" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-7">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchLastActivityFrom" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchLastActivityFrom" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchLastActivityTo" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchLastActivityTo" />
+                                            </div>
+                                        </div>
                                         @if (Model.CompanyEnabled)
                                         {
                                             <div class="form-group row">
@@ -261,6 +292,10 @@
                                     new FilterParameter(nameof(Model.SearchDayOfBirth)),
                                     new FilterParameter(nameof(Model.SearchMonthOfBirth)),
                                     new FilterParameter(nameof(Model.SearchCompany)),
+                                    new FilterParameter(nameof(Model.SearchRegistrationDateFrom)),
+                                    new FilterParameter(nameof(Model.SearchRegistrationDateTo)),
+                                    new FilterParameter(nameof(Model.SearchLastActivityFrom)),
+                                    new FilterParameter(nameof(Model.SearchLastActivityTo)),
                                     new FilterParameter(nameof(Model.SearchPhone)),
                                     new FilterParameter(nameof(Model.SearchZipPostalCode)),
                                     new FilterParameter(nameof(Model.SearchIpAddress)),

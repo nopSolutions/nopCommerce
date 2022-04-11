@@ -29,14 +29,14 @@ namespace Nop.Services.Plugins
         public static string Path => "~/Plugins";
 
         /// <summary>
+        /// Gets the path to plugins folder
+        /// </summary>
+        public static string UploadedPath => "~/Plugins/Uploaded";
+
+        /// <summary>
         /// Gets the plugins folder name
         /// </summary>
         public static string PathName => "Plugins";
-
-        /// <summary>
-        /// Gets the path to plugins shadow copies folder
-        /// </summary>
-        public static string ShadowCopyPath => "~/Plugins/bin";
 
         /// <summary>
         /// Gets the path to plugins refs folder
@@ -54,19 +54,9 @@ namespace Nop.Services.Plugins
         public static string LogoFileName => "logo";
 
         /// <summary>
-        /// Gets the name of reserve folder for plugins shadow copies
-        /// </summary>
-        public static string ReserveShadowCopyPathName => "reserve_bin_";
-
-        /// <summary>
-        /// Gets the name pattern of reserve folder for plugins shadow copies
-        /// </summary>
-        public static string ReserveShadowCopyPathNamePattern => "reserve_bin_*";
-
-        /// <summary>
         /// Gets supported extensions of logo file
         /// </summary>
-        public static List<string> SupportedLogoImageExtensions => new List<string> { "jpg", "png", "gif" };
+        public static List<string> SupportedLogoImageExtensions => new() { "jpg", "png", "gif" };
 
         /// <summary>
         /// Gets the path to temp directory with uploads
@@ -94,7 +84,7 @@ namespace Nop.Services.Plugins
         /// <remarks>
         /// {0} : customer identifier
         /// </remarks>
-        public static CacheKey AdminNavigationPluginsCacheKey => new CacheKey("Nop.plugins.adminnavigation.{0}", AdminNavigationPluginsPrefix);
+        public static CacheKey AdminNavigationPluginsCacheKey => new("Nop.plugins.adminnavigation.{0}", AdminNavigationPluginsPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache

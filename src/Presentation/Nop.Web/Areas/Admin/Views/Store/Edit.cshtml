@@ -7,7 +7,7 @@
     //tour step
     ViewBag.TourStep = TourStep.Store;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Stores");
+    NopHtml.SetActiveMenuItemSystemName("Stores");
 }
 
 @await Html.PartialAsync("_AdminTour")
@@ -34,7 +34,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.StoreDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.StoreDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

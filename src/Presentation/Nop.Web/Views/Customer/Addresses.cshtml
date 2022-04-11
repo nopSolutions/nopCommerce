@@ -3,21 +3,20 @@
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Account").Text);
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
     //page class
-    Html.AppendPageCssClassParts("html-account-page");
-    Html.AppendPageCssClassParts("html-address-list-page");
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-address-list-page");
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.Addresses })
 }
 <div class="page account-page address-list-page">
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses")</h1>
     </div>
     <div class="page-body">
-        <nop-antiforgery-token />
         @if (Model.Addresses.Count > 0)
         {
                 <div class="address-list">

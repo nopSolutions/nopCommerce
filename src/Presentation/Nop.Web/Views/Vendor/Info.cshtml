@@ -3,14 +3,14 @@
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.VendorInfo").Text);
+    NopHtml.AddTitleParts(T("PageTitle.VendorInfo").Text);
     //page class
-    Html.AppendPageCssClassParts("html-account-page");
-    Html.AppendPageCssClassParts("html-vendorinfo-page");
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-vendorinfo-page");
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.VendorInfo })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.VendorInfo })
 }
 
 <div class="page account-page vendorinfo-page">
@@ -41,7 +41,7 @@
                     </div>
                     <div class="inputs">
                         <label asp-for="PictureUrl" asp-postfix=":"></label>
-                        <input name="uploadedFile" type="file" />
+                        <input name="uploadedFile" type="file" accept="image/*" />
                         @if (!string.IsNullOrEmpty(Model.PictureUrl))
                         {
                             <div class="vendor-picture">

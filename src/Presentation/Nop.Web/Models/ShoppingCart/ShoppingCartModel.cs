@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Models;
@@ -18,7 +19,7 @@ namespace Nop.Web.Models.ShoppingCart
             CheckoutAttributes = new List<CheckoutAttributeModel>();
             OrderReviewData = new OrderReviewDataModel();
 
-            ButtonPaymentMethodViewComponentNames = new List<string>();
+            ButtonPaymentMethodViewComponents = new List<Type>();
         }
 
         public bool OnePageCheckoutEnabled { get; set; }
@@ -40,7 +41,7 @@ namespace Nop.Web.Models.ShoppingCart
         public GiftCardBoxModel GiftCardBox { get; set; }
         public OrderReviewDataModel OrderReviewData { get; set; }
 
-        public IList<string> ButtonPaymentMethodViewComponentNames { get; set; }
+        public IList<Type> ButtonPaymentMethodViewComponents { get; set; }
 
         public bool HideCheckoutButton { get; set; }
         public bool ShowVendorName { get; set; }
@@ -69,10 +70,13 @@ namespace Nop.Web.Models.ShoppingCart
             public string ProductSeName { get; set; }
 
             public string UnitPrice { get; set; }
+            public decimal UnitPriceValue { get; set; }
 
             public string SubTotal { get; set; }
+            public decimal SubTotalValue { get; set; }
 
             public string Discount { get; set; }
+            public decimal DiscountValue { get; set; }
             public int? MaximumDiscountedQty { get; set; }
 
             public int Quantity { get; set; }

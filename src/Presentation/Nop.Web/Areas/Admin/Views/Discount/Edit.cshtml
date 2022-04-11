@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Promotions.Discounts.EditDiscountDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Discounts");
+    NopHtml.SetActiveMenuItemSystemName("Discounts");
 }
 
 <form asp-controller="Discount" asp-action="Edit" method="post" id="discount-form">
@@ -30,7 +30,7 @@
                 @T("Admin.Common.Delete")
             </span>
         </div>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsButtons, additionalData = Model })
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DiscountDetailsButtons, additionalData = Model })
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
 </form>

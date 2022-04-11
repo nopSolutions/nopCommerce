@@ -37,6 +37,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool LogUserProfileChanges { get; set; }
         public bool LogUserProfileChanges_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Gdpr.DeleteInactiveCustomersAfterMonths")]
+        public int DeleteInactiveCustomersAfterMonths { get; set; }
+        public bool DeleteInactiveCustomersAfterMonths_OverrideForStore { get; set; }
+
         public GdprConsentSearchModel GdprConsentSearchModel { get; set; }
 
         #endregion

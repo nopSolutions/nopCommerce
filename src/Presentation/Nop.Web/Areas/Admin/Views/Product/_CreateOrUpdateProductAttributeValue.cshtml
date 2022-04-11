@@ -3,10 +3,8 @@
 @using Nop.Core.Domain.Catalog
 @using Nop.Services
 
-@{
-    Html.AddScriptParts("~/lib_npm/farbstastic/farbtastic.min.js");
-    Html.AddCssFileParts("~/lib_npm/farbstastic/farbtastic.css");
-}
+<link rel="stylesheet" href="~/lib_npm/farbstastic/farbtastic.css" />
+<script src="~/lib_npm/farbstastic/farbtastic.min.js" asp-location="Head"></script>
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -66,7 +64,7 @@
         <div class="form-horizontal">
             <div class="form-horizontal">
                 <div class="cards-group">
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeValueDetailsTop, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeValueDetailsTop, additionalData = Model })
                     <div class="card card-default card-popup card-popup">
                         <div class="card-body">
                             <div class="form-group row">
@@ -268,7 +266,7 @@
                             </div>
                         </div>
                     </div>
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeValueDetailsBottom, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeValueDetailsBottom, additionalData = Model })
                 </div>
             </div>
         </div>

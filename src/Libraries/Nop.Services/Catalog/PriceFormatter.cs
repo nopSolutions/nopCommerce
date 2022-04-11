@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 
@@ -22,6 +21,7 @@ namespace Nop.Services.Catalog
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly IMeasureService _measureService;
+        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IWorkContext _workContext;
         private readonly TaxSettings _taxSettings;
 
@@ -33,6 +33,7 @@ namespace Nop.Services.Catalog
             ICurrencyService currencyService,
             ILocalizationService localizationService,
             IMeasureService measureService,
+            IPriceCalculationService priceCalculationService,
             IWorkContext workContext,
             TaxSettings taxSettings)
         {
@@ -40,6 +41,7 @@ namespace Nop.Services.Catalog
             _currencyService = currencyService;
             _localizationService = localizationService;
             _measureService = measureService;
+            _priceCalculationService = priceCalculationService;
             _workContext = workContext;
             _taxSettings = taxSettings;
         }
@@ -291,8 +293,7 @@ namespace Nop.Services.Catalog
             Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax)
         {
             //we should round it no matter of "ShoppingCartSettings.RoundPricesDuringCalculation" setting
-            var priceCalculationService = EngineContext.Current.Resolve<IPriceCalculationService>();
-            price = await priceCalculationService.RoundPriceAsync(price, targetCurrency);
+            price = await _priceCalculationService.RoundPriceAsync(price, targetCurrency);
 
             var currencyString = GetCurrencyString(price, showCurrency, targetCurrency);
             if (!showTax)

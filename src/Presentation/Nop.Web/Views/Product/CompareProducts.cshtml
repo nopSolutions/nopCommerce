@@ -3,9 +3,9 @@
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.CompareProducts").Text);
+    NopHtml.AddTitleParts(T("PageTitle.CompareProducts").Text);
     //page class
-    Html.AppendPageCssClassParts("html-compare-products-page");
+    NopHtml.AppendPageCssClassParts("html-compare-products-page");
 }
 @{
     var columnWidth = "";
@@ -45,8 +45,9 @@
                             <td class="empty">&nbsp;</td>
                             @foreach (var product in Model.Products)
                             {
+                                var picture = product.PictureModels.FirstOrDefault();
                                 <td style="width: @columnWidth;">
-                                    <a class="picture" href="@Url.RouteUrl("Product", new { SeName = product.SeName })"><img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" /></a>
+                                    <a class="picture" href="@Url.RouteUrl("Product", new { SeName = product.SeName })"><img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" /></a>
                                 </td>
                             }
                         </tr>
@@ -142,19 +143,18 @@
                                                         if (string.IsNullOrEmpty(value.ColorSquaresRgb))
                                                         {
                                                             @Html.Raw(value.ValueRaw)
+                                                            if (i != foundProductSpec.Values.Count - 1)
+                                                            {
+                                                                <text>,&nbsp;</text>
+                                                            }
                                                         }
                                                         else
                                                         {
-                                                            <div class="attribute-squares color-squares">
+                                                            <div class="attribute-squares color-squares attribute-squares-padding">
                                                                 <span class="attribute-square-container" title="@Html.Raw(value.ValueRaw)">
                                                                     <span class="attribute-square" style="background-color: @(value.ColorSquaresRgb);">&nbsp;</span>
                                                                 </span>
                                                             </div>
-                                                        }
-
-                                                        if (i != foundProductSpec.Values.Count - 1)
-                                                        {
-                                                            <text>,&nbsp;</text>
                                                         }
                                                     }
                                                 }

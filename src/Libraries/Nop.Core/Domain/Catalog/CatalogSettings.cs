@@ -176,14 +176,24 @@ namespace Nop.Core.Domain.Catalog
         public bool RecentlyViewedProductsEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets a number of products on the "New products" page
-        /// </summary>
-        public int NewProductsNumber { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether "New products" page is enabled
         /// </summary>
         public bool NewProductsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of products on the "New products" page
+        /// </summary>
+        public int NewProductsPageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether customers are allowed to select page size on the "New products" page
+        /// </summary>
+        public bool NewProductsAllowCustomersToSelectPageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the available customer selectable page size options on the "New products" page
+        /// </summary>
+        public string NewProductsPageSizeOptions { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether "Compare products" feature is enabled
@@ -531,8 +541,33 @@ namespace Nop.Core.Domain.Catalog
         public bool EnablePriceRangeFiltering { get; set; }
 
         /// <summary>
+        /// Get or set a value indicating whether the specification attribute filtering is enabled on catalog pages
+        /// </summary>
+        public bool EnableSpecificationAttributeFiltering { get; set; }
+
+        /// <summary>
+        /// Get or set a value indicating whether the "From" prices (based on price adjustments of combinations and attributes) are displayed on catalog pages
+        /// </summary>
+        public bool DisplayFromPrices { get; set; }
+
+        /// <summary>
         /// Gets or sets the attribute value display type when out of stock
         /// </summary>
         public AttributeValueOutOfStockDisplayType AttributeValueOutOfStockDisplayType { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether customer can search with manufacturer name
+        /// </summary>
+        public bool AllowCustomersToSearchWithManufacturerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether customer can search with category name
+        /// </summary>
+        public bool AllowCustomersToSearchWithCategoryName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether all pictures will be displayed on catalog pages
+        /// </summary>
+        public bool DisplayAllPicturesOnCatalogPages { get; set; }
     }
 }

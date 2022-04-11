@@ -62,16 +62,16 @@ namespace Nop.Services.Media.RoxyFileman
         {
             var result = false;
 
-            var fileExtension = _fileProvider.GetFileExtension(path).Replace(".", string.Empty).ToLower();
+            var fileExtension = _fileProvider.GetFileExtension(path).Replace(".", string.Empty).ToLowerInvariant();
 
-            var forbiddenUploads = (await GetSettingAsync("FORBIDDEN_UPLOADS")).Trim().ToLower();
+            var forbiddenUploads = (await GetSettingAsync("FORBIDDEN_UPLOADS")).Trim().ToLowerInvariant();
             if (!string.IsNullOrEmpty(forbiddenUploads))
             {
                 var forbiddenFileExtensions = new ArrayList(Regex.Split(forbiddenUploads, "\\s+"));
                 result = !forbiddenFileExtensions.Contains(fileExtension);
             }
 
-            var allowedUploads = (await GetSettingAsync("ALLOWED_UPLOADS")).Trim().ToLower();
+            var allowedUploads = (await GetSettingAsync("ALLOWED_UPLOADS")).Trim().ToLowerInvariant();
             if (string.IsNullOrEmpty(allowedUploads))
                 return result;
 
@@ -112,8 +112,8 @@ namespace Nop.Services.Media.RoxyFileman
         {
             var fileType = "file";
 
-            fileExtension = fileExtension.ToLower();
-            if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif" || fileExtension == ".webp")
+            fileExtension = fileExtension.ToLowerInvariant();
+            if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif" || fileExtension == ".webp" || fileExtension == ".svg")
                 fileType = "image";
 
             if (fileExtension == ".swf" || fileExtension == ".flv")

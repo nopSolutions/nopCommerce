@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Customers.CustomerRoles.EditCustomerRoleDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Customer roles");
+    NopHtml.SetActiveMenuItemSystemName("Customer roles");
 }
 
 <form asp-controller="CustomerRole" asp-action="Edit" method="post">
@@ -29,7 +29,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerRoleDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerRoleDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -6,20 +8,24 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class CatalogController : BasePublicController
     {
         #region Fields
@@ -38,6 +44,7 @@ namespace Nop.Web.Controllers
         private readonly IProductTagService _productTagService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -62,6 +69,7 @@ namespace Nop.Web.Controllers
             IProductTagService productTagService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService,
             IVendorService vendorService,
             IWebHelper webHelper,
             IWorkContext workContext,
@@ -82,6 +90,7 @@ namespace Nop.Web.Controllers
             _productTagService = productTagService;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
             _vendorService = vendorService;
             _webHelper = webHelper;
             _workContext = workContext;
@@ -100,11 +109,13 @@ namespace Nop.Web.Controllers
             if (!await CheckCategoryAvailabilityAsync(category))
                 return InvokeHttp404();
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //'Continue shopping' URL
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
@@ -137,7 +148,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> GetCatalogRoot()
         {
             var model = await _catalogModelFactory.PrepareRootCategoriesAsync();
@@ -146,7 +156,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> GetCatalogSubCategories(int id)
         {
             var model = await _catalogModelFactory.PrepareSubCategoriesAsync(id);
@@ -165,11 +174,13 @@ namespace Nop.Web.Controllers
             if (!await CheckManufacturerAvailabilityAsync(manufacturer))
                 return InvokeHttp404();
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //'Continue shopping' URL
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
@@ -220,11 +231,13 @@ namespace Nop.Web.Controllers
             if (!await CheckVendorAvailabilityAsync(vendor))
                 return InvokeHttp404();
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //'Continue shopping' URL
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
@@ -297,15 +310,84 @@ namespace Nop.Web.Controllers
 
         #endregion
 
+        #region New (recently added) products page
+
+        public virtual async Task<IActionResult> NewProducts(CatalogProductsCommand command)
+        {
+            if (!_catalogSettings.NewProductsEnabled)
+                return InvokeHttp404();
+
+            var model = new NewProductsModel
+            {
+                CatalogProductsModel = await _catalogModelFactory.PrepareNewProductsModelAsync(command)
+            };
+
+            return View(model);
+        }
+
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        public virtual async Task<IActionResult> GetNewProducts(CatalogProductsCommand command)
+        {
+            if (!_catalogSettings.NewProductsEnabled)
+                return NotFound();
+
+            var model = await _catalogModelFactory.PrepareNewProductsModelAsync(command);
+
+            return PartialView("_ProductsInGridOrLines", model);
+        }
+
+        [CheckLanguageSeoCode(true)]
+        public virtual async Task<IActionResult> NewProductsRss()
+        {
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var feed = new RssFeed(
+                $"{await _localizationService.GetLocalizedAsync(store, x => x.Name)}: New products",
+                "Information about products",
+                new Uri(_webHelper.GetStoreLocation()),
+                DateTime.UtcNow);
+
+            if (!_catalogSettings.NewProductsEnabled)
+                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
+
+            var items = new List<RssItem>();
+
+            var storeId = store.Id;
+            var products = await _productService.GetProductsMarkedAsNewAsync(storeId: storeId);
+
+            foreach (var product in products)
+            {
+                var productUrl = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) }, _webHelper.GetCurrentRequestProtocol());
+                var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
+                var productDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription);
+                var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{store.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);
+                items.Add(item);
+                //uncomment below if you want to add RSS enclosure for pictures
+                //var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+                //if (picture != null)
+                //{
+                //    var imageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize);
+                //    item.ElementExtensions.Add(new XElement("enclosure", new XAttribute("type", "image/jpeg"), new XAttribute("url", imageUrl), new XAttribute("length", picture.PictureBinary.Length)));
+                //}
+
+            }
+            feed.Items = items;
+            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
+        }
+
+        #endregion
+
         #region Searching
 
         public virtual async Task<IActionResult> Search(SearchModel model, CatalogProductsCommand command)
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //'Continue shopping' URL
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(true),
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             if (model == null)
                 model = new SearchModel();
@@ -329,9 +411,9 @@ namespace Nop.Web.Controllers
             //products
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
                 _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
-
+            var store = await _storeContext.GetCurrentStoreAsync();
             var products = await _productService.SearchProductsAsync(0,
-                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                storeId: store.Id,
                 keywords: term,
                 languageId: (await _workContext.GetWorkingLanguageAsync()).Id,
                 visibleIndividuallyOnly: true,
@@ -345,7 +427,7 @@ namespace Nop.Web.Controllers
                           {
                               label = p.Name,
                               producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
-                              productpictureurl = p.DefaultPictureModel.ImageUrl,
+                              productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
                               showlinktoresultsearch = showLinkToResultSearch
                           })
                 .ToList();
@@ -368,7 +450,6 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<bool> CheckCategoryAvailabilityAsync(Category category)
         {
             var isAvailable = true;
@@ -392,7 +473,6 @@ namespace Nop.Web.Controllers
             return isAvailable;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<bool> CheckManufacturerAvailabilityAsync(Manufacturer manufacturer)
         {
             var isAvailable = true;
@@ -416,7 +496,6 @@ namespace Nop.Web.Controllers
             return isAvailable;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         private Task<bool> CheckVendorAvailabilityAsync(Vendor vendor)
         {
             var isAvailable = true;

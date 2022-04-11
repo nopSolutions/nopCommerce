@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Plugins
@@ -21,15 +22,6 @@ namespace Nop.Services.Plugins
             LimitedToStores = new List<int>();
             LimitedToCustomerRoles = new List<int>();
             DependsOn = new List<string>();
-        }
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="referencedAssembly">Referenced assembly</param>
-        public PluginDescriptor(Assembly referencedAssembly) : this()
-        {
-            ReferencedAssembly = referencedAssembly;
         }
 
         #endregion
@@ -101,7 +93,10 @@ namespace Nop.Services.Plugins
         /// </summary>
         public virtual void Save()
         {
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+            //since plugins are loaded before IoC initialization using the default provider,
+            //in order to avoid possible problems we use CommonHelper.DefaultFileProvider
+            //instead of the main file provider
+            var fileProvider = CommonHelper.DefaultFileProvider;
 
             //get the description file path
             if (OriginalAssemblyFile == null)
@@ -193,13 +188,19 @@ namespace Nop.Services.Plugins
         public virtual Type PluginType { get; set; }
 
         /// <summary>
-        /// Gets or sets the original assembly file that a shadow copy was made from it
+        /// Gets or sets the original assembly file
         /// </summary>
         [JsonIgnore]
         public virtual string OriginalAssemblyFile { get; set; }
 
         /// <summary>
-        /// Gets or sets the assembly that has been shadow copied that is active in the application
+        /// Gets or sets the list of all library files in the plugin directory
+        /// </summary>
+        [JsonIgnore]
+        public virtual IList<string> PluginFiles { get; set; }
+
+        /// <summary>
+        /// Gets or sets the assembly that is active in the application
         /// </summary>
         [JsonIgnore]
         public virtual Assembly ReferencedAssembly { get; set; }

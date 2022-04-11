@@ -1,6 +1,6 @@
 ﻿using System;
 using Nop.Services.Logging;
-using Nop.Services.Tasks;
+using Nop.Services.ScheduleTasks;
 
 namespace Nop.Services.Messages
 {

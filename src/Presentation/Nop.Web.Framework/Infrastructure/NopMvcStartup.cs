@@ -18,14 +18,10 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            //add MiniProfiler services
-            services.AddNopMiniProfiler();
-
-            //add WebMarkupMin services to the services container
-            services.AddNopWebMarkupMin();
-
             //add and configure MVC feature
             services.AddNopMvc();
+
+            services.AddWebEncoders();
 
             //add custom redirect result executor
             services.AddNopRedirectResultExecutor();
@@ -37,14 +33,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //use MiniProfiler
-            application.UseMiniProfiler();
-
-            //use WebMarkupMin
-            application.UseNopWebMarkupMin();
-
-            //Endpoints routing
-            application.UseNopEndpoints();
         }
 
         /// <summary>

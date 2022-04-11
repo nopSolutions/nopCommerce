@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="cards-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprConsentDetailsTop, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GdprConsentDetailsTop, additionalData = Model })
                 <div class="card card-default">
                     <div class="card-body">
                         @(await Html.LocalizedEditorAsync<GdprConsentModel, GdprConsentLocalizedModel>("gdpr-consent-localized",
@@ -47,7 +47,7 @@
                         </div>
                         @if (Model.Locales.Count == 1)
                         {
-                            <nop-nested-setting asp-for="IsRequired">
+                            <nop-nested-setting asp-for="IsRequired" disable-auto-generation="true">
                                 <div id="pnlRequiredMessage">
                                     <div class="form-group row">
                                         <div class="col-md-3">
@@ -136,7 +136,7 @@
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprConsentDetailsBottom, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GdprConsentDetailsBottom, additionalData = Model })
             </div>
         </div>
     </div>

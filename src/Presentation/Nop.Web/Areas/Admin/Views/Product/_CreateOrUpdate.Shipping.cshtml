@@ -1,32 +1,5 @@
 ﻿@model ProductModel
-<script>
-    $(document).ready(function() {
-        $("#@Html.IdFor(model => model.IsShipEnabled)").click(toggleShipping);
-        toggleShipping();
-    });
 
-    function toggleShipping() {
-        if ($('#@Html.IdFor(model => model.IsShipEnabled)').is(':checked')) {
-            $('#pnlFreeShipping').showElement();
-            $('#pnlShipSeparately').showElement();
-            $('#pnlAdditionalShippingCharge').showElement();
-            $('#pnlWeight').showElement();
-            $('#pnlLength').showElement();
-            $('#pnlWidth').showElement();
-            $('#pnlHeight').showElement();
-            $('#pnlDeliveryDate').showElement();
-        } else {
-            $('#pnlFreeShipping').hideElement();
-            $('#pnlShipSeparately').hideElement();
-            $('#pnlAdditionalShippingCharge').hideElement();
-            $('#pnlWeight').hideElement();
-            $('#pnlLength').hideElement();
-            $('#pnlWidth').hideElement();
-            $('#pnlHeight').hideElement();
-            $('#pnlDeliveryDate').hideElement();
-        }
-    }
-</script>
 <div class="card-body">
     <div id="product-shipping-area">
         <div class="form-group row">
@@ -39,7 +12,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="IsShipEnabled">
-            <div class="form-group row @(Model.ProductEditorSettingsModel.Weight ? null : "advanced-setting")" id="pnlWeight">
+            <div class="form-group row @(Model.ProductEditorSettingsModel.Weight ? null : "advanced-setting")">
                 <div class="col-md-3">
                     <nop-label asp-for="Weight" />
                 </div>
@@ -48,7 +21,7 @@
                     <span asp-validation-for="Weight"></span>
                 </div>
             </div>
-            <div class="form-group row @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")" id="pnlLength">
+            <div class="form-group row @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")">
                 <div class="col-md-3">
                     <nop-label asp-for="Length" />
                 </div>
@@ -57,7 +30,7 @@
                     <span asp-validation-for="Length"></span>
                 </div>
             </div>
-            <div class="form-group row @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")" id="pnlWidth">
+            <div class="form-group row @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")">
                 <div class="col-md-3">
                     <nop-label asp-for="Width" />
                 </div>
@@ -66,7 +39,7 @@
                     <span asp-validation-for="Width"></span>
                 </div>
             </div>
-            <div class="form-group row @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")" id="pnlHeight">
+            <div class="form-group row @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")">
                 <div class="col-md-3">
                     <nop-label asp-for="Height" />
                 </div>
@@ -75,7 +48,7 @@
                     <span asp-validation-for="Height"></span>
                 </div>
             </div>
-            <div class="form-group row @(Model.ProductEditorSettingsModel.FreeShipping ? null : "advanced-setting")" id="pnlFreeShipping">
+            <div class="form-group row @(Model.ProductEditorSettingsModel.FreeShipping ? null : "advanced-setting")">
                 <div class="col-md-3">
                     <nop-label asp-for="IsFreeShipping" />
                 </div>
@@ -84,7 +57,7 @@
                     <span asp-validation-for="IsFreeShipping"></span>
                 </div>
             </div>
-            <div class="form-group row @(Model.ProductEditorSettingsModel.ShipSeparately ? null : "advanced-setting")" id="pnlShipSeparately">
+            <div class="form-group row @(Model.ProductEditorSettingsModel.ShipSeparately ? null : "advanced-setting")">
                 <div class="col-md-3">
                     <nop-label asp-for="ShipSeparately" />
                 </div>
@@ -93,7 +66,7 @@
                     <span asp-validation-for="ShipSeparately"></span>
                 </div>
             </div>
-            <div class="form-group row @(Model.ProductEditorSettingsModel.AdditionalShippingCharge ? null : "advanced-setting")" id="pnlAdditionalShippingCharge">
+            <div class="form-group row @(Model.ProductEditorSettingsModel.AdditionalShippingCharge ? null : "advanced-setting")">
                 <div class="col-md-3">
                     <nop-label asp-for="AdditionalShippingCharge" />
                 </div>
@@ -102,7 +75,7 @@
                     <span asp-validation-for="AdditionalShippingCharge"></span>
                 </div>
             </div>
-            <div class="form-group row @(Model.ProductEditorSettingsModel.DeliveryDate ? null : "advanced-setting")" id="pnlDeliveryDate">
+            <div class="form-group row @(Model.ProductEditorSettingsModel.DeliveryDate ? null : "advanced-setting")">
                 <div class="col-md-3">
                     <nop-label asp-for="DeliveryDateId" />
                 </div>

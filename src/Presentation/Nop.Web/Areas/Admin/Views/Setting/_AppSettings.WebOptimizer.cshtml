@@ -1,0 +1,64 @@
+@model AppSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="WebOptimizerConfigModel.EnableJavaScriptBundling" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="WebOptimizerConfigModel.EnableJavaScriptBundling" />
+            <span asp-validation-for="WebOptimizerConfigModel.EnableJavaScriptBundling"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="WebOptimizerConfigModel.EnableJavaScriptBundling">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="WebOptimizerConfigModel.JavaScriptBundleSuffix" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="WebOptimizerConfigModel.JavaScriptBundleSuffix" />
+                <span asp-validation-for="WebOptimizerConfigModel.JavaScriptBundleSuffix"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="WebOptimizerConfigModel.EnableCssBundling" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="WebOptimizerConfigModel.EnableCssBundling" />
+            <span asp-validation-for="WebOptimizerConfigModel.EnableCssBundling"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="WebOptimizerConfigModel.EnableCssBundling">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="WebOptimizerConfigModel.CssBundleSuffix" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="WebOptimizerConfigModel.CssBundleSuffix" />
+                <span asp-validation-for="WebOptimizerConfigModel.CssBundleSuffix"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="WebOptimizerConfigModel.EnableDiskCache" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="WebOptimizerConfigModel.EnableDiskCache" />
+            <span asp-validation-for="WebOptimizerConfigModel.EnableDiskCache"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="WebOptimizerConfigModel.EnableDiskCache">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="WebOptimizerConfigModel.CacheDirectory" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="WebOptimizerConfigModel.CacheDirectory" />
+                <span asp-validation-for="WebOptimizerConfigModel.CacheDirectory"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>

@@ -11,16 +11,16 @@
     Layout = isRegisterCustomer ? "_ColumnsTwo" : "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.CheckGiftCardBalance").Text);
+    NopHtml.AddTitleParts(T("PageTitle.CheckGiftCardBalance").Text);
     //page class
-    Html.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-account-page");
 }
 
 @if (isRegisterCustomer)
 {
     @section left
     {
-        @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.CheckGiftCardBalance })
+        @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.CheckGiftCardBalance })
     }
 }
 

@@ -3,7 +3,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Categories.EditCategoryDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Categories");
+    NopHtml.SetActiveMenuItemSystemName("Categories");
 }
 
 <form asp-controller="Category" asp-action="Edit" method="post" id="category-form">
@@ -32,7 +32,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CategoryDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

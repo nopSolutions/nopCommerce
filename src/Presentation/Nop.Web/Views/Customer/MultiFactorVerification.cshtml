@@ -4,7 +4,7 @@
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.MultiFactorVerification").Text);
+    NopHtml.AddTitleParts(T("PageTitle.MultiFactorVerification").Text);
 }
 
 <div class="page login-page">
@@ -13,7 +13,7 @@
     </div>
     <div class="page-body">
             <div class="provider-verification">
-                @(await Component.InvokeAsync(Model.ViewComponentName)) 
+                @(await Component.InvokeAsync(Model.ViewComponent)) 
             </div>
     </div>
 </div>

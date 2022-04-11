@@ -1,11 +1,11 @@
 ﻿@model Nop.Plugin.Widgets.NivoSlider.Models.PublicInfoModel
 @{
     Layout = "";
-
-    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Widgets.NivoSlider/Scripts/jquery.nivo.slider.js");
-    Html.AddCssFileParts("~/Plugins/Widgets.NivoSlider/Content/nivoslider/nivo-slider.css");
-    Html.AddCssFileParts("~/Plugins/Widgets.NivoSlider/Content/nivoslider/themes/custom/custom.css");
 }
+
+<link rel="stylesheet" href="~/Plugins/Widgets.NivoSlider/Content/nivoslider/nivo-slider.css" />
+<link rel="stylesheet" href="~/Plugins/Widgets.NivoSlider/Content/nivoslider/themes/custom/custom.css" />
+<script asp-exclude-from-bundle="true" src="~/Plugins/Widgets.NivoSlider/Scripts/jquery.nivo.slider.js" asp-location="Footer"></script>
 
 <div class="slider-wrapper theme-custom">
     <div id="nivo-slider" class="nivoSlider">

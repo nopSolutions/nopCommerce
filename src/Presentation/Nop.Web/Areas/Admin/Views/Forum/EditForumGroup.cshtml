@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.ContentManagement.Forums.ForumGroup.EditForumGroup").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Manage forums");
+    NopHtml.SetActiveMenuItemSystemName("Manage forums");
 }
 
 <form asp-controller="Forum" asp-action="EditForumGroup" method="post">
@@ -29,7 +29,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumGroupDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ForumGroupDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateForumGroup", Model)

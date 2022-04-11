@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Http;
+using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -18,21 +19,27 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
     {
         #region Fields
 
+        private readonly EcbExchangeRateSettings _ecbExchangeRateSettings;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
+        private readonly ISettingService _settingService;
 
         #endregion
 
         #region Ctor
 
-        public EcbExchangeRateProvider(IHttpClientFactory httpClientFactory,
+        public EcbExchangeRateProvider(EcbExchangeRateSettings ecbExchangeRateSettings,
+            IHttpClientFactory httpClientFactory,
             ILocalizationService localizationService,
-            ILogger logger)
+            ILogger logger,
+            ISettingService settingService)
         {
+            _ecbExchangeRateSettings = ecbExchangeRateSettings;
             _httpClientFactory = httpClientFactory;
             _localizationService = localizationService;
             _logger = logger;
+            _settingService = settingService;
         }
 
         #endregion
@@ -67,7 +74,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             try
             {
                 var httpClient = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
-                var stream = await httpClient.GetStreamAsync("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml");
+                var stream = await httpClient.GetStreamAsync(_ecbExchangeRateSettings.EcbLink);
 
                 //load XML document
                 var document = new XmlDocument();
@@ -126,6 +133,13 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
+            //settings
+            var defaultSettings = new EcbExchangeRateSettings
+            {
+                EcbLink = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+            };
+            await _settingService.SaveSettingAsync(defaultSettings);
+
             //locales
             await _localizationService.AddOrUpdateLocaleResourceAsync("Plugins.ExchangeRate.EcbExchange.Error", "You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is supported by ECB");
 
@@ -138,6 +152,9 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
+            //settings
+            await _settingService.DeleteSettingAsync<EcbExchangeRateSettings>();
+
             //locales
             await _localizationService.DeleteLocaleResourceAsync("Plugins.ExchangeRate.EcbExchange.Error");
 

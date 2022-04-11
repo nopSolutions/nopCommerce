@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Products.ProductAttributes.Attributes.EditAttributeDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Products");
+    NopHtml.SetActiveMenuItemSystemName("Products");
 }
 
 <form asp-controller="Product" asp-action="ProductAttributeMappingEdit" method="post" id="productattribute-form">
@@ -29,7 +29,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeMappingDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeMappingDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateProductAttributeMapping", Model)

@@ -19,6 +19,6 @@ namespace Nop.Web.Framework.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the list of localized model
         /// </returns>
-        Task<IList<T>> PrepareLocalizedModelsAsync<T>(Action<T, int> configure = null) where T : ILocalizedLocaleModel;
+        Task<IList<T>> PrepareLocalizedModelsAsync<T>(Func<T, int, Task> configure = null) where T : ILocalizedLocaleModel;
     }
 }

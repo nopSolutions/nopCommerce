@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Cms;
-using Nop.Core.Domain.Tasks;
+using Nop.Core.Domain.ScheduleTasks;
+using Nop.Plugin.Misc.Sendinblue.Components;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Plugins;
+using Nop.Services.ScheduleTasks;
 using Nop.Services.Stores;
-using Nop.Services.Tasks;
 using Nop.Web.Framework.Infrastructure;
-using Task = System.Threading.Tasks.Task;
 
 namespace Nop.Plugin.Misc.Sendinblue
 {
@@ -75,13 +76,13 @@ namespace Nop.Plugin.Misc.Sendinblue
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying widget
+        /// Gets a type of a view component for displaying widget
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
-        /// <returns>View component name</returns>
-        public string GetWidgetViewComponentName(string widgetZone)
+        /// <returns>View component type</returns>
+        public Type GetWidgetViewComponent(string widgetZone)
         {
-            return SendinblueDefaults.TRACKING_VIEW_COMPONENT_NAME;
+            return typeof(WidgetsSendinblueViewComponent);
         }
 
         /// <summary>
@@ -124,6 +125,7 @@ namespace Nop.Plugin.Misc.Sendinblue
                 await _scheduleTaskService.InsertTaskAsync(new ScheduleTask
                 {
                     Enabled = true,
+                    LastEnabledUtc = DateTime.UtcNow,
                     Seconds = SendinblueDefaults.DefaultSynchronizationPeriod * 60 * 60,
                     Name = SendinblueDefaults.SynchronizationTaskName,
                     Type = SendinblueDefaults.SynchronizationTask,
@@ -131,7 +133,7 @@ namespace Nop.Plugin.Misc.Sendinblue
             }
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Misc.Sendinblue.AccountInfo"] = "Account info",
                 ["Plugins.Misc.Sendinblue.AccountInfo.Hint"] = "Display account information.",

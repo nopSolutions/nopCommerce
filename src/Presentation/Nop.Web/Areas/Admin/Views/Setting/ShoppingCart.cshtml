@@ -4,18 +4,19 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Settings.ShoppingCart").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Shopping cart settings");
+    NopHtml.SetActiveMenuItemSystemName("Shopping cart settings");
 }
 
 @{
     const string hideCommonBlockAttributeName = "ShoppingCartSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 
     const string hideMiniShoppingCartBlockAttributeName = "ShoppingCartSettingsPage.HideMiniShoppingCartBlock";
-    var hideMiniShoppingCartBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideMiniShoppingCartBlockAttributeName);
+    var hideMiniShoppingCartBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideMiniShoppingCartBlockAttributeName);
 
     const string hideWishlistBlockAttributeName = "ShoppingCartSettingsPage.HideWishlistBlock";
-    var hideWishlistBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideWishlistBlockAttributeName);
+    var hideWishlistBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideWishlistBlockAttributeName);
 }
 
 
@@ -29,15 +30,15 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShoppingCartSettingsButtons })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShoppingCartSettingsButtons, additionalData = Model })
         </div>
     </div>
 
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
-                @await Component.InvokeAsync("StoreScopeConfiguration")
-                @await Component.InvokeAsync("SettingMode")
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
                 <div asp-validation-summary="All"></div>
 
                 <nop-cards id="shoppingcartsettings-cards">
@@ -45,7 +46,7 @@
                     <nop-card asp-name="shoppingcartsettings-mini-shopping-cart" asp-icon="fas fa-shopping-cart" asp-title="@T("Admin.Configuration.Settings.ShoppingCart.BlockTitle.MiniShoppingCart")" asp-hide-block-attribute-name="@hideMiniShoppingCartBlockAttributeName" asp-hide="@hideMiniShoppingCartBlock" asp-advanced="false">@await Html.PartialAsync("_ShoppingCart.MiniShoppingCart", Model)</nop-card>
                     <nop-card asp-name="shoppingcartsettings-wishlist" asp-icon="far fa-star" asp-title="@T("Admin.Configuration.Settings.ShoppingCart.BlockTitle.Wishlist")" asp-hide-block-attribute-name="@hideWishlistBlockAttributeName" asp-hide="@hideWishlistBlock" asp-advanced="true">@await Html.PartialAsync("_ShoppingCart.Wishlist", Model)</nop-card>
 
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShoppingCartSettingsDetailsBlock, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShoppingCartSettingsDetailsBlock, additionalData = Model })
                 </nop-cards>
             </div>
         </div>

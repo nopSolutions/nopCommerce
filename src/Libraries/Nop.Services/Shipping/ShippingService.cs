@@ -543,7 +543,8 @@ namespace Nop.Services.Shipping
             //checkout attributes
             if (request.Customer is null || !includeCheckoutAttributes)
                 return totalWeight;
-            var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(request.Customer, NopCustomerDefaults.CheckoutAttributes, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(request.Customer, NopCustomerDefaults.CheckoutAttributes, store.Id);
             if (string.IsNullOrEmpty(checkoutAttributesXml))
                 return totalWeight;
             var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);

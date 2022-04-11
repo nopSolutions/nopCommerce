@@ -1,79 +1,88 @@
-﻿@using StackExchange.Profiling
-@using Nop.Core.Configuration
+﻿@using Nop.Core.Configuration
+@using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
-@using Nop.Services.Events
 @using Nop.Services.Security
-@using Nop.Web.Framework.Events
-@using Nop.Core
 @using Nop.Core.Events
+
+@inject CatalogSettings catalogSettings
 @inject CommonSettings commonSettings
 @inject IEventPublisher eventPublisher
 @inject IPermissionService permissionService
-@inject IWorkContext workContext
 @inject SeoSettings seoSettings
 @inject AppSettings appSettings
-@inject Nop.Services.Localization.ILanguageService languageService
+
 @{
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
+    if (catalogSettings.DisplayAllPicturesOnCatalogPages)
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/swiper/swiper-bundle.min.js");
+    }
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
     //when jQuery migrate script logging is active you will see the log in the browser console
     if (commonSettings.JqueryMigrateScriptLoggingActive)
     {
-        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.js");
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.js");
     }
     else
     {
-        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.min.js");
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.min.js");
     }
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation/jquery.validate.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery/jquery.min.js");
-    
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation/jquery.validate.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery/jquery.min.js");
+
     //custom tag(s);
     if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
     {
-        Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
+        NopHtml.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
 
-    var displayMiniProfiler = appSettings.CommonConfig.MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
+    var displayMiniProfiler = appSettings.Get<CommonConfig>().MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
 
     //event
-    await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
+    await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
 }
 <!DOCTYPE html>
-<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())" @(await this.ShouldUseRtlThemeAsync() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
 <head>
-    <title>@Html.NopTitle()</title>
+    <title>@NopHtml.GenerateTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <meta name="description" content="@(Html.NopMetaDescription())" />
-    <meta name="keywords" content="@(Html.NopMetaKeywords())" />
+    <meta name="description" content="@NopHtml.GenerateMetaDescription()" />
+    <meta name="keywords" content="@NopHtml.GenerateMetaKeywords()" />
     <meta name="generator" content="nopCommerce" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    @Html.NopHeadCustom()
+    @NopHtml.GenerateHeadCustom()
     @*This is used so that themes can inject content into the header*@
     @await Html.PartialAsync("Head")
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
-    @Html.NopCssFiles(ResourceLocation.Head)
-    @Html.NopScripts(ResourceLocation.Head)
-    @Html.NopCanonicalUrls()
-    @await Component.InvokeAsync("NewsRssHeaderLink")
-    @await Component.InvokeAsync("BlogRssHeaderLink")
+
+    @NopHtml.GenerateCssFiles()
+
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeadHtmlTag })
+    @NopHtml.GenerateCanonicalUrls()
+    @await Component.InvokeAsync(typeof(NewsRssHeaderLinkViewComponent))
+    @await Component.InvokeAsync(typeof(BlogRssHeaderLinkViewComponent))
     @*Insert favicon and app icons head code*@
-    @await Component.InvokeAsync("Favicon")
+    @await Component.InvokeAsync(typeof(FaviconViewComponent))
     @if (displayMiniProfiler)
     {
         <mini-profiler />
     }
-    @Html.NopInlineScripts(ResourceLocation.Head)
+    @NopHtml.GenerateScripts(ResourceLocation.Head)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->
+    
+    @Html.Raw(commonSettings.HeaderCustomHtml)
 </head>
 <body>
+    <nop-antiforgery-token />
     @RenderBody()
-    @Html.NopCssFiles(ResourceLocation.Footer)
-    @Html.NopScripts(ResourceLocation.Footer)
-    @Html.NopInlineScripts(ResourceLocation.Footer)
+
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
+    
+    @Html.Raw(commonSettings.FooterCustomHtml)
 </body>
 </html>

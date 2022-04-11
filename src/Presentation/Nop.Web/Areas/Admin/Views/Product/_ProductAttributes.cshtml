@@ -84,8 +84,8 @@
                                     asp-day-name="@(controlId + "_day")"
                                     asp-month-name="@(controlId + "_month")"
                                     asp-year-name="@(controlId + "_year")"
-                                    asp-begin-year="@(DateTime.Now.Year)"
-                                    asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)"
+                                    asp-begin-year="@(DateTime.UtcNow)"
+                                    asp-end-year="@(DateTime.UtcNow.AddYears(catalogSettings.CountDisplayedYearsDatePicker))"
                                  />
                             }
                             break;

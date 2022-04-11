@@ -4,13 +4,14 @@
     var showTour = ViewBag.ShowTour ?? false;
 
     const string hideInfoBlockAttributeName = "TopicDetailsPage.HideInfoBlock";
-    var hideInfoBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
 
     const string hideDisplayBlockAttributeName = "TopicDetailsPage.HideDisplayBlock";
-    var hideDisplayBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDisplayBlockAttributeName, defaultValue: true);
+    var hideDisplayBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDisplayBlockAttributeName, defaultValue: true);
 
     const string hideSeoBlockAttributeName = "TopicDetailsPage.HideSeoBlock";
-    var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSeoBlockAttributeName, defaultValue: true);
+    var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSeoBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>
@@ -22,7 +23,7 @@
             <div class="row">
                 <div class="col-md-12 clearfix">
                     <div class="float-left">
-                        @await Component.InvokeAsync("SettingMode", new { modeName = "topic-advanced-mode" })
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "topic-advanced-mode" })
                     </div>
                 </div>
             </div>
@@ -32,7 +33,7 @@
                 <nop-card asp-name="topic-display" asp-icon="fas fa-tv" asp-title="@T("Admin.ContentManagement.Topics.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-card>
                 <nop-card asp-name="topic-seo" asp-icon="fas fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TopicDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TopicDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

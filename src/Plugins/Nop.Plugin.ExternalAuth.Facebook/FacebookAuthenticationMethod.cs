@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core;
+using Nop.Plugin.ExternalAuth.Facebook.Components;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -45,12 +47,12 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store
+        /// Gets a type of a view component for displaying plugin in public store
         /// </summary>
-        /// <returns>View component name</returns>
-        public string GetPublicViewComponentName()
+        /// <returns>View component type</returns>
+        public Type GetPublicViewComponent()
         {
-            return FacebookAuthenticationDefaults.VIEW_COMPONENT_NAME;
+            return typeof(FacebookAuthenticationViewComponent);
         }
 
         /// <summary>
@@ -63,7 +65,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook
             await _settingService.SaveSettingAsync(new FacebookExternalAuthSettings());
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.ExternalAuth.Facebook.ClientKeyIdentifier"] = "App ID/API Key",
                 ["Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint"] = "Enter your app ID/API key here. You can find it on your FaceBook application page.",

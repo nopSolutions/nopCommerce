@@ -216,7 +216,6 @@ namespace Nop.Services.Catalog
         Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency,
             string currencyCode, int languageId, bool priceIncludesTax);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Formats a tax rate
         /// </summary>

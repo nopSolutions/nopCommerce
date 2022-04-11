@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
+using Nop.Plugin.Payments.CheckMoneyOrder.Components;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -21,7 +22,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
 
         private readonly CheckMoneyOrderPaymentSettings _checkMoneyOrderPaymentSettings;
         private readonly ILocalizationService _localizationService;
-        private readonly IPaymentService _paymentService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ISettingService _settingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IWebHelper _webHelper;
@@ -32,14 +33,14 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
 
         public CheckMoneyOrderPaymentProcessor(CheckMoneyOrderPaymentSettings checkMoneyOrderPaymentSettings,
             ILocalizationService localizationService,
-            IPaymentService paymentService,
+            IOrderTotalCalculationService orderTotalCalculationService,
             ISettingService settingService,
             IShoppingCartService shoppingCartService,
             IWebHelper webHelper)
         {
             _checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
             _localizationService = localizationService;
-            _paymentService = paymentService;
+            _orderTotalCalculationService = orderTotalCalculationService;
             _settingService = settingService;
             _shoppingCartService = shoppingCartService;
             _webHelper = webHelper;
@@ -103,7 +104,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// </returns>
         public async Task<decimal> GetAdditionalHandlingFeeAsync(IList<ShoppingCartItem> cart)
         {
-            return await _paymentService.CalculateAdditionalFeeAsync(cart,
+            return await _orderTotalCalculationService.CalculatePaymentAdditionalFeeAsync(cart,
                 _checkMoneyOrderPaymentSettings.AdditionalFee, _checkMoneyOrderPaymentSettings.AdditionalFeePercentage);
         }
 
@@ -224,12 +225,12 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store ("payment info" checkout step)
+        /// Gets a type of a view component for displaying plugin in public store ("payment info" checkout step)
         /// </summary>
-        /// <returns>View component name</returns>
-        public string GetPublicViewComponentName()
+        /// <returns>View component type</returns>
+        public Type GetPublicViewComponent()
         {
-            return "CheckMoneyOrder";
+            return typeof(CheckMoneyOrderViewComponent);
         }
 
         /// <summary>
@@ -246,7 +247,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             await _settingService.SaveSettingAsync(settings);
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Payment.CheckMoneyOrder.AdditionalFee"] = "Additional fee",
                 ["Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint"] = "The additional fee.",

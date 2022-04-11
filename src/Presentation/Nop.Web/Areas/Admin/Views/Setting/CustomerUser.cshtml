@@ -4,27 +4,28 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Settings.CustomerUser").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Customer and user settings");
+    NopHtml.SetActiveMenuItemSystemName("Customer and user settings");
 }
 
 @{
     const string hideCommonBlockAttributeName = "CustomerUserSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 
     const string hideSecurityBlockAttributeName = "CustomerUserSettingsPage.HideSecurityBlock";
-    var hideSecurityBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSecurityBlockAttributeName);
+    var hideSecurityBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSecurityBlockAttributeName);
 
     const string hideAccountBlockAttributeName = "CustomerUserSettingsPage.HideAccountBlock";
-    var hideAccountBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAccountBlockAttributeName);
+    var hideAccountBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAccountBlockAttributeName);
 
     const string hideProfileBlockAttributeName = "CustomerUserSettingsPage.HideProfileBlock";
-    var hideProfileBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideProfileBlockAttributeName);
+    var hideProfileBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProfileBlockAttributeName);
 
     const string hideCustomerFormFieldsBlockAttributeName = "CustomerUserSettingsPage.HideCustomerFormFieldsBlock";
-    var hideCustomerFormFieldsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCustomerFormFieldsBlockAttributeName);
+    var hideCustomerFormFieldsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCustomerFormFieldsBlockAttributeName);
 
     const string hideAddressFormFieldsBlockAttributeName = "CustomerUserSettingsPage.HideAddressFormFieldsBlock";
-    var hideAddressFormFieldsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAddressFormFieldsBlockAttributeName);
+    var hideAddressFormFieldsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAddressFormFieldsBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="CustomerUser" method="post">
@@ -37,7 +38,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerUserSettingsButtons })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerUserSettingsButtons, additionalData = Model })
         </div>
     </div>
     <div asp-validation-summary="All"></div>
@@ -45,7 +46,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
-                @await Component.InvokeAsync("SettingMode")
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
                 <nop-cards id="customersettings-cards">
                     <nop-card asp-name="customersettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.Common", Model)</nop-card>
                     <nop-card asp-name="customersettings-security" asp-icon="fas fa-shield-alt" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Password")" asp-hide-block-attribute-name="@hideSecurityBlockAttributeName" asp-hide="@hideSecurityBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Security", Model)</nop-card>
@@ -54,7 +55,7 @@
                     <nop-card asp-name="customersettings-customerformfields" asp-icon="fas fa-align-justify" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")" asp-hide-block-attribute-name="@hideCustomerFormFieldsBlockAttributeName" asp-hide="@hideCustomerFormFieldsBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model)</nop-card>
                     <nop-card asp-name="customersettings-addressformfields" asp-icon="far fa-address-book" asp-title="@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")" asp-hide-block-attribute-name="@hideAddressFormFieldsBlockAttributeName" asp-hide="@hideAddressFormFieldsBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.AddressFormFields", Model)</nop-card>
 
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerUserDetailsBlock, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerUserDetailsBlock, additionalData = Model })
                 </nop-cards>
             </div>
         </div>

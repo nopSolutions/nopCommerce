@@ -84,6 +84,20 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
+        /// Converted property value to Int32
+        /// </summary>
+        public int? IntValueNullable
+        {
+            get
+            {
+                if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out var rez))
+                    return null;
+
+                return rez;
+            }
+        }
+
+        /// <summary>
         /// Converted property value to boolean
         /// </summary>
         public bool BooleanValue
@@ -143,7 +157,20 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to DateTime?
         /// </summary>
-        public DateTime? DateTimeNullable => PropertyValue == null ? null : DateTime.FromOADate(DoubleValue) as DateTime?;
+        public DateTime? DateTimeNullable => !string.IsNullOrWhiteSpace(StringValue) ? null : PropertyValue as DateTime?;
+
+        /// <summary>
+        /// Converted property value to guid
+        /// </summary>
+        public Guid GuidValue
+        {
+            get
+            {
+                if (PropertyValue == null || !Guid.TryParse(PropertyValue.ToString(), out var rez))
+                    return default;
+                return rez;
+            }
+        }
 
         /// <summary>
         /// To string

@@ -55,6 +55,16 @@ namespace Nop.Services.Orders
         Task<IList<Order>> GetOrdersByIdsAsync(int[] orderIds);
 
         /// <summary>
+        /// Get orders by guids
+        /// </summary>
+        /// <param name="orderGuids">Order guids</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the orders
+        /// </returns>
+        Task<IList<Order>> GetOrdersByGuidsAsync(Guid[] orderGuids);
+
+        /// <summary>
         /// Gets an order
         /// </summary>
         /// <param name="orderGuid">The order identifier</param>
@@ -150,6 +160,16 @@ namespace Nop.Services.Orders
         Task<bool> HasItemsToShipAsync(Order order);
 
         /// <summary>
+        /// Gets a value indicating whether there are shipment items to mark as 'ready for pickup' in order shipments.
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether there are shipment items to mark as 'ready for pickup' in order shipments.
+        /// </returns>
+        Task<bool> HasItemsToReadyForPickupAsync(Order order);
+
+        /// <summary>
         /// Gets a value indicating whether an order has items to deliver
         /// </summary>
         /// <param name="order">Order</param>
@@ -231,7 +251,7 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains the otal number of items in all shipments
         /// </returns>
-        Task<int> GetTotalNumberOfItemsInAllShipmentAsync(OrderItem orderItem);
+        Task<int> GetTotalNumberOfItemsInAllShipmentsAsync(OrderItem orderItem);
 
         /// <summary>
         /// Gets a total number of already items which can be added to new shipments

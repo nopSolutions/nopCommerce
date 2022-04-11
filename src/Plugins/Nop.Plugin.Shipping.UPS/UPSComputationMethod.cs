@@ -80,6 +80,18 @@ namespace Nop.Plugin.Shipping.UPS
         }
 
         /// <summary>
+        /// Get associated shipment tracker
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment tracker
+        /// </returns>
+        public Task<IShipmentTracker> GetShipmentTrackerAsync()
+        {
+            return Task.FromResult<IShipmentTracker>(new UPSShipmentTracker(_upsService));
+        }
+
+        /// <summary>
         /// Gets a configuration page URL
         /// </summary>
         public override string GetConfigurationPageUrl()
@@ -108,7 +120,7 @@ namespace Nop.Plugin.Shipping.UPS
             });
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByDimensions"] = "Pack by dimensions",
                 ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByOneItemPerPackage"] = "Pack by one item per package",
@@ -177,15 +189,6 @@ namespace Nop.Plugin.Shipping.UPS
 
             await base.UninstallAsync();
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets a shipment tracker
-        /// </summary>
-        public IShipmentTracker ShipmentTracker => new UPSShipmentTracker(_upsService);
 
         #endregion
     }

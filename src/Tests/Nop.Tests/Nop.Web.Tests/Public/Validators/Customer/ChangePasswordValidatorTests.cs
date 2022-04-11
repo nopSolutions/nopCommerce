@@ -23,9 +23,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             {
                 OldPassword = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.OldPassword, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.OldPassword);
             model.OldPassword = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.OldPassword, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.OldPassword);
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             {
                 OldPassword = "old password"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.OldPassword, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.OldPassword);
         }
 
         [Test]
@@ -47,11 +47,11 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             };
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
-            _validator.ShouldHaveValidationErrorFor(x => x.NewPassword, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.NewPassword);
             model.NewPassword = string.Empty;
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
-            _validator.ShouldHaveValidationErrorFor(x => x.NewPassword, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.NewPassword);
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             };
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
-            _validator.ShouldNotHaveValidationErrorFor(x => x.NewPassword, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.NewPassword);
         }
 
         [Test]
@@ -73,9 +73,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             {
                 ConfirmNewPassword = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword);
             model.ConfirmNewPassword = string.Empty;
-            _validator.ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword);
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             };
             //we know that new password should equal confirmation password
             model.NewPassword = model.ConfirmNewPassword;
-            _validator.ShouldNotHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.ConfirmNewPassword);
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
                 NewPassword = "some password",
                 ConfirmNewPassword = "another password"
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
+            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword);
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
                 NewPassword = "some password",
                 ConfirmNewPassword = "some password"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.NewPassword, model);
+            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.NewPassword);
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
         private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
         private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
@@ -28,6 +29,7 @@ namespace Nop.Services.Catalog
         #region Ctor
 
         public ProductAttributeService(IRepository<PredefinedProductAttributeValue> predefinedProductAttributeValueRepository,
+            IRepository<Product> productRepository,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,
@@ -35,6 +37,7 @@ namespace Nop.Services.Catalog
             IStaticCacheManager staticCacheManager)
         {
             _predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
+            _productRepository = productRepository;
             _productAttributeRepository = productAttributeRepository;
             _productAttributeCombinationRepository = productAttributeCombinationRepository;
             _productAttributeMappingRepository = productAttributeMappingRepository;
@@ -435,8 +438,9 @@ namespace Nop.Services.Catalog
             sku = sku.Trim();
 
             var query = from pac in _productAttributeCombinationRepository.Table
+                        join p in _productRepository.Table on pac.ProductId equals p.Id
                         orderby pac.Id
-                        where pac.Sku == sku
+                        where !p.Deleted && pac.Sku == sku
                         select pac;
             var combination = await query.FirstOrDefaultAsync();
 

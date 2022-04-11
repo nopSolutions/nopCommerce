@@ -102,7 +102,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(Category category, CategoryModel model)
         {
             foreach (var localized in model.Locales)
@@ -138,7 +137,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdatePictureSeoNamesAsync(Category category)
         {
             var picture = await _pictureService.GetPictureByIdAsync(category.PictureId);
@@ -146,7 +144,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(category.Name));
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveCategoryAclAsync(Category category, CategoryModel model)
         {
             category.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
@@ -159,7 +156,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
-                    if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
+                    if (!existingAclRecords.Any(acl => acl.CustomerRoleId == customerRole.Id))
                         await _aclService.InsertAclRecordAsync(category, customerRole.Id);
                 }
                 else
@@ -172,7 +169,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveStoreMappingsAsync(Category category, CategoryModel model)
         {
             category.LimitedToStores = model.SelectedStoreIds.Any();
@@ -185,7 +181,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
-                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
+                    if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
                         await _storeMappingService.InsertStoreMappingAsync(category, store.Id);
                 }
                 else
@@ -436,10 +432,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
-            {
-                await _categoryService.DeleteCategoriesAsync(await (await _categoryService.GetCategoriesByIdsAsync(selectedIds.ToArray())).WhereAwait(async p => await _workContext.GetCurrentVendorAsync() == null).ToListAsync());
-            }
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
+
+            await _categoryService.DeleteCategoriesAsync(await (await _categoryService.GetCategoriesByIdsAsync(selectedIds.ToArray())).WhereAwait(async p => await _workContext.GetCurrentVendorAsync() == null).ToListAsync());
 
             return Json(new { Result = true });
         }

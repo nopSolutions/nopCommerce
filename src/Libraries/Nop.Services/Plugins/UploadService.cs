@@ -72,7 +72,10 @@ namespace Nop.Services.Plugins
         protected virtual IDescriptor UploadSingleItem(string archivePath)
         {
             //get path to the plugins directory
-            var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
+            var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.UploadedPath);
+
+            //ensure plugins directory is created
+            _fileProvider.CreateDirectory(pluginsDirectory);
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
@@ -161,7 +164,10 @@ namespace Nop.Services.Plugins
         protected virtual IList<IDescriptor> UploadMultipleItems(string archivePath, IList<UploadedItem> uploadedItems)
         {
             //get path to the plugins directory
-            var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
+            var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.UploadedPath);
+
+            //ensure plugins directory is created
+            _fileProvider.CreateDirectory(pluginsDirectory);
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
@@ -418,7 +424,7 @@ namespace Nop.Services.Plugins
                 if (!_fileProvider.GetFileExtension(ziplocalePatternPath)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
                     throw new Exception($"Archive '{NopCommonDefaults.LocalePatternArchiveName}' to retrieve localization patterns not found.");
 
-                var currentCulture = (cultureInfo is CultureInfo) ? cultureInfo : CultureInfo.CurrentCulture;
+                var currentCulture = (cultureInfo is not null) ? cultureInfo : CultureInfo.CurrentCulture;
 
                 //2. Check if there is already an unpacked folder with locales for the current culture in the lib directory, if not then
                 if (!(checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.Name) ||

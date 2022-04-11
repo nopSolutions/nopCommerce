@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Payment.MethodRestrictions").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Payment restrictions");
+    NopHtml.SetActiveMenuItemSystemName("Payment restrictions");
 }
 
 <form asp-controller="Payment" asp-action="MethodRestrictions" method="post">
@@ -19,7 +19,7 @@
             <div class="form-horizontal">
                 <div class="form-horizontal">
                     <div class="cards-group">
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodRestrictionsTop, additionalData = Model })
+                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PaymentMethodRestrictionsTop, additionalData = Model })
                         <div class="card card-default">
                             <div class="card-body">
                                 <div class="row v-center margin-b-5">
@@ -33,7 +33,7 @@
                                             <i class="far fa-save"></i>
                                             @T("Admin.Common.Save")
                                         </button>
-                                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentsListButtons })
+                                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PaymentsListButtons, additionalData = Model })
                                     </div>
                                 </div>
 
@@ -53,9 +53,7 @@
                                     {
                                         var systemNameWithoutDot = pm.SystemName.Replace(".", "");
                                         <text>
-                                            $('#selectall-@(systemNameWithoutDot)').click(function () {
-                                                $('.restrict_@(systemNameWithoutDot)').attr('checked', $(this).is(':checked')).change();
-                                            });
+                                            prepareTableCheckboxes('#selectall-@(systemNameWithoutDot)', '.restrict_@(systemNameWithoutDot)');
                                         </text>
                                     }
                                 });
@@ -100,7 +98,7 @@
                                 }
                             </div>
                         </div>
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodRestrictionsBottom, additionalData = Model })
+                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PaymentMethodRestrictionsBottom, additionalData = Model })
                     </div>
                 </div>
             </div>

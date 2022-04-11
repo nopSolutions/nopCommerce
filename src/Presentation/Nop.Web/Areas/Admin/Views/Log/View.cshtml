@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.System.Log.ViewLogDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Log");
+    NopHtml.SetActiveMenuItemSystemName("Log");
 }
 
 <form asp-controller="Log" asp-action="View" method="post">
@@ -21,7 +21,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LogDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.LogDetailsButtons, additionalData = Model })
         </div>
     </div>
 

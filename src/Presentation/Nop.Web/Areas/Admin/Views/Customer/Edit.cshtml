@@ -6,7 +6,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Customers.Customers.EditCustomerDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Customers list");
+    NopHtml.SetActiveMenuItemSystemName("Customers list");
 }
 
 <form asp-controller="Customer" asp-action="Edit" method="post">
@@ -86,7 +86,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
