@@ -570,7 +570,7 @@ namespace Nop.Services.Discounts
             {
                 case DiscountLimitationType.NTimesOnly:
                     {
-                        var usedTimes = (await GetAllDiscountUsageHistoryAsync(discount.Id, null, null, 0, 1)).TotalCount;
+                        var usedTimes = (await GetAllDiscountUsageHistoryAsync(discount.Id, null, null, false, 0, 1)).TotalCount;
                         if (usedTimes >= discount.LimitationTimes)
                             return result;
                     }
@@ -580,7 +580,7 @@ namespace Nop.Services.Discounts
                     {
                         if (await _customerService.IsRegisteredAsync(customer))
                         {
-                            var usedTimes = (await GetAllDiscountUsageHistoryAsync(discount.Id, customer.Id, null, 0, 1)).TotalCount;
+                            var usedTimes = (await GetAllDiscountUsageHistoryAsync(discount.Id, customer.Id, null, false, 0, 1)).TotalCount;
                             if (usedTimes >= discount.LimitationTimes)
                             {
                                 result.Errors = new List<string> {await _localizationService.GetResourceAsync("ShoppingCart.Discount.CannotBeUsedAnymore") };
@@ -646,6 +646,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountId">Discount identifier; null to load all records</param>
         /// <param name="customerId">Customer identifier; null to load all records</param>
         /// <param name="orderId">Order identifier; null to load all records</param>
+        /// <param name="includeCancelledOrders">Include cancelled orders</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>
@@ -653,7 +654,7 @@ namespace Nop.Services.Discounts
         /// The task result contains the discount usage history records
         /// </returns>
         public virtual async Task<IPagedList<DiscountUsageHistory>> GetAllDiscountUsageHistoryAsync(int? discountId = null,
-            int? customerId = null, int? orderId = null, int pageIndex = 0, int pageSize = int.MaxValue)
+            int? customerId = null, int? orderId = null, bool includeCancelledOrders = true, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             return await _discountUsageHistoryRepository.GetAllPagedAsync(query =>
             {
@@ -672,11 +673,11 @@ namespace Nop.Services.Discounts
                 if (orderId.HasValue && orderId.Value > 0)
                     query = query.Where(historyRecord => historyRecord.OrderId == orderId.Value);
 
-                //ignore deleted orders
+                //ignore invalid orders
                 query = from duh in query
-                    join order in _orderRepository.Table on duh.OrderId equals order.Id
-                    where !order.Deleted
-                    select duh;
+                        join order in _orderRepository.Table on duh.OrderId equals order.Id
+                        where !order.Deleted && (includeCancelledOrders || order.OrderStatusId != (int) OrderStatus.Cancelled)
+                            select duh;
 
                 //order
                 query = query.OrderByDescending(historyRecord => historyRecord.CreatedOnUtc)
