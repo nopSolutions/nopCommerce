@@ -654,12 +654,12 @@ namespace Nop.Tests
         protected class TestPictureService : PictureService
         {
             public TestPictureService(IDownloadService downloadService,
-                IHttpContextAccessor httpContextAccessor, INopFileProvider fileProvider,
+                IHttpContextAccessor httpContextAccessor, ILogger logger, INopFileProvider fileProvider,
                 IProductAttributeParser productAttributeParser, IRepository<Picture> pictureRepository,
                 IRepository<PictureBinary> pictureBinaryRepository,
                 IRepository<ProductPicture> productPictureRepository, ISettingService settingService,
                 IUrlRecordService urlRecordService, IWebHelper webHelper, MediaSettings mediaSettings) : base(
-                downloadService, httpContextAccessor, fileProvider, productAttributeParser,
+                downloadService, httpContextAccessor, logger, fileProvider, productAttributeParser,
                 pictureRepository, pictureBinaryRepository, productPictureRepository, settingService, urlRecordService,
                 webHelper, mediaSettings)
             {
