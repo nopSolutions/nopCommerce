@@ -79,7 +79,7 @@ namespace Nop.Core
         /// <returns>Result</returns>
         protected virtual bool IsIpAddressSet(IPAddress address)
         {
-            var rez =  address != null && address.ToString() != IPAddress.IPv6Loopback.ToString();
+            var rez = address != null && address.ToString() != IPAddress.IPv6Loopback.ToString();
 
             return rez;
         }
@@ -110,10 +110,10 @@ namespace Nop.Core
             if (!IsRequestAvailable())
                 return string.Empty;
 
-            if(_httpContextAccessor.HttpContext.Connection?.RemoteIpAddress is not IPAddress remoteIp)
+            if (_httpContextAccessor.HttpContext.Connection?.RemoteIpAddress is not IPAddress remoteIp)
                 return "";
 
-            if(remoteIp.Equals(IPAddress.IPv6Loopback))
+            if (remoteIp.Equals(IPAddress.IPv6Loopback))
                 return IPAddress.Loopback.ToString();
 
             return remoteIp.MapToIPv4().ToString();
@@ -157,7 +157,16 @@ namespace Nop.Core
             if (!IsRequestAvailable())
                 return false;
 
-            return _httpContextAccessor.HttpContext.Request.IsHttps;
+            // Loadbalance will send the X-Forwarded-Proto
+            var result = _httpContextAccessor
+               .HttpContext
+               .Request
+               .Headers
+               .TryGetValue("X-Forwarded-Proto", out var forwardProtoHeaders);
+
+            var isSecureRequest = result && forwardProtoHeaders.Any(a => a.Equals("https", StringComparison.InvariantCultureIgnoreCase));
+
+            return _httpContextAccessor.HttpContext.Request.IsHttps || isSecureRequest;
         }
 
         /// <summary>
@@ -358,7 +367,7 @@ namespace Nop.Core
                 var response = _httpContextAccessor.HttpContext.Response;
                 //ASP.NET 4 style - return response.IsRequestBeingRedirected;
                 int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found };
-                
+
                 return redirectionStatusCodes.Contains(response.StatusCode);
             }
         }

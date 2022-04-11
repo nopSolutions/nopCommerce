@@ -21,8 +21,7 @@ namespace Nop.Web.Framework.Controllers
 {
     /// <summary>
     /// Base controller
-    /// </summary>
-    [HttpsRequirement]
+    /// </summary>    
     [PublishModelEvents]
     [SignOutFromExternalAuthentication]
     [ValidatePassword]
@@ -60,7 +59,7 @@ namespace Nop.Web.Framework.Controllers
             await writer.FlushAsync();
             return writer.ToString();
         }
-        
+
         /// <summary>
         /// Render partial view to string
         /// </summary>
