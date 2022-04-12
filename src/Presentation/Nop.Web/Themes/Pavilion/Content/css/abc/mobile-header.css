@@ -125,10 +125,11 @@ div.search-box.store-search-box form#small-search-box-form input#sli_search_1 {
 
 input.search-box-text {
     background-color: white !important;
+    color: #4f4f4f !important;
 }
 
 input.search-box-text::placeholder {
-    color: #4f4f4f;
+    color: #787878;
 }
 
 .search-box-button {

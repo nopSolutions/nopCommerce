@@ -1,11 +1,11 @@
 ﻿{
-  "Group": "Widget",
+  "Group": "Misc",
   "FriendlyName": "SLI",
-  "SystemName": "Widgets.SLI",
+  "SystemName": "Misc.SLI",
   "Version": "4.40.0",
   "SupportedVersions": [ "4.40" ],
   "Author": "Dave Farinelli",
   "DisplayOrder": 1,
-  "FileName": "AbcWarehouse.Plugin.Widgets.SLI.dll",
+  "FileName": "AbcWarehouse.Plugin.Misc.SLI.dll",
   "Description": "Activates SLI Search"
 }
