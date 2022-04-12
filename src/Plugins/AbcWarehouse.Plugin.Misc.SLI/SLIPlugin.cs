@@ -10,15 +10,5 @@ namespace AbcWarehouse.Plugin.Misc.SLI
 {
     public class SLIPlugin : BasePlugin, IMiscPlugin
     {
-        private readonly ILocalizationService _localizationService;
-        private readonly ISettingService _settingService;
-
-        public SLIPlugin(
-            ILocalizationService localizationService,
-            ISettingService settingService)
-        {
-            _localizationService = localizationService;
-            _settingService = settingService;
-        }
     }
 }
