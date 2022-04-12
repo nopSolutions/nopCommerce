@@ -7,7 +7,7 @@
     <Authors>Dave Farinelli</Authors>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryType>Git</RepositoryType>
-    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Widgets.SLI</OutputPath>
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Misc.SLI</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
     <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.
     You need to set this parameter to true if your plugin has a nuget package 
@@ -22,6 +22,7 @@
   <ItemGroup>
     <None Remove="logo.png" />
     <None Remove="plugin.json" />
+    <None Remove="Views/Shared/Components/SearchBox/Default.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,11 +32,20 @@
     <Content Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views/Shared/Components/SearchBox/Default.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
     <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SevenSpikes.Nop.Framework">
+      <HintPath>..\..\Presentation\Nop.Web\Plugins\SevenSpikes.Core\SevenSpikes.Nop.Framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

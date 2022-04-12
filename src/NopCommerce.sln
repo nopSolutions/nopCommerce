@@ -67,7 +67,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Widgets.AbcPromo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Widgets.AbcSynchronyPayments", "Plugins\Nop.Plugin.Widgets.AbcSynchronyPayments\Nop.Plugin.Widgets.AbcSynchronyPayments.csproj", "{D2BF6C0E-C2E5-48C9-8E6F-415B426C5A3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbcWarehouse.Plugin.Widgets.SLI", "Plugins\AbcWarehouse.Plugin.Widgets.SLI\AbcWarehouse.Plugin.Widgets.SLI.csproj", "{A55C970A-E1D8-434B-8C06-1212F3137FFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbcWarehouse.Plugin.Misc.SLI", "Plugins\AbcWarehouse.Plugin.Misc.SLI\AbcWarehouse.Plugin.Misc.SLI.csproj", "{A55C970A-E1D8-434B-8C06-1212F3137FFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

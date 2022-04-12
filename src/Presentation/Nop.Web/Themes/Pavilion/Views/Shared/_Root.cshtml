@@ -1,13 +1,12 @@
 ﻿@using Nop.Core
 @using Nop.Services.Configuration
-@using Nop.Web.Framework.Infrastructure
 @* ABC: for shopping cart item count *@
 @using Nop.Services.Orders
 @using Nop.Core.Domain.Orders
 
 @inject IStoreContext storeContext
 @inject ISettingService settingService
-@* ABC: for shopping cart item count *@
+@* ABC: custom inject *@
 @inject IWorkContext workContext
 @inject IShoppingCartService shoppingCartService
 
@@ -22,15 +21,13 @@
     bool isLogoStickyOnMobileDevice = await settingService.GetSettingByKeyAsync("pavilionthemesettings.islogostickyonmobiledevice", false, storeId, true);
     string stickyLogoClass = isLogoStickyOnMobileDevice ? "mobile-sticky-logo" : string.Empty;
 
-    @* ABC: for shopping cart item count *@
+    // ABC: modifications
+    var mobilePhoneNumber = await settingService.GetSettingByKeyAsync("coresettings.mobilephonenumber", "800-981-3866");
     var customer = await workContext.GetCurrentCustomerAsync();
     var shoppingCartItemCount = (await shoppingCartService.GetShoppingCartAsync(
         customer,
         ShoppingCartType.ShoppingCart
     )).Count();
-
-    @* ABC: Get mobile phone number *@
-    string mobilePhoneNumber = await settingService.GetSettingByKeyAsync("coresettings.mobilephonenumber", "800-981-3866");
 }
 
 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyStartHtmlTagAfter })
@@ -39,7 +36,7 @@
 @await Html.PartialAsync("_OldInternetExplorerWarning")
 
 <div class="master-wrapper-page @stickyLogoClass">
-    @* ABC: customizing mobile nav. *@
+    @* ABC: customizing mobile nav. - header moved below *@
     <div class="responsive-nav-wrapper-parent">
         <div class="responsive-nav-wrapper">
             <div id="mobile-header-logo">
@@ -60,30 +57,15 @@
             </div>
         </div>
     </div>
-    @* ABC: adds search bar to mobile *@
+    @* ABC: search bar for mobile *@
     <div class="mobile-header-content-row">
         <div class="mobile-menu" onClick="toggleMobileMenu()">
             <span>Menu</span>
         </div>
-        <script type="text/javascript">
-            function ajaxsearchsubmit(form) {
-                var search = encodeURIComponent(form.w.value);
-                document.activeElement.blur();
-                window.location = "https://appliances.abcwarehouse.com/search?w=" + search;
-                return false;
-            }
-        </script>
-
-        <form action="//appliances.abcwarehouse.com/search" id="mobile-small-search-box-form" method="get" novalidate="novalidate" onsubmit="return ajaxsearchsubmit(this);" _lpchecked="1">
-            <label for="sli_search_1" id="search_label">
-                <span style="display: none">Search:</span>
-                <input type="text" class="search-box-text valid" id="sli_search_1" autocomplete="off" name="w" data-provide="rac" placeholder="What can we help you find?" aria-label="Search" aria-labelledby="search_label">
-            </label>
-            <input type="hidden" style="display:none;" id="mobile_sli_search_2" name="AbcClearanceStore" value="False">
-            <input type="submit" class="mobile-search-button" value="Search">
-        </form>
+        @await Component.InvokeAsync("SearchBox")
     </div>
 
+    @* ABC: moved header to below *@
     @await Html.PartialAsync("_Header")
     <script asp-location="Footer">
         var localized_data = {

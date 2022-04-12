@@ -30,6 +30,14 @@
         "HawthorneClearanceStore" :
         "AbcClearanceStore";
 }
+
+<form action="@action" id="small-search-box-form" method="get" novalidate="novalidate" onsubmit="return ajaxsearchsubmit(this);">
+    <input type="text" class="search-box-text" id="sli_search_1" autocomplete="off" name="w" data-provide="rac" placeholder="What can we help you find?">
+    <input type="hidden" style="display:none;" id="sli_search_2" name="@clearanceCookieName" value="@isClearanceStore.ToString()" />
+    <input type="submit" class="button-1 search-box-button" value="Search">
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBox })
+</form>
+
 <script type="text/javascript">
     function ajaxsearchsubmit(form){
         var search = encodeURIComponent(form.w.value);
@@ -38,10 +46,3 @@
         return false;
     }
 </script>
-
-<form action="@action" id="small-search-box-form" method="get" novalidate="novalidate" onsubmit="return ajaxsearchsubmit(this);">
-    <input type="text" class="search-box-text" id="sli_search_1" autocomplete="off" name="w" data-provide="rac" placeholder="What can we help you find?">
-    <input type="hidden" style="display:none;" id="sli_search_2" name="@clearanceCookieName" value="@isClearanceStore.ToString()" />
-    <input type="submit" class="button-1 search-box-button" value="Search">
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBox })
-</form>
