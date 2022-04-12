@@ -259,9 +259,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             
             using var handler = new HttpClientHandler { Credentials = new NetworkCredential(_shipStationSettings.ApiKey, _shipStationSettings.ApiSecret) };
             using var client = new HttpClient(handler);
-            
-            client.DefaultRequestHeaders.Add("Content-Type", CONTENT_TYPE);
-            var responseData = await client.PostAsync($"{API_URL}{LIST_RATES_CMD}", new StringContent(JsonConvert.SerializeObject(postData)));
+
+            var responseData = await client.PostAsync($"{API_URL}{LIST_RATES_CMD}", new StringContent(JsonConvert.SerializeObject(postData), Encoding.UTF8, CONTENT_TYPE));
             var data = await responseData.Content.ReadAsStringAsync();
 
             return (await TryGetError(data)) ? new List<ShipStationServiceRate>() : JsonConvert.DeserializeObject<List<ShipStationServiceRate>>(data);

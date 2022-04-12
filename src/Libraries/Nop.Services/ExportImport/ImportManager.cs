@@ -1659,11 +1659,18 @@ namespace Nop.Services.ExportImport
                     //category mappings
                     var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? Array.Empty<int>() : allProductsCategoryIds[product.Id];
 
+                    var storesIds = product.LimitedToStores
+                        ? (await _storeMappingService.GetStoresIdsWithAccessAsync(product)).ToList()
+                        : new List<int>();
+
                     var importedCategories = await categoryList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(categoryName => new CategoryKey(categoryName))
+                        .Select(categoryName => new CategoryKey(categoryName, storesIds))
                         .SelectAwait(async categoryKey =>
                         {
-                            var rez = allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id;
+                            var rez = (allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id) ??
+                                      allCategories.FirstOrDefault(p =>
+                                    p.Key.Key.Equals(categoryKey.Key, StringComparison.InvariantCultureIgnoreCase))
+                                .Value?.Id;
 
                             if (!rez.HasValue && int.TryParse(categoryKey.Key, out var id)) 
                                 rez = id;
