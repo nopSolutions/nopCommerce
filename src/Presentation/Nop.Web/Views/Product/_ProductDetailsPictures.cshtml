@@ -1,6 +1,6 @@
 ﻿@model ProductDetailsModel
 
-<div class="gallery">
+<div class="picture-gallery">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model })
     <div class="picture">
         @if (Model.DefaultPictureZoomEnabled && Model.PictureModels.Count == 1)

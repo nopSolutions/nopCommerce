@@ -516,6 +516,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ProductOrderSearchModel, options => options.Ignore())
                 .ForMember(model => model.ProductPictureModels, options => options.Ignore())
                 .ForMember(model => model.ProductPictureSearchModel, options => options.Ignore())
+                .ForMember(model => model.ProductVideoModels, options => options.Ignore())
+                .ForMember(model => model.ProductVideoSearchModel, options => options.Ignore())
+                .ForMember(model => model.AddVideoModel, options => options.Ignore())
                 .ForMember(model => model.ProductSpecificationAttributeSearchModel, options => options.Ignore())
                 .ForMember(model => model.ProductsTypesSupportedByProductTemplates, options => options.Ignore())
                 .ForMember(model => model.ProductTags, options => options.Ignore())
@@ -613,6 +616,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.OverrideAltAttribute, options => options.Ignore())
                 .ForMember(model => model.OverrideTitleAttribute, options => options.Ignore())
                 .ForMember(model => model.PictureUrl, options => options.Ignore());
+
+            CreateMap<ProductVideo, ProductVideoModel>()
+               .ForMember(model => model.VideoUrl, options => options.Ignore());
 
             CreateMap<Product, SpecificationAttributeProductModel>()
                 .ForMember(model => model.SpecificationAttributeId, options => options.Ignore())
@@ -1126,7 +1132,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.AutoCompleteSearchThumbPictureSize, options => options.Ignore())
                 .ForMember(settings => settings.AzureCacheControlHeader, options => options.Ignore())
                 .ForMember(settings => settings.UseAbsoluteImagePath, options => options.Ignore())
-                .ForMember(settings => settings.ImageSquarePictureSize, options => options.Ignore());
+                .ForMember(settings => settings.ImageSquarePictureSize, options => options.Ignore())
+                .ForMember(settings => settings.VideoIframeAllow, options => options.Ignore())
+                .ForMember(settings => settings.VideoIframeHeight, options => options.Ignore())
+                .ForMember(settings => settings.VideoIframeWidth, options => options.Ignore());
         }
 
         /// <summary>

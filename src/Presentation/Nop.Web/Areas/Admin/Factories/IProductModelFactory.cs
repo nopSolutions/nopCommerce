@@ -166,6 +166,17 @@ namespace Nop.Web.Areas.Admin.Factories
         Task<ProductPictureListModel> PrepareProductPictureListModelAsync(ProductPictureSearchModel searchModel, Product product);
 
         /// <summary>
+        /// Prepare paged product video list model
+        /// </summary>
+        /// <param name="searchModel">Product video search model</param>
+        /// <param name="product">Product</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product video list model
+        /// </returns>
+        Task<ProductVideoListModel> PrepareProductVideoListModelAsync(ProductVideoSearchModel searchModel, Product product);
+
+        /// <summary>
         /// Prepare paged product specification attribute list model
         /// </summary>
         /// <param name="searchModel">Product specification attribute search model</param>

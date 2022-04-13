@@ -35,6 +35,8 @@ using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -51,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IDiscountService _discountService;
         private readonly IDownloadService _downloadService;
         private readonly IExportManager _exportManager;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IImportManager _importManager;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -61,9 +64,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPdfService _pdfService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
+        private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
@@ -73,7 +76,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
-        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IVideoService _videoService;
         private readonly IWorkContext _workContext;
         private readonly VendorSettings _vendorSettings;
 
@@ -90,6 +93,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IDiscountService discountService,
             IDownloadService downloadService,
             IExportManager exportManager,
+            IGenericAttributeService genericAttributeService,
             IImportManager importManager,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -100,9 +104,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPdfService pdfService,
             IPermissionService permissionService,
             IPictureService pictureService,
+            IProductAttributeFormatter productAttributeFormatter,
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
-            IProductAttributeFormatter productAttributeFormatter,
             IProductModelFactory productModelFactory,
             IProductService productService,
             IProductTagService productTagService,
@@ -112,7 +116,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISpecificationAttributeService specificationAttributeService,
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
-            IGenericAttributeService genericAttributeService,
+            IVideoService videoService,
             IWorkContext workContext,
             VendorSettings vendorSettings)
         {
@@ -125,6 +129,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _discountService = discountService;
             _downloadService = downloadService;
             _exportManager = exportManager;
+            _genericAttributeService = genericAttributeService;
             _importManager = importManager;
             _languageService = languageService;
             _localizationService = localizationService;
@@ -135,9 +140,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             _pdfService = pdfService;
             _permissionService = permissionService;
             _pictureService = pictureService;
+            _productAttributeFormatter = productAttributeFormatter;
             _productAttributeParser = productAttributeParser;
             _productAttributeService = productAttributeService;
-            _productAttributeFormatter = productAttributeFormatter;
             _productModelFactory = productModelFactory;
             _productService = productService;
             _productTagService = productTagService;
@@ -147,7 +152,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _specificationAttributeService = specificationAttributeService;
             _storeContext = storeContext;
             _urlRecordService = urlRecordService;
-            _genericAttributeService = genericAttributeService;
+            _videoService = videoService;
             _workContext = workContext;
             _vendorSettings = vendorSettings;
         }
@@ -1148,7 +1153,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (currentVendor != null && originalProduct.VendorId != currentVendor.Id)
                     return RedirectToAction("List");
 
-                var newProduct = await _copyProductService.CopyProductAsync(originalProduct, copyModel.Name, copyModel.Published, copyModel.CopyImages);
+                var newProduct = await _copyProductService.CopyProductAsync(originalProduct, copyModel.Name, copyModel.Published, copyModel.CopyMultimedia);
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Copied"));
 
@@ -1677,7 +1682,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new 
                     { 
                         success = false, 
-                        message = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Pictures.Alert.PictureAdd")} {exc.Message}", 
+                        message = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd")} {exc.Message}", 
                     });
             }
             
@@ -1768,6 +1773,146 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No picture found with the specified id");
 
             await _pictureService.DeletePictureAsync(picture);
+
+            return new NullJsonResult();
+        }
+
+        #endregion
+
+        #region Product videos
+
+        [HttpPost]
+        public virtual async Task<IActionResult> ProductVideoAdd(int productId, [Validate] ProductVideoModel model)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            if (productId == 0)
+                throw new ArgumentException();
+
+            //try to get a product with the specified id
+            var product = await _productService.GetProductByIdAsync(productId)
+                ?? throw new ArgumentException("No product found with the specified id");
+
+            if (!ModelState.IsValid)
+            {
+                return ErrorJson(ModelState.SerializeErrors());
+            }
+
+            //a vendor should have access only to his products
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
+                return RedirectToAction("List");
+            try
+            {
+                var video = new Video
+                {
+                    VideoUrl = model.VideoUrl
+                };
+
+                //insert video
+                await _videoService.InsertVideoAsync(video);
+
+                await _productService.InsertProductVideoAsync(new ProductVideo
+                {
+                    VideoId = video.Id,
+                    ProductId = product.Id,
+                    DisplayOrder = model.DisplayOrder
+                });
+            }
+            catch (Exception exc)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd")} {exc.Message}",
+                });
+            }
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> ProductVideoList(ProductVideoSearchModel searchModel)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+                return await AccessDeniedDataTablesJson();
+
+            //try to get a product with the specified id
+            var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+                ?? throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
+                return Content("This is not your product");
+
+            //prepare model
+            var model = await _productModelFactory.PrepareProductVideoListModelAsync(searchModel, product);
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> ProductVideoUpdate([Validate] ProductVideoModel model)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            //try to get a product picture with the specified id
+            var productVideo = await _productService.GetProductVideoByIdAsync(model.Id)
+                ?? throw new ArgumentException("No product video found with the specified id");
+
+            //a vendor should have access only to his products
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+            {
+                var product = await _productService.GetProductByIdAsync(productVideo.ProductId);
+                if (product != null && product.VendorId != currentVendor.Id)
+                    return Content("This is not your product");
+            }
+
+            //try to get a video with the specified id
+            var video = await _videoService.GetVideoByIdAsync(productVideo.VideoId)
+                ?? throw new ArgumentException("No video found with the specified id");
+
+            video.VideoUrl = model.VideoUrl;
+
+            await _videoService.UpdateVideoAsync(video);
+
+            productVideo.DisplayOrder = model.DisplayOrder;
+            await _productService.UpdateProductVideoAsync(productVideo);
+
+            return new NullJsonResult();
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> ProductVideoDelete(int id)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            //try to get a product video with the specified id
+            var productVideo = await _productService.GetProductVideoByIdAsync(id)
+                ?? throw new ArgumentException("No product video found with the specified id");
+
+            //a vendor should have access only to his products
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+            {
+                var product = await _productService.GetProductByIdAsync(productVideo.ProductId);
+                if (product != null && product.VendorId != currentVendor.Id)
+                    return Content("This is not your product");
+            }
+
+            var videoId = productVideo.VideoId;
+            await _productService.DeleteProductVideoAsync(productVideo);
+
+            //try to get a video with the specified id
+            var video = await _videoService.GetVideoByIdAsync(videoId)
+                ?? throw new ArgumentException("No video found with the specified id");
+
+            await _videoService.DeleteVideoAsync(video);
 
             return new NullJsonResult();
         }
