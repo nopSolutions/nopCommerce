@@ -44,7 +44,7 @@
                         </div>
                         <div class="inputs">
                             <label>@T("Vendors.ApplyAccount.Picture"):</label>
-                            <input name="uploadedFile" type="file"/>
+                            <input name="uploadedFile" type="file" accept="image/*"/>
                         </div>
                         @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
                         @if (Model.DisplayCaptcha)

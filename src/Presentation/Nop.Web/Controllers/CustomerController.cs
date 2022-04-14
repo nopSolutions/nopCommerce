@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -55,9 +56,9 @@ namespace Nop.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
-        private readonly IDownloadService _downloadService;
         private readonly ForumSettings _forumSettings;
         private readonly GdprSettings _gdprSettings;
+        private readonly HtmlEncoder _htmlEncoder;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
@@ -70,6 +71,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerModelFactory _customerModelFactory;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICustomerService _customerService;
+        private readonly IDownloadService _downloadService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IExportManager _exportManager;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
@@ -104,9 +106,9 @@ namespace Nop.Web.Controllers
             CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
-            IDownloadService downloadService,
             ForumSettings forumSettings,
             GdprSettings gdprSettings,
+            HtmlEncoder htmlEncoder,
             IAddressAttributeParser addressAttributeParser,
             IAddressModelFactory addressModelFactory,
             IAddressService addressService,
@@ -119,6 +121,7 @@ namespace Nop.Web.Controllers
             ICustomerModelFactory customerModelFactory,
             ICustomerRegistrationService customerRegistrationService,
             ICustomerService customerService,
+            IDownloadService downloadService,
             IEventPublisher eventPublisher,
             IExportManager exportManager,
             IExternalAuthenticationService externalAuthenticationService,
@@ -149,9 +152,9 @@ namespace Nop.Web.Controllers
             _captchaSettings = captchaSettings;
             _customerSettings = customerSettings;
             _dateTimeSettings = dateTimeSettings;
-            _downloadService = downloadService;
             _forumSettings = forumSettings;
             _gdprSettings = gdprSettings;
+            _htmlEncoder = htmlEncoder;
             _addressAttributeParser = addressAttributeParser;
             _addressModelFactory = addressModelFactory;
             _addressService = addressService;
@@ -164,6 +167,7 @@ namespace Nop.Web.Controllers
             _customerModelFactory = customerModelFactory;
             _customerRegistrationService = customerRegistrationService;
             _customerService = customerService;
+            _downloadService = downloadService;
             _eventPublisher = eventPublisher;
             _exportManager = exportManager;
             _externalAuthenticationService = externalAuthenticationService;
@@ -425,7 +429,7 @@ namespace Nop.Web.Controllers
             {
                 var fullName = await _customerService.GetCustomerFullNameAsync(customer);
                 var message = await _localizationService.GetResourceAsync("Account.Login.AlreadyLogin");
-                _notificationService.SuccessNotification(string.Format(message, fullName));
+                _notificationService.SuccessNotification(string.Format(message, _htmlEncoder.Encode(fullName)));
             }
 
             return View(model);
@@ -1644,7 +1648,15 @@ namespace Nop.Web.Controllers
                 if (changePasswordResult.Success)
                 {
                     _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
-                    return string.IsNullOrEmpty(returnUrl)  ? View(model) : new RedirectResult(returnUrl);
+
+                    if (string.IsNullOrEmpty(returnUrl))
+                        return View(model);
+
+                    //prevent open redirection attack
+                    if (!Url.IsLocalUrl(returnUrl))
+                        returnUrl = Url.RouteUrl("Homepage");
+
+                    return new RedirectResult(returnUrl);
                 }
 
                 //errors
@@ -1685,6 +1697,11 @@ namespace Nop.Web.Controllers
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
 
+            var contentType = uploadedFile.ContentType.ToLowerInvariant();
+
+            if (!contentType.Equals("image/jpeg") && !contentType.Equals("image/gif"))
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Avatar.UploadRules"));
+
             if (ModelState.IsValid)
             {
                 try
@@ -1698,9 +1715,9 @@ namespace Nop.Web.Controllers
 
                         var customerPictureBinary = await _downloadService.GetDownloadBitsAsync(uploadedFile);
                         if (customerAvatar != null)
-                            customerAvatar = await _pictureService.UpdatePictureAsync(customerAvatar.Id, customerPictureBinary, uploadedFile.ContentType, null);
+                            customerAvatar = await _pictureService.UpdatePictureAsync(customerAvatar.Id, customerPictureBinary, contentType, null);
                         else
-                            customerAvatar = await _pictureService.InsertPictureAsync(customerPictureBinary, uploadedFile.ContentType, null);
+                            customerAvatar = await _pictureService.InsertPictureAsync(customerPictureBinary, contentType, null);
                     }
 
                     var customerAvatarId = 0;

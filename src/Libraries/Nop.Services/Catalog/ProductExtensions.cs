@@ -41,16 +41,16 @@ namespace Nop.Services.Catalog
                             keyGroup = localizedProperty.LocaleKeyGroup,
                             key = localizedProperty.LocaleKey
                         } into localizedProperties
-                    from localizedProperty in localizedProperties.DefaultIfEmpty(new LocalizedProperty {LocaleValue = product.Name})
+                    from localizedProperty in localizedProperties.DefaultIfEmpty(new LocalizedProperty { LocaleValue = product.Name })
                     select new { localizedProperty, product };
 
                 if (orderBy == ProductSortingEnum.NameAsc)
                     productsQuery = from item in query
-                        orderby item.localizedProperty.LocaleValue
+                        orderby item.localizedProperty.LocaleValue, item.product.Name
                         select item.product;
                 else
                     productsQuery = from item in query
-                        orderby item.localizedProperty.LocaleValue descending
+                        orderby item.localizedProperty.LocaleValue descending, item.product.Name descending
                         select item.product;
 
                 return productsQuery;

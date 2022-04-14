@@ -11,6 +11,8 @@ namespace Nop.Web.Models.Common
             Values = new List<AddressAttributeValueModel>();
         }
 
+        public string ControlId { get; set; }
+
         public string Name { get; set; }
 
         public bool IsRequired { get; set; }
