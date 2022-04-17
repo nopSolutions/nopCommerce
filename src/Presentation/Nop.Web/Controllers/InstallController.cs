@@ -15,7 +15,6 @@ using Nop.Data.Configuration;
 using Nop.Services.Common;
 using Nop.Services.Installation;
 using Nop.Services.Plugins;
-using Nop.Services.Security;
 using Nop.Web.Framework.Security;
 using Nop.Web.Infrastructure.Installation;
 using Nop.Web.Models.Install;
@@ -31,8 +30,6 @@ namespace Nop.Web.Controllers
         private readonly Lazy<IInstallationLocalizationService> _locService;
         private readonly Lazy<IInstallationService> _installationService;
         private readonly INopFileProvider _fileProvider;
-        private readonly Lazy<IPermissionService> _permissionService;
-        private readonly Lazy<IPluginService> _pluginService;
         private readonly Lazy<IStaticCacheManager> _staticCacheManager;
         private readonly Lazy<IUploadService> _uploadService;
         private readonly Lazy<IWebHelper> _webHelper;
@@ -46,8 +43,6 @@ namespace Nop.Web.Controllers
             Lazy<IInstallationLocalizationService> locService,
             Lazy<IInstallationService> installationService,
             INopFileProvider fileProvider,
-            Lazy<IPermissionService> permissionService,
-            Lazy<IPluginService> pluginService,
             Lazy<IStaticCacheManager> staticCacheManager,
             Lazy<IUploadService> uploadService,
             Lazy<IWebHelper> webHelper,
@@ -57,8 +52,6 @@ namespace Nop.Web.Controllers
             _locService = locService;
             _installationService = installationService;
             _fileProvider = fileProvider;
-            _permissionService = permissionService;
-            _pluginService = pluginService;
             _staticCacheManager = staticCacheManager;
             _uploadService = uploadService;
             _webHelper = webHelper;
@@ -267,34 +260,6 @@ namespace Nop.Web.Controllers
 
                 if (model.InstallSampleData)
                     await _installationService.Value.InstallSampleDataAsync(model.AdminEmail);
-
-                //prepare plugins to install
-                _pluginService.Value.ClearInstalledPluginsList();
-
-                var pluginsIgnoredDuringInstallation = new List<string>();
-                if (!string.IsNullOrEmpty(_appSettings.Get<InstallationConfig>().DisabledPlugins))
-                {
-                    pluginsIgnoredDuringInstallation = _appSettings.Get<InstallationConfig>().DisabledPlugins
-                        .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
-                }
-
-                var plugins = (await _pluginService.Value.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.All))
-                    .Where(pluginDescriptor => !pluginsIgnoredDuringInstallation.Contains(pluginDescriptor.SystemName))
-                    .OrderBy(pluginDescriptor => pluginDescriptor.Group).ThenBy(pluginDescriptor => pluginDescriptor.DisplayOrder)
-                    .ToList();
-
-                foreach (var plugin in plugins)
-                {
-                    await _pluginService.Value.PreparePluginToInstallAsync(plugin.SystemName, checkDependencies: false);
-                }
-
-                //register default permissions
-                var permissionProviders = new List<Type> { typeof(StandardPermissionProvider) };
-                foreach (var providerType in permissionProviders)
-                {
-                    var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
-                    await _permissionService.Value.InstallPermissionsAsync(provider);
-                }
 
                 return View(new InstallModel { RestartUrl = Url.RouteUrl("Homepage") });
 

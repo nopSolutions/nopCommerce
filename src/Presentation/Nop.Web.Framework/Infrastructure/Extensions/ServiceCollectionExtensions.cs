@@ -89,6 +89,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var engine = EngineContext.Create();
 
             engine.ConfigureServices(services, builder.Configuration);
+            services.AddHostedService<NopHostedService>();
         }
 
         /// <summary>
