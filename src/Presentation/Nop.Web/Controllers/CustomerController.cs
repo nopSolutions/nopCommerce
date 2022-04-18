@@ -1318,6 +1318,8 @@ namespace Nop.Web.Controllers
                     if (_gdprSettings.GdprEnabled)
                         await LogGdprAsync(customer, oldCustomerModel, model, form);
 
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.CustomerInfo.Updated"));
+
                     return RedirectToRoute("CustomerInfo");
                 }
             }
@@ -1491,6 +1493,8 @@ namespace Nop.Web.Controllers
 
                 await _customerService.InsertCustomerAddressAsync(customer, address);
 
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.CustomerAddresses.Added"));
+
                 return RedirectToRoute("CustomerAddresses");
             }
 
@@ -1553,6 +1557,8 @@ namespace Nop.Web.Controllers
                 address = model.Address.ToEntity(address);
                 address.CustomAttributes = customAttributes;
                 await _addressService.UpdateAddressAsync(address);
+
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.CustomerAddresses.Updated"));
 
                 return RedirectToRoute("CustomerAddresses");
             }

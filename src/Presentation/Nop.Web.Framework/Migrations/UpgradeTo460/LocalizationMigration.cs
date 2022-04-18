@@ -195,6 +195,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Catalog.Products.Multimedia.Videos.AddButton"] = "Add product video",
                 ["Admin.Catalog.Products.Copy.CopyMultimedia"] = "Copy multimedia",
                 ["Admin.Catalog.Products.Copy.CopyMultimedia.Hint"] = "Check to copy the images and videos.",
+
+                //#6062
+                ["Account.CustomerAddresses.Added"] = "The new address has been added successfully.",
+                ["Account.CustomerAddresses.Updated"] = "The address has been updated successfully.",
+                ["Account.CustomerInfo.Updated"] = "The customer info has been updated successfully.",
             }, languageId).Wait();
 
             #endregion
