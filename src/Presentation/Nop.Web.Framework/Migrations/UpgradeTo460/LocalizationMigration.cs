@@ -47,6 +47,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#7
                 "Admin.Catalog.Products.Pictures.SaveBeforeEdit",
                 "Admin.Catalog.Products.Pictures.AddButton",
+
+                "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions",
+                "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint",
             }).Wait();
 
             #endregion
@@ -147,7 +150,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Customers.Customers.List.SearchRegistrationDateFrom.Hint"] = "The registration from date for the search.",
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo"] = "Registration date to",
                 ["Admin.Customers.Customers.List.SearchRegistrationDateTo.Hint"] = "The registration to date for the search.",
-                
+
                 //#5313
                 ["ActivityLog.ImportOrders"] = "{0} orders were imported",
                 ["Admin.Orders.Import.CustomersDontExist"] = "Customers with the following guids don't exist: {0}",
@@ -176,7 +179,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#29
                 ["Admin.Configuration.Settings.Catalog.DisplayFromPrices"] = "Display 'From' prices",
                 ["Admin.Configuration.Settings.Catalog.DisplayFromPrices.Hint"] = "Check to display 'From' prices on catalog pages. This will display the minimum possible price of a product based on price adjustments of attributes and combinations instead of the fixed base price. If enabled, it is also recommended to enable setting 'Cache product prices'. But please note that it can affect performance if you use some complex discounts, discount requirement rules, etc.",
-                
+
                 //#5089
                 ["Products.Availability.LowStock"] = "Low stock",
                 ["Products.Availability.LowStockWithQuantity"] = "{0} low stock",

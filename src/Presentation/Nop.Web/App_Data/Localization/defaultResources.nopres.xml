@@ -4503,12 +4503,6 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.StaticFilesCacheControl.Hint">
     <Value>Specify a value of "Cache-Control" header value for static content (in seconds).</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions">
-    <Value>Support previous nopCommerce versions</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint">
-    <Value>Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance). In this case, old URLs (from previous nopCommerce versions) will redirect to new ones. Enable it only if you upgraded from one of the previous nopCommerce versions.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.UserAgentStringsPath">
     <Value>User agent strings path</Value>
   </LocaleResource>
