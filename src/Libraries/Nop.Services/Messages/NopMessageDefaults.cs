@@ -20,8 +20,9 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <remarks>
         /// {0} : store ID
+        /// {1} : is active?
         /// </remarks>
-        public static CacheKey MessageTemplatesAllCacheKey => new("Nop.messagetemplate.all.{0}", NopEntityCacheDefaults<MessageTemplate>.AllPrefix);
+        public static CacheKey MessageTemplatesAllCacheKey => new("Nop.messagetemplate.all.{0}-{1}", NopEntityCacheDefaults<MessageTemplate>.AllPrefix);
 
         /// <summary>
         /// Gets a key for caching

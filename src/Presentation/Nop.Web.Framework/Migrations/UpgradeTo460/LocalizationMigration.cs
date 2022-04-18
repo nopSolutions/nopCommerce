@@ -180,7 +180,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#6111
                 ["Admin.ReturnRequests.Fields.ReturnedQuantity.Hint"] = "The quantity to be returned to the stock.",
 
-
                 //#7
                 ["Admin.Catalog.Products.Multimedia"] = "Multimedia",
                 ["Admin.Catalog.Products.Multimedia.Videos"] = "Videos",
@@ -195,6 +194,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Catalog.Products.Multimedia.Videos.AddButton"] = "Add product video",
                 ["Admin.Catalog.Products.Copy.CopyMultimedia"] = "Copy multimedia",
                 ["Admin.Catalog.Products.Copy.CopyMultimedia.Hint"] = "Check to copy the images and videos.",
+
+                //#5905
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive"] = "Is active",
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.ActiveOnly"] = "Active only",
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.All"] = "All",
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.Hint"] = "Search by a \"IsActive\" property.",
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.InactiveOnly"] = "Inactive only"
             }, languageId).Wait();
 
             #endregion

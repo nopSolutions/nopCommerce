@@ -54,6 +54,14 @@
                                         <nop-editor asp-for="SearchKeywords" />
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="IsActiveId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="IsActiveId" asp-items="Model.AvailableActiveOptions" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -82,7 +90,8 @@
                         Filters = new List<FilterParameter>
                         {
                             new FilterParameter(nameof(Model.SearchKeywords)),
-                            new FilterParameter(nameof(Model.SearchStoreId))
+                            new FilterParameter(nameof(Model.SearchStoreId)),
+                            new FilterParameter(nameof(Model.IsActiveId))
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {

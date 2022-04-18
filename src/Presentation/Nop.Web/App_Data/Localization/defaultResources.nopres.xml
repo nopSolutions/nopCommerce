@@ -10572,6 +10572,21 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Subject.Required">
     <Value>Subject is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.IsActive.ActiveOnly">
+    <Value>Active only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.IsActive.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.IsActive.Hint">
+    <Value>Search by a "IsActive" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.IsActive.InactiveOnly">
+    <Value>Inactive only</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords">
     <Value>Search keywords</Value>
   </LocaleResource>
