@@ -1764,7 +1764,18 @@ label, label + * {
   height: 14px;
 }
 
-.item-box .description {
+.product-grid .item-box .description:not([data-short-description]) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  margin: 0 0 15px;
+  height: 66px;
+  line-height: 22px;
+}
+
+.item-box .description[data-short-description] {
   display: none;
 }
 

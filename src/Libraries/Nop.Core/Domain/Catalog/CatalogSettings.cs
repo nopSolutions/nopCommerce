@@ -56,6 +56,11 @@ namespace Nop.Core.Domain.Catalog
         public bool ShowFreeShippingNotification { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether short description should be displayed in product box
+        /// </summary>
+        public bool ShowShortDescriptionInGridViewProductBox { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether product sorting is enabled
         /// </summary>
         public bool AllowProductSorting { get; set; }

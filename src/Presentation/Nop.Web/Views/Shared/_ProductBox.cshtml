@@ -80,7 +80,7 @@
                 </div>
             </div>
         }
-        <div class="description">
+        <div class="description" @(catalogSettings.ShowShortDescriptionInGridViewProductBox ? "" : "data-short-description=none")>
             @Html.Raw(Model.ShortDescription)
         </div>
         <div class="add-info">

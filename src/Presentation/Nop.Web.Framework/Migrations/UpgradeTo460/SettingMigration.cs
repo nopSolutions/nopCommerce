@@ -79,6 +79,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(catalogSettings, settings => settings.DisplayFromPrices).Wait();
             }
 
+            //#6115
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ShowShortDescriptionInGridViewProductBox).Result)
+            {
+                catalogSettings.ShowShortDescriptionInGridViewProductBox = false;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.ShowShortDescriptionInGridViewProductBox).Wait();
+            }
+
             var storeInformationSettings = settingService.LoadSettingAsync<StoreInformationSettings>().Result;
 
             //#3997

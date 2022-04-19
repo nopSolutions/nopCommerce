@@ -54,6 +54,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ShowFreeShippingNotification { get; set; }
         public bool ShowFreeShippingNotification_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowShortDescriptionInGridViewProductBox")]
+        public bool ShowShortDescriptionInGridViewProductBox { get; set; }
+        public bool ShowShortDescriptionInGridViewProductBox_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowProductSorting")]
         public bool AllowProductSorting { get; set; }
         public bool AllowProductSorting_OverrideForStore { get; set; }
