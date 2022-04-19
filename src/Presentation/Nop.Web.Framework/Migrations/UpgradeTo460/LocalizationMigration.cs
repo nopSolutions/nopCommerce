@@ -200,7 +200,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.ContentManagement.MessageTemplates.List.IsActive.ActiveOnly"] = "Active only",
                 ["Admin.ContentManagement.MessageTemplates.List.IsActive.All"] = "All",
                 ["Admin.ContentManagement.MessageTemplates.List.IsActive.Hint"] = "Search by a \"IsActive\" property.",
-                ["Admin.ContentManagement.MessageTemplates.List.IsActive.InactiveOnly"] = "Inactive only"
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.InactiveOnly"] = "Inactive only",
+
+                //#6062
+                ["Account.CustomerAddresses.Added"] = "The new address has been added successfully.",
+                ["Account.CustomerAddresses.Updated"] = "The address has been updated successfully.",
+                ["Account.CustomerInfo.Updated"] = "The customer info has been updated successfully.",
+
             }, languageId).Wait();
 
             #endregion
