@@ -1,0 +1,10 @@
+@model string
+
+<!-- Listrak Analytics - Javascript Framework -->
+<script type="text/javascript">
+    (function (d, tid, vid) {
+    if (typeof _ltk != 'undefined') return; var js = d.createElement('script'); js.id = 'ltkSDK';
+    js.src = "https://cdn.listrakbi.com/scripts/script.js?m=" + tid + "&v=" + vid;
+    d.querySelector('head').appendChild(js);
+    })(document, '@Model', '1');
+</script>

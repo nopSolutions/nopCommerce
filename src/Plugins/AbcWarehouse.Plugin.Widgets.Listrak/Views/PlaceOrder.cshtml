@@ -1,0 +1,20 @@
+@model AbcWarehouse.Plugin.Widgets.Listrak.Models.PlaceOrderModel;
+
+<script type="text/javascript">
+    (function(d){if(typeof _ltk=="undefined"){if(document.addEventListener)document.addEventListener("ltkAsyncListener",function(){_ltk_util.ready(d)});else{e=document.documentElement;e.ltkAsyncProperty=0;e.attachEvent("onpropertychange",function(e){if(e.propertyName=="ltkAsyncProperty"){_ltk_util.ready(d)}})}}else{_ltk_util.ready(d)}})(function(){
+        _ltk.Order.SetCustomer(
+            @Model.CustomerEmail, 
+            @Model.CustomerFirstName, 
+            @Model.CustomerLastName);
+        _ltk.Order.OrderNumber = @Model.OrderNumber;
+        _ltk.Order.ItemTotal = @Model.ItemTotal;
+        _ltk.Order.ShippingTotal = @Model.ShippingTotal;
+        _ltk.Order.TaxTotal = @Model.TaxTotal;
+        _ltk.Order.OrderTotal = @Model.OrderTotal;
+        
+        // REPEAT THIS FUNCTION FOR EVERY ITEM PURCHASED
+        //_ltk.Order.AddItem(sku, quantity, price);
+        
+        _ltk.Order.Submit();
+    });
+</script>
