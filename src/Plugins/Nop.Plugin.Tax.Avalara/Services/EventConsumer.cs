@@ -34,7 +34,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         IConsumer<EntityDeletedEvent<Order>>,
         IConsumer<ModelPreparedEvent<BaseNopModel>>,
         IConsumer<ModelReceivedEvent<BaseNopModel>>,
-        IConsumer<OrderCancelledEvent>,
+        IConsumer<OrderStatusChangedEvent>,
         IConsumer<OrderPlacedEvent>,
         IConsumer<OrderRefundedEvent>,
         IConsumer<OrderVoidedEvent>
@@ -266,9 +266,12 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// </summary>
         /// <param name="eventMessage">Event message</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task HandleEventAsync(OrderCancelledEvent eventMessage)
+        public async Task HandleEventAsync(OrderStatusChangedEvent eventMessage)
         {
             if (eventMessage.Order == null)
+                return;
+
+            if (eventMessage.Order.OrderStatus != OrderStatus.Cancelled)
                 return;
 
             //ensure that Avalara tax provider is active

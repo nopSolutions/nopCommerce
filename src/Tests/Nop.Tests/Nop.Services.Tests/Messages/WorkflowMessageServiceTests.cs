@@ -258,6 +258,13 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         }
 
         [Test]
+        public async Task CanSendOrderProcessingCustomerNotification()
+        {
+            await CheckData(async () =>
+                await _workflowMessageService.SendOrderProcessingCustomerNotificationAsync(_order, 1));
+        }
+
+        [Test]
         public async Task CanSendOrderCompletedCustomerNotification()
         {
             await CheckData(async () =>

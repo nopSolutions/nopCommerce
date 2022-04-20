@@ -943,6 +943,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.DisplayPickupInStoreOnShippingMethodPage, model.DisplayPickupInStoreOnShippingMethodPage_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AttachPdfInvoiceToOrderPlacedEmail, model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AttachPdfInvoiceToOrderPaidEmail, model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AttachPdfInvoiceToOrderProcessingEmail, model.AttachPdfInvoiceToOrderProcessingEmail_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AttachPdfInvoiceToOrderCompletedEmail, model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.ReturnRequestsEnabled, model.ReturnRequestsEnabled_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.ReturnRequestsAllowFiles, model.ReturnRequestsAllowFiles_OverrideForStore, storeScope, false);

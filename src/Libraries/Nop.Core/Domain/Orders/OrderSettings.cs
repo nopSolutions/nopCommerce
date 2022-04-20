@@ -89,6 +89,11 @@ namespace Nop.Core.Domain.Orders
         public bool AttachPdfInvoiceToOrderPaidEmail { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating we should attach PDF invoice to "Order processing" email
+        /// </summary>
+        public bool AttachPdfInvoiceToOrderProcessingEmail { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating we should attach PDF invoice to "Order completed" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderCompletedEmail { get; set; }

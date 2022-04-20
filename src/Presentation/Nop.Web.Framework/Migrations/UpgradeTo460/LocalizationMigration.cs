@@ -195,6 +195,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Catalog.Products.Multimedia.Videos.AddButton"] = "Add product video",
                 ["Admin.Catalog.Products.Copy.CopyMultimedia"] = "Copy multimedia",
                 ["Admin.Catalog.Products.Copy.CopyMultimedia.Hint"] = "Check to copy the images and videos.",
+
+                //#3651
+                ["Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail"] = "Attach PDF invoice (\"order processing\" email)",
+                ["Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail.Hint"] = "Check to attach PDF invoice to the \"order processing\" email sent to a customer.",
             }, languageId).Wait();
 
             #endregion

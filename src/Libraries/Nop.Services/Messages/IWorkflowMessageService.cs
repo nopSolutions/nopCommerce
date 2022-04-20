@@ -208,6 +208,20 @@ namespace Nop.Services.Messages
         Task<IList<int>> SendShipmentDeliveredCustomerNotificationAsync(Shipment shipment, int languageId);
 
         /// <summary>
+        /// Sends an order processing notification to a customer
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        Task<IList<int>> SendOrderProcessingCustomerNotificationAsync(Order order, int languageId,
+            string attachmentFilePath = null, string attachmentFileName = null);
+
+        /// <summary>
         /// Sends an order completed notification to a customer
         /// </summary>
         /// <param name="order">Order instance</param>

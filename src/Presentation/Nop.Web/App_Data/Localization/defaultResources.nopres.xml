@@ -8010,6 +8010,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPlacedEmail.Hint">
     <Value>Check to attach PDF invoice to the "order placed" email sent to a customer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail">
+    <Value>Attach PDF invoice ("order processing" email)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail.Hint">
+    <Value>Check to attach PDF invoice to the "order processing" email sent to a customer.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder">
     <Value>Auto update order totals</Value>
   </LocaleResource>

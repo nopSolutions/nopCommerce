@@ -1296,6 +1296,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AllowAdminsToBuyCallForPriceProducts_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowProductThumbnailInOrderDetailsPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AnonymousCheckoutAllowed_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.AttachPdfInvoiceToOrderProcessingEmail_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore, options => options.Ignore())

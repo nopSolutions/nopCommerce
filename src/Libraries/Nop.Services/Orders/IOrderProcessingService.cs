@@ -18,7 +18,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task CheckOrderStatusAsync(Order order);
+        Task CheckOrderStatusAsync(Order order, bool notifyCustomer);
 
         /// <summary>
         /// Places an order

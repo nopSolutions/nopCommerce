@@ -92,6 +92,11 @@
         public const string ShipmentDeliveredCustomerNotification = "ShipmentDelivered.CustomerNotification";
 
         /// <summary>
+        /// Represents system name of notification customer about processing order
+        /// </summary>
+        public const string OrderProcessingCustomerNotification = "OrderProcessing.CustomerNotification";
+
+        /// <summary>
         /// Represents system name of notification customer about completed order
         /// </summary>
         public const string OrderCompletedCustomerNotification = "OrderCompleted.CustomerNotification";
