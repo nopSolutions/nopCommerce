@@ -180,7 +180,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#6111
                 ["Admin.ReturnRequests.Fields.ReturnedQuantity.Hint"] = "The quantity to be returned to the stock.",
 
-
                 //#7
                 ["Admin.Catalog.Products.Multimedia"] = "Multimedia",
                 ["Admin.Catalog.Products.Multimedia.Videos"] = "Videos",
@@ -199,6 +198,19 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#6115
                 ["Admin.Configuration.Settings.Catalog.ShowShortDescriptionOnCatalogPages"] = "Show short description on catalog pages",
                 ["Admin.Configuration.Settings.Catalog.ShowShortDescriptionOnCatalogPages.Hint"] = "Check to show product short description on catalog pages.",
+
+                //#5905
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive"] = "Is active",
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.ActiveOnly"] = "Active only",
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.All"] = "All",
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.Hint"] = "Search by a \"IsActive\" property.",
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.InactiveOnly"] = "Inactive only",
+
+                //#6062
+                ["Account.CustomerAddresses.Added"] = "The new address has been added successfully.",
+                ["Account.CustomerAddresses.Updated"] = "The address has been updated successfully.",
+                ["Account.CustomerInfo.Updated"] = "The customer info has been updated successfully.",
+
             }, languageId).Wait();
 
             #endregion

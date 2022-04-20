@@ -128,19 +128,23 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="keywords">Keywords to search by name, body, or subject</param>
+        /// <param name="isActive">A value indicating whether to get active records; "null" to load all records; "false" to load only inactive records; "true" to load only active records</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the message template list
         /// </returns>
-        public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplatesAsync(int storeId, string keywords = null)
+        public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplatesAsync(int storeId, string keywords = null, bool? isActive = null)
         {
             var messageTemplates = await _messageTemplateRepository.GetAllAsync(async query =>
             {
                 //apply store mapping constraints
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
+                if (isActive.HasValue)
+                    query = query.Where(mt => mt.IsActive == isActive);
+
                 return query.OrderBy(t => t.Name);
-            }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId));
+            }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId, isActive));
 
             if (!string.IsNullOrWhiteSpace(keywords))
             {
