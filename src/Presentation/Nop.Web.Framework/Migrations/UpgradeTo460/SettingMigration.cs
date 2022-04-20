@@ -80,10 +80,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             }
 
             //#6115
-            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ShowShortDescriptionInGridViewProductBox).Result)
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ShowShortDescriptionOnCatalogPages).Result)
             {
-                catalogSettings.ShowShortDescriptionInGridViewProductBox = false;
-                settingService.SaveSettingAsync(catalogSettings, settings => settings.ShowShortDescriptionInGridViewProductBox).Wait();
+                catalogSettings.ShowShortDescriptionOnCatalogPages = false;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.ShowShortDescriptionOnCatalogPages).Wait();
             }
 
             var storeInformationSettings = settingService.LoadSettingAsync<StoreInformationSettings>().Result;

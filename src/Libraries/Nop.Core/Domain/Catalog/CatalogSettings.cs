@@ -58,7 +58,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a value indicating whether short description should be displayed in product box
         /// </summary>
-        public bool ShowShortDescriptionInGridViewProductBox { get; set; }
+        public bool ShowShortDescriptionOnCatalogPages { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether product sorting is enabled

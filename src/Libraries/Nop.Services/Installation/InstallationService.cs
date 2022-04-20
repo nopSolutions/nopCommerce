@@ -2865,7 +2865,7 @@ namespace Nop.Services.Installation
                 ShowManufacturerPartNumber = false,
                 ShowGtin = false,
                 ShowFreeShippingNotification = true,
-                ShowShortDescriptionInGridViewProductBox = false,
+                ShowShortDescriptionOnCatalogPages = false,
                 AllowProductSorting = true,
                 AllowProductViewModeChanging = true,
                 DefaultViewMode = "grid",

@@ -197,8 +197,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Catalog.Products.Copy.CopyMultimedia.Hint"] = "Check to copy the images and videos.",
 
                 //#6115
-                ["Admin.Configuration.Settings.Catalog.ShowShortDescriptionInGridViewProductBox"] = "Show short description in grid view product box",
-                ["Admin.Configuration.Settings.Catalog.ShowShortDescriptionInGridViewProductBox.Hint"] = "Check to show product short description in grid view product box.",
+                ["Admin.Configuration.Settings.Catalog.ShowShortDescriptionOnCatalogPages"] = "Show short description on catalog pages",
+                ["Admin.Configuration.Settings.Catalog.ShowShortDescriptionOnCatalogPages.Hint"] = "Check to show product short description on catalog pages.",
             }, languageId).Wait();
 
             #endregion

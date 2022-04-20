@@ -6267,11 +6267,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton.Hint">
     <Value>Check to show share button on product details page.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShortDescriptionInGridViewProductBox">
-    <Value>Show short description in grid view product box</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShortDescriptionOnCatalogPages">
+    <Value>Show short description on catalog pages</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShortDescriptionInGridViewProductBox.Hint">
-    <Value>Check to show product short description in grid view product box.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShortDescriptionOnCatalogPages.Hint">
+    <Value>Check to show product short description on catalog pages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSkuOnCatalogPages">
     <Value>Show SKU on catalog pages</Value>
