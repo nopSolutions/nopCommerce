@@ -195,6 +195,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Catalog.Products.Copy.CopyMultimedia"] = "Copy multimedia",
                 ["Admin.Catalog.Products.Copy.CopyMultimedia.Hint"] = "Check to copy the images and videos.",
 
+                //#6115
+                ["Admin.Configuration.Settings.Catalog.ShowShortDescriptionOnCatalogPages"] = "Show short description on catalog pages",
+                ["Admin.Configuration.Settings.Catalog.ShowShortDescriptionOnCatalogPages.Hint"] = "Check to show product short description on catalog pages.",
+
                 //#5905
                 ["Admin.ContentManagement.MessageTemplates.List.IsActive"] = "Is active",
                 ["Admin.ContentManagement.MessageTemplates.List.IsActive.ActiveOnly"] = "Active only",

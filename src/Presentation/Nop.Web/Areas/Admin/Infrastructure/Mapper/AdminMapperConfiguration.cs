@@ -371,6 +371,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowCategoryProductNumber_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowFreeShippingNotification_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ShowShortDescriptionOnCatalogPages_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowGtin_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowLinkToAllResultInSearchAutoComplete_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowManufacturerPartNumber_OverrideForStore, options => options.Ignore())
