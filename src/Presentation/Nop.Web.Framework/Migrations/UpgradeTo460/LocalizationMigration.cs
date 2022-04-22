@@ -160,7 +160,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#6182
                 ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests"] = "Show on checkout page for guests",
-                ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests.Hint"] = "Check to show CAPTCHA on  checkout page for guests.",
+                ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests.Hint"] = "Check to show CAPTCHA on checkout page for guests.",
 
             }, languageId).Wait();
 

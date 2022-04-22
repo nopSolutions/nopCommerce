@@ -574,17 +574,21 @@ var ConfirmOrder = {
     saveUrl: false,
     isSuccess: false,
     isCaptchaEnabled: false,
+    isReCaptchaV3: false,
+    recaptchaPublicKey: "",
 
-    init: function (saveUrl, successUrl, isCaptchaEnabled) {
+    init: function (saveUrl, successUrl, isCaptchaEnabled, isReCaptchaV3, recaptchaPublicKey) {
         this.saveUrl = saveUrl;
         this.successUrl = successUrl;
         this.isCaptchaEnabled = isCaptchaEnabled;
+        this.isReCaptchaV3 = isReCaptchaV3;
+        this.recaptchaPublicKey = recaptchaPublicKey;
     },
 
-    save: function () {
-      if (Checkout.loadWaiting !== false) return;
+  save: async function () {
+    if (Checkout.loadWaiting !== false) return;
 
-        //terms of service
+      //terms of service
         var termOfServiceOk = true;
         if ($('#termsofservice').length > 0) {
             //terms of service element exists
@@ -598,9 +602,10 @@ var ConfirmOrder = {
         if (termOfServiceOk) {
             Checkout.setLoadWaiting('confirm-order');
             var postData = {};
+
             if (ConfirmOrder.isCaptchaEnabled) {
-              var captchaData = $("#g-recaptcha-response").val()
-              postData['g-recaptcha-response'] = captchaData;
+                var captchaTok = await ConfirmOrder.getCaptchaToken('OpcConfirmOrder');
+                postData['g-recaptcha-response'] = captchaTok;
             }
 
             addAntiForgeryToken(postData);
@@ -616,6 +621,25 @@ var ConfirmOrder = {
         } else {
             return false;
         }
+    },
+
+    getCaptchaToken: async function (action) {
+        var recaptchaToken = ''
+        if (ConfirmOrder.isReCaptchaV3) {
+            grecaptcha.ready(() => {
+                grecaptcha.execute(this.recaptchaPublicKey, { action: action }).then((token) => {
+                    recaptchaToken = token;
+                });
+            });
+        } else {
+            recaptchaToken = grecaptcha.getResponse();
+        }
+
+        while (recaptchaToken == '') {
+            await new Promise(t => setTimeout(t, 100));
+        }
+
+        return recaptchaToken;
     },
 
     resetLoadWaiting: function (transport) {

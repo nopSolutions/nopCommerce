@@ -5,6 +5,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -12,7 +13,7 @@ using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-02-08 00:00:00", "4.60.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
+    [NopMigration("2022-04-18 00:00:00", "4.60.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -128,6 +129,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             {
                 gdprSettings.DeleteInactiveCustomersAfterMonths = 36;
                 settingService.SaveSettingAsync(gdprSettings, settings => settings.DeleteInactiveCustomersAfterMonths).Wait();
+            }
+
+            var captchaSettings = settingService.LoadSettingAsync<CaptchaSettings>().Result;
+
+            //#6223
+            if (!settingService.SettingExistsAsync(captchaSettings, settings => settings.ShowOnCheckoutPageForGuests).Result)
+            {
+                captchaSettings.ShowOnCheckoutPageForGuests = false;
+                settingService.SaveSettingAsync(captchaSettings, settings => settings.ShowOnCheckoutPageForGuests).Wait();
             }
         }
 

@@ -644,7 +644,9 @@ namespace Nop.Web.Factories
                 DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && (await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).Any(),
                 BillingAddress = await PrepareBillingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true),
                 DisplayCaptcha = await _customerService.IsGuestAsync(await _customerService.GetShoppingCartCustomerAsync(cart))
-                    && _captchaSettings.Enabled && _captchaSettings.ShowOnCheckoutPageForGuests
+                    && _captchaSettings.Enabled && _captchaSettings.ShowOnCheckoutPageForGuests,
+                IsReCaptchaV3 = _captchaSettings.CaptchaType == CaptchaType.ReCaptchaV3,
+                ReCaptchaPublicKey = _captchaSettings.ReCaptchaPublicKey
             };
             return model;
         }

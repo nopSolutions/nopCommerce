@@ -7194,6 +7194,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnBlogCommentPage.Hint">
     <Value>Check to show CAPTCHA on blog page when writing a comment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests">
+      <Value>Show on checkout page for guests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests.Hint">
+      <Value>Check to show CAPTCHA on  checkout page for guests.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnContactUsPage">
     <Value>Show on contact us page</Value>
   </LocaleResource>
@@ -7217,12 +7223,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage.Hint">
     <Value>Check to show CAPTCHA on forgot password page when restore password.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests">
-    <Value>Show on checkout page for guests</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests.Hint">
-    <Value>Check to show CAPTCHA on  checkout page for guests.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForum">
     <Value>Show on forum</Value>

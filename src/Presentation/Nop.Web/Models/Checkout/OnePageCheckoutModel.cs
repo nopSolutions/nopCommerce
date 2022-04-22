@@ -7,6 +7,8 @@ namespace Nop.Web.Models.Checkout
         public bool ShippingRequired { get; set; }
         public bool DisableBillingAddressCheckoutStep { get; set; }
         public bool DisplayCaptcha { get; set; }
+        public bool IsReCaptchaV3 { get; set; }
+        public string ReCaptchaPublicKey { get; set; }
 
         public CheckoutBillingAddressModel BillingAddress { get; set; }
     }
