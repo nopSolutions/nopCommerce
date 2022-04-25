@@ -12,8 +12,10 @@
         _ltk.Order.TaxTotal = @Model.TaxTotal;
         _ltk.Order.OrderTotal = @Model.OrderTotal;
         
-        // REPEAT THIS FUNCTION FOR EVERY ITEM PURCHASED
-        //_ltk.Order.AddItem(sku, quantity, price);
+        @foreach (var item in Model.OrderItems)
+        {
+            _ltk.Order.AddItem(item.Sku, item.Quantity, item.Price);
+        }
         
         _ltk.Order.Submit();
     });

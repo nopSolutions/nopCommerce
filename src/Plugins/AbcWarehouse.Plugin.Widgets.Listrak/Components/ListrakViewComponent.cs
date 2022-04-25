@@ -20,17 +20,20 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Components
         private readonly ICustomerService _customerService;
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
 
         public ListrakViewComponent(
             ListrakSettings settings,
             ICustomerService customerService,
             ILogger logger,
-            IOrderService orderService)
+            IOrderService orderService,
+            IProductService productService)
         {
             _settings = settings;
             _customerService = customerService;
             _logger = logger;
             _orderService = orderService;
+            _productService = productService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
@@ -65,6 +68,7 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Components
         {
             var order = await _orderService.GetOrderByIdAsync(checkoutCompletedModel.OrderId);
             var orderItems = await _orderService.GetOrderItemsAsync(checkoutCompletedModel.OrderId);
+            var listrakOrderItems = await GetListrakOrderItems(orderItems);
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
             var address = (await _customerService.GetAddressesByCustomerIdAsync(order.CustomerId)).FirstOrDefault();
 
@@ -78,10 +82,28 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Components
                 ShippingTotal = order.OrderShippingExclTax,
                 TaxTotal = order.OrderTax,
                 OrderTotal = order.OrderTotal,
-                OrderItems = orderItems,
+                OrderItems = listrakOrderItems,
             };
 
             return View("~/Plugins/Widgets.Listrak/Views/PlaceOrder.cshtml", model);
+        }
+
+        private async Task<ListrakOrderItem> GetListrakOrderItems(IList<OrderItem> orderItems)
+        {
+            var result = new List<ListrakOrderItem>();
+
+            foreach (var oi in orderItems)
+            {
+                var product = await _productService.GetProductByIdAsync(oi.ProductId);
+                result.Add(new ListrakOrderItem()
+                {
+                    Sku = product.Sku,
+                    Quantity = oi.Quantity,
+                    Price = oi.UnitPrice
+                });
+            }
+
+            return result;
         }
     }
 }
