@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AbcWarehouse.Plugin.Widgets.Listrak.Models;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -88,7 +89,7 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Components
             return View("~/Plugins/Widgets.Listrak/Views/PlaceOrder.cshtml", model);
         }
 
-        private async Task<ListrakOrderItem> GetListrakOrderItems(IList<OrderItem> orderItems)
+        private async Task<IList<ListrakOrderItem>> GetListrakOrderItems(IList<OrderItem> orderItems)
         {
             var result = new List<ListrakOrderItem>();
 
@@ -99,7 +100,7 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Components
                 {
                     Sku = product.Sku,
                     Quantity = oi.Quantity,
-                    Price = oi.UnitPrice
+                    Price = oi.UnitPriceExclTax,
                 });
             }
 
