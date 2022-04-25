@@ -218,6 +218,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<IBBCodeHelper, BBCodeHelper>();
             services.AddScoped<IHtmlFormatter, HtmlFormatter>();
             services.AddScoped<IVideoService, VideoService>();
+            services.AddScoped<INopUrlHelper, NopUrlHelper>();
 
             //plugin managers
             services.AddScoped(typeof(IPluginManager<>), typeof(PluginManager<>));
