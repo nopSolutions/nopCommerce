@@ -11,7 +11,7 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Models
         public string Sku { get; init; }
 
         public int Quantity { get; init; }
-        
+
         public decimal Price { get; init; }
     }
 }

@@ -39,9 +39,15 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Components
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
+            if (string.IsNullOrWhiteSpace(_settings.MerchantId))
+            {
+                await _logger.ErrorAsync("Widgets.Listrak: Merchant ID not defined, add in Settings.");
+                return Content(string.Empty);
+            }
+
             if (widgetZone == PublicWidgetZones.BodyEndHtmlTagBefore)
             {
-                return await FrameworkAsync();
+                return View("~/Plugins/Widgets.Listrak/Views/Framework.cshtml", _settings.MerchantId);
             }
 
             if (widgetZone == PublicWidgetZones.CheckoutCompletedBottom)
@@ -51,18 +57,6 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Components
 
             await _logger.ErrorAsync($"Widgets.Listrak: Unsupported widget zone: {widgetZone}.");
             return Content(string.Empty);
-        }
-
-        private async Task<IViewComponentResult> FrameworkAsync()
-        {
-            var merchantId = _settings.MerchantId;
-            if (string.IsNullOrWhiteSpace(merchantId))
-            {
-                await _logger.ErrorAsync("Widgets.Listrak: Merchant ID not defined, add in Settings.");
-                return Content(string.Empty);
-            }
-
-            return View("~/Plugins/Widgets.Listrak/Views/Framework.cshtml", merchantId);
         }
 
         private async Task<IViewComponentResult> OrderFulfillmentAsync(CheckoutCompletedModel checkoutCompletedModel)
@@ -84,6 +78,7 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Components
                 TaxTotal = order.OrderTax,
                 OrderTotal = order.OrderTotal,
                 OrderItems = listrakOrderItems,
+                MerchantId = _settings.MerchantId,
             };
 
             return View("~/Plugins/Widgets.Listrak/Views/PlaceOrder.cshtml", model);
