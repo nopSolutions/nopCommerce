@@ -3,119 +3,20 @@
 @inject IPermissionService permissionService
 @inject ICustomerService customerService
 @inject IEventPublisher eventPublisher
-@inject CommonSettings commonSettings
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
-@inject INopFileProvider fileProvider;
-@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
 @inject Nop.Services.Localization.ILanguageService languageService
 @using System.Globalization
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
-@using Nop.Services.Common
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
 @using Nop.Services.Security
 @using Nop.Web.Framework.UI
 
+
 @{
     var returnUrl = webHelper.GetRawUrl(Context.Request);
-
-    //Kendo UI
-    var kendoVersion = "2020.1.406";
-
-    var currentKendoCulture = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).LanguageCulture;
-
-    var currentCulture = CultureInfo.CurrentCulture;
-
-    //Code to get check if current cultures scripts are exists. If not, select parent cultures scripts
-    string GetDefaultLocale()
-    {
-        var localePattern = NopCommonDefaults.LocalePatternPath;
-
-        var cultureToUse = NopCommonDefaults.DefaultLocalePattern; //Default regionalisation to use
-
-        if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, currentCulture.Name))))
-            cultureToUse = currentCulture.Name;
-        else if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, currentCulture.TwoLetterISOLanguageName))))
-            cultureToUse = currentCulture.TwoLetterISOLanguageName;
-
-        return cultureToUse;
-    }
-
-    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
-
-    //CSS resources
-    if (supportRtl)
-    {
-        Html.AppendCssFileParts("~/css/admin/styles.rtl.css");
-        Html.AppendCssFileParts("~/lib/adminLTE/css/adminlte-rtl.min.css");
-        Html.AppendCssFileParts("~/lib_npm/@laylazi/bootstrap-rtl/css/bootstrap-rtl.min.css");
-    }
-    else
-    {
-        Html.AppendCssFileParts("~/css/admin/styles.css");
-        Html.AppendCssFileParts("~/lib_npm/admin-lte/css/adminlte.min.css");
-        Html.AppendCssFileParts("~/lib_npm/bootstrap/css/bootstrap.min.css");
-    }
-
-    Html.AppendCssFileParts($"~/lib_npm/overlayscrollbars/css/OverlayScrollbars.min.css");
-    Html.AppendCssFileParts($"~/lib_npm/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css");
-    Html.AppendCssFileParts($"~/lib_npm/datatables.net-bs4/css/dataTables.bootstrap4.min.css");
-    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.rtl.min.css");
-    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.default.min.css");
-    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.common.min.css");
-    Html.AppendCssFileParts("~/lib_npm/@fortawesome/fontawesome-free/css/all.min.css");
-    Html.AppendCssFileParts("~/lib_npm/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
-    Html.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
-
-    //scripts
-    Html.AppendScriptParts($"~/lib_npm/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js");
-    Html.AppendScriptParts($"~/lib_npm/datatables.net-buttons/js/dataTables.buttons.min.js");
-    Html.AppendScriptParts($"~/lib_npm/moment/min/moment-with-locales.min.js");
-    Html.AppendScriptParts($"~/lib_npm/datatables.net-bs4/js/dataTables.bootstrap4.min.js");
-    Html.AppendScriptParts($"~/lib_npm/datatables.net/js/jquery.dataTables.min.js");
-    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/cultures/kendo.culture.{currentKendoCulture}.min.js");
-    var fileInfo = fileProvider.GetFileInfo($"{WebHostEnvironment.WebRootPath}/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{currentKendoCulture}.min.js");
-    @if (fileInfo.Exists)
-    {
-        Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{currentKendoCulture}.min.js");
-    }
-    else
-    {
-        Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{NopCommonDefaults.DefaultLanguageCulture}.min.js");
-    }
-    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/kendo.ui.core.min.js");
-
-    Html.AppendScriptParts("~/js/admin.search.js");
-    Html.AppendScriptParts("~/js/admin.navigation.js");
-    Html.AppendScriptParts("~/js/admin.common.js");
-    Html.AppendScriptParts("~/lib_npm/typeahead.js/typeahead.bundle.min.js");
-    Html.AppendScriptParts("~/lib_npm/jquery-migrate/jquery-migrate.min.js");
-
-    // this file can be downloaded from :
-    // https://github.com/johnnyreilly/jquery-validation-globalize
-    Html.AppendScriptParts("~/lib/jquery-validation-globalize/jquery.validate.globalize.min.js");
-
-    // globalize scripts
-    Html.AppendScriptParts("~/lib_npm/globalize/globalize/currency.js");
-    Html.AppendScriptParts("~/lib_npm/globalize/globalize/date.js");
-    Html.AppendScriptParts("~/lib_npm/globalize/globalize/number.js");
-    Html.AppendScriptParts("~/lib_npm/globalize/globalize.js");
-
-    // cldr scripts (needed for globalize)
-    Html.AppendScriptParts("~/lib_npm/cldrjs/cldr/supplemental.js");
-    Html.AppendScriptParts("~/lib_npm/cldrjs/cldr/event.js");
-    Html.AppendScriptParts("~/lib_npm/cldrjs/cldr.js");
-
-    Html.AppendScriptParts("~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts("~/lib_npm/jquery-validation/jquery.validate.min.js");
-    Html.AppendScriptParts("~/lib_npm/bootstrap/js/bootstrap.bundle.min.js");
-    Html.AppendScriptParts("~/lib_npm/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js");
-    Html.AppendScriptParts("~/lib_npm/overlayscrollbars/js/jquery.overlayScrollbars.min.js");
-    Html.AppendScriptParts("~/lib_npm/admin-lte/js/adminlte.min.js");
-    Html.AppendScriptParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
-    Html.AppendScriptParts("~/lib_npm/jquery/jquery.min.js");
 
     //page title
     string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.PageTitle) ? ViewBag.PageTitle + " / " : "";
@@ -128,54 +29,27 @@
     var currentCustomer = await workContext.GetCurrentCustomerAsync();
 
     //event
-    await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
+    await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
 
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
 <!DOCTYPE html>
-<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())" @(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(localizationSettings.IgnoreRtlPropertyForAdminArea)">
 <head>
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    @*Google Font*@
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-    <script>
-            var rootAppPath = '@(Url.Content("~/"))';
-    </script>
-    @Html.NopHeadCustom()
-    @Html.NopCssFiles(ResourceLocation.Head, false)
-    @Html.NopScripts(ResourceLocation.Head, false)
+    @NopHtml.GenerateHeadCustom()
+
+    @* CSS & Script resources *@
+    @{
+        await Html.RenderPartialAsync("_AdminScripts");
+    }
+
     @*Insert favicon and app icons head code*@
     @await Component.InvokeAsync("Favicon")
-    @Html.NopInlineScripts(ResourceLocation.Head)
 </head>
 <body class="hold-transition sidebar-mini layout-fixed control-sidebar-slide-open">
-    <script type="text/javascript">
-            var culture = "@GetDefaultLocale()";
-
-            //load cldr for current culture
-            $.when(
-                $.get("/lib_npm/cldr-data/supplemental/likelySubtags.json"),
-                $.get("/lib_npm/cldr-data/main/" + culture + "/numbers.json"),
-                $.get("/lib_npm/cldr-data/main/" + culture + "/currencies.json"),
-                $.get("/lib_npm/cldr-data/supplemental/numberingSystems.json"),
-                $.get("/lib_npm/cldr-data/main/" + culture + "/ca-gregorian.json"),
-                $.get("/lib_npm/cldr-data/main/" + culture + "/timeZoneNames.json"),
-                $.get("/lib_npm/cldr-data/supplemental/timeData.json"),
-                $.get("/lib_npm/cldr-data/supplemental/weekData.json"),
-            ).then(function () {
-                // Normalize $.get results, we only need the JSON, not the request statuses.
-                return [].slice.apply(arguments, [0]).map(function (result) {
-                    return result[0];
-                });
-            }).then(Globalize.load).then(function () {
-                Globalize.locale(culture);
-            });
-    </script>
-    <script>
-            kendo.culture("@(currentKendoCulture)");
-    </script>
     <div class="throbber">
         <div class="curtain">
         </div>
@@ -257,11 +131,11 @@
                                                 <span>@T("Admin.Header.RestartApplication")</span>
                                             </button>
                                             <script>
-                                $(document).ready(function () {
-                                    $("#restart-application").click(function (e) {
-                                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
-                                    });
-                                });
+                                                $(document).ready(function () {
+                                                    $("#restart-application").click(function (e) {
+                                                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
+                                                    });
+                                                });
                                             </script>
                                         </form>
                                     </li>
@@ -283,7 +157,7 @@
         {
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Brand Logo -->
-                <a href="@Url.Content("~/Admin")" class="brand-link navbar-dark logo-switch">
+            <a href="@Url.Content("~/Admin")" class="brand-link navbar-dark logo-switch">
                     <img src="~/css/admin/images/logo.png" alt="logo.png" class="brand-image-xl logo-xl">
                     <img src="~/css/admin/images/logo-mini.png" alt="logo.png" class="brand-image-xs logo-xs">
                 </a>
@@ -315,29 +189,31 @@
         <div class="main-footer">
             <div class="container-fluid">
                 <div class="col-md-12">
-                        <div class="row">
-                            @if (!storeInformationSettings.HidePoweredByNopCommerce)
-                            {
-                                <div class="col-md-4 col-xs-12 text-md-left text-center">
-                                    @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
-                        Please find more info at https://www.nopcommerce.com/nopcommerce-copyright-removal-key*@
-                                    Powered by <a href="@(OfficialSite.Main + Utm.OnAdminFooter)" target="_blank">nopCommerce</a>
-                                </div>
-                            }else
-                            {
-                                <div class="col-md-4 col-xs-12"></div>
-                            }
-                            <div class="col-md-4 col-xs-12 text-center">
-                                @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", currentCulture))
+                    <div class="row">
+                        @if (!storeInformationSettings.HidePoweredByNopCommerce)
+                        {
+                            <div class="col-md-4 col-xs-12 text-md-left text-center">
+                                @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
+                                    Please find more info at https://www.nopcommerce.com/nopcommerce-copyright-removal-key*@
+                                Powered by <a href="@(OfficialSite.Main + Utm.OnAdminFooter)" target="_blank">nopCommerce</a>
                             </div>
-                            <div class="col-md-4 col-xs-12 text-md-right text-center">
-                                <b>nopCommerce version @NopVersion.FULL_VERSION</b>
-                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-4 col-xs-12"></div>
+                        }
+                        <div class="col-md-4 col-xs-12 text-center">
+                            @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", CultureInfo.CurrentCulture))
+                        </div>
+                        <div class="col-md-4 col-xs-12 text-md-right text-center">
+                            <b>nopCommerce version @NopVersion.FULL_VERSION</b>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
+
     <script>
         var AdminLTEOptions = {
             boxWidgetOptions: {
@@ -354,12 +230,10 @@
         if (!String.IsNullOrEmpty(selectedCardName))
         {
             <script>
-                    location.hash = '#@(selectedCardName)';
+                location.hash = '#@(selectedCardName)';
             </script>
         }
     }
-    @Html.NopCssFiles(ResourceLocation.Footer)
-    @Html.NopScripts(ResourceLocation.Footer)
     <a id="backTop" class="btn btn-back-top bg-teal"></a>
     <script>
         $(document).ready(function () {
@@ -370,6 +244,8 @@
             $('[data-toggle="tooltip"]').tooltip({ placement: 'bottom' });
         });
     </script>
-    @Html.NopInlineScripts(ResourceLocation.Footer)
+
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
 </body>
 </html>

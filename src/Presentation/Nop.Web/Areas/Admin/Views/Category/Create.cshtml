@@ -3,7 +3,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Categories.AddNew").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Categories");
+    NopHtml.SetActiveMenuItemSystemName("Categories");
 }
 
 <form asp-controller="Category" asp-action="Create" method="post" id="category-form">
@@ -24,7 +24,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

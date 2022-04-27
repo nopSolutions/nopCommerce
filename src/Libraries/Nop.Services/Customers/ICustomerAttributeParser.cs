@@ -29,7 +29,6 @@ namespace Nop.Services.Customers
         /// </returns>
         Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValuesAsync(string attributesXml);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Gets selected customer attribute value
         /// </summary>
@@ -38,7 +37,6 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute value</returns>
         IList<string> ParseValues(string attributesXml, int customerAttributeId);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Adds an attribute
         /// </summary>

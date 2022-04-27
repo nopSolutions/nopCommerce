@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
-using Nop.Data.Extensions;
 
 namespace Nop.Services.Orders
 {
@@ -19,6 +19,8 @@ namespace Nop.Services.Orders
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
+        private readonly IRepository<OrderItem> _orderItemRepository;
+        private readonly IRepository<Product> _productRepository;
 
         #endregion
 
@@ -26,11 +28,15 @@ namespace Nop.Services.Orders
 
         public ReturnRequestService(IRepository<ReturnRequest> returnRequestRepository,
             IRepository<ReturnRequestAction> returnRequestActionRepository,
-            IRepository<ReturnRequestReason> returnRequestReasonRepository)
+            IRepository<ReturnRequestReason> returnRequestReasonRepository,
+            IRepository<OrderItem> orderItemRepository,
+            IRepository<Product> productRepository)
         {
             _returnRequestRepository = returnRequestRepository;
             _returnRequestActionRepository = returnRequestActionRepository;
             _returnRequestReasonRepository = returnRequestReasonRepository;
+            _orderItemRepository = orderItemRepository;
+            _productRepository = productRepository;
         }
 
         #endregion
@@ -108,6 +114,54 @@ namespace Nop.Services.Orders
             var returnRequests = await query.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
 
             return returnRequests;
+        }
+
+        /// <summary>
+        /// Gets the return request availability
+        /// </summary>
+        /// <param name="orderId">The order identifier</param>
+        /// <returns>The <see cref="Task"/> containing the <see cref="ReturnRequestAvailability"/></returns>
+        public virtual async Task<ReturnRequestAvailability> GetReturnRequestAvailabilityAsync(int orderId)
+        {
+            var result = new ReturnRequestAvailability();
+
+            if (orderId > 0)
+            {
+                var cancelledStatusId = (int)ReturnRequestStatus.Cancelled;
+                var requestedOrderItemsForReturn =
+                    from rr in _returnRequestRepository.Table
+                    where rr.ReturnRequestStatusId != cancelledStatusId
+                    group rr by new
+                    {
+                        rr.OrderItemId,
+                        rr.Quantity
+                    } into g
+                    select new
+                    {
+                        OrderItemId = g.Key.OrderItemId,
+                        RequestedQuantityForReturn = g.Sum(rr => rr.Quantity)
+                    };
+
+                var query =
+                    from oi in _orderItemRepository.Table
+                    join roi in requestedOrderItemsForReturn
+                        on oi.Id equals roi.OrderItemId into alreadyRequestedForReturn
+                    from aroi in alreadyRequestedForReturn.DefaultIfEmpty()
+                    join p in _productRepository.Table
+                        on oi.ProductId equals p.Id
+                    where !p.NotReturnable && oi.OrderId == orderId
+                    select new ReturnableOrderItem
+                    {
+                        AvailableQuantityForReturn = aroi != null
+                            ? Math.Max(oi.Quantity - aroi.RequestedQuantityForReturn, 0)
+                            : oi.Quantity,
+                        OrderItem = oi
+                    };
+
+                result.ReturnableOrderItems = await query.ToListAsync();
+            }
+
+            return result;
         }
 
         /// <summary>

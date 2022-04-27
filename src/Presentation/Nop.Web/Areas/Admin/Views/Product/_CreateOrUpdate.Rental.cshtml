@@ -1,22 +1,7 @@
 ﻿@model ProductModel
 @using Nop.Core.Domain.Catalog;
 @using Nop.Services
-<script>
-    $(document).ready(function() {
-        $("#@Html.IdFor(model => model.IsRental)").click(toggleRental);
-        toggleRental();
-    });
 
-    function toggleRental() {
-        if ($('#@Html.IdFor(model => model.IsRental)').is(':checked')) {
-            $('#pnlRentalPriceLength').showElement();
-            $('#pnlRentalPricePeriod').showElement();
-        } else {
-            $('#pnlRentalPriceLength').hideElement();
-            $('#pnlRentalPricePeriod').hideElement();
-        }
-    }
-</script>
 <div class="card-body">
     <div class="form-group row">
         <div class="col-md-3">
@@ -28,7 +13,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="IsRental">
-        <div class="form-group row" id="pnlRentalPriceLength">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="RentalPriceLength" />
             </div>
@@ -37,7 +22,7 @@
                 <span asp-validation-for="RentalPriceLength"></span>
             </div>
         </div>
-        <div class="form-group row" id="pnlRentalPricePeriod">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="RentalPricePeriodId" />
             </div>

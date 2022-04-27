@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Data;
-using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Install
 {

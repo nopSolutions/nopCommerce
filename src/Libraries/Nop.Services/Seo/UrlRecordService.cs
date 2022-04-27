@@ -19,7 +19,7 @@ namespace Nop.Services.Seo
     {
         #region Fields
 
-        private static readonly object _lock = new object();
+        private static readonly object _lock = new();
         private static Dictionary<string, string> _seoCharacterTable;
 
         private readonly ILanguageService _languageService;
@@ -1117,16 +1117,6 @@ namespace Nop.Services.Seo
             return returnChar;
         }
 
-        /// <summary>
-        /// Updates the URL record
-        /// </summary>
-        /// <param name="urlRecord">URL record</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task UpdateUrlRecordAsync(UrlRecord urlRecord)
-        {
-            await _urlRecordRepository.UpdateAsync(urlRecord);
-        }
-
         #endregion
 
         #region Methods
@@ -1162,6 +1152,16 @@ namespace Nop.Services.Seo
         public virtual async Task InsertUrlRecordAsync(UrlRecord urlRecord)
         {
             await _urlRecordRepository.InsertAsync(urlRecord);
+        }
+
+        /// <summary>
+        /// Updates the URL record
+        /// </summary>
+        /// <param name="urlRecord">URL record</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateUrlRecordAsync(UrlRecord urlRecord)
+        {
+            await _urlRecordRepository.UpdateAsync(urlRecord);
         }
 
         /// <summary>

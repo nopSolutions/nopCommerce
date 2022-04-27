@@ -1,11 +1,10 @@
-@using OfficeOpenXml.FormulaParsing.Excel.Functions.Math
 @model AffiliateSearchModel
 
 @{
     //page title
     ViewBag.PageTitle = T("Admin.Affiliates").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Affiliates");
+    NopHtml.SetActiveMenuItemSystemName("Affiliates");
 }
 
 @{
@@ -22,26 +21,9 @@
             <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateListButtons, additionalData = Model })
     </div>
 </div>
-
-<script>
-    $(document).ready(function() {
-        $("#@Html.IdFor(model => model.LoadOnlyWithOrders)").click(toggleLoadOnlyWithOrders);
-        toggleLoadOnlyWithOrders();
-    });
-
-    function toggleLoadOnlyWithOrders() {
-        if ($('#@Html.IdFor(model => model.LoadOnlyWithOrders)').is(':checked')) {
-            $('#pnlOrdersCreatedFromUtc').showElement();
-            $('#pnlOrdersCreatedToUtc').showElement();
-        } else {
-            $('#pnlOrdersCreatedFromUtc').hideElement();
-            $('#pnlOrdersCreatedToUtc').hideElement();
-        }
-    }
-</script>
 
 <section class="content">
     <div class="container-fluid">
@@ -93,7 +75,7 @@
                                     </div>
                                 </div>
                                 <nop-nested-setting asp-for="LoadOnlyWithOrders">
-                                    <div class="form-group row" id="pnlOrdersCreatedFromUtc">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="OrdersCreatedFromUtc" />
                                         </div>
@@ -101,7 +83,7 @@
                                             <nop-editor asp-for="OrdersCreatedFromUtc" />
                                         </div>
                                     </div>
-                                    <div class="form-group row" id="pnlOrdersCreatedToUtc">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="OrdersCreatedToUtc" />
                                         </div>

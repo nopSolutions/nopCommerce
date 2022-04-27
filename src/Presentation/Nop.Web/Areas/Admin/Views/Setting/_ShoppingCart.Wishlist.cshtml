@@ -32,7 +32,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="EmailWishlistEnabled">
-        <div class="form-group row" id="pnlAllowAnonymousUsersToEmailWishlist">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="AllowAnonymousUsersToEmailWishlist_OverrideForStore" asp-input="AllowAnonymousUsersToEmailWishlist" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="AllowAnonymousUsersToEmailWishlist" />
@@ -74,31 +74,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.MiniShoppingCartEnabled)").click(toggleMiniShoppingCartEnabled);
-        $("#@Html.IdFor(model => model.EmailWishlistEnabled)").click(toggleEmailWishlistEnabled);
-
-        toggleMiniShoppingCartEnabled();
-        toggleEmailWishlistEnabled();
-    });
-
-    function toggleMiniShoppingCartEnabled() {
-        if ($('#@Html.IdFor(model => model.MiniShoppingCartEnabled)').is(':checked')) {
-            $('#pnlMiniShoppingCartProductNumber').showElement();
-            $('#pnlShowProductImagesInMiniShoppingCart').showElement();
-        } else {
-            $('#pnlMiniShoppingCartProductNumber').hideElement();
-            $('#pnlShowProductImagesInMiniShoppingCart').hideElement();
-        }
-    }
-
-    function toggleEmailWishlistEnabled() {
-        if ($('#@Html.IdFor(model => model.EmailWishlistEnabled)').is(':checked')) {
-            $('#pnlAllowAnonymousUsersToEmailWishlist').showElement();
-        } else {
-            $('#pnlAllowAnonymousUsersToEmailWishlist').hideElement();
-        }
-    }
-</script>

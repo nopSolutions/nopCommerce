@@ -7,11 +7,10 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Seo;
-using Nop.Core.Html;
 using Nop.Data;
-using Nop.Data.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Html;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
 
@@ -27,6 +26,7 @@ namespace Nop.Services.Forums
         private readonly ForumSettings _forumSettings;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Forum> _forumRepository;
         private readonly IRepository<ForumGroup> _forumGroupRepository;
@@ -48,6 +48,7 @@ namespace Nop.Services.Forums
         public ForumService(ForumSettings forumSettings,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
+            IHtmlFormatter htmlFormatter,
             IRepository<Customer> customerRepository,
             IRepository<Forum> forumRepository,
             IRepository<ForumGroup> forumGroupRepository,
@@ -65,6 +66,7 @@ namespace Nop.Services.Forums
             _forumSettings = forumSettings;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
+            _htmlFormatter = htmlFormatter;
             _customerRepository = customerRepository;
             _forumRepository = forumRepository;
             _forumGroupRepository = forumGroupRepository;
@@ -1216,18 +1218,18 @@ namespace Nop.Services.Forums
         /// Get post vote made since the parameter date
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="сreatedFromUtc">Date</param>
+        /// <param name="createdFromUtc">Date</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the post votes count
         /// </returns>
-        public virtual async Task<int> GetNumberOfPostVotesAsync(Customer customer, DateTime сreatedFromUtc)
+        public virtual async Task<int> GetNumberOfPostVotesAsync(Customer customer, DateTime createdFromUtc)
         {
             if (customer == null)
                 return 0;
 
             return await _forumPostVoteRepository.Table
-                .CountAsync(pv => pv.CustomerId == customer.Id && pv.CreatedOnUtc > сreatedFromUtc);
+                .CountAsync(pv => pv.CustomerId == customer.Id && pv.CreatedOnUtc > createdFromUtc);
         }
 
         /// <summary>
@@ -1281,13 +1283,13 @@ namespace Nop.Services.Forums
             {
                 case EditorType.SimpleTextBox:
                     {
-                        text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+                        text = _htmlFormatter.FormatText(text, false, true, false, false, false, false);
                     }
 
                     break;
                 case EditorType.BBCodeEditor:
                     {
-                        text = HtmlHelper.FormatText(text, false, true, false, true, false, false);
+                        text = _htmlFormatter.FormatText(text, false, true, false, true, false, false);
                     }
 
                     break;
@@ -1336,7 +1338,7 @@ namespace Nop.Services.Forums
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = _htmlFormatter.FormatText(text, false, true, false, false, false, false);
             return text;
         }
 
@@ -1352,7 +1354,7 @@ namespace Nop.Services.Forums
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = HtmlHelper.FormatText(text, false, true, false, true, false, false);
+            text = _htmlFormatter.FormatText(text, false, true, false, true, false, false);
 
             return text;
         }

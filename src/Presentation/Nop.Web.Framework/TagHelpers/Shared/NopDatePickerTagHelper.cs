@@ -26,9 +26,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         private const string BEGIN_YEAR_ATTRIBUTE_NAME = "asp-begin-year";
         private const string END_YEAR_ATTRIBUTE_NAME = "asp-end-year";
 
-        private const string SELECTED_DAY_ATTRIBUTE_NAME = "asp-selected-day";
-        private const string SELECTED_MONTH_ATTRIBUTE_NAME = "asp-selected-month";
-        private const string SELECTED_YEAR_ATTRIBUTE_NAME = "asp-selected-year";
+        private const string SELECTED_DATE_ATTRIBUTE_NAME = "asp-selected-date";
 
         private const string WRAP_TAGS_ATTRIBUTE_NAME = "asp-wrap-tags";
 
@@ -60,31 +58,19 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         /// Begin year
         /// </summary>
         [HtmlAttributeName(BEGIN_YEAR_ATTRIBUTE_NAME)]
-        public int? BeginYear { get; set; }
+        public DateTime? BeginYear { get; set; }
 
         /// <summary>
         /// End year
         /// </summary>
         [HtmlAttributeName(END_YEAR_ATTRIBUTE_NAME)]
-        public int? EndYear { get; set; }
+        public DateTime? EndYear { get; set; }
 
         /// <summary>
         /// Selected day
         /// </summary>
-        [HtmlAttributeName(SELECTED_DAY_ATTRIBUTE_NAME)]
-        public int? SelectedDay { get; set; }
-
-        /// <summary>
-        /// Selected month
-        /// </summary>
-        [HtmlAttributeName(SELECTED_MONTH_ATTRIBUTE_NAME)]
-        public int? SelectedMonth { get; set; }
-
-        /// <summary>
-        /// Selected year
-        /// </summary>
-        [HtmlAttributeName(SELECTED_YEAR_ATTRIBUTE_NAME)]
-        public int? SelectedYear { get; set; }
+        [HtmlAttributeName(SELECTED_DATE_ATTRIBUTE_NAME)]
+        public DateTime? SelectedDate { get; set; }
 
         /// <summary>
         /// Wrap tags
@@ -160,9 +146,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 YEAR_NAME_ATTRIBUTE_NAME,
                 BEGIN_YEAR_ATTRIBUTE_NAME,
                 END_YEAR_ATTRIBUTE_NAME,
-                SELECTED_DAY_ATTRIBUTE_NAME,
-                SELECTED_MONTH_ATTRIBUTE_NAME,
-                SELECTED_YEAR_ATTRIBUTE_NAME,
+                SELECTED_DATE_ATTRIBUTE_NAME,
                 WRAP_TAGS_ATTRIBUTE_NAME
             };
             var customerAttributes = new Dictionary<string, object>();
@@ -176,6 +160,8 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             monthsList.MergeAttributes(htmlAttributesDictionary, true);
             yearsList.MergeAttributes(htmlAttributesDictionary, true);
 
+            var currentCalendar = CultureInfo.CurrentCulture.Calendar;
+
             var days = new StringBuilder();
             var months = new StringBuilder();
             var years = new StringBuilder();
@@ -184,7 +170,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
             for (var i = 1; i <= 31; i++)
                 days.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
-                    (SelectedDay.HasValue && SelectedDay.Value == i) ? " selected=\"selected\"" : null);
+                    (SelectedDate.HasValue && currentCalendar.GetDayOfMonth(SelectedDate.Value) == i) ? " selected=\"selected\"" : null);
 
             months.AppendFormat("<option value='{0}'>{1}</option>", "0", await _localizationService.GetResourceAsync("Common.Month"));
 
@@ -192,28 +178,26 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             {
                 months.AppendFormat("<option value='{0}'{1}>{2}</option>",
                     i,
-                    (SelectedMonth.HasValue && SelectedMonth.Value == i) ? " selected=\"selected\"" : null,
-                    CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(i));
+                    (SelectedDate.HasValue && currentCalendar.GetMonth(SelectedDate.Value) == i) ? " selected=\"selected\"" : null,
+                    CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i));
             }
 
             years.AppendFormat("<option value='{0}'>{1}</option>", "0", await _localizationService.GetResourceAsync("Common.Year"));
 
-            if (BeginYear == null)
-                BeginYear = DateTime.UtcNow.Year - 100;
-            if (EndYear == null)
-                EndYear = DateTime.UtcNow.Year;
+            BeginYear ??= DateTime.UtcNow.AddYears(-100);
+            EndYear ??= DateTime.UtcNow;
 
             if (EndYear > BeginYear)
             {
-                for (var i = BeginYear.Value; i <= EndYear.Value; i++)
+                for (var i = currentCalendar.GetYear(BeginYear.Value); i <= currentCalendar.GetYear(EndYear.Value); i++)
                     years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
-                        (SelectedYear.HasValue && SelectedYear.Value == i) ? " selected=\"selected\"" : null);
+                        (SelectedDate.HasValue && currentCalendar.GetYear(SelectedDate.Value) == i) ? " selected=\"selected\"" : null);
             }
             else
             {
-                for (var i = BeginYear.Value; i >= EndYear.Value; i--)
+                for (var i = currentCalendar.GetYear(BeginYear.Value); i >= currentCalendar.GetYear(EndYear.Value); i--)
                     years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
-                        (SelectedYear.HasValue && SelectedYear.Value == i) ? " selected=\"selected\"" : null);
+                        (SelectedDate.HasValue && currentCalendar.GetYear(SelectedDate.Value) == i) ? " selected=\"selected\"" : null);
             }
 
             daysList.InnerHtml.AppendHtml(days.ToString());

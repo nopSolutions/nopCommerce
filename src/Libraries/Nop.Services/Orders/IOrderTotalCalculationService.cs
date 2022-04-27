@@ -94,6 +94,18 @@ namespace Nop.Services.Orders
             bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true);
 
         /// <summary>
+        /// Calculate payment method fee
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="fee">Fee value</param>
+        /// <param name="usePercentage">Is fee amount specified as percentage or fixed value?</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        Task<decimal> CalculatePaymentAdditionalFeeAsync(IList<ShoppingCartItem> cart, decimal fee, bool usePercentage);
+
+        /// <summary>
         /// Update order totals
         /// </summary>
         /// <param name="updateOrderParameters">Parameters for the updating order</param>

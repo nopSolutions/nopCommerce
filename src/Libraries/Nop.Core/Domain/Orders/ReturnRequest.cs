@@ -33,6 +33,11 @@ namespace Nop.Core.Domain.Orders
         public int Quantity { get; set; }
 
         /// <summary>
+        /// Gets or sets the quantity returned to stock
+        /// </summary>
+        public int ReturnedQuantity { get; set; }
+
+        /// <summary>
         /// Gets or sets the reason to return
         /// </summary>
         public string ReasonForReturn { get; set; }

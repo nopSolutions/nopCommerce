@@ -1,12 +1,13 @@
-﻿@model CustomerReturnRequestsModel
+﻿@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
+@model CustomerReturnRequestsModel
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Account").Text);
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
     //page class
-    Html.AppendPageCssClassParts("html-account-page");
-    Html.AppendPageCssClassParts("html-return-request-list-page");
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-return-request-list-page");
 }
 @section left
 {
@@ -56,7 +57,7 @@
                     {
                         <li class="comments">
                             <label>@T("Account.CustomerReturnRequests.Comments")</label>
-                            <div>@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(item.Comments, false, true, false, false, false, false))</div>
+                            <div>@Html.Raw(htmlFormatter.FormatText(item.Comments, false, true, false, false, false, false))</div>
                         </li>
                     }
                 </ul>

@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Authentication.MultiFactorMethods").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Multi-factor authentication methods");
+    NopHtml.SetActiveMenuItemSystemName("Multi-factor authentication methods");
 }
 
 <div class="content-header clearfix">
@@ -13,7 +13,7 @@
     </h1>
     <div class="float-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MultiFactorAuthenticationListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MultiFactorAuthenticationListButtons, additionalData = Model })
     </div>
 </div>
 

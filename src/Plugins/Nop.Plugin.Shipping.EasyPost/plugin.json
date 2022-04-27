@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Shipping rate computation",
+  "FriendlyName": "EasyPost",
+  "SystemName": "Shipping.EasyPost",
+  "Version": "1.13",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Shipping.EasyPost.dll",
+  "Description": "This plugin allows using EasyPost the multi-carrier shipping solution for eCommerce"
+}

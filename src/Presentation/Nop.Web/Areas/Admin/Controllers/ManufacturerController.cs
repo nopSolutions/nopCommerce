@@ -98,7 +98,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(Manufacturer manufacturer, ManufacturerModel model)
         {
             foreach (var localized in model.Locales)
@@ -134,7 +133,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdatePictureSeoNamesAsync(Manufacturer manufacturer)
         {
             var picture = await _pictureService.GetPictureByIdAsync(manufacturer.PictureId);
@@ -142,7 +140,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(manufacturer.Name));
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveManufacturerAclAsync(Manufacturer manufacturer, ManufacturerModel model)
         {
             manufacturer.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
@@ -155,7 +152,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
-                    if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
+                    if (!existingAclRecords.Any(acl => acl.CustomerRoleId == customerRole.Id))
                         await _aclService.InsertAclRecordAsync(manufacturer, customerRole.Id);
                 }
                 else
@@ -168,7 +165,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveStoreMappingsAsync(Manufacturer manufacturer, ManufacturerModel model)
         {
             manufacturer.LimitedToStores = model.SelectedStoreIds.Any();
@@ -181,7 +177,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
-                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
+                    if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
                         await _storeMappingService.InsertStoreMappingAsync(manufacturer, store.Id);
                 }
                 else
@@ -426,17 +422,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
-            {
-                var manufacturers = await _manufacturerService.GetManufacturersByIdsAsync(selectedIds.ToArray());
-                await _manufacturerService.DeleteManufacturersAsync(manufacturers);
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
 
-                var locale = await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer");
-                foreach (var manufacturer in manufacturers)
-                {
-                    //activity log
-                    await _customerActivityService.InsertActivityAsync("DeleteManufacturer", string.Format(locale, manufacturer.Name), manufacturer);
-                }
+            var manufacturers = await _manufacturerService.GetManufacturersByIdsAsync(selectedIds.ToArray());
+            await _manufacturerService.DeleteManufacturersAsync(manufacturers);
+
+            var locale = await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer");
+            foreach (var manufacturer in manufacturers)
+            {
+                //activity log
+                await _customerActivityService.InsertActivityAsync("DeleteManufacturer", string.Format(locale, manufacturer.Name), manufacturer);
             }
 
             return Json(new { Result = true });

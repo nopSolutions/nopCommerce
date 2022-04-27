@@ -20,7 +20,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         private const string FOR_ATTRIBUTE_NAME = "asp-for";
         private const string NAME_ATTRIBUTE_NAME = "asp-for-name";
         private const string ITEMS_ATTRIBUTE_NAME = "asp-items";
-        private const string DISABLED_ATTRIBUTE_NAME = "asp-multiple";
+        private const string MULTIPLE_ATTRIBUTE_NAME = "asp-multiple";
         private const string REQUIRED_ATTRIBUTE_NAME = "asp-required";
 
         #endregion
@@ -54,7 +54,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// <summary>
         /// Indicates whether the input is multiple
         /// </summary>
-        [HtmlAttributeName(DISABLED_ATTRIBUTE_NAME)]
+        [HtmlAttributeName(MULTIPLE_ATTRIBUTE_NAME)]
         public string IsMultiple { set; get; }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 if (!attribute.Name.Equals(FOR_ATTRIBUTE_NAME) &&
                     !attribute.Name.Equals(NAME_ATTRIBUTE_NAME) &&
                     !attribute.Name.Equals(ITEMS_ATTRIBUTE_NAME) &&
-                    !attribute.Name.Equals(DISABLED_ATTRIBUTE_NAME) &&
+                    !attribute.Name.Equals(MULTIPLE_ATTRIBUTE_NAME) &&
                     !attribute.Name.Equals(REQUIRED_ATTRIBUTE_NAME))
                 {
                     htmlAttributes.Add(attribute.Name, attribute.Value);
@@ -128,13 +128,14 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //generate editor
             var tagName = For != null ? For.Name : Name;
-            bool.TryParse(IsMultiple, out var multiple);
+            _ = bool.TryParse(IsMultiple, out var multiple);
             if (!string.IsNullOrEmpty(tagName))
             {
                 IHtmlContent selectList;
                 if (multiple)
                 {
-                    selectList = _htmlHelper.Editor(tagName, "MultiSelect", new { htmlAttributes, SelectList = Items });
+                    var templateName = For.ModelExplorer.ModelType == typeof(List<string>) ? "MultiSelectString" : "MultiSelect";
+                    selectList = _htmlHelper.Editor(tagName, templateName, new { htmlAttributes, SelectList = Items });
                 }
                 else
                 {

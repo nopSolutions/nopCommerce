@@ -168,7 +168,8 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             if (ModelState.IsValid)
             {
                 //save configuration
-                model.StoreId = model.StoreId > 0 ? model.StoreId : (await _storeContext.GetCurrentStoreAsync()).Id;
+                var store = await _storeContext.GetCurrentStoreAsync();
+                model.StoreId = model.StoreId > 0 ? model.StoreId : store.Id;
                 var configuration = model.ToEntity<FacebookPixelConfiguration>();
                 await _facebookPixelService.InsertConfigurationAsync(configuration);
 
@@ -219,9 +220,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
 
             if (ModelState.IsValid)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
                 //save configuration
                 var customEvents = configuration.CustomEvents;
-                model.StoreId = model.StoreId > 0 ? model.StoreId : (await _storeContext.GetCurrentStoreAsync()).Id;
+                model.StoreId = model.StoreId > 0 ? model.StoreId : store.Id;
                 configuration = model.ToEntity<FacebookPixelConfiguration>();
                 configuration.CustomEvents = customEvents;
                 await _facebookPixelService.UpdateConfigurationAsync(configuration);

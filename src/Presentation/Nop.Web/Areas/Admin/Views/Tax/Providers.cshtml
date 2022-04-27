@@ -7,7 +7,7 @@
     //tour step
     ViewBag.TourStep = TourStep.TaxProviders;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Tax providers");
+    NopHtml.SetActiveMenuItemSystemName("Tax providers");
 
     string editQueryString = string.Empty;
     var showTour = ViewBag.ShowTour ?? false;
@@ -30,7 +30,7 @@
         <div class="container-fluid">
             <div class="form-horizontal">
                 <div class="cards-group">
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxProviderListButtons })
+                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxProviderListButtons, additionalData = Model })
                     <div class="card card-default">
                         <div class="card-body">
                             <p>

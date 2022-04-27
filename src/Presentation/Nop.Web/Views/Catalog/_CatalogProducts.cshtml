@@ -1,8 +1,6 @@
 ﻿@model CatalogProductsModel
 
-@{
-    Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.catalogproducts.js");
-}
+<script src="~/js/public.catalogproducts.js" asp-location="Footer"></script>
 
 <div class="products-container">
     <div class="ajax-products-busy"></div>
@@ -13,7 +11,7 @@
 <script asp-location="Footer">
     $(document).ready(function () {
         CatalogProducts.init({
-            ajax: @Model.UseAjaxLoading.ToString().ToLower(),
+            ajax: @Model.UseAjaxLoading.ToString().ToLowerInvariant(),
             browserPath: '@Context.Request.Path',
             fetchUrl: '@ViewData["fetchUrl"]'
         });

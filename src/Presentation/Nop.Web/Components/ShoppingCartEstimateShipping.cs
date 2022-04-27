@@ -33,13 +33,13 @@ namespace Nop.Web.Components
             _shippingSettings = shippingSettings;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData)
         {
             if (!_shippingSettings.EstimateShippingCartPageEnabled)
                 return Content(string.Empty);
 
-            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, store.Id);
 
             var model = await _shoppingCartModelFactory.PrepareEstimateShippingModelAsync(cart);
             if (!model.Enabled)

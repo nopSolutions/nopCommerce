@@ -60,7 +60,7 @@ namespace Nop.Core.ComponentModel
         /// <returns>Result</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (!(value is string) && value != null)
+            if (value is not string && value != null)
                 return base.ConvertFrom(context, culture, value);
 
             var items = GetStringArray((string)value);

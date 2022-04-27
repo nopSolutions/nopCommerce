@@ -16,7 +16,7 @@ namespace Nop.Services.Shipping
         /// <remarks>
         /// {0} : country identifier
         /// </remarks>
-        public static CacheKey ShippingMethodsAllCacheKey => new CacheKey("Nop.shippingmethod.all.{0}", NopEntityCacheDefaults<ShippingMethod>.AllPrefix);
+        public static CacheKey ShippingMethodsAllCacheKey => new("Nop.shippingmethod.all.{0}", NopEntityCacheDefaults<ShippingMethod>.AllPrefix);
 
         #endregion
     }

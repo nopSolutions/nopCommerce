@@ -1,24 +1,7 @@
 ﻿@model ProductModel
 @using Nop.Core.Domain.Catalog;
 @using Nop.Services
-<script>
-    $(document).ready(function() {
-        $("#@Html.IdFor(model => model.IsRecurring)").click(toggleRecurring);
-        toggleRecurring();
-    });
 
-    function toggleRecurring() {
-        if ($('#@Html.IdFor(model => model.IsRecurring)').is(':checked')) {
-            $('#pnlCycleLength').showElement();
-            $('#pnlCyclePeriod').showElement();
-            $('#pnlTotalCycles').showElement();
-        } else {
-            $('#pnlCycleLength').hideElement();
-            $('#pnlCyclePeriod').hideElement();
-            $('#pnlTotalCycles').hideElement();
-        }
-    }
-</script>
 <div class="card-body">
     <div class="form-group row">
         <div class="col-md-3">
@@ -30,7 +13,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="IsRecurring">
-        <div class="form-group row" id="pnlCycleLength">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="RecurringCycleLength" />
             </div>
@@ -39,7 +22,7 @@
                 <span asp-validation-for="RecurringCycleLength"></span>
             </div>
         </div>
-        <div class="form-group row" id="pnlCyclePeriod">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="RecurringCyclePeriodId" />
             </div>
@@ -48,7 +31,7 @@
                 <span asp-validation-for="RecurringCyclePeriodId"></span>
             </div>
         </div>
-        <div class="form-group row" id="pnlTotalCycles">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="RecurringTotalCycles" />
             </div>

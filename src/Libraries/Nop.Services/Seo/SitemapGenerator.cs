@@ -120,7 +120,9 @@ namespace Nop.Services.Seo
         /// </returns>
         protected virtual async Task<string> GetHttpProtocolAsync()
         {
-            return (await _storeContext.GetCurrentStoreAsync()).SslEnabled ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            return store.SslEnabled ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
         }
 
         /// <summary>
@@ -203,7 +205,9 @@ namespace Nop.Services.Seo
         /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetNewsItemUrlsAsync()
         {
-            return await (await _newsService.GetAllNewsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            return await (await _newsService.GetAllNewsAsync(storeId: store.Id))
                 .SelectAwait(async news => await GetLocalizedSitemapUrlAsync("NewsItem",
                     async lang => new { SeName = await _urlRecordService.GetSeNameAsync(news, news.LanguageId, ensureTwoPublishedLanguages: false) },
                     news.CreatedOnUtc)).ToListAsync();
@@ -218,7 +222,9 @@ namespace Nop.Services.Seo
         /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetCategoryUrlsAsync()
         {
-            return await (await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            return await (await _categoryService.GetAllCategoriesAsync(storeId: store.Id))
                 .SelectAwait(async category => await GetLocalizedSitemapUrlAsync("Category", GetSeoRouteParamsAwait(category), category.UpdatedOnUtc)).ToListAsync();
         }
 
@@ -231,7 +237,9 @@ namespace Nop.Services.Seo
         /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetManufacturerUrlsAsync()
         {
-            return await (await _manufacturerService.GetAllManufacturersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            return await (await _manufacturerService.GetAllManufacturersAsync(storeId: store.Id))
                 .SelectAwait(async manufacturer => await GetLocalizedSitemapUrlAsync("Manufacturer", GetSeoRouteParamsAwait(manufacturer), manufacturer.UpdatedOnUtc)).ToListAsync();
         }
 
@@ -244,7 +252,9 @@ namespace Nop.Services.Seo
         /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetProductUrlsAsync()
         {
-            return await (await _productService.SearchProductsAsync(0, storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            return await (await _productService.SearchProductsAsync(0, storeId: store.Id,
                 visibleIndividuallyOnly: true, orderBy: ProductSortingEnum.CreatedOn))
                 .SelectAwait(async product => await GetLocalizedSitemapUrlAsync("Product", GetSeoRouteParamsAwait(product), product.UpdatedOnUtc)).ToListAsync();
         }
@@ -271,7 +281,9 @@ namespace Nop.Services.Seo
         /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetTopicUrlsAsync()
         {
-            return await (await _topicService.GetAllTopicsAsync((await _storeContext.GetCurrentStoreAsync()).Id)).Where(t => t.IncludeInSitemap)
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            return await (await _topicService.GetAllTopicsAsync(store.Id)).Where(t => t.IncludeInSitemap)
                 .SelectAwait(async topic => await GetLocalizedSitemapUrlAsync("Topic", GetSeoRouteParamsAwait(topic))).ToListAsync();
         }
 
@@ -284,7 +296,9 @@ namespace Nop.Services.Seo
         /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetBlogPostUrlsAsync()
         {
-            return await (await _blogService.GetAllBlogPostsAsync((await _storeContext.GetCurrentStoreAsync()).Id))
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            return await (await _blogService.GetAllBlogPostsAsync(store.Id))
                 .Where(p => p.IncludeInSitemap)
                 .SelectAwait(async post => await GetLocalizedSitemapUrlAsync("BlogPost",
                     async lang => new { SeName = await _urlRecordService.GetSeNameAsync(post, post.LanguageId, ensureTwoPublishedLanguages: false) },

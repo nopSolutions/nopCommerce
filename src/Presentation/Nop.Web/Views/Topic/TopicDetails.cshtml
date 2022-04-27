@@ -9,28 +9,24 @@
     {
         Layout = "_ColumnsOne";
     }
-    else
-    {
-        Context.Items["nop.IgnoreScriptTagLocation"] = true;
-    }
 
     if (!Model.IsPasswordProtected)
     {
         //title
-        Html.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+        NopHtml.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
         //meta
-        Html.AddMetaDescriptionParts(Model.MetaDescription);
-        Html.AddMetaKeywordParts(Model.MetaKeywords);
+        NopHtml.AddMetaDescriptionParts(Model.MetaDescription);
+        NopHtml.AddMetaKeywordParts(Model.MetaKeywords);
     }
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
         var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
-        Html.AddCanonicalUrlParts(topicUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
+        NopHtml.AddCanonicalUrlParts(topicUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 
     //page class
-    Html.AppendPageCssClassParts("html-topic-page");
+    NopHtml.AppendPageCssClassParts("html-topic-page");
 }
 @if (Model.IsPasswordProtected)
 {

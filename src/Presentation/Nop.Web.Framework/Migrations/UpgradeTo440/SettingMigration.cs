@@ -15,8 +15,7 @@ using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
-    [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Settings)]
-    [SkipMigrationOnInstall]
+    [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -34,7 +33,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             if (!settingService.SettingExistsAsync(externalAuthenticationSettings, settings => settings.LogErrors).Result)
             {
                 externalAuthenticationSettings.LogErrors = false;
-                settingService.SaveSettingAsync(externalAuthenticationSettings).Wait();
+                settingService.SaveSettingAsync(externalAuthenticationSettings, settings => settings.LogErrors).Wait();
             }
 
             var multiFactorAuthenticationSettings = settingService.LoadSettingAsync<MultiFactorAuthenticationSettings>().Result;
@@ -42,7 +41,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             {
                 multiFactorAuthenticationSettings.ForceMultifactorAuthentication = false;
 
-                settingService.SaveSettingAsync(multiFactorAuthenticationSettings).Wait();
+                settingService.SaveSettingAsync(multiFactorAuthenticationSettings, settings => settings.ForceMultifactorAuthentication).Wait();
             }
 
             //#5102 Delete Full-text settings
@@ -65,19 +64,19 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 if (!seoSettings.ReservedUrlRecordSlugs.Contains(slug))
                     seoSettings.ReservedUrlRecordSlugs.Add(slug);
             }
-            settingService.SaveSettingAsync(seoSettings).Wait();
+            settingService.SaveSettingAsync(seoSettings, settings => seoSettings.ReservedUrlRecordSlugs).Wait();
 
             //#3015
             if (!settingService.SettingExistsAsync(seoSettings, settings => settings.HomepageTitle).Result)
             {
                 seoSettings.HomepageTitle = seoSettings.DefaultTitle;
-                settingService.SaveSettingAsync(seoSettings).Wait();
+                settingService.SaveSettingAsync(seoSettings, settings => settings.HomepageTitle).Wait();
             }
 
             if (!settingService.SettingExistsAsync(seoSettings, settings => settings.HomepageDescription).Result)
             {
                 seoSettings.HomepageDescription = "Your home page description";
-                settingService.SaveSettingAsync(seoSettings).Wait();
+                settingService.SaveSettingAsync(seoSettings, settings => settings.HomepageDescription).Wait();
             }
 
             //#5210
@@ -85,7 +84,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             if (!settingService.SettingExistsAsync(adminAreaSettings, settings => settings.ShowDocumentationReferenceLinks).Result)
             {
                 adminAreaSettings.ShowDocumentationReferenceLinks = true;
-                settingService.SaveSettingAsync(adminAreaSettings).Wait();
+                settingService.SaveSettingAsync(adminAreaSettings, settings => settings.ShowDocumentationReferenceLinks).Wait();
             }
 
             //#4944
@@ -93,7 +92,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             if (!settingService.SettingExistsAsync(shippingSettings, settings => settings.RequestDelay).Result)
             {
                 shippingSettings.RequestDelay = 300;
-                settingService.SaveSettingAsync(shippingSettings).Wait();
+                settingService.SaveSettingAsync(shippingSettings, settings => settings.RequestDelay).Wait();
             }
 
             //#276 AJAX filters
@@ -101,67 +100,67 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.UseAjaxCatalogProductsLoading).Result)
             {
                 catalogSettings.UseAjaxCatalogProductsLoading = true;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.UseAjaxCatalogProductsLoading).Wait();
             }
 
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.EnableManufacturerFiltering).Result)
             {
                 catalogSettings.EnableManufacturerFiltering = true;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.EnableManufacturerFiltering).Wait();
             }
 
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.EnablePriceRangeFiltering).Result)
             {
                 catalogSettings.EnablePriceRangeFiltering = true;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.EnablePriceRangeFiltering).Wait();
             }
 
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPagePriceRangeFiltering).Result)
             {
                 catalogSettings.SearchPagePriceRangeFiltering = true;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.SearchPagePriceRangeFiltering).Wait();
             }
 
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPagePriceFrom).Result)
             {
                 catalogSettings.SearchPagePriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.SearchPagePriceFrom).Wait();
             }
 
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPagePriceTo).Result)
             {
                 catalogSettings.SearchPagePriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.SearchPagePriceTo).Wait();
             }
 
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPageManuallyPriceRange).Result)
             {
                 catalogSettings.SearchPageManuallyPriceRange = false;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.SearchPageManuallyPriceRange).Wait();
             }
 
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductsByTagPriceRangeFiltering).Result)
             {
                 catalogSettings.ProductsByTagPriceRangeFiltering = true;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.ProductsByTagPriceRangeFiltering).Wait();
             }
 
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductsByTagPriceFrom).Result)
             {
                 catalogSettings.ProductsByTagPriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.ProductsByTagPriceFrom).Wait();
             }
 
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductsByTagPriceTo).Result)
             {
                 catalogSettings.ProductsByTagPriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.ProductsByTagPriceTo).Wait();
             }
 
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductsByTagManuallyPriceRange).Result)
             {
                 catalogSettings.ProductsByTagManuallyPriceRange = false;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.ProductsByTagManuallyPriceRange).Wait();
             }
 
             //#4303
@@ -169,14 +168,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             if (!settingService.SettingExistsAsync(orderSettings, settings => settings.DisplayCustomerCurrencyOnOrders).Result)
             {
                 orderSettings.DisplayCustomerCurrencyOnOrders = false;
-                settingService.SaveSettingAsync(orderSettings).Wait();
+                settingService.SaveSettingAsync(orderSettings, settings => settings.DisplayCustomerCurrencyOnOrders).Wait();
             }
 
             //#16 #2909
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.AttributeValueOutOfStockDisplayType).Result)
             {
                 catalogSettings.AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay;
-                settingService.SaveSettingAsync(catalogSettings).Wait();
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.AttributeValueOutOfStockDisplayType).Wait();
             }
 
             //#5482
@@ -187,7 +186,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             if (!settingService.SettingExistsAsync(shippingSettings, settings => settings.EstimateShippingCityNameEnabled).Result)
             {
                 shippingSettings.EstimateShippingCityNameEnabled = false;
-                settingService.SaveSettingAsync(shippingSettings).Wait();
+                settingService.SaveSettingAsync(shippingSettings, settings => settings.EstimateShippingCityNameEnabled).Wait();
             }
         }
 

@@ -17,7 +17,7 @@ namespace Nop.Web.Areas.Admin.Validators
 
         public static bool PageSizeOptionsInAdvancedSettingsValidator(SettingModel model, string value)
         {
-            if (model.Name.ToLower().Contains("pagesizeoptions"))
+            if (model.Name.ToLowerInvariant().Contains("pagesizeoptions"))
             {
                 if (string.IsNullOrEmpty(value))
                 {

@@ -77,7 +77,6 @@ namespace Nop.Services.Directory
         /// </returns>
         Task<IList<ExchangeRate>> GetCurrencyLiveRatesAsync(string currencyCode = null);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Converts currency
         /// </summary>

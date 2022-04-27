@@ -3,7 +3,7 @@
 @{
     Layout = "_AdminLayout";
     ViewBag.PageTitle = T("Plugins.Tax.Avalara.Log.Hint").Text;
-    Html.SetActiveMenuItemSystemName("Tax providers");
+    NopHtml.SetActiveMenuItemSystemName("Tax providers");
 }
 
 <form asp-controller="TaxTransactionLog" asp-action="View" method="post">

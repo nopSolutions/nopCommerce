@@ -1,16 +1,14 @@
 ﻿@model string
 @inject IPermissionService permissionService
 @inject AdminAreaSettings adminAreaSettings
+@inject ITinyMceHelper tinyMceHelper
 @using Nop.Web.Areas.Admin.Helpers
 @using Nop.Core
 @using Nop.Services.Security
 @using Nop.Web.Framework.UI
 @{
-    //we do not bundle this script file (does not work for some reasons in bundle)
-    Html.AddScriptParts("~/lib_npm/tinymce/tinymce.min.js", excludeFromBundle: true);
-
     // tinyMCE language
-    var language = await TinyMceHelper.GetTinyMceLanguageAsync();
+    var language = await tinyMceHelper.GetTinyMceLanguageAsync();
 
     var allowRoxyFileman = await permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures);
 
@@ -45,6 +43,7 @@
         valid_children.Add("+body[link]");
     }
 }
+<script src="~/lib_npm/tinymce/tinymce.min.js" asp-location="Head"></script>
 
 <script>
     $(document).ready(function() {
@@ -92,11 +91,13 @@
             max_height: '100%',
             plugins: [
                 "advlist autolink autoresize directionality lists link image charmap preview anchor",
-                "searchreplace visualblocks code fullscreen textcolor",
+                "searchreplace visualblocks code fullscreen",
                 "insertdatetime media table paste@(enableFullPage ? " fullpage" : null)"
             ],
             toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
             relative_urls: false,
+            suffix: '.min',
+            base_url: '@Url.Content("~/lib_npm/tinymce")',
             @if (allowRoxyFileman)
             {
                 <text>

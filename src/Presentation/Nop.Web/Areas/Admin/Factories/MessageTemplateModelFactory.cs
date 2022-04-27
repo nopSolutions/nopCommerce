@@ -97,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get message templates
             var messageTemplates = (await _messageTemplateService
-                .GetAllMessageTemplatesAsync(storeId: searchModel.SearchStoreId)).ToPagedList(searchModel);
+                .GetAllMessageTemplatesAsync(searchModel.SearchStoreId, searchModel.SearchKeywords)).ToPagedList(searchModel);
 
             //prepare store names (to avoid loading for each message template)
             var stores = (await _storeService.GetAllStoresAsync()).Select(store => new { store.Id, store.Name }).ToList();
@@ -141,7 +141,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<MessageTemplateModel> PrepareMessageTemplateModelAsync(MessageTemplateModel model,
             MessageTemplate messageTemplate, bool excludeProperties = false)
         {
-            Action<MessageTemplateLocalizedModel, int> localizedModelConfiguration = null;
+            Func<MessageTemplateLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (messageTemplate != null)
             {

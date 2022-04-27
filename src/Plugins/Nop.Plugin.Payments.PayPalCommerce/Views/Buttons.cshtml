@@ -1,9 +1,15 @@
-﻿@model (string WidgetZone, int ProductId)
+﻿@model (string WidgetZone, int ProductId, string ProductCost)
 
 @if (Model.ProductId > 0)
 {
     <div>
         <div class="add-to-cart-panel" id="paypal-button-container@($"-{Model.ProductId}")"></div>
+         <div
+            data-pp-message
+            data-pp-layout="text"
+            data-pp-placement="product"
+            data-pp-amount="@Model.ProductCost">
+        </div>
     </div>
 }
 else
@@ -12,6 +18,8 @@ else
         $(document).ready(function () {
             $('#checkout').after('<div id="paypal-button-container"></div>');
             $('#checkout').hide();
+
+            $('#paypal-button-container').after('<div data-pp-message data-pp-layout="text" data-pp-placement="cart"></div>');
         });
     </script>
 }

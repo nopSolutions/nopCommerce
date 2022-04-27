@@ -19,6 +19,7 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Tax.Avalara.Controllers
@@ -30,6 +31,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
     {
         #region Fields
 
+        private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly AvalaraTaxManager _avalaraTaxManager;
         private readonly AvalaraTaxSettings _avalaraTaxSettings;
         private readonly CurrencySettings _currencySettings;
@@ -46,7 +48,8 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         #region Ctor
 
-        public AvalaraController(AvalaraTaxManager avalaraTaxManager,
+        public AvalaraController(IAclSupportedModelFactory aclSupportedModelFactory,
+            AvalaraTaxManager avalaraTaxManager,
             AvalaraTaxSettings avalaraTaxSettings,
             CurrencySettings currencySettings,
             IBaseAdminModelFactory baseAdminModelFactory,
@@ -58,6 +61,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             ISettingService settingService,
             IWorkContext workContext)
         {
+            _aclSupportedModelFactory = aclSupportedModelFactory;
             _avalaraTaxManager = avalaraTaxManager;
             _avalaraTaxSettings = avalaraTaxSettings;
             _currencySettings = currencySettings;
@@ -80,7 +84,8 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
-            //prepare common properties
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             var model = new ConfigurationModel
             {
                 AccountId = _avalaraTaxSettings.AccountId,
@@ -91,14 +96,23 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 ValidateAddress = _avalaraTaxSettings.ValidateAddress,
                 TaxOriginAddressTypeId = (int)_avalaraTaxSettings.TaxOriginAddressType,
                 EnableLogging = _avalaraTaxSettings.EnableLogging,
+                UseTaxRateTables = _avalaraTaxSettings.UseTaxRateTables,
                 GetTaxRateByAddressOnly = _avalaraTaxSettings.GetTaxRateByAddressOnly,
+                EnableCertificates = _avalaraTaxSettings.EnableCertificates,
+                AutoValidateCertificate = _avalaraTaxSettings.AutoValidateCertificate,
+                AllowEditCustomer = _avalaraTaxSettings.AllowEditCustomer,
+                DisplayNoValidCertificatesMessage = _avalaraTaxSettings.DisplayNoValidCertificatesMessage,
+                SelectedCustomerRoleIds = _avalaraTaxSettings.CustomerRoleIds,
                 TestTaxResult = testTaxResult
             };
             model.IsConfigured = !string.IsNullOrEmpty(_avalaraTaxSettings.AccountId) && !string.IsNullOrEmpty(_avalaraTaxSettings.LicenseKey);
             model.TaxOriginAddressTypes = (await TaxOriginAddressType.DefaultTaxAddress.ToSelectListAsync(false))
                 .Select(type => new SelectListItem(type.Text, type.Value)).ToList();
-            model.HideGeneralBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), AvalaraTaxDefaults.HideGeneralBlock);
-            model.HideLogBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), AvalaraTaxDefaults.HideLogBlock);
+            model.HideGeneralBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, AvalaraTaxDefaults.HideGeneralBlock);
+            model.HideLogBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, AvalaraTaxDefaults.HideLogBlock);
+
+            //prepare model customer roles
+            await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model);
 
             //prepare address model
             await _baseAdminModelFactory.PrepareCountriesAsync(model.TestAddress.AvailableCountries);
@@ -130,13 +144,14 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 defaultCompanyCode = model.Companies.FirstOrDefault()?.Value;
 
             //set the default company
+            var selectedCompany = activeCompanies?.FirstOrDefault(company => company.companyCode.Equals(defaultCompanyCode));
             model.CompanyCode = defaultCompanyCode;
             _avalaraTaxSettings.CompanyCode = defaultCompanyCode;
+            _avalaraTaxSettings.CompanyId = selectedCompany?.id;
             await _settingService.SaveSettingAsync(_avalaraTaxSettings);
 
             //display warning in case of company currency differ from the primary store currency
             var primaryCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
-            var selectedCompany = activeCompanies?.FirstOrDefault(company => company.companyCode.Equals(defaultCompanyCode));
             if (!selectedCompany?.baseCurrencyCode?.Equals(primaryCurrency?.CurrencyCode, StringComparison.InvariantCultureIgnoreCase) ?? false)
             {
                 var warning = string.Format(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Fields.Company.Currency.Warning"),
@@ -157,7 +172,6 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (!ModelState.IsValid)
                 return await Configure();
 
-            //save settings
             _avalaraTaxSettings.AccountId = model.AccountId;
             _avalaraTaxSettings.LicenseKey = model.LicenseKey;
             _avalaraTaxSettings.CompanyCode = model.CompanyCode;
@@ -166,7 +180,13 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             _avalaraTaxSettings.ValidateAddress = model.ValidateAddress;
             _avalaraTaxSettings.TaxOriginAddressType = (TaxOriginAddressType)model.TaxOriginAddressTypeId;
             _avalaraTaxSettings.EnableLogging = model.EnableLogging;
+            _avalaraTaxSettings.UseTaxRateTables = model.UseTaxRateTables;
             _avalaraTaxSettings.GetTaxRateByAddressOnly = model.GetTaxRateByAddressOnly;
+            _avalaraTaxSettings.EnableCertificates = model.EnableCertificates;
+            _avalaraTaxSettings.AutoValidateCertificate = model.AutoValidateCertificate;
+            _avalaraTaxSettings.AllowEditCustomer = model.AllowEditCustomer;
+            _avalaraTaxSettings.DisplayNoValidCertificatesMessage = model.DisplayNoValidCertificatesMessage;
+            _avalaraTaxSettings.CustomerRoleIds = model.SelectedCustomerRoleIds.ToList();
             await _settingService.SaveSettingAsync(_avalaraTaxSettings);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
@@ -175,24 +195,76 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         }
 
         [HttpPost, ActionName("Configure")]
-        [FormValueRequired("verifyCredentials")]
-        public async Task<IActionResult> VerifyCredentials()
+        [FormValueRequired("check-credentials")]
+        public async Task<IActionResult> CheckCredentials()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
-            //verify credentials 
-            var result = await _avalaraTaxManager.PingAsync();
-            if (result?.authenticated ?? false)
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.VerifyCredentials.Verified"));
+            //verify credentials
+            var credentials = await _avalaraTaxManager.PingAsync();
+            if (credentials?.authenticated ?? false)
+            {
+                var locale = await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Configuration.Credentials.Verified");
+                _notificationService.SuccessNotification(locale);
+            }
             else
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.VerifyCredentials.Declined"));
+            {
+                var locale = await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Configuration.Credentials.Declined");
+                _notificationService.ErrorNotification(locale);
+            }
+
+            //check certificate setup status
+            var status = await _avalaraTaxManager.GetCertificateSetupStatusAsync();
+            if (status is null)
+            {
+                var locale = await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Configuration.Certificates.NotProvisioned");
+                _notificationService.ErrorNotification(locale);
+            }
+            else if (status == false)
+            {
+                var locale = await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Configuration.Certificates.InProgress");
+                _notificationService.WarningNotification(locale);
+            }
+            else
+            {
+                var locale = await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Configuration.Certificates.Provisioned");
+                _notificationService.SuccessNotification(locale);
+            }
 
             return await Configure();
         }
 
         [HttpPost, ActionName("Configure")]
-        [FormValueRequired("testTax")]
+        [FormValueRequired("request-certificate-setup")]
+        public async Task<IActionResult> RequestCertificateSetup()
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
+            //request the certificate setup and display current status
+            var status = await _avalaraTaxManager.GetCertificateSetupStatusAsync(true);
+            if (status is null)
+            {
+                var locale = await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Configuration.Certificates.NotProvisioned");
+                _notificationService.ErrorNotification(locale);
+            }
+            else if (status == false)
+            {
+                var locale = await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Configuration.Certificates.InProgress");
+                _notificationService.WarningNotification(locale);
+            }
+            else
+            {
+                var locale = await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Configuration.Certificates.Provisioned");
+                _notificationService.SuccessNotification(locale);
+            }
+
+            return await Configure();
+        }
+
+        [HttpPost, ActionName("Configure")]
+        [FormValueRequired("test-tax")]
         public async Task<IActionResult> TestTaxRequest(ConfigurationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
@@ -215,11 +287,11 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (transaction?.totalTax != null)
             {
                 //display tax rates by jurisdictions
-                testTaxResult = $"Total tax rate: {transaction.totalTax:0.00}% {Environment.NewLine}";
+                testTaxResult = $"Total tax rate: {transaction.totalTax:0.000}% {Environment.NewLine}";
                 if (transaction.summary?.Any() ?? false)
                 {
                     testTaxResult = transaction.summary.Aggregate(testTaxResult, (resultString, rate) =>
-                        $"{resultString}Jurisdiction: {rate?.jurisName}, Tax rate: {(rate?.rate ?? 0) * 100:0.00}% {Environment.NewLine}");
+                        $"{resultString}Jurisdiction: {rate?.jurisName}, Tax rate: {(rate?.rate ?? 0) * 100:0.000}% {Environment.NewLine}");
                 }
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TestTax.Success"));
             }
@@ -239,6 +311,18 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                     .GetResourceAsync("Plugins.Tax.Avalara.Fields.TaxOriginAddressType.DefaultTaxAddress.Warning"), Url.Action("Tax", "Setting")),
                 _ => null
             };
+
+            return Json(new { Result = message });
+        }
+
+        public async Task<IActionResult> ChangeEnableCertificates(bool enabled)
+        {
+            var message = string.Empty;
+            if (enabled)
+            {
+                var locale = await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Fields.EnableCertificates.Warning");
+                message = string.Format(locale, Url.Action("CustomerUser", "Setting"));
+            }
 
             return Json(new { Result = message });
         }

@@ -148,7 +148,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                     return response;
                 }
 
-                var storeId = getShippingOptionRequest.StoreId != 0 ? getShippingOptionRequest.StoreId : (await _storeContext.GetCurrentStoreAsync()).Id;
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var storeId = getShippingOptionRequest.StoreId != 0 ? getShippingOptionRequest.StoreId : store.Id;
                 var countryId = getShippingOptionRequest.ShippingAddress.CountryId ?? 0;
                 var stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId ?? 0;
                 var warehouseId = getShippingOptionRequest.WarehouseFrom?.Id ?? 0;
@@ -239,6 +240,18 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         }
 
         /// <summary>
+        /// Get associated shipment tracker
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment tracker
+        /// </returns>
+        public Task<IShipmentTracker> GetShipmentTrackerAsync()
+        {
+            return Task.FromResult<IShipmentTracker>(null);
+        }
+
+        /// <summary>
         /// Gets a configuration page URL
         /// </summary>
         public override string GetConfigurationPageUrl()
@@ -256,7 +269,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             await _settingService.SaveSettingAsync(new FixedByWeightByTotalSettings());
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Shipping.FixedByWeightByTotal.AddRecord"] = "Add record",
                 ["Plugins.Shipping.FixedByWeightByTotal.Fields.AdditionalFixedCost"] = "Additional fixed cost",
@@ -323,19 +336,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
 
             await base.UninstallAsync();
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets a shipment tracker
-        /// </summary>
-        /// <remarks>
-        /// uncomment a line below to return a general shipment tracker (finds an appropriate tracker by tracking number)
-        /// return new GeneralShipmentTracker(EngineContext.Current.Resolve<ITypeFinder>());
-        /// </remarks>
-        public IShipmentTracker ShipmentTracker => null;
 
         #endregion
     }

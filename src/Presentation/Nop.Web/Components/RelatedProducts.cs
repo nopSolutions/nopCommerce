@@ -27,7 +27,6 @@ namespace Nop.Web.Components
             _storeMappingService = storeMappingService;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(int productId, int? productThumbPictureSize)
         {
             //load and cache report

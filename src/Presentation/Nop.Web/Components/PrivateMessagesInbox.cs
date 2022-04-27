@@ -14,7 +14,6 @@ namespace Nop.Web.Components
             _privateMessagesModelFactory = privateMessagesModelFactory;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(int pageNumber, string tab)
         {
             var model = await _privateMessagesModelFactory.PrepareInboxModelAsync(pageNumber, tab);

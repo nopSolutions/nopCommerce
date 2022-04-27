@@ -262,6 +262,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var action = Request.Form["action"];
 
             var fileName = Request.Form["backupFileName"];
+            fileName = _fileProvider.GetFileName(_fileProvider.GetAbsolutePath(fileName));
+
             var backupPath = _maintenanceService.GetBackupPath(fileName);
 
             try
@@ -408,8 +410,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
-                await _urlRecordService.DeleteUrlRecordsAsync(await _urlRecordService.GetUrlRecordsByIdsAsync(selectedIds.ToArray()));
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
+
+            await _urlRecordService.DeleteUrlRecordsAsync(await _urlRecordService.GetUrlRecordsByIdsAsync(selectedIds.ToArray()));
 
             return Json(new { Result = true });
         }
@@ -432,7 +436,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(seName))
                 return Json(new { Result = string.Empty });
 
-            int.TryParse(entityId, out var parsedEntityId);
+            _ = int.TryParse(entityId, out var parsedEntityId);
             var validatedSeName = await _urlRecordService.ValidateSeNameAsync(parsedEntityId, entityName, seName, null, false);
 
             if (seName.Equals(validatedSeName, StringComparison.InvariantCultureIgnoreCase))

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Reflection;
-using FluentMigrator.Builders.Create;
-using FluentMigrator.Expressions;
+﻿using System.Reflection;
 
 namespace Nop.Data.Migrations
 {
@@ -11,30 +8,16 @@ namespace Nop.Data.Migrations
     public interface IMigrationManager
     {
         /// <summary>
-        /// Executes all found (and unapplied) migrations
+        /// Executes an Up for all found unapplied migrations
         /// </summary>
-        /// <param name="assembly">Assembly to find the migration</param>
-        /// <param name="isUpdateProcess">Indicates whether the upgrade or installation process is ongoing. True - if an upgrade process</param>
-        void ApplyUpMigrations(Assembly assembly, bool isUpdateProcess = false);
+        /// <param name="assembly">Assembly to find migrations</param>
+        /// <param name="migrationProcessType">Type of migration process</param>
+        void ApplyUpMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.Installation);
 
         /// <summary>
         /// Executes an Down migration
         /// </summary>
         /// <param name="assembly">Assembly to find the migration</param>
         void ApplyDownMigrations(Assembly assembly);
-
-        /// <summary>
-        /// Retrieves expressions into ICreateExpressionRoot
-        /// </summary>
-        /// <param name="expressionRoot">The root expression for a CREATE operation</param>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        void BuildTable<TEntity>(ICreateExpressionRoot expressionRoot);
-
-        /// <summary>
-        /// Gets create table expression for entity type
-        /// </summary>
-        /// <param name="type">Entity type</param>
-        /// <returns>Expression to create a table</returns>
-        CreateTableExpression GetCreateTableExpression(Type type);
     }
 }

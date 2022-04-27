@@ -1,0 +1,215 @@
+@model BatchModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = T("Plugins.Shipping.EasyPost.Batch.Edit").Text;
+    NopHtml.SetActiveMenuItemSystemName("EasyPost Batches");
+}
+
+<form asp-controller="EasyPost" asp-action="BatchEdit" method="post" id="batch-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Plugins.Shipping.EasyPost.Batch.Edit") - @Model.Id
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="BatchList">@T("Plugins.Shipping.EasyPost.Batch.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            @if (Model.Purchased)
+            {
+                @await Html.PartialAsync("~/Plugins/Shipping.EasyPost/Views/Pickup/_PickupButtons.cshtml", Model.PickupModel)
+            }
+            @if (Model.Purchased && !Model.ManifestGenerated)
+            {
+                <button type="submit" asp-action="BatchGenerateManifest" class="btn btn-primary">
+                    <i class="fa fa-list"></i>
+                    @T("Plugins.Shipping.EasyPost.Batch.GenerateManifest")
+                </button>
+            }
+            @if (Model.ManifestGenerated)
+            {
+                <button type="submit" asp-action="BatchDownloadManifest" class="btn btn-success">
+                    <i class="fa fa-download"></i>
+                    @T("Plugins.Shipping.EasyPost.Batch.DownloadManifest")
+                </button>
+            }
+            @if (Model.BatchStatus == BatchStatus.Purchased)
+            {
+                <div class="btn-group">
+                    <button type="button" class="btn bg-purple">
+                        <i class="fa fa-barcode"></i>
+                        @T("Plugins.Shipping.EasyPost.Batch.GenerateLabel")
+                    </button>
+                    <button type="button" class="btn bg-purple dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">&nbsp;</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <button type="submit" asp-action="BatchGenerateLabel" asp-route-labelFormat="pdf">
+                                <i class="far fa-file-pdf"></i>
+                                @T("Plugins.Shipping.EasyPost.Batch.GenerateLabel.Pdf")
+                            </button>
+                        </li>
+                        <li>
+                            <button type="submit" asp-action="BatchGenerateLabel" asp-route-labelFormat="zpl">
+                                <i class="far fa-file"></i>
+                                @T("Plugins.Shipping.EasyPost.Batch.GenerateLabel.Zpl")
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            }
+            @if (Model.BatchStatus == BatchStatus.LabelGenerated)
+            {
+                <button type="submit" asp-action="BatchDownloadLabel" class="btn btn-success">
+                    <i class="fa fa-download"></i>
+                    @T("Plugins.Shipping.EasyPost.Batch.DownloadLabel")
+                </button>
+            }
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <span id="batch-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+    <input asp-for="Id" type="hidden" />
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            @if (!string.IsNullOrEmpty(Model.BatchId))
+                            {
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="BatchId" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="form-text-row">@Model.BatchId</div>
+                                    </div>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Status))
+                            {
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="Status" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="form-text-row">@Model.Status</div>
+                                    </div>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.PickupStatus))
+                            {
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="PickupStatus" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="form-text-row">@Model.PickupStatus</div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="UpdatedOn" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">@Model.UpdatedOn</div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="CreatedOn" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">@Model.CreatedOn</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.Purchased)
+                    {
+                        @await Html.PartialAsync("~/Plugins/Shipping.EasyPost/Views/Pickup/_PickupDetails.cshtml", Model.PickupModel)
+                    }
+
+                    <div class="card card-default no-margin">
+                        <div class="card-header">
+                            @T("Plugins.Shipping.EasyPost.Batch.Shipments")
+                        </div>
+                        <div class="card-body">
+                            @await Html.PartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "batch-shipments-grid",
+                                UrlRead = new DataUrl("BatchShipmentList", "EasyPost", new Microsoft.AspNetCore.Routing.RouteValueDictionary { [nameof(BatchShipmentSearchModel.BatchId)] = Model.BatchShipmentSearchModel.BatchId }),
+                                Length = Model.BatchShipmentSearchModel.PageSize,
+                                LengthMenu = Model.BatchShipmentSearchModel.AvailablePageSizes,
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(BatchShipmentModel.Id))
+                                    {
+                                        Title = T("Admin.Orders.Shipments.ID").Text,
+                                        Width = "80"
+                                    },
+                                    new ColumnProperty(nameof(BatchShipmentModel.ShipmentId))
+                                    {
+                                        Title = T("Plugins.Shipping.EasyPost.Shipment.Fields.Id").Text,
+                                        Width = "200"
+                                    },
+                                    new ColumnProperty(nameof(BatchShipmentModel.CustomOrderNumber))
+                                    {
+                                        Title = T("Admin.Orders.Shipments.CustomOrderNumber").Text,
+                                        Width = "200"
+                                    },
+                                    new ColumnProperty(nameof(BatchShipmentModel.TotalWeight))
+                                    {
+                                        Title = T("Admin.Orders.Shipments.TotalWeight").Text,
+                                        Width = "200"
+                                    },
+                                    new ColumnProperty(nameof(BatchShipmentModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Delete").Text,
+                                        Width = "100",
+                                        Render = new RenderCustom("renderDeleteUrl"),
+                                    }
+                                }
+                            })
+                        </div>
+                        <script>
+                            function renderDeleteUrl(data, type, row, meta) {
+                                var link = '@Url.Action("BatchShipmentDelete", "EasyPost", new { batchId = Model.Id })' + '&id=' + data;
+                                return '<a href ="' + link + '" class="@NopColumnClassDefaults.Button"><i class="far fa-trash-alt"></i>@T("Admin.Common.Delete").Text</a>';
+                            }
+                        </script>
+                        <div class="card-footer">
+                            <button type="submit" id="btnAddNewValue"
+                                    onclick="javascript:OpenWindow('@(Url.Action("BatchShipmentAdd", "EasyPost", new { batchId = Model.Id, btnId = "refresh-button", formId = "batch-form" }))', 800, 850, true); return false;"
+                                    class="btn btn-primary">
+                                @T("Plugins.Shipping.EasyPost.Batch.Shipments.Add")
+                            </button>
+                            <button type="submit" id="refresh-button" style="display: none"></button>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#refresh-button').click(function () {
+                                        updateTable('#batch-shipments-grid');
+                                        return false;
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="batch-delete" asp-action="BatchDelete" />

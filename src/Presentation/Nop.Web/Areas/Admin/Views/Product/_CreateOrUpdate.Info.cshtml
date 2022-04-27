@@ -8,30 +8,26 @@
 
 @{
     var stores = await storeService.GetAllStoresAsync();
-
-    //resources for product tags input
-    Html.AppendCssFileParts("~/lib_npm/jquery-tageditor/jquery.tag-editor.css");
-    Html.AppendScriptParts("~/lib_npm/jquery-tageditor/jquery.tag-editor.min.js");
-    Html.AppendScriptParts("~/lib_npm/jquery-tageditor/jquery.caret.min.js");
 }
+    @* resources for product tags input *@
+    <script src="~/lib_npm/jquery-tageditor/jquery.caret.min.js"></script>
+    <script src="~/lib_npm/jquery-tageditor/jquery.tag-editor.min.js"></script>
+    <link rel="stylesheet" href="~/lib_npm/jquery-tageditor/jquery.tag-editor.css">
 
-    <script>
+
+    <script asp-location="Footer">
     $(document).ready(function() {
         @if (!Model.IsLoggedInAsVendor)
         {
             <text>$("#@Html.IdFor(model => model.ShowOnHomepage)").click(toggleShowOnHomepage);</text>
         }
         $("#@Html.IdFor(model => model.ProductTypeId)").change(toggleProductType);
-        $("#@Html.IdFor(model => model.RequireOtherProducts)").click(toggleRequireOtherProducts);
-        $("#@Html.IdFor(model => model.MarkAsNew)").click(toggleMarkAsNew);
 
         @if (!Model.IsLoggedInAsVendor)
         {
             <text>toggleShowOnHomepage();</text>
         }
         toggleProductType();
-        toggleRequireOtherProducts();
-        toggleMarkAsNew();
     });
 
     function toggleShowOnHomepage() {
@@ -105,26 +101,6 @@
             $('#pnlProductTemplateId').showElement();
         } else {
             $('#pnlProductTemplateId').hideElement();
-        }
-    }
-
-    function toggleRequireOtherProducts() {
-        if ($('#@Html.IdFor(model => model.RequireOtherProducts)').is(':checked')) {
-            $('#pnlRequiredProductIds').showElement();
-            $('#pnlAutomaticallyAddRequiredProducts').showElement();
-        } else {
-            $('#pnlRequiredProductIds').hideElement();
-            $('#pnlAutomaticallyAddRequiredProducts').hideElement();
-        }
-    }
-
-    function toggleMarkAsNew() {
-        if ($('#@Html.IdFor(model => model.MarkAsNew)').is(':checked')) {
-            $('#pnlMarkAsNewStartDateTimeUtc').showElement();
-            $('#pnlMarkAsNewEndDateTimeUtc').showElement();
-        } else {
-            $('#pnlMarkAsNewStartDateTimeUtc').hideElement();
-            $('#pnlMarkAsNewEndDateTimeUtc').hideElement();
         }
     }
 
@@ -377,7 +353,7 @@
             <span asp-validation-for="ShowOnHomepage"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="ShowOnHomepage">
+    <nop-nested-setting asp-for="ShowOnHomepage" disable-auto-generation="true">
         <div class="form-group row @(Model.ProductEditorSettingsModel.ShowOnHomepage  ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <div class="col-md-3">
                 <nop-label asp-for="DisplayOrder" />
@@ -606,7 +582,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="RequireOtherProducts">
-        <div class="form-group row @(Model.ProductEditorSettingsModel.RequireOtherProductsAddedToCart ? null : "advanced-setting")" id="pnlRequiredProductIds">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.RequireOtherProductsAddedToCart ? null : "advanced-setting")">
             <div class="col-md-3">
                 <nop-label asp-for="RequiredProductIds" />
                 <span id="required-products-check-progress" style="display: none; float: right; clear: both" class="please-wait">
@@ -638,7 +614,7 @@
                 @Html.ValidationMessageFor(model => model.RequiredProductIds)
             </div>
         </div>
-        <div class="form-group row @(Model.ProductEditorSettingsModel.RequireOtherProductsAddedToCart ? null : "advanced-setting")" id="pnlAutomaticallyAddRequiredProducts">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.RequireOtherProductsAddedToCart ? null : "advanced-setting")">
             <div class="col-md-3">
                 <nop-label asp-for="AutomaticallyAddRequiredProducts" />
             </div>
@@ -685,7 +661,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="MarkAsNew">
-        <div class="form-group row @(Model.ProductEditorSettingsModel.MarkAsNew  ? null : "advanced-setting")" id="pnlMarkAsNewStartDateTimeUtc">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.MarkAsNew  ? null : "advanced-setting")">
             <div class="col-md-3">
                 <nop-label asp-for="MarkAsNewStartDateTimeUtc" />
             </div>
@@ -694,7 +670,7 @@
                 <span asp-validation-for="MarkAsNewStartDateTimeUtc"></span>
             </div>
         </div>
-        <div class="form-group row @(Model.ProductEditorSettingsModel.MarkAsNew  ? null : "advanced-setting")" id="pnlMarkAsNewEndDateTimeUtc">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.MarkAsNew  ? null : "advanced-setting")">
             <div class="col-md-3">
                 <nop-label asp-for="MarkAsNewEndDateTimeUtc" />
             </div>

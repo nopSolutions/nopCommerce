@@ -32,10 +32,9 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Creates the database connection
         /// </summary>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        protected override async Task<DataConnection> CreateDataConnectionAsync()
+        protected override DataConnection CreateDataConnection()
         {
-            var dataContext = await CreateDataConnectionAsync(LinqToDbDataProvider);
+            var dataContext = CreateDataConnection(LinqToDbDataProvider);
 
             dataContext.MappingSchema.SetDataType(typeof(Guid), new SqlDataType(DataType.NChar, typeof(Guid), 36));
             dataContext.MappingSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
@@ -43,7 +42,7 @@ namespace Nop.Data.DataProviders
             return dataContext;
         }
 
-        protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
+        protected static MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             return new MySqlConnectionStringBuilder(GetCurrentConnectionString());
         }
@@ -60,7 +59,7 @@ namespace Nop.Data.DataProviders
         protected override DbConnection GetInternalDbConnection(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentException(nameof(connectionString));
+                throw new ArgumentNullException(nameof(connectionString));
 
             return new MySqlConnection(connectionString);
         }
@@ -127,7 +126,7 @@ namespace Nop.Data.DataProviders
         {
             try
             {
-                await using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+                await using var connection = GetInternalDbConnection(GetCurrentConnectionString());
 
                 //just try to connect
                 await connection.OpenAsync();
@@ -159,16 +158,7 @@ namespace Nop.Data.DataProviders
                 return false;
             }
         }
-
-        /// <summary>
-        /// Initialize database
-        /// </summary>
-        public void InitializeDatabase()
-        {
-            var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
-        }
-
+        
         /// <summary>
         /// Get the current identity value
         /// </summary>
@@ -179,13 +169,13 @@ namespace Nop.Data.DataProviders
         /// </returns>
         public virtual async Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
         {
-            using var currentConnection = await CreateDataConnectionAsync();
-            var tableName = GetEntityDescriptor<TEntity>().TableName;
+            using var currentConnection = CreateDataConnection();
+            var tableName = GetEntityDescriptor(typeof(TEntity)).EntityName;
             var databaseName = currentConnection.Connection.Database;
 
             //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
             //with DataContext we could be used KeepConnectionAlive option
-            await using var dbConnection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+            await using var dbConnection = GetInternalDbConnection(GetCurrentConnectionString());
 
             dbConnection.StateChange += (sender, e) =>
             {
@@ -197,7 +187,7 @@ namespace Nop.Data.DataProviders
                     var connection = (IDbConnection)sender;
                     using var internalCommand = connection.CreateCommand();
                     internalCommand.Connection = connection;
-                    internalCommand.CommandText = $"SET @@SESSION.information_schema_stats_expiry = 0;";
+                    internalCommand.CommandText = "SET @@SESSION.information_schema_stats_expiry = 0;";
                     internalCommand.ExecuteNonQuery();
                 }
                 //ignoring for older than 8.0 versions MySQL (#1193 Unknown system variable)
@@ -227,8 +217,8 @@ namespace Nop.Data.DataProviders
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            using var currentConnection = await CreateDataConnectionAsync();
-            var tableName = GetEntityDescriptor<TEntity>().TableName;
+            using var currentConnection = CreateDataConnection();
+            var tableName = GetEntityDescriptor(typeof(TEntity)).EntityName;
 
             await currentConnection.ExecuteAsync($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
         }
@@ -258,7 +248,7 @@ namespace Nop.Data.DataProviders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ReIndexTablesAsync()
         {
-            using var currentConnection = await CreateDataConnectionAsync();
+            using var currentConnection = CreateDataConnection();
             var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
 
             if (tables.Count > 0)
@@ -282,7 +272,7 @@ namespace Nop.Data.DataProviders
             {
                 Server = nopConnectionString.ServerName,
                 //Cast DatabaseName to lowercase to avoid case-sensitivity problems
-                Database = nopConnectionString.DatabaseName.ToLower(),
+                Database = nopConnectionString.DatabaseName.ToLowerInvariant(),
                 AllowUserVariables = true,
                 UserID = nopConnectionString.Username,
                 Password = nopConnectionString.Password,

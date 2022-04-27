@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Settings.Gdpr.Consent.Edit").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("GDPR settings");
+    NopHtml.SetActiveMenuItemSystemName("GDPR settings");
 }
 
 <form asp-controller="Setting" asp-action="EditGdprConsent" method="post">

@@ -43,7 +43,7 @@ namespace Nop.Services.Security
         /// {0} : entity ID
         /// {1} : entity name
         /// </remarks>
-        public static CacheKey AclRecordCacheKey => new CacheKey("Nop.aclrecord.{0}-{1}");
+        public static CacheKey AclRecordCacheKey => new("Nop.aclrecord.{0}-{1}");
 
         /// <summary>
         /// Gets a key for caching
@@ -51,7 +51,7 @@ namespace Nop.Services.Security
         /// <remarks>
         /// {0} : entity name
         /// </remarks>
-        public static CacheKey EntityAclRecordExistsCacheKey => new CacheKey("Nop.aclrecord.exists.{0}");
+        public static CacheKey EntityAclRecordExistsCacheKey => new("Nop.aclrecord.exists.{0}");
 
         #endregion
 
@@ -64,7 +64,7 @@ namespace Nop.Services.Security
         /// {0} : permission system name
         /// {1} : customer role ID
         /// </remarks>
-        public static CacheKey PermissionAllowedCacheKey => new CacheKey("Nop.permissionrecord.allowed.{0}-{1}", PermissionAllowedPrefix);
+        public static CacheKey PermissionAllowedCacheKey => new("Nop.permissionrecord.allowed.{0}-{1}", PermissionAllowedPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -80,7 +80,7 @@ namespace Nop.Services.Security
         /// <remarks>
         /// {0} : customer role ID
         /// </remarks>
-        public static CacheKey PermissionRecordsAllCacheKey => new CacheKey("Nop.permissionrecord.all.{0}", NopEntityCacheDefaults<PermissionRecord>.AllPrefix);
+        public static CacheKey PermissionRecordsAllCacheKey => new("Nop.permissionrecord.all.{0}", NopEntityCacheDefaults<PermissionRecord>.AllPrefix);
 
         #endregion
 

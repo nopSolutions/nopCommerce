@@ -1,6 +1,5 @@
 ﻿@model CustomerSearchModel
 
-@using System.Globalization;
 @using Nop.Core.Domain.Media
 
 @inject MediaSettings _mediaSettings
@@ -9,7 +8,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Customers.Customers").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Customers list");
+    NopHtml.SetActiveMenuItemSystemName("Customers list");
 }
 
 @{
@@ -65,7 +64,7 @@
                 </ul>
 
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerListButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerListButtons, additionalData = Model })
         </div>
     </div>
 

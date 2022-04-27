@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.Topics;
-using Nop.Data;
+using Nop.Data.Mapping;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Models.Topics;
@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Validators.Topics
 {
     public partial class TopicValidator : BaseNopValidator<TopicModel>
     {
-        public TopicValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
+        public TopicValidator(ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
         {
             RuleFor(x => x.SeName)
                 .Length(0, NopSeoDefaults.ForumTopicLength)
@@ -21,7 +21,7 @@ namespace Nop.Web.Areas.Admin.Validators.Topics
                 .When(x => x.IsPasswordProtected)
                 .WithMessageAwait(localizationService.GetResourceAsync("Validation.Password.IsNotEmpty"));
 
-            SetDatabaseValidationRules<Topic>(dataProvider);
+            SetDatabaseValidationRules<Topic>(mappingEntityAccessor);
         }
     }
 }

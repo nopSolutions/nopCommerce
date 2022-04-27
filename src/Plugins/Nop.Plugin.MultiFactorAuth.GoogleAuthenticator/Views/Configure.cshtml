@@ -8,10 +8,13 @@
 
 <form asp-controller="GoogleAuthenticator" asp-action="Configure" method="post">    
     <selection class="content">
-        <dv class="container-fluid">
+        <div class="container-fluid">
             <div class="card card-default">
                 <div class="card-body">
-                    @Html.Raw(string.Format(T("Plugins.MultiFactorAuth.GoogleAuthenticator.Instructions").Text, webHelper.GetStoreLocation()))
+                    <p>
+                        @Html.Raw(string.Format(T("Plugins.MultiFactorAuth.GoogleAuthenticator.Instructions").Text, webHelper.GetStoreLocation()))
+                    </p>
+                    <hr/>
                     <div class="form-group row">                    
                         <div class="col-md-3">
                             <nop-label asp-for="BusinessPrefix" />
@@ -99,5 +102,6 @@
                     })
                 </div>
             </div>
+        </div>
     </selection>
 </form>

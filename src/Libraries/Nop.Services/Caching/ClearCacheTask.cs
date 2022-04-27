@@ -1,5 +1,5 @@
 ﻿using Nop.Core.Caching;
-using Nop.Services.Tasks;
+using Nop.Services.ScheduleTasks;
 
 namespace Nop.Services.Caching
 {

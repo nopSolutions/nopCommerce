@@ -4,21 +4,22 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Settings.Forums").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Forums settings");
+    NopHtml.SetActiveMenuItemSystemName("Forums settings");
 }
 
 @{
     const string hideCommonBlockAttributeName = "ForumSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 
     const string hidePermissionsBlockAttributeName = "ForumSettingsPage.HidePermissionsBlock";
-    var hidePermissionsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePermissionsBlockAttributeName);
+    var hidePermissionsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePermissionsBlockAttributeName);
 
     const string hidePageSizesBlockAttributeName = "ForumSettingsPage.HidePageSizesBlock";
-    var hidePageSizesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePageSizesBlockAttributeName);
+    var hidePageSizesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePageSizesBlockAttributeName);
 
     const string hideFeedsBlockAttributeName = "ForumSettingsPage.HideFeedsBlock";
-    var hideFeedsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideFeedsBlockAttributeName);
+    var hideFeedsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideFeedsBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Forum" method="post">
@@ -31,7 +32,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumSettingsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumSettingsButtons, additionalData = Model })
         </div>
     </div>
 
@@ -50,57 +51,6 @@
 
                     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumSettingsDetailsBlock, additionalData = Model })
                 </nop-cards>
-
-                <script>
-                $(document).ready(function () {
-                    $("#@Html.IdFor(model => model.AllowPostVoting)").click(toggleAllowVoting);
-                    $("#@Html.IdFor(model => model.AllowPrivateMessages)").click(toggleAllowPrivateMessages);
-                    $("#@Html.IdFor(model => model.ForumFeedsEnabled)").click(toggleForumFeedsEnabled);
-                    $("#@Html.IdFor(model => model.ActiveDiscussionsFeedEnabled)").click(toggleActiveDiscussionsFeedEnabled);
-                    toggleAllowVoting();
-                    toggleAllowPrivateMessages();
-                    toggleForumFeedsEnabled();
-                    toggleActiveDiscussionsFeedEnabled();
-                });
-
-                function toggleAllowVoting() {
-                    if ($('#@Html.IdFor(model => model.AllowPostVoting)').is(':checked')) {
-                        $('#pnlMaxVotes').showElement();
-                    }
-                    else {
-                        $('#pnlMaxVotes').hideElement();
-                    }
-                }
-
-                function toggleAllowPrivateMessages() {
-                    if ($('#@Html.IdFor(model => model.AllowPrivateMessages)').is(':checked')) {
-                        $('#pnlShowAlertForPM').showElement();
-                        $('#pnlNotifyAboutPrivateMessages').showElement();
-                    }
-                    else {
-                        $('#pnlShowAlertForPM').hideElement();
-                        $('#pnlNotifyAboutPrivateMessages').hideElement();
-                    }
-                }
-
-                function toggleForumFeedsEnabled() {
-                    if ($('#@Html.IdFor(model => model.ForumFeedsEnabled)').is(':checked')) {
-                        $('#pnlForumFeedCount').showElement();
-                    }
-                    else {
-                        $('#pnlForumFeedCount').hideElement();
-                    }
-                }
-
-                function toggleActiveDiscussionsFeedEnabled() {
-                    if ($('#@Html.IdFor(model => model.ActiveDiscussionsFeedEnabled)').is(':checked')) {
-                        $('#pnlActiveDiscussionsFeedCount').showElement();
-                    }
-                    else {
-                        $('#pnlActiveDiscussionsFeedCount').hideElement();
-                    }
-                }
-            </script>
         </div>
     </div>
 </form>

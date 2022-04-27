@@ -6,7 +6,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Tax.Categories").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Tax categories");
+    NopHtml.SetActiveMenuItemSystemName("Tax categories");
 }
 
 <form asp-controller="AvalaraTax" asp-action="Categories" method="post">
@@ -53,7 +53,7 @@
         <div class="container-fluid">
             <div class="form-horizontal">
                 <div class="cards-group">
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxCategoryListButtons })
+                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxCategoryListButtons, additionalData = Model })
                     <div class="card card-default">
                         <div class="card-body">
                             @await Html.PartialAsync("Table", new DataTablesModel
@@ -151,23 +151,23 @@
                                         $('#addTaxCategory').click(function () {
                                             $('#addTaxCategory').attr('disabled', true);
                                             var postData = {
-                                                Name: $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val(),
-                                                DisplayOrder: $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").val(),
-                                                TypeId: $("#@Html.IdFor(model => model.AddTaxCategory.TypeId)").val()
+                                                Name: $('#@Html.IdFor(model => model.AddTaxCategory.Name)').val(),
+                                                DisplayOrder: $('#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)').val(),
+                                                TypeId: $('#@Html.IdFor(model => model.AddTaxCategory.TypeId)').val()
                                             };
                                             addAntiForgeryToken(postData);
 
                                             $.ajax({
                                                 cache: false,
-                                                type: "POST",
-                                                url: "@Html.Raw(Url.Action("TaxCategoryAdd", "AvalaraTax", null))",
+                                                type: 'POST',
+                                                url: '@Html.Raw(Url.Action("TaxCategoryAdd", "AvalaraTax", null))',
                                                 data: postData,
                                                 success: function (data, textStatus, jqXHR) {
                                                     if (data.Result) {
                                                         updateTable('#tax-categories-grid');
-                                                        $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val('');
-                                                        $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").data("kendoNumericTextBox").value(0);
-                                                        $("#@Html.IdFor(model => model.AddTaxCategory.TypeId)").val('');
+                                                        $('#@Html.IdFor(model => model.AddTaxCategory.Name)').val('');
+                                                        $('#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)').data('kendoNumericTextBox').value(0);
+                                                        $('#@Html.IdFor(model => model.AddTaxCategory.TypeId)').val('');
                                                     } else {
                                                         display_nop_error(data);
                                                     }

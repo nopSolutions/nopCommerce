@@ -5,13 +5,12 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Security;
-using Nop.Services.Tasks;
+using Nop.Services.ScheduleTasks;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Task = Nop.Services.Tasks.Task;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -25,6 +24,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IScheduleTaskModelFactory _scheduleTaskModelFactory;
         private readonly IScheduleTaskService _scheduleTaskService;
+        private readonly IScheduleTaskRunner _taskRunner;
 
         #endregion
 
@@ -35,7 +35,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService,
             IScheduleTaskModelFactory scheduleTaskModelFactory,
-            IScheduleTaskService scheduleTaskService)
+            IScheduleTaskService scheduleTaskService,
+            IScheduleTaskRunner taskRunner)
         {
             _customerActivityService = customerActivityService;
             _localizationService = localizationService;
@@ -43,6 +44,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _permissionService = permissionService;
             _scheduleTaskModelFactory = scheduleTaskModelFactory;
             _scheduleTaskService = scheduleTaskService;
+            _taskRunner = taskRunner;
         }
 
         #endregion
@@ -96,8 +98,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             if (!ModelState.IsValid)
-                return ErrorJson(ModelState.SerializeErrors());            
+                return ErrorJson(ModelState.SerializeErrors());
 
+            if(!scheduleTask.Enabled && model.Enabled)
+                scheduleTask.LastEnabledUtc = DateTime.UtcNow;
+            
             scheduleTask = model.ToEntity(scheduleTask);
 
             await _scheduleTaskService.UpdateTaskAsync(scheduleTask);
@@ -120,9 +125,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var scheduleTask = await _scheduleTaskService.GetTaskByIdAsync(id)
                                    ?? throw new ArgumentException("Schedule task cannot be loaded", nameof(id));
 
-                //ensure that the task is enabled
-                var task = new Task(scheduleTask) { Enabled = true };
-                await task.ExecuteAsync(true, false);
+                await _taskRunner.ExecuteAsync(scheduleTask, true, true, false);
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.ScheduleTasks.RunNow.Done"));
             }

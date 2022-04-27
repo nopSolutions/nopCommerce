@@ -3,7 +3,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Address.AddressAttributes.AddNew").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Customer and user settings");
+    NopHtml.SetActiveMenuItemSystemName("Customer and user settings");
 }
 
 <form asp-controller="AddressAttribute" asp-action="Create" method="post" id="addressattribute-form">
@@ -24,7 +24,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AddressAttributeDetailsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AddressAttributeDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

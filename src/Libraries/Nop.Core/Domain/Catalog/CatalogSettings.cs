@@ -531,6 +531,11 @@ namespace Nop.Core.Domain.Catalog
         public bool EnablePriceRangeFiltering { get; set; }
 
         /// <summary>
+        /// Get or set a value indicating whether the specification attribute filtering is enabled on catalog pages
+        /// </summary>
+        public bool EnableSpecificationAttributeFiltering { get; set; }
+
+        /// <summary>
         /// Gets or sets the attribute value display type when out of stock
         /// </summary>
         public AttributeValueOutOfStockDisplayType AttributeValueOutOfStockDisplayType { get; set; }

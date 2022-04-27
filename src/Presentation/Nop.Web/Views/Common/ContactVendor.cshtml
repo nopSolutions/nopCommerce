@@ -3,16 +3,16 @@
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.ContactVendor", Model.VendorName).Text);
+    NopHtml.AddTitleParts(T("PageTitle.ContactVendor", Model.VendorName).Text);
     //page class
-    Html.AppendPageCssClassParts("html-contact-page");
+    NopHtml.AppendPageCssClassParts("html-contact-page");
 }
 <div class="page contact-page">
     <div class="page-title">
         <h1>@T("PageTitle.ContactVendor", Model.VendorName)</h1>
     </div>
     <div class="page-body">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContactVendorTop })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContactVendorTop, additionalData = Model })
         @if (Model.SuccessfullySent)
         {
             <div class="result">
@@ -63,6 +63,6 @@
                 </div>
             </form>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContactVendorBottom })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContactVendorBottom, additionalData = Model })
     </div>
 </div>

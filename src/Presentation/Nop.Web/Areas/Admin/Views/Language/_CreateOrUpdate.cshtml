@@ -2,10 +2,11 @@
 
 @{
     const string hideInfoBlockAttributeName = "LanguagePage.HideInfoBlock";
-    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
 
     const string hideResourcesBlockAttributeName = "LanguagePage.HideResourcesBlock";
-    var hideResourcesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideResourcesBlockAttributeName, defaultValue: true);
+    var hideResourcesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideResourcesBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

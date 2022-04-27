@@ -4,21 +4,22 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Settings.Shipping").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Shipping settings");
+    NopHtml.SetActiveMenuItemSystemName("Shipping settings");
 }
 
 @{
     const string hideCommonBlockAttributeName = "ShippingSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 
     const string hideNotificationsBlockAttributeName = "ShippingSettingsPage.HideNotificationsBlock";
-    var hideNotificationsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideNotificationsBlockAttributeName);
+    var hideNotificationsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideNotificationsBlockAttributeName);
 
     const string hideCheckoutBlockAttributeName = "ShippingSettingsPage.HideCheckoutBlock";
-    var hideCheckoutBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCheckoutBlockAttributeName);
+    var hideCheckoutBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCheckoutBlockAttributeName);
 
     const string hideShippingOriginBlockAttributeName = "ShippingSettingsPage.HideShippingOriginBlock";
-    var hideShippingOriginBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideShippingOriginBlockAttributeName);
+    var hideShippingOriginBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideShippingOriginBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Shipping" method="post">
@@ -31,7 +32,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingSettingsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingSettingsButtons, additionalData = Model })
         </div>
     </div>
 

@@ -287,7 +287,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         {
             var model = await _commonModelFactory.PrepareRobotsTextFileAsync();
             model.Should().NotBeNullOrEmpty();
-            model.Trim().Split("\r\n").Length.Should().Be(73);
+            model.Trim().Split("\r\n").Length.Should().Be(74);
         }
     }
 }

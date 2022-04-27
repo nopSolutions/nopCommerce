@@ -9,7 +9,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.CurrentCarts.CartsAndWishlists").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Current shopping carts and wishlists");
+    NopHtml.SetActiveMenuItemSystemName("Current shopping carts and wishlists");
 }
 
 @{
@@ -23,7 +23,7 @@
     </h1>
     <div class="float-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrentShoppingCartListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrentShoppingCartListButtons, additionalData = Model })
     </div>
 </div>
 

@@ -28,7 +28,7 @@
                 <span asp-validation-for="ConditionModel.EnableCondition"></span>
             </div>
         </div>
-        <nop-nested-setting asp-for="ConditionModel.EnableCondition" id="pnlAttributes">
+        <nop-nested-setting asp-for="ConditionModel.EnableCondition" id="pnlAttributes" disable-auto-generation="true">
             @if (Model.ConditionModel.ConditionAttributes.Count > 0)
             {
                 <div class="form-group row">

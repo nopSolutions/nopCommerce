@@ -77,7 +77,7 @@
             }
         }
     })
-    <script>
+    <script asp-location="Footer">
         function renderColumnOrderInfo(data, type, row, meta) {
             if (row.OrderId > 0) {
                 var textRenderer = $.fn.dataTable.render.text().display;

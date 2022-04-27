@@ -18,7 +18,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <summary>
         /// Key for caching all records
         /// </summary>
-        private readonly CacheKey _shippingByWeightByTotalAllKey = new CacheKey("Nop.shippingbyweightbytotal.all", SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
+        private readonly CacheKey _shippingByWeightByTotalAllKey = new("Nop.shippingbyweightbytotal.all", SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
         private const string SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY = "Nop.shippingbyweightbytotal.";
 
         #endregion

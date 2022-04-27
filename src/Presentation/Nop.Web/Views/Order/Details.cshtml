@@ -9,9 +9,9 @@
         Layout = "_Print";
     }
     //title
-    Html.AddTitleParts(T("PageTitle.OrderDetails").Text);
+    NopHtml.AddTitleParts(T("PageTitle.OrderDetails").Text);
     //page class
-    Html.AppendPageCssClassParts("html-order-details-page");
+    NopHtml.AppendPageCssClassParts("html-order-details-page");
 }
 @if (Model.PrintMode)
 {
@@ -171,6 +171,7 @@
                                 </li>
                             }
                         }
+                        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsBillingAddress, additionalData = Model })
                     </ul>
                 </div>
                 @if (!string.IsNullOrEmpty(Model.PaymentMethod))
@@ -312,6 +313,7 @@
                                         @Html.Raw(Model.ShippingAddress.FormattedCustomAddressAttributes)
                                     </li>
                                 }
+                                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsShippingAddress, additionalData = Model })
                             }
                             else
                             {
@@ -421,9 +423,18 @@
                                 <th class="tracking-number">
                                     @T("Order.Shipments.TrackingNumber")
                                 </th>
-                                <th class="shipping-date">
-                                    @T("Order.Shipments.ShippedDate")
-                                </th>
+                                @if (Model.PickupInStore)
+                                {
+                                    <th class="ready-for-pickup-date">
+                                        @T("Order.Shipments.ReadyForPickupDate")
+                                    </th>
+                                }
+                                else
+                                {
+                                    <th class="shipping-date">
+                                        @T("Order.Shipments.ShippedDate")
+                                    </th>
+                                }
                                 <th class="delivery-date">
                                     @T("Order.Shipments.DeliveryDate")
                                 </th>
@@ -444,17 +455,34 @@
                                         <label>@T("Order.Shipments.TrackingNumber"):</label>
                                         @item.TrackingNumber
                                     </td>
-                                    <td class="shipped-date">
-                                        <label>@T("Order.Shipments.ShippedDate"):</label>
-                                        @if (item.ShippedDate.HasValue)
-                                        {
-                                            <span>@item.ShippedDate.Value.ToString("D")</span>
-                                        }
-                                        else
-                                        {
-                                            <span>@T("Order.Shipments.ShippedDate.NotYet")</span>
-                                        }
-                                    </td>
+                                    @if (Model.PickupInStore)
+                                    {
+                                        <td class="ready-for-pickup-date">
+                                            <label>@T("Order.Shipments.ReadyForPickupDate"):</label>
+                                            @if (item.ReadyForPickupDate.HasValue)
+                                            {
+                                                <span>@item.ReadyForPickupDate.Value.ToString("D")</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@T("Order.Shipments.ReadyForPickupDate.NotYet")</span>
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="shipped-date">
+                                            <label>@T("Order.Shipments.ShippedDate"):</label>
+                                            @if (item.ShippedDate.HasValue)
+                                            {
+                                                <span>@item.ShippedDate.Value.ToString("D")</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@T("Order.Shipments.ShippedDate.NotYet")</span>
+                                            }
+                                        </td>
+                                    }
                                     <td class="delivery-date">
                                         <label>@T("Order.Shipments.DeliveryDate"):</label>
                                         @if (item.DeliveryDate.HasValue)

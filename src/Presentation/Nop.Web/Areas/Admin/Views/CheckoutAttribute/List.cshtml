@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Attributes.CheckoutAttributes").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Checkout attributes");
+    NopHtml.SetActiveMenuItemSystemName("Checkout attributes");
 }
 
 <div class="content-header clearfix">
@@ -16,7 +16,7 @@
             <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeListButtons, additionalData = Model })
         <button type="button" id="delete-selected" class="btn btn-danger">
             <i class="far fa-trash-alt"></i>
             @T("Admin.Common.Delete.Selected")
@@ -95,10 +95,14 @@
                                 url: "@(Url.Action("DeleteSelected", "CheckoutAttribute"))",
                                 data: postData,
                                 error: function (jqXHR, textStatus, errorThrown) {
-                                    $('#deleteSelectedFailed-info').text(errorThrown);
-                                    $('#deleteSelectedFailed').click();
+                                    showAlert('deleteSelectedFailed', errorThrown);
                                 },
                                 complete: function (jqXHR, textStatus) {
+                                    if (jqXHR.status === 204)
+                                    {
+                                        showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                        return;
+                                    }
                                     updateTable('#checkoutattributes-grid');
                                 }
                             });
@@ -108,6 +112,7 @@
                     });
                         </script>
                         <nop-alert asp-alert-id="deleteSelectedFailed" />
+                        <nop-alert asp-alert-id="nothingSelectedAlert" />
                     </div>
                 </div>
             </div>
