@@ -47,7 +47,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         {
             try
             {
-                var dataSettings = await DataSettingsManager.LoadSettingsAsync();
+                var dataSettings = DataSettingsManager.LoadSettings();
                 var currentStore = await _storeContext.GetCurrentStoreAsync();
                 var currentCustomer = await _workContext.GetCurrentCustomerAsync();
 

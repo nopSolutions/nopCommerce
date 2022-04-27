@@ -51,7 +51,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProducts(int page = 1, int pageSize = 100, string minModifiedDateStr = null, string maxModifiedDateStr = null)
         {
-            var dataSettings = await DataSettingsManager.LoadSettingsAsync();
+            var dataSettings = DataSettingsManager.LoadSettings();
             var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
 
             var store = await PolyCommerceHelper.GetPolyCommerceStoreByToken(storeToken);
