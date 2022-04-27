@@ -15,6 +15,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
+using Nop.Web.Framework.Events;
 
 namespace Nop.Web.Framework.Mvc.Routing
 {
@@ -237,6 +238,12 @@ namespace Nop.Web.Framework.Mvc.Routing
                 return values;
 
             if (!values.TryGetValue(SeName, out var slug) || await _urlRecordService.GetBySlugAsync(slug.ToString()) is not UrlRecord urlRecord)
+                return values;
+
+            //give the ability to transform values to third-party handlers
+            var routingEvent = new GenericRoutingEvent(httpContext, values, urlRecord);
+            await _eventPublisher.PublishAsync(routingEvent);
+            if (routingEvent.Handled)
                 return values;
 
             if (values.TryGetValue(CategorySeName, out var catalogPathValue) && catalogPathValue is string catalogPath)
