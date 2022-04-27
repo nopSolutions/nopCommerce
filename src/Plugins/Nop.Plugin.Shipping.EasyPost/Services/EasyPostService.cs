@@ -417,12 +417,16 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 options.currency = EasyPostDefaults.CurrencyCode;
 
             //create shipment
-            var shipment = await Shipment.Create();
-            shipment.to_address = addressTo;
-            shipment.from_address = addressFrom;
-            shipment.parcel = parcel;
-            shipment.customs_info = customsInfo;
-            shipment.options = options;
+            var shipmentParameters = new Dictionary<string, object>()
+            {
+                { "to_address", addressTo },
+                { "from_address", addressFrom },
+                { "parcel", parcel },
+                { "customs_info", customsInfo },
+                { "options", options },
+            };
+
+            var shipment = await Shipment.Create(shipmentParameters);
 
             if (!_easyPostSettings.UseSandbox && !_easyPostSettings.UseAllAvailableCarriers)
                 shipment.carrier_accounts = _easyPostSettings.CarrierAccounts?.Select(value => new CarrierAccount { id = value }).ToList();
