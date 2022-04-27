@@ -46,6 +46,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IProductAttributeService _productAttributeService;
+        private readonly IAddressService _addressService;
 
         public OrdersController(IRepository<Order> orderRepository,
             ICustomerActivityService customerActivityService,
@@ -63,6 +64,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             IOrderService orderService,
             CurrencySettings currencySettings,
             IProductService productService,
+            IAddressService addressService,
             IRepository<Product> productRepository,
             IProductAttributeService productAttributeService)
         {
@@ -84,6 +86,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             _currencyService = currencyService;
             _currencySettings = currencySettings;
             _productAttributeService = productAttributeService;
+            _addressService = addressService;
         }
 
         [HttpGet]
@@ -188,6 +191,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     Company = model.Address.Company,
                     ZipPostalCode = model.Address.ZipPostalCode
                 };
+
+                await _addressService.InsertAddressAsync(shippingAddress);
 
                 await _customerService.InsertCustomerAddressAsync(customer, shippingAddress);
 

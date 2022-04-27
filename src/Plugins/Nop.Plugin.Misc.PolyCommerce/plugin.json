@@ -2,7 +2,7 @@
   "Group": "Misc",
   "FriendlyName": "PolyCommerce",
   "SystemName": "Misc.PolyCommerce",
-  "Version": "1.09",
+  "Version": "1.10",
   "SupportedVersions": [ "4.20", "4.40" ],
   "Author": "PolyCommerce Team",
   "DisplayOrder": 1,
