@@ -11,6 +11,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -45,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
         private readonly IEncryptionService _encryptionService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IExportManager _exportManager;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
@@ -78,6 +80,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
             IEncryptionService encryptionService,
+            IEventPublisher eventPublisher,
             IExportManager exportManager,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
@@ -107,6 +110,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _dateTimeHelper = dateTimeHelper;
             _downloadService = downloadService;
             _encryptionService = encryptionService;
+            _eventPublisher = eventPublisher;
             _exportManager = exportManager;
             _giftCardService = giftCardService;
             _localizationService = localizationService;
@@ -139,17 +143,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             return order != null && await HasAccessToOrderAsync(order.Id);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<bool> HasAccessToOrderAsync(int orderId)
         {
             if (orderId == 0)
                 return false;
 
-            if (await _workContext.GetCurrentVendorAsync() == null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor == null)
                 //not a vendor; has access
                 return true;
 
-            var vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var vendorId = currentVendor.Id;
             var hasVendorProducts = (await _orderService.GetOrderItemsAsync(orderId, vendorId: vendorId)).Any();
 
             return hasVendorProducts;
@@ -160,11 +164,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (orderItem == null || orderItem.ProductId == 0)
                 return false;
 
-            if (await _workContext.GetCurrentVendorAsync() == null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor == null)
                 //not a vendor; has access
                 return true;
 
-            var vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var vendorId = currentVendor.Id;
 
             return (await _productService.GetProductByIdAsync(orderItem.ProductId))?.VendorId == vendorId;
         }
@@ -181,7 +186,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return await HasAccessToOrderAsync(shipment.OrderId);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task LogEditOrderAsync(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
@@ -269,9 +273,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
-                model.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                model.VendorId = currentVendor.Id;
             }
 
             var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
@@ -286,7 +291,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var filterByProductId = 0;
             var product = await _productService.GetProductByIdAsync(model.ProductId);
-            if (product != null && (await _workContext.GetCurrentVendorAsync() == null || product.VendorId == (await _workContext.GetCurrentVendorAsync()).Id))
+            if (product != null && (currentVendor == null || product.VendorId == currentVendor.Id))
                 filterByProductId = model.ProductId;
 
             //load orders
@@ -368,9 +373,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
-                model.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                model.VendorId = currentVendor.Id;
             }
 
             var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
@@ -385,7 +391,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var filterByProductId = 0;
             var product = await _productService.GetProductByIdAsync(model.ProductId);
-            if (product != null && (await _workContext.GetCurrentVendorAsync() == null || product.VendorId == (await _workContext.GetCurrentVendorAsync()).Id))
+            if (product != null && (currentVendor == null || product.VendorId == currentVendor.Id))
                 filterByProductId = model.ProductId;
 
             //load orders
@@ -903,10 +909,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //a vendor should have access only to his products
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
             var vendorId = 0;
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            if (currentVendor != null)
             {
-                vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                vendorId = currentVendor.Id;
             }
 
             var order = await _orderService.GetOrderByIdAsync(orderId);
@@ -922,7 +929,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 bytes = stream.ToArray();
             }
 
-            return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.Id}.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.CustomOrderNumber}.pdf");
         }
 
         [HttpPost, ActionName("PdfInvoice")]
@@ -933,9 +940,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
             {
-                model.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                model.VendorId = currentVendor.Id;
             }
 
             var startDateValue = model.StartDate == null ? null
@@ -956,7 +964,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var filterByProductId = 0;
             var product = await _productService.GetProductByIdAsync(model.ProductId);
-            if (product != null && (await _workContext.GetCurrentVendorAsync() == null || product.VendorId == (await _workContext.GetCurrentVendorAsync()).Id))
+            if (product != null && (currentVendor == null || product.VendorId == currentVendor.Id))
                 filterByProductId = model.ProductId;
 
             //load orders
@@ -1018,11 +1026,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //a vendor should have access only to his products
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
             var vendorId = 0;
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            if (currentVendor != null)
             {
                 orders = await orders.WhereAwait(HasAccessToOrderAsync).ToListAsync();
-                vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+                vendorId = currentVendor.Id;
             }
 
             try
@@ -1665,11 +1674,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No customer found with the specified id");
 
             //basic properties
-            decimal.TryParse(form["UnitPriceInclTax"], out var unitPriceInclTax);
-            decimal.TryParse(form["UnitPriceExclTax"], out var unitPriceExclTax);
-            int.TryParse(form["Quantity"], out var quantity);
-            decimal.TryParse(form["SubTotalInclTax"], out var priceInclTax);
-            decimal.TryParse(form["SubTotalExclTax"], out var priceExclTax);
+            _ = decimal.TryParse(form["UnitPriceInclTax"], out var unitPriceInclTax);
+            _ = decimal.TryParse(form["UnitPriceExclTax"], out var unitPriceExclTax);
+            _ = int.TryParse(form["Quantity"], out var quantity);
+            _ = decimal.TryParse(form["SubTotalInclTax"], out var priceInclTax);
+            _ = decimal.TryParse(form["SubTotalExclTax"], out var priceExclTax);
 
             //warnings
             var warnings = new List<string>();
@@ -1933,7 +1942,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No shipment found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && !await HasAccessToShipmentAsync(shipment))
                 return Content(string.Empty);
 
             //try to get an order with the specified id
@@ -1941,7 +1951,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No order found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToOrderAsync(order))
+            if (currentVendor != null && !await HasAccessToOrderAsync(order))
                 return Content(string.Empty);
 
             //prepare model
@@ -1984,12 +1994,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToOrderAsync(order))
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && !await HasAccessToOrderAsync(order))
                 return RedirectToAction("List");
 
             var orderItems = await _orderService.GetOrderItemsAsync(order.Id, isShipEnabled: true);
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
+            if (currentVendor != null)
             {
                 orderItems = await orderItems.WhereAwait(HasAccessToProductAsync).ToListAsync();
             }
@@ -2020,7 +2031,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var formKey in form.Keys)
                     if (formKey.Equals($"qtyToAdd{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int.TryParse(form[formKey], out qtyToAdd);
+                        _ = int.TryParse(form[formKey], out qtyToAdd);
                         break;
                     }
 
@@ -2033,7 +2044,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     foreach (var formKey in form.Keys)
                         if (formKey.Equals($"warehouse_{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            int.TryParse(form[formKey], out warehouseId);
+                            _ = int.TryParse(form[formKey], out warehouseId);
                             break;
                         }
                 }
@@ -2089,10 +2100,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                     CreatedOnUtc = DateTime.UtcNow
                 });
 
-                if (model.CanShip)
+                await _eventPublisher.PublishAsync(new ShipmentCreatedEvent(shipment));
+
+                var canShip = !order.PickupInStore && model.CanShip;
+                if (canShip)
                     await _orderProcessingService.ShipAsync(shipment, true);
 
-                if (model.CanShip && model.CanDeliver)
+                var canMarkAsReadyForPickup = order.PickupInStore && model.CanMarkAsReadyForPickup;
+                if (canMarkAsReadyForPickup)
+                    await _orderProcessingService.ReadyForPickupAsync(shipment, true);
+
+                if ((canShip || canMarkAsReadyForPickup) && model.CanDeliver)
                     await _orderProcessingService.DeliverAsync(shipment, true);
 
                 await LogEditOrderAsync(order.Id);
@@ -2284,6 +2302,68 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("setasreadyforpickup")]
+        public virtual async Task<IActionResult> SetAsReadyForPickup(int id)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //try to get a shipment with the specified id
+            var shipment = await _shipmentService.GetShipmentByIdAsync(id);
+            if (shipment == null)
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
+                return RedirectToAction("List");
+
+            try
+            {
+                await _orderProcessingService.ReadyForPickupAsync(shipment, true);
+                await LogEditOrderAsync(shipment.OrderId);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+            catch (Exception exc)
+            {
+                //error
+                await _notificationService.ErrorNotificationAsync(exc);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+        }
+
+        [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("savereadyforpickupdate")]
+        public virtual async Task<IActionResult> EditReadyForPickupDate(ShipmentModel model)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //try to get a shipment with the specified id
+            var shipment = await _shipmentService.GetShipmentByIdAsync(model.Id);
+            if (shipment == null)
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
+                return RedirectToAction("List");
+
+            try
+            {
+                if (!model.ReadyForPickupDateUtc.HasValue)
+                    throw new Exception("Enter ready for pickup date");
+
+                shipment.ReadyForPickupDateUtc = model.ReadyForPickupDateUtc;
+                await _shipmentService.UpdateShipmentAsync(shipment);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+            catch (Exception exc)
+            {
+                await _notificationService.ErrorNotificationAsync(exc);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+        }
+
+        [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("setasdelivered")]
         public virtual async Task<IActionResult> SetAsDelivered(int id)
         {
@@ -2391,9 +2471,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
             //a vendor should have access only to his products
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
             var vendorId = 0;
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            if (currentVendor != null)
+                vendorId = currentVendor.Id;
 
             //load shipments
             var shipments = await _shipmentService.GetAllShipmentsAsync(vendorId: vendorId,
@@ -2404,6 +2485,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 shippingCity: model.City,
                 trackingNumber: model.TrackingNumber,
                 loadNotShipped: model.LoadNotShipped,
+                loadNotReadyForPickup: model.LoadNotReadyForPickup,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue);
 
@@ -2477,11 +2559,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var shipments = new List<Shipment>();
-            if (selectedIds != null)
-            {
-                shipments.AddRange(await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray()));
-            }
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
+
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
@@ -2504,16 +2586,48 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        public virtual async Task<IActionResult> SetAsReadyForPickupSelected(ICollection<int> selectedIds)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
+
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+
+            //a vendor should have access only to his products
+            if (await _workContext.GetCurrentVendorAsync() != null)
+            {
+                shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
+            }
+
+            foreach (var shipment in shipments)
+            {
+                try
+                {
+                    await _orderProcessingService.ReadyForPickupAsync(shipment, true);
+                }
+                catch
+                {
+                    //ignore any exception
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
+        [HttpPost]
         public virtual async Task<IActionResult> SetAsDeliveredSelected(ICollection<int> selectedIds)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var shipments = new List<Shipment>();
-            if (selectedIds != null)
-            {
-                shipments.AddRange(await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray()));
-            }
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
+
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {

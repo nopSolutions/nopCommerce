@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Manufacturers").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Manufacturers");
+    NopHtml.SetActiveMenuItemSystemName("Manufacturers");
 }
 
 @{
@@ -49,7 +49,7 @@
             <i class="fas fa-upload"></i>
             @T("Admin.Common.Import")
         </button>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerListButtons, additionalData = Model })
         <button type="button" id="delete-selected" class="btn btn-danger">
             <i class="far fa-trash-alt"></i>
             @T("Admin.Common.Delete.Selected")
@@ -178,10 +178,14 @@
                                     url: "@(Url.Action("DeleteSelected", "Manufacturer"))",
                                     data: postData,
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        $('#deleteSelectedFailed-info').text(errorThrown);
-                                        $('#deleteSelectedFailed').click();
+                                        showAlert('deleteSelectedFailed', errorThrown);
                                     },
                                     complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
                                         updateTable('#manufacturers-grid');
                                     }
                                 });
@@ -191,6 +195,7 @@
                         });
                     </script>
                     <nop-alert asp-alert-id="deleteSelectedFailed" />
+                    <nop-alert asp-alert-id="nothingSelectedAlert" />
                 </div>
             </div>
         </div>

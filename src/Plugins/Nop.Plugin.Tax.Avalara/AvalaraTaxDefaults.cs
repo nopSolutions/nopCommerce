@@ -24,9 +24,49 @@ namespace Nop.Plugin.Tax.Avalara
         public static string ApplicationVersion => $"v{NopVersion.CURRENT_VERSION}";
 
         /// <summary>
+        /// Gets the certificates script source URL
+        /// </summary>
+        public static string CertificatesScriptUrl => "https://app.certcapture.com/gencert2/js";
+
+        /// <summary>
+        /// Gets the certificates sandbox script source URL
+        /// </summary>
+        public static string CertificatesSandboxScriptUrl => "https://sbx.certcapture.com/gencert2/js";
+
+        /// <summary>
+        /// Gets the CertExpress default URL
+        /// </summary>
+        public static string CertExpressUrl => "https://app.certexpress.com/";
+
+        /// <summary>
         /// Gets the configuration route name
         /// </summary>
         public static string ConfigurationRouteName => "Plugin.Tax.Avalara.Configure";
+
+        /// <summary>
+        /// Gets the tax categories list route name
+        /// </summary>
+        public static string TaxCategoriesRouteName => "Plugin.Tax.Avalara.Tax.Categories";
+
+        /// <summary>
+        /// Gets the tax exemption certificates list route name
+        /// </summary>
+        public static string ExemptionCertificatesRouteName => "Plugin.Tax.Avalara.ExemptionCertificates";
+
+        /// <summary>
+        /// Gets the download exemption certificate route name
+        /// </summary>
+        public static string DownloadCertificateRouteName => "Plugin.Tax.Avalara.DownloadCertificate";
+
+        /// <summary>
+        /// Gets the class name of the tax exemption certificates menu item
+        /// </summary>
+        public static string ExemptionCertificatesMenuClassName => "exemption-certificates";
+
+        /// <summary>
+        /// Gets the tab id of the tax exemption certificates menu item
+        /// </summary>
+        public static int ExemptionCertificatesMenuTab => 420;
 
         /// <summary>
         /// Gets the name of the generic attribute that is used to store Avalara system tax code description
@@ -44,6 +84,14 @@ namespace Nop.Plugin.Tax.Avalara
         public static string EntityUseCodeAttribute => "AvalaraEntityUseCode";
 
         /// <summary>
+        /// Gets the key for caching tax rate by zip code
+        /// </summary>
+        /// <remarks>
+        /// {0} - Zip postal code
+        /// </remarks>
+        public static CacheKey TaxRateByZipCacheKey => new("Nop.avalara.taxratebyzip.{0}");
+
+        /// <summary>
         /// Gets the key for caching tax rate
         /// </summary>
         /// <remarks>
@@ -55,7 +103,7 @@ namespace Nop.Plugin.Tax.Avalara
         /// {5} - Country identifier
         /// {6} - Zip postal code
         /// </remarks>
-        public static CacheKey TaxRateCacheKey => new CacheKey("Nop.avalara.taxrate.{0}-{1}-{2}-{3}-{4}-{5}-{6}", TaxRateCacheKeyByCustomerPrefix);
+        public static CacheKey TaxRateCacheKey => new("Nop.avalara.taxrate.{0}-{1}-{2}-{3}-{4}-{5}-{6}", TaxRateCacheKeyByCustomerPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -68,12 +116,23 @@ namespace Nop.Plugin.Tax.Avalara
         /// <summary>
         /// Gets the key for caching Avalara tax code types
         /// </summary>
-        public static CacheKey TaxCodeTypesCacheKey => new CacheKey("Nop.avalara.taxcodetypes");
+        public static CacheKey TaxCodeTypesCacheKey => new("Nop.avalara.taxcodetypes");
 
         /// <summary>
         /// Gets the key for caching Avalara system entity use codes
         /// </summary>
-        public static CacheKey EntityUseCodesCacheKey => new CacheKey("Nop.avalara.entityusecodes");
+        public static CacheKey EntityUseCodesCacheKey => new("Nop.avalara.entityusecodes");
+
+        /// <summary>
+        /// Gets the path to file that contains tax rates
+        /// </summary>
+        public static string TaxRatesFilePath => "wwwroot/files/taxrates.csv";
+
+        /// <summary>
+        /// Gets the name, type and period in days of a schedule task to download tax rates
+        /// </summary>
+        public static (string Name, string Type, int Days) DownloadTaxRatesTask =>
+            ($"Download tax rates ({SystemName})", "Nop.Plugin.Tax.Avalara.Services.DownloadTaxRatesTask", 7);
 
         /// <summary>
         /// Gets the name of the view component to display entity use code field
@@ -89,6 +148,11 @@ namespace Nop.Plugin.Tax.Avalara
         /// Gets the name of the view component to validate entered address
         /// </summary>
         public const string ADDRESS_VALIDATION_VIEW_COMPONENT_NAME = "AvalaraAddressValidation";
+
+        /// <summary>
+        /// Gets the name of the view component to display applied certificate
+        /// </summary>
+        public const string APPLIED_CERTIFICATE_VIEW_COMPONENT_NAME = "AvalaraAppliedCertificate";
 
         /// <summary>
         /// Gets the generic attribute name to hide general settings block on the plugin configuration page

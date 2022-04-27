@@ -35,6 +35,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Fields
 
             private readonly ICustomerService _customerService;
+            private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
 
             #endregion
@@ -42,9 +43,11 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Ctor
 
             public ValidatePasswordFilter(ICustomerService customerService,
+                IWebHelper webHelper,
                 IWorkContext workContext)
             {
                 _customerService = customerService;
+                _webHelper = webHelper;
                 _workContext = workContext;
             }
 
@@ -65,7 +68,11 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context.HttpContext.Request == null)
                     return;
 
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                //ignore AJAX requests
+                if (_webHelper.IsAjaxRequest(context.HttpContext.Request))
+                    return;
+
+                if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
                 //get action and controller names
@@ -83,11 +90,12 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //check password expiration
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                if (!await _customerService.PasswordIsExpiredAsync(customer))
+                if (!await _customerService.IsPasswordExpiredAsync(customer))
                     return;
 
+                var returnUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
                 //redirect to ChangePassword page if expires
-                context.Result = new RedirectToRouteResult("CustomerChangePassword", null);
+                context.Result = new RedirectToRouteResult("CustomerChangePassword", new { returnUrl = returnUrl });
             }
 
             #endregion

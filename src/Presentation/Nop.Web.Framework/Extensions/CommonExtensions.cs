@@ -39,7 +39,7 @@ namespace Nop.Web.Framework.Extensions
             var ts = new TimeSpan(DateTime.UtcNow.Ticks - source.Ticks);
             var delta = ts.TotalSeconds;
 
-            CultureInfo culture = null;
+            CultureInfo culture;
             try
             {
                 culture = new CultureInfo(languageCode);

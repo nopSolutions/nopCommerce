@@ -54,7 +54,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(ProductAttribute productAttribute, ProductAttributeModel model)
         {
             foreach (var localized in model.Locales)
@@ -71,7 +70,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(PredefinedProductAttributeValue ppav, PredefinedProductAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
@@ -240,16 +238,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
-            {
-                var productAttributes = await _productAttributeService.GetProductAttributeByIdsAsync(selectedIds.ToArray());
-                await _productAttributeService.DeleteProductAttributesAsync(productAttributes);
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
 
-                foreach (var productAttribute in productAttributes)
-                {
-                    await _customerActivityService.InsertActivityAsync("DeleteProductAttribute",
-                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteProductAttribute"), productAttribute.Name), productAttribute);
-                }
+            var productAttributes = await _productAttributeService.GetProductAttributeByIdsAsync(selectedIds.ToArray());
+            await _productAttributeService.DeleteProductAttributesAsync(productAttributes);
+
+            foreach (var productAttribute in productAttributes)
+            {
+                await _customerActivityService.InsertActivityAsync("DeleteProductAttribute",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteProductAttribute"), productAttribute.Name), productAttribute);
             }
 
             return Json(new { Result = true });

@@ -18,12 +18,12 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
-using Nop.Core.Html;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
@@ -50,6 +50,7 @@ namespace Nop.Services.Common
         private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGiftCardService _giftCardService;
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IMeasureService _measureService;
@@ -86,6 +87,7 @@ namespace Nop.Services.Common
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
             IGiftCardService giftCardService,
+            IHtmlFormatter htmlFormatter,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IMeasureService measureService,
@@ -118,6 +120,7 @@ namespace Nop.Services.Common
             _currencyService = currencyService;
             _dateTimeHelper = dateTimeHelper;
             _giftCardService = giftCardService;
+            _htmlFormatter = htmlFormatter;
             _languageService = languageService;
             _localizationService = localizationService;
             _measureService = measureService;
@@ -411,7 +414,7 @@ namespace Nop.Services.Common
                 cellOrderNote.HorizontalAlignment = Element.ALIGN_LEFT;
                 notesTable.AddCell(cellOrderNote);
 
-                cellOrderNote = GetPdfCell(HtmlHelper.ConvertHtmlToPlainText(_orderService.FormatOrderNoteText(orderNote), true, true), font);
+                cellOrderNote = GetPdfCell(_htmlFormatter.ConvertHtmlToPlainText(_orderService.FormatOrderNoteText(orderNote), true, true), font);
                 cellOrderNote.HorizontalAlignment = Element.ALIGN_LEFT;
                 notesTable.AddCell(cellOrderNote);
 
@@ -707,7 +710,7 @@ namespace Nop.Services.Common
                 WidthPercentage = 100f
             };
 
-            var cCheckoutAttributes = GetPdfCell(HtmlHelper.ConvertHtmlToPlainText(order.CheckoutAttributeDescription, true, true), font);
+            var cCheckoutAttributes = GetPdfCell(_htmlFormatter.ConvertHtmlToPlainText(order.CheckoutAttributeDescription, true, true), font);
             cCheckoutAttributes.Border = Rectangle.NO_BORDER;
             cCheckoutAttributes.HorizontalAlignment = Element.ALIGN_RIGHT;
             attribTable.AddCell(cCheckoutAttributes);
@@ -818,7 +821,7 @@ namespace Nop.Services.Common
                 if (!string.IsNullOrEmpty(orderItem.AttributeDescription))
                 {
                     var attributesParagraph =
-                        new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true),
+                        new Paragraph(_htmlFormatter.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true),
                             attributesFont);
                     pAttribTable.AddCell(attributesParagraph);
                 }
@@ -1001,7 +1004,7 @@ namespace Nop.Services.Common
                         .FormatAttributesAsync(shippingAddress.CustomAttributes, $"<br />{indent}");
                     if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
-                        var text = HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true);
+                        var text = _htmlFormatter.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true);
                         shippingAddressPdf.AddCell(new Paragraph(indent + text, font));
                     }
 
@@ -1103,7 +1106,7 @@ namespace Nop.Services.Common
                 .FormatAttributesAsync(billingAddress.CustomAttributes, $"<br />{indent}");
             if (!string.IsNullOrEmpty(customBillingAddressAttributes))
             {
-                var text = HtmlHelper.ConvertHtmlToPlainText(customBillingAddressAttributes, true, true);
+                var text = _htmlFormatter.ConvertHtmlToPlainText(customBillingAddressAttributes, true, true);
                 billingAddressPdf.AddCell(new Paragraph(indent + text, font));
             }
 
@@ -1394,7 +1397,7 @@ namespace Nop.Services.Common
                     var customShippingAddressAttributes = await _addressAttributeFormatter.FormatAttributesAsync(shippingAddress.CustomAttributes);
                     if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
-                        addressTable.AddCell(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));
+                        addressTable.AddCell(new Paragraph(_htmlFormatter.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));
                     }
                 }
                 else
@@ -1474,7 +1477,7 @@ namespace Nop.Services.Common
                     //attributes
                     if (!string.IsNullOrEmpty(orderItem.AttributeDescription))
                     {
-                        var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
+                        var attributesParagraph = new Paragraph(_htmlFormatter.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
                         productAttribTable.AddCell(attributesParagraph);
                     }
 
@@ -1566,7 +1569,7 @@ namespace Nop.Services.Common
 
                 productTable.AddCell(new Paragraph($"{productNumber}. {productName}", titleFont));
                 productTable.AddCell(new Paragraph(" "));
-                productTable.AddCell(new Paragraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(productDescription, decode: true)), font));
+                productTable.AddCell(new Paragraph(_htmlFormatter.StripTags(_htmlFormatter.ConvertHtmlToPlainText(productDescription, decode: true)), font));
                 productTable.AddCell(new Paragraph(" "));
 
                 if (product.ProductType == ProductType.SimpleProduct)
@@ -1636,7 +1639,7 @@ namespace Nop.Services.Common
                         //string apDescription = associated_localizationService.GetLocalized(product, x => x.ShortDescription, lang.Id);
                         //if (!string.IsNullOrEmpty(apDescription))
                         //{
-                        //    productTable.AddCell(new Paragraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(apDescription)), font));
+                        //    productTable.AddCell(new Paragraph(_htmlHelper.StripTags(_htmlHelper.ConvertHtmlToPlainText(apDescription)), font));
                         //    productTable.AddCell(new Paragraph(" "));
                         //}
 

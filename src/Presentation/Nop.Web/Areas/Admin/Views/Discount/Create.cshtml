@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Promotions.Discounts.AddNew").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Discounts");
+    NopHtml.SetActiveMenuItemSystemName("Discounts");
 }
 
 <form asp-controller="Discount" asp-action="Create" method="post" id="discount-form">
@@ -25,7 +25,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

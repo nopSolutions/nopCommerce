@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using ClosedXML.Excel;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -15,6 +16,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
@@ -37,7 +39,6 @@ using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
-using OfficeOpenXml;
 
 namespace Nop.Services.ExportImport
 {
@@ -441,6 +442,11 @@ namespace Nop.Services.ExportImport
             {
                 new PropertyByName<ExportProductAttribute>("AttributeId", p => p.AttributeId),
                 new PropertyByName<ExportProductAttribute>("AttributeName", p => p.AttributeName),
+                new PropertyByName<ExportProductAttribute>("DefaultValue", p => p.DefaultValue),
+                new PropertyByName<ExportProductAttribute>("ValidationMinLength", p => p.ValidationMinLength),
+                new PropertyByName<ExportProductAttribute>("ValidationMaxLength", p => p.ValidationMaxLength),
+                new PropertyByName<ExportProductAttribute>("ValidationFileAllowedExtensions", p => p.ValidationFileAllowedExtensions),
+                new PropertyByName<ExportProductAttribute>("ValidationFileMaximumSize", p => p.ValidationFileMaximumSize),
                 new PropertyByName<ExportProductAttribute>("AttributeTextPrompt", p => p.AttributeTextPrompt),
                 new PropertyByName<ExportProductAttribute>("AttributeIsRequired", p => p.AttributeIsRequired),
                 new PropertyByName<ExportProductAttribute>("AttributeControlType", p => p.AttributeControlTypeId)
@@ -502,19 +508,20 @@ namespace Nop.Services.ExportImport
 
             await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(stream))
+            using (var workbook = new XLWorkbook())
             {
                 // uncomment this line if you want the XML written out to the outputDir
                 //xlPackage.DebugMode = true; 
 
                 // get handles to the worksheets
-                var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
-                var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
-                fpWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
-                var fbaWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductAttributesFilters");
-                fbaWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
-                var fsaWorksheet = xlPackage.Workbook.Worksheets.Add("DataForSpecificationAttributesFilters");
-                fsaWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                // Worksheet names cannot be more than 31 characters
+                var worksheet = workbook.Worksheets.Add(typeof(Product).Name);
+                var fpWorksheet = workbook.Worksheets.Add("ProductsFilters");
+                fpWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
+                var fbaWorksheet = workbook.Worksheets.Add("ProductAttributesFilters");
+                fbaWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
+                var fsaWorksheet = workbook.Worksheets.Add("SpecificationAttributesFilters");
+                fsaWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
 
                 //create Headers and format them 
                 var manager = new PropertyManager<Product>(properties, _catalogSettings);
@@ -533,21 +540,23 @@ namespace Nop.Services.ExportImport
                         row = await ExportSpecificationAttributesAsync(item, specificationAttributeManager, worksheet, row, fsaWorksheet);
                 }
 
-                xlPackage.Save();
+                workbook.SaveAs(stream);
             }
 
             return stream.ToArray();
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
+        private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute> attributeManager, IXLWorksheet worksheet, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(item.Id))
                 .SelectManyAwait(async pam =>
                 {
                     var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
 
-                    if (await _productAttributeService.GetProductAttributeValuesAsync(pam.Id) is IList<ProductAttributeValue> values)
+                    var values = await _productAttributeService.GetProductAttributeValuesAsync(pam.Id);
+
+                    if (values?.Any() ?? false)
                         return values.Select(pav =>
                             new ExportProductAttribute
                             {
@@ -574,35 +583,37 @@ namespace Nop.Services.ExportImport
                                 PictureId = pav.PictureId
                             });
 
+                    var attribute = new ExportProductAttribute
+                    {
+                        AttributeId = productAttribute.Id,
+                        AttributeName = productAttribute.Name,
+                        AttributeTextPrompt = pam.TextPrompt,
+                        AttributeIsRequired = pam.IsRequired,
+                        AttributeControlTypeId = pam.AttributeControlTypeId,
+                    };
+
+                    //validation rules
+                    if (!pam.ValidationRulesAllowed())
+                        return new List<ExportProductAttribute> {attribute};
+
+                    attribute.ValidationMinLength = pam.ValidationMinLength;
+                    attribute.ValidationMaxLength = pam.ValidationMaxLength;
+                    attribute.ValidationFileAllowedExtensions = pam.ValidationFileAllowedExtensions;
+                    attribute.ValidationFileMaximumSize = pam.ValidationFileMaximumSize;
+                    attribute.DefaultValue = pam.DefaultValue;
+
                     return new List<ExportProductAttribute>
                     {
-                        new ExportProductAttribute
-                        {
-                            AttributeId = productAttribute.Id,
-                            AttributeName = productAttribute.Name,
-                            AttributeTextPrompt = pam.TextPrompt,
-                            AttributeIsRequired = pam.IsRequired,
-                            AttributeControlTypeId = pam.AttributeControlTypeId
-                        }
+                        attribute
                     };
                 }).ToListAsync();
-
-            //attributes.AddRange(item.ProductAttributeMappings.Where(pam => !pam.ProductAttributeValues.Any()).Select(
-            //    pam => new ExportProductAttribute
-            //    {
-            //        AttributeId = pam.ProductAttribute.Id,
-            //        AttributeName = pam.ProductAttribute.Name,
-            //        AttributeTextPrompt = pam.TextPrompt,
-            //        AttributeIsRequired = pam.IsRequired,
-            //        AttributeControlTypeId = pam.AttributeControlTypeId
-            //    }));
 
             if (!attributes.Any())
                 return row;
 
             attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
-            worksheet.Row(row).Collapsed = true;
+            worksheet.Row(row).Collapse();
 
             foreach (var exportProductAttribute in attributes)
             {
@@ -610,14 +621,14 @@ namespace Nop.Services.ExportImport
                 attributeManager.CurrentObject = exportProductAttribute;
                 await attributeManager.WriteToXlsxAsync(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
-                worksheet.Row(row).Collapsed = true;
+                worksheet.Row(row).Collapse();
             }
 
             return row + 1;
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
+        private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, IXLWorksheet worksheet, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _specificationAttributeService
                 .GetProductSpecificationAttributesAsync(item.Id)).SelectAwait(
@@ -637,7 +648,7 @@ namespace Nop.Services.ExportImport
 
             attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
-            worksheet.Row(row).Collapsed = true;
+            worksheet.Row(row).Collapse();
 
             foreach (var exportProductAttribute in attributes)
             {
@@ -645,7 +656,7 @@ namespace Nop.Services.ExportImport
                 attributeManager.CurrentObject = exportProductAttribute;
                 await attributeManager.WriteToXlsxAsync(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
-                worksheet.Row(row).Collapsed = true;
+                worksheet.Row(row).Collapse();
             }
 
             return row + 1;
@@ -657,7 +668,7 @@ namespace Nop.Services.ExportImport
             var orderItemProperties = new[]
             {
                 new PropertyByName<OrderItem>("Name", async oi => (await _productService.GetProductByIdAsync(oi.ProductId)).Name),
-                new PropertyByName<OrderItem>("Sku", async oi => (await _productService.GetProductByIdAsync(oi.ProductId)).Sku),
+                new PropertyByName<OrderItem>("Sku", async oi => await _productService.FormatSkuAsync(await _productService.GetProductByIdAsync(oi.ProductId), oi.AttributesXml)),
                 new PropertyByName<OrderItem>("PriceExclTax", oi => oi.UnitPriceExclTax),
                 new PropertyByName<OrderItem>("PriceInclTax", oi => oi.UnitPriceInclTax),
                 new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
@@ -671,15 +682,16 @@ namespace Nop.Services.ExportImport
 
             await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(stream))
+            using (var workbook = new XLWorkbook())
             {
                 // uncomment this line if you want the XML written out to the outputDir
                 //xlPackage.DebugMode = true; 
 
                 // get handles to the worksheets
-                var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Order).Name);
-                var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
-                fpWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                // Worksheet names cannot be more than 31 characters
+                var worksheet = workbook.Worksheets.Add(typeof(Order).Name);
+                var fpWorksheet = workbook.Worksheets.Add("DataForProductsFilters");
+                fpWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
 
                 //create Headers and format them 
                 var manager = new PropertyManager<Order>(properties, _catalogSettings);
@@ -692,14 +704,15 @@ namespace Nop.Services.ExportImport
                     await manager.WriteToXlsxAsync(worksheet, row++);
 
                     //a vendor should have access only to his products
-                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0);
+                    var vendor = await _workContext.GetCurrentVendorAsync();
+                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: vendor?.Id ?? 0);
 
                     if (!orderItems.Any())
                         continue;
 
                     orderItemsManager.WriteCaption(worksheet, row, 2);
                     worksheet.Row(row).OutlineLevel = 1;
-                    worksheet.Row(row).Collapsed = true;
+                    worksheet.Row(row).Collapse();
 
                     foreach (var orderItem in orderItems)
                     {
@@ -707,13 +720,13 @@ namespace Nop.Services.ExportImport
                         orderItemsManager.CurrentObject = orderItem;
                         await orderItemsManager.WriteToXlsxAsync(worksheet, row, 2, fpWorksheet);
                         worksheet.Row(row).OutlineLevel = 1;
-                        worksheet.Row(row).Collapsed = true;
+                        worksheet.Row(row).Collapse();
                     }
 
                     row++;
                 }
 
-                xlPackage.Save();
+                workbook.SaveAs(stream);
             }
 
             return stream.ToArray();
@@ -942,6 +955,7 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteStartDocumentAsync();
             await xmlWriter.WriteStartElementAsync("Products");
             await xmlWriter.WriteAttributeStringAsync("Version", NopVersion.CURRENT_VERSION);
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
 
             foreach (var product in products)
             {
@@ -956,12 +970,12 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteStringAsync("FullDescription", product.FullDescription);
                 await xmlWriter.WriteStringAsync("AdminComment", product.AdminComment, await IgnoreExportProductPropertyAsync(p => p.AdminComment));
                 //vendor can't change this field
-                await xmlWriter.WriteStringAsync("VendorId", product.VendorId, await IgnoreExportProductPropertyAsync(p => p.Vendor) || await _workContext.GetCurrentVendorAsync() != null);
+                await xmlWriter.WriteStringAsync("VendorId", product.VendorId, await IgnoreExportProductPropertyAsync(p => p.Vendor) || currentVendor != null);
                 await xmlWriter.WriteStringAsync("ProductTemplateId", product.ProductTemplateId, await IgnoreExportProductPropertyAsync(p => p.ProductTemplate));
                 //vendor can't change this field
-                await xmlWriter.WriteStringAsync("ShowOnHomepage", product.ShowOnHomepage, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || await _workContext.GetCurrentVendorAsync() != null);
+                await xmlWriter.WriteStringAsync("ShowOnHomepage", product.ShowOnHomepage, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null);
                 //vendor can't change this field
-                await xmlWriter.WriteStringAsync("DisplayOrder", product.DisplayOrder, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || await _workContext.GetCurrentVendorAsync() != null);
+                await xmlWriter.WriteStringAsync("DisplayOrder", product.DisplayOrder, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null);
                 await xmlWriter.WriteStringAsync("MetaKeywords", product.MetaKeywords, await IgnoreExportProductPropertyAsync(p => p.Seo));
                 await xmlWriter.WriteStringAsync("MetaDescription", product.MetaDescription, await IgnoreExportProductPropertyAsync(p => p.Seo));
                 await xmlWriter.WriteStringAsync("MetaTitle", product.MetaTitle, await IgnoreExportProductPropertyAsync(p => p.Seo));
@@ -1260,6 +1274,7 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportProductsToXlsxAsync(IEnumerable<Product> products)
         {
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
             var properties = new[]
             {
                 new PropertyByName<Product>("ProductId", p => p.Id),
@@ -1273,7 +1288,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("ShortDescription", p => p.ShortDescription),
                 new PropertyByName<Product>("FullDescription", p => p.FullDescription),
                 //vendor can't change this field
-                new PropertyByName<Product>("Vendor", p => p.VendorId, await IgnoreExportProductPropertyAsync(p => p.Vendor) || await _workContext.GetCurrentVendorAsync() != null)
+                new PropertyByName<Product>("Vendor", p => p.VendorId, await IgnoreExportProductPropertyAsync(p => p.Vendor) || currentVendor != null)
                 {
                     DropDownElements = (await _vendorService.GetAllVendorsAsync(showHidden: true)).Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor)?.Name ?? string.Empty),
                     AllowBlank = true
@@ -1283,9 +1298,9 @@ namespace Nop.Services.ExportImport
                     DropDownElements = (await _productTemplateService.GetAllProductTemplatesAsync()).Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate)?.Name ?? string.Empty)
                 },
                 //vendor can't change this field
-                new PropertyByName<Product>("ShowOnHomepage", p => p.ShowOnHomepage, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || await _workContext.GetCurrentVendorAsync() != null),
+                new PropertyByName<Product>("ShowOnHomepage", p => p.ShowOnHomepage, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null),
                 //vendor can't change this field
-                new PropertyByName<Product>("DisplayOrder", p => p.DisplayOrder, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || await _workContext.GetCurrentVendorAsync() != null),
+                new PropertyByName<Product>("DisplayOrder", p => p.DisplayOrder, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null),
                 new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords, await IgnoreExportProductPropertyAsync(p => p.Seo)),
                 new PropertyByName<Product>("MetaDescription", p => p.MetaDescription, await IgnoreExportProductPropertyAsync(p => p.Seo)),
                 new PropertyByName<Product>("MetaTitle", p => p.MetaTitle, await IgnoreExportProductPropertyAsync(p => p.Seo)),
@@ -1449,7 +1464,8 @@ namespace Nop.Services.ExportImport
         public virtual async Task<string> ExportOrdersToXmlAsync(IList<Order> orders)
         {
             //a vendor should have access only to part of order information
-            var ignore = await _workContext.GetCurrentVendorAsync() != null;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var ignore = currentVendor != null;
 
             var settings = new XmlWriterSettings
             {
@@ -1520,7 +1536,7 @@ namespace Nop.Services.ExportImport
                 if (_orderSettings.ExportWithProducts)
                 {
                     //a vendor should have access only to his products
-                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0);
+                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: currentVendor?.Id ?? 0);
 
                     if (orderItems.Any())
                     {
@@ -1533,7 +1549,7 @@ namespace Nop.Services.ExportImport
                             await xmlWriter.WriteStringAsync("Id", orderItem.Id);
                             await xmlWriter.WriteStringAsync("OrderItemGuid", orderItem.OrderItemGuid);
                             await xmlWriter.WriteStringAsync("Name", product.Name);
-                            await xmlWriter.WriteStringAsync("Sku", product.Sku);
+                            await xmlWriter.WriteStringAsync("Sku", await _productService.FormatSkuAsync(product, orderItem.AttributesXml));
                             await xmlWriter.WriteStringAsync("PriceExclTax", orderItem.UnitPriceExclTax);
                             await xmlWriter.WriteStringAsync("PriceInclTax", orderItem.UnitPriceInclTax);
                             await xmlWriter.WriteStringAsync("Quantity", orderItem.Quantity);
@@ -1599,9 +1615,18 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("StoreId", p => p.StoreId),
                 new PropertyByName<Order>("OrderGuid", p => p.OrderGuid, ignore),
                 new PropertyByName<Order>("CustomerId", p => p.CustomerId, ignore),
-                new PropertyByName<Order>("OrderStatusId", p => p.OrderStatusId, ignore),
-                new PropertyByName<Order>("PaymentStatusId", p => p.PaymentStatusId),
-                new PropertyByName<Order>("ShippingStatusId", p => p.ShippingStatusId, ignore),
+                new PropertyByName<Order>("OrderStatus", p => p.OrderStatusId, ignore)
+                {
+                    DropDownElements = await OrderStatus.Pending.ToSelectListAsync(useLocalization: false)
+                },
+                new PropertyByName<Order>("PaymentStatus", p => p.PaymentStatusId, ignore)
+                {
+                    DropDownElements = await PaymentStatus.Pending.ToSelectListAsync(useLocalization: false)
+                },
+                new PropertyByName<Order>("ShippingStatus", p => p.ShippingStatusId, ignore)
+                {
+                    DropDownElements = await ShippingStatus.ShippingNotRequired.ToSelectListAsync(useLocalization: false)
+                },
                 new PropertyByName<Order>("OrderSubtotalInclTax", p => p.OrderSubtotalInclTax, ignore),
                 new PropertyByName<Order>("OrderSubtotalExclTax", p => p.OrderSubtotalExclTax, ignore),
                 new PropertyByName<Order>("OrderSubTotalDiscountInclTax", p => p.OrderSubTotalDiscountInclTax, ignore),
@@ -1624,7 +1649,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("ShippingRateComputationMethodSystemName", p => p.ShippingRateComputationMethodSystemName, ignore),
                 new PropertyByName<Order>("CustomValuesXml", p => p.CustomValuesXml, ignore),
                 new PropertyByName<Order>("VatNumber", p => p.VatNumber, ignore),
-                new PropertyByName<Order>("CreatedOnUtc", p => p.CreatedOnUtc.ToOADate()),
+                new PropertyByName<Order>("CreatedOnUtc", p => p.CreatedOnUtc),
                 new PropertyByName<Order>("BillingFirstName", async p => (await orderBillingAddress(p))?.FirstName ?? string.Empty),
                 new PropertyByName<Order>("BillingLastName", async p => (await orderBillingAddress(p))?.LastName ?? string.Empty),
                 new PropertyByName<Order>("BillingEmail", async p => (await orderBillingAddress(p))?.Email ?? string.Empty),
@@ -1974,11 +1999,12 @@ namespace Nop.Services.ExportImport
             }, _catalogSettings);
 
             //customer orders
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             var orderManager = new PropertyManager<Order>(new[]
             {
                 new PropertyByName<Order>("Order Number", p => p.CustomOrderNumber),
                 new PropertyByName<Order>("Order status", async p => await _localizationService.GetLocalizedEnumAsync(p.OrderStatus)),
-                new PropertyByName<Order>("Order total", async p => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency(p.OrderTotal, p.CurrencyRate), true, p.CustomerCurrencyCode, false, (await _workContext.GetWorkingLanguageAsync()).Id)),
+                new PropertyByName<Order>("Order total", async p => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency(p.OrderTotal, p.CurrencyRate), true, p.CustomerCurrencyCode, false, currentLanguage.Id)),
                 new PropertyByName<Order>("Shipping method", p => p.ShippingMethod),
                 new PropertyByName<Order>("Created on", async p => (await _dateTimeHelper.ConvertToUserTimeAsync(p.CreatedOnUtc, DateTimeKind.Utc)).ToString("D")),
                 new PropertyByName<Order>("Billing first name", async p => (await orderBillingAddress(p))?.FirstName ?? string.Empty),
@@ -2012,9 +2038,9 @@ namespace Nop.Services.ExportImport
 
             var orderItemsManager = new PropertyManager<OrderItem>(new[]
             { 
-                new PropertyByName<OrderItem>("SKU", async oi => (await _productService.GetProductByIdAsync(oi.ProductId)).Sku),
+                new PropertyByName<OrderItem>("SKU", async oi => await _productService.FormatSkuAsync(await _productService.GetProductByIdAsync(oi.ProductId), oi.AttributesXml)),
                 new PropertyByName<OrderItem>("Name", async oi => await _localizationService.GetLocalizedAsync(await _productService.GetProductByIdAsync(oi.ProductId), p => p.Name)),
-                new PropertyByName<OrderItem>("Price", async oi => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency((await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CurrencyRate), true, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerCurrencyCode, false, (await _workContext.GetWorkingLanguageAsync()).Id)),
+                new PropertyByName<OrderItem>("Price", async oi => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency((await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CurrencyRate), true, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerCurrencyCode, false, currentLanguage.Id)),
                 new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
                 new PropertyByName<OrderItem>("Total", async oi => await _priceFormatter.FormatPriceAsync((await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.PriceInclTax : oi.PriceExclTax))
             }, _catalogSettings);
@@ -2069,15 +2095,16 @@ namespace Nop.Services.ExportImport
 
             await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(stream))
+            using (var workbook = new XLWorkbook())
             {
                 // uncomment this line if you want the XML written out to the outputDir
                 //xlPackage.DebugMode = true; 
 
                 // get handles to the worksheets
-                var customerInfoWorksheet = xlPackage.Workbook.Worksheets.Add("Customer info");
-                var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForFilters");
-                fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                // Worksheet names cannot be more than 31 characters
+                var customerInfoWorksheet = workbook.Worksheets.Add("Customer info");
+                var fWorksheet = workbook.Worksheets.Add("DataForFilters");
+                fWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
 
                 //customer info and customer attributes
                 var customerInfoRow = 2;
@@ -2090,7 +2117,7 @@ namespace Nop.Services.ExportImport
                 {
                     customerInfoRow += 2;
 
-                    var cell = customerInfoWorksheet.Cells[customerInfoRow, 1];
+                    var cell = customerInfoWorksheet.Row(customerInfoRow).Cell(1);
                     cell.Value = "Address List";
                     customerInfoRow += 1;
                     addressManager.SetCaptionStyle(cell);
@@ -2107,7 +2134,7 @@ namespace Nop.Services.ExportImport
                 //customer orders
                 if (orders.Any())
                 {
-                    var ordersWorksheet = xlPackage.Workbook.Worksheets.Add("Orders");
+                    var ordersWorksheet = workbook.Worksheets.Add("Orders");
 
                     orderManager.WriteCaption(ordersWorksheet);
 
@@ -2129,7 +2156,7 @@ namespace Nop.Services.ExportImport
 
                         orderItemsManager.WriteCaption(ordersWorksheet, orderRow, 2);
                         ordersWorksheet.Row(orderRow).OutlineLevel = 1;
-                        ordersWorksheet.Row(orderRow).Collapsed = true;
+                        ordersWorksheet.Row(orderRow).Collapse();
 
                         foreach (var orederItem in orederItems)
                         {
@@ -2137,7 +2164,7 @@ namespace Nop.Services.ExportImport
                             orderItemsManager.CurrentObject = orederItem;
                             await orderItemsManager.WriteToXlsxAsync(ordersWorksheet, orderRow, 2, fWorksheet);
                             ordersWorksheet.Row(orderRow).OutlineLevel = 1;
-                            ordersWorksheet.Row(orderRow).Collapsed = true;
+                            ordersWorksheet.Row(orderRow).Collapse();
                         }
                     }
                 }
@@ -2145,7 +2172,7 @@ namespace Nop.Services.ExportImport
                 //customer private messages
                 if (pmList?.Any() ?? false)
                 {
-                    var privateMessageWorksheet = xlPackage.Workbook.Worksheets.Add("Private messages");
+                    var privateMessageWorksheet = workbook.Worksheets.Add("Private messages");
                     privateMessageManager.WriteCaption(privateMessageWorksheet);
 
                     var privateMessageRow = 1;
@@ -2162,7 +2189,7 @@ namespace Nop.Services.ExportImport
                 //customer GDPR logs
                 if (gdprLog.Any())
                 {
-                    var gdprLogWorksheet = xlPackage.Workbook.Worksheets.Add("GDPR requests (log)");
+                    var gdprLogWorksheet = workbook.Worksheets.Add("GDPR requests (log)");
                     gdprLogManager.WriteCaption(gdprLogWorksheet);
 
                     var gdprLogRow = 1;
@@ -2176,7 +2203,7 @@ namespace Nop.Services.ExportImport
                     }
                 }
 
-                xlPackage.Save();
+                workbook.SaveAs(stream);
             }
 
             return stream.ToArray();

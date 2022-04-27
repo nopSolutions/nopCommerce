@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Attributes.ProductAttributes.AddNew").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Product attributes");
+    NopHtml.SetActiveMenuItemSystemName("Product attributes");
 }
 
 <form asp-controller="ProductAttribute" asp-action="Create" method="post" id="productattribute-form">
@@ -25,7 +25,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeDetailsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

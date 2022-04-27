@@ -20,6 +20,7 @@ using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class CatalogController : BasePublicController
     {
         #region Fields
@@ -100,11 +101,13 @@ namespace Nop.Web.Controllers
             if (!await CheckCategoryAvailabilityAsync(category))
                 return InvokeHttp404();
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //'Continue shopping' URL
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
@@ -137,7 +140,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> GetCatalogRoot()
         {
             var model = await _catalogModelFactory.PrepareRootCategoriesAsync();
@@ -146,7 +148,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> GetCatalogSubCategories(int id)
         {
             var model = await _catalogModelFactory.PrepareSubCategoriesAsync(id);
@@ -165,11 +166,13 @@ namespace Nop.Web.Controllers
             if (!await CheckManufacturerAvailabilityAsync(manufacturer))
                 return InvokeHttp404();
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //'Continue shopping' URL
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
@@ -220,11 +223,13 @@ namespace Nop.Web.Controllers
             if (!await CheckVendorAvailabilityAsync(vendor))
                 return InvokeHttp404();
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //'Continue shopping' URL
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
@@ -301,11 +306,13 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> Search(SearchModel model, CatalogProductsCommand command)
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //'Continue shopping' URL
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(true),
-                (await _storeContext.GetCurrentStoreAsync()).Id);
+                store.Id);
 
             if (model == null)
                 model = new SearchModel();
@@ -329,9 +336,9 @@ namespace Nop.Web.Controllers
             //products
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
                 _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
-
+            var store = await _storeContext.GetCurrentStoreAsync();
             var products = await _productService.SearchProductsAsync(0,
-                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                storeId: store.Id,
                 keywords: term,
                 languageId: (await _workContext.GetWorkingLanguageAsync()).Id,
                 visibleIndividuallyOnly: true,
@@ -368,7 +375,6 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<bool> CheckCategoryAvailabilityAsync(Category category)
         {
             var isAvailable = true;
@@ -392,7 +398,6 @@ namespace Nop.Web.Controllers
             return isAvailable;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<bool> CheckManufacturerAvailabilityAsync(Manufacturer manufacturer)
         {
             var isAvailable = true;
@@ -416,7 +421,6 @@ namespace Nop.Web.Controllers
             return isAvailable;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         private Task<bool> CheckVendorAvailabilityAsync(Vendor vendor)
         {
             var isAvailable = true;

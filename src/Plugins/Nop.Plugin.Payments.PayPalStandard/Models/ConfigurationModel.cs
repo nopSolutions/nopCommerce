@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using System.ComponentModel.DataAnnotations;
+using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Payments.PayPalStandard.Models
@@ -11,6 +12,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Models
         public bool UseSandbox { get; set; }
         public bool UseSandbox_OverrideForStore { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.BusinessEmail")]
         public string BusinessEmail { get; set; }
         public bool BusinessEmail_OverrideForStore { get; set; }

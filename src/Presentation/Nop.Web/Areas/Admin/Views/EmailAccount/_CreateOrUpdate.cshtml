@@ -61,7 +61,7 @@
                             </div>
                             <div class="col-md-9">
                                 <div class="input-group">
-                                    <nop-editor asp-for="Password" autocomplete="new-password"/>
+                                    <nop-editor asp-for="Password" html-attributes="@(new { autocomplete = "new-password" })"/>
                                     <div class="input-group-append">
                                         @if (Model.Id > 0)
                                         {

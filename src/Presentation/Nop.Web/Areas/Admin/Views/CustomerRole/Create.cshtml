@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Customers.CustomerRoles.AddNew").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Customer roles");
+    NopHtml.SetActiveMenuItemSystemName("Customer roles");
 }
 
 <form asp-controller="CustomerRole" asp-action="Create" method="post">
@@ -25,7 +25,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerRoleDetailsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerRoleDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

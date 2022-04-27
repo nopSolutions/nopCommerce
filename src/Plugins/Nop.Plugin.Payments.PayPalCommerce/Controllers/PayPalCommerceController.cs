@@ -197,6 +197,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Controllers
                 DisplayLogoInHeaderLinks = settings.DisplayLogoInHeaderLinks,
                 LogoInHeaderLinks = settings.LogoInHeaderLinks,
                 DisplayLogoInFooter = settings.DisplayLogoInFooter,
+                DisplayPayLaterMessages = settings.DisplayPayLaterMessages,
                 LogoInFooter = settings.LogoInFooter,
                 ActiveStoreScopeConfiguration = storeId,
                 IsConfigured = ServiceManager.IsConfigured(settings)
@@ -217,6 +218,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Controllers
                 model.DisplayLogoInHeaderLinks_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.DisplayLogoInHeaderLinks, storeId);
                 model.LogoInHeaderLinks_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.LogoInHeaderLinks, storeId);
                 model.DisplayLogoInFooter_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.DisplayLogoInFooter, storeId);
+                model.DisplayPayLaterMessages_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.DisplayPayLaterMessages, storeId);
                 model.LogoInFooter_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.LogoInFooter, storeId);
             }
 
@@ -263,6 +265,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Controllers
             settings.DisplayLogoInHeaderLinks = model.DisplayLogoInHeaderLinks;
             settings.LogoInHeaderLinks = model.LogoInHeaderLinks;
             settings.DisplayLogoInFooter = model.DisplayLogoInFooter;
+            settings.DisplayPayLaterMessages = model.DisplayPayLaterMessages;
             settings.LogoInFooter = model.LogoInFooter;
 
             if (model.SetCredentialsManually)
@@ -319,6 +322,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Controllers
             await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.DisplayLogoInHeaderLinks, model.DisplayLogoInHeaderLinks_OverrideForStore, storeId, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.LogoInHeaderLinks, model.LogoInHeaderLinks_OverrideForStore, storeId, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.DisplayLogoInFooter, model.DisplayLogoInFooter_OverrideForStore, storeId, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.DisplayPayLaterMessages, model.DisplayPayLaterMessages_OverrideForStore, storeId, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.LogoInFooter, model.LogoInFooter_OverrideForStore, storeId, false);
             await _settingService.ClearCacheAsync();
 

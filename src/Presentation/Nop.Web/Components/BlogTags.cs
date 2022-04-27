@@ -17,7 +17,6 @@ namespace Nop.Web.Components
             _blogModelFactory = blogModelFactory;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(int currentCategoryId, int currentProductId)
         {
             if (!_blogSettings.Enabled)

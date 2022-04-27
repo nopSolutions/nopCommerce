@@ -101,7 +101,8 @@ namespace Nop.Services.Messages
                     CreationDate = cDate,
                     ModificationDate = mDate,
                     ReadDate = rDate
-                }
+                },
+                ContentTransferEncoding = ContentEncoding.Base64
             };
         }
 

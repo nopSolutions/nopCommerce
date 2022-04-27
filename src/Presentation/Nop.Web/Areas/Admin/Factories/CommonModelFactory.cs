@@ -202,7 +202,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether current store URL matches the store configured URL
-            var currentStoreUrl = (await _storeContext.GetCurrentStoreAsync()).Url;
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var currentStoreUrl = store.Url;
             if (!string.IsNullOrEmpty(currentStoreUrl) &&
                 (currentStoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase) ||
                 currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)))
@@ -539,10 +540,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             var dirPermissionsOk = true;
-            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
+            var dirsToCheck = _fileProvider.GetDirectoriesWrite();
             foreach (var dir in dirsToCheck)
             {
-                if (FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
+                if (_fileProvider.CheckPermissions(dir, false, true, true, false))
                     continue;
 
                 models.Add(new SystemWarningModel
@@ -564,10 +565,10 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             var filePermissionsOk = true;
-            var filesToCheck = FilePermissionHelper.GetFilesWrite();
+            var filesToCheck = _fileProvider.GetFilesWrite();
             foreach (var file in filesToCheck)
             {
-                if (FilePermissionHelper.CheckPermissions(file, false, true, true, true))
+                if (_fileProvider.CheckPermissions(file, false, true, true, true))
                     continue;
 
                 models.Add(new SystemWarningModel
@@ -603,6 +604,28 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.SetGridPageSize();
 
             return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare plugins installed warning model
+        /// </summary>
+        /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PreparePluginsInstalledWarningModelAsync(List<SystemWarningModel> models)
+        {
+            var plugins = await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.NotInstalledOnly);
+
+            var notInstalled = plugins.Select(p => p.FriendlyName).ToList();
+
+            if (!notInstalled.Any())
+                return;
+
+            models.Add(new SystemWarningModel
+            {
+                Level = SystemWarningLevel.Warning,
+                DontEncode = true,
+                Text = $"{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotInstalled")}: {string.Join(", ", notInstalled)}. {await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotInstalled.HelpText")}"
+            });
         }
 
         /// <summary>
@@ -754,13 +777,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var currentStaticCacheManagerName = _staticCacheManager.GetType().Name;
 
-            if (_appSettings.DistributedCacheConfig.Enabled)
+            if (_appSettings.Get<DistributedCacheConfig>().Enabled)
                 currentStaticCacheManagerName +=
-                    $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.DistributedCacheConfig.DistributedCacheType)})";
+                    $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.Get<DistributedCacheConfig>().DistributedCacheType)})";
 
             model.CurrentStaticCacheManager = currentStaticCacheManagerName;
 
-            model.AzureBlobStorageEnabled = _appSettings.AzureBlobConfig.Enabled;
+            model.AzureBlobStorageEnabled = _appSettings.Get<AzureBlobConfig>().Enabled;
 
             return model;
         }
@@ -844,6 +867,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //not active plugins
             await PreparePluginsEnabledWarningModelAsync(models);
+
+            //not install plugins
+            await PreparePluginsInstalledWarningModelAsync(models);
 
             //proxy connection
             await PrepareProxyConnectionWarningModelAsync(models);
@@ -1045,11 +1071,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<LanguageSelectorModel> PrepareLanguageSelectorModelAsync()
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
             var model = new LanguageSelectorModel
             {
                 CurrentLanguage = (await _workContext.GetWorkingLanguageAsync()).ToModel<LanguageModel>(),
                 AvailableLanguages = (await _languageService
-                    .GetAllLanguagesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+                    .GetAllLanguagesAsync(storeId: store.Id))
                     .Select(language => language.ToModel<LanguageModel>()).ToList()
             };
 

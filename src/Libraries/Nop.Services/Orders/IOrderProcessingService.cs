@@ -91,7 +91,15 @@ namespace Nop.Services.Orders
         /// <param name="notifyCustomer">True to notify customer</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task ShipAsync(Shipment shipment, bool notifyCustomer);
-        
+
+        /// <summary>
+        /// Marks a shipment as ready for pickup
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <param name="notifyCustomer">True to notify customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task ReadyForPickupAsync(Shipment shipment, bool notifyCustomer);
+
         /// <summary>
         /// Marks a shipment as delivered
         /// </summary>
@@ -256,10 +264,10 @@ namespace Nop.Services.Orders
         Task<IList<string>> VoidAsync(Order order);
 
         /// <summary>
-        /// Gets a value indicating whether order can be marked as Tasked
+        /// Gets a value indicating whether order can be marked as voided
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A value indicating whether order can be marked as Tasked</returns>
+        /// <returns>A value indicating whether order can be marked as voided</returns>
         bool CanVoidOffline(Order order);
 
         /// <summary>

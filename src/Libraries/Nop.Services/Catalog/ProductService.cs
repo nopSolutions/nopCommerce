@@ -151,19 +151,21 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ApplyLowStockActivityAsync(Product product, int totalStock)
         {
-            var stockDec = product.MinStockQuantity >= totalStock;
-            var stockInc = _catalogSettings.PublishBackProductWhenCancellingOrders && product.MinStockQuantity < totalStock;
+            var isMinimumStockReached = totalStock <= product.MinStockQuantity;
 
+            if (!isMinimumStockReached && !_catalogSettings.PublishBackProductWhenCancellingOrders)
+                return;
+            
             switch (product.LowStockActivity)
             {
                 case LowStockActivity.DisableBuyButton:
-                    product.DisableBuyButton = stockDec && !stockInc;
-                    product.DisableWishlistButton = stockDec && !stockInc;
+                    product.DisableBuyButton = isMinimumStockReached;
+                    product.DisableWishlistButton = isMinimumStockReached;
                     await UpdateProductAsync(product);
                     break;
 
                 case LowStockActivity.Unpublish:
-                    product.Published = !stockDec && stockInc;
+                    product.Published = !isMinimumStockReached;
                     await UpdateProductAsync(product);
                     break;
 
@@ -230,22 +232,6 @@ namespace Nop.Services.Catalog
 
             string stockMessage;
 
-            /*TODO implement #5510
-            if (_catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.AlwaysDisplay)
-            {
-                //let's check whether all required attributes are already selected
-                //if some attribute is not selected, then return a "Products.Availability.SelectRequiredAttributes" locale 
-            }
-            else
-            {
-                //let's check whether all required attributes that could be selected are already selected
-
-                //note that it's possible that some required attribute is not selected yet, but its values are already disabled (not available)
-                //hence a customer cannot select it. in this case proceed to the logic below
-
-                //otherwise, return a "Products.Availability.SelectRequiredAttributes" locale
-            }*/
-
             var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
             if (combination != null)
             {
@@ -280,6 +266,28 @@ namespace Nop.Services.Catalog
                 //no combination configured
                 if (product.AllowAddingOnlyExistingAttributeCombinations)
                 {
+                    var allIds = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id)).Where(pa => pa.IsRequired).Select(pa => pa.Id).ToList();
+                    var exIds = (await _productAttributeParser.ParseProductAttributeMappingsAsync(attributesXml)).Select(pa => pa.Id).ToList();
+
+                    var selectedIds = allIds.Intersect(exIds).ToList();
+
+                    if (selectedIds.Count() != allIds.Count)
+                        if (_catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.AlwaysDisplay)
+                            return await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
+                        else
+                        {
+                            var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
+
+                            combinations = combinations.Where(p => p.StockQuantity >= 0 || p.AllowOutOfStockOrders).ToList();
+
+                            var attributes = await combinations.SelectAwait(async c => await _productAttributeParser.ParseProductAttributeMappingsAsync(c.AttributesXml)).ToListAsync();
+
+                            var flag = attributes.SelectMany(a => a).Any(a => selectedIds.Contains(a.Id));
+
+                            if (flag)
+                                return await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
+                        }
+
                     var productAvailabilityRange = await
                         _dateRangeService.GetProductAvailabilityRangeByIdAsync(product.ProductAvailabilityRangeId);
                     stockMessage = productAvailabilityRange == null
@@ -695,7 +703,8 @@ namespace Nop.Services.Catalog
 
                 query = from p in query
                         where p.Published && p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
-                        LinqToDB.Sql.Between(DateTime.UtcNow, p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue, p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
+                            DateTime.UtcNow >= (p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue) &&
+                            DateTime.UtcNow <= (p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
                         orderby p.CreatedOnUtc descending
                         select p;
 
@@ -833,11 +842,14 @@ namespace Nop.Services.Catalog
                         warehouseId == 0 ||
                         (
                             !p.UseMultipleWarehouses ? p.WarehouseId == warehouseId :
-                                _productWarehouseInventoryRepository.Table.Any(pwi => pwi.Id == warehouseId && pwi.ProductId == p.Id)
+                                _productWarehouseInventoryRepository.Table.Any(pwi => pwi.WarehouseId == warehouseId && pwi.ProductId == p.Id)
                         )
                     ) &&
                     (productType == null || p.ProductTypeId == (int)productType) &&
-                    (showHidden || LinqToDB.Sql.Between(DateTime.UtcNow, p.AvailableStartDateTimeUtc ?? DateTime.MinValue, p.AvailableEndDateTimeUtc ?? DateTime.MaxValue)) &&
+                    (showHidden ||
+                            DateTime.UtcNow >= (p.AvailableStartDateTimeUtc ?? DateTime.MinValue) &&
+                            DateTime.UtcNow <= (p.AvailableEndDateTimeUtc ?? DateTime.MaxValue)
+                    ) &&
                     (priceMin == null || p.Price >= priceMin) &&
                     (priceMax == null || p.Price <= priceMax)
                 select p;
@@ -860,6 +872,21 @@ namespace Nop.Services.Catalog
                             (searchSku && p.Sku == keywords)
                         select p.Id;
 
+                if (searchLocalizedValue)
+                {
+                    productsByKeywords = productsByKeywords.Union(
+                        from lp in _localizedPropertyRepository.Table
+                        let checkName = lp.LocaleKey == nameof(Product.Name) &&
+                                        lp.LocaleValue.Contains(keywords)
+                        let checkShortDesc = searchDescriptions &&
+                                        lp.LocaleKey == nameof(Product.ShortDescription) &&
+                                        lp.LocaleValue.Contains(keywords)
+                        where
+                            lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId && (checkName || checkShortDesc)
+
+                        select lp.EntityId);
+                }
+
                 //search by SKU for ProductAttributeCombination
                 if (searchSku)
                 {
@@ -874,7 +901,7 @@ namespace Nop.Services.Catalog
                     productsByKeywords = productsByKeywords.Union(
                         from pptm in _productTagMappingRepository.Table
                         join pt in _productTagRepository.Table on pptm.ProductTagId equals pt.Id
-                        where pt.Name == keywords
+                        where pt.Name.Contains(keywords)
                         select pptm.ProductId
                     );
 
@@ -885,34 +912,15 @@ namespace Nop.Services.Catalog
                         join lp in _localizedPropertyRepository.Table on pptm.ProductTagId equals lp.EntityId
                         where lp.LocaleKeyGroup == nameof(ProductTag) &&
                               lp.LocaleKey == nameof(ProductTag.Name) &&
-                              lp.LocaleValue.Contains(keywords)
-                        select lp.EntityId);
+                              lp.LocaleValue.Contains(keywords) &&
+                              lp.LanguageId == languageId
+                        select pptm.ProductId);
                     }
-                }
-
-                if (searchLocalizedValue)
-                {
-                    productsByKeywords = productsByKeywords.Union(
-                                from lp in _localizedPropertyRepository.Table
-                                let checkName = lp.LocaleKey == nameof(Product.Name) &&
-                                                lp.LocaleValue.Contains(keywords)
-                                let checkShortDesc = searchDescriptions &&
-                                                lp.LocaleKey == nameof(Product.ShortDescription) &&
-                                                lp.LocaleValue.Contains(keywords)
-                                let checkProductTags = searchProductTags &&
-                                                lp.LocaleKeyGroup == nameof(ProductTag) &&
-                                                lp.LocaleKey == nameof(ProductTag.Name) &&
-                                                lp.LocaleValue.Contains(keywords)
-                                where
-                                    lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId && (checkName || checkShortDesc) ||
-                                    checkProductTags
-
-                                select lp.EntityId);
                 }
 
                 productsQuery =
                     from p in productsQuery
-                    from pbk in LinqToDB.LinqExtensions.InnerJoin(productsByKeywords, pbk => pbk == p.Id)
+                    join pbk in productsByKeywords on p.Id equals pbk
                     select p;
             }
 
@@ -999,7 +1007,7 @@ namespace Nop.Services.Catalog
                 }
             }
             
-            return await productsQuery.OrderBy(orderBy).ToPagedListAsync(pageIndex, pageSize);
+            return await productsQuery.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy).ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -1012,7 +1020,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the products
         /// </returns>
-        public virtual async Task<IPagedList<Product>> GetProductsByProductAtributeIdAsync(int productAttributeId,
+        public virtual async Task<IPagedList<Product>> GetProductsByProductAttributeIdAsync(int productAttributeId,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from p in _productRepository.Table
@@ -1681,6 +1689,7 @@ namespace Nop.Services.Catalog
                 //send email notification
                 if (quantityToChange < 0 && totalStock < product.NotifyAdminForQuantityBelow)
                 {
+                    //do not inject IWorkflowMessageService via constructor because it'll cause circular references
                     var workflowMessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
                     await workflowMessageService.SendQuantityBelowStoreOwnerNotificationAsync(product, _localizationSettings.DefaultAdminLanguageId);
                 }
@@ -1709,6 +1718,7 @@ namespace Nop.Services.Catalog
                     //send email notification
                     if (quantityToChange < 0 && combination.StockQuantity < combination.NotifyAdminForQuantityBelow)
                     {
+                        //do not inject IWorkflowMessageService via constructor because it'll cause circular references
                         var workflowMessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
                         await workflowMessageService.SendQuantityBelowStoreOwnerNotificationAsync(combination, _localizationSettings.DefaultAdminLanguageId);
                     }
@@ -1959,7 +1969,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the cross-sells
         /// </returns>
-        public virtual async Task<IList<Product>> GetCrosssellProductsByShoppingCartAsync(IList<ShoppingCartItem> cart, int numberOfProducts)
+        public virtual async Task<IList<Product>> GetCrossSellProductsByShoppingCartAsync(IList<ShoppingCartItem> cart, int numberOfProducts)
         {
             var result = new List<Product>();
 
@@ -2254,7 +2264,7 @@ namespace Nop.Services.Catalog
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
-        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <param name="storeId">The store identifier, where a review has been created; pass 0 to load all records</param>
         /// <param name="productId">The product identifier; pass 0 to load all records</param>
         /// <param name="vendorId">The vendor identifier (limit to products of this vendor); pass 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
@@ -2295,7 +2305,7 @@ namespace Nop.Services.Catalog
                     query = query.Where(pr => toUtc.Value >= pr.CreatedOnUtc);
                 if (!string.IsNullOrEmpty(message))
                     query = query.Where(pr => pr.Title.Contains(message) || pr.ReviewText.Contains(message));
-                if (storeId > 0 && (showHidden || _catalogSettings.ShowProductReviewsPerStore))
+                if (storeId > 0)
                     query = query.Where(pr => pr.StoreId == storeId);
                 if (productId > 0)
                     query = query.Where(pr => pr.ProductId == productId);
@@ -2385,8 +2395,9 @@ namespace Nop.Services.Catalog
             if (productReview is null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            var prh = await _productReviewHelpfulnessRepository.Table
-                .SingleOrDefaultAwaitAsync(async h => h.ProductReviewId == productReview.Id && h.CustomerId == (await _workContext.GetCurrentCustomerAsync()).Id);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var prh = _productReviewHelpfulnessRepository.Table
+                .SingleOrDefault(h => h.ProductReviewId == productReview.Id && h.CustomerId == customer.Id);
 
             if (prh is null)
             {
@@ -2394,7 +2405,7 @@ namespace Nop.Services.Catalog
                 prh = new ProductReviewHelpfulness
                 {
                     ProductReviewId = productReview.Id,
-                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                    CustomerId = customer.Id,
                     WasHelpful = helpfulness,
                 };
 
@@ -2448,8 +2459,10 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<bool> CanAddReviewAsync(int productId, int storeId = 0)
         {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             if (_catalogSettings.OneReviewPerProductFromCustomer)
-                return (await GetAllProductReviewsAsync(customerId: (await _workContext.GetCurrentCustomerAsync()).Id, productId: productId, storeId: storeId)).TotalCount == 0;
+                return (await GetAllProductReviewsAsync(customerId: customer.Id, productId: productId, storeId: storeId)).TotalCount == 0;
 
             return true;
         }

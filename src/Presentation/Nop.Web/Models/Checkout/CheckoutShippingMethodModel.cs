@@ -29,8 +29,9 @@ namespace Nop.Web.Models.Checkout
             public string Name { get; set; }
             public string Description { get; set; }
             public string Fee { get; set; }
+            public decimal Rate { get; set; }
+            public int DisplayOrder { get; set; }
             public bool Selected { get; set; }
-
             public ShippingOption ShippingOption { get; set; }
         }
 

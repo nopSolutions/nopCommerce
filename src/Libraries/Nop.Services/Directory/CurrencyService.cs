@@ -79,7 +79,7 @@ namespace Nop.Services.Directory
                 return null;
 
             return (await GetAllCurrenciesAsync(true))
-                .FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());
+                .FirstOrDefault(c => c.CurrencyCode.ToLowerInvariant() == currencyCode.ToLowerInvariant());
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace Nop.Services.Directory
             var exchangeRate = sourceCurrencyCode.Rate;
             if (exchangeRate == decimal.Zero)
                 throw new NopException($"Exchange rate not found for currency [{sourceCurrencyCode.Name}]");
-            result = result / exchangeRate;
+            result /= exchangeRate;
 
             return result;
         }
@@ -289,7 +289,7 @@ namespace Nop.Services.Directory
             var exchangeRate = targetCurrencyCode.Rate;
             if (exchangeRate == decimal.Zero)
                 throw new NopException($"Exchange rate not found for currency [{targetCurrencyCode.Name}]");
-            result = result * exchangeRate;
+            result *= exchangeRate;
 
             return result;
         }

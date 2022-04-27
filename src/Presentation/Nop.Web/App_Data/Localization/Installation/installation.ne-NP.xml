@@ -34,10 +34,10 @@
     <Value>कनेक्शन स्ट्रिंगको ढाँचा(फर्मेट) गलत छ</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>देश</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>आफ्नो देश चयन गर्नुहोस्...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>डाटाबेस बनेको छैन भने सिर्जना गर्नुहोस्</Value>
@@ -46,7 +46,7 @@
     <Value>नमूना (सेम्पल) डेटा सिर्जना गर्नुहोस्</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>कस्टम collation उल्लेख गर्नुहोस्</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>डाटाबेस</Value>
@@ -79,7 +79,7 @@
     <Value>स्थापना गर्नुहोस् (इन्स्टल)</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>NopCommerce स्थापना(इन्स्टल) गर्दै...</Value>
+    <Value>nopCommerce स्थापना(इन्स्टल) गर्दै...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
     <Value>एकीकृत विन्डोज प्रमाणीकरण(integrated Windows authentication) प्रयोग गर्नुहोस्</Value>
@@ -103,7 +103,7 @@
     <Value>इन्स्टलेसन प्रक्रिया पुन: सुरु गर्न क्लिक गर्नुहोस् (सबै क्यास(cache) रद्द गर्नुहोस्)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>पुनःसुरु हुँदै ...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
     <Value>सर्भरको नाम</Value>

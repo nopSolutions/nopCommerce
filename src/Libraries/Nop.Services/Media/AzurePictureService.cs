@@ -43,7 +43,6 @@ namespace Nop.Services.Media
         #region Ctor
 
         public AzurePictureService(AppSettings appSettings,
-            INopDataProvider dataProvider,
             IDownloadService downloadService,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
@@ -56,8 +55,7 @@ namespace Nop.Services.Media
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             MediaSettings mediaSettings)
-            : base(dataProvider,
-                  downloadService,
+            : base(downloadService,
                   httpContextAccessor,
                   fileProvider,
                   productAttributeParser,
@@ -88,13 +86,13 @@ namespace Nop.Services.Media
             if (_isInitialized)
                 return;
 
-            if (string.IsNullOrEmpty(appSettings.AzureBlobConfig.ConnectionString))
+            if (string.IsNullOrEmpty(appSettings.Get<AzureBlobConfig>().ConnectionString))
                 throw new Exception("Azure connection string for Blob is not specified");
 
-            if (string.IsNullOrEmpty(appSettings.AzureBlobConfig.ContainerName))
+            if (string.IsNullOrEmpty(appSettings.Get<AzureBlobConfig>().ContainerName))
                 throw new Exception("Azure container name for Blob is not specified");
 
-            if (string.IsNullOrEmpty(appSettings.AzureBlobConfig.EndPoint))
+            if (string.IsNullOrEmpty(appSettings.Get<AzureBlobConfig>().EndPoint))
                 throw new Exception("Azure end point for Blob is not specified");
 
             lock (_locker)
@@ -102,10 +100,10 @@ namespace Nop.Services.Media
                 if (_isInitialized)
                     return;
 
-                _azureBlobStorageAppendContainerName = appSettings.AzureBlobConfig.AppendContainerName;
-                _azureBlobStorageConnectionString = appSettings.AzureBlobConfig.ConnectionString;
-                _azureBlobStorageContainerName = appSettings.AzureBlobConfig.ContainerName.Trim().ToLower();
-                _azureBlobStorageEndPoint = appSettings.AzureBlobConfig.EndPoint.Trim().ToLower().TrimEnd('/');
+                _azureBlobStorageAppendContainerName = appSettings.Get<AzureBlobConfig>().AppendContainerName;
+                _azureBlobStorageConnectionString = appSettings.Get<AzureBlobConfig>().ConnectionString;
+                _azureBlobStorageContainerName = appSettings.Get<AzureBlobConfig>().ContainerName.Trim().ToLowerInvariant();
+                _azureBlobStorageEndPoint = appSettings.Get<AzureBlobConfig>().EndPoint.Trim().ToLowerInvariant().TrimEnd('/');
 
                 _blobServiceClient = new BlobServiceClient(_azureBlobStorageConnectionString);
                 _blobContainerClient = _blobServiceClient.GetBlobContainerClient(_azureBlobStorageContainerName);

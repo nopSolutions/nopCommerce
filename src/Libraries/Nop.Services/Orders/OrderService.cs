@@ -10,10 +10,10 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Html;
+using Nop.Core.Domain.Shipping;
 using Nop.Data;
-using Nop.Data.Extensions;
 using Nop.Services.Catalog;
+using Nop.Services.Html;
 using Nop.Services.Shipping;
 
 namespace Nop.Services.Orders
@@ -25,6 +25,7 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly IProductService _productService;
         private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Customer> _customerRepository;
@@ -41,7 +42,8 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        public OrderService(IProductService productService,
+        public OrderService(IHtmlFormatter htmlFormatter,
+            IProductService productService,
             IRepository<Address> addressRepository,
             IRepository<Customer> customerRepository,
             IRepository<Order> orderRepository,
@@ -53,6 +55,7 @@ namespace Nop.Services.Orders
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
             IShipmentService shipmentService)
         {
+            _htmlFormatter = htmlFormatter;
             _productService = productService;
             _addressRepository = addressRepository;
             _customerRepository = customerRepository;
@@ -71,103 +74,37 @@ namespace Nop.Services.Orders
         #region Utilities
 
         /// <summary>
-        /// Gets a total number of not yet shipped items (but added to shipments)
+        /// Gets the value indicating whether there are shipment items with a positive quantity in order shipments.
         /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the otal number of not yet shipped items (but added to shipments)
-        /// </returns>
-        protected virtual async Task<int> GetTotalNumberOfNotYetShippedItemsAsync(OrderItem orderItem)
+        /// <param name="order">Order</param>
+        /// <param name="predicate">Predicate to filter shipments or null to check all shipments</param>
+        /// <returns>The <see cref="Task"/> containing the value indicating whether there are shipment items with a positive quantity in order shipments.</returns>
+        protected virtual async Task<bool> HasShipmentItemsAsync(Order order, Func<Shipment, bool> predicate = null)
         {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
-
-            var result = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
-            for (var i = 0; i < shipments.Count; i++)
+            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(order.Id);
+            if (shipments?.Any(shipment => predicate == null || predicate(shipment)) == true)
             {
-                var shipment = shipments[i];
-                if (shipment.ShippedDateUtc.HasValue)
-                    //already shipped
-                    continue;
-
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
-                if (si != null)
+                var orderItems = await GetOrderItemsAsync(order.Id, isShipEnabled: true);
+                if (orderItems?.Any() == true)
                 {
-                    result += si.Quantity;
+                    foreach (var shipment in shipments)
+                    {
+                        if (predicate?.Invoke(shipment) == false)
+                            continue;
+
+                        bool hasPositiveQuantity(ShipmentItem shipmentItem)
+                        {
+                            return orderItems.Any(orderItem => orderItem.Id == shipmentItem.OrderItemId && shipmentItem.Quantity > 0);
+                        }
+
+                        var shipmentItems = await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id);
+                        if (shipmentItems?.Any(hasPositiveQuantity) == true)
+                            return true;
+                    }
                 }
             }
 
-            return result;
-        }
-
-        /// <summary>
-        /// Gets a total number of already shipped items
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the otal number of already shipped items
-        /// </returns>
-        protected virtual async Task<int> GetTotalNumberOfShippedItemsAsync(OrderItem orderItem)
-        {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
-
-            var result = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
-            for (var i = 0; i < shipments.Count; i++)
-            {
-                var shipment = shipments[i];
-                if (!shipment.ShippedDateUtc.HasValue)
-                    //not shipped yet
-                    continue;
-
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
-                if (si != null)
-                {
-                    result += si.Quantity;
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets a total number of already delivered items
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the otal number of already delivered items
-        /// </returns>
-        protected virtual async Task<int> GetTotalNumberOfDeliveredItemsAsync(OrderItem orderItem)
-        {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
-
-            var result = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
-
-            for (var i = 0; i < shipments.Count; i++)
-            {
-                var shipment = shipments[i];
-                if (!shipment.DeliveryDateUtc.HasValue)
-                    //not delivered yet
-                    continue;
-
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
-                if (si != null)
-                {
-                    result += si.Quantity;
-                }
-            }
-
-            return result;
+            return false;
         }
 
         #endregion
@@ -326,10 +263,14 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.CustomerId == customerId);
 
             if (productId > 0)
+            {
                 query = from o in query
                     join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                     where oi.ProductId == productId
                     select o;
+
+                query = query.Distinct();
+            }
 
             if (warehouseId > 0)
             {
@@ -348,6 +289,8 @@ namespace Nop.Services.Orders
                         //we use standard "warehouse" property
                         ((p.ManageInventoryMethodId != manageStockInventoryMethodId || !p.UseMultipleWarehouses) && p.WarehouseId == warehouseId)
                     select o;
+
+                query = query.Distinct();
             }
 
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
@@ -491,17 +434,29 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            foreach (var orderItem in await GetOrderItemsAsync(order.Id, isShipEnabled: true)) //we can ship only shippable products
-            {
-                var totalNumberOfNotYetShippedItems = await GetTotalNumberOfNotYetShippedItemsAsync(orderItem);
-                if (totalNumberOfNotYetShippedItems <= 0)
-                    continue;
+            if (order.PickupInStore)
+                return false;
 
-                //yes, we have at least one item to ship
-                return true;
-            }
+            return await HasShipmentItemsAsync(order, shipment => !shipment.ShippedDateUtc.HasValue);
+        }
 
-            return false;
+        /// <summary>
+        /// Gets a value indicating whether there are shipment items to mark as 'ready for pickup' in order shipments.
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether there are shipment items to mark as 'ready for pickup' in order shipments.
+        /// </returns>
+        public virtual async Task<bool> HasItemsToReadyForPickupAsync(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            if (!order.PickupInStore)
+                return false;
+
+            return await HasShipmentItemsAsync(order, shipment => !shipment.ReadyForPickupDateUtc.HasValue);
         }
 
         /// <summary>
@@ -517,18 +472,7 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            foreach (var orderItem in await GetOrderItemsAsync(order.Id, isShipEnabled: true)) //we can ship only shippable products
-            {
-                var totalNumberOfShippedItems = await GetTotalNumberOfShippedItemsAsync(orderItem);
-                var totalNumberOfDeliveredItems = await GetTotalNumberOfDeliveredItemsAsync(orderItem);
-                if (totalNumberOfShippedItems <= totalNumberOfDeliveredItems)
-                    continue;
-
-                //yes, we have at least one item to deliver
-                return true;
-            }
-
-            return false;
+            return await HasShipmentItemsAsync(order, shipment => (shipment.ShippedDateUtc.HasValue || shipment.ReadyForPickupDateUtc.HasValue) && !shipment.DeliveryDateUtc.HasValue);
         }
 
         #endregion
@@ -658,7 +602,7 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains the otal number of items in all shipments
         /// </returns>
-        public virtual async Task<int> GetTotalNumberOfItemsInAllShipmentAsync(OrderItem orderItem)
+        public virtual async Task<int> GetTotalNumberOfItemsInAllShipmentsAsync(OrderItem orderItem)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
@@ -693,7 +637,7 @@ namespace Nop.Services.Orders
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
 
-            var totalInShipments = await GetTotalNumberOfItemsInAllShipmentAsync(orderItem);
+            var totalInShipments = await GetTotalNumberOfItemsInAllShipmentsAsync(orderItem);
 
             var qtyOrdered = orderItem.Quantity;
             var qtyCanBeAddedToShipmentTotal = qtyOrdered - totalInShipments;
@@ -879,7 +823,7 @@ namespace Nop.Services.Orders
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = _htmlFormatter.FormatText(text, false, true, false, false, false, false);
 
             return text;
         }

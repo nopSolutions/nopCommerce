@@ -125,7 +125,7 @@
                                 function onboardedCallback(authCode, sharedId) {
                                     var postData = {
                                         MerchantGuid: '@Model.OnboardingModel.MerchantGuid',
-                                        Email_OverrideForStore: '@Model.Email_OverrideForStore.ToString().ToLower()',
+                                        Email_OverrideForStore: '@Model.Email_OverrideForStore.ToString().ToLowerInvariant()',
                                         SharedId: sharedId,
                                         AuthCode: authCode
                                     };
@@ -172,7 +172,7 @@
                         <span asp-validation-for="SetCredentialsManually"></span>
                     </div>
                 </div>
-                <nop-nested-setting asp-for="SetCredentialsManually" id="pnlCredentials">
+                <nop-nested-setting asp-for="SetCredentialsManually" id="pnlCredentials" disable-auto-generation="true">
                     <div class="form-group row">
                         <div class="col-md-3">
                             <nop-override-store-checkbox asp-for="UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -199,7 +199,7 @@
                             <nop-label asp-for="SecretKey" />
                         </div>
                         <div class="col-md-9">
-                            <nop-editor asp-for="SecretKey" asp-required="true" asp-value="@Model.SecretKey" />
+                            <nop-editor asp-for="SecretKey" asp-required="true" html-attributes="@(new { value = Model.SecretKey })" />
                             <span asp-validation-for="SecretKey"></span>
                         </div>
                     </div>
@@ -220,32 +220,6 @@
                         <div class="card-header">
                             @T("Plugins.Payments.PayPalCommerce.Prominently")
                         </div>
-
-                        <script>
-                            $(document).ready(function () {
-                                $("#@Html.IdFor(model => model.DisplayLogoInHeaderLinks)").click(toggleDisplayLogo);
-                                $("#@Html.IdFor(model => model.DisplayLogoInFooter)").click(toggleDisplayLogo);
-
-                                toggleDisplayLogo();
-                            });
-
-                            function toggleDisplayLogo() {
-                                if ($('#@Html.IdFor(model => model.DisplayLogoInHeaderLinks)').is(':checked')) {
-                                    $('#pnlLogoInHeaderLinks').showElement();
-                                }
-                                else {
-                                    $('#pnlLogoInHeaderLinks').hideElement();
-                                }
-
-                                if ($('#@Html.IdFor(model => model.DisplayLogoInFooter)').is(':checked')) {
-                                    $('#pnlLogoInFooter').showElement();
-                                }
-                                else {
-                                    $('#pnlLogoInFooter').hideElement();
-                                }
-                            }
-                        </script>
-
                         <div class="card-body">
                             <p>
                                 Build customer trust with PayPal branding on your website.<br />
@@ -275,6 +249,16 @@
                             </div>
                             <div class="form-group row advanced-setting">
                                 <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="DisplayPayLaterMessages_OverrideForStore" asp-input="DisplayPayLaterMessages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="DisplayPayLaterMessages" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="DisplayPayLaterMessages" />
+                                    <span asp-validation-for="DisplayPayLaterMessages"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row advanced-setting">
+                                <div class="col-md-3">
                                     <nop-override-store-checkbox asp-for="DisplayLogoInHeaderLinks_OverrideForStore" asp-input="DisplayLogoInHeaderLinks" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                     <nop-label asp-for="DisplayLogoInHeaderLinks" />
                                 </div>
@@ -284,7 +268,7 @@
                                 </div>
                             </div>
                             <nop-nested-setting asp-for="DisplayLogoInHeaderLinks">
-                                <div class="form-group row advanced-setting" id="pnlLogoInHeaderLinks">
+                                <div class="form-group row advanced-setting">
                                     <div class="col-md-3">
                                         <nop-override-store-checkbox asp-for="LogoInHeaderLinks_OverrideForStore" asp-input="LogoInHeaderLinks" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                         <nop-label asp-for="LogoInHeaderLinks" />
@@ -306,7 +290,7 @@
                                 </div>
                             </div>
                             <nop-nested-setting asp-for="DisplayLogoInFooter">
-                                <div class="form-group row advanced-setting" id="pnlLogoInFooter">
+                                <div class="form-group row advanced-setting">
                                     <div class="col-md-3">
                                         <nop-override-store-checkbox asp-for="LogoInFooter_OverrideForStore" asp-input="LogoInFooter" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                         <nop-label asp-for="LogoInFooter" />

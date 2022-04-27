@@ -20,7 +20,7 @@ namespace Nop.Services.Payments
         /// A task that represents the asynchronous operation
         /// The task result contains the list of active payment methods
         /// </returns>
-        Task<IList<IPaymentMethod>> LoadActivePluginsAsyncAsync(Customer customer = null, int storeId = 0, int countryId = 0);
+        Task<IList<IPaymentMethod>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0, int countryId = 0);
 
         /// <summary>
         /// Check whether the passed payment method is active
@@ -42,7 +42,7 @@ namespace Nop.Services.Payments
         Task<bool> IsPluginActiveAsync(string systemName, Customer customer = null, int storeId = 0);
 
         /// <summary>
-        /// Get countries in which the passed payment method is now allowed
+        /// Get countries in which the passed payment method is not allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <returns>
@@ -52,7 +52,7 @@ namespace Nop.Services.Payments
         Task<IList<int>> GetRestrictedCountryIdsAsync(IPaymentMethod paymentMethod);
 
         /// <summary>
-        /// Save countries in which the passed payment method is now allowed
+        /// Save countries in which the passed payment method is not allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="countryIds">List of country identifiers</param>

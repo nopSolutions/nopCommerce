@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.GiftCards.AddNew").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Gift cards");
+    NopHtml.SetActiveMenuItemSystemName("Gift cards");
 }
 
 <form asp-controller="GiftCard" asp-action="Create" method="post">
@@ -25,7 +25,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GiftCardDetailsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GiftCardDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

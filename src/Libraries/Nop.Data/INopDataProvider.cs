@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using LinqToDB;
 using LinqToDB.Data;
-using LinqToDB.Mapping;
 using Nop.Core;
+using Nop.Data.Mapping;
 
 namespace Nop.Data
 {
     /// <summary>
     /// Represents a data provider
     /// </summary>
-    public partial interface INopDataProvider
+    public partial interface INopDataProvider : IMappingEntityAccessor
     {
         #region Methods
 
@@ -138,19 +137,8 @@ namespace Nop.Data
         /// mapped to database table or view.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the queryable source
-        /// </returns>
-        Task<ITable<TEntity>> GetTableAsync<TEntity>() where TEntity : BaseEntity;
-
-        /// <summary>
-        /// Returns queryable source for specified mapping class for current connection,
-        /// mapped to database table or view.
-        /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Queryable source</returns>
-        ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity;
+        IQueryable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity;
 
         /// <summary>
         /// Get the current identity value
@@ -212,11 +200,16 @@ namespace Nop.Data
         Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity;
 
         /// <summary>
-        /// Returns mapped entity descriptor
+        /// Get hash values of a stored entity field
         /// </summary>
-        /// <typeparam name="TEntity">Type of entity</typeparam>
-        /// <returns>Mapped entity descriptor</returns>
-        EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity;
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="keySelector">A key selector which should project to a dictionary key</param>
+        /// <param name="fieldSelector">A field selector to apply a transform to a hash value</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>Dictionary</returns>
+        Task<IDictionary<int, string>> GetFieldHashesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate,
+            Expression<Func<TEntity, int>> keySelector,
+            Expression<Func<TEntity, object>> fieldSelector) where TEntity : BaseEntity;
 
         /// <summary>
         /// Executes command asynchronously and returns number of affected records
@@ -253,6 +246,12 @@ namespace Nop.Data
         /// The task result contains the returns collection of query result records
         /// </returns>
         Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters);
+
+        /// <summary>
+        /// Truncates database table
+        /// </summary>
+        /// <param name="resetIdentity">Performs reset identity column</param>
+        Task TruncateAsync<TEntity>(bool resetIdentity = false) where TEntity : BaseEntity;
 
         #endregion
 

@@ -6,7 +6,7 @@
     //page title
     ViewBag.PageTitle = string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.CustomOrderNumber);
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Orders");
+    NopHtml.SetActiveMenuItemSystemName("Orders");
 
     var itemsFromMultipleWarehouses = Model.Items
         .Where(x => x.AllowToChooseWarehouse && x.AvailableWarehouses.Count > 0)
@@ -33,7 +33,7 @@
             </button>
             <nop-action-confirmation asp-button-id="shipment-save" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
             <nop-action-confirmation asp-button-id="shipment-save-continue" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentAddButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentAddButtons, additionalData = Model })
         </div>
     </div>
     <div asp-validation-summary="All"></div>
@@ -63,24 +63,48 @@
                                     <nop-editor asp-for="AdminComment" />
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <nop-label asp-for="CanShip" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="CanShip" />
-                                </div>
-                            </div>
-                            <nop-nested-setting asp-for="CanShip">
-                                <div class="form-group row" id="pnlHasDelivery">
+                            @if (Model.PickupInStore)
+                            {
+                                <div class="form-group row">
                                     <div class="col-md-3">
-                                        <nop-label asp-for="CanDeliver" />
+                                        <nop-label asp-for="CanMarkAsReadyForPickup" />
                                     </div>
                                     <div class="col-md-9">
-                                        <nop-editor asp-for="CanDeliver" />
+                                        <nop-editor asp-for="CanMarkAsReadyForPickup" />
                                     </div>
                                 </div>
-                            </nop-nested-setting>
+                                <nop-nested-setting asp-for="CanMarkAsReadyForPickup">
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="CanDeliver" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="CanDeliver" />
+                                        </div>
+                                    </div>
+                                </nop-nested-setting>
+                            }
+                            else
+                            {
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="CanShip" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="CanShip" />
+                                    </div>
+                                </div>
+                                <nop-nested-setting asp-for="CanShip">
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="CanDeliver" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="CanDeliver" />
+                                        </div>
+                                    </div>
+                                </nop-nested-setting>
+                            }
                         </div>
                         <script>
                             $(document).ready(function () {
@@ -101,22 +125,7 @@
                                 }).bind("click", function () {
                                     return validateWarehouseAvailability("continue");
                                 });;
-
-                                $("#@Html.IdFor(model => model.CanShip)").click(toggleDelivery);
-                                toggleDelivery();
-
                             });
-
-                            function toggleDelivery() {
-                                if ($('#@Html.IdFor(model => model.CanShip)').is(':checked'))
-                                {
-                                    $('#pnlHasDelivery').showElement();
-                                }
-                                else
-                                {
-                                    $('#pnlHasDelivery').hideElement();
-                                }
-                            }
 
                             function validateWarehouseAvailability(action) {
                                 @{
@@ -190,12 +199,24 @@
                                         <th>
                                             @T("Admin.Orders.Shipments.Products.QtyOrdered")
                                         </th>
-                                        <th>
-                                            @T("Admin.Orders.Shipments.Products.QtyShipped")
-                                        </th>
-                                        <th>
-                                            @T("Admin.Orders.Shipments.Products.QtyToShip")
-                                        </th>
+                                        @if (Model.PickupInStore)
+                                        {
+                                            <th>
+                                                @T("Admin.Orders.Shipments.Products.QtyReadyForPickup")
+                                            </th>
+                                            <th>
+                                                @T("Admin.Orders.Shipments.Products.QtyToPickup")
+                                            </th>
+                                        }
+                                        else
+                                        {
+                                            <th>
+                                                @T("Admin.Orders.Shipments.Products.QtyShipped")
+                                            </th>
+                                            <th>
+                                                @T("Admin.Orders.Shipments.Products.QtyToShip")
+                                            </th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>

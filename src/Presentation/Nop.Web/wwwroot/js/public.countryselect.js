@@ -10,6 +10,10 @@
         var $this = $(this);
         var selectedItem = $this.val();
         var stateProvince = $($this.data('stateprovince'));
+
+        if(stateProvince.length == 0)
+          return;
+
         var loading = $($this.data('loading'));
         loading.show();
         $.ajax({

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
@@ -161,7 +160,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<SpecificationAttributeGroupModel> PrepareSpecificationAttributeGroupModelAsync(SpecificationAttributeGroupModel model,
             SpecificationAttributeGroup specificationAttributeGroup, bool excludeProperties = false)
         {
-            Action<SpecificationAttributeGroupLocalizedModel, int> localizedModelConfiguration = null;
+            Func<SpecificationAttributeGroupLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (specificationAttributeGroup != null)
             {
@@ -222,7 +221,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<SpecificationAttributeModel> PrepareSpecificationAttributeModelAsync(SpecificationAttributeModel model,
             SpecificationAttribute specificationAttribute, bool excludeProperties = false)
         {
-            Action<SpecificationAttributeLocalizedModel, int> localizedModelConfiguration = null;
+            Func<SpecificationAttributeLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (specificationAttribute != null)
             {
@@ -311,7 +310,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (specificationAttribute == null)
                 throw new ArgumentNullException(nameof(specificationAttribute));
 
-            Action<SpecificationAttributeOptionLocalizedModel, int> localizedModelConfiguration = null;
+            Func<SpecificationAttributeOptionLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (specificationAttributeOption != null)
             {

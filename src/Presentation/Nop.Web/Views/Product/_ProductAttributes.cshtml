@@ -1,4 +1,5 @@
 ﻿@model ProductDetailsModel
+@using Nop.Core
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Media
 @using System.Text
@@ -135,13 +136,11 @@
                         case AttributeControlType.Datepicker:
                             {
                                 <nop-date-picker asp-day-name="@(controlId + "_day")"
-                                                 asp-month-name="@(controlId + "_month")"
-                                                 asp-year-name="@(controlId + "_year")"
-                                                 asp-begin-year="@(DateTime.Now.Year)"
-                                                 asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)"
-                                                 asp-selected-day="@(attribute.SelectedDay)"
-                                                 asp-selected-month="@(attribute.SelectedMonth)"
-                                                 asp-selected-year="@(attribute.SelectedYear)" />
+                                                asp-month-name="@(controlId + "_month")"
+                                                asp-year-name="@(controlId + "_year")"
+                                                asp-begin-year="@DateTime.UtcNow"
+                                                asp-end-year="@DateTime.UtcNow.AddYears(catalogSettings.CountDisplayedYearsDatePicker)"
+                                                asp-selected-date="@CommonHelper.ParseDate(attribute.SelectedYear, attribute.SelectedMonth, attribute.SelectedDay)" />
                             }
                             break;
                         case AttributeControlType.FileUpload:
@@ -152,9 +151,9 @@
                                     download = await downloadService.GetDownloadByGuidAsync(new Guid(attribute.DefaultValue));
                                 }
 
-                                //register CSS and JS
-                                Html.AddCssFileParts(ResourceLocation.Footer, "~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css");
-                                Html.AddScriptParts(ResourceLocation.Footer, "~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js");
+                                @* register CSS and JS *@
+                                <link rel="stylesheet" href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" />
+                                <script asp-exclude-from-bundle="true" src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js" asp-location="Footer"></script>
 
                                 //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                 var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
@@ -361,7 +360,7 @@
 
     if (Model.AllowAddingOnlyExistingAttributeCombinations && catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.Disable)
     {
-        Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.combinationsbehavior.js");
+        <script src="~/js/public.combinationsbehavior.js" asp-location="Footer"></script>
 
         <script asp-location="Footer">
             var combinationsBehavior_@(Model.Id);

@@ -78,6 +78,10 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Models
         public string LogoInFooter { get; set; }
         public bool LogoInFooter_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Plugins.Payments.PayPalCommerce.Fields.DisplayPayLaterMessages")]
+        public bool DisplayPayLaterMessages { get; set; }
+        public bool DisplayPayLaterMessages_OverrideForStore { get; set; }
+
         public OnboardingModel OnboardingModel { get; set; }
 
         #endregion

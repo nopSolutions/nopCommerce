@@ -69,7 +69,7 @@
                     <nop-label asp-for="@Model.AddRewardPoints.Message" />
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="@Model.AddRewardPoints.Message" placeholder="@T("Admin.Customers.Customers.SomeComment")"/>
+                    <nop-editor asp-for="@Model.AddRewardPoints.Message" html-attributes="@(new { placeholder = T("Admin.Customers.Customers.SomeComment") })"/>
                     <span asp-validation-for="@Model.AddRewardPoints.Message"></span>
                 </div>
             </div>
@@ -148,7 +148,7 @@
                             $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(@Model.AddRewardPoints.ActivationDelayPeriodId);
                             $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").data("kendoNumericTextBox").value(@Model.AddRewardPoints.ActivationDelay);
                             $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").data("kendoNumericTextBox").value(0);
-                            $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").prop('checked', @(Model.AddRewardPoints.ActivatePointsImmediately.ToString().ToLower()));
+                            $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").prop('checked', @(Model.AddRewardPoints.ActivatePointsImmediately.ToString().ToLowerInvariant()));
 
                             activatePointsImmediately();
                         } else {

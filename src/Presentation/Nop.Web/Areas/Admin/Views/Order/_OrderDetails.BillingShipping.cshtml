@@ -110,6 +110,7 @@
                                     @Model.BillingAddress.CountryName
                                 </td>
                             </tr>
+                            @await Component.InvokeAsync("Widget", new { widgetZone = AdminWidgetZones.OrderBillingAddressDetailsBottom, additionalData = Model })
                             @if (!string.IsNullOrEmpty(Model.BillingAddress.FormattedCustomAddressAttributes))
                             {
                                 <tr>
@@ -239,6 +240,7 @@
                                             @Model.ShippingAddress.CountryName
                                         </td>
                                     </tr>
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = AdminWidgetZones.OrderShippingAddressDetailsBottom, additionalData = Model })
                                     @if (!string.IsNullOrEmpty(Model.ShippingAddress.FormattedCustomAddressAttributes))
                                     {
                                         <tr class="custom-attributes-view">
@@ -470,11 +472,19 @@
                             Title = T("Admin.Orders.Shipments.TotalWeight").Text,
                             Width = "100"
                         },
-                        new ColumnProperty(nameof(ShipmentModel.ShippedDate))
-                        {
-                            Title = T("Admin.Orders.Shipments.ShippedDate").Text,
-                            Width = "100"
-                        },
+                        (
+                            Model.PickupInStore 
+                                ? new ColumnProperty(nameof(ShipmentModel.ReadyForPickupDate))
+                                {
+                                    Title = T("Admin.Orders.Shipments.ReadyForPickupDate").Text,
+                                    Width = "100"
+                                }
+                                : new ColumnProperty(nameof(ShipmentModel.ShippedDate))
+                                {
+                                    Title = T("Admin.Orders.Shipments.ShippedDate").Text,
+                                    Width = "100"
+                                } 
+                        ),
                         new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
                         {
                             Title = T("Admin.Orders.Shipments.DeliveryDate").Text,

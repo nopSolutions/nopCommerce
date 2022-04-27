@@ -56,7 +56,6 @@ namespace Nop.Web.Factories
         private readonly IManufacturerService _manufacturerService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IPictureService _pictureService;
-        private readonly IPriceFormatter _priceFormatter;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
@@ -92,7 +91,6 @@ namespace Nop.Web.Factories
             IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService,
             IPictureService pictureService,
-            IPriceFormatter priceFormatter,
             IProductModelFactory productModelFactory,
             IProductService productService,
             IProductTagService productTagService,
@@ -124,7 +122,6 @@ namespace Nop.Web.Factories
             _manufacturerService = manufacturerService;
             _manufacturerTemplateService = manufacturerTemplateService;
             _pictureService = pictureService;
-            _priceFormatter = priceFormatter;
             _productModelFactory = productModelFactory;
             _productService = productService;
             _productTagService = productTagService;
@@ -541,8 +538,10 @@ namespace Nop.Web.Factories
             if (!_catalogSettings.UseAjaxLoadMenu)
                 cachedCategoriesModel = await PrepareCategorySimpleModelsAsync();
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             //top menu topics
-            var topicModel = await (await _topicService.GetAllTopicsAsync((await _storeContext.GetCurrentStoreAsync()).Id, onlyIncludedInTopMenu: true))
+            var topicModel = await (await _topicService.GetAllTopicsAsync(store.Id, onlyIncludedInTopMenu: true))
                 .SelectAwait(async t => new TopMenuModel.TopicModel
                 {
                     Id = t.Id,
@@ -753,7 +752,10 @@ namespace Nop.Web.Factories
             var filterableOptions = await _specificationAttributeService
                 .GetFiltrableSpecificationAttributeOptionsByCategoryIdAsync(category.Id);
 
-            model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
+            if (_catalogSettings.EnableSpecificationAttributeFiltering)
+            {
+                model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
+            }
 
             //filterable manufacturers
             if (_catalogSettings.EnableManufacturerFiltering)
@@ -823,7 +825,8 @@ namespace Nop.Web.Factories
             //it'll load all categories anyway.
             //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
             //so we load all categories at once (we know they are cached)
-            var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: store.Id);
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
             foreach (var category in categories)
             {
@@ -842,10 +845,10 @@ namespace Nop.Web.Factories
                     //include subcategories
                     if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
                         categoryIds.AddRange(
-                            await _categoryService.GetChildCategoryIdsAsync(category.Id, (await _storeContext.GetCurrentStoreAsync()).Id));
+                            await _categoryService.GetChildCategoryIdsAsync(category.Id, store.Id));
 
                     categoryModel.NumberOfProducts =
-                        await _productService.GetNumberOfProductsInCategoryAsync(categoryIds, (await _storeContext.GetCurrentStoreAsync()).Id);
+                        await _productService.GetNumberOfProductsInCategoryAsync(categoryIds, store.Id);
                 }
 
                 if (loadSubCategories)
@@ -936,7 +939,8 @@ namespace Nop.Web.Factories
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
             {
-                var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var storeId = store.Id;
                 var featuredProducts = await _productService.GetManufacturerFeaturedProductsAsync(manufacturer.Id, storeId);
                 if (featuredProducts != null)
                     model.FeaturedProducts = (await _productModelFactory.PrepareProductOverviewModelsAsync(featuredProducts)).ToList();
@@ -1021,7 +1025,10 @@ namespace Nop.Web.Factories
             var filterableOptions = await _specificationAttributeService
                 .GetFiltrableSpecificationAttributeOptionsByManufacturerIdAsync(manufacturer.Id);
 
-            model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
+            if (_catalogSettings.EnableSpecificationAttributeFiltering)
+            {
+                model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
+            }
 
             var filteredSpecs = command.SpecificationOptionIds is null ? null : filterableOptions.Where(fo => command.SpecificationOptionIds.Contains(fo.Id)).ToList();
 
@@ -1233,18 +1240,19 @@ namespace Nop.Web.Factories
 
             //price range
             PriceRangeModel selectedPriceRange = null;
+            var store = await _storeContext.GetCurrentStoreAsync();
             if (_catalogSettings.EnablePriceRangeFiltering && vendor.PriceRangeFiltering)
             {
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
-                PriceRangeModel availablePriceRange = null;
+                PriceRangeModel availablePriceRange;
                 if (!vendor.ManuallyPriceRange)
                 {
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                     {
                         var products = await _productService.SearchProductsAsync(0, 1,
                             vendorId: vendor.Id,
-                            storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                            storeId: store.Id,
                             visibleIndividuallyOnly: true,
                             orderBy: orderBy);
 
@@ -1276,7 +1284,7 @@ namespace Nop.Web.Factories
                 vendorId: vendor.Id,
                 priceMin: selectedPriceRange?.From,
                 priceMax: selectedPriceRange?.To,
-                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                storeId: store.Id,
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
@@ -1478,17 +1486,18 @@ namespace Nop.Web.Factories
 
             //price range
             PriceRangeModel selectedPriceRange = null;
+            var store = await _storeContext.GetCurrentStoreAsync();
             if (_catalogSettings.EnablePriceRangeFiltering && _catalogSettings.ProductsByTagPriceRangeFiltering)
             {
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
-                PriceRangeModel availablePriceRange = null;
+                PriceRangeModel availablePriceRange;
                 if (!_catalogSettings.ProductsByTagManuallyPriceRange)
                 {
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                     {
                         var products = await _productService.SearchProductsAsync(0, 1,
-                            storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                            storeId: store.Id,
                             productTagId: productTag.Id,
                             visibleIndividuallyOnly: true,
                             orderBy: orderBy);
@@ -1520,7 +1529,7 @@ namespace Nop.Web.Factories
                 command.PageSize,
                 priceMin: selectedPriceRange?.From,
                 priceMax: selectedPriceRange?.To,
-                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                storeId: store.Id,
                 productTagId: productTag.Id,
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy);
@@ -1670,7 +1679,7 @@ namespace Nop.Web.Factories
                 : searchModel.q.Trim();
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
-            // only search if query string search keyword is set (used to aasync Task searching or displaying search term min length error message on /search page load)
+            //only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
             //we don't use "!string.IsNullOrEmpty(searchTerms)" in cases of "ProductSearchTermMinimumLength" set to 0 but searching by other parameters (e.g. category or price filter)
             var isSearchTermSpecified = _httpContextAccessor.HttpContext.Request.Query.ContainsKey("q");
             if (isSearchTermSpecified)
@@ -1722,7 +1731,7 @@ namespace Nop.Web.Factories
                     {
                         selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
-                        PriceRangeModel availablePriceRange = null;
+                        PriceRangeModel availablePriceRange;
                         if (!_catalogSettings.SearchPageManuallyPriceRange)
                         {
                             async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)

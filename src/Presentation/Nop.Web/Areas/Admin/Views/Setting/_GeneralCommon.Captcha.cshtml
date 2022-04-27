@@ -13,7 +13,7 @@
             <span asp-validation-for="CaptchaSettings.Enabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CaptchaSettings.Enabled">
+    <nop-nested-setting asp-for="CaptchaSettings.Enabled" disable-auto-generation="true">
         <div class="form-group row" id="ssCaptchaTypepnl">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="CaptchaSettings.CaptchaType_OverrideForStore" asp-input="CaptchaSettings.CaptchaType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

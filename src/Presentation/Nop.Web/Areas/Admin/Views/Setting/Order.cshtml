@@ -4,27 +4,28 @@
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Settings.Order").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Order settings");
+    NopHtml.SetActiveMenuItemSystemName("Order settings");
 }
 
 @{
     const string hideCheckoutBlockAttributeName = "OrderSettingsPage.HideCheckoutBlock";
-    var hideCheckoutBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCheckoutBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCheckoutBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCheckoutBlockAttributeName);
 
     const string hideOrderTotalsBlockAttributeName = "OrderSettingsPage.HideOrderTotalsBlock";
-    var hideOrderTotalsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideOrderTotalsBlockAttributeName);
+    var hideOrderTotalsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideOrderTotalsBlockAttributeName);
 
     const string hideCommonBlockAttributeName = "OrderSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 
     const string hidePdfInvoiceBlockAttributeName = "OrderSettingsPage.HidePdfInvoiceBlock";
-    var hidePdfInvoiceBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePdfInvoiceBlockAttributeName);
+    var hidePdfInvoiceBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePdfInvoiceBlockAttributeName);
 
     const string hideGiftCardsBlockAttributeName = "OrderSettingsPage.HideGiftCardsBlock";
-    var hideGiftCardsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideGiftCardsBlockAttributeName);
+    var hideGiftCardsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideGiftCardsBlockAttributeName);
 
     const string hideReturnRequestBlockAttributeName = "OrderSettingsPage.HideReturnRequestBlock";
-    var hideReturnRequestBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideReturnRequestBlockAttributeName);
+    var hideReturnRequestBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideReturnRequestBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Order" method="post">
@@ -37,7 +38,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsButtons, additionalData = Model })
         </div>
     </div>
 

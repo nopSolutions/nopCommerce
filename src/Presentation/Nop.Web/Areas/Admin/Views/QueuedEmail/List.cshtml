@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.System.QueuedEmails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Queued emails");
+    NopHtml.SetActiveMenuItemSystemName("Queued emails");
 }
 
 @{
@@ -28,7 +28,7 @@
                 @T("Admin.System.QueuedEmails.DeleteAll")
             </button>
             <nop-action-confirmation asp-button-id="delete-all" />
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.QueuedEmailListButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.QueuedEmailListButtons, additionalData = Model })
         </div>
     </div>
 
@@ -231,10 +231,14 @@
                                         data: postData,
                                         traditional: true,
                                         error: function (jqXHR, textStatus, errorThrown) {
-                                            $('#deleteSelectedFailed-info').text(errorThrown);
-                                            $("#deleteSelectedFailed").click();
+                                            showAlert('deleteSelectedFailed', errorThrown);
                                         },
                                         complete: function (jqXHR, textStatus) {
+                                            if (jqXHR.status === 204)
+                                            {
+                                                showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                return;
+                                            }
                                             updateTable('#queuedEmails-grid');
                                         }
                                     });
@@ -251,3 +255,4 @@
     </section>
 </form>
 <nop-alert asp-alert-id="deleteSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />

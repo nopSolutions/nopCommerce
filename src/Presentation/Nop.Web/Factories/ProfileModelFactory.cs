@@ -230,7 +230,7 @@ namespace Nop.Web.Factories
 
             foreach (var forumPost in list)
             {
-                var posted = string.Empty;
+                string posted;
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
                 {
                     var languageCode = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
@@ -254,7 +254,7 @@ namespace Nop.Web.Factories
                 });
             }
 
-            var pagerModel = new PagerModel
+            var pagerModel = new PagerModel(_localizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

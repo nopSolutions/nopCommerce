@@ -12,7 +12,7 @@
             <span asp-validation-for="CustomerSettings.UsernamesEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.UsernamesEnabled">
+    <nop-nested-setting asp-for="CustomerSettings.UsernamesEnabled" disable-auto-generation="true">
         <div class="form-group row advanced-setting" id="pnlAllowUsersToChangeUsernames">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.AllowUsersToChangeUsernames" />
@@ -41,7 +41,7 @@
                     <span asp-validation-for="CustomerSettings.UsernameValidationEnabled"></span>
                 </div>
             </div>
-            <nop-nested-setting asp-for="CustomerSettings.UsernameValidationEnabled">
+            <nop-nested-setting asp-for="CustomerSettings.UsernameValidationEnabled" disable-auto-generation="true">
                 <div class="form-group row advanced-setting" id="pnlUsernameValidationRule">
                     <div class="col-md-3">
                         <nop-label asp-for="CustomerSettings.UsernameValidationRule" />
@@ -82,7 +82,7 @@
                 <span asp-validation-for="CustomerSettings.PhoneNumberValidationEnabled"></span>
             </div>
         </div>
-        <nop-nested-setting asp-for="CustomerSettings.PhoneNumberValidationEnabled">
+        <nop-nested-setting asp-for="CustomerSettings.PhoneNumberValidationEnabled" disable-auto-generation="true">
             <div class="form-group row advanced-setting" id="pnlPhoneNumberValidationRule">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.PhoneNumberValidationRule" />
@@ -112,7 +112,7 @@
             <span asp-validation-for="CustomerSettings.AllowCustomersToUploadAvatars"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.AllowCustomersToUploadAvatars">
+    <nop-nested-setting asp-for="CustomerSettings.AllowCustomersToUploadAvatars" disable-auto-generation="true">
         <div class="form-group row" id="pnlDefaultAvatarEnabled">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.DefaultAvatarEnabled" />

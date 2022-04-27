@@ -77,7 +77,6 @@ namespace Nop.Services.Discounts
 
         #region Discounts (caching)
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Gets the discount amount for the specified value
         /// </summary>
@@ -86,7 +85,6 @@ namespace Nop.Services.Discounts
         /// <returns>The discount amount</returns>
         decimal GetDiscountAmount(Discount discount, decimal amount);
 
-        //TODO: migrate to an extension method
         /// <summary>
         /// Get preferred discount (with maximum discount value)
         /// </summary>

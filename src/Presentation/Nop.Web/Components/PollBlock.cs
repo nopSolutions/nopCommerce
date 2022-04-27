@@ -14,7 +14,6 @@ namespace Nop.Web.Components
             _pollModelFactory = pollModelFactory;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(string systemKeyword)
         {
 

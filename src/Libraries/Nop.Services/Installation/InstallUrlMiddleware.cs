@@ -37,7 +37,7 @@ namespace Nop.Services.Installation
         public async Task InvokeAsync(HttpContext context, IWebHelper webHelper)
         {
             //whether database is installed
-            if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+            if (!DataSettingsManager.IsDatabaseInstalled())
             {
                 var installUrl = $"{webHelper.GetStoreLocation()}{NopInstallationDefaults.InstallPath}";
                 if (!webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))

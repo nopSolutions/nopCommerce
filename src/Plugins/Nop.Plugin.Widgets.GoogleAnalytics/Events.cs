@@ -127,6 +127,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     var product = await _productService.GetProductByIdAsync(item.ProductId);
                     //get category
                     var category = (await _categoryService.GetCategoryByIdAsync((await _categoryService.GetProductCategoriesByProductIdAsync(product.Id)).FirstOrDefault()?.CategoryId ?? 0))?.Name;
+                    if (string.IsNullOrEmpty(category))
+                        category = "No category";
+
                     var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
                     var qty = item.Quantity;
                     if (!add)

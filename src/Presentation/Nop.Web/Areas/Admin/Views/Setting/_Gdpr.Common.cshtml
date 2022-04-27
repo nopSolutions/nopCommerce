@@ -11,7 +11,7 @@
             <span asp-validation-for="GdprEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="GdprEnabled">
+    <nop-nested-setting asp-for="GdprEnabled" disable-auto-generation="true">
         <div class="form-group row advanced-setting" id="pnlLogPrivacyPolicyConsent">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="LogPrivacyPolicyConsent_OverrideForStore" asp-input="LogPrivacyPolicyConsent" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

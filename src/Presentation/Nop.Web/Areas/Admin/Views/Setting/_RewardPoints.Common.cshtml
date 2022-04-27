@@ -47,4 +47,14 @@
             <span asp-validation-for="MaximumRewardPointsToUsePerOrder"></span>
         </div>
     </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MaximumRedeemedRate_OverrideForStore" asp-input="MaximumRedeemedRate" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MaximumRedeemedRate" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MaximumRedeemedRate" />
+            <span asp-validation-for="MaximumRedeemedRate"></span>
+        </div>
+    </div>
 </div>

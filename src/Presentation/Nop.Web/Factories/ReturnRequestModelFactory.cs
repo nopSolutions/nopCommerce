@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -110,12 +111,7 @@ namespace Nop.Web.Factories
                 .ToListAsync();
 
             //returnable products
-            var orderItems = await _orderService.GetOrderItemsAsync(order.Id, isNotReturnable: false);
-            foreach (var orderItem in orderItems)
-            {
-                var orderItemModel = await PrepareSubmitReturnRequestOrderItemModelAsync(orderItem);
-                model.Items.Add(orderItemModel);
-            }
+            model.Items = await PrepareSubmitReturnRequestOrderItemModelsAsync(order);
 
             return model;
         }
@@ -130,8 +126,10 @@ namespace Nop.Web.Factories
         public virtual async Task<CustomerReturnRequestsModel> PrepareCustomerReturnRequestsModelAsync()
         {
             var model = new CustomerReturnRequestsModel();
-
-            var returnRequests = await _returnRequestService.SearchReturnRequestsAsync((await _storeContext.GetCurrentStoreAsync()).Id, (await _workContext.GetCurrentCustomerAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var returnRequests = await _returnRequestService.SearchReturnRequestsAsync(store.Id, customer.Id);
+            
             foreach (var returnRequest in returnRequests)
             {
                 var orderItem = await _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
@@ -164,48 +162,61 @@ namespace Nop.Web.Factories
         }
 
         /// <summary>
-        /// Prepare the order item model
+        /// Prepares the order item models for return request by specified order.
         /// </summary>
-        /// <param name="orderItem">Order item</param>
+        /// <param name="order">Order</param>
         /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the order item model
+        /// The <see cref="Task"/> containing the <see cref="IList{SubmitReturnRequestModel.OrderItemModel}"/>
         /// </returns>
-        public virtual async Task<SubmitReturnRequestModel.OrderItemModel> PrepareSubmitReturnRequestOrderItemModelAsync(OrderItem orderItem)
+        protected virtual async Task<IList<SubmitReturnRequestModel.OrderItemModel>> PrepareSubmitReturnRequestOrderItemModelsAsync(Order order)
         {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
+            if (order is null)
+                throw new ArgumentNullException(nameof(order));
 
-            var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
-            var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+            var models = new List<SubmitReturnRequestModel.OrderItemModel>();
 
-            var model = new SubmitReturnRequestModel.OrderItemModel
+            var returnRequestAvailability = await _returnRequestService.GetReturnRequestAvailabilityAsync(order.Id);
+            if (returnRequestAvailability?.IsAllowed == true)
             {
-                Id = orderItem.Id,
-                ProductId = product.Id,
-                ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
-                ProductSeName = await _urlRecordService.GetSeNameAsync(product),
-                AttributeInfo = orderItem.AttributeDescription,
-                Quantity = orderItem.Quantity
-            };
+                foreach (var returnableOrderItem in returnRequestAvailability.ReturnableOrderItems)
+                {
+                    if (returnableOrderItem.AvailableQuantityForReturn == 0)
+                        continue;
 
-            var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+                    var orderItem = returnableOrderItem.OrderItem;
+                    var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
-            //unit price
-            if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-            {
-                //including tax
-                var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                model.UnitPrice = await _priceFormatter.FormatPriceAsync(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+                    var model = new SubmitReturnRequestModel.OrderItemModel
+                    {
+                        Id = orderItem.Id,
+                        ProductId = product.Id,
+                        ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                        ProductSeName = await _urlRecordService.GetSeNameAsync(product),
+                        AttributeInfo = orderItem.AttributeDescription,
+                        Quantity = returnableOrderItem.AvailableQuantityForReturn
+                    };
+
+                    var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+
+                    //unit price
+                    if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+                    {
+                        //including tax
+                        var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                        model.UnitPrice = await _priceFormatter.FormatPriceAsync(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+                    }
+                    else
+                    {
+                        //excluding tax
+                        var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                        model.UnitPrice = await _priceFormatter.FormatPriceAsync(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
+                    }
+
+                    models.Add(model);
+                }
             }
-            else
-            {
-                //excluding tax
-                var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                model.UnitPrice = await _priceFormatter.FormatPriceAsync(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
-            }
 
-            return model;
+            return models;
         }
 
         #endregion

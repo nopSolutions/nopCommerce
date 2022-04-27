@@ -13,6 +13,7 @@ using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
+using Nop.Services.ScheduleTasks;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Infrastructure;
 
@@ -28,6 +29,7 @@ namespace Nop.Plugin.Tax.Avalara
         private readonly AvalaraTaxManager _avalaraTaxManager;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ILocalizationService _localizationService;
+        private readonly IScheduleTaskService _scheduleTaskService;
         private readonly ISettingService _settingService;
         private readonly ITaxPluginManager _taxPluginManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -41,6 +43,7 @@ namespace Nop.Plugin.Tax.Avalara
         public AvalaraTaxProvider(AvalaraTaxManager avalaraTaxManager,
             IActionContextAccessor actionContextAccessor,
             ILocalizationService localizationService,
+            IScheduleTaskService scheduleTaskService,
             ISettingService settingService,
             ITaxPluginManager taxPluginManager,
             IUrlHelperFactory urlHelperFactory,
@@ -50,6 +53,7 @@ namespace Nop.Plugin.Tax.Avalara
             _avalaraTaxManager = avalaraTaxManager;
             _actionContextAccessor = actionContextAccessor;
             _localizationService = localizationService;
+            _scheduleTaskService = scheduleTaskService;
             _settingService = settingService;
             _taxPluginManager = taxPluginManager;
             _urlHelperFactory = urlHelperFactory;
@@ -144,7 +148,8 @@ namespace Nop.Plugin.Tax.Avalara
                 AdminWidgetZones.CustomerRoleDetailsTop,
                 AdminWidgetZones.ProductListButtons,
                 PublicWidgetZones.CheckoutConfirmTop,
-                PublicWidgetZones.OpCheckoutConfirmTop
+                PublicWidgetZones.OpCheckoutConfirmTop,
+                PublicWidgetZones.OrderSummaryContentBefore
             });
         }
 
@@ -170,6 +175,9 @@ namespace Nop.Plugin.Tax.Avalara
                 return AvalaraTaxDefaults.ADDRESS_VALIDATION_VIEW_COMPONENT_NAME;
             }
 
+            if (widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore))
+                return AvalaraTaxDefaults.APPLIED_CERTIFICATE_VIEW_COMPONENT_NAME;
+
             return null;
         }
 
@@ -187,8 +195,12 @@ namespace Nop.Plugin.Tax.Avalara
                 CommitTransactions = true,
                 TaxOriginAddressType = TaxOriginAddressType.DefaultTaxAddress,
                 EnableLogging = true,
+                UseTaxRateTables = true,
                 GetTaxRateByAddressOnly = true,
-                TaxRateByAddressCacheTime = 480
+                TaxRateByAddressCacheTime = 480,
+                AutoValidateCertificate = true,
+                AllowEditCustomer = true,
+                DisplayNoValidCertificatesMessage = true
             });
 
             if (!_widgetSettings.ActiveWidgetSystemNames.Contains(AvalaraTaxDefaults.SystemName))
@@ -197,30 +209,83 @@ namespace Nop.Plugin.Tax.Avalara
                 await _settingService.SaveSettingAsync(_widgetSettings);
             }
 
-            //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            //schedule task
+            if (await _scheduleTaskService.GetTaskByTypeAsync(AvalaraTaxDefaults.DownloadTaxRatesTask.Type) is null)
             {
-                ["Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.Create"] = "Create request",
-                ["Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.CreateResponse"] = "Create response",
-                ["Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.Error"] = "Error",
-                ["Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.Refund"] = "Refund request",
-                ["Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.RefundResponse"] = "Refund response",
-                ["Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.Void"] = "Void request",
-                ["Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.VoidResponse"] = "Void response",
+                await _scheduleTaskService.InsertTaskAsync(new()
+                {
+                    Enabled = true,
+                    LastEnabledUtc = DateTime.UtcNow,
+                    Seconds = AvalaraTaxDefaults.DownloadTaxRatesTask.Days * 24 * 60 * 60,
+                    Name = AvalaraTaxDefaults.DownloadTaxRatesTask.Name,
+                    Type = AvalaraTaxDefaults.DownloadTaxRatesTask.Type
+                });
+            }
+
+            //locales
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+            {
                 ["Enums.Nop.Plugin.Tax.Avalara.Domain.TaxOriginAddressType.DefaultTaxAddress"] = "Default tax address",
                 ["Enums.Nop.Plugin.Tax.Avalara.Domain.TaxOriginAddressType.ShippingOrigin"] = "Shipping origin address",
                 ["Plugins.Tax.Avalara.AddressValidation.Confirm"] = "For the correct tax calculation we need the most accurate address, so we clarified the address you entered ({0}) through the validation system. Do you confirm the use of this updated address ({1})?",
                 ["Plugins.Tax.Avalara.AddressValidation.Error"] = "For the correct tax calculation we need the most accurate address. There are some errors from the validation system: {0}",
                 ["Plugins.Tax.Avalara.Configuration"] = "Configuration",
+                ["Plugins.Tax.Avalara.Configuration.Certificates"] = "Exemption certificates",
+                ["Plugins.Tax.Avalara.Configuration.Certificates.InProgress"] = "Exemption certificates",
+                ["Plugins.Tax.Avalara.Configuration.Certificates.NotProvisioned"] = "The selected company isn't configured to use exemption certificates, use the button 'Request certificate setup' below to access this feature",
+                ["Plugins.Tax.Avalara.Configuration.Certificates.Provisioned"] = "The selected company is configured to use exemption certificates",
+                ["Plugins.Tax.Avalara.Configuration.Certificates.Button"] = "Request certificate setup",
+                ["Plugins.Tax.Avalara.Configuration.Common"] = "Common settings",
+                ["Plugins.Tax.Avalara.Configuration.Credentials.Button"] = "Check connection",
+                ["Plugins.Tax.Avalara.Configuration.Credentials.Declined"] = "Credentials declined",
+                ["Plugins.Tax.Avalara.Configuration.Credentials.Verified"] = "Credentials verified",
+                ["Plugins.Tax.Avalara.Configuration.TaxCalculation"] = "Tax calculation",
+                ["Plugins.Tax.Avalara.ExemptionCertificates"] = "Tax exemption certificates",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.Add.ExposureZone"] = "State",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.Add.Fail"] = "An error occurred while adding a certificate",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.Add.Success"] = "Certificate added successfully",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.Description"] = @"
+                    <h3>Here you can view and manage your certificates.</h3>
+                    <p>
+                        The certificate document contains information about a customer's eligibility for exemption from sales.<br />
+                        When you add a certificate, it will be processed and become available for use in calculating tax exemptions.<br />
+                    </p>
+                    <p>
+                        You can also go to <a href=""{0}"" target=""_blank"">CertExpress website</a> where you can follow a step-by-step guide to enter information about your exemption certificates.
+                    </p>
+                    <p>
+                        The certificates entered will be recorded and automatically linked to your account.
+                    </p>
+                    <p>If you have any questions, please <a href=""{1}"" target=""_blank"">contact us</a>.</p>",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.ExpirationDate"] = "Expiration date",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.ExposureZone"] = "State",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.None"] = "No downloaded certificates yet",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.OrderReview"] = "Tax",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.OrderReview.Applied"] = "Exemption certificate applied",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.OrderReview.None"] = @"You have no valid certificates in the selected region. You can add them in your account on <a href=""{0}"" target=""_blank"" style=""color: #4ab2f1;"">this page</a>.",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.SignedDate"] = "Signed date",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.Status"] = "Status",
+                ["Plugins.Tax.Avalara.ExemptionCertificates.View"] = "View",
                 ["Plugins.Tax.Avalara.Fields.AccountId"] = "Account ID",
                 ["Plugins.Tax.Avalara.Fields.AccountId.Hint"] = "Specify Avalara account ID.",
                 ["Plugins.Tax.Avalara.Fields.AccountId.Required"] = "Account ID is required",
+                ["Plugins.Tax.Avalara.Fields.AllowEditCustomer"] = "Allow edit info",
+                ["Plugins.Tax.Avalara.Fields.AllowEditCustomer.Hint"] = "Determine whether to allow customers to edit their info (name, phone, address, etc) when managing certificates. If disabled, the info will be auto updated when customers change details in their accounts.",
+                ["Plugins.Tax.Avalara.Fields.AutoValidateCertificate"] = "Auto validate certificates",
+                ["Plugins.Tax.Avalara.Fields.AutoValidateCertificate.Hint"] = "Determine whether the new certificates are automatically valid, this allows your customers to make exempt purchases right away, otherwise a customer is not treated as exempt until you validate the document.",
                 ["Plugins.Tax.Avalara.Fields.CommitTransactions"] = "Commit transactions",
                 ["Plugins.Tax.Avalara.Fields.CommitTransactions.Hint"] = "Determine whether to commit tax transactions right after they are saved.",
                 ["Plugins.Tax.Avalara.Fields.Company"] = "Company",
                 ["Plugins.Tax.Avalara.Fields.Company.Currency.Warning"] = "The default currency used by '{0}' company ({1}) does not match the primary store currency ({2})",
                 ["Plugins.Tax.Avalara.Fields.Company.Hint"] = "Choose a company that was previously added to the Avalara account.",
                 ["Plugins.Tax.Avalara.Fields.Company.NotExist"] = "There are no active companies",
+                ["Plugins.Tax.Avalara.Fields.CustomerRoles"] = "Limited to customer roles",
+                ["Plugins.Tax.Avalara.Fields.CustomerRoles.Hint"] = "Select customer roles for which exemption certificates will be available. Leave empty if you want this feature to be available to all customers.",
+                ["Plugins.Tax.Avalara.Fields.DisplayNoValidCertificatesMessage"] = "Display 'No valid certificates' message",
+                ["Plugins.Tax.Avalara.Fields.DisplayNoValidCertificatesMessage.Hint"] = "Determine whether to display a message that there are no valid certificates for the customer on the order confirmation page.",
+                ["Plugins.Tax.Avalara.Fields.EnableCertificates"] = "Enable exemption certificates",
+                ["Plugins.Tax.Avalara.Fields.EnableCertificates.Hint"] = "Determine whether to enable this feature. In this case, a new page will be added in the account section, so customers can manage their exemption certificates before making a purchase.",
+                ["Plugins.Tax.Avalara.Fields.EnableCertificates.Warning"] = "To use this feature, you need the following information from customers: name, country, state, city, address, postal code. Ensure that the appropriate Customer form fields are enabled under <a href=\"{0}\" target=\"_blank\">Customer settings</a>",
                 ["Plugins.Tax.Avalara.Fields.EnableLogging"] = "Enable logging",
                 ["Plugins.Tax.Avalara.Fields.EnableLogging.Hint"] = "Determine whether to enable logging of all requests to Avalara services.",
                 ["Plugins.Tax.Avalara.Fields.EntityUseCode"] = "Entity use code",
@@ -240,6 +305,8 @@ namespace Nop.Plugin.Tax.Avalara
                 ["Plugins.Tax.Avalara.Fields.TaxOriginAddressType.ShippingOrigin.Warning"] = "Ensure that you have correctly filled in the 'Shipping origin' under <a href=\"{0}\" target=\"_blank\">Shipping settings</a>",
                 ["Plugins.Tax.Avalara.Fields.UseSandbox"] = "Use sandbox",
                 ["Plugins.Tax.Avalara.Fields.UseSandbox.Hint"] = "Determine whether to use sandbox (testing environment).",
+                ["Plugins.Tax.Avalara.Fields.UseTaxRateTables"] = "Use tax rate tables to estimate ",
+                ["Plugins.Tax.Avalara.Fields.UseTaxRateTables.Hint"] = "Determine whether to use tax rate tables to estimate. This will be used as a default tax calculation for catalog pages and will be adjusted and reconciled to the final transaction tax during checkout. Tax rates are looked up by zip code (US only) in a file that will be periodically updated from the Avalara (see Schedule tasks).",
                 ["Plugins.Tax.Avalara.Fields.ValidateAddress"] = "Validate address",
                 ["Plugins.Tax.Avalara.Fields.ValidateAddress.Hint"] = "Determine whether to validate entered by customer addresses before the tax calculation.",
                 ["Plugins.Tax.Avalara.Items.Export"] = "Export to Avalara (selected)",
@@ -279,11 +346,9 @@ namespace Nop.Plugin.Tax.Avalara
                 ["Plugins.Tax.Avalara.TaxCodes.Import.Error"] = "An error has occurred on import tax codes",
                 ["Plugins.Tax.Avalara.TaxCodes.Import.Success"] = "Successfully imported {0} tax codes",
                 ["Plugins.Tax.Avalara.TestTax"] = "Test tax calculation",
+                ["Plugins.Tax.Avalara.TestTax.Button"] = "Submit",
                 ["Plugins.Tax.Avalara.TestTax.Error"] = "An error has occurred on tax request",
-                ["Plugins.Tax.Avalara.TestTax.Success"] = "The tax was successfully received",
-                ["Plugins.Tax.Avalara.VerifyCredentials"] = "Test connection",
-                ["Plugins.Tax.Avalara.VerifyCredentials.Declined"] = "Credentials declined",
-                ["Plugins.Tax.Avalara.VerifyCredentials.Verified"] = "Credentials verified"
+                ["Plugins.Tax.Avalara.TestTax.Success"] = "The tax was successfully received"
             });
 
             await base.InstallAsync();
@@ -306,6 +371,11 @@ namespace Nop.Plugin.Tax.Avalara
             _widgetSettings.ActiveWidgetSystemNames.Remove(AvalaraTaxDefaults.SystemName);
             await _settingService.SaveSettingAsync(_widgetSettings);
             await _settingService.DeleteSettingAsync<AvalaraTaxSettings>();
+
+            //schedule task
+            var task = await _scheduleTaskService.GetTaskByTypeAsync(AvalaraTaxDefaults.DownloadTaxRatesTask.Type);
+            if (task is not null)
+                await _scheduleTaskService.DeleteTaskAsync(task);
 
             //locales
             await _localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Tax.Avalara.Domain");

@@ -136,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<AddressAttributeModel> PrepareAddressAttributeModelAsync(AddressAttributeModel model,
             AddressAttribute addressAttribute, bool excludeProperties = false)
         {
-            Action<AddressAttributeLocalizedModel, int> localizedModelConfiguration = null;
+            Func<AddressAttributeLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (addressAttribute != null)
             {
@@ -208,7 +208,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (addressAttribute == null)
                 throw new ArgumentNullException(nameof(addressAttribute));
 
-            Action<AddressAttributeValueLocalizedModel, int> localizedModelConfiguration = null;
+            Func<AddressAttributeValueLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (addressAttributeValue != null)
             {

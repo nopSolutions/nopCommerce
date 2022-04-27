@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Core.Html;
 using Nop.Plugin.Tax.Avalara.Models.Log;
 using Nop.Plugin.Tax.Avalara.Services;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -22,6 +22,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
@@ -33,6 +34,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         public TaxTransactionLogController(ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
+            IHtmlFormatter htmlFormatter,
             ILocalizationService localizationService,
             INotificationService notificationService,
             IPermissionService permissionService,
@@ -40,6 +42,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         {
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
+            _htmlFormatter = htmlFormatter;
             _localizationService = localizationService;
             _notificationService = notificationService;
             _permissionService = permissionService;
@@ -51,7 +54,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         #region Methods
 
         [HttpPost]
-        public virtual async Task<IActionResult> LogList(TaxTransactionLogSearchModel searchModel)
+        public async Task<IActionResult> LogList(TaxTransactionLogSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return await AccessDeniedDataTablesJson();
@@ -85,18 +88,20 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
+        public async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
-                await _taxTransactionLogService.DeleteTaxTransactionLogAsync(selectedIds.ToArray());
+            if (selectedIds == null || selectedIds.Count == 0)
+                return NoContent();
+
+            await _taxTransactionLogService.DeleteTaxTransactionLogAsync(selectedIds.ToArray());
 
             return Json(new { Result = true });
         }
 
-        public virtual async Task<IActionResult> View(int id)
+        public async Task<IActionResult> View(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
@@ -111,8 +116,8 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 Id = logItem.Id,
                 StatusCode = logItem.StatusCode,
                 Url = logItem.Url,
-                RequestMessage = HtmlHelper.FormatText(logItem.RequestMessage, false, true, false, false, false, false),
-                ResponseMessage = HtmlHelper.FormatText(logItem.ResponseMessage, false, true, false, false, false, false),
+                RequestMessage = _htmlFormatter.FormatText(logItem.RequestMessage, false, true, false, false, false, false),
+                ResponseMessage = _htmlFormatter.FormatText(logItem.ResponseMessage, false, true, false, false, false, false),
                 CustomerId = logItem.CustomerId,
                 CustomerEmail = (await _customerService.GetCustomerByIdAsync(logItem.CustomerId))?.Email,
                 CreatedDate = await _dateTimeHelper.ConvertToUserTimeAsync(logItem.CreatedDateUtc, DateTimeKind.Utc)
@@ -122,7 +127,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
@@ -136,6 +141,16 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             }
 
             return RedirectToAction("Configure", "Avalara");
+        }
+
+        public async Task<IActionResult> ClearAll()
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
+            await _taxTransactionLogService.ClearLogAsync();
+
+            return Json(new { Result = true });
         }
 
         #endregion

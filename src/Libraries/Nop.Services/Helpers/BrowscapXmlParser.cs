@@ -34,7 +34,7 @@ namespace Nop.Services.Helpers
         {
             var el = browscapItem.Elements("item").FirstOrDefault(e => e.Attribute("name")?.Value == "Crawler");
 
-            return el != null && el.Attribute("value")?.Value.ToLower() == "true";
+            return el != null && el.Attribute("value")?.Value.ToLowerInvariant() == "true";
         }
 
         private static string ToRegexp(string str)
@@ -47,6 +47,7 @@ namespace Nop.Services.Helpers
         private void Initialize(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
         {
             List<XElement> crawlerItems = null;
+            var comments = new XElement("comments");
             var needSaveCrawlerOnly = false;
 
             if (!string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) && _fileProvider.FileExists(crawlerOnlyUserAgentStringsPath))
@@ -60,10 +61,12 @@ namespace Nop.Services.Helpers
             {
                 //try to load crawler list from full user agents file
                 using var sr = new StreamReader(userAgentStringsPath);
-                crawlerItems = XDocument.Load(sr).Root?.Element("browsercapitems")?.Elements("browscapitem")
+                var rootElemen = XDocument.Load(sr).Root;
+                crawlerItems = rootElemen?.Element("browsercapitems")?.Elements("browscapitem")
                     //only crawlers
                     .Where(IsBrowscapItemIsCrawler).ToList();
                 needSaveCrawlerOnly = true;
+                comments = rootElemen?.Element("comments");
             }
 
             if (crawlerItems == null || !crawlerItems.Any())
@@ -84,12 +87,15 @@ namespace Nop.Services.Helpers
             //try to write crawlers file
             using var sw = new StreamWriter(crawlerOnlyUserAgentStringsPath);
             var root = new XElement("browsercapitems");
+            
+            comments?.AddFirst(new XElement("comment", new XCData("nopCommerce uses a short version of the \"browscap.xml\" file. This short version contains crawlers only. If you want to keep the crawlers list up to date, please download the full version of the original file from the official browscap site (http://browscap.org/). Please save it in the \\App_Data folder (The file name should be \"browscap.xml\"), delete \"browscap.crawlersonly.xml\", and restart the website.")));
+            root.Add(comments);
 
             foreach (var crawler in crawlerItems)
             {
                 foreach (var element in crawler.Elements().ToList())
                 {
-                    if ((element.Attribute("name")?.Value.ToLower() ?? string.Empty) == "crawler")
+                    if ((element.Attribute("name")?.Value.ToLowerInvariant() ?? string.Empty) == "crawler")
                         continue;
                     element.Remove();
                 }

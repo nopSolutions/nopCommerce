@@ -59,6 +59,12 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// </summary>
         public int? RequestTimeout { get; set; }
 
+        /// <summary>
+        /// Gets or sets a minimum value that can be considered a real discount, and not a rounding error in calculations, 
+        /// for example, if you are sure that the store will not have discounts less than a $1, set here 1.00
+        /// </summary>
+        public decimal MinDiscountAmount { get; set; }
+
         #region Advanced settings
 
         /// <summary>
@@ -90,6 +96,11 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// Gets or sets the source code of logo in footer
         /// </summary>
         public string LogoInFooter { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display Pay Later messages
+        /// </summary>
+        public bool DisplayPayLaterMessages { get; set; }
 
         /// <summary>
         /// Gets or sets the disabled funding sources for the transaction (separated by comma)

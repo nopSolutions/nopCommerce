@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Specification attributes");
+    NopHtml.SetActiveMenuItemSystemName("Specification attributes");
 }
 
 <div class="content-header clearfix">
@@ -20,7 +20,7 @@
             <i class="fas fa-plus-square"></i>
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeListButtons, additionalData = Model })
         <button type="button" id="delete-selected-specification-attributes" class="btn btn-danger">
             <i class="far fa-trash-alt"></i>
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.DeleteSelected")
@@ -125,10 +125,14 @@
                             url: "@(Url.Action("DeleteSelectedSpecificationAttributes", "SpecificationAttribute"))",
                             data: postData,
                             error: function (jqXHR, textStatus, errorThrown) {
-                                $('#delete-selected-specification-attributes-alert-info').text(errorThrown);
-                                $('#delete-selected-specification-attributes-alert').click();
+                                showAlert('delete-selected-specification-attributes-alert', errorThrown);
                             },
                             complete: function (jqXHR, textStatus) {
+                                if (jqXHR.status === 204)
+                                {
+                                    showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                    return;
+                                }
                                 updateTable('#specificationattributegroups-grid');
                             }
                         });
@@ -138,6 +142,7 @@
                 });
                 </script>
                 <nop-alert asp-alert-id="delete-selected-specification-attributes-alert" />
+                <nop-alert asp-alert-id="nothingSelectedAlert" />
             </div>
         </div>
     </div>

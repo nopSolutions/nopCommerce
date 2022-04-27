@@ -80,7 +80,7 @@
                 }
             }
         })
-        <script>
+        <script asp-location="Footer">
             function renderColumnCustomerEmail(data, type, row, meta) {
                 var textRenderer = $.fn.dataTable.render.text().display;
                 return textRenderer(row.CustomerFullName) + ' (' + textRenderer(row.CustomerEmail) + ')';

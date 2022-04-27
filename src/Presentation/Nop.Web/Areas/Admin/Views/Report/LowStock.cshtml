@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Reports.LowStock").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Low stock");
+    NopHtml.SetActiveMenuItemSystemName("Low stock");
 }
 
 @{
@@ -109,7 +109,7 @@
                             }
                         })
 
-                        <script>
+                        <script asp-location="Footer">
                             function renderColumnName(data, type, row, meta) {
                                 var textRenderer = $.fn.dataTable.render.text().display;
                                 var res = data;

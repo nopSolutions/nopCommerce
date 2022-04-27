@@ -1,31 +1,35 @@
-﻿@using Nop.Core
-@inject Nop.Services.Localization.ILanguageService languageService
-@inject Nop.Core.Domain.Common.CommonSettings commonSettings
+﻿@inject Nop.Core.Domain.Common.CommonSettings commonSettings
 @inject IThemeContext themeContext
-@inject IWorkContext workContext;
 @{
     var themeName = await themeContext.GetWorkingThemeNameAsync();
 }
 <!DOCTYPE html>
-<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())" @Html.NopPageCssClasses()>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" class="@NopHtml.GeneratePageCssClasses()">
 <head>
-    <title>@Html.NopTitle()</title>
+    <title>@NopHtml.GenerateTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <link href="@Url.Content($"~/Themes/{themeName}/Content/css/print.css")" rel="stylesheet" type="text/css" />
-    <script src="@Url.Content("~/lib_npm/jquery/jquery.min.js")"></script>
-    @*/when jQuery migrate script logging is active you will see the log in the browser console*@
-    @if (commonSettings.JqueryMigrateScriptLoggingActive)
-    {
-        <script src="@Url.Content("~/lib_npm/jquery-migrate/jquery-migrate.js")"></script>
-    }
-    else
-    {
-        <script src="@Url.Content("~/lib_npm/jquery-migrate/jquery-migrate.min.js")"></script>
-    }
-    @Html.NopInlineScripts(ResourceLocation.Head)
+    <link href="~/Themes/@themeName/Content/css/print.css" rel="stylesheet" type="text/css" />
+
+    @NopHtml.GenerateCssFiles()    
+    @NopHtml.GenerateScripts(ResourceLocation.Head)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
 </head>
 <body>
     @RenderBody()
-    @Html.NopInlineScripts(ResourceLocation.Footer)
+    <!-- FooterScripts  -->
+
+    <script src="~/lib_npm/jquery/jquery.min.js"></script>
+    @* when jQuery migrate script logging is active you will see the log in the browser console *@
+    @if (commonSettings.JqueryMigrateScriptLoggingActive)
+    {
+        <script src="~/lib_npm/jquery-migrate/jquery-migrate.js"></script>
+    }
+    else
+    {
+        <script src="~/lib_npm/jquery-migrate/jquery-migrate.min.js"></script>
+    }
+
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
 </body>
 </html>

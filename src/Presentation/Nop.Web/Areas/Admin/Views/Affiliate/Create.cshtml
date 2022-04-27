@@ -3,7 +3,7 @@
     //page title
     ViewBag.PageTitle = T("Admin.Affiliates.AddNew").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Affiliates");
+    NopHtml.SetActiveMenuItemSystemName("Affiliates");
 }
 
 <form asp-controller="Affiliate" asp-action="Create" method="post">
@@ -24,7 +24,7 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateDetailsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

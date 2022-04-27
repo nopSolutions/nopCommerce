@@ -3,9 +3,9 @@
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
+    NopHtml.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
     //page class
-    Html.AppendPageCssClassParts("html-move-topic-page");
+    NopHtml.AppendPageCssClassParts("html-move-topic-page");
 }
 @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
 <div class="page move-topic-page">

@@ -17,15 +17,16 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
+using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
-using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure.Mapper;
+using Nop.Data.Configuration;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Cms;
@@ -43,11 +44,11 @@ using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Discounts;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
-using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
 using Nop.Web.Areas.Admin.Models.Forums;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Areas.Admin.Models.Logging;
 using Nop.Web.Areas.Admin.Models.Messages;
+using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
 using Nop.Web.Areas.Admin.Models.News;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Payments;
@@ -62,6 +63,7 @@ using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Areas.Admin.Models.Vendors;
+using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
@@ -187,7 +189,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<HostingConfig, HostingConfigModel>();
             CreateMap<HostingConfigModel, HostingConfig>();
-            
+
             CreateMap<DistributedCacheConfig, DistributedCacheConfigModel>()
                 .ForMember(model => model.DistributedCacheTypeValues, options => options.Ignore());
             CreateMap<DistributedCacheConfigModel, DistributedCacheConfig>();
@@ -205,6 +207,19 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<CommonConfig, CommonConfigModel>();
             CreateMap<CommonConfigModel, CommonConfig>();
+
+            CreateMap<DataConfig, DataConfigModel>()
+                .ForMember(model => model.DataProviderTypeValues, options => options.Ignore());
+            CreateMap<DataConfigModel, DataConfig>();
+
+            CreateMap<WebOptimizerConfig, WebOptimizerConfigModel>();
+            CreateMap<WebOptimizerConfigModel, WebOptimizerConfig>()
+                .ForMember(entity => entity.CdnUrl, options => options.Ignore())
+                .ForMember(entity => entity.AllowEmptyBundle, options => options.Ignore())
+                .ForMember(entity => entity.HttpsCompression, options => options.Ignore())
+                .ForMember(entity => entity.EnableTagHelperBundling, options => options.Ignore())
+                .ForMember(entity => entity.EnableCaching, options => options.Ignore())
+                .ForMember(entity => entity.EnableMemoryCache, options => options.Ignore());
         }
 
         /// <summary>
@@ -376,6 +391,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ProductsByTagManuallyPriceRange_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.EnableManufacturerFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.EnablePriceRangeFiltering_OverrideForStore, mo => mo.Ignore())
+                .ForMember(model => model.EnableSpecificationAttributeFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.AttributeValueOutOfStockDisplayTypes, mo => mo.Ignore())
                 .ForMember(model => model.AttributeValueOutOfStockDisplayType_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.SortOptionSearchModel, options => options.Ignore())
@@ -758,6 +774,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.MinOrderTotalToAwardPoints_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PageSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PointsForPurchases_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.MaximumRedeemedRate_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PointsForRegistration_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
                 .ForMember(model => model.PurchasesPointsValidity_OverrideForStore, options => options.Ignore())
@@ -1286,7 +1303,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.GeneratePdfInvoiceInCustomerLanguage, options => options.Ignore())
                 .ForMember(settings => settings.MinimumOrderPlacementInterval, options => options.Ignore())
                 .ForMember(settings => settings.DisplayCustomerCurrencyOnOrders, options => options.Ignore())
-                .ForMember(settings => settings.ReturnRequestsFileMaximumSize, options => options.Ignore());
+                .ForMember(settings => settings.ReturnRequestsFileMaximumSize, options => options.Ignore())
+                .ForMember(settings => settings.DisplayOrderSummary, options => options.Ignore());
 
             CreateMap<ReturnRequestAction, ReturnRequestActionModel>();
             CreateMap<ReturnRequestActionModel, ReturnRequestAction>();
@@ -1343,9 +1361,11 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.Store, options => options.Ignore())
                 .ForMember(model => model.AttributeInfo, options => options.Ignore())
                 .ForMember(model => model.UnitPrice, options => options.Ignore())
+                .ForMember(model => model.UnitPriceValue, options => options.Ignore())
                 .ForMember(model => model.UpdatedOn, options => options.Ignore())
                 .ForMember(model => model.ProductName, options => options.Ignore())
-                .ForMember(model => model.Total, options => options.Ignore());
+                .ForMember(model => model.Total, options => options.Ignore())
+                .ForMember(model => model.TotalValue, options => options.Ignore());
         }
 
         /// <summary>
@@ -1473,12 +1493,15 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<Shipment, ShipmentModel>()
                 .ForMember(model => model.ShippedDate, options => options.Ignore())
+                .ForMember(model => model.ReadyForPickupDate, options => options.Ignore())
                 .ForMember(model => model.DeliveryDate, options => options.Ignore())
                 .ForMember(model => model.TotalWeight, options => options.Ignore())
                 .ForMember(model => model.TrackingNumberUrl, options => options.Ignore())
                 .ForMember(model => model.Items, options => options.Ignore())
                 .ForMember(model => model.ShipmentStatusEvents, options => options.Ignore())
+                .ForMember(model => model.PickupInStore, options => options.Ignore())
                 .ForMember(model => model.CanShip, options => options.Ignore())
+                .ForMember(model => model.CanMarkAsReadyForPickup, options => options.Ignore())
                 .ForMember(model => model.CanDeliver, options => options.Ignore())
                 .ForMember(model => model.CustomOrderNumber, options => options.Ignore());
 
@@ -1486,6 +1509,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AllowPickupInStore_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ConsiderAssociatedProductsDimensions_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.SortShippingValues, options => options.Ignore())
+                .ForMember(model => model.ShippingSorting_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DisplayPickupPointsOnMap_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DisplayShipmentEventsToCustomers_OverrideForStore, options => options.Ignore())
@@ -1533,7 +1558,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.Type, options => options.Ignore())
                 .ForMember(entity => entity.LastStartUtc, options => options.Ignore())
                 .ForMember(entity => entity.LastEndUtc, options => options.Ignore())
-                .ForMember(entity => entity.LastSuccessUtc, options => options.Ignore());
+                .ForMember(entity => entity.LastSuccessUtc, options => options.Ignore())
+                .ForMember(entity => entity.LastEnabledUtc, options => options.Ignore());
         }
 
         /// <summary>

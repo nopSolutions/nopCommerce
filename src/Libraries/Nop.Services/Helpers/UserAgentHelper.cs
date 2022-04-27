@@ -15,7 +15,7 @@ namespace Nop.Services.Helpers
     {
         #region Fields
 
-        private static readonly object _locker = new object();
+        private static readonly object _locker = new();
         private static readonly Regex _firstMobileDeviceRegex;
         private static readonly Regex _secondMobileDeviceRegex;
 
@@ -57,7 +57,7 @@ namespace Nop.Services.Helpers
                 return Singleton<BrowscapXmlHelper>.Instance;
 
             //no database created
-            if (string.IsNullOrEmpty(_appSettings.CommonConfig.UserAgentStringsPath))
+            if (string.IsNullOrEmpty(_appSettings.Get<CommonConfig>().UserAgentStringsPath))
                 return null;
 
             //prevent multi loading data
@@ -67,9 +67,9 @@ namespace Nop.Services.Helpers
                 if (Singleton<BrowscapXmlHelper>.Instance != null)
                     return Singleton<BrowscapXmlHelper>.Instance;
 
-                var userAgentStringsPath = _fileProvider.MapPath(_appSettings.CommonConfig.UserAgentStringsPath);
-                var crawlerOnlyUserAgentStringsPath = !string.IsNullOrEmpty(_appSettings.CommonConfig.CrawlerOnlyUserAgentStringsPath)
-                    ? _fileProvider.MapPath(_appSettings.CommonConfig.CrawlerOnlyUserAgentStringsPath)
+                var userAgentStringsPath = _fileProvider.MapPath(_appSettings.Get<CommonConfig>().UserAgentStringsPath);
+                var crawlerOnlyUserAgentStringsPath = !string.IsNullOrEmpty(_appSettings.Get<CommonConfig>().CrawlerOnlyUserAgentStringsPath)
+                    ? _fileProvider.MapPath(_appSettings.Get<CommonConfig>().CrawlerOnlyUserAgentStringsPath)
                     : string.Empty;
 
                 var browscapXmlHelper = new BrowscapXmlHelper(userAgentStringsPath, crawlerOnlyUserAgentStringsPath, _fileProvider);

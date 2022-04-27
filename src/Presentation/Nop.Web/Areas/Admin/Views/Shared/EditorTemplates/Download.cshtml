@@ -6,10 +6,6 @@
 @using Nop.Web.Framework.UI;
 
 @{
-    //register CSS and JS
-    Html.AddCssFileParts("~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css");
-    Html.AddScriptParts("~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js");
-
     //other variables
     var randomNumber = CommonHelper.GenerateRandomInteger();
     var clientId = "download" + randomNumber;
@@ -18,6 +14,10 @@
     var disableUrl = Convert.ToBoolean(ViewData["nop.DownloadEditor.DisableUrl"] ?? false);
 }
 
+@* register CSS and JS *@
+<link rel="stylesheet" href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" />
+<script asp-exclude-from-bundle="true" src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js" asp-location="Footer"></script>
+
 <script>
     $(document).ready(function () {
         $('#cbUseDownloadURL@(randomNumber)').click(toggleDownloadRecordType@(randomNumber));
@@ -25,13 +25,17 @@
         $('#saveDownloadUrl@(randomNumber)').click(function () {
             var downloadUrl = $("#downloadurl@(randomNumber)").val();
             $('#saveDownloadUrl@(randomNumber)').attr('disabled', true);
+
+            var postData = {
+                "downloadUrl": downloadUrl
+            };
+            addAntiForgeryToken(postData);
+
             $.ajax({
                 cache: false,
                 type: "POST",
                 url: "@(Url.Action("SaveDownloadUrl", "Download", new { area = AreaNames.Admin }))",
-                data: {
-                    "downloadUrl": downloadUrl
-                },
+                data: postData,
                 success: function (data, textStatus, jqXHR) {
                     if (data.success) {
                         $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");

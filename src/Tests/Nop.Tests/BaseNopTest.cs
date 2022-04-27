@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -34,6 +35,8 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Configuration;
+using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication.External;
@@ -51,6 +54,7 @@ using Nop.Services.ExportImport;
 using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
+using Nop.Services.Html;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -61,17 +65,18 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Polls;
+using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
-using Nop.Services.Tasks;
 using Nop.Services.Tax;
 using Nop.Services.Themes;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
+using Nop.Tests.Nop.Services.Tests.ScheduleTasks;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Factories;
@@ -85,16 +90,40 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Nop.Tests
 {
-    public abstract class BaseNopTest
+    public partial class BaseNopTest
     {
         private static readonly ServiceProvider _serviceProvider;
+        private static readonly ResourceManager _resourceManager;
 
+        protected BaseNopTest()
+        {
+            SetDataProviderType(DataProviderType.Unknown);
+        }
+
+        private static void Init()
+        {
+            
+            var dataProvider = _serviceProvider.GetService<IDataProviderManager>().DataProvider;
+            
+            dataProvider.CreateDatabase(null);
+            dataProvider.InitializeDatabase();
+
+            var languagePackInfo = (DownloadUrl: string.Empty, Progress: 0);
+            
+            _serviceProvider.GetService<IInstallationService>()
+                .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, null, null).Wait();
+            _serviceProvider.GetService<IInstallationService>().InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
+
+            var provider = (IPermissionProvider)Activator.CreateInstance(typeof(StandardPermissionProvider));
+            EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider).Wait();
+        }
+        
         protected static T PropertiesShouldEqual<T, Tm>(T entity, Tm model, params string[] filter) where T : BaseEntity
         where Tm : BaseNopModel
         {
             var objectProperties = typeof(T).GetProperties();
             var modelProperties = typeof(Tm).GetProperties();
-            
+
             foreach (var objectProperty in objectProperties)
             {
                 var name = objectProperty.Name;
@@ -102,14 +131,14 @@ namespace Nop.Tests
                 if (filter.Contains(name))
                     continue;
 
-                var modelProperty = modelProperties.FirstOrDefault(p => p.Name == name);
+                var modelProperty = Array.Find(modelProperties, p => p.Name == name);
 
                 if (modelProperty == null)
                     continue;
 
                 var objectPropertyValue = objectProperty.GetValue(entity);
                 var modelPropertyValue = modelProperty.GetValue(model);
-                
+
                 objectPropertyValue.Should().Be(modelPropertyValue, $"The property \"{typeof(T).Name}.{objectProperty.Name}\" of these objects is not equal");
             }
 
@@ -118,6 +147,9 @@ namespace Nop.Tests
 
         static BaseNopTest()
         {
+            _resourceManager = Connections.ResourceManager;
+            SetDataProviderType(DataProviderType.Unknown);
+
             TypeDescriptor.AddAttributes(typeof(List<int>),
                 new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
             TypeDescriptor.AddAttributes(typeof(List<string>),
@@ -129,28 +161,30 @@ namespace Nop.Tests
 
             var memoryCache = new MemoryCache(new MemoryCacheOptions());
             var typeFinder = new AppDomainTypeFinder();
-
-            Singleton<DataSettings>.Instance = new DataSettings
-            {
-                ConnectionString = "Data Source=nopCommerceTest.sqlite;Mode=Memory;Cache=Shared"
-            };
+            Singleton<ITypeFinder>.Instance = typeFinder;
 
             var mAssemblies = typeFinder.FindClassesOfType<AutoReversingMigration>()
                 .Select(t => t.Assembly)
                 .Distinct()
                 .ToArray();
 
-            //add configuration parameters
-            var appSettings = new AppSettings();
-            services.AddSingleton(appSettings);
+            //create app settings
+            var configurations = typeFinder
+                .FindClassesOfType<IConfig>()
+                .Select(configType => (IConfig)Activator.CreateInstance(configType))
+                .ToList();
+            
+            var appSettings = new AppSettings(configurations);
+            appSettings.Update(new List<IConfig> { Singleton<DataConfig>.Instance });
             Singleton<AppSettings>.Instance = appSettings;
+            services.AddSingleton(appSettings);
 
             var hostApplicationLifetime = new Mock<IHostApplicationLifetime>();
             services.AddSingleton(hostApplicationLifetime.Object);
 
             var rootPath =
                 new DirectoryInfo(
-                        $@"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine(@"\..\..\Presentation\Nop.Web".Split('\\', '/').ToArray())}")
+                        $"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine(@"\..\..\Presentation\Nop.Web".Split('\\', '/').ToArray())}")
                     .FullName;
 
             //Presentation\Nop.Web\wwwroot
@@ -160,10 +194,12 @@ namespace Nop.Tests
             webHostEnvironment.Setup(p => p.EnvironmentName).Returns("test");
             webHostEnvironment.Setup(p => p.ApplicationName).Returns("nopCommerce");
             services.AddSingleton(webHostEnvironment.Object);
-            
+
+            services.AddWebEncoders();
+
             var httpContext = new DefaultHttpContext
             {
-                Request = {Headers = {{HeaderNames.Host, NopTestsDefaults.HostIpAddress}}}
+                Request = { Headers = { { HeaderNames.Host, NopTestsDefaults.HostIpAddress } } }
             };
 
             var httpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -183,7 +219,7 @@ namespace Nop.Tests
             urlHelperFactory.Setup(x => x.GetUrlHelper(It.IsAny<ActionContext>()))
                 .Returns(urlHelper);
 
-            services.AddTransient(provider => actionContextAccessor.Object);
+            services.AddTransient(_ => actionContextAccessor.Object);
 
             services.AddSingleton(urlHelperFactory.Object);
 
@@ -194,9 +230,11 @@ namespace Nop.Tests
             services.AddSingleton(tempDataDictionaryFactory.Object);
 
             services.AddSingleton<ITypeFinder>(typeFinder);
+            Singleton<ITypeFinder>.Instance = typeFinder;
 
             //file provider
             services.AddTransient<INopFileProvider, NopFileProvider>();
+            CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment.Object);
 
             //web helper
             services.AddTransient<IWebHelper, WebHelper>();
@@ -206,7 +244,9 @@ namespace Nop.Tests
 
             //data layer
             services.AddTransient<IDataProviderManager, TestDataProviderManager>();
-            services.AddTransient<INopDataProvider, SqLiteNopDataProvider>();
+            services.AddTransient(serviceProvider =>
+                serviceProvider.GetRequiredService<IDataProviderManager>().DataProvider);
+            services.AddTransient<IMappingEntityAccessor>(x => x.GetRequiredService<INopDataProvider>());
 
             //repositories
             services.AddTransient(typeof(IRepository<>), typeof(EntityRepository<>));
@@ -279,7 +319,7 @@ namespace Nop.Tests
             services.AddTransient<IWorkflowMessageService, WorkflowMessageService>();
             services.AddTransient<IMessageTokenProvider, MessageTokenProvider>();
             services.AddTransient<ITokenizer, Tokenizer>();
-            services.AddTransient<ISmtpBuilder, SmtpBuilder>();
+            services.AddTransient<ISmtpBuilder, TestSmtpBuilder>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ICheckoutAttributeFormatter, CheckoutAttributeFormatter>();
             services.AddTransient<ICheckoutAttributeParser, CheckoutAttributeParser>();
@@ -319,6 +359,8 @@ namespace Nop.Tests
             services.AddTransient<IUploadService, UploadService>();
             services.AddTransient<IThemeProvider, ThemeProvider>();
             services.AddTransient<IExternalAuthenticationService, ExternalAuthenticationService>();
+            services.AddScoped<IBBCodeHelper, BBCodeHelper>();
+            services.AddScoped<IHtmlFormatter, HtmlFormatter>();
 
             //slug route transformer
             services.AddSingleton<IReviewTypeService, ReviewTypeService>();
@@ -342,39 +384,50 @@ namespace Nop.Tests
             //register all settings
             var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
             foreach (var setting in settings)
+            {
                 services.AddTransient(setting,
                     context => context.GetRequiredService<ISettingService>().LoadSettingAsync(setting).Result);
+            }
 
             //event consumers
-            var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
-            foreach (var consumer in consumers)
-            foreach (var findInterface in consumer.FindInterfaces((type, criteria) =>
+            foreach (var consumer in typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList())
             {
-                var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
-                return isMatch;
-            }, typeof(IConsumer<>)))
-                services.AddTransient(findInterface, consumer);
+                var interfaces = consumer.FindInterfaces((type, criteria) => type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition()), typeof(IConsumer<>));
+                foreach (var findInterface in interfaces)
+                {
+                    services.AddTransient(findInterface, consumer);
+                }
+            }
 
             services.AddSingleton<IInstallationService, InstallationService>();
+            services.AddTransient(p => new Lazy<IVersionLoader>(p.GetRequiredService<IVersionLoader>()));
 
             services
                 // add common FluentMigrator services
                 .AddFluentMigratorCore()
                 .AddScoped<IProcessorAccessor, TestProcessorAccessor>()
                 // set accessor for the connection string
-                .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
-                .AddScoped<IMigrationManager, MigrationManager>()
+                .AddScoped<IConnectionStringAccessor>(_ => DataSettingsManager.LoadSettings())
+                .AddScoped<IMigrationManager, TestMigrationManager>()
                 .AddSingleton<IConventionSet, NopTestConventionSet>()
                 .ConfigureRunner(rb =>
-                    rb.WithVersionTable(new MigrationVersionInfo()).AddSQLite()
+                    rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres().AddSQLite()
                         // define the assembly containing the migrations
                         .ScanIn(mAssemblies).For.Migrations());
 
             services.AddTransient<IStoreContext, WebStoreContext>();
+            services.AddTransient<Lazy<IStoreContext>>();
             services.AddTransient<IWorkContext, WebWorkContext>();
             services.AddTransient<IThemeContext, ThemeContext>();
 
-            services.AddTransient<IPageHeadBuilder, PageHeadBuilder>();
+            services.AddTransient<INopHtmlHelper, NopHtmlHelper>();
+
+            //schedule tasks
+            services.AddSingleton<ITaskScheduler, TestTaskScheduler>();
+            services.AddTransient<IScheduleTaskRunner, ScheduleTaskRunner>();
+
+            //WebOptimizer
+            services.AddWebOptimizer();
 
             //common factories
             services.AddTransient<IAclSupportedModelFactory, AclSupportedModelFactory>();
@@ -467,20 +520,10 @@ namespace Nop.Tests
 
             EngineContext.Replace(new NopTestEngine(_serviceProvider));
 
-            _serviceProvider.GetService<INopDataProvider>().CreateDatabase(null);
-            _serviceProvider.GetService<INopDataProvider>().InitializeDatabase();
-
-            var languagePackInfo = (DownloadUrl: string.Empty, Progress: 0);
-
-            _serviceProvider.GetService<IInstallationService>()
-                .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, null, null).Wait();
-            _serviceProvider.GetService<IInstallationService>().InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
-
-            var provider = (IPermissionProvider)Activator.CreateInstance(typeof(StandardPermissionProvider));
-            EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider).Wait();
+            Init();
         }
 
-        public T GetService<T>()
+        public static T GetService<T>()
         {
             try
             {
@@ -490,6 +533,66 @@ namespace Nop.Tests
             {
                 return (T)EngineContext.Current.ResolveUnregistered(typeof(T));
             }
+        }
+        
+        public async Task TestCrud<TEntity>(TEntity baseEntity, Func<TEntity, Task> insert, TEntity updateEntity, Func<TEntity, Task> update, Func<int, Task<TEntity>> getById, Func<TEntity, TEntity, bool> equals, Func<TEntity, Task> delete) where TEntity : BaseEntity
+        {
+            baseEntity.Id = 0;
+
+            await insert(baseEntity);
+            baseEntity.Id.Should().BeGreaterThan(0);
+            
+            updateEntity.Id = baseEntity.Id;
+            await update(updateEntity);
+
+            var item = await getById(baseEntity.Id);
+            item.Should().NotBeNull();
+            equals(updateEntity, item).Should().BeTrue();
+
+            await delete(baseEntity);
+            item = await getById(baseEntity.Id);
+            item.Should().BeNull();
+        }
+
+        public static bool SetDataProviderType(DataProviderType type)
+        {
+            var dataConfig = Singleton<DataConfig>.Instance ?? new DataConfig();
+
+            dataConfig.DataProvider = type;
+            dataConfig.ConnectionString = string.Empty;
+
+            try
+            {
+                switch (type)
+                {
+                    case DataProviderType.SqlServer:
+                        dataConfig.ConnectionString = _resourceManager.GetString("sql server connection string");
+                        break;
+                    case DataProviderType.MySql:
+                        dataConfig.ConnectionString = _resourceManager.GetString("MySql server connection string");
+                        break;
+                    case DataProviderType.PostgreSQL:
+                        dataConfig.ConnectionString = _resourceManager.GetString("PostgreSql server connection string");
+                        break;
+                    case DataProviderType.Unknown:
+                        dataConfig.ConnectionString = "Data Source=nopCommerceTest.sqlite;Mode=Memory;Cache=Shared";
+                        break;
+                }
+            }
+            catch (MissingManifestResourceException)
+            {
+                //ignore
+            }
+
+            Singleton<DataConfig>.Instance = dataConfig;
+            var flag = !string.IsNullOrEmpty(dataConfig.ConnectionString);
+
+            if (Singleton<AppSettings>.Instance == null)
+                return flag;
+
+            Singleton<AppSettings>.Instance.Update(new List<IConfig> { Singleton<DataConfig>.Instance });
+
+            return flag;
         }
 
         #region Nested classes
@@ -550,13 +653,13 @@ namespace Nop.Tests
 
         protected class TestPictureService : PictureService
         {
-            public TestPictureService(INopDataProvider dataProvider, IDownloadService downloadService,
+            public TestPictureService(IDownloadService downloadService,
                 IHttpContextAccessor httpContextAccessor, INopFileProvider fileProvider,
                 IProductAttributeParser productAttributeParser, IRepository<Picture> pictureRepository,
                 IRepository<PictureBinary> pictureBinaryRepository,
                 IRepository<ProductPicture> productPictureRepository, ISettingService settingService,
                 IUrlRecordService urlRecordService, IWebHelper webHelper, MediaSettings mediaSettings) : base(
-                dataProvider, downloadService, httpContextAccessor, fileProvider, productAttributeParser,
+                downloadService, httpContextAccessor, fileProvider, productAttributeParser,
                 pictureRepository, pictureBinaryRepository, productPictureRepository, settingService, urlRecordService,
                 webHelper, mediaSettings)
             {
@@ -570,9 +673,11 @@ namespace Nop.Tests
                 PictureType defaultPictureType = PictureType.Entity)
             {
                 if (picture == null)
+                {
                     return showDefaultPicture
                         ? (await GetDefaultPictureUrlAsync(targetSize, defaultPictureType, storeLocation), null)
                         : (string.Empty, (Picture)null);
+                }
 
                 byte[] pictureBinary = null;
                 if (picture.IsNew)
@@ -581,9 +686,11 @@ namespace Nop.Tests
                     pictureBinary = await LoadPictureBinaryAsync(picture);
 
                     if ((pictureBinary?.Length ?? 0) == 0)
+                    {
                         return showDefaultPicture
                             ? (await GetDefaultPictureUrlAsync(targetSize, defaultPictureType, storeLocation), picture)
                             : (string.Empty, picture);
+                    }
 
                     //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown
                     picture = await UpdatePictureAsync(picture.Id,

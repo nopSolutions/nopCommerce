@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FluentValidation;
 using FluentValidation.Validators;
 
 namespace Nop.Web.Framework.Validators
@@ -6,18 +7,18 @@ namespace Nop.Web.Framework.Validators
     /// <summary>
     /// Credit card validator
     /// </summary>
-    public class CreditCardPropertyValidator : PropertyValidator
+    public class CreditCardPropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
     {
-        protected override string GetDefaultMessageTemplate() => "Credit card number is not valid";
+        public override string Name => "CreditCardPropertyValidator";
 
         /// <summary>
         /// Is valid?
         /// </summary>
         /// <param name="context">Validation context</param>
         /// <returns>Result</returns>
-        protected override bool IsValid(PropertyValidatorContext context)
+        public override bool IsValid(ValidationContext<T> context, TProperty value)
         {
-            var ccValue = context.PropertyValue as string;
+            var ccValue = value as string;
             if (string.IsNullOrWhiteSpace(ccValue))
                 return false;
 
@@ -45,5 +46,7 @@ namespace Nop.Web.Framework.Validators
 
             return (checksum % 10) == 0;
         }
+
+        protected override string GetDefaultMessageTemplate(string errorCode) => "Credit card number is not valid";
     }
 }

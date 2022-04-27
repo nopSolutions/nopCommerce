@@ -44,15 +44,15 @@ namespace Nop.Web.Components
             _storeMappingService = storeMappingService;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(int productId, int? productThumbPictureSize)
         {
             if (!_catalogSettings.ProductsAlsoPurchasedEnabled)
                 return Content("");
 
             //load and cache report
-            var productIds = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductsAlsoPurchasedIdsKey, productId, await _storeContext.GetCurrentStoreAsync()),
-                async () => await _orderReportService.GetAlsoPurchasedProductsIdsAsync((await _storeContext.GetCurrentStoreAsync()).Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var productIds = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductsAlsoPurchasedIdsKey, productId, store),
+                async () => await _orderReportService.GetAlsoPurchasedProductsIdsAsync(store.Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)
             );
 
             //load products

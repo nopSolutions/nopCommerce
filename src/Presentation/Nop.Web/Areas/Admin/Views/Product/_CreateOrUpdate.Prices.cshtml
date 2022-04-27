@@ -7,49 +7,10 @@
 }
 <script>
     $(document).ready(function() {
-        $("#@Html.IdFor(model => model.AvailableForPreOrder)").click(togglePreOrder);
-        $("#@Html.IdFor(model => model.CustomerEntersPrice)").click(toggleCustomerEntersPrice);
-        $("#@Html.IdFor(model => model.BasepriceEnabled)").click(toggleBasepriceEnabled);
         $("#@Html.IdFor(model => model.IsTaxExempt)").click(toggleTax);
 
-        togglePreOrder();
-        toggleCustomerEntersPrice();
-        toggleBasepriceEnabled();
         toggleTax();
     });
-
-    function togglePreOrder() {
-        if ($('#@Html.IdFor(model => model.AvailableForPreOrder)').is(':checked')) {
-            $('#pnlPreOrderAvailabilityStartDateTimeUtc').showElement();
-        } else {
-            $('#pnlPreOrderAvailabilityStartDateTimeUtc').hideElement();
-        }
-    }
-
-
-    function toggleCustomerEntersPrice() {
-        if ($('#@Html.IdFor(model => model.CustomerEntersPrice)').is(':checked')) {
-            $('#pnlMinimumCustomerEnteredPrice').showElement();
-            $('#pnlMaximumCustomerEnteredPrice').showElement();
-        } else {
-            $('#pnlMinimumCustomerEnteredPrice').hideElement();
-            $('#pnlMaximumCustomerEnteredPrice').hideElement();
-        }
-    }
-
-    function toggleBasepriceEnabled() {
-        if ($('#@Html.IdFor(model => model.BasepriceEnabled)').is(':checked')) {
-            $('#pnlBasepriceAmount').showElement();
-            $('#pnlBasepriceUnit').showElement();
-            $('#pnlBasepriceBaseAmount').showElement();
-            $('#pnlBasepriceBaseUnit').showElement();
-        } else {
-            $('#pnlBasepriceAmount').hideElement();
-            $('#pnlBasepriceUnit').hideElement();
-            $('#pnlBasepriceBaseAmount').hideElement();
-            $('#pnlBasepriceBaseUnit').hideElement();
-        }
-    }
 
     function toggleTax() {
         if ($('#@Html.IdFor(model => model.IsTaxExempt)').is(':checked')) {
@@ -115,7 +76,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="AvailableForPreOrder">
-        <div class="form-group row @(Model.ProductEditorSettingsModel.AvailableForPreOrder ? null : "advanced-setting")" id="pnlPreOrderAvailabilityStartDateTimeUtc">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.AvailableForPreOrder ? null : "advanced-setting")">
             <div class="col-md-3">
                 <nop-label asp-for="PreOrderAvailabilityStartDateTimeUtc" />
             </div>
@@ -144,7 +105,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="CustomerEntersPrice">
-        <div class="form-group row @(Model.ProductEditorSettingsModel.CustomerEntersPrice ? null : "advanced-setting")" id="pnlMinimumCustomerEnteredPrice">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.CustomerEntersPrice ? null : "advanced-setting")">
             <div class="col-md-3">
                 <nop-label asp-for="MinimumCustomerEnteredPrice" />
             </div>
@@ -153,7 +114,7 @@
                 <span asp-validation-for="MinimumCustomerEnteredPrice"></span>
             </div>
         </div>
-        <div class="form-group row @(Model.ProductEditorSettingsModel.CustomerEntersPrice ? null : "advanced-setting")" id="pnlMaximumCustomerEnteredPrice">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.CustomerEntersPrice ? null : "advanced-setting")">
             <div class="col-md-3">
                 <nop-label asp-for="MaximumCustomerEnteredPrice" />
             </div>
@@ -173,7 +134,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="BasepriceEnabled">
-        <div class="form-group row @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")" id="pnlBasepriceAmount">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")">
             <div class="col-md-3">
                 <nop-label asp-for="BasepriceAmount" />
             </div>
@@ -182,7 +143,7 @@
                 <span asp-validation-for="BasepriceAmount"></span>
             </div>
         </div>
-        <div class="form-group row @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")" id="pnlBasepriceUnit">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")">
             <div class="col-md-3">
                 <nop-label asp-for="BasepriceUnitId" />
             </div>
@@ -191,7 +152,7 @@
                 <span asp-validation-for="BasepriceUnitId"></span>
             </div>
         </div>
-        <div class="form-group row @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")" id="pnlBasepriceBaseAmount">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")">
             <div class="col-md-3">
                 <nop-label asp-for="BasepriceBaseAmount" />
             </div>
@@ -200,7 +161,7 @@
                 <span asp-validation-for="BasepriceBaseAmount"></span>
             </div>
         </div>
-        <div class="form-group row @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")" id="pnlBasepriceBaseUnit">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")">
             <div class="col-md-3">
                 <nop-label asp-for="BasepriceBaseUnitId" />
             </div>

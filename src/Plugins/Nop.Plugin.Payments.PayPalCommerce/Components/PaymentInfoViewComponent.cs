@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Http.Extensions;
@@ -71,6 +72,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components
             if (order != null)
             {
                 model.OrderId = order.Id;
+                model.OrderTotal = order.PurchaseUnits.FirstOrDefault().AmountWithBreakdown.Value;
 
                 //save order details for future using
                 var key = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.OrderId");

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Plugins
@@ -101,7 +102,10 @@ namespace Nop.Services.Plugins
         /// </summary>
         public virtual void Save()
         {
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+            //since plugins are loaded before IoC initialization using the default provider,
+            //in order to avoid possible problems we use CommonHelper.DefaultFileProvider
+            //instead of the main file provider
+            var fileProvider = CommonHelper.DefaultFileProvider;
 
             //get the description file path
             if (OriginalAssemblyFile == null)

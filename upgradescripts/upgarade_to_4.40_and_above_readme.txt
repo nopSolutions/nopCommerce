@@ -1,4 +1,5 @@
 ﻿IMPORTANT. We don't use SQL upgrade scripts anymore. Upgrade is performed automatically with migrations (during the first application start).
+IMPORTANT. If you're upgrading nopCommerce to version 4.50 or above, please ensure that your connection string contains one of the following parameters: "Encrypt=false" or "TrustServerCertificate=True" (depending on your server requirements). You can manually add these parameters to your connection string in the \App_Data\appsettings.json file. This step is caused by the "Microsoft.Data.SqlClient" library that changed the default value of the "Encrypt" option from "false" to "true".
 
 Steps:
 1. Make a backup of everything on your site, including the database. This is extremely important so that you can roll back to a running site no matter what happens during migration.

@@ -57,6 +57,8 @@ namespace Nop.Web.Models.ShoppingCart
 
             public string DeliveryDateFormat { get; set; }
 
+            public int DisplayOrder { get; set; }
+
             public bool Selected { get; set; }
         }
 

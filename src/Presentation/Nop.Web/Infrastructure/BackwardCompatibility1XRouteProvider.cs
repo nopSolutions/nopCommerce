@@ -19,7 +19,7 @@ namespace Nop.Web.Infrastructure
         /// <param name="endpointRouteBuilder">Route builder</param>
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
-            if (!EngineContext.Current.Resolve<AppSettings>().CommonConfig.SupportPreviousNopcommerceVersions)
+            if (!Singleton<AppSettings>.Instance.Get<CommonConfig>().SupportPreviousNopcommerceVersions)
                 return;
 
             //all old aspx URLs
