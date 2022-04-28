@@ -1,0 +1,4 @@
+<Project>
+    <!-- TODO: this should be integrated with engineering and not hard coded -->
+    <Import Project="c:\src\Metalama\Metalama.Import.props"/>
+</Project>
