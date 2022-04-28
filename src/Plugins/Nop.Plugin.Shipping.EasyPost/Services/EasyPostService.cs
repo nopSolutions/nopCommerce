@@ -426,10 +426,10 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 { "options", options },
             };
 
-            var shipment = await Shipment.Create(shipmentParameters);
-
             if (!_easyPostSettings.UseSandbox && !_easyPostSettings.UseAllAvailableCarriers)
-                shipment.carrier_accounts = _easyPostSettings.CarrierAccounts?.Select(value => new CarrierAccount { id = value }).ToList();
+                shipmentParameters.Add("carrier_accounts", _easyPostSettings.CarrierAccounts?.Select(value => new CarrierAccount { id = value }).ToList());
+
+            var shipment = await Shipment.Create(shipmentParameters);
 
             //log warning messages if any
             if (_easyPostSettings.LogShipmentMessages && shipment.messages?.Any() == true)
@@ -607,17 +607,17 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
             {
                 //no need to log configuration errors here
                 if (!IsConfigured())
-                    return Task.FromResult(false);
+                    return false;
 
                 var url = _easyPostSettings.WebhookUrl;
                 if (string.IsNullOrEmpty(url))
-                    return Task.FromResult(false);
+                    return false;
 
-                var deleteResult = await (await Webhook.All())
-                    ?.FirstOrDefault(webhook => webhook.url?.Equals(url, StringComparison.InvariantCultureIgnoreCase) ?? false)
-                    ?.Delete();
+                var webhook = (await Webhook.All())
+                    ?.FirstOrDefault(webhook => webhook.url?.Equals(url, StringComparison.InvariantCultureIgnoreCase) ?? false);
+                var deleteResult = webhook is not null && await webhook.Delete();
 
-                return Task.FromResult(deleteResult);
+                return deleteResult;
             });
         }
 
@@ -929,7 +929,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                         }
                     }
 
-                    return Task.FromResult(rates);
+                    return rates;
                 });
 
                 return rates;
@@ -1426,19 +1426,8 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 //log warning messages if any
                 if (_easyPostSettings.LogShipmentMessages && pickup.messages?.Any() == true)
                 {
-                    var warning = pickup.messages.Aggregate(string.Empty, (text, messageText) =>
-                    {
-                        try
-                        {
-                            //for some reason, sometimes we need to manually get message details
-                            var message = JsonConvert.DeserializeObject<Message>(messageText.message);
-                            if (message is not null)
-                                return $"{text}{message.carrier}: {message.message};{Environment.NewLine}";
-                        }
-                        catch { }
-
-                        return $"{text}{messageText};{Environment.NewLine}";
-                    });
+                    var warning = pickup.messages
+                        .Aggregate(string.Empty, (text, message) => $"{text}{message.carrier}: {message.message};{Environment.NewLine}");
                     await _logger.WarningAsync($"{EasyPostDefaults.SystemName} warning. {warning}");
                 }
 
@@ -1504,19 +1493,8 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 //log warning messages if any
                 if (_easyPostSettings.LogShipmentMessages && pickup.messages?.Any() == true)
                 {
-                    var warning = pickup.messages.Aggregate(string.Empty, (text, messageText) =>
-                    {
-                        try
-                        {
-                            //for some reason, sometimes we need to manually get message details
-                            var message = JsonConvert.DeserializeObject<Message>(messageText.message);
-                            if (message is not null)
-                                return $"{text}{message.carrier}: {message.message};{Environment.NewLine}";
-                        }
-                        catch { }
-
-                        return $"{text}{messageText};{Environment.NewLine}";
-                    });
+                    var warning = pickup.messages
+                        .Aggregate(string.Empty, (text, message) => $"{text}{message.carrier}: {message.message};{Environment.NewLine}");
                     await _logger.WarningAsync($"{EasyPostDefaults.SystemName} warning. {warning}");
                 }
 
