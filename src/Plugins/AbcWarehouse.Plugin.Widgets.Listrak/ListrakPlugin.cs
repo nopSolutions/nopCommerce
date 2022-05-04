@@ -34,6 +34,8 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak
             {
                 PublicWidgetZones.BodyEndHtmlTagBefore,
                 PublicWidgetZones.CheckoutCompletedBottom,
+                PublicWidgetZones.ProductDetailsBottom,
+                PublicWidgetZones.OrderSummaryCartFooter,
             });
         }
 

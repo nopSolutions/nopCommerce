@@ -8,3 +8,13 @@
     d.querySelector('head').appendChild(js);
     })(document, '@Model', '1');
 </script>
+
+<!-- Listrak: Set up listeners for email capture -->
+<script type="text/javascript">
+    (function(d){if(typeof _ltk=="undefined"){if(document.addEventListener)document.addEventListener("ltkAsyncListener",function(){_ltk_util.ready(d)});else{e=document.documentElement;e.ltkAsyncProperty=0;e.attachEvent("onpropertychange",function(e){if(e.propertyName=="ltkAsyncProperty"){_ltk_util.ready(d)}})}}else{_ltk_util.ready(d)}})(function(){
+        _ltk.SCA.CaptureEmail('Email');
+        _ltk.SCA.CaptureEmail('newsletter-email');
+        _ltk.SCA.CaptureEmail('BillingNewAddress_Email');
+        _ltk.SCA.CaptureEmail('ShippingNewAddress_Email');
+    });
+</script>

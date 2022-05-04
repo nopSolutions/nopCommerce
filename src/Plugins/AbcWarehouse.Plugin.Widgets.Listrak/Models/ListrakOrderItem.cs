@@ -13,5 +13,11 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Models
         public int Quantity { get; init; }
 
         public decimal Price { get; init; }
+
+        public string Title { get; init; }
+
+        public string ImageUrl { get; init; }
+
+        public string ProductUrl { get; init; }
     }
 }

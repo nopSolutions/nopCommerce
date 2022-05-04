@@ -26,6 +26,8 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Models
 
         public decimal OrderTotal { get; init; }
 
+        public string Source { get; init; }
+
         public IList<ListrakOrderItem> OrderItems { get; init; }
 
         public string MerchantId { get; init; }
