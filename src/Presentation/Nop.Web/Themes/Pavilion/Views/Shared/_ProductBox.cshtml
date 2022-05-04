@@ -157,18 +157,6 @@
         miniDesc = Model.ShortDescription;
     }
 
-    if (usesPairPricing)
-    {
-        if (!string.IsNullOrEmpty(Model.ProductPrice.OldPrice))
-        {
-            Model.ProductPrice.OldPrice = "$" + string.Format("{0:0.00}", decimal.Parse(Model.ProductPrice.OldPrice.Substring(1)) / 2);
-        }
-        if (!string.IsNullOrEmpty(Model.ProductPrice.Price))
-        {
-            Model.ProductPrice.Price = "$" + string.Format("{0:0.00}", decimal.Parse(Model.ProductPrice.Price.Substring(1)) / 2);
-        }
-    }
-
     //**************************************************************************
 
     var index = Model.Name.LastIndexOf(' ');

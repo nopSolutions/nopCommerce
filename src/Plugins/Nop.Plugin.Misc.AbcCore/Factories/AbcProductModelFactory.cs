@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Plugin.Misc.AbcCore.Mattresses;
+using Nop.Plugin.Misc.AbcCore.Services;
 
 namespace Nop.Plugin.Misc.AbcCore.Factories
 {
@@ -35,6 +36,7 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
         private readonly IWebHelper _webHelper;
         private readonly IAbcMattressListingPriceService _abcMattressListingPriceService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductAbcDescriptionService _productAbcDescriptionService;
 
         public AbcProductModelFactory(
             CaptchaSettings captchaSettings,
@@ -73,7 +75,8 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             SeoSettings seoSettings,
             ShippingSettings shippingSettings,
             VendorSettings vendorSettings,
-            IAbcMattressListingPriceService abcMattressListingPriceService)
+            IAbcMattressListingPriceService abcMattressListingPriceService,
+            IProductAbcDescriptionService productAbcDescriptionService)
             : base(captchaSettings, catalogSettings, customerSettings,
                 categoryService, currencyService, customerService, dateRangeService,
                 dateTimeHelper, downloadService, genericAttributeService, localizationService,
@@ -88,9 +91,9 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             _webHelper = webHelper;
             _abcMattressListingPriceService = abcMattressListingPriceService;
             _priceFormatter = priceFormatter;
+            _productAbcDescriptionService = productAbcDescriptionService;
         }
 
-        // Adjusts for mattresses
         protected override async Task<ProductOverviewModel.ProductPriceModel>
             PrepareProductOverviewPriceModelAsync(
                 Product product,
@@ -98,31 +101,24 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
         )
         {
             var model = await base.PrepareProductOverviewPriceModelAsync(product, forceRedirectionAfterAddingToCart);
-            var newPrice = await _abcMattressListingPriceService.GetListingPriceForMattressProductAsync(
-                product.Id
-            );
+            model.Price = await AdjustMattressPriceAsync(product.Id) ?? model.Price;
 
-            if (newPrice != null)
-            {
-                model.Price = (await _priceFormatter.FormatPriceAsync(newPrice.Value)).Replace(".00", "");
-            }
+            var pairPricingResult = await AdjustPairPricingAsync(product.Id, model.OldPrice, model.Price);
+            model.OldPrice = pairPricingResult.OldPrice ?? model.OldPrice;
+            model.Price = pairPricingResult.Price ?? model.Price;
 
             return model;
         }
 
-        // Adjusts for mattresses
         protected override async Task<ProductDetailsModel.ProductPriceModel>
             PrepareProductPriceModelAsync(Product product)
         {
             var model = await base.PrepareProductPriceModelAsync(product);
-            var newPrice = await _abcMattressListingPriceService.GetListingPriceForMattressProductAsync(
-                product.Id
-            );
+            model.Price = await AdjustMattressPriceAsync(product.Id) ?? model.Price;
 
-            if (newPrice != null)
-            {
-                model.Price = (await _priceFormatter.FormatPriceAsync(newPrice.Value)).Replace(".00", "");
-            }
+            var pairPricingResult = await AdjustPairPricingAsync(product.Id, model.OldPrice, model.Price);
+            model.OldPrice = pairPricingResult.OldPrice ?? model.OldPrice;
+            model.Price = pairPricingResult.Price ?? model.Price;
 
             return model;
         }
@@ -151,6 +147,36 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             var models = await base.PrepareProductAttributeModelsAsync(product, updatecartitem);
 
             return models.Where(m => attributesToInclude.Contains(m.Name)).ToList();
+        }
+
+        private async Task<string> AdjustMattressPriceAsync(int productId)
+        {
+            var mattressPrice = await _abcMattressListingPriceService.GetListingPriceForMattressProductAsync(
+                productId
+            );
+            if (mattressPrice != null)
+            {
+                return (await _priceFormatter.FormatPriceAsync(mattressPrice.Value)).Replace(".00", "");
+            }
+
+            return null;
+        }
+
+        private async Task<(string OldPrice, string Price)> AdjustPairPricingAsync(
+            int productId,
+            string oldPrice,
+            string price)
+        {
+            var productAbcDescription = await _productAbcDescriptionService.GetProductAbcDescriptionByProductIdAsync(productId);
+            if (productAbcDescription != null && productAbcDescription.UsesPairPricing)
+            {
+                return (
+                    oldPrice != null ? "$" + string.Format("{0:0.00}", decimal.Parse(oldPrice.Substring(1)) / 2) : oldPrice,
+                    price != null ? "$" + string.Format("{0:0.00}", decimal.Parse(price.Substring(1)) / 2) : price
+                );
+            }
+
+            return (null, null);
         }
     }
 }
