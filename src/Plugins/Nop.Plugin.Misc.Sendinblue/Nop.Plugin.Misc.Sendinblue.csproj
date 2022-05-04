@@ -48,27 +48,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="RestSharp.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SendinblueMarketingAutomation.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Reference Include="SendinblueMarketingAutomation">
-      <HintPath>SendinblueMarketingAutomation.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj" />
     <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="sib_api_v3_sdk" Version="3.1.0" />
+    <PackageReference Include="sib_api_v3_sdk" Version="3.3.0" />
+    <PackageReference Include="RestSharp" Version="107.3.0" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->
