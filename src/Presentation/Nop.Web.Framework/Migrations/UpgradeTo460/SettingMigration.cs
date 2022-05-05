@@ -13,7 +13,7 @@ using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-04-18 00:00:00", "4.60.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
+    [NopMigration("2022-02-18 00:00:00", "4.60.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -133,7 +133,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             var captchaSettings = settingService.LoadSettingAsync<CaptchaSettings>().Result;
 
-            //#6223
+            //#6182
             if (!settingService.SettingExistsAsync(captchaSettings, settings => settings.ShowOnCheckoutPageForGuests).Result)
             {
                 captchaSettings.ShowOnCheckoutPageForGuests = false;
