@@ -1,0 +1,6 @@
+<Project>
+    <PropertyGroup>
+        <MainVersion>4.5.0</MainVersion>
+        <PackageVersionSuffix></PackageVersionSuffix>
+    </PropertyGroup>
+</Project>

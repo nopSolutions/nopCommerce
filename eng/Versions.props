@@ -1,0 +1,26 @@
+<Project>
+
+    <!-- Set the default version of the current product -->
+    <Import Project="MainVersion.props" />
+    
+    <PropertyGroup>
+        <MyProductVersion>$(MainVersion)$(PackageVersionSuffix)</MyProductVersion>
+        <MyProductAssemblyVersion>$(MainVersion)</MyProductAssemblyVersion>
+    </PropertyGroup>
+
+    
+    <!-- Set the default versions of dependencies -->
+    <PropertyGroup>
+        <PostSharpEngineeringVersion>1.0.64-preview</PostSharpEngineeringVersion>
+		<MetalamaVersion>branch:master</MetalamaVersion>
+    </PropertyGroup>
+
+    <!-- Override versions (both this product and dependencies) for the local build -->
+    <Import Project="Versions.g.props" Condition="Exists('Versions.g.props')" />
+
+    <PropertyGroup>
+        <AssemblyVersion>$(MyProductAssemblyVersion)</AssemblyVersion>
+        <Version>$(MyProductVersion)</Version>
+    </PropertyGroup>
+
+</Project>

@@ -3,5 +3,8 @@
     "version": "6.0.101",
     "rollForward": "latestFeature",
     "allowPrerelease": false
+  },
+  "msbuild-sdks": {
+    "PostSharp.Engineering.Sdk": "1.0.64-preview"
   }
 } 

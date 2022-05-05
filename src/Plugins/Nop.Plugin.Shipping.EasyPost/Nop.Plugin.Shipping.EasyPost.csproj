@@ -7,7 +7,7 @@
     <Authors>Nop Solutions, Ltd</Authors>
     <PackageProjectUrl>https://www.nopcommerce.com/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/nopSolutions/nopCommerce/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <RepositoryType>Git</RepositoryType>
     <OutputPath>..\..\Presentation\Nop.Web\Plugins\Shipping.EasyPost</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
