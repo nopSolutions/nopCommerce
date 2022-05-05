@@ -100,7 +100,7 @@ namespace Nop.Web.Framework.UI
         /// <returns>The bundle</returns>
         private IAsset GetOrCreateBundle(string bundlePath, Func<string, string[], IAsset> createAsset, params string[] sourceFiles)
         {
-            if(string.IsNullOrEmpty(bundlePath))
+            if (string.IsNullOrEmpty(bundlePath))
                 throw new ArgumentNullException(nameof(bundlePath));
 
             if (createAsset is null)
@@ -765,8 +765,8 @@ namespace Nop.Web.Framework.UI
                 return routeName;
 
             //then try to get a generic one (actually it's an action name, not the route)
-            if (httpContext.GetRouteValue(NopRoutingDefaults.SeNameFieldKey) is not null &&
-                httpContext.GetRouteValue(NopRoutingDefaults.ActionFieldKey) is string actionKey)
+            if (httpContext.GetRouteValue(NopRoutingDefaults.RouteValue.SeName) is not null &&
+                httpContext.GetRouteValue(NopRoutingDefaults.RouteValue.Action) is string actionKey)
             {
                 //there are some cases when the action name doesn't match the route name
                 //it's not easy to make them the same, so we'll just handle them here

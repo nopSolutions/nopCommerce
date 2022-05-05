@@ -24,7 +24,7 @@ namespace Nop.Web.Infrastructure
                     //this pattern is set once at the application start, when we don't have the selected language yet
                     //so we use 'en' by default for the language value, later it'll be replaced with the working language code
                     var code = "en";
-                    return $"{{{NopRoutingDefaults.LanguageRouteValue}:maxlength(2):{NopRoutingDefaults.LanguageParameterTransformer}={code}}}";
+                    return $"{{{NopRoutingDefaults.RouteValue.Language}:maxlength(2):{NopRoutingDefaults.LanguageParameterTransformer}={code}}}";
                 }
             }
 

@@ -19,8 +19,6 @@ namespace Nop.Web.Framework.Mvc.Routing
     /// </summary>
     public partial class NopUrlHelper : INopUrlHelper
     {
-        public static string SeName = "SeName";
-        public static string CategorySeName = "CatalogSeName";
         public static string ProductRoute = "Product";
         public static string CategoryRoute = "Category";
         public static string ManufacturerRoute = "Manufacturer";

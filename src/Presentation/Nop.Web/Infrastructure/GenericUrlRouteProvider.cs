@@ -36,10 +36,10 @@ namespace Nop.Web.Infrastructure
                 return;
 
             //generic routes (actually routing is processed later in SlugRouteTransformer)
-            var genericCatalogPattern = $"{lang}/{{CatalogSeName}}/{{SeName}}";
+            var genericCatalogPattern = $"{lang}/{{{NopRoutingDefaults.RouteValue.CatalogSeName}}}/{{{NopRoutingDefaults.RouteValue.SeName}}}";
             endpointRouteBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(genericCatalogPattern);
 
-            var genericPattern = $"{lang}/{{SeName}}";
+            var genericPattern = $"{lang}/{{{NopRoutingDefaults.RouteValue.SeName}}}";
             endpointRouteBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(genericPattern);
 
             //routes for not found slugs
@@ -55,11 +55,11 @@ namespace Nop.Web.Infrastructure
             }
 
             endpointRouteBuilder.MapControllerRoute(name: "GenericUrl",
-                pattern: "{SeName}",
+                pattern: $"{{{NopRoutingDefaults.RouteValue.SeName}}}",
                 defaults: new { controller = "Common", action = "GenericUrl" });
 
             endpointRouteBuilder.MapControllerRoute(name: "GenericCatalogUrl",
-                pattern: "{CatalogSeName}/{SeName}",
+                pattern: $"{{{NopRoutingDefaults.RouteValue.CatalogSeName}}}/{{{NopRoutingDefaults.RouteValue.SeName}}}",
                 defaults: new { controller = "Common", action = "GenericUrl" });
 
             //routes for entities that support catalog path and slug (e.g. /category-seo-name/product-seo-name)
