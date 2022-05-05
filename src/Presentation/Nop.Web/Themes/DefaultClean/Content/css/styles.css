@@ -801,7 +801,7 @@ label, label + * {
   left: 50%;
   z-index: 1050;
   width: 320px;
-  height: 180px;
+  height: auto;
   margin: -90px 0 0 -160px;
   border: 1px solid #ccc;
   box-shadow: 0 0 2px rgba(0,0,0,0.15);
