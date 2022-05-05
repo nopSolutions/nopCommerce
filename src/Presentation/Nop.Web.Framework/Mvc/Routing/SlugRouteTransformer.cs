@@ -13,6 +13,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Events;
@@ -212,7 +213,7 @@ namespace Nop.Web.Framework.Mvc.Routing
             values[NopRoutingDefaults.RouteValue.Action] = "InternalRedirect";
             values[NopRoutingDefaults.RouteValue.Url] = $"{httpContext.Request.PathBase}{path}{httpContext.Request.QueryString}";
             values[NopRoutingDefaults.RouteValue.PermanentRedirect] = permanent;
-            httpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
+            httpContext.Items[NopHttpDefaults.GenericRouteInternalRedirect] = true;
         }
 
         #endregion

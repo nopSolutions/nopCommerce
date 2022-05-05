@@ -19,15 +19,6 @@ namespace Nop.Web.Framework.Mvc.Routing
     /// </summary>
     public partial class NopUrlHelper : INopUrlHelper
     {
-        public static string ProductRoute = "Product";
-        public static string CategoryRoute = "Category";
-        public static string ManufacturerRoute = "Manufacturer";
-        public static string VendorRoute = "Vendor";
-        public static string NewsItemRoute = "NewsItem";
-        public static string BlogPostRoute = "BlogPost";
-        public static string TopicRoute = "Topic";
-        public static string ProductsByTagRoute = "ProductsByTag";
-
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
@@ -72,7 +63,7 @@ namespace Nop.Web.Framework.Mvc.Routing
         protected virtual async Task<string> RouteProductUrlAsync(IUrlHelper urlHelper,
             object values = null, string protocol = null, string host = null, string fragment = null)
         {
-            return urlHelper.RouteUrl(ProductRoute, values, protocol, host, fragment);
+            return urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Product, values, protocol, host, fragment);
         }
 
         #endregion
@@ -97,14 +88,22 @@ namespace Nop.Web.Framework.Mvc.Routing
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             return typeof(TEntity) switch
             {
-                var entityType when entityType == typeof(Product) => await RouteProductUrlAsync(urlHelper, values, protocol, host, fragment),
-                var entityType when entityType == typeof(Category) => urlHelper.RouteUrl(CategoryRoute, values, protocol, host, fragment),
-                var entityType when entityType == typeof(Manufacturer) => urlHelper.RouteUrl(ManufacturerRoute, values, protocol, host, fragment),
-                var entityType when entityType == typeof(Vendor) => urlHelper.RouteUrl(VendorRoute, values, protocol, host, fragment),
-                var entityType when entityType == typeof(NewsItem) => urlHelper.RouteUrl(NewsItemRoute, values, protocol, host, fragment),
-                var entityType when entityType == typeof(BlogPost) => urlHelper.RouteUrl(BlogPostRoute, values, protocol, host, fragment),
-                var entityType when entityType == typeof(Topic) => urlHelper.RouteUrl(TopicRoute, values, protocol, host, fragment),
-                var entityType when entityType == typeof(ProductTag) => urlHelper.RouteUrl(ProductsByTagRoute, values, protocol, host, fragment),
+                var entityType when entityType == typeof(Product)
+                    => await RouteProductUrlAsync(urlHelper, values, protocol, host, fragment),
+                var entityType when entityType == typeof(Category)
+                    => urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Category, values, protocol, host, fragment),
+                var entityType when entityType == typeof(Manufacturer)
+                    => urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Manufacturer, values, protocol, host, fragment),
+                var entityType when entityType == typeof(Vendor)
+                    => urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Vendor, values, protocol, host, fragment),
+                var entityType when entityType == typeof(NewsItem)
+                    => urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.NewsItem, values, protocol, host, fragment),
+                var entityType when entityType == typeof(BlogPost)
+                    => urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.BlogPost, values, protocol, host, fragment),
+                var entityType when entityType == typeof(Topic)
+                    => urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Topic, values, protocol, host, fragment),
+                var entityType when entityType == typeof(ProductTag)
+                    => urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.ProductTag, values, protocol, host, fragment),
                 var entityType => urlHelper.RouteUrl(entityType.Name, values, protocol, host, fragment)
             };
         }

@@ -5,6 +5,81 @@
     /// </summary>
     public static partial class NopRoutingDefaults
     {
+        #region Route names
+
+        public static partial class RouteName
+        {
+            public static partial class Generic
+            {
+                /// <summary>
+                /// Gets the generic route name
+                /// </summary>
+                public static string GenericUrl => "GenericUrl";
+
+                /// <summary>
+                /// Gets the generic route (with language code e.g. en/) name
+                /// </summary>
+                public static string GenericUrlWithLanguageCode => "GenericUrlWithLanguageCode";
+
+                /// <summary>
+                /// Gets the generic catalog route (with language code e.g. en/) name
+                /// </summary>
+                public static string GenericCatalogUrl => "GenericCatalogUrl";
+
+                /// <summary>
+                /// Gets the generic catalog route name 
+                /// </summary>
+                public static string GenericCatalogUrlWithLanguageCode => "GenericCatalogUrlWithLanguageCode";
+
+                /// <summary>
+                /// Gets the generic product catalog route name
+                /// </summary>
+                public static string ProductCatalog => "ProductCatalog";
+
+                /// <summary>
+                /// Gets the generic product route name
+                /// </summary>
+                public static string Product => "ProductDetails";
+
+                /// <summary>
+                /// Gets the generic category route name
+                /// </summary>
+                public static string Category => "Category";
+
+                /// <summary>
+                /// Gets the generic manufacturer route name
+                /// </summary>
+                public static string Manufacturer => "Manufacturer";
+
+                /// <summary>
+                /// Gets the generic vendor route name
+                /// </summary>
+                public static string Vendor => "Vendor";
+
+                /// <summary>
+                /// Gets the generic news item route name
+                /// </summary>
+                public static string NewsItem => "NewsItem";
+
+                /// <summary>
+                /// Gets the generic blog post route name
+                /// </summary>
+                public static string BlogPost => "BlogPost";
+
+                /// <summary>
+                /// Gets the generic topic route name
+                /// </summary>
+                public static string Topic => "TopicDetails";
+
+                /// <summary>
+                /// Gets the generic product tag route name
+                /// </summary>
+                public static string ProductTag => "ProductsByTag";
+            }
+        }
+
+        #endregion
+
         #region Route values keys
 
         public static partial class RouteValue

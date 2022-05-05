@@ -9,6 +9,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Html;
@@ -369,8 +370,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult InternalRedirect(string url, bool permanentRedirect)
         {
             //ensure it's invoked from our GenericPathRoute class
-            if (HttpContext.Items["nop.RedirectFromGenericPathRoute"] == null ||
-                !Convert.ToBoolean(HttpContext.Items["nop.RedirectFromGenericPathRoute"]))
+            if (!HttpContext.Items.TryGetValue(NopHttpDefaults.GenericRouteInternalRedirect, out var value) || value is not bool redirect || !redirect)
             {
                 url = Url.RouteUrl("Homepage");
                 permanentRedirect = false;
