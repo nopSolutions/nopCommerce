@@ -23,11 +23,8 @@
     <None Remove="logo.png" />
     <None Remove="plugin.json" />
     <None Remove="Views\_ViewImports.cshtml" />
-    <None Remove="Views\CartUpdate.cshtml" />
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\Framework.cshtml" />
-    <None Remove="Views\PlaceOrder.cshtml" />
-    <None Remove="Views\ProductBrowse.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,19 +37,10 @@
     <Content Include="Views\_ViewImports.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\CartUpdate.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\Configure.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Framework.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\PlaceOrder.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\ProductBrowse.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

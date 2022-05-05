@@ -64,63 +64,58 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Components
                 return Content(string.Empty);
             }
 
-            if (widgetZone == PublicWidgetZones.BodyEndHtmlTagBefore)
+            var model = new ListrakModel()
             {
-                return View("~/Plugins/Widgets.Listrak/Views/Framework.cshtml", _settings.MerchantId);
-            }
-
-            if (widgetZone == PublicWidgetZones.CheckoutCompletedBottom)
-            {
-                return await OrderFulfillmentAsync(additionalData as CheckoutCompletedModel);
-            }
-
-            if (widgetZone == PublicWidgetZones.ProductDetailsBottom)
-            {
-                return View("~/Plugins/Widgets.Listrak/Views/ProductBrowse.cshtml", (additionalData as ProductDetailsModel).Sku);
-            }
-
-            if (widgetZone == PublicWidgetZones.OrderSummaryCartFooter)
-            {
-                return await CartUpdateAsync();
-            }
-
-            await _logger.ErrorAsync($"Widgets.Listrak: Unsupported widget zone: {widgetZone}.");
-            return Content(string.Empty);
-        }
-
-        private async Task<IViewComponentResult> CartUpdateAsync()
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer);
-            var listrakOrderItems = await GetListrakOrderItemsFromShoppingCart(cart);
-
-            return View("~/Plugins/Widgets.Listrak/Views/CartUpdate.cshtml", listrakOrderItems);
-        }
-
-        private async Task<IViewComponentResult> OrderFulfillmentAsync(CheckoutCompletedModel checkoutCompletedModel)
-        {
-            var order = await _orderService.GetOrderByIdAsync(checkoutCompletedModel.OrderId);
-            var orderItems = await _orderService.GetOrderItemsAsync(checkoutCompletedModel.OrderId);
-            var listrakOrderItems = await GetListrakOrderItemsFromOrderItems(orderItems);
-            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-            var address = (await _customerService.GetAddressesByCustomerIdAsync(order.CustomerId)).FirstOrDefault();
-
-            var model = new PlaceOrderModel()
-            {
-                CustomerEmail = customer.Email,
-                CustomerFirstName = address.FirstName,
-                CustomerLastName = address.LastName,
-                OrderNumber = order.Id,
-                ItemTotal = order.OrderSubtotalExclTax,
-                ShippingTotal = order.OrderShippingExclTax,
-                TaxTotal = order.OrderTax,
-                OrderTotal = order.OrderTotal,
-                OrderItems = listrakOrderItems,
-                Source = "web",
                 MerchantId = _settings.MerchantId,
             };
 
-            return View("~/Plugins/Widgets.Listrak/Views/PlaceOrder.cshtml", model);
+            var routeData = Url.ActionContext.RouteData;
+            var controller = routeData.Values["controller"];
+            var action = routeData.Values["action"];
+
+            // on cart page
+            if (controller.ToString() == "ShoppingCart" && action.ToString() == "Cart")
+            {
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                var cart = await _shoppingCartService.GetShoppingCartAsync(customer);
+
+                model.CartUpdateOrderItems = await GetListrakOrderItemsFromShoppingCart(cart);
+            }
+
+            // on order confirmation page
+            if (controller.ToString() == "Checkout" && action.ToString() == "Completed")
+            {
+                var orderId = Convert.ToInt32(routeData.Values["orderId"]);
+                var order = await _orderService.GetOrderByIdAsync(orderId);
+                var orderItems = await _orderService.GetOrderItemsAsync(orderId);
+                var listrakOrderItems = await GetListrakOrderItemsFromOrderItems(orderItems);
+                var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+                var address = (await _customerService.GetAddressesByCustomerIdAsync(order.CustomerId)).FirstOrDefault();
+
+                model.PlaceOrderModel = new PlaceOrderModel()
+                {
+                    CustomerEmail = customer.Email,
+                    CustomerFirstName = address.FirstName,
+                    CustomerLastName = address.LastName,
+                    OrderNumber = order.Id,
+                    ItemTotal = order.OrderSubtotalExclTax,
+                    ShippingTotal = order.OrderShippingExclTax,
+                    TaxTotal = order.OrderTax,
+                    OrderTotal = order.OrderTotal,
+                    OrderItems = listrakOrderItems,
+                    Source = "web"
+                };
+            }
+
+            // on product details page
+            if (controller.ToString() == "Product" && action.ToString() == "ProductDetails")
+            {
+                var productId = Convert.ToInt32(routeData.Values["productId"]);
+                var product = await _productService.GetProductByIdAsync(productId);
+                model.ProductBrowseSku = product.Sku;
+            }
+
+            return View("~/Plugins/Widgets.Listrak/Views/Framework.cshtml", model);
         }
 
         private async Task<IList<ListrakOrderItem>> GetListrakOrderItemsFromOrderItems(IList<OrderItem> orderItems)

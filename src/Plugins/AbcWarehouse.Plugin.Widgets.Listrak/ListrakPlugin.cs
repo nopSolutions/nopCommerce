@@ -33,9 +33,6 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak
             return Task.FromResult<IList<string>>(new List<string>
             {
                 PublicWidgetZones.BodyEndHtmlTagBefore,
-                PublicWidgetZones.CheckoutCompletedBottom,
-                PublicWidgetZones.ProductDetailsBottom,
-                PublicWidgetZones.OrderSummaryCartFooter,
             });
         }
 
