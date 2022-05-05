@@ -63,8 +63,8 @@ using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Areas.Admin.Models.Vendors;
-using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.WebOptimizer;
 
 namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 {

@@ -37,9 +37,9 @@ using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;
-using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Models.Extensions;
+using Nop.Web.Framework.WebOptimizer;
 
 namespace Nop.Web.Areas.Admin.Factories
 {

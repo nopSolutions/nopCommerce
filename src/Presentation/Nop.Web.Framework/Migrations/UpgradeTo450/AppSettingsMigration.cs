@@ -3,7 +3,7 @@ using FluentMigrator;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
-using Nop.Web.Framework.Configuration;
+using Nop.Web.Framework.WebOptimizer;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450
 {
