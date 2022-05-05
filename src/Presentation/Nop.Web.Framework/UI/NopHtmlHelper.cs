@@ -765,8 +765,8 @@ namespace Nop.Web.Framework.UI
                 return routeName;
 
             //then try to get a generic one (actually it's an action name, not the route)
-            if (httpContext.GetRouteValue(NopPathRouteDefaults.SeNameFieldKey) is not null &&
-                httpContext.GetRouteValue(NopPathRouteDefaults.ActionFieldKey) is string actionKey)
+            if (httpContext.GetRouteValue(NopRoutingDefaults.SeNameFieldKey) is not null &&
+                httpContext.GetRouteValue(NopRoutingDefaults.ActionFieldKey) is string actionKey)
             {
                 //there are some cases when the action name doesn't match the route name
                 //it's not easy to make them the same, so we'll just handle them here

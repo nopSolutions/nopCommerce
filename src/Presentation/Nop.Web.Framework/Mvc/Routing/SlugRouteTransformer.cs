@@ -81,7 +81,7 @@ namespace Nop.Web.Framework.Mvc.Routing
             //otherwise it can cause some issues when customers choose a new language but a slug stays the same
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
-                if (values.TryGetValue(NopPathRouteDefaults.LanguageRouteValue, out var languageValue))
+                if (values.TryGetValue(NopRoutingDefaults.LanguageRouteValue, out var languageValue))
                 {
                     var code = languageValue?.ToString();
                     var store = await _storeContext.GetCurrentStoreAsync();
@@ -106,59 +106,59 @@ namespace Nop.Web.Framework.Mvc.Routing
             switch (urlRecord.EntityName)
             {
                 case var name when name.Equals(nameof(Product), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopPathRouteDefaults.ControllerFieldKey] = "Product";
-                    values[NopPathRouteDefaults.ActionFieldKey] = "ProductDetails";
-                    values[NopPathRouteDefaults.ProductIdFieldKey] = urlRecord.EntityId;
-                    values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
+                    values[NopRoutingDefaults.ControllerFieldKey] = "Product";
+                    values[NopRoutingDefaults.ActionFieldKey] = "ProductDetails";
+                    values[NopRoutingDefaults.ProductIdFieldKey] = urlRecord.EntityId;
+                    values[NopRoutingDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
 
                 case var name when name.Equals(nameof(ProductTag), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopPathRouteDefaults.ControllerFieldKey] = "Catalog";
-                    values[NopPathRouteDefaults.ActionFieldKey] = "ProductsByTag";
-                    values[NopPathRouteDefaults.ProducttagIdFieldKey] = urlRecord.EntityId;
-                    values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
+                    values[NopRoutingDefaults.ControllerFieldKey] = "Catalog";
+                    values[NopRoutingDefaults.ActionFieldKey] = "ProductsByTag";
+                    values[NopRoutingDefaults.ProducttagIdFieldKey] = urlRecord.EntityId;
+                    values[NopRoutingDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
 
                 case var name when name.Equals(nameof(Category), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopPathRouteDefaults.ControllerFieldKey] = "Catalog";
-                    values[NopPathRouteDefaults.ActionFieldKey] = "Category";
-                    values[NopPathRouteDefaults.CategoryIdFieldKey] = urlRecord.EntityId;
-                    values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
+                    values[NopRoutingDefaults.ControllerFieldKey] = "Catalog";
+                    values[NopRoutingDefaults.ActionFieldKey] = "Category";
+                    values[NopRoutingDefaults.CategoryIdFieldKey] = urlRecord.EntityId;
+                    values[NopRoutingDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
 
                 case var name when name.Equals(nameof(Manufacturer), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopPathRouteDefaults.ControllerFieldKey] = "Catalog";
-                    values[NopPathRouteDefaults.ActionFieldKey] = "Manufacturer";
-                    values[NopPathRouteDefaults.ManufacturerIdFieldKey] = urlRecord.EntityId;
-                    values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
+                    values[NopRoutingDefaults.ControllerFieldKey] = "Catalog";
+                    values[NopRoutingDefaults.ActionFieldKey] = "Manufacturer";
+                    values[NopRoutingDefaults.ManufacturerIdFieldKey] = urlRecord.EntityId;
+                    values[NopRoutingDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
 
                 case var name when name.Equals(nameof(Vendor), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopPathRouteDefaults.ControllerFieldKey] = "Catalog";
-                    values[NopPathRouteDefaults.ActionFieldKey] = "Vendor";
-                    values[NopPathRouteDefaults.VendorIdFieldKey] = urlRecord.EntityId;
-                    values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
+                    values[NopRoutingDefaults.ControllerFieldKey] = "Catalog";
+                    values[NopRoutingDefaults.ActionFieldKey] = "Vendor";
+                    values[NopRoutingDefaults.VendorIdFieldKey] = urlRecord.EntityId;
+                    values[NopRoutingDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
 
                 case var name when name.Equals(nameof(NewsItem), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopPathRouteDefaults.ControllerFieldKey] = "News";
-                    values[NopPathRouteDefaults.ActionFieldKey] = "NewsItem";
-                    values[NopPathRouteDefaults.NewsItemIdFieldKey] = urlRecord.EntityId;
-                    values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
+                    values[NopRoutingDefaults.ControllerFieldKey] = "News";
+                    values[NopRoutingDefaults.ActionFieldKey] = "NewsItem";
+                    values[NopRoutingDefaults.NewsItemIdFieldKey] = urlRecord.EntityId;
+                    values[NopRoutingDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
 
                 case var name when name.Equals(nameof(BlogPost), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopPathRouteDefaults.ControllerFieldKey] = "Blog";
-                    values[NopPathRouteDefaults.ActionFieldKey] = "BlogPost";
-                    values[NopPathRouteDefaults.BlogPostIdFieldKey] = urlRecord.EntityId;
-                    values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
+                    values[NopRoutingDefaults.ControllerFieldKey] = "Blog";
+                    values[NopRoutingDefaults.ActionFieldKey] = "BlogPost";
+                    values[NopRoutingDefaults.BlogPostIdFieldKey] = urlRecord.EntityId;
+                    values[NopRoutingDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
 
                 case var name when name.Equals(nameof(Topic), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopPathRouteDefaults.ControllerFieldKey] = "Topic";
-                    values[NopPathRouteDefaults.ActionFieldKey] = "TopicDetails";
-                    values[NopPathRouteDefaults.TopicIdFieldKey] = urlRecord.EntityId;
-                    values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
+                    values[NopRoutingDefaults.ControllerFieldKey] = "Topic";
+                    values[NopRoutingDefaults.ActionFieldKey] = "TopicDetails";
+                    values[NopRoutingDefaults.TopicIdFieldKey] = urlRecord.EntityId;
+                    values[NopRoutingDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
             }
         }
@@ -194,10 +194,10 @@ namespace Nop.Web.Framework.Mvc.Routing
             if (!urlRecord.EntityName.Equals("product", StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
-            values[NopPathRouteDefaults.ControllerFieldKey] = "Product";
-            values[NopPathRouteDefaults.ActionFieldKey] = "ProductDetails";
-            values[NopPathRouteDefaults.ProductIdFieldKey] = urlRecord.EntityId;
-            values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
+            values[NopRoutingDefaults.ControllerFieldKey] = "Product";
+            values[NopRoutingDefaults.ActionFieldKey] = "ProductDetails";
+            values[NopRoutingDefaults.ProductIdFieldKey] = urlRecord.EntityId;
+            values[NopRoutingDefaults.SeNameFieldKey] = urlRecord.Slug;
 
             return true;
         }
@@ -211,10 +211,10 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// <param name="permanent">Whether the redirect should be permanent</param>
         protected virtual void InternalRedirect(HttpContext httpContext, RouteValueDictionary values, string path, bool permanent)
         {
-            values[NopPathRouteDefaults.ControllerFieldKey] = "Common";
-            values[NopPathRouteDefaults.ActionFieldKey] = "InternalRedirect";
-            values[NopPathRouteDefaults.UrlFieldKey] = $"{httpContext.Request.PathBase}{path}{httpContext.Request.QueryString}";
-            values[NopPathRouteDefaults.PermanentRedirectFieldKey] = permanent;
+            values[NopRoutingDefaults.ControllerFieldKey] = "Common";
+            values[NopRoutingDefaults.ActionFieldKey] = "InternalRedirect";
+            values[NopRoutingDefaults.UrlFieldKey] = $"{httpContext.Request.PathBase}{path}{httpContext.Request.QueryString}";
+            values[NopRoutingDefaults.PermanentRedirectFieldKey] = permanent;
             httpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
         }
 

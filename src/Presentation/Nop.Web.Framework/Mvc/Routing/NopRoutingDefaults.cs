@@ -1,7 +1,12 @@
 ﻿namespace Nop.Web.Framework.Mvc.Routing
 {
-    public static partial class NopPathRouteDefaults
+    /// <summary>
+    /// Represents default values related to routing
+    /// </summary>
+    public static partial class NopRoutingDefaults
     {
+        #region Route values keys
+
         /// <summary>
         /// Gets default key for action field
         /// </summary>
@@ -71,6 +76,8 @@
         /// Gets language route value
         /// </summary>
         public static string LanguageRouteValue => "language";
+
+        #endregion
 
         /// <summary>
         /// Gets language parameter transformer
