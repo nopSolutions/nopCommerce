@@ -29,9 +29,9 @@ using Nop.Web.Models.Sitemap;
 namespace Nop.Web.Factories
 {
     /// <summary>
-    /// Represents a sitemap generator
+    /// Represents the sitemap model factory implementation
     /// </summary>
-    public partial class SitemapGenerator : ISitemapGenerator
+    public partial class SitemapModelFactory : ISitemapModelFactory
     {
         #region Fields
 
@@ -59,7 +59,7 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public SitemapGenerator(BlogSettings blogSettings,
+        public SitemapModelFactory(BlogSettings blogSettings,
             ForumSettings forumSettings,
             IActionContextAccessor actionContextAccessor,
             IBlogService blogService,
@@ -134,31 +134,31 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the list of sitemap URLs
         /// </returns>
-        protected virtual async Task<IList<SitemapUrl>> GenerateUrlsAsync()
+        protected virtual async Task<IList<SitemapUrlModel>> GenerateUrlsAsync()
         {
-            var sitemapUrls = new List<SitemapUrl>
+            var sitemapUrls = new List<SitemapUrlModel>
             {
                 //home page
-                await GetLocalizedSitemapUrlAsync("Homepage"),
+                await PrepareLocalizedSitemapUrlAsync("Homepage"),
 
                 //search products
-                await GetLocalizedSitemapUrlAsync("ProductSearch"),
+                await PrepareLocalizedSitemapUrlAsync("ProductSearch"),
 
                 //contact us
-                await GetLocalizedSitemapUrlAsync("ContactUs")
+                await PrepareLocalizedSitemapUrlAsync("ContactUs")
             };
 
             //news
             if (_newsSettings.Enabled)
-                sitemapUrls.Add(await GetLocalizedSitemapUrlAsync("NewsArchive"));
+                sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync("NewsArchive"));
 
             //blog
             if (_blogSettings.Enabled)
-                sitemapUrls.Add(await GetLocalizedSitemapUrlAsync("Blog"));
+                sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync("Blog"));
 
             //forum
             if (_forumSettings.ForumsEnabled)
-                sitemapUrls.Add(await GetLocalizedSitemapUrlAsync("Boards"));
+                sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync("Boards"));
 
             //categories
             if (_sitemapXmlSettings.SitemapXmlIncludeCategories)
@@ -205,12 +205,12 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the sitemap URLs
         /// </returns>
-        protected virtual async Task<IEnumerable<SitemapUrl>> GetNewsItemUrlsAsync()
+        protected virtual async Task<IEnumerable<SitemapUrlModel>> GetNewsItemUrlsAsync()
         {
             var store = await _storeContext.GetCurrentStoreAsync();
 
             return await (await _newsService.GetAllNewsAsync(storeId: store.Id))
-                .SelectAwait(async news => await GetLocalizedSitemapUrlAsync("NewsItem",
+                .SelectAwait(async news => await PrepareLocalizedSitemapUrlAsync("NewsItem",
                     async lang => new { SeName = await _urlRecordService.GetSeNameAsync(news, news.LanguageId, ensureTwoPublishedLanguages: false) },
                     news.CreatedOnUtc)).ToListAsync();
         }
@@ -222,12 +222,12 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the sitemap URLs
         /// </returns>
-        protected virtual async Task<IEnumerable<SitemapUrl>> GetCategoryUrlsAsync()
+        protected virtual async Task<IEnumerable<SitemapUrlModel>> GetCategoryUrlsAsync()
         {
             var store = await _storeContext.GetCurrentStoreAsync();
 
             return await (await _categoryService.GetAllCategoriesAsync(storeId: store.Id))
-                .SelectAwait(async category => await GetLocalizedSitemapUrlAsync("Category", GetSeoRouteParamsAwait(category), category.UpdatedOnUtc)).ToListAsync();
+                .SelectAwait(async category => await PrepareLocalizedSitemapUrlAsync("Category", GetSeoRouteParamsAwait(category), category.UpdatedOnUtc)).ToListAsync();
         }
 
         /// <summary>
@@ -237,12 +237,12 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the sitemap URLs
         /// </returns>
-        protected virtual async Task<IEnumerable<SitemapUrl>> GetManufacturerUrlsAsync()
+        protected virtual async Task<IEnumerable<SitemapUrlModel>> GetManufacturerUrlsAsync()
         {
             var store = await _storeContext.GetCurrentStoreAsync();
 
             return await (await _manufacturerService.GetAllManufacturersAsync(storeId: store.Id))
-                .SelectAwait(async manufacturer => await GetLocalizedSitemapUrlAsync("Manufacturer", GetSeoRouteParamsAwait(manufacturer), manufacturer.UpdatedOnUtc)).ToListAsync();
+                .SelectAwait(async manufacturer => await PrepareLocalizedSitemapUrlAsync("Manufacturer", GetSeoRouteParamsAwait(manufacturer), manufacturer.UpdatedOnUtc)).ToListAsync();
         }
 
         /// <summary>
@@ -252,13 +252,13 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the sitemap URLs
         /// </returns>
-        protected virtual async Task<IEnumerable<SitemapUrl>> GetProductUrlsAsync()
+        protected virtual async Task<IEnumerable<SitemapUrlModel>> GetProductUrlsAsync()
         {
             var store = await _storeContext.GetCurrentStoreAsync();
 
             return await (await _productService.SearchProductsAsync(0, storeId: store.Id,
                 visibleIndividuallyOnly: true, orderBy: ProductSortingEnum.CreatedOn))
-                .SelectAwait(async product => await GetLocalizedSitemapUrlAsync("Product", GetSeoRouteParamsAwait(product), product.UpdatedOnUtc)).ToListAsync();
+                .SelectAwait(async product => await PrepareLocalizedSitemapUrlAsync("Product", GetSeoRouteParamsAwait(product), product.UpdatedOnUtc)).ToListAsync();
         }
 
         /// <summary>
@@ -268,10 +268,10 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the sitemap URLs
         /// </returns>
-        protected virtual async Task<IEnumerable<SitemapUrl>> GetProductTagUrlsAsync()
+        protected virtual async Task<IEnumerable<SitemapUrlModel>> GetProductTagUrlsAsync()
         {
             return await (await _productTagService.GetAllProductTagsAsync())
-                .SelectAwait(async productTag => await GetLocalizedSitemapUrlAsync("ProductsByTag", GetSeoRouteParamsAwait(productTag))).ToListAsync();
+                .SelectAwait(async productTag => await PrepareLocalizedSitemapUrlAsync("ProductsByTag", GetSeoRouteParamsAwait(productTag))).ToListAsync();
         }
 
         /// <summary>
@@ -281,12 +281,12 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the sitemap URLs
         /// </returns>
-        protected virtual async Task<IEnumerable<SitemapUrl>> GetTopicUrlsAsync()
+        protected virtual async Task<IEnumerable<SitemapUrlModel>> GetTopicUrlsAsync()
         {
             var store = await _storeContext.GetCurrentStoreAsync();
 
             return await (await _topicService.GetAllTopicsAsync(store.Id)).Where(t => t.IncludeInSitemap)
-                .SelectAwait(async topic => await GetLocalizedSitemapUrlAsync("Topic", GetSeoRouteParamsAwait(topic))).ToListAsync();
+                .SelectAwait(async topic => await PrepareLocalizedSitemapUrlAsync("Topic", GetSeoRouteParamsAwait(topic))).ToListAsync();
         }
 
         /// <summary>
@@ -296,13 +296,13 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the sitemap URLs
         /// </returns>
-        protected virtual async Task<IEnumerable<SitemapUrl>> GetBlogPostUrlsAsync()
+        protected virtual async Task<IEnumerable<SitemapUrlModel>> GetBlogPostUrlsAsync()
         {
             var store = await _storeContext.GetCurrentStoreAsync();
 
             return await (await _blogService.GetAllBlogPostsAsync(store.Id))
                 .Where(p => p.IncludeInSitemap)
-                .SelectAwait(async post => await GetLocalizedSitemapUrlAsync("BlogPost",
+                .SelectAwait(async post => await PrepareLocalizedSitemapUrlAsync("BlogPost",
                     async lang => new { SeName = await _urlRecordService.GetSeNameAsync(post, post.LanguageId, ensureTwoPublishedLanguages: false) },
                     post.CreatedOnUtc)).ToListAsync();
         }
@@ -311,12 +311,12 @@ namespace Nop.Web.Factories
         /// Get custom URLs for the sitemap
         /// </summary>
         /// <returns>Sitemap URLs</returns>
-        protected virtual IEnumerable<SitemapUrl> GetCustomUrls()
+        protected virtual IEnumerable<SitemapUrlModel> GetCustomUrls()
         {
             var storeLocation = _webHelper.GetStoreLocation();
 
             return _sitemapXmlSettings.SitemapCustomUrls.Select(customUrl =>
-                new SitemapUrl(string.Concat(storeLocation, customUrl), new List<string>(), UpdateFrequency.Weekly, DateTime.UtcNow));
+                new SitemapUrlModel(string.Concat(storeLocation, customUrl), new List<string>(), UpdateFrequency.Weekly, DateTime.UtcNow));
         }
 
         /// <summary>
@@ -376,7 +376,7 @@ namespace Nop.Web.Factories
         /// <param name="stream">Stream</param>
         /// <param name="sitemapUrls">List of sitemap URLs</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task WriteSitemapAsync(Stream stream, IList<SitemapUrl> sitemapUrls)
+        protected virtual async Task WriteSitemapAsync(Stream stream, IList<SitemapUrlModel> sitemapUrls)
         {
             await using var writer = new XmlTextWriter(stream, Encoding.UTF8)
             {
@@ -399,7 +399,7 @@ namespace Nop.Web.Factories
                 foreach (var alternate in sitemapUrl.AlternateLocations
                     .Where(p => !p.Equals(sitemapUrl.Location, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    await WriteSitemapUrlAsync(writer, new SitemapUrl(alternate, sitemapUrl));
+                    await WriteSitemapUrlAsync(writer, new SitemapUrlModel(alternate, sitemapUrl));
                 }
             }
 
@@ -412,7 +412,7 @@ namespace Nop.Web.Factories
         /// <param name="writer">XML stream writer</param>
         /// <param name="sitemapUrl">Sitemap URL</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task WriteSitemapUrlAsync(XmlTextWriter writer, SitemapUrl sitemapUrl)
+        protected virtual async Task WriteSitemapUrlAsync(XmlTextWriter writer, SitemapUrlModel sitemapUrl)
         {
             if (string.IsNullOrEmpty(sitemapUrl.Location))
                 return;
@@ -501,20 +501,22 @@ namespace Nop.Web.Factories
         #region Methods
 
         /// <summary>
+        /// Prepare sitemap model.
         /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
         /// <param name="id">Sitemap identifier</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the sitemap.xml as string
+        /// The task result contains the sitemap model with sitemap.xml as string
         /// </returns>
-        public virtual async Task<string> GenerateAsync(int? id)
+        public virtual async Task<SitemapXmlModel> PrepareSitemapXmlModelAsync(int? id)
         {
             await using var stream = new MemoryStream();
             await GenerateAsync(stream, id);
 
-            return Encoding.UTF8.GetString(stream.ToArray());
+            var sitemapXml = Encoding.UTF8.GetString(stream.ToArray());
+            return new SitemapXmlModel { SitemapXml = sitemapXml };
         }
 
         /// <summary>
@@ -525,7 +527,7 @@ namespace Nop.Web.Factories
         /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
         /// <param name="updateFreq">How often to update url</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task<SitemapUrl> GetLocalizedSitemapUrlAsync(string routeName,
+        public virtual async Task<SitemapUrlModel> PrepareLocalizedSitemapUrlAsync(string routeName,
             Func<int?, Task<object>> getRouteParamsAwait = null,
             DateTime? dateTimeUpdatedOn = null,
             UpdateFrequency updateFreq = UpdateFrequency.Weekly)
@@ -543,7 +545,7 @@ namespace Nop.Web.Factories
                 : null;
 
             if (languages == null)
-                return new SitemapUrl(url, new List<string>(), updateFreq, updatedOn);
+                return new SitemapUrlModel(url, new List<string>(), updateFreq, updatedOn);
 
             var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
             //return list of localized urls
@@ -571,7 +573,7 @@ namespace Nop.Web.Factories
                 .Where(value => !string.IsNullOrEmpty(value))
                 .ToListAsync();
 
-            return new SitemapUrl(url, localizedUrls, updateFreq, updatedOn);
+            return new SitemapUrlModel(url, localizedUrls, updateFreq, updatedOn);
         }
 
         #endregion

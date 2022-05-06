@@ -77,7 +77,7 @@ namespace Nop.Web.Factories
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
         private readonly IShoppingCartService _shoppingCartService;
-        private readonly ISitemapGenerator _sitemapGenerator;
+        private readonly ISitemapModelFactory _sitemapModelFactory;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
@@ -125,7 +125,7 @@ namespace Nop.Web.Factories
             IProductService productService,
             IProductTagService productTagService,
             IShoppingCartService shoppingCartService,
-            ISitemapGenerator sitemapGenerator,
+            ISitemapModelFactory sitemapModelFactory,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IThemeContext themeContext,
@@ -169,7 +169,7 @@ namespace Nop.Web.Factories
             _productService = productService;
             _productTagService = productTagService;
             _shoppingCartService = shoppingCartService;
-            _sitemapGenerator = sitemapGenerator;
+            _sitemapModelFactory = sitemapModelFactory;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _themeContext = themeContext;
@@ -788,7 +788,11 @@ namespace Nop.Web.Factories
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapSeoModelKey,
                 id, language, customerRoleIds, store);
 
-            var siteMap = await _staticCacheManager.GetAsync(cacheKey, async () => await _sitemapGenerator.GenerateAsync(id));
+            var siteMap = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                var model = await _sitemapModelFactory.PrepareSitemapXmlModelAsync(id);
+                return model.SitemapXml;
+            });
 
             return siteMap;
         }

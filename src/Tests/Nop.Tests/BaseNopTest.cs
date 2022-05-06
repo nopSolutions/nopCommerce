@@ -511,8 +511,8 @@ namespace Nop.Tests
             services.AddTransient<Web.Factories.IProductModelFactory, Web.Factories.ProductModelFactory>();
             services.AddTransient<Web.Factories.IProfileModelFactory, Web.Factories.ProfileModelFactory>();
             services.AddTransient<Web.Factories.IReturnRequestModelFactory, Web.Factories.ReturnRequestModelFactory>();
-            services.AddTransient<Web.Factories.ISitemapGenerator, Web.Factories.SitemapGenerator>();
             services.AddTransient<Web.Factories.IShoppingCartModelFactory, Web.Factories.ShoppingCartModelFactory>();
+            services.AddTransient<Web.Factories.ISitemapModelFactory, Web.Factories.SitemapModelFactory>();
             services.AddTransient<Web.Factories.ITopicModelFactory, Web.Factories.TopicModelFactory>();
             services.AddTransient<Web.Factories.IVendorModelFactory, Web.Factories.VendorModelFactory>();
             services.AddTransient<Web.Factories.IWidgetModelFactory, Web.Factories.WidgetModelFactory>();

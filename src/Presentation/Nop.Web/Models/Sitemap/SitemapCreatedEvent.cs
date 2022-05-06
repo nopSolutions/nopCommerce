@@ -9,9 +9,9 @@ namespace Nop.Web.Models.Sitemap
     {
         #region Ctor
 
-        public SitemapCreatedEvent(IList<SitemapUrl> sitemapUrls)
+        public SitemapCreatedEvent(IList<SitemapUrlModel> sitemapUrls)
         {
-            SitemapUrls = sitemapUrls ?? new List<SitemapUrl>();
+            SitemapUrls = sitemapUrls ?? new List<SitemapUrlModel>();
         }
 
         #endregion
@@ -21,7 +21,7 @@ namespace Nop.Web.Models.Sitemap
         /// <summary>
         /// Gets a list of sitemap URLs
         /// </summary>
-        public IList<SitemapUrl> SitemapUrls { get; }
+        public IList<SitemapUrlModel> SitemapUrls { get; }
 
         #endregion
     }

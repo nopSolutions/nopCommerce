@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Sitemap
 {
     /// <summary>
-    /// Represents sitemap URL entry
+    /// Represents sitemap URL model
     /// </summary>
-    public partial class SitemapUrl
+    public partial record SitemapUrlModel : BaseNopModel
     {
         #region Ctor
 
         /// <summary>
-        /// Initializes a new instance of the sitemap URL entry
+        /// Initializes a new instance of the sitemap URL model
         /// </summary>
         /// <param name="location">URL of the page</param>
         /// <param name="alternateLocations">List of the page urls</param>
         /// <param name="frequency">Update frequency</param>
         /// <param name="updatedOn">Updated on</param>
-        public SitemapUrl(string location, IList<string> alternateLocations, UpdateFrequency frequency, DateTime updatedOn)
+        public SitemapUrlModel(string location, IList<string> alternateLocations, UpdateFrequency frequency, DateTime updatedOn)
         {
             Location = location;
             AlternateLocations = alternateLocations ?? new List<string>();
@@ -26,11 +27,11 @@ namespace Nop.Web.Models.Sitemap
         }
 
         /// <summary>
-        /// Initializes a new instance of the sitemap URL entry based on the passed entry
+        /// Initializes a new instance of the sitemap URL model based on the passed model
         /// </summary>
         /// <param name="location">URL of the page</param>
         /// <param name="sitemapUrl">The another sitemap url</param>
-        public SitemapUrl(string location, SitemapUrl sitemapUrl)
+        public SitemapUrlModel(string location, SitemapUrlModel sitemapUrl)
         {
             Location = location;
             AlternateLocations = sitemapUrl.AlternateLocations;

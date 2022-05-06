@@ -104,8 +104,8 @@ namespace Nop.Web.Infrastructure
             services.AddScoped<Factories.IProductModelFactory, Factories.ProductModelFactory>();
             services.AddScoped<Factories.IProfileModelFactory, Factories.ProfileModelFactory>();
             services.AddScoped<Factories.IReturnRequestModelFactory, Factories.ReturnRequestModelFactory>();
-            services.AddScoped<Factories.ISitemapGenerator, Factories.SitemapGenerator>();
             services.AddScoped<Factories.IShoppingCartModelFactory, Factories.ShoppingCartModelFactory>();
+            services.AddScoped<Factories.ISitemapModelFactory, Factories.SitemapModelFactory>();
             services.AddScoped<Factories.ITopicModelFactory, Factories.TopicModelFactory>();
             services.AddScoped<Factories.IVendorModelFactory, Factories.VendorModelFactory>();
             services.AddScoped<Factories.IWidgetModelFactory, Factories.WidgetModelFactory>();
