@@ -20,6 +20,7 @@ using Nop.Web.Factories;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Models.Common;
+using Nop.Web.Models.Sitemap;
 
 namespace Nop.Web.Controllers
 {
@@ -37,6 +38,7 @@ namespace Nop.Web.Controllers
         private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
+        private readonly ISitemapModelFactory _sitemapModelFactory;
         private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
         private readonly IVendorService _vendorService;
@@ -61,6 +63,7 @@ namespace Nop.Web.Controllers
             IHtmlFormatter htmlFormatter,
             ILanguageService languageService,
             ILocalizationService localizationService,
+            ISitemapModelFactory sitemapModelFactory,
             IStoreContext storeContext,
             IThemeContext themeContext,
             IVendorService vendorService,
@@ -81,6 +84,7 @@ namespace Nop.Web.Controllers
             _htmlFormatter = htmlFormatter;
             _languageService = languageService;
             _localizationService = localizationService;
+            _sitemapModelFactory = sitemapModelFactory;
             _storeContext = storeContext;
             _themeContext = themeContext;
             _vendorService = vendorService;
@@ -184,11 +188,11 @@ namespace Nop.Web.Controllers
         {
             var model = new ContactUsModel();
             model = await _commonModelFactory.PrepareContactUsModelAsync(model, false);
-            
+
             return View(model);
         }
 
-        [HttpPost, ActionName("ContactUs")]        
+        [HttpPost, ActionName("ContactUs")]
         [ValidateCaptcha]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
@@ -235,11 +239,11 @@ namespace Nop.Web.Controllers
 
             var model = new ContactVendorModel();
             model = await _commonModelFactory.PrepareContactVendorModelAsync(model, vendor, false);
-            
+
             return View(model);
         }
 
-        [HttpPost, ActionName("ContactVendor")]        
+        [HttpPost, ActionName("ContactVendor")]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ContactVendorSend(ContactVendorModel model, bool captchaValid)
         {
@@ -281,8 +285,8 @@ namespace Nop.Web.Controllers
             if (!_sitemapSettings.SitemapEnabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _commonModelFactory.PrepareSitemapModelAsync(pageModel);
-            
+            var model = await _sitemapModelFactory.PrepareSitemapModelAsync(pageModel);
+
             return View(model);
         }
 
@@ -295,10 +299,10 @@ namespace Nop.Web.Controllers
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> SitemapXml(int? id)
         {
-            var siteMap = _sitemapXmlSettings.SitemapXmlEnabled
-                ? await _commonModelFactory.PrepareSitemapXmlAsync(id) : string.Empty;
+            var sitemapModel = _sitemapXmlSettings.SitemapXmlEnabled
+                ? await _sitemapModelFactory.PrepareSitemapXmlModelAsync(id) : null;
 
-            return Content(siteMap, "text/xml");
+            return Content(sitemapModel?.SitemapXml, "text/xml");
         }
 
         public virtual async Task<IActionResult> SetStoreTheme(string themeName, string returnUrl = "")
@@ -343,7 +347,7 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> RobotsTextFile()
         {
             var robotsFileContent = await _commonModelFactory.PrepareRobotsTextFileAsync();
-            
+
             return Content(robotsFileContent, MimeTypes.TextPlain);
         }
 

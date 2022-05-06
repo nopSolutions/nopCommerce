@@ -10,6 +10,16 @@ namespace Nop.Web.Factories
     public partial interface ISitemapModelFactory
     {
         /// <summary>
+        /// Prepare the sitemap model
+        /// </summary>
+        /// <param name="pageModel">Sitemap page model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap model
+        /// </returns>
+        Task<SitemapModel> PrepareSitemapModelAsync(SitemapPageModel pageModel);
+
+        /// <summary>
         /// Prepare sitemap model.
         /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.

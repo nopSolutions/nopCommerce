@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -20,10 +21,13 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Events;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.News;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
+using Nop.Web.Framework.Mvc.Routing;
+using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Sitemap;
 
 namespace Nop.Web.Factories
@@ -40,19 +44,24 @@ namespace Nop.Web.Factories
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
         private readonly INewsService _newsService;
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ITopicService _topicService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly NewsSettings _newsSettings;
+        private readonly SitemapSettings _sitemapSettings;
         private readonly SitemapXmlSettings _sitemapXmlSettings;
 
         #endregion
@@ -64,40 +73,50 @@ namespace Nop.Web.Factories
             IActionContextAccessor actionContextAccessor,
             IBlogService blogService,
             ICategoryService categoryService,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
             ILanguageService languageService,
+            ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             INewsService newsService,
             IProductService productService,
             IProductTagService productTagService,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             ITopicService topicService,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
+            IWorkContext workContext,
             LocalizationSettings localizationSettings,
             NewsSettings newsSettings,
-            SitemapXmlSettings sitemapSettings)
+            SitemapSettings sitemapSettings,
+            SitemapXmlSettings sitemapXmlSettings)
         {
             _blogSettings = blogSettings;
             _forumSettings = forumSettings;
             _actionContextAccessor = actionContextAccessor;
             _blogService = blogService;
             _categoryService = categoryService;
+            _customerService = customerService;
             _eventPublisher = eventPublisher;
             _languageService = languageService;
+            _localizationService = localizationService;
             _manufacturerService = manufacturerService;
             _newsService = newsService;
             _productService = productService;
             _productTagService = productTagService;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _topicService = topicService;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
             _webHelper = webHelper;
+            _workContext = workContext;
             _localizationSettings = localizationSettings;
             _newsSettings = newsSettings;
-            _sitemapXmlSettings = sitemapSettings;
+            _sitemapSettings = sitemapSettings;
+            _sitemapXmlSettings = sitemapXmlSettings;
         }
 
         #endregion
@@ -501,6 +520,211 @@ namespace Nop.Web.Factories
         #region Methods
 
         /// <summary>
+        /// Prepare the sitemap model
+        /// </summary>
+        /// <param name="pageModel">Sitemap page model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap model
+        /// </returns>
+        public virtual async Task<SitemapModel> PrepareSitemapModelAsync(SitemapPageModel pageModel)
+        {
+            if (pageModel == null)
+                throw new ArgumentNullException(nameof(pageModel));
+
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapPageModelKey,
+                language, customerRoleIds, store);
+
+            var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                //get URL helper
+                var urlHelper = GetUrlHelper();
+
+                var model = new SitemapModel();
+
+                //prepare common items
+                var commonGroupTitle = await _localizationService.GetResourceAsync("Sitemap.General");
+
+                //home page
+                model.Items.Add(new SitemapModel.SitemapItemModel
+                {
+                    GroupTitle = commonGroupTitle,
+                    Name = await _localizationService.GetResourceAsync("Homepage"),
+                    Url = urlHelper.RouteUrl("Homepage")
+                });
+
+                //search
+                model.Items.Add(new SitemapModel.SitemapItemModel
+                {
+                    GroupTitle = commonGroupTitle,
+                    Name = await _localizationService.GetResourceAsync("Search"),
+                    Url = urlHelper.RouteUrl("ProductSearch")
+                });
+
+                //news
+                if (_newsSettings.Enabled)
+                {
+                    model.Items.Add(new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = commonGroupTitle,
+                        Name = await _localizationService.GetResourceAsync("News"),
+                        Url = urlHelper.RouteUrl("NewsArchive")
+                    });
+                }
+
+                //blog
+                if (_blogSettings.Enabled)
+                {
+                    model.Items.Add(new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = commonGroupTitle,
+                        Name = await _localizationService.GetResourceAsync("Blog"),
+                        Url = urlHelper.RouteUrl("Blog")
+                    });
+                }
+
+                //forums
+                if (_forumSettings.ForumsEnabled)
+                {
+                    model.Items.Add(new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = commonGroupTitle,
+                        Name = await _localizationService.GetResourceAsync("Forum.Forums"),
+                        Url = urlHelper.RouteUrl("Boards")
+                    });
+                }
+
+                //contact us
+                model.Items.Add(new SitemapModel.SitemapItemModel
+                {
+                    GroupTitle = commonGroupTitle,
+                    Name = await _localizationService.GetResourceAsync("ContactUs"),
+                    Url = urlHelper.RouteUrl("ContactUs")
+                });
+
+                //customer info
+                model.Items.Add(new SitemapModel.SitemapItemModel
+                {
+                    GroupTitle = commonGroupTitle,
+                    Name = await _localizationService.GetResourceAsync("Account.MyAccount"),
+                    Url = urlHelper.RouteUrl("CustomerInfo")
+                });
+
+                //at the moment topics are in general category too
+                if (_sitemapSettings.SitemapIncludeTopics)
+                {
+                    var topics = (await _topicService.GetAllTopicsAsync(storeId: store.Id))
+                        .Where(topic => topic.IncludeInSitemap);
+
+                    model.Items.AddRange(await topics.SelectAwait(async topic => new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = commonGroupTitle,
+                        Name = await _localizationService.GetLocalizedAsync(topic, x => x.Title),
+                        Url = await _nopUrlHelper.RouteGenericUrlAsync<Topic>(new { SeName = await _urlRecordService.GetSeNameAsync(topic) })
+                    }).ToListAsync());
+                }
+
+                //blog posts
+                if (_sitemapSettings.SitemapIncludeBlogPosts && _blogSettings.Enabled)
+                {
+                    var blogPostsGroupTitle = await _localizationService.GetResourceAsync("Sitemap.BlogPosts");
+                    var blogPosts = (await _blogService.GetAllBlogPostsAsync(storeId: store.Id))
+                        .Where(p => p.IncludeInSitemap);
+
+                    model.Items.AddRange(await blogPosts.SelectAwait(async post => new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = blogPostsGroupTitle,
+                        Name = post.Title,
+                        Url = await _nopUrlHelper
+                            .RouteGenericUrlAsync<BlogPost>(new { SeName = await _urlRecordService.GetSeNameAsync(post, post.LanguageId, ensureTwoPublishedLanguages: false) })
+                    }).ToListAsync());
+                }
+
+                //news
+                if (_sitemapSettings.SitemapIncludeNews && _newsSettings.Enabled)
+                {
+                    var newsGroupTitle = await _localizationService.GetResourceAsync("Sitemap.News");
+                    var news = await _newsService.GetAllNewsAsync(storeId: store.Id);
+                    model.Items.AddRange(await news.SelectAwait(async newsItem => new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = newsGroupTitle,
+                        Name = newsItem.Title,
+                        Url = await _nopUrlHelper
+                            .RouteGenericUrlAsync<NewsItem>(new { SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) })
+                    }).ToListAsync());
+                }
+
+                //categories
+                if (_sitemapSettings.SitemapIncludeCategories)
+                {
+                    var categoriesGroupTitle = await _localizationService.GetResourceAsync("Sitemap.Categories");
+                    var categories = await _categoryService.GetAllCategoriesAsync(storeId: store.Id);
+                    model.Items.AddRange(await categories.SelectAwait(async category => new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = categoriesGroupTitle,
+                        Name = await _localizationService.GetLocalizedAsync(category, x => x.Name),
+                        Url = await _nopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = await _urlRecordService.GetSeNameAsync(category) })
+                    }).ToListAsync());
+                }
+
+                //manufacturers
+                if (_sitemapSettings.SitemapIncludeManufacturers)
+                {
+                    var manufacturersGroupTitle = await _localizationService.GetResourceAsync("Sitemap.Manufacturers");
+                    var manufacturers = await _manufacturerService.GetAllManufacturersAsync(storeId: store.Id);
+                    model.Items.AddRange(await manufacturers.SelectAwait(async manufacturer => new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = manufacturersGroupTitle,
+                        Name = await _localizationService.GetLocalizedAsync(manufacturer, x => x.Name),
+                        Url = await _nopUrlHelper.RouteGenericUrlAsync<Manufacturer>(new { SeName = await _urlRecordService.GetSeNameAsync(manufacturer) })
+                    }).ToListAsync());
+                }
+
+                //products
+                if (_sitemapSettings.SitemapIncludeProducts)
+                {
+                    var productsGroupTitle = await _localizationService.GetResourceAsync("Sitemap.Products");
+                    var products = await _productService.SearchProductsAsync(0, storeId: store.Id, visibleIndividuallyOnly: true);
+                    model.Items.AddRange(await products.SelectAwait(async product => new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = productsGroupTitle,
+                        Name = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                        Url = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                    }).ToListAsync());
+                }
+
+                //product tags
+                if (_sitemapSettings.SitemapIncludeProductTags)
+                {
+                    var productTagsGroupTitle = await _localizationService.GetResourceAsync("Sitemap.ProductTags");
+                    var productTags = await _productTagService.GetAllProductTagsAsync();
+                    model.Items.AddRange(await productTags.SelectAwait(async productTag => new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = productTagsGroupTitle,
+                        Name = await _localizationService.GetLocalizedAsync(productTag, x => x.Name),
+                        Url = await _nopUrlHelper.RouteGenericUrlAsync<ProductTag>(new { SeName = await _urlRecordService.GetSeNameAsync(productTag) })
+                    }).ToListAsync());
+                }
+
+                return model;
+            });
+
+            //prepare model with pagination
+            pageModel.PageSize = Math.Max(pageModel.PageSize, _sitemapSettings.SitemapPageSize);
+            pageModel.PageNumber = Math.Max(pageModel.PageNumber, 1);
+
+            var pagedItems = new PagedList<SitemapModel.SitemapItemModel>(cachedModel.Items, pageModel.PageNumber - 1, pageModel.PageSize);
+            var sitemapModel = new SitemapModel { Items = pagedItems };
+            sitemapModel.PageModel.LoadPagedList(pagedItems);
+
+            return sitemapModel;
+        }
+
+        /// <summary>
         /// Prepare sitemap model.
         /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
@@ -512,10 +736,20 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<SitemapXmlModel> PrepareSitemapXmlModelAsync(int? id)
         {
-            await using var stream = new MemoryStream();
-            await GenerateAsync(stream, id);
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapSeoModelKey,
+                id, language, customerRoleIds, store);
 
-            var sitemapXml = Encoding.UTF8.GetString(stream.ToArray());
+            var sitemapXml = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                await using var stream = new MemoryStream();
+                await GenerateAsync(stream, id);
+                return Encoding.UTF8.GetString(stream.ToArray());
+            });
+
             return new SitemapXmlModel { SitemapXml = sitemapXml };
         }
 
