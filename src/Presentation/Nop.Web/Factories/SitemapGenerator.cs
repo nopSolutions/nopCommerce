@@ -22,9 +22,11 @@ using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.News;
+using Nop.Services.Seo;
 using Nop.Services.Topics;
+using Nop.Web.Models.Sitemap;
 
-namespace Nop.Services.Seo
+namespace Nop.Web.Factories
 {
     /// <summary>
     /// Represents a sitemap generator

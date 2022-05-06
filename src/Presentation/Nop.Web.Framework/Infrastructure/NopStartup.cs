@@ -202,7 +202,6 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<INewsService, NewsService>();
             services.AddScoped<IDateTimeHelper, DateTimeHelper>();
-            services.AddScoped<ISitemapGenerator, SitemapGenerator>();
             services.AddScoped<INopHtmlHelper, NopHtmlHelper>();
             services.AddScoped<IScheduleTaskService, ScheduleTaskService>();
             services.AddScoped<IExportManager, ExportManager>();

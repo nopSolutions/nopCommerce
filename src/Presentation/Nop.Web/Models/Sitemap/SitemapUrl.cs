@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Nop.Services.Seo
+namespace Nop.Web.Models.Sitemap
 {
     /// <summary>
     /// Represents sitemap URL entry
