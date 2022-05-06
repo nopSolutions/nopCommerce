@@ -7,17 +7,12 @@ using PostSharp.Engineering.BuildTools.Build.Solutions;
 using PostSharp.Engineering.BuildTools.Dependencies.Model;
 using Spectre.Console.Cli;
 
-var productDependencyDefinition =
-    new DependencyDefinition("Metalama.Tests.NopCommerce", VcsProvider.GitHub, "Metalama", false);
-
-var product = new Product(productDependencyDefinition)
+var product = new Product(TestDependencies.NopCommerce)
 {
-    ProductName = productDependencyDefinition.Name,
     Solutions = new Solution[]
     {
-        new DotNetSolution("src\\NopCommerce.sln"),
+        new DotNetSolution("src\\NopCommerce.sln") { BuildMethod = BuildMethod.Build },
     },
-    PublicArtifacts = Pattern.Create("Nop.Web.Framework.4.5.0.nupkg"),
     Dependencies = new[] { Dependencies.PostSharpEngineering, Dependencies.Metalama },
 };
 

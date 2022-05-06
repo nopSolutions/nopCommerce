@@ -8,7 +8,6 @@
     <Import Project="eng\Versions.props"/>
     <Import Project="eng\Packaging.props"/>
     <Import Sdk="PostSharp.Engineering.Sdk" Project="BuildOptions.props"/>
-    <Import Sdk="PostSharp.Engineering.Sdk" Project="CodeQuality.props"/>
     <Import Sdk="PostSharp.Engineering.Sdk" Project="StrongName.props"/>
     <Import Sdk="PostSharp.Engineering.Sdk" Project="SourceLink.props"/>
 
