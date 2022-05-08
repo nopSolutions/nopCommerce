@@ -367,7 +367,8 @@ namespace Nop.Services.Customers
 
             var customersWithCarts = from c in customers
                                      join item in items on c.Id equals item.CustomerId
-                                     orderby item.CreatedOnUtc descending
+                                     //we change ordering for the MySQL engine to avoid problems with the ONLY_FULL_GROUP_BY server property that is set by default since the 5.7.5 version
+                                     orderby _dataProvider.ConfigurationName == "MySql" ? c.CreatedOnUtc : item.CreatedOnUtc descending
                                      select c;
 
             return await customersWithCarts.Distinct().ToPagedListAsync(pageIndex, pageSize);

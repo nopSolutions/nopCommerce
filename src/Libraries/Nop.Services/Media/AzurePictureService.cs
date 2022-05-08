@@ -231,7 +231,9 @@ namespace Nop.Services.Media
             }
 
             if (headers is null)
-                await blobClient.UploadAsync(ms);
+                //We must explicitly indicate through the parameter that the object needs to be overwritten if it already exists
+                //See more: https://github.com/Azure/azure-sdk-for-net/issues/9470
+                await blobClient.UploadAsync(ms, overwrite: true);
             else
                 await blobClient.UploadAsync(ms, new BlobUploadOptions { HttpHeaders = headers });
 

@@ -74,6 +74,5 @@ RUN mkdir bin
 RUN mkdir logs  
                                                             
 COPY --from=build /app/published .
-
-# call entrypoint script instead of dotnet                            
+                            
 ENTRYPOINT "/entrypoint.sh"

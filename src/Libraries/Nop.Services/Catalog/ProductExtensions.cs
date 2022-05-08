@@ -11,7 +11,11 @@ namespace Nop.Services.Catalog
         /// <param name="productsQuery">A sequence of products to order</param>
         /// <param name="orderBy">Product sorting rule</param>
         /// <returns>An System.Linq.IOrderedQueryable`1 whose elements are sorted according to a rule.</returns>
-        public static IOrderedQueryable<Product> OrderBy(this IQueryable<Product> productsQuery, ProductSortingEnum orderBy) 
+        /// <remarks>
+        /// If <paramref name="orderBy"/> is set to <c>Position</c> and passed <paramref name="productsQuery"/> is
+        /// ordered sorting rule will be skipped
+        /// </remarks>
+        public static IQueryable<Product> OrderBy(this IQueryable<Product> productsQuery, ProductSortingEnum orderBy) 
         {
             return orderBy switch
             {
@@ -20,6 +24,7 @@ namespace Nop.Services.Catalog
                 ProductSortingEnum.PriceAsc => productsQuery.OrderBy(p => p.Price),
                 ProductSortingEnum.PriceDesc => productsQuery.OrderByDescending(p => p.Price),
                 ProductSortingEnum.CreatedOn => productsQuery.OrderByDescending(p => p.CreatedOnUtc),
+                ProductSortingEnum.Position when productsQuery is IOrderedQueryable => productsQuery,
                 _ => productsQuery.OrderBy(p => p.DisplayOrder).ThenBy(p => p.Id)
             };
         }

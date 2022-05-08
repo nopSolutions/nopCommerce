@@ -19,6 +19,7 @@ namespace Nop.Services.Discounts.Caching
             await RemoveAsync(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, entity);
             await RemoveByPrefixAsync(NopDiscountDefaults.CategoryIdsByDiscountPrefix, entity);
             await RemoveByPrefixAsync(NopDiscountDefaults.ManufacturerIdsByDiscountPrefix, entity);
+            await RemoveByPrefixAsync(NopDiscountDefaults.AppliedDiscountsCachePrefix);
         }
     }
 }

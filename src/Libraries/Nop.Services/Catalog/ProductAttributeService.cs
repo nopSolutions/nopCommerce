@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 
 namespace Nop.Services.Catalog
@@ -434,9 +435,12 @@ namespace Nop.Services.Catalog
 
             sku = sku.Trim();
 
+            // todo: inject IRepository<Product> via ctor in 4.50
+            var productRepository = EngineContext.Current.Resolve<IRepository<Product>>();
             var query = from pac in _productAttributeCombinationRepository.Table
+                        join p in productRepository.Table on pac.ProductId equals p.Id
                         orderby pac.Id
-                        where pac.Sku == sku
+                        where !p.Deleted && pac.Sku == sku
                         select pac;
             var combination = await query.FirstOrDefaultAsync();
 

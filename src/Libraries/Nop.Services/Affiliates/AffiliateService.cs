@@ -217,7 +217,7 @@ namespace Nop.Services.Affiliates
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            var storeUrl = _webHelper.GetStoreLocation(false);
+            var storeUrl = _webHelper.GetStoreLocation();
             var url = !string.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
                 //use friendly URL
                 _webHelper.ModifyQueryString(storeUrl, NopAffiliateDefaults.AffiliateQueryParameter, affiliate.FriendlyUrlName) :

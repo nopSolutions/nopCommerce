@@ -78,7 +78,7 @@
         listControllerName = "Authentication";
 
     }
-    else if (plugin is IWidgetPlugin)
+    else if (plugin is IWidgetPlugin widget && !widget.HideInWidgetList)
     {
         //widgets
         activeMenuSystemName = "Widgets";
