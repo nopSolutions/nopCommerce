@@ -21,7 +21,7 @@
 {
     List<string> responsiveMenuItems = new List<string>();
 
-    <ul class="mega-menu @menu.CssClass"
+    <ul role="menu" class="mega-menu @menu.CssClass"
         data-isRtlEnabled="@supportRtl.ToString().ToLowerInvariant()"
         data-enableClickForDropDown="@menu.ShowDropdownsOnClick.ToString().ToLowerInvariant()">
         @foreach (var item in menu.Items)
