@@ -732,7 +732,7 @@ namespace Nop.Plugin.Misc.AbcSliExport
 
         private string StripMarkupForShortDescription(string input)
         {
-            if (input == null) return null;
+            if (string.IsNullOrWhiteSpace(input)) return input;
 
             const string identifier = "<span style=\"Times New Roman&quot;\">";
             const string endIdentifier = "</span>";
@@ -743,7 +743,9 @@ namespace Nop.Plugin.Misc.AbcSliExport
                 int endIdentifierId = input.IndexOf(endIdentifier);
 
                 int length = endIdentifierId - identifierId - identifier.Length;
-                string output = input.Substring(identifierId + identifier.Length, length).Replace("&quot;", "\"").Replace("&trade;", "™").Replace("<br />", "");
+                string output = length > 0 ?
+                    input.Substring(identifierId + identifier.Length, length).Replace("&quot;", "\"").Replace("&trade;", "™").Replace("<br />", "") :
+                    string.Empty;
 
                 return output;
             }
