@@ -9,20 +9,11 @@
         /// Ctor
         /// </summary>
         /// <param name="order">Order</param>
-        public OrderStatusChangedEvent(Order order)
-        {
-            Order = order;
-        }
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="order">Order</param>
         /// <param name="prevOrderStatus">Previous order status</param>
         public OrderStatusChangedEvent(Order order, OrderStatus prevOrderStatus)
         {
             Order = order;
-            PrevOrderStatus = prevOrderStatus;
+            PreviousOrderStatus = prevOrderStatus;
         }
 
         /// <summary>
@@ -33,6 +24,6 @@
         /// <summary>
         /// Previous order status
         /// </summary>
-        public OrderStatus PrevOrderStatus { get; set; }
+        public OrderStatus PreviousOrderStatus { get; set; }
     }
 }

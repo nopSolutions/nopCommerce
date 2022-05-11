@@ -1579,6 +1579,8 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
+            var prevOrderStatus = order.OrderStatus;
+
             if (order.PaymentStatus == PaymentStatus.Paid && !order.PaidDateUtc.HasValue)
             {
                 //ensure that paid date is set
@@ -1591,12 +1593,18 @@ namespace Nop.Services.Orders
                 case OrderStatus.Pending:
                     if (order.PaymentStatus == PaymentStatus.Authorized ||
                         order.PaymentStatus == PaymentStatus.Paid)
+                    {
                         await SetOrderStatusAsync(order, OrderStatus.Processing, notifyCustomer);
+                        await _eventPublisher.PublishAsync(new OrderStatusChangedEvent(order, prevOrderStatus));
+                    }
 
                     if (order.ShippingStatus == ShippingStatus.PartiallyShipped ||
                         order.ShippingStatus == ShippingStatus.Shipped ||
                         order.ShippingStatus == ShippingStatus.Delivered)
+                    {
                         await SetOrderStatusAsync(order, OrderStatus.Processing, notifyCustomer);
+                        await _eventPublisher.PublishAsync(new OrderStatusChangedEvent(order, prevOrderStatus));
+                    }
 
                     break;
                 //is order complete?
@@ -1625,8 +1633,11 @@ namespace Nop.Services.Orders
                                 order.ShippingStatus == ShippingStatus.Delivered;
             }
 
-            if (completed) 
+            if (completed)
+            {
                 await SetOrderStatusAsync(order, OrderStatus.Complete, true);
+                await _eventPublisher.PublishAsync(new OrderStatusChangedEvent(order, prevOrderStatus));
+            }
         }
 
         /// <summary>

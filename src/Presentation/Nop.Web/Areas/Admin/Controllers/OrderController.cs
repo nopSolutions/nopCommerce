@@ -841,8 +841,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
+                var prevOrderStatus = order.OrderStatus;
+
                 order.OrderStatusId = model.OrderStatusId;
                 await _orderService.UpdateOrderAsync(order);
+
+                if (prevOrderStatus != order.OrderStatus)
+                    await _eventPublisher.PublishAsync(new OrderStatusChangedEvent(order, prevOrderStatus));
 
                 //add a note
                 await _orderService.InsertOrderNoteAsync(new OrderNote
