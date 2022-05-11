@@ -55,6 +55,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             var localesToRename = new[]
             {
+                //#6255
+                new { Name = "Forum.BreadCrumb.HomeTitle", NewName = "Forum.Breadcrumb.HomeTitle" },
+                new { Name = "Forum.BreadCrumb.ForumHomeTitle", NewName = "Forum.Breadcrumb.ForumHomeTitle" },
+                new { Name = "Forum.BreadCrumb.ForumGroupTitle", NewName = "Forum.Breadcrumb.ForumGroupTitle" },
+                new { Name = "Forum.BreadCrumb.ForumTitle", NewName = "Forum.Breadcrumb.ForumTitle" },
+                new { Name = "Forum.BreadCrumb.TopicTitle", NewName = "Forum.Breadcrumb.TopicTitle" },
+
+                
                 //#3511
                 new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize" },
                 new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint" },
