@@ -17274,19 +17274,19 @@
   <LocaleResource Name="Forum.Author">
     <Value>Author</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.BreadCrumb.ForumGroupTitle">
+  <LocaleResource Name="Forum.Breadcrumb.ForumGroupTitle">
     <Value>Forum Group</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.BreadCrumb.ForumHomeTitle">
+  <LocaleResource Name="Forum.Breadcrumb.ForumHomeTitle">
     <Value>Forum Home Page</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.BreadCrumb.ForumTitle">
+  <LocaleResource Name="Forum.Breadcrumb.ForumTitle">
     <Value>Forum</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.BreadCrumb.HomeTitle">
+  <LocaleResource Name="Forum.Breadcrumb.HomeTitle">
     <Value>Home Page</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.BreadCrumb.TopicTitle">
+  <LocaleResource Name="Forum.Breadcrumb.TopicTitle">
     <Value>Topic</Value>
   </LocaleResource>
   <LocaleResource Name="Forum.By">
