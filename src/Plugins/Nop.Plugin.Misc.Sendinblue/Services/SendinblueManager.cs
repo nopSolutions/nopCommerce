@@ -18,6 +18,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Installation;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Stores;
@@ -40,6 +41,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         private readonly ICustomerService _customerService;
         private readonly IEmailAccountService _emailAccountService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILanguageService _languageService;
         private readonly ILogger _logger;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ISettingService _settingService;
@@ -58,6 +60,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             ICustomerService customerService,
             IEmailAccountService emailAccountService,
             IGenericAttributeService genericAttributeService,
+            ILanguageService languageService,
             ILogger logger,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             ISettingService settingService,
@@ -72,6 +75,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             _customerService = customerService;
             _emailAccountService = emailAccountService;
             _genericAttributeService = genericAttributeService;
+            _languageService = languageService;
             _logger = logger;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _settingService = settingService;
@@ -211,7 +215,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                         $"{SendinblueDefaults.CityServiceAttribute};" +
                         $"{SendinblueDefaults.CountyServiceAttribute};" +
                         $"{SendinblueDefaults.StateServiceAttribute};" +
-                        $"{SendinblueDefaults.FaxServiceAttribute}";
+                        $"{SendinblueDefaults.FaxServiceAttribute};" +
+                        $"{SendinblueDefaults.LanguageCultureAttribute};";
                     var csv = await subscriptions.AggregateAwaitAsync(title, async (all, subscription) =>
                     {
                         var firstName = string.Empty;
@@ -229,6 +234,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                         var county = string.Empty;
                         var state = string.Empty;
                         var fax = string.Empty;
+
+                        var language = await _languageService.GetLanguageByIdAsync(subscription.LanguageId) ??
+                            (await _languageService.GetAllLanguagesAsync()).First();
 
                         var customer = await _customerService.GetCustomerByEmailAsync(subscription.Email);
                         if (customer != null)
@@ -276,7 +284,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                             $"{city};" +
                             $"{county};" +
                             $"{state};" +
-                            $"{fax};";
+                            $"{fax};" +
+                            $"{language.LanguageCulture};";
                     });
 
                     //prepare data to import
@@ -475,12 +484,15 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 var contacts = await client.GetContactsFromListAsync(listId);
 
                 //whether subscribed contact already in the list
-                var template = new { contacts = new[] { new { email = string.Empty } } };
+                var template = new { contacts = new[] { new { email = string.Empty, attributes = new Dictionary<string,string>() } } };
                 var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
-                var alreadyExist = contactObjects?.contacts?.Any(contact => contact.email == subscription.Email.ToLowerInvariant()) ?? false;
+                var contactObject = contactObjects?.contacts?.FirstOrDefault(contact => contact.email == subscription.Email.ToLowerInvariant());
+
+                var language = await _languageService.GetLanguageByIdAsync(subscription.LanguageId)??
+                    (await _languageService.GetAllLanguagesAsync()).First();
 
                 //Add new contact
-                if (!alreadyExist)
+                if (contactObject == null)
                 {
                     var firstName = string.Empty;
                     var lastName = string.Empty;
@@ -543,7 +555,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                         [SendinblueDefaults.CityServiceAttribute] = city,
                         [SendinblueDefaults.CountyServiceAttribute] = county,
                         [SendinblueDefaults.StateServiceAttribute] = state,
-                        [SendinblueDefaults.FaxServiceAttribute] = fax
+                        [SendinblueDefaults.FaxServiceAttribute] = fax,
+                        [SendinblueDefaults.LanguageCultureAttribute] = language.LanguageCulture
                     };
 
                     switch (await GetAccountLanguageAsync())
@@ -585,11 +598,19 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 }
                 else
                 {
+                    var attributes = contactObject.attributes;
+
+                    if (attributes != null && attributes.ContainsKey(SendinblueDefaults.LanguageCultureAttribute))
+                        attributes[SendinblueDefaults.LanguageCultureAttribute] = language.LanguageCulture;
+                    else
+                        attributes.Add(SendinblueDefaults.LanguageCultureAttribute, language.LanguageCulture);
+
                     //update contact
                     var updateContact = new UpdateContact
                     {
                         ListIds = new List<long?> { listId },
-                        EmailBlacklisted = false
+                        EmailBlacklisted = false,
+                        Attributes = attributes
                     };
                     await client.UpdateContactAsync(subscription.Email, updateContact);
                 }
@@ -997,6 +1018,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     (CategoryEnum.Normal, SendinblueDefaults.CountyServiceAttribute, null, CreateAttribute.TypeEnum.Text),
                     (CategoryEnum.Normal, SendinblueDefaults.StateServiceAttribute, null, CreateAttribute.TypeEnum.Text),
                     (CategoryEnum.Normal, SendinblueDefaults.FaxServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, SendinblueDefaults.LanguageCultureAttribute, null, CreateAttribute.TypeEnum.Text),
                     (CategoryEnum.Transactional, SendinblueDefaults.OrderIdServiceAttribute, null, CreateAttribute.TypeEnum.Id),
                     (CategoryEnum.Transactional, SendinblueDefaults.OrderDateServiceAttribute, null, CreateAttribute.TypeEnum.Text),
                     (CategoryEnum.Transactional, SendinblueDefaults.OrderTotalServiceAttribute, null, CreateAttribute.TypeEnum.Text),

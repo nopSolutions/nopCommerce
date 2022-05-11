@@ -31,5 +31,10 @@ namespace Nop.Core.Domain.Messages
         /// Gets or sets the date and time when subscription was created
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the the language identifier in which a customer has subscribed to newsletter; 0 is set when we use the default language display order
+        /// </summary>
+        public int LanguageId { get; set; }
     }
 }

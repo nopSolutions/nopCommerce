@@ -80,7 +80,8 @@ namespace Nop.Web.Controllers
                         Email = email,
                         Active = false,
                         StoreId = store.Id,
-                        CreatedOnUtc = DateTime.UtcNow
+                        CreatedOnUtc = DateTime.UtcNow,
+                        LanguageId = (await _workContext.GetWorkingLanguageAsync()).Id
                     };
                     await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
                     await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(subscription, currentLanguage.Id);
@@ -112,6 +113,7 @@ namespace Nop.Web.Controllers
             if (active)
             {
                 subscription.Active = true;
+                subscription.LanguageId = (await _storeContext.GetCurrentStoreAsync()).DefaultLanguageId;
                 await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
             }
             else

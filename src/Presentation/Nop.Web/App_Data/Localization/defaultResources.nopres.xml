@@ -14058,6 +14058,9 @@
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required">
     <Value>Email is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Language">
+    <Value>Language</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Store">
     <Value>Store</Value>
   </LocaleResource>

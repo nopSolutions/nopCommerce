@@ -118,7 +118,8 @@ namespace Nop.Services.Messages
             
             //Publish the subscription event 
             if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
-                (newsLetterSubscription.Active && originalSubscription.Email != newsLetterSubscription.Email))
+                (newsLetterSubscription.Active && originalSubscription.Email != newsLetterSubscription.Email)||
+                (originalSubscription.LanguageId != newsLetterSubscription.LanguageId))
             {
                 //If the previous entry was false, but this one is true, publish a subscribe.
                 await PublishSubscriptionEventAsync(newsLetterSubscription, true, publishSubscriptionEvents);

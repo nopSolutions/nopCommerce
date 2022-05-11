@@ -2038,6 +2038,7 @@ namespace Nop.Services.ExportImport
 
                     var store = await _storeContext.GetCurrentStoreAsync();
                     var storeId = store.Id;
+                    var languageId = 0;
 
                     //"email" field specified
                     var email = tmp[0].Trim();
@@ -2053,12 +2054,17 @@ namespace Nop.Services.ExportImport
                     if (tmp.Length == 3)
                         storeId = int.Parse(tmp[2].Trim());
 
+                    //"languageId" field specified
+                    if (tmp.Length == 4)
+                        languageId = int.Parse(tmp[4].Trim());
+
                     //import
                     var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, storeId);
                     if (subscription != null)
                     {
                         subscription.Email = email;
                         subscription.Active = isActive;
+                        subscription.LanguageId = languageId;
                         await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
                     }
                     else
@@ -2069,7 +2075,8 @@ namespace Nop.Services.ExportImport
                             CreatedOnUtc = DateTime.UtcNow,
                             Email = email,
                             StoreId = storeId,
-                            NewsLetterSubscriptionGuid = Guid.NewGuid()
+                            NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                            LanguageId = languageId
                         };
                         await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
                     }

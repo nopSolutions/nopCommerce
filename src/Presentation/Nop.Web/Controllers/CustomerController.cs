@@ -1305,7 +1305,8 @@ namespace Nop.Web.Controllers
                                     Email = customer.Email,
                                     Active = true,
                                     StoreId = store.Id,
-                                    CreatedOnUtc = DateTime.UtcNow
+                                    CreatedOnUtc = DateTime.UtcNow,
+                                    LanguageId = customer.LanguageId ?? (await _workContext.GetWorkingLanguageAsync()).Id
                                 });
                             }
                         }
