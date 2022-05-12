@@ -200,7 +200,7 @@
                         @*confirm order content will be loaded here*@
                     </div>
                     <script asp-location="Footer">
-                        ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@Url.RouteUrl("CheckoutCompleted")');
+                        ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@Url.RouteUrl("CheckoutCompleted")', @Model.DisplayCaptcha.ToString().ToLowerInvariant(), @Model.IsReCaptchaV3.ToString().ToLowerInvariant(), '@Model.ReCaptchaPublicKey');
                     </script>
                     <div class="buttons" id="confirm-order-buttons-container">
                         <p class="back-link">

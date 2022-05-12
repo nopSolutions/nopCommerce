@@ -185,6 +185,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#6101
                 ["Admin.System.Warnings.PluginNotInstalled.HelpText"] = "You may delete the plugins you don't use in order to decrease startup time",
 
+                //#6182
+                ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests"] = "Show on checkout page for guests",
+                ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests.Hint"] = "Check to show CAPTCHA on checkout page for guests.",
+
                 //#6111
                 ["Admin.ReturnRequests.Fields.ReturnedQuantity.Hint"] = "The quantity to be returned to the stock.",
 

@@ -5,6 +5,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -137,6 +138,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(gdprSettings, settings => settings.DeleteInactiveCustomersAfterMonths).Wait();
             }
 
+            var captchaSettings = settingService.LoadSettingAsync<CaptchaSettings>().Result;
+
+            //#6182
+            if (!settingService.SettingExistsAsync(captchaSettings, settings => settings.ShowOnCheckoutPageForGuests).Result)
+            {
+                captchaSettings.ShowOnCheckoutPageForGuests = false;
+                settingService.SaveSettingAsync(captchaSettings, settings => settings.ShowOnCheckoutPageForGuests).Wait();
+            }
+            
             //#7
             if (!settingService.SettingExistsAsync(mediaSettings, settings => settings.VideoIframeAllow).Result)
             {

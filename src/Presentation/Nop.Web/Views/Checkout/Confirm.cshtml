@@ -87,6 +87,10 @@
                                 0);
                             });
                     </script>
+                    if (Model.DisplayCaptcha)
+                    {
+                        <nop-captcha />
+                    }
                 }
                 @if (Model.Warnings.Count > 0)
                 {
