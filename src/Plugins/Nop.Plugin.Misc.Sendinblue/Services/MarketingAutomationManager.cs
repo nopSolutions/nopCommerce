@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +9,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
+using Nop.Plugin.Misc.Sendinblue.MarketingAutomation;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -18,16 +18,13 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
-using SendinblueMarketingAutomation.Api;
-using SendinblueMarketingAutomation.Client;
-using SendinblueMarketingAutomation.Model;
 
 namespace Nop.Plugin.Misc.Sendinblue.Services
 {
     /// <summary>
     /// Represents Sendinblue marketing automation manager
     /// </summary>
-    public class SendinblueMarketingAutomationManager
+    public class MarketingAutomationManager
     {
         #region Fields
 
@@ -52,13 +49,14 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
+        private readonly MarketingAutomationHttpClient _marketingAutomationHttpClient;
         private readonly SendinblueSettings _sendinblueSettings;
 
         #endregion
 
         #region Ctor
 
-        public SendinblueMarketingAutomationManager(CurrencySettings currencySettings,
+        public MarketingAutomationManager(CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
             IAddressService addressService,
             ICategoryService categoryService,
@@ -79,6 +77,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             IWorkContext workContext,
+            MarketingAutomationHttpClient marketingAutomationHttpClient,
             SendinblueSettings sendinblueSettings)
         {
             _currencySettings = currencySettings;
@@ -102,33 +101,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             _urlRecordService = urlRecordService;
             _webHelper = webHelper;
             _workContext = workContext;
+            _marketingAutomationHttpClient = marketingAutomationHttpClient;
             _sendinblueSettings = sendinblueSettings;
-        }
-
-        #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare marketing automation API client
-        /// </summary>
-        /// <returns>Marketing automation API client</returns>
-        private MarketingAutomationApi CreateMarketingAutomationClient()
-        {
-            //validate tracker identifier
-            if (string.IsNullOrEmpty(_sendinblueSettings.MarketingAutomationKey))
-                throw new NopException($"Marketing automation not configured");
-
-            var apiConfiguration = new Configuration()
-            {
-                MaKey = new Dictionary<string, string>
-                {
-                    [SendinblueDefaults.MarketingAutomationKeyHeader] = _sendinblueSettings.MarketingAutomationKey
-                },
-                UserAgent = SendinblueDefaults.UserAgent
-            };
-
-            return new MarketingAutomationApi(apiConfiguration);
         }
 
         #endregion
@@ -150,18 +124,15 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
 
             try
             {
-                //create API client
-                var client = CreateMarketingAutomationClient();
-
                 //first, try to identify current customer
-                await client.IdentifyAsync(new Identify(customer.Email));
+                await _marketingAutomationHttpClient.RequestAsync(new IdentifyRequest { Email = customer.Email });
 
                 //get shopping cart GUID
                 var shoppingCartGuid = await _genericAttributeService
                     .GetAttributeAsync<Guid?>(customer, SendinblueDefaults.ShoppingCartGuidAttribute);
 
                 //create track event object
-                var trackEvent = new TrackEvent(customer.Email, string.Empty);
+                var trackEvent = new TrackEventRequest { Email = customer.Email };
 
                 //get current customer's shopping cart
                 var store = await _storeContext.GetCurrentStoreAsync();
@@ -253,7 +224,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 }
 
                 //track event
-                await client.TrackEventAsync(trackEvent);
+                await _marketingAutomationHttpClient.RequestAsync(trackEvent);
 
                 //update GUID for the current customer's shopping cart
                 await _genericAttributeService.SaveAttributeAsync(customer, SendinblueDefaults.ShoppingCartGuidAttribute, shoppingCartGuid);
@@ -283,11 +254,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
 
             try
             {
-                //create API client
-                var client = CreateMarketingAutomationClient();
-
                 //first, try to identify current customer
-                await client.IdentifyAsync(new Identify(customer.Email));
+                await _marketingAutomationHttpClient.RequestAsync(new IdentifyRequest { Email = customer.Email });
 
                 //get URL helper
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
@@ -385,11 +353,15 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     SendinblueDefaults.ShoppingCartGuidAttribute) ?? Guid.NewGuid();
 
                 //create track event object
-                var trackEvent = new TrackEvent(customer.Email, SendinblueDefaults.OrderCompletedEventName,
-                    eventData: new { id = $"cart:{shoppingCartGuid}", data = cartData });
+                var trackEvent = new TrackEventRequest
+                {
+                    Email = customer.Email,
+                    EventName = SendinblueDefaults.OrderCompletedEventName,
+                    EventData = new { id = $"cart:{shoppingCartGuid}", data = cartData }
+                };
 
                 //track event
-                client.TrackEvent(trackEvent);
+                await _marketingAutomationHttpClient.RequestAsync(trackEvent);
 
                 //update GUID for the current customer's shopping cart
                 await _genericAttributeService.SaveAttributeAsync<Guid?>(order, SendinblueDefaults.ShoppingCartGuidAttribute, null);

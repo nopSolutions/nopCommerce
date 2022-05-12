@@ -127,6 +127,7 @@
                                 @Model.PaymentMethod
                             </span>
                         </li>
+                        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryPaymentMethodInfo, additionalData = Model })
                     </ul>
                 </div>
             }
@@ -300,6 +301,7 @@
                                 @Model.ShippingMethod
                             </span>
                         </li>
+                        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryShippingMethodInfo, additionalData = Model })
                     </ul>
                 </div>
             </div>

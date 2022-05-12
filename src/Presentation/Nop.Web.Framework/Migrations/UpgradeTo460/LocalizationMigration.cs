@@ -43,6 +43,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#5123
                 "Admin.Catalog.Products.Pictures.Alert.AddNew",
+
+                //#7
+                "Admin.Catalog.Products.Pictures.SaveBeforeEdit",
+                "Admin.Catalog.Products.Pictures.AddButton",
             }).Wait();
 
             #endregion
@@ -51,9 +55,32 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             var localesToRename = new[]
             {
+                //#6255
+                new { Name = "Forum.BreadCrumb.HomeTitle", NewName = "Forum.Breadcrumb.HomeTitle" },
+                new { Name = "Forum.BreadCrumb.ForumHomeTitle", NewName = "Forum.Breadcrumb.ForumHomeTitle" },
+                new { Name = "Forum.BreadCrumb.ForumGroupTitle", NewName = "Forum.Breadcrumb.ForumGroupTitle" },
+                new { Name = "Forum.BreadCrumb.ForumTitle", NewName = "Forum.Breadcrumb.ForumTitle" },
+                new { Name = "Forum.BreadCrumb.TopicTitle", NewName = "Forum.Breadcrumb.TopicTitle" },
+
+                
                 //#3511
                 new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize" },
                 new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint" },
+
+                //#7
+                new { Name = "Admin.Catalog.Products.Pictures", NewName =  "Admin.Catalog.Products.Multimedia.Pictures"},
+                new { Name = "Admin.Catalog.Products.Pictures.AddNew", NewName = "Admin.Catalog.Products.Multimedia.Pictures.AddNew"},
+                new { Name = "Admin.Catalog.Products.Pictures.Alert.PictureAdd", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.DisplayOrder", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.DisplayOrder.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder.Hint"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute.Hint"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute.Hint"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.Picture", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.Picture.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture.Hint"},
+                new { Name = "Admin.Catalog.Products.Copy.CopyImages", NewName = "Admin.Catalog.Products.Copy.CopyMultimedia"},
+                new { Name = "Admin.Catalog.Products.Copy.CopyImages.Hint", NewName = "Admin.Catalog.Products.Copy.CopyMultimedia.Hint"},
             };
 
             foreach (var lang in languages)
@@ -161,6 +188,40 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#6182
                 ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests"] = "Show on checkout page for guests",
                 ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests.Hint"] = "Check to show CAPTCHA on checkout page for guests.",
+
+                //#6111
+                ["Admin.ReturnRequests.Fields.ReturnedQuantity.Hint"] = "The quantity to be returned to the stock.",
+
+                //#7
+                ["Admin.Catalog.Products.Multimedia"] = "Multimedia",
+                ["Admin.Catalog.Products.Multimedia.Videos"] = "Videos",
+                ["Admin.Catalog.Products.Multimedia.Videos.SaveBeforeEdit"] = "You need to save the product before you can upload videos for this product page.",
+                ["Admin.Catalog.Products.Multimedia.Videos.AddNew"] = "Add a new video",
+                ["Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd"] = "Failed to add product video.",
+                ["Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder"] = "Display order",
+                ["Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder.Hint"] = "Display order of the video. 1 represents the top of the list.",
+                ["Admin.Catalog.Products.Multimedia.Videos.Fields.Preview"] = "Preview",
+                ["Admin.Catalog.Products.Multimedia.Videos.Fields.VideoUrl"] = "Embed video URL",
+                ["Admin.Catalog.Products.Multimedia.Videos.Fields.VideoUrl.Hint"] = "Specify the URL path to the video.",
+                ["Admin.Catalog.Products.Multimedia.Videos.AddButton"] = "Add product video",
+                ["Admin.Catalog.Products.Copy.CopyMultimedia"] = "Copy multimedia",
+                ["Admin.Catalog.Products.Copy.CopyMultimedia.Hint"] = "Check to copy the images and videos.",
+
+                //#6115
+                ["Admin.Configuration.Settings.Catalog.ShowShortDescriptionOnCatalogPages"] = "Show short description on catalog pages",
+                ["Admin.Configuration.Settings.Catalog.ShowShortDescriptionOnCatalogPages.Hint"] = "Check to show product short description on catalog pages.",
+
+                //#5905
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive"] = "Is active",
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.ActiveOnly"] = "Active only",
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.All"] = "All",
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.Hint"] = "Search by a \"IsActive\" property.",
+                ["Admin.ContentManagement.MessageTemplates.List.IsActive.InactiveOnly"] = "Inactive only",
+
+                //#6062
+                ["Account.CustomerAddresses.Added"] = "The new address has been added successfully.",
+                ["Account.CustomerAddresses.Updated"] = "The address has been updated successfully.",
+                ["Account.CustomerInfo.Updated"] = "The customer info has been updated successfully.",
 
             }, languageId).Wait();
 

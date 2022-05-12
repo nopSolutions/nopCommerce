@@ -135,14 +135,23 @@
   <LocaleResource Name="Account.CustomerAddresses.AddNew">
     <Value>Add new address</Value>
   </LocaleResource>
+   <LocaleResource Name="Account.CustomerAddresses.Added">
+     <Value>The new address has been added successfully.</Value>
+   </LocaleResource>
   <LocaleResource Name="Account.CustomerAddresses.Edit">
     <Value>Edit address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAddresses.Updated">
+    <Value>The address has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerAddresses.NoAddresses">
     <Value>No addresses</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerInfo">
     <Value>Customer info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerInfo.Updated">
+        <Value>The customer info has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerOrders">
     <Value>Orders</Value>
@@ -2718,11 +2727,11 @@
   <LocaleResource Name="Admin.Catalog.Products.Copy">
     <Value>Copy product</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Copy.CopyImages">
-    <Value>Copy images</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Copy.CopyMultimedia">
+    <Value>Copy multimedia</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Copy.CopyImages.Hint">
-    <Value>Check to copy the images.</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Copy.CopyMultimedia.Hint">
+    <Value>Check to copy the images and videos.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Copy.Name">
     <Value>New product name</Value>
@@ -3513,44 +3522,71 @@
   <LocaleResource Name="Admin.Catalog.Products.List.SearchWarehouse.Hint">
     <Value>Search by a specific warehouse.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures">
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia">
+    <Value>Multimedia</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures">
     <Value>Pictures</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.AddButton">
-    <Value>Add product picture</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.AddNew">
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.AddNew">
     <Value>Add a new picture</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.Alert.PictureAdd">
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd">
     <Value>Failed to add product picture.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.DisplayOrder">
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.DisplayOrder.Hint">
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder.Hint">
     <Value>Display order of the picture. 1 represents the top of the list.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute">
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute">
     <Value>Alt</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute.Hint">
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute.Hint">
     <Value>Override "alt" attribute for "img" HTML element. If empty, then a default rule will be used (e.g. product name).</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute">
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute">
     <Value>Title</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute.Hint">
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute.Hint">
     <Value>Override "title" attribute for "img" HTML element. If empty, then a default rule will be used (e.g. product name).</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.Picture">
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture">
     <Value>Picture</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.Picture.Hint">
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture.Hint">
     <Value>You can choose multiple images to upload at once. If the picture size exceeds your stores max image size setting, it will be automatically resized.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Pictures.SaveBeforeEdit">
-    <Value>You need to save the product before you can upload pictures for this product page.</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos">
+    <Value>Videos</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.AddButton">
+    <Value>Add product video</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.AddNew">
+    <Value>Add a new video</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd">
+    <Value>Failed to add product video.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder.Hint">
+    <Value>Display order of the video. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Fields.Preview">
+    <Value>Preview</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Fields.VideoUrl">
+    <Value>Embed video URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Fields.VideoUrl.Hint">
+    <Value>Specify the URL path to the video.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.SaveBeforeEdit">
+    <Value>You need to save the product before you can upload videos for this product page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Price">
     <Value>Prices</Value>
@@ -4133,7 +4169,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Updated">
     <Value>The product has been updated successfully.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.ProductTags">
     <Value>Product tags</Value>
   </LocaleResource>
@@ -6239,6 +6275,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton.Hint">
     <Value>Check to show share button on product details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShortDescriptionOnCatalogPages">
+    <Value>Show short description on catalog pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShortDescriptionOnCatalogPages.Hint">
+    <Value>Check to show product short description on catalog pages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSkuOnCatalogPages">
     <Value>Show SKU on catalog pages</Value>
@@ -10551,6 +10593,21 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Subject.Required">
     <Value>Subject is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.IsActive.ActiveOnly">
+    <Value>Active only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.IsActive.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.IsActive.Hint">
+    <Value>Search by a "IsActive" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.IsActive.InactiveOnly">
+    <Value>Inactive only</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords">
     <Value>Search keywords</Value>
   </LocaleResource>
@@ -14647,7 +14704,7 @@
     <Value>The quantity to be returned to stock cannot be less than quantity already returned: {0}.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity.Hint">
-    <Value>The quantity already returned to stock.</Value>
+    <Value>The quantity to be returned to the stock.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeEqualOrGreaterThanZero">
     <Value>The quantity to be returned to stock must be equal or greater than zero.</Value>
@@ -17223,19 +17280,19 @@
   <LocaleResource Name="Forum.Author">
     <Value>Author</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.BreadCrumb.ForumGroupTitle">
+  <LocaleResource Name="Forum.Breadcrumb.ForumGroupTitle">
     <Value>Forum Group</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.BreadCrumb.ForumHomeTitle">
+  <LocaleResource Name="Forum.Breadcrumb.ForumHomeTitle">
     <Value>Forum Home Page</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.BreadCrumb.ForumTitle">
+  <LocaleResource Name="Forum.Breadcrumb.ForumTitle">
     <Value>Forum</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.BreadCrumb.HomeTitle">
+  <LocaleResource Name="Forum.Breadcrumb.HomeTitle">
     <Value>Home Page</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.BreadCrumb.TopicTitle">
+  <LocaleResource Name="Forum.Breadcrumb.TopicTitle">
     <Value>Topic</Value>
   </LocaleResource>
   <LocaleResource Name="Forum.By">

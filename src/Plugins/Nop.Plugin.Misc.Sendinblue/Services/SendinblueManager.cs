@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Misc.Sendinblue.Domain;
@@ -102,9 +101,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
 
             var apiConfiguration = new Configuration()
             {
-                ApiKey = new Dictionary<string, string> { 
-                    [SendinblueDefaults.ApiKeyHeader] = sendinblueSettings.ApiKey, 
-                    [SendinblueDefaults.PartnerKeyHeader] = sendinblueSettings.ApiKey 
+                ApiKey = new Dictionary<string, string>
+                {
+                    [SendinblueDefaults.ApiKeyHeader] = sendinblueSettings.ApiKey,
+                    [SendinblueDefaults.PartnerKeyHeader] = sendinblueSettings.ApiKey
                 },
                 ApiKeyPrefix = new Dictionary<string, string> { [SendinblueDefaults.PartnerKeyHeader] = SendinblueDefaults.PartnerName },
                 UserAgent = SendinblueDefaults.UserAgent
@@ -453,7 +453,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// </summary>
         /// <param name="subscription">Subscription</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task SubscribeAsync(NewsLetterSubscription subscription)
+        public async System.Threading.Tasks.Task SubscribeAsync(NewsLetterSubscription subscription)
         {
             try
             {
@@ -606,7 +606,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// </summary>
         /// <param name="subscription">Subscription</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task UnsubscribeAsync(NewsLetterSubscription subscription)
+        public async System.Threading.Tasks.Task UnsubscribeAsync(NewsLetterSubscription subscription)
         {
             try
             {
@@ -643,7 +643,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// </summary>
         /// <param name="unsubscribeContact">Contact information</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task UnsubscribeWebhookAsync(string unsubscribeContact)
+        public async System.Threading.Tasks.Task UnsubscribeWebhookAsync(string unsubscribeContact)
         {
             try
             {
@@ -723,7 +723,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task UpdateContactAfterCompletingOrderAsync(Order order)
+        public async System.Threading.Tasks.Task UpdateContactAfterCompletingOrderAsync(Order order)
         {
             try
             {
@@ -794,7 +794,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return (null, false, null, exception.Message);
             }
-        }        
+        }
 
         /// <summary>
         /// Get available lists to synchronize contacts
@@ -1262,7 +1262,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <param name="from">Name of sender</param>
         /// <param name="text">Text</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task SendSMSAsync(string to, string from, string text)
+        public async System.Threading.Tasks.Task SendSMSAsync(string to, string from, string text)
         {
             //whether SMS notifications enabled
             var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();

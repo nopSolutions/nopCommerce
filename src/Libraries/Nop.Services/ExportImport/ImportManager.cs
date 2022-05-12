@@ -52,6 +52,7 @@ namespace Nop.Services.ExportImport
         private readonly CatalogSettings _catalogSettings;
         private readonly IAddressService _addressService;
         private readonly IAffiliateService _affiliateService;
+        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly ICategoryService _categoryService;
         private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
         private readonly ICountryService _countryService;
@@ -97,6 +98,7 @@ namespace Nop.Services.ExportImport
         public ImportManager(CatalogSettings catalogSettings,
             IAddressService addressService,
             IAffiliateService affiliateService,
+            IBackInStockSubscriptionService backInStockSubscriptionService,
             ICategoryService categoryService,
             ICheckoutAttributeFormatter checkoutAttributeFormatter,
             ICountryService countryService,
@@ -137,6 +139,7 @@ namespace Nop.Services.ExportImport
         {
             _addressService = addressService;
             _affiliateService = affiliateService;
+            _backInStockSubscriptionService = backInStockSubscriptionService;
             _catalogSettings = catalogSettings;
             _categoryService = categoryService;
             _checkoutAttributeFormatter = checkoutAttributeFormatter;
@@ -293,7 +296,7 @@ namespace Nop.Services.ExportImport
                 {
                     var existingBinary = await _pictureService.LoadPictureBinaryAsync(existingPicture);
                     //picture binary after validation (like in database)
-                    var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType);
+                    var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType, name);
                     if (existingBinary.SequenceEqual(validatedPictureBinary) ||
                         existingBinary.SequenceEqual(newPictureBinary))
                     {
@@ -342,7 +345,7 @@ namespace Nop.Services.ExportImport
                         {
                             var existingBinary = await _pictureService.LoadPictureBinaryAsync(existingPicture);
                             //picture binary after validation (like in database)
-                            var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType);
+                            var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType, picturePath);
                             if (!existingBinary.SequenceEqual(validatedPictureBinary) &&
                                 !existingBinary.SequenceEqual(newPictureBinary))
                                 continue;
@@ -401,6 +404,8 @@ namespace Nop.Services.ExportImport
                         var mimeType = GetMimeTypeFromFilePath(picturePath);
                         var newPictureBinary = await _fileProvider.ReadAllBytesAsync(picturePath);
                         var pictureAlreadyExists = false;
+                        var seoFileName = await _pictureService.GetPictureSeNameAsync(product.ProductItem.Name);
+
                         if (!product.IsNew)
                         {
                             var newImageHash = HashHelper.CreateHash(
@@ -409,7 +414,7 @@ namespace Nop.Services.ExportImport
                                 trimByteCount);
 
                             var newValidatedImageHash = HashHelper.CreateHash(
-                                await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType),
+                                await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType, seoFileName),
                                 ExportImportDefaults.ImageHashAlgorithm,
                                 trimByteCount);
 
@@ -427,7 +432,7 @@ namespace Nop.Services.ExportImport
                         if (pictureAlreadyExists)
                             continue;
 
-                        var newPicture = await _pictureService.InsertPictureAsync(newPictureBinary, mimeType, await _pictureService.GetPictureSeNameAsync(product.ProductItem.Name));
+                        var newPicture = await _pictureService.InsertPictureAsync(newPictureBinary, mimeType, seoFileName);
 
                         await _productService.InsertProductPictureAsync(new ProductPicture
                         {
@@ -1510,6 +1515,7 @@ namespace Nop.Services.ExportImport
                 //some of previous values
                 var previousStockQuantity = product.StockQuantity;
                 var previousWarehouseId = product.WarehouseId;
+                var prevTotalStockQuantity = await _productService.GetTotalStockQuantityAsync(product);
 
                 if (isNew)
                     product.CreatedOnUtc = DateTime.UtcNow;
@@ -1844,6 +1850,18 @@ namespace Nop.Services.ExportImport
                     //record history
                     await _productService.AddStockQuantityHistoryEntryAsync(product, -previousStockQuantity, 0, previousWarehouseId, message);
                     await _productService.AddStockQuantityHistoryEntryAsync(product, product.StockQuantity, product.StockQuantity, product.WarehouseId, message);
+                }
+
+                if (!isNew &&
+                    product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                    product.BackorderMode == BackorderMode.NoBackorders &&
+                    product.AllowBackInStockSubscriptions &&
+                    await _productService.GetTotalStockQuantityAsync(product) > 0 &&
+                    prevTotalStockQuantity <= 0 &&
+                    product.Published &&
+                    !product.Deleted)
+                {
+                    await _backInStockSubscriptionService.SendNotificationsToSubscribersAsync(product);
                 }
 
                 var tempProperty = metadata.Manager.GetProperty("SeName");

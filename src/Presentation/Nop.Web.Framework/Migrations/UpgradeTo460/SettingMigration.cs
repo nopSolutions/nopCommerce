@@ -13,7 +13,7 @@ using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-02-18 00:00:00", "4.60.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
+    [NopMigration("2022-02-08 00:00:00", "4.60.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -80,6 +80,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(catalogSettings, settings => settings.DisplayFromPrices).Wait();
             }
 
+            //#6115
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ShowShortDescriptionOnCatalogPages).Result)
+            {
+                catalogSettings.ShowShortDescriptionOnCatalogPages = false;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.ShowShortDescriptionOnCatalogPages).Wait();
+            }
+
             var storeInformationSettings = settingService.LoadSettingAsync<StoreInformationSettings>().Result;
 
             //#3997
@@ -138,6 +145,27 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             {
                 captchaSettings.ShowOnCheckoutPageForGuests = false;
                 settingService.SaveSettingAsync(captchaSettings, settings => settings.ShowOnCheckoutPageForGuests).Wait();
+            }
+            
+            //#7
+            if (!settingService.SettingExistsAsync(mediaSettings, settings => settings.VideoIframeAllow).Result)
+            {
+                mediaSettings.VideoIframeAllow = "fullscreen";
+                settingService.SaveSettingAsync(mediaSettings, settings => settings.VideoIframeAllow).Wait();
+            }
+
+            //#7
+            if (!settingService.SettingExistsAsync(mediaSettings, settings => settings.VideoIframeWidth).Result)
+            {
+                mediaSettings.VideoIframeWidth = 300;
+                settingService.SaveSettingAsync(mediaSettings, settings => settings.VideoIframeWidth).Wait();
+            }
+
+            //#7
+            if (!settingService.SettingExistsAsync(mediaSettings, settings => settings.VideoIframeHeight).Result)
+            {
+                mediaSettings.VideoIframeHeight = 150;
+                settingService.SaveSettingAsync(mediaSettings, settings => settings.VideoIframeHeight).Wait();
             }
         }
 

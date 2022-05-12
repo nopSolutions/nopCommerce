@@ -269,6 +269,11 @@ namespace Nop.Plugin.Misc.Sendinblue
         public static string MarketingAutomationKeyHeader => "ma-key";
 
         /// <summary>
+        /// Gets the marketing automation services URL
+        /// </summary>
+        public static string MarketingAutomationUrl => "https://in-automate.sendinblue.com/api/v2/";
+
+        /// <summary>
         /// Gets a key of the attribute to store template identifier
         /// </summary>
         public static string TemplateIdAttribute => "TemplateId";

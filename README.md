@@ -1,29 +1,22 @@
-﻿nopCommerce: free and open-source eCommerce solution
+﻿﻿nopCommerce: free and open-source eCommerce solution
 ===========
 
 [nopCommerce](https://www.nopcommerce.com/?utm_source=github&utm_medium=content&utm_campaign=homepage) is the best open-source eCommerce platform. nopCommerce is free, and it is the most popular ASP.NET Core shopping cart.
 
 ![nopCommerce demo](https://www.nopcommerce.com/images/github/responsive_devices_codeplex.png#v1)
 
-The product is being developed and supported by the professional team since 2008.
+### Key features ###
 
-nopCommerce has been downloaded more than 3,000,000 times.
-
-The active developer community has more than 250,000 members.
-
-nopCommerce runs on .NET 6 with an MS SQL 2012 (or higher) backend database.
-
-nopCommerce is cross-platform, and you can run it on Windows, Linux, or Mac.
-
-nopCommerce supports Docker and MySQL out of the box, so you can easily run nopCommerce on a Linux machine.
-
-nopCommerce supports PostgreSQL database.
-
-nopCommerce fully supports web farms. You can read more about it [here](https://docs.nopcommerce.com/en/developer/tutorials/web-farms.html?utm_source=github&utm_medium=referral&utm_campaign=documentation&utm_content=text).  
-
-All methods in nopCommerce are async.
-
-nopCommerce supports multi-factor authentication out of the box.
+* The product is being developed and supported by the professional team since 2008.
+* nopCommerce has been downloaded more than 3,000,000 times.
+* The active developer community has more than 250,000 members.
+* nopCommerce runs on .NET 6 with an MS SQL 2012 (or higher) backend database.
+* nopCommerce is cross-platform, and you can run it on Windows, Linux, or Mac.
+* nopCommerce supports Docker and MySQL out of the box, so you can easily run nopCommerce on a Linux machine.
+* nopCommerce supports PostgreSQL database.
+* nopCommerce fully supports web farms. You can read more about it [here](https://docs.nopcommerce.com/en/developer/tutorials/web-farms.html?utm_source=github&utm_medium=referral&utm_campaign=documentation&utm_content=text).  
+* All methods in nopCommerce are async.
+* nopCommerce supports multi-factor authentication out of the box.
 
 ![Logo](https://www.nopcommerce.com/images/github/logos.png#v2)
 
@@ -79,4 +72,4 @@ Create a new graphical theme or develop a new plugin or integration and sell it 
 
 ### Contribute ###
 
-As a free and open-source project, we are very grateful to everyone who helps us to develop nopCommerce. Please find more details about the options and bonuses for contributors at [сontribute page](https://www.nopcommerce.com/contribute?utm_source=github&utm_medium=referral&utm_campaign=contribute&utm_content=text).
+As a free and open-source project, we are very grateful to everyone who helps us to develop nopCommerce. Please find more details about the options and bonuses for contributors at [contribute page](https://www.nopcommerce.com/contribute?utm_source=github&utm_medium=referral&utm_campaign=contribute&utm_content=text).

@@ -72,6 +72,7 @@ namespace Nop.Web.Factories
         private readonly ITaxService _taxService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
+        private readonly IVideoService _videoService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
@@ -114,6 +115,7 @@ namespace Nop.Web.Factories
             ITaxService taxService,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
+            IVideoService videoService,
             IWebHelper webHelper,
             IWorkContext workContext,
             MediaSettings mediaSettings,
@@ -159,6 +161,9 @@ namespace Nop.Web.Factories
             _seoSettings = seoSettings;
             _shippingSettings = shippingSettings;
             _vendorSettings = vendorSettings;
+            _videoService = videoService;
+
+
         }
 
         #endregion
@@ -550,7 +555,7 @@ namespace Nop.Web.Factories
                     {
                         //calculate price for the maximum quantity if we have tier prices, and choose minimal
                         tmpMinPossiblePrice = Math.Min(tmpMinPossiblePrice,
-                            (await _priceCalculationService.GetFinalPriceAsync(associatedProduct, customer, quantity: int.MaxValue)).priceWithoutDiscounts);
+                            (await _priceCalculationService.GetFinalPriceAsync(associatedProduct, customer, quantity: int.MaxValue)).finalPrice);
                     }
 
                     if (minPossiblePrice.HasValue && tmpMinPossiblePrice >= minPossiblePrice.Value)
@@ -1156,7 +1161,7 @@ namespace Nop.Web.Factories
                 {
                     var priceBase = (await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product,
                         customer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts,
-                        tierPrice.Quantity)).priceWithoutDiscounts)).price;
+                        tierPrice.Quantity)).finalPrice)).price;
 
                        var price = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceBase, await _workContext.GetWorkingCurrencyAsync());
 
@@ -1210,7 +1215,7 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the picture model for the default picture; All picture models
         /// </returns>
-        protected virtual async Task<(PictureModel pictureModel, IList<PictureModel> allPictureModels)> PrepareProductDetailsPictureModelAsync(Product product, bool isAssociatedProduct)
+        protected virtual async Task<(PictureModel pictureModel, IList<PictureModel> allPictureModels, IList<VideoModel> allVideoModels)> PrepareProductDetailsPictureModelAsync(Product product, bool isAssociatedProduct)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1283,7 +1288,23 @@ namespace Nop.Web.Factories
             });
 
             var allPictureModels = cachedPictures.PictureModels;
-            return (cachedPictures.DefaultPictureModel, allPictureModels);
+            
+            //all videos
+            var allvideoModels = new List<VideoModel>();
+            var videos = await _videoService.GetVideosByProductIdAsync(product.Id);
+            foreach (var video in videos)
+            {
+                var videoModel = new VideoModel
+                {
+                    VideoUrl = video.VideoUrl,
+                    Allow = _mediaSettings.VideoIframeAllow,
+                    Width = _mediaSettings.VideoIframeWidth,
+                    Height = _mediaSettings.VideoIframeHeight
+                };
+
+                allvideoModels.Add(videoModel);
+            }
+            return (cachedPictures.DefaultPictureModel, allPictureModels, allvideoModels);
         }
 
         #endregion
@@ -1569,11 +1590,13 @@ namespace Nop.Web.Factories
                 model.ProductTags = await PrepareProductTagModelsAsync(product);
             }
 
-            //pictures
+            //pictures and videos
             model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
             IList<PictureModel> allPictureModels;
-            (model.DefaultPictureModel, allPictureModels) = await PrepareProductDetailsPictureModelAsync(product, isAssociatedProduct);
+            IList<VideoModel> allVideoModels;
+            (model.DefaultPictureModel, allPictureModels, allVideoModels) = await PrepareProductDetailsPictureModelAsync(product, isAssociatedProduct);
             model.PictureModels = allPictureModels;
+            model.VideoModels = allVideoModels;
 
             //price
             model.ProductPrice = await PrepareProductPriceModelAsync(product);
@@ -1892,7 +1915,7 @@ namespace Nop.Web.Factories
                 ShowTotalSummary = false,
                 RouteActionName = "CustomerProductReviewsPaged",
                 UseRouteLinks = true,
-                RouteValues = new CustomerProductReviewsModel.CustomerProductReviewsRouteValues { pageNumber = pageIndex }
+                RouteValues = new CustomerProductReviewsModel.CustomerProductReviewsRouteValues { PageNumber = pageIndex }
             };
 
             var model = new CustomerProductReviewsModel

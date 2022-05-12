@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
 using Nop.Plugin.Pickup.PickupInStore.Services;
@@ -56,12 +57,13 @@ namespace Nop.Plugin.Pickup.PickupInStore
         /// <summary>
         /// Get pickup points for the address
         /// </summary>
+        /// <param name="cart">Shopping Cart</param>
         /// <param name="address">Address</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the represents a response of getting pickup points
         /// </returns>
-        public async Task<GetPickupPointsResponse> GetPickupPointsAsync(Address address)
+        public async Task<GetPickupPointsResponse> GetPickupPointsAsync(IList<ShoppingCartItem> cart, Address address)
         {
             var result = new GetPickupPointsResponse();
             var store = await _storeContext.GetCurrentStoreAsync();

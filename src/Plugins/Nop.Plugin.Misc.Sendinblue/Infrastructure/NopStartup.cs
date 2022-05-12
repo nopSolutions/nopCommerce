@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Misc.Sendinblue.Services;
 using Nop.Services.Messages;
+using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Plugin.Misc.Sendinblue.Infrastructure
 {
@@ -19,9 +20,11 @@ namespace Nop.Plugin.Misc.Sendinblue.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHttpClient<MarketingAutomationHttpClient>().WithProxy();
+
             //register custom services
             services.AddScoped<SendinblueManager>();
-            services.AddScoped<SendinblueMarketingAutomationManager>();
+            services.AddScoped<MarketingAutomationManager>();
 
             //override services
             services.AddScoped<IWorkflowMessageService, SendinblueMessageService>();

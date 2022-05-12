@@ -25,18 +25,18 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
+        private readonly MarketingAutomationManager _marketingAutomationManager;
         private readonly SendinblueManager _sendinblueEmailManager;
-        private readonly SendinblueMarketingAutomationManager _sendinblueMarketingAutomationManager;
 
         #endregion
 
         #region Ctor
 
-        public EventConsumer(SendinblueManager sendinblueEmailManager,
-            SendinblueMarketingAutomationManager sendinblueMarketingAutomationManager)
+        public EventConsumer(MarketingAutomationManager marketingAutomationManager,
+            SendinblueManager sendinblueEmailManager)
         {
+            _marketingAutomationManager = marketingAutomationManager;
             _sendinblueEmailManager = sendinblueEmailManager;
-            _sendinblueMarketingAutomationManager = sendinblueMarketingAutomationManager;
         }
 
         #endregion
@@ -73,7 +73,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(EntityInsertedEvent<ShoppingCartItem> eventMessage)
         {
             //handle event
-            await _sendinblueMarketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
+            await _marketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
         {
             //handle event
-            await _sendinblueMarketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
+            await _marketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(EntityDeletedEvent<ShoppingCartItem> eventMessage)
         {
             //handle event
-            await _sendinblueMarketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
+            await _marketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(OrderPaidEvent eventMessage)
         {
             //handle event
-            await _sendinblueMarketingAutomationManager.HandleOrderCompletedEventAsync(eventMessage.Order);
+            await _marketingAutomationManager.HandleOrderCompletedEventAsync(eventMessage.Order);
             await _sendinblueEmailManager.UpdateContactAfterCompletingOrderAsync(eventMessage.Order);
         }
 
@@ -118,7 +118,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
         {
             //handle event
-            await _sendinblueMarketingAutomationManager.HandleOrderPlacedEventAsync(eventMessage.Order);
+            await _marketingAutomationManager.HandleOrderPlacedEventAsync(eventMessage.Order);
         }
 
         /// <summary>
