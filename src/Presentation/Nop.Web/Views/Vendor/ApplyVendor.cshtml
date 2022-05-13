@@ -1,7 +1,5 @@
 ﻿@model ApplyVendorModel
 
-@using Nop.Core.Domain.Topics
-
 @{
     Layout = "_ColumnsOne";
 
@@ -89,7 +87,7 @@
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-acceptterms" href="@(Url.RouteUrl<Topic>(new { SeName = await Html.GetTopicSeNameAsync("VendorTermsOfService") }))">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                                    <a class="read" id="read-acceptterms" href="@Url.RouteTopicUrl("VendorTermsOfService")">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
                                 }
                             </div>
                         }

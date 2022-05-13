@@ -11,6 +11,7 @@ using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Seo;
+using Nop.Services.Topics;
 
 namespace Nop.Web.Framework.Mvc.Routing
 {
@@ -24,6 +25,8 @@ namespace Nop.Web.Framework.Mvc.Routing
         private readonly CatalogSettings _catalogSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ICategoryService _categoryService;
+        private readonly IStoreContext _storeContext;
+        private readonly ITopicService _topicService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
 
@@ -34,12 +37,16 @@ namespace Nop.Web.Framework.Mvc.Routing
         public NopUrlHelper(CatalogSettings catalogSettings,
             IActionContextAccessor actionContextAccessor,
             ICategoryService categoryService,
+            IStoreContext storeContext,
+            ITopicService topicService,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService)
         {
             _catalogSettings = catalogSettings;
             _actionContextAccessor = actionContextAccessor;
             _categoryService = categoryService;
+            _storeContext = storeContext;
+            _topicService = topicService;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
         }
@@ -106,6 +113,28 @@ namespace Nop.Web.Framework.Mvc.Routing
                     => urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.ProductTag, values, protocol, host, fragment),
                 var entityType => urlHelper.RouteUrl(entityType.Name, values, protocol, host, fragment)
             };
+        }
+
+        /// <summary>
+        /// Generate a URL for topic by the specified system name
+        /// </summary>
+        /// <param name="systemName">Topic system name</param>
+        /// <param name="protocol">The protocol for the URL, such as "http" or "https"</param>
+        /// <param name="host">The host name for the URL</param>
+        /// <param name="fragment">The fragment for the URL</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the generated URL
+        /// </returns>
+        public virtual async Task<string> RouteTopicUrlAsync(string systemName, string protocol = null, string host = null, string fragment = null)
+        {
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var topic = await _topicService.GetTopicBySystemNameAsync(systemName, store.Id);
+            if (topic is null)
+                return string.Empty;
+
+            var sename = await _urlRecordService.GetSeNameAsync(topic);
+            return await RouteGenericUrlAsync<Topic>(new { SeName = sename }, protocol, host, fragment);
         }
 
         #endregion
