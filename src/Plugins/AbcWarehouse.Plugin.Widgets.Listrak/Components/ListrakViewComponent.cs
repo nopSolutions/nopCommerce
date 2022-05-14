@@ -94,7 +94,7 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Components
 
                 model.PlaceOrderModel = new PlaceOrderModel()
                 {
-                    CustomerEmail = customer.Email,
+                    CustomerEmail = customer.Email ?? address.Email,
                     CustomerFirstName = address.FirstName,
                     CustomerLastName = address.LastName,
                     OrderNumber = order.Id,
@@ -103,7 +103,7 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Components
                     TaxTotal = order.OrderTax,
                     OrderTotal = order.OrderTotal,
                     OrderItems = listrakOrderItems,
-                    Source = "web"
+                    Source = "web",
                 };
             }
 
