@@ -47,6 +47,9 @@
                     if (data.Success) {
                         $('#newsletter-subscribe-block').hide();
                         $('#newsletter-result-block').show();
+
+                        // ABC: add to Listrak
+                        _ltk.Signup.New('newsletter-abc', 'newsletter-email', _ltk.Signup.TYPE.CLICK, 'newsletter-subscribe-button');
                     } else {
                         $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
                     }
