@@ -62,6 +62,24 @@ RUN dotnet build Nop.Plugin.Widgets.What3words.csproj -c Release
 WORKDIR /src/Presentation/Nop.Web   
 RUN dotnet publish Nop.Web.csproj -c Release -o /app/published
 
+WORKDIR /app/published
+
+RUN mkdir logs
+RUN mkdir bin
+
+RUN chmod 775 App_Data/
+RUN chmod 775 App_Data/DataProtectionKeys
+RUN chmod 775 bin
+RUN chmod 775 logs
+RUN chmod 775 Plugins
+RUN chmod 775 wwwroot/bundles
+RUN chmod 775 wwwroot/db_backups
+RUN chmod 775 wwwroot/files/exportimport
+RUN chmod 775 wwwroot/icons
+RUN chmod 775 wwwroot/images
+RUN chmod 775 wwwroot/images/thumbs
+RUN chmod 775 wwwroot/images/uploaded
+
 # create the runtime instance 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS runtime 
 
@@ -77,10 +95,6 @@ RUN apk add tzdata --no-cache
 # copy entrypoint script
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
-
-WORKDIR /app        
-RUN mkdir bin
-RUN mkdir logs 
 
 COPY --from=build /app/published .
                             
