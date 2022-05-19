@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -25,6 +28,7 @@ namespace Nop.Web.Framework.Mvc.Routing
         private readonly CatalogSettings _catalogSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ICategoryService _categoryService;
+        private readonly IManufacturerService _manufacturerService;
         private readonly IStoreContext _storeContext;
         private readonly ITopicService _topicService;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -37,6 +41,7 @@ namespace Nop.Web.Framework.Mvc.Routing
         public NopUrlHelper(CatalogSettings catalogSettings,
             IActionContextAccessor actionContextAccessor,
             ICategoryService categoryService,
+            IManufacturerService manufacturerService,
             IStoreContext storeContext,
             ITopicService topicService,
             IUrlHelperFactory urlHelperFactory,
@@ -45,6 +50,7 @@ namespace Nop.Web.Framework.Mvc.Routing
             _catalogSettings = catalogSettings;
             _actionContextAccessor = actionContextAccessor;
             _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
             _storeContext = storeContext;
             _topicService = topicService;
             _urlHelperFactory = urlHelperFactory;
@@ -70,7 +76,35 @@ namespace Nop.Web.Framework.Mvc.Routing
         protected virtual async Task<string> RouteProductUrlAsync(IUrlHelper urlHelper,
             object values = null, string protocol = null, string host = null, string fragment = null)
         {
-            return urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Product, values, protocol, host, fragment);
+            if (_catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.Product)
+                return urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Product, values, protocol, host, fragment);
+
+            var routeValues = new RouteValueDictionary(values);
+            if (!routeValues.TryGetValue(NopRoutingDefaults.RouteValue.SeName, out var slug))
+                return urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Product, values, protocol, host, fragment);
+
+            var urlRecord = await _urlRecordService.GetBySlugAsync(slug.ToString());
+            if (urlRecord is null || !urlRecord.EntityName.Equals(nameof(Product), StringComparison.InvariantCultureIgnoreCase))
+                return urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Product, values, protocol, host, fragment);
+
+            var catalogSename = string.Empty;
+            if (_catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.CategoryProduct)
+            {
+                var productCategory = (await _categoryService.GetProductCategoriesByProductIdAsync(urlRecord.EntityId)).LastOrDefault();
+                var category = await _categoryService.GetCategoryByIdAsync(productCategory?.CategoryId ?? 0);
+                catalogSename = category is not null ? await _urlRecordService.GetSeNameAsync(category) : string.Empty;
+            }
+            if (_catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.ManufacturerProduct)
+            {
+                var productManufacturer = (await _manufacturerService.GetProductManufacturersByProductIdAsync(urlRecord.EntityId)).FirstOrDefault();
+                var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(productManufacturer?.ManufacturerId ?? 0);
+                catalogSename = manufacturer is not null ? await _urlRecordService.GetSeNameAsync(manufacturer) : string.Empty;
+            }
+            if (string.IsNullOrEmpty(catalogSename))
+                return urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Product, values, protocol, host, fragment);
+
+            routeValues[NopRoutingDefaults.RouteValue.CatalogSeName] = catalogSename;
+            return urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.ProductCatalog, routeValues, protocol, host, fragment);
         }
 
         #endregion

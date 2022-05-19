@@ -405,6 +405,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool DisplayAllPicturesOnCatalogPages { get; set; }
         public bool DisplayAllPicturesOnCatalogPages_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductUrlStructureType")]
+        public int ProductUrlStructureTypeId { get; set; }
+        public bool ProductUrlStructureTypeId_OverrideForStore { get; set; }
+        public SelectList ProductUrlStructureTypes { get; set; }
+
         #endregion
     }
 }

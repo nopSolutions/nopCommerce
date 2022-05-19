@@ -14,6 +14,7 @@ using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Core.Http;
+using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Events;
@@ -27,8 +28,11 @@ namespace Nop.Web.Framework.Mvc.Routing
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
+        private readonly ICategoryService _categoryService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
+        private readonly IManufacturerService _manufacturerService;
         private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
         private readonly LocalizationSettings _localizationSettings;
@@ -37,14 +41,20 @@ namespace Nop.Web.Framework.Mvc.Routing
 
         #region Ctor
 
-        public SlugRouteTransformer(IEventPublisher eventPublisher,
+        public SlugRouteTransformer(CatalogSettings catalogSettings,
+            ICategoryService categoryService,
+            IEventPublisher eventPublisher,
             ILanguageService languageService,
+            IManufacturerService manufacturerService,
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
             LocalizationSettings localizationSettings)
         {
+            _catalogSettings = catalogSettings;
+            _categoryService = categoryService;
             _eventPublisher = eventPublisher;
             _languageService = languageService;
+            _manufacturerService = manufacturerService;
             _storeContext = storeContext;
             _urlRecordService = urlRecordService;
             _localizationSettings = localizationSettings;
@@ -60,43 +70,42 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// <param name="httpContext">HTTP context</param>
         /// <param name="values">The route values associated with the current match</param>
         /// <param name="urlRecord">Record found by the URL slug</param>
+        /// <param name="catalogPath">URL catalog path</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task SingleSlugRoutingAsync(HttpContext httpContext, RouteValueDictionary values, UrlRecord urlRecord)
+        protected virtual async Task SingleSlugRoutingAsync(HttpContext httpContext, RouteValueDictionary values, UrlRecord urlRecord, string catalogPath)
         {
             //if URL record is not active let's find the latest one
-            if (!urlRecord.IsActive)
-            {
-                var activeSlug = await _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId);
-                if (string.IsNullOrEmpty(activeSlug))
-                    return;
+            var slug = urlRecord.IsActive
+                ? urlRecord.Slug
+                : await _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId);
+            if (string.IsNullOrEmpty(slug))
+                return;
 
-                //redirect to active slug if found
-                InternalRedirect(httpContext, values, $"/{activeSlug}", true);
+            if (!urlRecord.IsActive || !string.IsNullOrEmpty(catalogPath))
+            {
+                //permanent redirect to new URL with active single slug
+                InternalRedirect(httpContext, values, $"/{slug}", true);
                 return;
             }
 
             //Ensure that the slug is the same for the current language, 
             //otherwise it can cause some issues when customers choose a new language but a slug stays the same
-            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled && values.TryGetValue(NopRoutingDefaults.RouteValue.Language, out var langValue))
             {
-                if (values.TryGetValue(NopRoutingDefaults.RouteValue.Language, out var languageValue))
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var languages = await _languageService.GetAllLanguagesAsync(storeId: store.Id);
+                var language = languages
+                    .FirstOrDefault(lang => lang.Published && lang.UniqueSeoCode.Equals(langValue?.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                    ?? languages.FirstOrDefault();
+
+                var slugLocalized = await _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, language.Id);
+                if (!string.IsNullOrEmpty(slugLocalized) && !slugLocalized.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var code = languageValue?.ToString();
-                    var store = await _storeContext.GetCurrentStoreAsync();
-                    var languages = await _languageService.GetAllLanguagesAsync(storeId: store.Id);
-                    var language = languages
-                        .FirstOrDefault(lang => lang.Published && lang.UniqueSeoCode.Equals(code, StringComparison.InvariantCultureIgnoreCase))
-                        ?? languages.FirstOrDefault();
+                    //we should make validation above because some entities does not have SeName for standard (Id = 0) language (e.g. news, blog posts)
 
-                    var slugForCurrentLanguage = await _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, language.Id);
-                    if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(urlRecord.Slug, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        //we should make validation above because some entities does not have SeName for standard (Id = 0) language (e.g. news, blog posts)
-
-                        //redirect to the page for current language
-                        InternalRedirect(httpContext, values, $"/{language.UniqueSeoCode}/{slugForCurrentLanguage}", false);
-                        return;
-                    }
+                    //redirect to the page for current language
+                    InternalRedirect(httpContext, values, $"/{language.UniqueSeoCode}/{slugLocalized}", false);
+                    return;
                 }
             }
 
@@ -104,79 +113,41 @@ namespace Nop.Web.Framework.Mvc.Routing
             switch (urlRecord.EntityName)
             {
                 case var name when name.Equals(nameof(Product), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopRoutingDefaults.RouteValue.Controller] = "Product";
-                    values[NopRoutingDefaults.RouteValue.Action] = "ProductDetails";
-                    values[NopRoutingDefaults.RouteValue.ProductId] = urlRecord.EntityId;
-                    values[NopRoutingDefaults.RouteValue.SeName] = urlRecord.Slug;
-                    break;
+                    RouteToAction(values, "Product", "ProductDetails", slug, (NopRoutingDefaults.RouteValue.ProductId, urlRecord.EntityId));
+                    return;
 
                 case var name when name.Equals(nameof(ProductTag), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopRoutingDefaults.RouteValue.Controller] = "Catalog";
-                    values[NopRoutingDefaults.RouteValue.Action] = "ProductsByTag";
-                    values[NopRoutingDefaults.RouteValue.ProductTagId] = urlRecord.EntityId;
-                    values[NopRoutingDefaults.RouteValue.SeName] = urlRecord.Slug;
-                    break;
+                    RouteToAction(values, "Catalog", "ProductsByTag", slug, (NopRoutingDefaults.RouteValue.ProductTagId, urlRecord.EntityId));
+                    return;
 
                 case var name when name.Equals(nameof(Category), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopRoutingDefaults.RouteValue.Controller] = "Catalog";
-                    values[NopRoutingDefaults.RouteValue.Action] = "Category";
-                    values[NopRoutingDefaults.RouteValue.CategoryId] = urlRecord.EntityId;
-                    values[NopRoutingDefaults.RouteValue.SeName] = urlRecord.Slug;
-                    break;
+                    RouteToAction(values, "Catalog", "Category", slug, (NopRoutingDefaults.RouteValue.CategoryId, urlRecord.EntityId));
+                    return;
 
                 case var name when name.Equals(nameof(Manufacturer), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopRoutingDefaults.RouteValue.Controller] = "Catalog";
-                    values[NopRoutingDefaults.RouteValue.Action] = "Manufacturer";
-                    values[NopRoutingDefaults.RouteValue.ManufacturerId] = urlRecord.EntityId;
-                    values[NopRoutingDefaults.RouteValue.SeName] = urlRecord.Slug;
-                    break;
+                    RouteToAction(values, "Catalog", "Manufacturer", slug, (NopRoutingDefaults.RouteValue.ManufacturerId, urlRecord.EntityId));
+                    return;
 
                 case var name when name.Equals(nameof(Vendor), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopRoutingDefaults.RouteValue.Controller] = "Catalog";
-                    values[NopRoutingDefaults.RouteValue.Action] = "Vendor";
-                    values[NopRoutingDefaults.RouteValue.VendorId] = urlRecord.EntityId;
-                    values[NopRoutingDefaults.RouteValue.SeName] = urlRecord.Slug;
-                    break;
+                    RouteToAction(values, "Catalog", "Vendor", slug, (NopRoutingDefaults.RouteValue.VendorId, urlRecord.EntityId));
+                    return;
 
                 case var name when name.Equals(nameof(NewsItem), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopRoutingDefaults.RouteValue.Controller] = "News";
-                    values[NopRoutingDefaults.RouteValue.Action] = "NewsItem";
-                    values[NopRoutingDefaults.RouteValue.NewsItemId] = urlRecord.EntityId;
-                    values[NopRoutingDefaults.RouteValue.SeName] = urlRecord.Slug;
-                    break;
+                    RouteToAction(values, "News", "NewsItem", slug, (NopRoutingDefaults.RouteValue.NewsItemId, urlRecord.EntityId));
+                    return;
 
                 case var name when name.Equals(nameof(BlogPost), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopRoutingDefaults.RouteValue.Controller] = "Blog";
-                    values[NopRoutingDefaults.RouteValue.Action] = "BlogPost";
-                    values[NopRoutingDefaults.RouteValue.BlogPostId] = urlRecord.EntityId;
-                    values[NopRoutingDefaults.RouteValue.SeName] = urlRecord.Slug;
-                    break;
+                    RouteToAction(values, "Blog", "BlogPost", slug, (NopRoutingDefaults.RouteValue.BlogPostId, urlRecord.EntityId));
+                    return;
 
                 case var name when name.Equals(nameof(Topic), StringComparison.InvariantCultureIgnoreCase):
-                    values[NopRoutingDefaults.RouteValue.Controller] = "Topic";
-                    values[NopRoutingDefaults.RouteValue.Action] = "TopicDetails";
-                    values[NopRoutingDefaults.RouteValue.TopicId] = urlRecord.EntityId;
-                    values[NopRoutingDefaults.RouteValue.SeName] = urlRecord.Slug;
-                    break;
+                    RouteToAction(values, "Topic", "TopicDetails", slug, (NopRoutingDefaults.RouteValue.TopicId, urlRecord.EntityId));
+                    return;
             }
         }
 
         /// <summary>
-        /// Transform route values according to the passed URL record and URL catalog path
-        /// </summary>
-        /// <param name="httpContext">HTTP context</param>
-        /// <param name="values">The route values associated with the current match</param>
-        /// <param name="urlRecord">Record found by the URL slug</param>
-        /// <param name="catalogPath">URL catalog path</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task CatalogRoutingAsync(HttpContext httpContext, RouteValueDictionary values, UrlRecord urlRecord, string catalogPath)
-        {
-            if (await ProductCatalogRoutingAsync(httpContext, values, urlRecord, catalogPath))
-                return;
-        }
-
-        /// <summary>
-        /// Transform route values according to the passed URL record and URL catalog path
+        /// Try transforming the route values, assuming the passed URL record is of a product type
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
         /// <param name="values">The route values associated with the current match</param>
@@ -184,19 +155,90 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// <param name="catalogPath">URL catalog path</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the set of values
+        /// The task result contains a value whether the route values were processed
         /// </returns>
-        protected virtual async Task<bool> ProductCatalogRoutingAsync(HttpContext httpContext, RouteValueDictionary values, UrlRecord urlRecord, string catalogPath)
+        protected virtual async Task<bool> TryProductCatalogRoutingAsync(HttpContext httpContext, RouteValueDictionary values, UrlRecord urlRecord, string catalogPath)
         {
-            //no product URL record found
-            if (!urlRecord.EntityName.Equals("product", StringComparison.InvariantCultureIgnoreCase))
+            //ensure it's a product URL record
+            if (!urlRecord.EntityName.Equals(nameof(Product), StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
-            values[NopRoutingDefaults.RouteValue.Controller] = "Product";
-            values[NopRoutingDefaults.RouteValue.Action] = "ProductDetails";
-            values[NopRoutingDefaults.RouteValue.ProductId] = urlRecord.EntityId;
-            values[NopRoutingDefaults.RouteValue.SeName] = urlRecord.Slug;
+            //if the product URL structure type is product sename only, it will be processed later by a single slug
+            if (_catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.Product)
+                return false;
 
+            //get active slug for the product
+            var slug = urlRecord.IsActive
+                ? urlRecord.Slug
+                : await _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId);
+            if (string.IsNullOrEmpty(slug))
+                return false;
+
+            //try to get active catalog (e.g. category or manufacturer) sename for the product
+            var catalogSename = string.Empty;
+            var isCategoryProductUrl = _catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.CategoryProduct;
+            if (isCategoryProductUrl)
+            {
+                var productCategory = (await _categoryService.GetProductCategoriesByProductIdAsync(urlRecord.EntityId)).LastOrDefault();
+                var category = await _categoryService.GetCategoryByIdAsync(productCategory?.CategoryId ?? 0);
+                catalogSename = category is not null ? await _urlRecordService.GetSeNameAsync(category) : string.Empty;
+            }
+            var isManufacturerProductUrl = _catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.ManufacturerProduct;
+            if (isManufacturerProductUrl)
+            {
+                var productManufacturer = (await _manufacturerService.GetProductManufacturersByProductIdAsync(urlRecord.EntityId)).FirstOrDefault();
+                var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(productManufacturer?.ManufacturerId ?? 0);
+                catalogSename = manufacturer is not null ? await _urlRecordService.GetSeNameAsync(manufacturer) : string.Empty;
+            }
+            if (string.IsNullOrEmpty(catalogSename))
+                return false;
+
+            //get URL record by the specified catalog path
+            var catalogUrlRecord = await _urlRecordService.GetBySlugAsync(catalogPath);
+            if (catalogUrlRecord is null ||
+                (isCategoryProductUrl && !catalogUrlRecord.EntityName.Equals(nameof(Category), StringComparison.InvariantCultureIgnoreCase)) ||
+                (isManufacturerProductUrl && !catalogUrlRecord.EntityName.Equals(nameof(Manufacturer), StringComparison.InvariantCultureIgnoreCase)) ||
+                !urlRecord.IsActive)
+            {
+                //permanent redirect to new URL with active catalog sename and active slug
+                InternalRedirect(httpContext, values, $"/{catalogSename}/{slug}", true);
+                return true;
+            }
+
+            //ensure the catalog sename and slug are the same for the current language
+            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled && values.TryGetValue(NopRoutingDefaults.RouteValue.Language, out var langValue))
+            {
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var languages = await _languageService.GetAllLanguagesAsync(storeId: store.Id);
+                var language = languages
+                    .FirstOrDefault(lang => lang.Published && lang.UniqueSeoCode.Equals(langValue?.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                    ?? languages.FirstOrDefault();
+
+                var slugLocalized = await _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, language.Id);
+                var catalogSlugLocalized = await _urlRecordService.GetActiveSlugAsync(catalogUrlRecord.EntityId, catalogUrlRecord.EntityName, language.Id);
+                if ((!string.IsNullOrEmpty(slugLocalized) && !slugLocalized.Equals(slug, StringComparison.InvariantCultureIgnoreCase)) ||
+                    (!string.IsNullOrEmpty(catalogSlugLocalized) && !catalogSlugLocalized.Equals(catalogUrlRecord.Slug, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    //redirect to localized URL for the current language
+                    var activeSlug = !string.IsNullOrEmpty(slugLocalized) ? slugLocalized : slug;
+                    var activeCatalogSlug = !string.IsNullOrEmpty(catalogSlugLocalized) ? catalogSlugLocalized : catalogUrlRecord.Slug;
+                    InternalRedirect(httpContext, values, $"/{language.UniqueSeoCode}/{activeCatalogSlug}/{activeSlug}", false);
+                    return true;
+                }
+            }
+
+            //ensure the specified catalog path is equal to the active catalog sename
+            //we do it here after localization check to avoid double redirect
+            if (!catalogSename.Equals(catalogUrlRecord.Slug, StringComparison.InvariantCultureIgnoreCase))
+            {
+                //permanent redirect to new URL with active catalog sename and active slug
+                InternalRedirect(httpContext, values, $"/{catalogSename}/{slug}", true);
+                return true;
+            }
+
+            //all is ok, so select the appropriate action
+            RouteToAction(values, "Product", "ProductDetails", slug,
+                (NopRoutingDefaults.RouteValue.ProductId, urlRecord.EntityId), (NopRoutingDefaults.RouteValue.CatalogSeName, catalogSename));
             return true;
         }
 
@@ -216,6 +258,25 @@ namespace Nop.Web.Framework.Mvc.Routing
             httpContext.Items[NopHttpDefaults.GenericRouteInternalRedirect] = true;
         }
 
+        /// <summary>
+        /// Transform route values to set controller, action and action parameters
+        /// </summary>
+        /// <param name="values">The route values associated with the current match</param>
+        /// <param name="controller">Controller name</param>
+        /// <param name="action">Action name</param>
+        /// <param name="slug">URL slug</param>
+        /// <param name="parameters">Action parameters</param>
+        protected virtual void RouteToAction(RouteValueDictionary values, string controller, string action, string slug, params (string Key, object Value)[] parameters)
+        {
+            values[NopRoutingDefaults.RouteValue.Controller] = controller;
+            values[NopRoutingDefaults.RouteValue.Action] = action;
+            values[NopRoutingDefaults.RouteValue.SeName] = slug;
+            foreach (var (key, value) in parameters)
+            {
+                values[key] = value;
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -231,26 +292,33 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// </returns>
         public override async ValueTask<RouteValueDictionary> TransformAsync(HttpContext httpContext, RouteValueDictionary routeValues)
         {
+            //get values to transform for action selection
             var values = new RouteValueDictionary(routeValues);
             if (values is null)
                 return values;
 
-            if (!values.TryGetValue(NopRoutingDefaults.RouteValue.SeName, out var slug) || await _urlRecordService.GetBySlugAsync(slug.ToString()) is not UrlRecord urlRecord)
+            if (!values.TryGetValue(NopRoutingDefaults.RouteValue.SeName, out var slug))
                 return values;
 
-            //give the ability to transform values to third-party handlers
+            //find record by the URL slug
+            if (await _urlRecordService.GetBySlugAsync(slug.ToString()) is not UrlRecord urlRecord)
+                return values;
+
+            //allow third-party handlers to select an action by the found URL record
             var routingEvent = new GenericRoutingEvent(httpContext, values, urlRecord);
             await _eventPublisher.PublishAsync(routingEvent);
             if (routingEvent.Handled)
                 return values;
 
-            if (values.TryGetValue(NopRoutingDefaults.RouteValue.CatalogSeName, out var catalogPathValue) && catalogPathValue is string catalogPath)
-            {
-                await CatalogRoutingAsync(httpContext, values, urlRecord, catalogPath);
+            //then try to select an action by the found URL record and the catalog path
+            var catalogPath = values.TryGetValue(NopRoutingDefaults.RouteValue.CatalogSeName, out var catalogPathValue)
+                ? catalogPathValue.ToString()
+                : string.Empty;
+            if (await TryProductCatalogRoutingAsync(httpContext, values, urlRecord, catalogPath))
                 return values;
-            }
 
-            await SingleSlugRoutingAsync(httpContext, values, urlRecord);
+            //finally, select an action by the URL record only
+            await SingleSlugRoutingAsync(httpContext, values, urlRecord, catalogPath);
 
             return values;
         }

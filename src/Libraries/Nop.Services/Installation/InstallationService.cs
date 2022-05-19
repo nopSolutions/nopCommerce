@@ -2959,7 +2959,8 @@ namespace Nop.Services.Installation
                 AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay,
                 AllowCustomersToSearchWithCategoryName = true,
                 AllowCustomersToSearchWithManufacturerName = true,
-                DisplayAllPicturesOnCatalogPages = false
+                DisplayAllPicturesOnCatalogPages = false,
+                ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product
             });
 
             await settingService.SaveSettingAsync(new LocalizationSettings

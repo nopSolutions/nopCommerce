@@ -1144,6 +1144,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.ActiveStoreScopeConfiguration = storeId;
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
             model.AttributeValueOutOfStockDisplayTypes = await catalogSettings.AttributeValueOutOfStockDisplayType.ToSelectListAsync();
+            model.ProductUrlStructureTypes = await ((ProductUrlStructureType)catalogSettings.ProductUrlStructureTypeId).ToSelectListAsync();
             model.AvailableViewModes.Add(new SelectListItem
             {
                 Text = await _localizationService.GetResourceAsync("Admin.Catalog.ViewMode.Grid"),
@@ -1246,6 +1247,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.AllowCustomersToSearchWithManufacturerName_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowCustomersToSearchWithManufacturerName, storeId);
                 model.AllowCustomersToSearchWithCategoryName_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowCustomersToSearchWithCategoryName, storeId);
                 model.DisplayAllPicturesOnCatalogPages_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayAllPicturesOnCatalogPages, storeId);
+                model.ProductUrlStructureTypeId_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductUrlStructureTypeId, storeId);
             }
 
             //prepare nested search model

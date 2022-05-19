@@ -226,6 +226,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Account.CustomerAddresses.Updated"] = "The address has been updated successfully.",
                 ["Account.CustomerInfo.Updated"] = "The customer info has been updated successfully.",
 
+                //#385
+                ["Admin.Configuration.Settings.Catalog.ProductUrlStructureType"] = "Product URL structure type",
+                ["Admin.Configuration.Settings.Catalog.ProductUrlStructureType.Hint"] = "Select the product URL structure type (e.g. '/product-seo-name' or '/category-seo-name/product-seo-name' or '/manufacturer-seo-name/product-seo-name').",
+                ["Enums.Nop.Core.Domain.Catalog.ProductUrlStructureType.CategoryProduct"] = "/Category/Product",
+                ["Enums.Nop.Core.Domain.Catalog.ProductUrlStructureType.ManufacturerProduct"] = "/Manufacturer/Product",
+                ["Enums.Nop.Core.Domain.Catalog.ProductUrlStructureType.Product"] = "/Product",
+
             }, languageId).Wait();
 
             #endregion

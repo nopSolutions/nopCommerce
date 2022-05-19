@@ -167,6 +167,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 mediaSettings.VideoIframeHeight = 150;
                 settingService.SaveSettingAsync(mediaSettings, settings => settings.VideoIframeHeight).Wait();
             }
+
+            //#385
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductUrlStructureTypeId).Result)
+            {
+                catalogSettings.ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.ProductUrlStructureTypeId).Wait();
+            }
+
         }
 
         public override void Down()
