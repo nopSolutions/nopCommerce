@@ -16,6 +16,10 @@
         _ltk.SCA.CaptureEmail('BillingNewAddress_Email');
         _ltk.SCA.CaptureEmail('ShippingNewAddress_Email');
 
+        @if (Model.IsRegisterPage) {
+            <text>_ltk.Signup.New('account-registration-abc', 'Email', _ltk.Signup.TYPE.DEFAULT, 'register-button');</text>
+        }
+
         @if (Model.CartUpdateOrderItems != null) {
             if (!Model.CartUpdateOrderItems.Any()) {
                 <text>_ltk.SCA.ClearCart();</text>

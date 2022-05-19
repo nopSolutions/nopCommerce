@@ -15,5 +15,7 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Models
         public string ProductBrowseSku { get; set; }
 
         public string MerchantId { get; set; }
+
+        public bool IsRegisterPage { get; set; }
     }
 }

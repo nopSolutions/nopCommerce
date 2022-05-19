@@ -115,6 +115,12 @@ namespace AbcWarehouse.Plugin.Widgets.Listrak.Components
                 model.ProductBrowseSku = product.Sku;
             }
 
+            // on cart page
+            if (controller.ToString() == "Customer" && action.ToString() == "Register")
+            {
+                model.IsRegisterPage = true;
+            }
+
             return View("~/Plugins/Widgets.Listrak/Views/Framework.cshtml", model);
         }
 
