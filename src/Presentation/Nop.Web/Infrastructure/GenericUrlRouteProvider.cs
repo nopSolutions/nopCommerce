@@ -35,19 +35,37 @@ namespace Nop.Web.Infrastructure
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
-            //generic routes
-            var genericPattern = $"{lang}/{{SeName}}";
+            //generic routes (actually routing is processed later in SlugRouteTransformer)
+            var genericCatalogPattern = $"{lang}/{{CatalogSeName}}/{{SeName}}";
+            endpointRouteBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(genericCatalogPattern);
 
+            var genericPattern = $"{lang}/{{SeName}}";
             endpointRouteBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(genericPattern);
 
+            //routes for not found slugs
+            if (!string.IsNullOrEmpty(lang))
+            {
+                endpointRouteBuilder.MapControllerRoute(name: "GenericUrlWithLanguageCode",
+                    pattern: genericPattern,
+                    defaults: new { controller = "Common", action = "GenericUrl" });
+
+                endpointRouteBuilder.MapControllerRoute(name: "GenericCatalogUrlWithLanguageCode",
+                    pattern: genericCatalogPattern,
+                    defaults: new { controller = "Common", action = "GenericUrl" });
+            }
+
             endpointRouteBuilder.MapControllerRoute(name: "GenericUrl",
-                pattern: "{genericSeName}",
+                pattern: "{SeName}",
                 defaults: new { controller = "Common", action = "GenericUrl" });
 
-            endpointRouteBuilder.MapControllerRoute(name: "GenericUrlWithParameter",
-                pattern: "{genericSeName}/{genericParameter}",
+            endpointRouteBuilder.MapControllerRoute(name: "GenericCatalogUrl",
+                pattern: "{CatalogSeName}/{SeName}",
                 defaults: new { controller = "Common", action = "GenericUrl" });
 
+            //routes for entities that support catalog path and slug (e.g. /category-seo-name/product-seo-name)
+            //TODO:
+
+            //routes for entities that support single slug (e.g. /product-seo-name)
             endpointRouteBuilder.MapControllerRoute(name: "Product",
                 pattern: genericPattern,
                 defaults: new { controller = "Product", action = "ProductDetails" });
