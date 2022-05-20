@@ -187,8 +187,8 @@ namespace Nop.Web.Controllers
                 if (parentGroupedProduct == null)
                     return RedirectToRoute("Homepage");
 
-                var sename = await _urlRecordService.GetSeNameAsync(parentGroupedProduct);
-                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = sename });
+                var seName = await _urlRecordService.GetSeNameAsync(parentGroupedProduct);
+                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName });
                 return LocalRedirectPermanent(productUrl);
             }
 
@@ -196,8 +196,8 @@ namespace Nop.Web.Controllers
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
-                var sename = await _urlRecordService.GetSeNameAsync(product);
-                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = sename });
+                var seName = await _urlRecordService.GetSeNameAsync(product);
+                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName });
                 var store = await _storeContext.GetCurrentStoreAsync();
                 var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: store.Id);
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);

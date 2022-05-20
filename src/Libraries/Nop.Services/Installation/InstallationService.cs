@@ -268,7 +268,7 @@ namespace Nop.Services.Installation
             //max length
             seName = CommonHelper.EnsureMaximumLength(seName, NopSeoDefaults.SearchEngineNameLength);
 
-            //ensure this sename is not reserved yet
+            //ensure this seName is not reserved yet
             var i = 2;
             var tempSeName = seName;
             while (true)

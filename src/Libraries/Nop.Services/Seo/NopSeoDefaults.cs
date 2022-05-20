@@ -25,7 +25,7 @@ namespace Nop.Services.Seo
         public static int SearchEngineNameLength => 200;
 
         /// <summary>
-        /// Gets a default list of slugs (sename) reserved for some other needs
+        /// Gets a default list of slugs (seName) reserved for some other needs
         /// </summary>
         public static List<string> ReservedUrlRecordSlugs => new()
         {

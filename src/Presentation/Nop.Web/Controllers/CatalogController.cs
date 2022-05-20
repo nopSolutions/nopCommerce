@@ -361,8 +361,8 @@ namespace Nop.Web.Controllers
 
             foreach (var product in products)
             {
-                var sename = await _urlRecordService.GetSeNameAsync(product);
-                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = sename }, _webHelper.GetCurrentRequestProtocol());
+                var seName = await _urlRecordService.GetSeNameAsync(product);
+                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
                 var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
                 var productDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription);
                 var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{store.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);

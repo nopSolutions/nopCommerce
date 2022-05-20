@@ -137,8 +137,8 @@ namespace Nop.Web.Controllers
             var blogPosts = await _blogService.GetAllBlogPostsAsync(store.Id, languageId);
             foreach (var blogPost in blogPosts)
             {
-                var sename = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
-                var blogPostUrl = await _nopUrlHelper.RouteGenericUrlAsync<BlogPost>(new { SeName = sename }, _webHelper.GetCurrentRequestProtocol());
+                var seName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
+                var blogPostUrl = await _nopUrlHelper.RouteGenericUrlAsync<BlogPost>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
                 items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), $"urn:store:{store.Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
             }
             feed.Items = items;
@@ -231,8 +231,8 @@ namespace Nop.Web.Controllers
                     ? await _localizationService.GetResourceAsync("Blog.Comments.SuccessfullyAdded")
                     : await _localizationService.GetResourceAsync("Blog.Comments.SeeAfterApproving");
 
-                var sename = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
-                var blogPostUrl = await _nopUrlHelper.RouteGenericUrlAsync<BlogPost>(new { SeName = sename });
+                var seName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
+                var blogPostUrl = await _nopUrlHelper.RouteGenericUrlAsync<BlogPost>(new { SeName = seName });
                 return LocalRedirect(blogPostUrl);
             }
 

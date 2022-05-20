@@ -119,8 +119,8 @@ namespace Nop.Web.Controllers
             var newsItems = await _newsService.GetAllNewsAsync(languageId, store.Id);
             foreach (var n in newsItems)
             {
-                var sename = await _urlRecordService.GetSeNameAsync(n, n.LanguageId, ensureTwoPublishedLanguages: false);
-                var newsUrl = await _nopUrlHelper.RouteGenericUrlAsync<NewsItem>(new { SeName = sename }, _webHelper.GetCurrentRequestProtocol());
+                var seName = await _urlRecordService.GetSeNameAsync(n, n.LanguageId, ensureTwoPublishedLanguages: false);
+                var newsUrl = await _nopUrlHelper.RouteGenericUrlAsync<NewsItem>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
                 items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), $"urn:store:{store.Id}:news:blog:{n.Id}", n.CreatedOnUtc));
             }
             feed.Items = items;
@@ -217,8 +217,8 @@ namespace Nop.Web.Controllers
                     ? await _localizationService.GetResourceAsync("News.Comments.SuccessfullyAdded")
                     : await _localizationService.GetResourceAsync("News.Comments.SeeAfterApproving");
 
-                var sename = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
-                var newsUrl = await _nopUrlHelper.RouteGenericUrlAsync<NewsItem>(new { SeName = sename });
+                var seName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
+                var newsUrl = await _nopUrlHelper.RouteGenericUrlAsync<NewsItem>(new { SeName = seName });
                 return LocalRedirect(newsUrl);
             }
 

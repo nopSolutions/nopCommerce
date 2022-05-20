@@ -87,23 +87,23 @@ namespace Nop.Web.Framework.Mvc.Routing
             if (urlRecord is null || !urlRecord.EntityName.Equals(nameof(Product), StringComparison.InvariantCultureIgnoreCase))
                 return urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Product, values, protocol, host, fragment);
 
-            var catalogSename = string.Empty;
+            var catalogSeName = string.Empty;
             if (_catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.CategoryProduct)
             {
                 var productCategory = (await _categoryService.GetProductCategoriesByProductIdAsync(urlRecord.EntityId)).LastOrDefault();
                 var category = await _categoryService.GetCategoryByIdAsync(productCategory?.CategoryId ?? 0);
-                catalogSename = category is not null ? await _urlRecordService.GetSeNameAsync(category) : string.Empty;
+                catalogSeName = category is not null ? await _urlRecordService.GetSeNameAsync(category) : string.Empty;
             }
             if (_catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.ManufacturerProduct)
             {
                 var productManufacturer = (await _manufacturerService.GetProductManufacturersByProductIdAsync(urlRecord.EntityId)).FirstOrDefault();
                 var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(productManufacturer?.ManufacturerId ?? 0);
-                catalogSename = manufacturer is not null ? await _urlRecordService.GetSeNameAsync(manufacturer) : string.Empty;
+                catalogSeName = manufacturer is not null ? await _urlRecordService.GetSeNameAsync(manufacturer) : string.Empty;
             }
-            if (string.IsNullOrEmpty(catalogSename))
+            if (string.IsNullOrEmpty(catalogSeName))
                 return urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Product, values, protocol, host, fragment);
 
-            routeValues[NopRoutingDefaults.RouteValue.CatalogSeName] = catalogSename;
+            routeValues[NopRoutingDefaults.RouteValue.CatalogSeName] = catalogSeName;
             return urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.ProductCatalog, routeValues, protocol, host, fragment);
         }
 
@@ -167,8 +167,8 @@ namespace Nop.Web.Framework.Mvc.Routing
             if (topic is null)
                 return string.Empty;
 
-            var sename = await _urlRecordService.GetSeNameAsync(topic);
-            return await RouteGenericUrlAsync<Topic>(new { SeName = sename }, protocol, host, fragment);
+            var seName = await _urlRecordService.GetSeNameAsync(topic);
+            return await RouteGenericUrlAsync<Topic>(new { SeName = seName }, protocol, host, fragment);
         }
 
         #endregion

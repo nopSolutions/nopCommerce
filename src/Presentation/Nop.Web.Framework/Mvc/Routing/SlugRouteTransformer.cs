@@ -163,7 +163,7 @@ namespace Nop.Web.Framework.Mvc.Routing
             if (!urlRecord.EntityName.Equals(nameof(Product), StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
-            //if the product URL structure type is product sename only, it will be processed later by a single slug
+            //if the product URL structure type is product seName only, it will be processed later by a single slug
             if (_catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.Product)
                 return false;
 
@@ -174,23 +174,23 @@ namespace Nop.Web.Framework.Mvc.Routing
             if (string.IsNullOrEmpty(slug))
                 return false;
 
-            //try to get active catalog (e.g. category or manufacturer) sename for the product
-            var catalogSename = string.Empty;
+            //try to get active catalog (e.g. category or manufacturer) seName for the product
+            var catalogSeName = string.Empty;
             var isCategoryProductUrl = _catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.CategoryProduct;
             if (isCategoryProductUrl)
             {
                 var productCategory = (await _categoryService.GetProductCategoriesByProductIdAsync(urlRecord.EntityId)).LastOrDefault();
                 var category = await _categoryService.GetCategoryByIdAsync(productCategory?.CategoryId ?? 0);
-                catalogSename = category is not null ? await _urlRecordService.GetSeNameAsync(category) : string.Empty;
+                catalogSeName = category is not null ? await _urlRecordService.GetSeNameAsync(category) : string.Empty;
             }
             var isManufacturerProductUrl = _catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.ManufacturerProduct;
             if (isManufacturerProductUrl)
             {
                 var productManufacturer = (await _manufacturerService.GetProductManufacturersByProductIdAsync(urlRecord.EntityId)).FirstOrDefault();
                 var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(productManufacturer?.ManufacturerId ?? 0);
-                catalogSename = manufacturer is not null ? await _urlRecordService.GetSeNameAsync(manufacturer) : string.Empty;
+                catalogSeName = manufacturer is not null ? await _urlRecordService.GetSeNameAsync(manufacturer) : string.Empty;
             }
-            if (string.IsNullOrEmpty(catalogSename))
+            if (string.IsNullOrEmpty(catalogSeName))
                 return false;
 
             //get URL record by the specified catalog path
@@ -200,12 +200,12 @@ namespace Nop.Web.Framework.Mvc.Routing
                 (isManufacturerProductUrl && !catalogUrlRecord.EntityName.Equals(nameof(Manufacturer), StringComparison.InvariantCultureIgnoreCase)) ||
                 !urlRecord.IsActive)
             {
-                //permanent redirect to new URL with active catalog sename and active slug
-                InternalRedirect(httpContext, values, $"/{catalogSename}/{slug}", true);
+                //permanent redirect to new URL with active catalog seName and active slug
+                InternalRedirect(httpContext, values, $"/{catalogSeName}/{slug}", true);
                 return true;
             }
 
-            //ensure the catalog sename and slug are the same for the current language
+            //ensure the catalog seName and slug are the same for the current language
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled && values.TryGetValue(NopRoutingDefaults.RouteValue.Language, out var langValue))
             {
                 var store = await _storeContext.GetCurrentStoreAsync();
@@ -227,18 +227,18 @@ namespace Nop.Web.Framework.Mvc.Routing
                 }
             }
 
-            //ensure the specified catalog path is equal to the active catalog sename
+            //ensure the specified catalog path is equal to the active catalog seName
             //we do it here after localization check to avoid double redirect
-            if (!catalogSename.Equals(catalogUrlRecord.Slug, StringComparison.InvariantCultureIgnoreCase))
+            if (!catalogSeName.Equals(catalogUrlRecord.Slug, StringComparison.InvariantCultureIgnoreCase))
             {
-                //permanent redirect to new URL with active catalog sename and active slug
-                InternalRedirect(httpContext, values, $"/{catalogSename}/{slug}", true);
+                //permanent redirect to new URL with active catalog seName and active slug
+                InternalRedirect(httpContext, values, $"/{catalogSeName}/{slug}", true);
                 return true;
             }
 
             //all is ok, so select the appropriate action
             RouteToAction(values, "Product", "ProductDetails", slug,
-                (NopRoutingDefaults.RouteValue.ProductId, urlRecord.EntityId), (NopRoutingDefaults.RouteValue.CatalogSeName, catalogSename));
+                (NopRoutingDefaults.RouteValue.ProductId, urlRecord.EntityId), (NopRoutingDefaults.RouteValue.CatalogSeName, catalogSeName));
             return true;
         }
 
