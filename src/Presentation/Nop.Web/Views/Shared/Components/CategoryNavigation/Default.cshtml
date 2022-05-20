@@ -1,5 +1,7 @@
 ﻿@model CategoryNavigationModel
 
+@using Nop.Core.Domain.Catalog
+
 @functions {
     bool BreadCrumbContainsCurrentCategoryId(CategorySimpleModel category)
     {
@@ -31,7 +33,7 @@
         }
 
         <li class="@liClass">
-            <a href="@Url.RouteUrl("Category", new { SeName = lineModel.Category.SeName })">@lineModel.Category.Name
+            <a href="@(Url.RouteUrl<Category>(new { SeName = lineModel.Category.SeName }))">@lineModel.Category.Name
                 @if (lineModel.Category.NumberOfProducts.HasValue)
                 {
                     <text> </text>@T("Categories.TotalProducts", lineModel.Category.NumberOfProducts.Value)

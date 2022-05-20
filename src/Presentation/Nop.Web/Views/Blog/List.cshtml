@@ -1,4 +1,7 @@
 ﻿@model BlogPostListModel
+
+@using Nop.Core.Domain.Blogs
+
 @{
     Layout = "_ColumnsTwo";
 
@@ -22,11 +25,11 @@
             {
                 if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
                 {
-                @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"))
+                    @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"))
                 }
                 else
                 {
-                @T("Blog")
+                    @T("Blog")
                 }
             }
             else
@@ -43,7 +46,7 @@
                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageBeforePost, additionalData = item })
                 <div class="post">
                     <div class="post-head">
-                        <a class="post-title" href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})">@item.Title</a>
+                        <a class="post-title" href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }))">@item.Title</a>
                         <span class="post-date">@item.CreatedOn.ToString("D")</span>
                     </div>
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageBeforePostBody, additionalData = item })
@@ -72,9 +75,9 @@
                         <div class="buttons">
                             @if (item.AllowComments)
                             {
-                                <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})#comments" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
+                                <a href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }, fragment: "comments"))" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
                             }
-                            <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})" class="read-more">@T("Blog.MoreInfo")</a>
+                            <a href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }))" class="read-more">@T("Blog.MoreInfo")</a>
                         </div>
                     </div>
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageInsidePost, additionalData = item })

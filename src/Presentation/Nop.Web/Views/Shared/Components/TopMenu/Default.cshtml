@@ -1,10 +1,13 @@
 ﻿@model TopMenuModel
 
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Topics
+
 @functions {
     async Task CategoryLine(TopMenuModel.CategoryLineModel lineModel)
     {
         <li>
-            <a href="@Url.RouteUrl("Category", new { SeName = lineModel.Category.SeName })">@lineModel.Category.Name
+            <a href="@(Url.RouteUrl<Category>(new { SeName = lineModel.Category.SeName }))">@lineModel.Category.Name
                 @if (lineModel.Category.NumberOfProducts.HasValue)
                 {
                     <text> </text>@T("Categories.TotalProducts", lineModel.Category.NumberOfProducts.Value)
@@ -65,7 +68,7 @@
     }
     @foreach (var topic in Model.Topics)
     {
-        <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+        <li><a href="@(Url.RouteUrl<Topic>(new { SeName = topic.SeName }))">@topic.Name</a></li>
     }
     @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
     {
@@ -119,7 +122,7 @@
         }
         @foreach (var topic in Model.Topics)
         {
-            <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+            <li><a href="@(Url.RouteUrl<Topic>(new { SeName = topic.SeName }))">@topic.Name</a></li>
         }
         @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
         {

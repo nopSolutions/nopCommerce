@@ -1,5 +1,7 @@
 @model ProductModel
 
+@using Nop.Core.Domain.Catalog
+
 @{
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Products.EditProductDetails").Text;
@@ -17,7 +19,7 @@
             </small>
         </h1>
         <div class="float-right">
-            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info">
+            <button type="button" onclick="javascript:OpenWindow('@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))', 800, 600, true); return false;" class="btn btn-info">
                 <i class="far fa-eye"></i>
                 @T("Admin.Common.Preview")
             </button>
@@ -56,7 +58,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="copyproduct-window-title">@T("Admin.Catalog.Products.Copy")</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <form asp-controller="Product" asp-action="CopyProduct" method="post">
                 <div class="form-horizontal">

@@ -18,9 +18,9 @@ using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Models.News;
 
 namespace Nop.Web.Controllers
@@ -37,6 +37,7 @@ namespace Nop.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly INewsModelFactory _newsModelFactory;
         private readonly INewsService _newsService;
+        private readonly INopUrlHelper _nopUrlHelper;
         private readonly IPermissionService _permissionService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
@@ -58,6 +59,7 @@ namespace Nop.Web.Controllers
             ILocalizationService localizationService,
             INewsModelFactory newsModelFactory,
             INewsService newsService,
+            INopUrlHelper nopUrlHelper,
             IPermissionService permissionService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
@@ -75,6 +77,7 @@ namespace Nop.Web.Controllers
             _localizationService = localizationService;
             _newsModelFactory = newsModelFactory;
             _newsService = newsService;
+            _nopUrlHelper = nopUrlHelper;
             _permissionService = permissionService;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
@@ -116,7 +119,8 @@ namespace Nop.Web.Controllers
             var newsItems = await _newsService.GetAllNewsAsync(languageId, store.Id);
             foreach (var n in newsItems)
             {
-                var newsUrl = Url.RouteUrl("NewsItem", new { SeName = await _urlRecordService.GetSeNameAsync(n, n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.GetCurrentRequestProtocol());
+                var sename = await _urlRecordService.GetSeNameAsync(n, n.LanguageId, ensureTwoPublishedLanguages: false);
+                var newsUrl = await _nopUrlHelper.RouteGenericUrlAsync<NewsItem>(new { SeName = sename }, _webHelper.GetCurrentRequestProtocol());
                 items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), $"urn:store:{store.Id}:news:blog:{n.Id}", n.CreatedOnUtc));
             }
             feed.Items = items;
@@ -155,8 +159,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("NewsItem")]        
-        [FormValueRequired("add-comment")]
+        [HttpPost]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
         {
@@ -214,7 +217,9 @@ namespace Nop.Web.Controllers
                     ? await _localizationService.GetResourceAsync("News.Comments.SuccessfullyAdded")
                     : await _localizationService.GetResourceAsync("News.Comments.SeeAfterApproving");
 
-                return RedirectToRoute("NewsItem", new { SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
+                var sename = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
+                var newsUrl = await _nopUrlHelper.RouteGenericUrlAsync<NewsItem>(new { SeName = sename });
+                return LocalRedirect(newsUrl);
             }
 
             //If we got this far, something failed, redisplay form

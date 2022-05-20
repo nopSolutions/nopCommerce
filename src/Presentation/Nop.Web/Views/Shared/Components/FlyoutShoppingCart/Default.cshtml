@@ -1,4 +1,7 @@
 ﻿@model MiniShoppingCartModel
+
+@using Nop.Core.Domain.Catalog
+
 <div id="flyout-cart" class="flyout-cart">
     <div class="mini-shopping-cart">
         <div class="count">
@@ -21,14 +24,14 @@
                         @if (Model.ShowProductImages)
                         {
                             <div class="picture">
-                                <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.Picture.Title">
+                                <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))" title="@item.Picture.Title">
                                     <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
                                 </a>
                             </div>
                         }
                         <div class="product">
                             <div class="name">
-                                <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                                <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a>
                             </div>
                             @if (!string.IsNullOrEmpty(item.AttributeInfo))
                             {

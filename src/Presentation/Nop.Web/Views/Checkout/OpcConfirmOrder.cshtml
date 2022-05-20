@@ -1,4 +1,7 @@
 ﻿@model CheckoutConfirmModel
+
+@using Nop.Core.Domain.Topics
+
 <div class="checkout-data">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutConfirmTop, additionalData = Model })
     @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning) || Model.Warnings.Count > 0)
@@ -33,7 +36,7 @@
             <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
         </div>
         <div class="terms-of-service">
-            <input id="termsofservice" type="checkbox" name="termsofservice"/>
+            <input id="termsofservice" type="checkbox" name="termsofservice" />
             <label for="termsofservice">@T("Checkout.TermsOfService.IAccept")</label>
             @if (Model.TermsOfServicePopup)
             {
@@ -49,7 +52,7 @@
             }
             else
             {
-                <a class="read" id="read-terms" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a>
+                <a class="read" id="read-terms" href="@(Url.RouteUrl<Topic>(new { SeName = await Html.GetTopicSeNameAsync("conditionsofuse") }))">@T("Checkout.TermsOfService.Read")</a>
             }
         </div>
     }

@@ -18,6 +18,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Domain.Topics;
 using Nop.Core.Events;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
@@ -50,6 +51,7 @@ namespace Nop.Web.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
         private readonly INewsService _newsService;
+        private readonly INopUrlHelper _nopUrlHelper;
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
         private readonly IStaticCacheManager _staticCacheManager;
@@ -79,6 +81,7 @@ namespace Nop.Web.Factories
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             INewsService newsService,
+            INopUrlHelper nopUrlHelper,
             IProductService productService,
             IProductTagService productTagService,
             IStaticCacheManager staticCacheManager,
@@ -104,6 +107,7 @@ namespace Nop.Web.Factories
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
             _newsService = newsService;
+            _nopUrlHelper = nopUrlHelper;
             _productService = productService;
             _productTagService = productTagService;
             _staticCacheManager = staticCacheManager;
@@ -766,10 +770,27 @@ namespace Nop.Web.Factories
             DateTime? dateTimeUpdatedOn = null,
             UpdateFrequency updateFreq = UpdateFrequency.Weekly)
         {
-            var urlHelper = GetUrlHelper();
+            async Task<string> routeUrlAsync(string routeName, object values, string protocol) => routeName switch
+            {
+                var name when name.Equals(nameof(Product), StringComparison.InvariantCultureIgnoreCase)
+                    => await _nopUrlHelper.RouteGenericUrlAsync<Product>(values, protocol),
+                var name when name.Equals(nameof(Category), StringComparison.InvariantCultureIgnoreCase)
+                    => await _nopUrlHelper.RouteGenericUrlAsync<Category>(values, protocol),
+                var name when name.Equals(nameof(Manufacturer), StringComparison.InvariantCultureIgnoreCase)
+                    => await _nopUrlHelper.RouteGenericUrlAsync<Manufacturer>(values, protocol),
+                var name when name.Equals(nameof(BlogPost), StringComparison.InvariantCultureIgnoreCase)
+                    => await _nopUrlHelper.RouteGenericUrlAsync<BlogPost>(values, protocol),
+                var name when name.Equals(nameof(NewsItem), StringComparison.InvariantCultureIgnoreCase)
+                    => await _nopUrlHelper.RouteGenericUrlAsync<NewsItem>(values, protocol),
+                var name when name.Equals(nameof(Topic), StringComparison.InvariantCultureIgnoreCase)
+                    => await _nopUrlHelper.RouteGenericUrlAsync<Topic>(values, protocol),
+                var name when name.Equals(nameof(ProductTag), StringComparison.InvariantCultureIgnoreCase)
+                    => await _nopUrlHelper.RouteGenericUrlAsync<ProductTag>(values, protocol),
+                _ => GetUrlHelper().RouteUrl(routeName, values, protocol)
+            };
 
             //url for current language
-            var url = urlHelper.RouteUrl(routeName,
+            var url = await routeUrlAsync(routeName,
                 getRouteParamsAwait != null ? await getRouteParamsAwait(null) : null,
                 await GetHttpProtocolAsync());
 
@@ -786,7 +807,7 @@ namespace Nop.Web.Factories
             var localizedUrls = await languages
                 .SelectAwait(async lang =>
                 {
-                    var currentUrl = urlHelper.RouteUrl(routeName,
+                    var currentUrl = await routeUrlAsync(routeName,
                         getRouteParamsAwait != null ? await getRouteParamsAwait(lang.Id) : null,
                         await GetHttpProtocolAsync());
 

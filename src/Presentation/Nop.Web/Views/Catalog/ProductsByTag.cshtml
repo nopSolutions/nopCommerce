@@ -1,7 +1,12 @@
 ﻿@model ProductsByTagModel
+
+@using Nop.Core
+@using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Seo
-@inject Nop.Core.IWebHelper webHelper
+
+@inject IWebHelper webHelper
 @inject SeoSettings seoSettings
+
 @{
     Layout = "_ColumnsTwo";
 
@@ -13,7 +18,7 @@
     //canonical URL
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var productsByTagUrl = Url.RouteUrl("ProductsByTag", new { SeName = Model.TagSeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        var productsByTagUrl = Url.RouteUrl<ProductTag>(new { SeName = Model.TagSeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
         NopHtml.AddCanonicalUrlParts(productsByTagUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }

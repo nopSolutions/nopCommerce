@@ -1,8 +1,13 @@
 @model WishlistModel
+
 @using Nop.Core
+@using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Tax
+@using Nop.Core.Domain.Topics
+
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
+
 @{
     Layout = "_ColumnsOne";
 
@@ -126,11 +131,11 @@
                                         @if (Model.ShowProductImages)
                                         {
                                             <td class="product-picture">
-                                                <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                                <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
                                             </td>
                                         }
                                         <td class="product">
-                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" class="product-name">@item.ProductName</a>
+                                            <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))" class="product-name">@item.ProductName</a>
                                             @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                             {
                                                 <div class="attributes">
@@ -151,7 +156,7 @@
                                             }
                                             @if (Model.IsEditable && item.AllowItemEditing)
                                             {
-                                                var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
+                                                var editCartItemUrl = Url.RouteUrl<Product>(new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
                                                 editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
                                                 <div class="edit-item">
                                                     <a href="@editCartItemUrl">@T("Common.Edit")</a>
@@ -230,7 +235,7 @@
                         //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                         //of course, you can modify appropriate locales to include VAT info there
                         <div class="tax-shipping-info">
-                            @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("shippinginfo") }))
+                            @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", (Url.RouteUrl<Topic>(new { SeName = await Html.GetTopicSeNameAsync("shippinginfo") })))
                         </div>
                     }
                     <div class="buttons">

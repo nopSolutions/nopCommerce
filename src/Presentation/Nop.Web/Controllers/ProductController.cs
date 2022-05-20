@@ -25,6 +25,7 @@ using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
@@ -43,6 +44,7 @@ namespace Nop.Web.Controllers
         private readonly IEventPublisher _eventPublisher;
         private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILocalizationService _localizationService;
+        private readonly INopUrlHelper _nopUrlHelper;
         private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -74,6 +76,7 @@ namespace Nop.Web.Controllers
             IEventPublisher eventPublisher,
             IHtmlFormatter htmlFormatter,
             ILocalizationService localizationService,
+            INopUrlHelper nopUrlHelper,
             IOrderService orderService,
             IPermissionService permissionService,
             IProductAttributeParser productAttributeParser,
@@ -101,6 +104,7 @@ namespace Nop.Web.Controllers
             _eventPublisher = eventPublisher;
             _htmlFormatter = htmlFormatter;
             _localizationService = localizationService;
+            _nopUrlHelper = nopUrlHelper;
             _orderService = orderService;
             _permissionService = permissionService;
             _productAttributeParser = productAttributeParser;
@@ -183,26 +187,28 @@ namespace Nop.Web.Controllers
                 if (parentGroupedProduct == null)
                     return RedirectToRoute("Homepage");
 
-                return RedirectToRoutePermanent("Product", new { SeName = await _urlRecordService.GetSeNameAsync(parentGroupedProduct) });
+                var sename = await _urlRecordService.GetSeNameAsync(parentGroupedProduct);
+                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = sename });
+                return LocalRedirectPermanent(productUrl);
             }
 
             //update existing shopping cart or wishlist  item?
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
+                var sename = await _urlRecordService.GetSeNameAsync(product);
+                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = sename });
                 var store = await _storeContext.GetCurrentStoreAsync();
                 var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: store.Id);
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
+                
                 //not found?
                 if (updatecartitem == null)
-                {
-                    return RedirectToRoute("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) });
-                }
+                    return LocalRedirect(productUrl);
+
                 //is it this product?
                 if (product.Id != updatecartitem.ProductId)
-                {
-                    return RedirectToRoute("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) });
-                }
+                    return LocalRedirect(productUrl);
             }
 
             //save as recently viewed

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -18,6 +19,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.Sendinblue.Services
 {
@@ -37,6 +39,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILogger _logger;
+        private readonly INopUrlHelper _nopUrlHelper;
         private readonly IOrderService _orderService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPictureService _pictureService;
@@ -65,6 +68,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ILogger logger,
+            INopUrlHelper nopUrlHelper,
             IOrderService orderService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IPictureService pictureService,
@@ -89,6 +93,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _logger = logger;
+            _nopUrlHelper = nopUrlHelper;
             _orderService = orderService;
             _orderTotalCalculationService = orderTotalCalculationService;
             _pictureService = pictureService;
@@ -179,7 +184,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                                 res = all == "," ? res : all + ", " + res;
                                 return res;
                             }),
-                            url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
+                            url = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
                             image = (await _pictureService.GetPictureUrlAsync(picture)).Url,
                             quantity = item.Quantity,
                             price = (await _shoppingCartService.GetSubTotalAsync(item, true)).subTotal
@@ -288,7 +293,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                             res = all == "," ? res : all + ", " + res;
                             return res;
                         }),
-                        url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
+                        url = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
                         image = (await _pictureService.GetPictureUrlAsync(picture)).Url,
                         quantity = item.Quantity,
                         price = item.PriceInclTax,

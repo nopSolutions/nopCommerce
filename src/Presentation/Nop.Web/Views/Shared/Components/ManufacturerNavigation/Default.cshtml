@@ -1,4 +1,7 @@
 ﻿@model ManufacturerNavigationModel
+
+@using Nop.Core.Domain.Catalog
+
 @if (Model.Manufacturers.Count > 0)
 {
     <div class="block block-manufacturer-navigation">
@@ -9,7 +12,8 @@
             <ul class="list">
                 @foreach (var manufacturer in Model.Manufacturers)
                 {
-                    <li class="@(manufacturer.IsActive ? "active" : "inactive")"><a href="@Url.RouteUrl("Manufacturer", new { SeName = manufacturer.SeName })">@manufacturer.Name</a>
+                    <li class="@(manufacturer.IsActive ? "active" : "inactive")">
+                        <a href="@(Url.RouteUrl<Manufacturer>(new { SeName = manufacturer.SeName }))">@manufacturer.Name</a>
                     </li>
                 }
             </ul>

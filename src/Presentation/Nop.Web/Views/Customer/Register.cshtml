@@ -1,4 +1,7 @@
 ﻿@model RegisterModel
+
+@using Nop.Core.Domain.Topics
+
 @{
     Layout = "_ColumnsOne";
 
@@ -143,11 +146,11 @@
                 </div>
             }
             @if (Model.StreetAddressEnabled ||
-             Model.StreetAddress2Enabled ||
-             Model.ZipPostalCodeEnabled ||
-             Model.CityEnabled ||
-             Model.CountyEnabled ||
-             Model.CountryEnabled)
+                Model.StreetAddress2Enabled ||
+                Model.ZipPostalCodeEnabled ||
+                Model.CityEnabled ||
+                Model.CountyEnabled ||
+                Model.CountryEnabled)
             {
                 <div class="fieldset">
                     <div class="title">
@@ -387,7 +390,7 @@
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-privacyinfo" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("privacyinfo") })">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
+                                    <a class="read" id="read-privacyinfo" href="@(Url.RouteUrl<Topic>(new { SeName = await Html.GetTopicSeNameAsync("privacyinfo") }))">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
                                 }
                             </div>
                         }

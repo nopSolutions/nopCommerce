@@ -8,10 +8,7 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -31,6 +28,7 @@ using Nop.Services.Seo;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Events;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
@@ -45,7 +43,6 @@ namespace Nop.Web.Factories
         private readonly CatalogSettings _catalogSettings;
         private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
         private readonly ForumSettings _forumSettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly ICurrencyService _currencyService;
@@ -55,6 +52,7 @@ namespace Nop.Web.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
+        private readonly INopUrlHelper _nopUrlHelper;
         private readonly IPictureService _pictureService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
@@ -64,7 +62,6 @@ namespace Nop.Web.Factories
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ITopicService _topicService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
@@ -80,7 +77,6 @@ namespace Nop.Web.Factories
             CatalogSettings catalogSettings,
             DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings,
             ForumSettings forumSettings,
-            IActionContextAccessor actionContextAccessor,
             ICategoryService categoryService,
             ICategoryTemplateService categoryTemplateService,
             ICurrencyService currencyService,
@@ -90,6 +86,7 @@ namespace Nop.Web.Factories
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService,
+            INopUrlHelper nopUrlHelper,
             IPictureService pictureService,
             IProductModelFactory productModelFactory,
             IProductService productService,
@@ -99,7 +96,6 @@ namespace Nop.Web.Factories
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             ITopicService topicService,
-            IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
             IWebHelper webHelper,
@@ -111,7 +107,6 @@ namespace Nop.Web.Factories
             _catalogSettings = catalogSettings;
             _displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
             _forumSettings = forumSettings;
-            _actionContextAccessor = actionContextAccessor;
             _categoryService = categoryService;
             _categoryTemplateService = categoryTemplateService;
             _currencyService = currencyService;
@@ -121,6 +116,7 @@ namespace Nop.Web.Factories
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
             _manufacturerTemplateService = manufacturerTemplateService;
+            _nopUrlHelper = nopUrlHelper;
             _pictureService = pictureService;
             _productModelFactory = productModelFactory;
             _productService = productService;
@@ -130,7 +126,6 @@ namespace Nop.Web.Factories
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _topicService = topicService;
-            _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
             _vendorService = vendorService;
             _webHelper = webHelper;
@@ -145,8 +140,6 @@ namespace Nop.Web.Factories
 
         protected virtual CategorySimpleModel GetCategorySimpleModel(XElement elem)
         {
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-
             var model = new CategorySimpleModel
             {
                 Id = int.Parse(elem.XPathSelectElement("Id").Value),
@@ -159,7 +152,7 @@ namespace Nop.Web.Factories
 
                 IncludeInTopMenu = bool.Parse(elem.XPathSelectElement("IncludeInTopMenu").Value),
                 HaveSubCategories = bool.Parse(elem.XPathSelectElement("HaveSubCategories").Value),
-                Route = urlHelper.RouteUrl("Category", new { SeName = elem.XPathSelectElement("SeName").Value })
+                Route = _nopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = elem.XPathSelectElement("SeName").Value }).Result
             };
 
             return model;

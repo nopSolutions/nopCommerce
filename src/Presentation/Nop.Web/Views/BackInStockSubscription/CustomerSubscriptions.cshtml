@@ -1,4 +1,7 @@
 ﻿@model CustomerBackInStockSubscriptionsModel
+
+@using Nop.Core.Domain.Catalog
+
 @{    
     Layout = "_ColumnsTwo";
 
@@ -62,7 +65,7 @@
                                         <input type="checkbox" name="biss@(item.Id)" class="rowcheckbox" />
                                     </td>
                                     <td class="product">
-                                        @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
+                                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.SeName }))">@item.ProductName</a>
                                     </td>
                                 </tr>
                             }

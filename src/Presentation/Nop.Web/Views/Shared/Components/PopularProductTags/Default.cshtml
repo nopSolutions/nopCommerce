@@ -1,4 +1,7 @@
 ﻿@model PopularProductTagsModel
+
+@using Nop.Core.Domain.Catalog
+
 @if (Model.Tags.Count > 0)
 {
     <div class="block block-popular-tags">
@@ -10,7 +13,7 @@
                 <ul>
                     @foreach (var item in Model.Tags)
                     {
-                        <li><a href="@Url.RouteUrl("ProductsByTag", new { item.SeName })" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</a></li>
+                        <li><a href="@(Url.RouteUrl<ProductTag>(new { SeName = item.SeName }))" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</a></li>
                     }
                 </ul>
             </div>

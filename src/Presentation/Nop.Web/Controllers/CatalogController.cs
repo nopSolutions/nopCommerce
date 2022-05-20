@@ -21,6 +21,7 @@ using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
@@ -38,6 +39,7 @@ namespace Nop.Web.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly INopUrlHelper _nopUrlHelper;
         private readonly IPermissionService _permissionService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
@@ -63,6 +65,7 @@ namespace Nop.Web.Controllers
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
+            INopUrlHelper nopUrlHelper,
             IPermissionService permissionService,
             IProductModelFactory productModelFactory,
             IProductService productService,
@@ -84,6 +87,7 @@ namespace Nop.Web.Controllers
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
+            _nopUrlHelper = nopUrlHelper;
             _permissionService = permissionService;
             _productModelFactory = productModelFactory;
             _productService = productService;
@@ -357,7 +361,8 @@ namespace Nop.Web.Controllers
 
             foreach (var product in products)
             {
-                var productUrl = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) }, _webHelper.GetCurrentRequestProtocol());
+                var sename = await _urlRecordService.GetSeNameAsync(product);
+                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = sename }, _webHelper.GetCurrentRequestProtocol());
                 var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
                 var productDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription);
                 var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{store.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);
@@ -426,7 +431,7 @@ namespace Nop.Web.Controllers
                           select new
                           {
                               label = p.Name,
-                              producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
+                              producturl = Url.RouteUrl<Product>(new { SeName = p.SeName }),
                               productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
                               showlinktoresultsearch = showLinkToResultSearch
                           })

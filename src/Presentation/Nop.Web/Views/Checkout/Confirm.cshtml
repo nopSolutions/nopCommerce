@@ -1,4 +1,7 @@
 ﻿@model CheckoutConfirmModel
+
+@using Nop.Core.Domain.Topics
+
 @{
     Layout = "_ColumnsOne";
 
@@ -70,7 +73,7 @@
                             }
                             else
                             {
-                                <a class="read" id="read-terms" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a>
+                                <a class="read" id="read-terms" href="@(Url.RouteUrl<Topic>(new { SeName = await Html.GetTopicSeNameAsync("conditionsofuse") }))">@T("Checkout.TermsOfService.Read")</a>
                             }
                         </div>
                     }

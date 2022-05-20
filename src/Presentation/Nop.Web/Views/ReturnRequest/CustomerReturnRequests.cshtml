@@ -1,5 +1,9 @@
-﻿@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
-@model CustomerReturnRequestsModel
+﻿@model CustomerReturnRequestsModel
+
+@using Nop.Core.Domain.Catalog
+
+@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
+
 @{
     Layout = "_ColumnsTwo";
 
@@ -27,7 +31,7 @@
                 <ul class="details">
                     <li class="product">
                         <label>@T("Account.CustomerReturnRequests.Item")</label>
-                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a>
                         <span>x @item.Quantity</span>
                     </li>
                     <li class="reason">

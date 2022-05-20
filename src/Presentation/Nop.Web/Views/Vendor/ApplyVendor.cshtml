@@ -1,4 +1,7 @@
 ﻿@model ApplyVendorModel
+
+@using Nop.Core.Domain.Topics
+
 @{
     Layout = "_ColumnsOne";
 
@@ -28,13 +31,13 @@
                     <div class="form-fields">
                         <div class="inputs">
                             <label asp-for="Name" asp-postfix=":"></label>
-                            <input asp-for="Name" class="name" placeholder="@T("Vendors.ApplyAccount.Name.Hint")"/>
+                            <input asp-for="Name" class="name" placeholder="@T("Vendors.ApplyAccount.Name.Hint")" />
                             <nop-required />
                             <span asp-validation-for="Name"></span>
                         </div>
                         <div class="inputs">
                             <label asp-for="Email" asp-postfix=":"></label>
-                            <input asp-for="Email" class="name" placeholder="@T("Vendors.ApplyAccount.Email.Hint")"/>
+                            <input asp-for="Email" class="name" placeholder="@T("Vendors.ApplyAccount.Email.Hint")" />
                             <nop-required />
                             <span asp-validation-for="Email"></span>
                         </div>
@@ -44,7 +47,7 @@
                         </div>
                         <div class="inputs">
                             <label>@T("Vendors.ApplyAccount.Picture"):</label>
-                            <input name="uploadedFile" type="file" accept="image/*"/>
+                            <input name="uploadedFile" type="file" accept="image/*" />
                         </div>
                         @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
                         @if (Model.DisplayCaptcha)
@@ -86,7 +89,7 @@
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("VendorTermsOfService") })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                                    <a class="read" id="read-acceptterms" href="@(Url.RouteUrl<Topic>(new { SeName = await Html.GetTopicSeNameAsync("VendorTermsOfService") }))">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
                                 }
                             </div>
                         }
