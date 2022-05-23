@@ -623,13 +623,10 @@ namespace Nop.Web.Controllers
                     //send email
                     await _workflowMessageService.SendCustomerPasswordRecoveryMessageAsync(customer,
                         (await _workContext.GetWorkingLanguageAsync()).Id);
+                }
 
-                    model.Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailHasBeenSent");
-                }
-                else
-                {
-                    model.Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailNotFound");
-                }
+                // ABC: Use the 'email is sent' messaging even if the customer doesn't exist.
+                model.Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailHasBeenSent");
             }
 
             model = await _customerModelFactory.PreparePasswordRecoveryModelAsync(model);
