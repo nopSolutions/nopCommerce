@@ -78,7 +78,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         false);
             }
 
-            //progress of localozation 
+            //progress of localization 
             var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             var progress = await _genericAttributeService.GetAttributeAsync<string>(currentLanguage, NopCommonDefaults.LanguagePackProgressAttribute);
             if (!string.IsNullOrEmpty(progress))
