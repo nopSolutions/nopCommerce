@@ -1877,13 +1877,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 switch (_fileProvider.GetFileExtension(iconsFile.FileName))
                 {
                     case ".ico":
-                        _uploadService.UploadFavicon(iconsFile);
+                        await _uploadService.UploadFaviconAsync(iconsFile);
                         commonSettings.FaviconAndAppIconsHeadCode = string.Format(NopCommonDefaults.SingleFaviconHeadLink, storeScope, iconsFile.FileName);
 
                         break;
 
                     case ".zip":
-                        _uploadService.UploadIconsArchive(iconsFile);
+                        await _uploadService.UploadIconsArchiveAsync(iconsFile);
 
                         var headCodePath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, storeScope), NopCommonDefaults.HeadCodeFileName);
                         if (!_fileProvider.FileExists(headCodePath))
