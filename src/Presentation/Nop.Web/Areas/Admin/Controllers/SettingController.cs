@@ -1845,7 +1845,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                _uploadService.UploadLocalePattern();
+                await _uploadService.UploadLocalePatternAsync();
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.LocalePattern.SuccessUpload"));
             }
             catch (Exception exc)

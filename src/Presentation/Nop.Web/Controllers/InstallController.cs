@@ -259,7 +259,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //upload CLDR
-                    _uploadService.Value.UploadLocalePattern(cultureInfo);
+                    await _uploadService.Value.UploadLocalePatternAsync(cultureInfo);
                 }
 
                 //now resolve installation service
