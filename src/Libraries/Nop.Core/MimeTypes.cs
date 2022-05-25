@@ -6,6 +6,7 @@
     /// </summary>
     public static class MimeTypes
     {
+
         #region application/*
 
         /// <summary>
