@@ -175,6 +175,106 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(catalogSettings, settings => settings.ProductUrlStructureTypeId).Wait();
             }
 
+            //#5261
+            var robotsTxtSettings = settingService.LoadSettingAsync<RobotsTxtSettings>().Result;
+
+            if (!settingService.SettingExistsAsync(robotsTxtSettings, settings => settings.DisallowPaths).Result)
+            {
+                robotsTxtSettings.DisallowPaths.AddRange(new[]
+                {
+                    "/admin",
+                    "/bin/",
+                    "/files/",
+                    "/files/exportimport/",
+                    "/country/getstatesbycountryid",
+                    "/install",
+                    "/setproductreviewhelpfulness",
+                    "/*?*returnUrl="
+                });
+
+                settingService.SaveSettingAsync(robotsTxtSettings, settings => settings.DisallowPaths).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(robotsTxtSettings, settings => settings.LocalizableDisallowPaths).Result)
+            {
+                robotsTxtSettings.LocalizableDisallowPaths.AddRange(new[]
+                {
+                    "/addproducttocart/catalog/",
+                    "/addproducttocart/details/",
+                    "/backinstocksubscriptions/manage",
+                    "/boards/forumsubscriptions",
+                    "/boards/forumwatch",
+                    "/boards/postedit",
+                    "/boards/postdelete",
+                    "/boards/postcreate",
+                    "/boards/topicedit",
+                    "/boards/topicdelete",
+                    "/boards/topiccreate",
+                    "/boards/topicmove",
+                    "/boards/topicwatch",
+                    "/cart$",
+                    "/changecurrency",
+                    "/changelanguage",
+                    "/changetaxtype",
+                    "/checkout",
+                    "/checkout/billingaddress",
+                    "/checkout/completed",
+                    "/checkout/confirm",
+                    "/checkout/shippingaddress",
+                    "/checkout/shippingmethod",
+                    "/checkout/paymentinfo",
+                    "/checkout/paymentmethod",
+                    "/clearcomparelist",
+                    "/compareproducts",
+                    "/compareproducts/add/*",
+                    "/customer/avatar",
+                    "/customer/activation",
+                    "/customer/addresses",
+                    "/customer/changepassword",
+                    "/customer/checkusernameavailability",
+                    "/customer/downloadableproducts",
+                    "/customer/info",
+                    "/customer/productreviews",
+                    "/deletepm",
+                    "/emailwishlist",
+                    "/eucookielawaccept",
+                    "/inboxupdate",
+                    "/newsletter/subscriptionactivation",
+                    "/onepagecheckout",
+                    "/order/history",
+                    "/orderdetails",
+                    "/passwordrecovery/confirm",
+                    "/poll/vote",
+                    "/privatemessages",
+                    "/recentlyviewedproducts",
+                    "/returnrequest",
+                    "/returnrequest/history",
+                    "/rewardpoints/history",
+                    "/search?",
+                    "/sendpm",
+                    "/sentupdate",
+                    "/shoppingcart/*",
+                    "/storeclosed",
+                    "/subscribenewsletter",
+                    "/topic/authenticate",
+                    "/viewpm",
+                    "/uploadfilecheckoutattribute",
+                    "/uploadfileproductattribute",
+                    "/uploadfilereturnrequest",
+                    "/wishlist"
+                });
+
+                settingService.SaveSettingAsync(robotsTxtSettings, settings => settings.LocalizableDisallowPaths).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(robotsTxtSettings, settings => settings.DisallowLanguages).Result) 
+                settingService.SaveSettingAsync(robotsTxtSettings, settings => settings.DisallowLanguages).Wait();
+            
+            if (!settingService.SettingExistsAsync(robotsTxtSettings, settings => settings.AdditionsRules).Result)
+                settingService.SaveSettingAsync(robotsTxtSettings, settings => settings.AdditionsRules).Wait();
+
+            if (!settingService.SettingExistsAsync(robotsTxtSettings, settings => settings.AllowSitemapXml).Result)
+                settingService.SaveSettingAsync(robotsTxtSettings, settings => settings.AllowSitemapXml).Wait();
         }
 
         public override void Down()

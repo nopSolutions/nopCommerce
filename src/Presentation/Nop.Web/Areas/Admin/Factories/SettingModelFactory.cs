@@ -22,6 +22,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Configuration;
 using Nop.Services;
@@ -59,10 +60,12 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
         private readonly INopDataProvider _dataProvider;
+        private readonly INopFileProvider _fileProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGdprService _gdprService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
         private readonly IReturnRequestModelFactory _returnRequestModelFactory;
@@ -87,10 +90,12 @@ namespace Nop.Web.Areas.Admin.Factories
             ICurrencyService currencyService,
             ICustomerAttributeModelFactory customerAttributeModelFactory,
             INopDataProvider dataProvider,
+            INopFileProvider fileProvider,
             IDateTimeHelper dateTimeHelper,
             IGdprService gdprService,
             ILocalizedModelFactory localizedModelFactory,
             IGenericAttributeService genericAttributeService,
+            ILanguageService languageService,
             ILocalizationService localizationService,
             IPictureService pictureService,
             IReturnRequestModelFactory returnRequestModelFactory,
@@ -111,10 +116,12 @@ namespace Nop.Web.Areas.Admin.Factories
             _currencyService = currencyService;
             _customerAttributeModelFactory = customerAttributeModelFactory;
             _dataProvider = dataProvider;
+            _fileProvider = fileProvider;
             _dateTimeHelper = dateTimeHelper;
             _gdprService = gdprService;
             _localizedModelFactory = localizedModelFactory;
             _genericAttributeService = genericAttributeService;
+            _languageService = languageService;
             _localizationService = localizationService;
             _pictureService = pictureService;
             _returnRequestModelFactory = returnRequestModelFactory;
@@ -793,6 +800,60 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
+
+        /// <summary>
+        /// Prepare robots.txt settings model
+        /// </summary>
+        /// <param name="model">robots.txt model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the robots.txt settings model
+        /// </returns>
+        protected virtual async Task<RobotsTxtSettingsModel> PrepareRobotsTxtSettingsModelAsync(RobotsTxtSettingsModel model = null)
+        {
+            var additionsInstruction =
+                string.Format(
+                    await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsInstruction"),
+                    RobotsTxtDefaults.RobotsAdditionsFileName);
+
+            if (_fileProvider.FileExists(_fileProvider.Combine(_fileProvider.MapPath("~/wwwroot"), RobotsTxtDefaults.RobotsCustomFileName)))
+                return new RobotsTxtSettingsModel { CustomFileExists = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.RobotsCustomFileExists"), RobotsTxtDefaults.RobotsCustomFileName), AdditionsInstruction = additionsInstruction };
+
+            //load settings for a chosen store scope
+            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var robotsTxtSettings = await _settingService.LoadSettingAsync<RobotsTxtSettings>(storeId);
+            
+            model ??= new RobotsTxtSettingsModel
+            {
+                AllowSitemapXml = robotsTxtSettings.AllowSitemapXml,
+                DisallowPaths = string.Join(Environment.NewLine, robotsTxtSettings.DisallowPaths),
+                LocalizableDisallowPaths =
+                    string.Join(Environment.NewLine, robotsTxtSettings.LocalizableDisallowPaths),
+                DisallowLanguages = robotsTxtSettings.DisallowLanguages.ToList(),
+                AdditionsRules = string.Join(Environment.NewLine, robotsTxtSettings.AdditionsRules)
+            };
+
+            if (!model.AvailableLanguages.Any())
+                model.AvailableLanguages.AddRange((await _languageService.GetAllLanguagesAsync(storeId: storeId)).Select(p => new SelectListItem
+                {
+                    Value = p.Id.ToString(),
+                    Text = p.Name
+                }));
+
+            model.AdditionsInstruction = additionsInstruction;
+
+            if (storeId <= 0)
+                return model;
+
+            model.AdditionsRules_OverrideForStore = await _settingService.SettingExistsAsync(robotsTxtSettings, x => x.AdditionsRules, storeId);
+            model.AllowSitemapXml_OverrideForStore = await _settingService.SettingExistsAsync(robotsTxtSettings, x => x.AllowSitemapXml, storeId);
+            model.DisallowLanguages_OverrideForStore = await _settingService.SettingExistsAsync(robotsTxtSettings, x => x.DisallowLanguages, storeId);
+            model.DisallowPaths_OverrideForStore = await _settingService.SettingExistsAsync(robotsTxtSettings, x => x.DisallowPaths, storeId);
+            model.LocalizableDisallowPaths_OverrideForStore = await _settingService.SettingExistsAsync(robotsTxtSettings, x => x.LocalizableDisallowPaths, storeId);
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -1666,6 +1727,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare security settings model
             model.SecuritySettings = await PrepareSecuritySettingsModelAsync();
+
+            //prepare robots.txt settings model
+            model.RobotsTxtSettings = await PrepareRobotsTxtSettingsModelAsync();
 
             //prepare captcha settings model
             model.CaptchaSettings = await PrepareCaptchaSettingsModelAsync();

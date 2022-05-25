@@ -7191,6 +7191,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf">
     <Value>Pdf</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.RobotsTxt">
+    <Value>robots.txt</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Security">
     <Value>Security</Value>
   </LocaleResource>
@@ -7676,6 +7679,42 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaV3ScoreThreshold.Hint">
     <Value>Select a reCAPTCHA v3 score threshold (1.0 is very likely a good interaction, 0.0 is very likely a bot). By default, you can use a threshold of 0.5.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsInstruction">
+    <Value><![CDATA[You also may extend the robots.txt data by adding the {0} file on the wwwroot directory of your site.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules">
+    <Value>Additions rules</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules.Hint">
+    <Value>Put here an additional rules for robots.txt file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAllowSitemapXml">
+    <Value>Allow sitemap.xml</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAllowSitemapXml.Hint">
+    <Value>Check to allow robots use the sitemap.xml file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsCustomFileExists">
+    <Value>robots.txt file data overridden by {0} file in site root.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages">
+    <Value>Disallow languages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages.Hint">
+    <Value>The list of languages which prohibit to use by robots</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsDisallowPaths">
+    <Value>Disallow paths</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsDisallowPaths.Hint">
+    <Value>The list of paths which prohibit to use by robots</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsLocalizableDisallowPaths">
+    <Value>Localizable disallow paths</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsLocalizableDisallowPaths.Hint">
+    <Value>The list of localizable paths which prohibit to use by robots</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled">
     <Value>SEO friendly URLs with multiple languages enabled</Value>

@@ -75,6 +75,7 @@ namespace Nop.Web.Factories
         private readonly LocalizationSettings _localizationSettings;
         private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
+        private readonly RobotsTxtSettings _robotsTxtSettings;
         private readonly SitemapSettings _sitemapSettings;
         private readonly SitemapXmlSettings _sitemapXmlSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -114,6 +115,7 @@ namespace Nop.Web.Factories
             LocalizationSettings localizationSettings,
             MediaSettings mediaSettings,
             NewsSettings newsSettings,
+            RobotsTxtSettings robotsTxtSettings,
             SitemapSettings sitemapSettings,
             SitemapXmlSettings sitemapXmlSettings,
             StoreInformationSettings storeInformationSettings,
@@ -149,6 +151,7 @@ namespace Nop.Web.Factories
             _mediaSettings = mediaSettings;
             _localizationSettings = localizationSettings;
             _newsSettings = newsSettings;
+            _robotsTxtSettings = robotsTxtSettings;
             _sitemapSettings = sitemapSettings;
             _sitemapXmlSettings = sitemapXmlSettings;
             _storeInformationSettings = storeInformationSettings;
@@ -589,7 +592,7 @@ namespace Nop.Web.Factories
             var sb = new StringBuilder();
 
             //if robots.custom.txt exists, let's use it instead of hard-coded data below
-            var robotsFilePath = _fileProvider.Combine(_fileProvider.MapPath("~/"), "robots.custom.txt");
+            var robotsFilePath = _fileProvider.Combine(_fileProvider.MapPath("~/wwwroot"), RobotsTxtDefaults.RobotsCustomFileName);
             if (_fileProvider.FileExists(robotsFilePath))
             {
                 //the robots.txt file exists
@@ -598,132 +601,45 @@ namespace Nop.Web.Factories
             }
             else
             {
-                //doesn't exist. Let's generate it (default behavior)
+                sb.AppendLine("User-agent: *");
 
-                var disallowPaths = new List<string>
-                {
-                    "/admin",
-                    "/bin/",
-                    "/files/",
-                    "/files/exportimport/",
-                    "/country/getstatesbycountryid",
-                    "/install",
-                    "/setproductreviewhelpfulness",
-                    "/*?*returnUrl="
-                };
-                var localizableDisallowPaths = new List<string>
-                {
-                    "/addproducttocart/catalog/",
-                    "/addproducttocart/details/",
-                    "/backinstocksubscriptions/manage",
-                    "/boards/forumsubscriptions",
-                    "/boards/forumwatch",
-                    "/boards/postedit",
-                    "/boards/postdelete",
-                    "/boards/postcreate",
-                    "/boards/topicedit",
-                    "/boards/topicdelete",
-                    "/boards/topiccreate",
-                    "/boards/topicmove",
-                    "/boards/topicwatch",
-                    "/cart$",
-                    "/changecurrency",
-                    "/changelanguage",
-                    "/changetaxtype",
-                    "/checkout",
-                    "/checkout/billingaddress",
-                    "/checkout/completed",
-                    "/checkout/confirm",
-                    "/checkout/shippingaddress",
-                    "/checkout/shippingmethod",
-                    "/checkout/paymentinfo",
-                    "/checkout/paymentmethod",
-                    "/clearcomparelist",
-                    "/compareproducts",
-                    "/compareproducts/add/*",
-                    "/customer/avatar",
-                    "/customer/activation",
-                    "/customer/addresses",
-                    "/customer/changepassword",
-                    "/customer/checkusernameavailability",
-                    "/customer/downloadableproducts",
-                    "/customer/info",
-                    "/customer/productreviews",
-                    "/deletepm",
-                    "/emailwishlist",
-                    "/eucookielawaccept",
-                    "/inboxupdate",
-                    "/newsletter/subscriptionactivation",
-                    "/onepagecheckout",
-                    "/order/history",
-                    "/orderdetails",
-                    "/passwordrecovery/confirm",
-                    "/poll/vote",
-                    "/privatemessages",
-                    "/recentlyviewedproducts",
-                    "/returnrequest",
-                    "/returnrequest/history",
-                    "/rewardpoints/history",
-                    "/search?",
-                    "/sendpm",
-                    "/sentupdate",
-                    "/shoppingcart/*",
-                    "/storeclosed",
-                    "/subscribenewsletter",
-                    "/topic/authenticate",
-                    "/viewpm",
-                    "/uploadfilecheckoutattribute",
-                    "/uploadfileproductattribute",
-                    "/uploadfilereturnrequest",
-                    "/wishlist",
-                };
-
-                const string newLine = "\r\n"; //Environment.NewLine
-                sb.Append("User-agent: *");
-                sb.Append(newLine);
-
-                //sitemaps
-                if (_sitemapXmlSettings.SitemapXmlEnabled)
-                {
-                    sb.AppendFormat("Sitemap: {0}sitemap.xml", _webHelper.GetStoreLocation());
-                    sb.Append(newLine);
-                }
+                //sitemap
+                if (_sitemapXmlSettings.SitemapXmlEnabled && _robotsTxtSettings.AllowSitemapXml) 
+                    sb.AppendLine($"Sitemap: {_webHelper.GetStoreLocation()}sitemap.xml");
+                else
+                    sb.AppendLine("Disallow: /sitemap.xml");
 
                 //host
-                sb.AppendFormat("Host: {0}", _webHelper.GetStoreLocation());
-                sb.Append(newLine);
+                sb.AppendLine($"Host: {_webHelper.GetStoreLocation()}");
 
                 //usual paths
-                foreach (var path in disallowPaths)
-                {
-                    sb.AppendFormat("Disallow: {0}", path);
-                    sb.Append(newLine);
-                }
+                foreach (var path in _robotsTxtSettings.DisallowPaths) 
+                    sb.AppendLine($"Disallow: {path}");
+
                 //localizable paths (without SEO code)
-                foreach (var path in localizableDisallowPaths)
-                {
-                    sb.AppendFormat("Disallow: {0}", path);
-                    sb.Append(newLine);
-                }
+                foreach (var path in _robotsTxtSettings.LocalizableDisallowPaths)
+                    sb.AppendLine($"Disallow: {path}");
 
                 if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                 {
                     var store = await _storeContext.GetCurrentStoreAsync();
                     //URLs are localizable. Append SEO code
                     foreach (var language in await _languageService.GetAllLanguagesAsync(storeId: store.Id))
-                    {
-                        foreach (var path in localizableDisallowPaths)
-                        {
-                            sb.AppendFormat("Disallow: /{0}{1}", language.UniqueSeoCode, path);
-                            sb.Append(newLine);
-                        }
-                    }
+                        if (_robotsTxtSettings.DisallowLanguages.Contains(language.Id))
+                            sb.AppendLine($"Disallow: /{language.UniqueSeoCode}*");
+                        else
+                            foreach (var path in _robotsTxtSettings.LocalizableDisallowPaths)
+                                sb.AppendLine($"Disallow: /{language.UniqueSeoCode}{path}");
                 }
 
+                foreach (var additionsRule in _robotsTxtSettings.AdditionsRules)
+                    sb.Append(additionsRule);
+
                 //load and add robots.txt additions to the end of file.
-                var robotsAdditionsFile = _fileProvider.Combine(_fileProvider.MapPath("~/"), "robots.additions.txt");
+                var robotsAdditionsFile = _fileProvider.Combine(_fileProvider.MapPath("~/wwwroot"), RobotsTxtDefaults.RobotsAdditionsFileName);
                 if (_fileProvider.FileExists(robotsAdditionsFile))
                 {
+                    sb.AppendLine();
                     var robotsFileContent = await _fileProvider.ReadAllTextAsync(robotsAdditionsFile, Encoding.UTF8);
                     sb.Append(robotsFileContent);
                 }
