@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Tax;
 
@@ -238,6 +239,12 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the shipping address identifier
         /// </summary>
         public int? ShippingAddressId { get; set; }
+        
+        /// <summary>
+        /// Welcome Message 
+        /// </summary>
+        [NotMapped]
+        public string WelcomeMessage { get; set; }
 
         #region Custom properties
 

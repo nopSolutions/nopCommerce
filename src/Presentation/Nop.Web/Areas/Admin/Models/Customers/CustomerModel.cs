@@ -252,6 +252,11 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         public CustomerAssociatedExternalAuthRecordsSearchModel CustomerAssociatedExternalAuthRecordsSearchModel { get; set; }
 
+        // The NopResourceDisplayName provides the "key" used during localization
+        // WelcomeMessage display parameter
+        [NopResourceDisplayName("Admin.Customers.Customers.WelcomeMessage")]
+        public string WelcomeMessage { get; set; }
+        
         #endregion
 
         #region Nested classes
