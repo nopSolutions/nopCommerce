@@ -42,6 +42,8 @@ namespace Nop.Services.Catalog
         protected readonly IRepository<CrossSellProduct> _crossSellProductRepository;
         protected readonly IRepository<DiscountProductMapping> _discountProductMappingRepository;
         protected readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
+        protected readonly IRepository<LocalizedGroup> _localizedGroupRepository;
+        protected readonly IRepository<LocalizedLocalGroup> _localizedLocalGroupRepository;
         protected readonly IRepository<Manufacturer> _manufacturerRepository;
         protected readonly IRepository<Product> _productRepository;
         protected readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
@@ -84,6 +86,8 @@ namespace Nop.Services.Catalog
             IRepository<CrossSellProduct> crossSellProductRepository,
             IRepository<DiscountProductMapping> discountProductMappingRepository,
             IRepository<LocalizedProperty> localizedPropertyRepository,
+            IRepository<LocalizedGroup> localizedGroupRepository,
+            IRepository<LocalizedLocalGroup> localizedLocalGroupRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
             IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
@@ -122,6 +126,8 @@ namespace Nop.Services.Catalog
             _crossSellProductRepository = crossSellProductRepository;
             _discountProductMappingRepository = discountProductMappingRepository;
             _localizedPropertyRepository = localizedPropertyRepository;
+            _localizedGroupRepository = localizedGroupRepository;
+            _localizedLocalGroupRepository = localizedLocalGroupRepository;
             _manufacturerRepository = manufacturerRepository;
             _productRepository = productRepository;
             _productAttributeCombinationRepository = productAttributeCombinationRepository;
@@ -164,7 +170,7 @@ namespace Nop.Services.Catalog
 
             if (!isMinimumStockReached && !_catalogSettings.PublishBackProductWhenCancellingOrders)
                 return;
-            
+
             switch (product.LowStockActivity)
             {
                 case LowStockActivity.DisableBuyButton:
@@ -344,7 +350,7 @@ namespace Nop.Services.Catalog
 
             var stockMessage = string.Empty;
             var stockQuantity = await GetTotalStockQuantityAsync(product);
-            
+
             if (stockQuantity > 0)
             {
                 if (product.MinStockQuantity >= stockQuantity && product.LowStockActivity == LowStockActivity.Nothing)
@@ -497,12 +503,12 @@ namespace Nop.Services.Catalog
                 return new List<CrossSellProduct>();
 
             var query = from csp in _crossSellProductRepository.Table
-                join p in _productRepository.Table on csp.ProductId2 equals p.Id
-                where productIds.Contains(csp.ProductId1) &&
-                      !p.Deleted &&
-                      (showHidden || p.Published)
-                orderby csp.Id
-                select csp;
+                        join p in _productRepository.Table on csp.ProductId2 equals p.Id
+                        where productIds.Contains(csp.ProductId1) &&
+                              !p.Deleted &&
+                              (showHidden || p.Published)
+                        orderby csp.Id
+                        select csp;
             var crossSellProducts = await query.ToListAsync();
 
             return crossSellProducts;
@@ -917,15 +923,25 @@ namespace Nop.Services.Catalog
 
                 if (searchLocalizedValue)
                 {
+                    var localizeLocalGroupProductKey = _localizedGroupRepository.Table.Where(x => x.LocaleKeyGroup == nameof(Product)).First();
+                    var localizeLocalProductKey = _localizedLocalGroupRepository.Table.Where(x => x.LocaleKeyGroupId == localizeLocalGroupProductKey.Id)
+                                                                                      .Where(x => x.LocaleKey == nameof(Product.Name))
+                                                                                      .First();
+
+                    var localizeLocalGroupDescriptionKey = _localizedGroupRepository.Table.Where(x => x.LocaleKeyGroup == nameof(Product)).First();
+                    var localizeLocalDescriptionKey = _localizedLocalGroupRepository.Table.Where(x => x.LocaleKeyGroupId == localizeLocalGroupDescriptionKey.Id)
+                                                                                          .Where(x => x.LocaleKey == nameof(Product.ShortDescription))
+                                                                                          .First();
+
                     productsByKeywords = productsByKeywords.Union(
                         from lp in _localizedPropertyRepository.Table
-                        let checkName = lp.LocaleKey == nameof(Product.Name) &&
+                        let checkName = lp.LocaleKeyId == localizeLocalProductKey.Id &&
                                         lp.LocaleValue.Contains(keywords)
                         let checkShortDesc = searchDescriptions &&
-                                        lp.LocaleKey == nameof(Product.ShortDescription) &&
+                                        lp.LocaleKeyId == localizeLocalDescriptionKey.Id &&
                                         lp.LocaleValue.Contains(keywords)
                         where
-                            lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId && (checkName || checkShortDesc)
+                            lp.LocaleKeyGroupId == localizeLocalProductKey.LocaleKeyGroupId && lp.LanguageId == languageId && (checkName || checkShortDesc)
 
                         select lp.EntityId);
                 }
@@ -951,11 +967,16 @@ namespace Nop.Services.Catalog
 
                     if (searchLocalizedValue)
                     {
+                        var localizeLocalGroupCategoryKey = _localizedGroupRepository.Table.Where(x => x.LocaleKeyGroup == nameof(Category)).First();
+                        var localizeLocalCategoryKey = _localizedLocalGroupRepository.Table.Where(x => x.LocaleKeyGroupId == localizeLocalGroupCategoryKey.Id)
+                                                                                           .Where(x => x.LocaleKey == nameof(Category.Name))
+                                                                                           .First();
+
                         productsByKeywords = productsByKeywords.Union(
                         from pc in _productCategoryRepository.Table
                         join lp in _localizedPropertyRepository.Table on pc.CategoryId equals lp.EntityId
-                        where lp.LocaleKeyGroup == nameof(Category) &&
-                              lp.LocaleKey == nameof(Category.Name) &&
+                        where lp.LocaleKeyGroupId == localizeLocalCategoryKey.LocaleKeyGroupId &&
+                              lp.LocaleKeyId == localizeLocalCategoryKey.Id &&
                               lp.LocaleValue.Contains(keywords) &&
                               lp.LanguageId == languageId
                         select pc.ProductId);
@@ -974,11 +995,16 @@ namespace Nop.Services.Catalog
 
                     if (searchLocalizedValue)
                     {
+                        var localizeLocalGroupManufacturerKey = _localizedGroupRepository.Table.Where(x => x.LocaleKeyGroup == nameof(Manufacturer)).First();
+                        var localizeLocalManufacturerKey = _localizedLocalGroupRepository.Table.Where(x => x.LocaleKeyGroupId == localizeLocalGroupManufacturerKey.Id)
+                                                                                               .Where(x => x.LocaleKey == nameof(Manufacturer.Name))
+                                                                                               .First();
+
                         productsByKeywords = productsByKeywords.Union(
                         from pm in _productManufacturerRepository.Table
                         join lp in _localizedPropertyRepository.Table on pm.ManufacturerId equals lp.EntityId
-                        where lp.LocaleKeyGroup == nameof(Manufacturer) &&
-                              lp.LocaleKey == nameof(Manufacturer.Name) &&
+                        where lp.LocaleKeyGroupId == localizeLocalManufacturerKey.LocaleKeyGroupId &&
+                              lp.LocaleKeyId == localizeLocalManufacturerKey.Id &&
                               lp.LocaleValue.Contains(keywords) &&
                               lp.LanguageId == languageId
                         select pm.ProductId);
@@ -996,11 +1022,16 @@ namespace Nop.Services.Catalog
 
                     if (searchLocalizedValue)
                     {
+                        var localizeLocalGroupProductTagKey = _localizedGroupRepository.Table.Where(x => x.LocaleKeyGroup == nameof(ProductTag)).First();
+                        var localizeLocalProductTagKey = _localizedLocalGroupRepository.Table.Where(x => x.LocaleKeyGroupId == localizeLocalGroupProductTagKey.Id)
+                                                                                               .Where(x => x.LocaleKey == nameof(ProductTag.Name))
+                                                                                               .First();
+
                         productsByKeywords = productsByKeywords.Union(
                         from pptm in _productTagMappingRepository.Table
                         join lp in _localizedPropertyRepository.Table on pptm.ProductTagId equals lp.EntityId
-                        where lp.LocaleKeyGroup == nameof(ProductTag) &&
-                              lp.LocaleKey == nameof(ProductTag.Name) &&
+                        where lp.LocaleKeyGroupId == localizeLocalProductTagKey.LocaleKeyGroupId &&
+                              lp.LocaleKeyId == localizeLocalProductTagKey.Id &&
                               lp.LocaleValue.Contains(keywords) &&
                               lp.LanguageId == languageId
                         select pptm.ProductId);
@@ -1025,7 +1056,8 @@ namespace Nop.Services.Catalog
                         where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
                             categoryIds.Contains(pc.CategoryId)
                         group pc by pc.ProductId into pc
-                        select new { 
+                        select new
+                        {
                             ProductId = pc.Key,
                             DisplayOrder = pc.First().DisplayOrder
                         };
@@ -1050,7 +1082,8 @@ namespace Nop.Services.Catalog
                         where (!excludeFeaturedProducts || !pm.IsFeaturedProduct) &&
                             manufacturerIds.Contains(pm.ManufacturerId)
                         group pm by pm.ProductId into pm
-                        select new { 
+                        select new
+                        {
                             ProductId = pm.Key,
                             DisplayOrder = pm.First().DisplayOrder
                         };
@@ -1095,8 +1128,12 @@ namespace Nop.Services.Catalog
                         select p;
                 }
             }
-            
-            return await productsQuery.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy).ToPagedListAsync(pageIndex, pageSize);
+
+            return await productsQuery.OrderBy(_localizedPropertyRepository,
+                                               _localizedGroupRepository,
+                                               _localizedLocalGroupRepository,
+                                               await _workContext.GetWorkingLanguageAsync(),
+                                               orderBy).ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>

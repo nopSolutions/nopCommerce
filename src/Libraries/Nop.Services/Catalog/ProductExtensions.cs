@@ -19,43 +19,54 @@ namespace Nop.Services.Catalog
         /// If <paramref name="orderBy"/> is set to <c>Position</c> and passed <paramref name="productsQuery"/> is
         /// ordered sorting rule will be skipped
         /// </remarks>
-        public static IQueryable<Product> OrderBy(this IQueryable<Product> productsQuery, IRepository<LocalizedProperty> localizedPropertyRepository, Language currentLanguage, ProductSortingEnum orderBy)
+        public static IQueryable<Product> OrderBy(this IQueryable<Product> productsQuery,
+                                                  IRepository<LocalizedProperty> localizedPropertyRepository,
+                                                  IRepository<LocalizedGroup> localizedGroupRepository,
+                                                  IRepository<LocalizedLocalGroup> localizedLocalGroupRepository,
+                                                  Language currentLanguage,
+                                                  ProductSortingEnum orderBy)
         {
             if (orderBy == ProductSortingEnum.NameAsc || orderBy == ProductSortingEnum.NameDesc)
             {
                 var currentLanguageId = currentLanguage.Id;
-                
+
+
+                var localizedLocalGroupProductKey = localizedGroupRepository.Table.Where(x => x.LocaleKeyGroup == nameof(Product)).First();
+                var localizedLocalProductKey = localizedLocalGroupRepository.Table.Where(x => x.LocaleKeyGroupId == localizedLocalGroupProductKey.Id)
+                                                                                  .Where(x => x.LocaleKey == nameof(Product.Name))
+                                                                                  .First();
+
                 var query =
                     from product in productsQuery
                     join localizedProperty in localizedPropertyRepository.Table on new
-                        {
-                            product.Id,
-                            languageId = currentLanguageId,
-                            keyGroup = nameof(Product),
-                            key = nameof(Product.Name)
-                        }
+                    {
+                        Id = product.Id,
+                        languageId = currentLanguageId,
+                        keyGroup = localizedLocalProductKey.LocaleKeyGroupId,
+                        key = localizedLocalProductKey.Id
+                    }
                         equals new
                         {
                             Id = localizedProperty.EntityId,
                             languageId = localizedProperty.LanguageId,
-                            keyGroup = localizedProperty.LocaleKeyGroup,
-                            key = localizedProperty.LocaleKey
+                            keyGroup = localizedProperty.LocaleKeyGroupId,
+                            key = localizedProperty.LocaleKeyId
                         } into localizedProperties
                     from localizedProperty in localizedProperties.DefaultIfEmpty(new LocalizedProperty { LocaleValue = product.Name })
                     select new { localizedProperty, product };
 
                 if (orderBy == ProductSortingEnum.NameAsc)
                     productsQuery = from item in query
-                        orderby item.localizedProperty.LocaleValue, item.product.Name
-                        select item.product;
+                                    orderby item.localizedProperty.LocaleValue, item.product.Name
+                                    select item.product;
                 else
                     productsQuery = from item in query
-                        orderby item.localizedProperty.LocaleValue descending, item.product.Name descending
-                        select item.product;
+                                    orderby item.localizedProperty.LocaleValue descending, item.product.Name descending
+                                    select item.product;
 
                 return productsQuery;
             }
-            
+
             return orderBy switch
             {
                 ProductSortingEnum.PriceAsc => productsQuery.OrderBy(p => p.Price),

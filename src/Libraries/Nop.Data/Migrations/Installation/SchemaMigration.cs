@@ -91,6 +91,8 @@ namespace Nop.Data.Migrations.Installation
             Create.TableFor<StoreMapping>();
             Create.TableFor<LocaleStringResource>();
             Create.TableFor<LocalizedProperty>();
+            Create.TableFor<LocalizedGroup>();
+            Create.TableFor<LocalizedLocalGroup>();
             Create.TableFor<BlogPost>();
             Create.TableFor<BlogComment>();
             Create.TableFor<Category>();

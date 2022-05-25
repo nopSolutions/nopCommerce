@@ -20,6 +20,8 @@ namespace Nop.Services.Localization
         #region Fields
 
         private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
+        private readonly IRepository<LocalizedGroup> _localizedGroupRepository;
+        private readonly IRepository<LocalizedLocalGroup> _localizedLocalGroupRepository;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly LocalizationSettings _localizationSettings;
 
@@ -28,10 +30,14 @@ namespace Nop.Services.Localization
         #region Ctor
 
         public LocalizedEntityService(IRepository<LocalizedProperty> localizedPropertyRepository,
-            IStaticCacheManager staticCacheManager,
-            LocalizationSettings localizationSettings)
+                                      IRepository<LocalizedGroup> localizedGroupRepository,
+                                      IRepository<LocalizedLocalGroup> localizedLocalGroupRepository,
+                                      IStaticCacheManager staticCacheManager,
+                                      LocalizationSettings localizationSettings)
         {
             _localizedPropertyRepository = localizedPropertyRepository;
+            _localizedGroupRepository = localizedGroupRepository;
+            _localizedLocalGroupRepository = localizedLocalGroupRepository;
             _staticCacheManager = staticCacheManager;
             _localizationSettings = localizationSettings;
         }
@@ -54,10 +60,12 @@ namespace Nop.Services.Localization
             if (entityId == 0 || string.IsNullOrEmpty(localeKeyGroup))
                 return new List<LocalizedProperty>();
 
+            var localizedLocalGroup = await SaveLocalizedGroupOrGetValueAsync(localeKeyGroup);
+
             var query = from lp in _localizedPropertyRepository.Table
                         orderby lp.Id
                         where lp.EntityId == entityId &&
-                              lp.LocaleKeyGroup == localeKeyGroup
+                              lp.LocaleKeyGroupId == localizedLocalGroup.Id
                         select lp;
 
             var props = await query.ToListAsync();
@@ -77,7 +85,7 @@ namespace Nop.Services.Localization
             return await _localizedPropertyRepository.GetAllAsync(query =>
             {
                 return from lp in query
-                    select lp;
+                       select lp;
             }, cache => default);
         }
 
@@ -139,12 +147,16 @@ namespace Nop.Services.Localization
                     //gradual loading
                     : _localizedPropertyRepository.Table;
 
+                var localizedLocalGroup = await SaveLocalizedGroupOrGetValueAsync(localeKeyGroup);
+                var localizedLocal = await SaveLocalizedLocalGroupOrGetValueAsync(localizedLocalGroup.Id, localeKey);
+
+
                 var query = from lp in source
-                    where lp.LanguageId == languageId &&
-                          lp.EntityId == entityId &&
-                          lp.LocaleKeyGroup == localeKeyGroup &&
-                          lp.LocaleKey == localeKey
-                    select lp.LocaleValue;
+                            where lp.LanguageId == languageId &&
+                                  lp.EntityId == entityId &&
+                                  lp.LocaleKeyGroupId == localizedLocal.LocaleKeyGroupId &&
+                                  lp.LocaleKeyId == localizedLocal.Id
+                            select lp.LocaleValue;
 
                 //little hack here. nulls aren't cacheable so set it to ""
                 var localeValue = query.FirstOrDefault() ?? string.Empty;
@@ -210,9 +222,11 @@ namespace Nop.Services.Localization
             var localeKeyGroup = entity.GetType().Name;
             var localeKey = propInfo.Name;
 
+            var localizedLocalGroup = await SaveLocalizedGroupOrGetValueAsync(localeKeyGroup);
+            var localizedLocal = await SaveLocalizedLocalGroupOrGetValueAsync(localizedLocalGroup.Id, localeKey);
+
             var props = await GetLocalizedPropertiesAsync(entity.Id, localeKeyGroup);
-            var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
-                lp.LocaleKey.Equals(localeKey, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
+            var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId && lp.LocaleKeyId == localizedLocal.Id); //should be culture invariant
 
             var localeValueStr = CommonHelper.To<string>(localeValue);
 
@@ -240,12 +254,70 @@ namespace Nop.Services.Localization
                 {
                     EntityId = entity.Id,
                     LanguageId = languageId,
-                    LocaleKey = localeKey,
-                    LocaleKeyGroup = localeKeyGroup,
+                    LocaleKeyId = localizedLocal.Id,
+                    LocaleKeyGroupId = localizedLocal.LocaleKeyGroupId,
                     LocaleValue = localeValueStr
                 };
                 await InsertLocalizedPropertyAsync(prop);
             }
+        }
+
+
+        private async Task<LocalizedLocalGroup> SaveLocalizedLocalGroupOrGetValueAsync(int localeKeyGroupId, string localeKey)
+        {
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedLocalGroupPropertyCacheKey, localeKeyGroupId, localeKey);
+
+            return await _staticCacheManager.GetAsync(key, async () =>
+            {
+                var query = from lp in _localizedLocalGroupRepository.Table
+                            where lp.LocaleKeyGroupId == localeKeyGroupId &&
+                                  lp.LocaleKey == localeKey
+                            select lp;
+
+                var localeValue = query.FirstOrDefault();
+                if (localeValue == null)
+                {
+                    await _localizedLocalGroupRepository.InsertAsync(new LocalizedLocalGroup()
+                    {
+                        LocaleKey = localeKey,
+                        LocaleKeyGroupId = localeKeyGroupId
+                    });
+                    query = from lp in _localizedLocalGroupRepository.Table
+                            where lp.LocaleKeyGroupId == localeKeyGroupId &&
+                                  lp.LocaleKey == localeKey
+                            select lp;
+
+                    localeValue = query.First();
+                }
+                return localeValue;
+            });
+        }
+
+        private async Task<LocalizedGroup> SaveLocalizedGroupOrGetValueAsync(string localeKeyGroup)
+        {
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedGroupPropertyCacheKey, localeKeyGroup);
+
+            return await _staticCacheManager.GetAsync(key, async () =>
+            {
+                var query = from lp in _localizedGroupRepository.Table
+                            where lp.LocaleKeyGroup == localeKeyGroup
+                            select lp;
+
+                var localeValue = query.FirstOrDefault();
+                if (localeValue == null)
+                {
+                    await _localizedGroupRepository.InsertAsync(new LocalizedGroup()
+                    {
+                        LocaleKeyGroup = localeKeyGroup
+                    });
+                    query = from lp in _localizedGroupRepository.Table
+                            where lp.LocaleKeyGroup == localeKeyGroup
+                            select lp;
+
+                    localeValue = query.First();
+                }
+                return localeValue;
+            });
         }
 
         #endregion

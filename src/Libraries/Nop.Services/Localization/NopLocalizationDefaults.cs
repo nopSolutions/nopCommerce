@@ -113,6 +113,24 @@ namespace Nop.Services.Localization
         /// </remarks>
         public static CacheKey LocalizedPropertyCacheKey => new("Nop.localizedproperty.value.{0}-{1}-{2}-{3}");
 
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : locale key group
+        /// </remarks>
+        public static CacheKey LocalizedGroupPropertyCacheKey => new("Nop.localizedgroupproperty.value.{0}");
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : locale key group id
+        /// {1} : locale key id
+        /// </remarks>
+        public static CacheKey LocalizedLocalGroupPropertyCacheKey => new("Nop.localizedlocalgroupproperty.value.{0}-{1}");
+
         #endregion
 
         #endregion

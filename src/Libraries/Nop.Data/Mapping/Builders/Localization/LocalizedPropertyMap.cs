@@ -18,8 +18,8 @@ namespace Nop.Data.Mapping.Builders.Localization
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(LocalizedProperty.LocaleKeyGroup)).AsString(400).NotNullable()
-                .WithColumn(nameof(LocalizedProperty.LocaleKey)).AsString(400).NotNullable()
+                .WithColumn(nameof(LocalizedProperty.LocaleKeyGroupId)).AsInt32()
+                .WithColumn(nameof(LocalizedProperty.LocaleKeyId)).AsInt32()
                 .WithColumn(nameof(LocalizedProperty.LocaleValue)).AsString(int.MaxValue).NotNullable()
                 .WithColumn(nameof(LocalizedProperty.LanguageId)).AsInt32().ForeignKey<Language>();
         }

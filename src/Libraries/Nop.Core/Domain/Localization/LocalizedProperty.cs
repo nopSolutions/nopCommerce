@@ -18,12 +18,12 @@
         /// <summary>
         /// Gets or sets the locale key group
         /// </summary>
-        public string LocaleKeyGroup { get; set; }
+        public int LocaleKeyGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the locale key
         /// </summary>
-        public string LocaleKey { get; set; }
+        public int LocaleKeyId { get; set; }
 
         /// <summary>
         /// Gets or sets the locale value
