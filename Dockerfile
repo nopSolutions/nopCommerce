@@ -96,6 +96,8 @@ RUN apk add tzdata --no-cache
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
 
+WORKDIR /app
+
 COPY --from=build /app/published .
                             
 ENTRYPOINT "/entrypoint.sh"
