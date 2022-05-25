@@ -11,7 +11,8 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
     {
         public CustomerAttributeValidator(ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.CustomerAttributes.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty()
+                .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.CustomerAttributes.Fields.Name.Required"));
 
             SetDatabaseValidationRules<CustomerAttribute>(mappingEntityAccessor);
         }
