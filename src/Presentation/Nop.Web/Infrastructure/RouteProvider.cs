@@ -698,9 +698,9 @@ namespace Nop.Web.Infrastructure
             
             
             //my new page
-            endpointRouteBuilder.MapControllerRoute(name: "ConfigurationEnabled",
-                pattern: $"{lang}/ConfigurationEnabled",
-                defaults: new { controller = "ConfigurationEnabled", action = "Index" });
+            endpointRouteBuilder.MapControllerRoute(name: "WebhookSetting",
+                pattern: $"{lang}/WebhookSetting",
+                defaults: new { controller = "WebhookSetting", action = "Index" });
         }
 
         #endregion

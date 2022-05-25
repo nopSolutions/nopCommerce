@@ -2,7 +2,7 @@
 
 namespace Nop.Core.Domain.NewPage;
 
-public class ConfigurationEnabledSettings : ISettings
+public class WebhookSettings : ISettings
 {
     public bool ConfigurationEnabled { get; set; }
     
