@@ -236,6 +236,9 @@ namespace Nop.Web.Factories
                 model.Phone = customer.Phone;
                 model.Fax = customer.Fax;
 
+                //welcome message
+                model.WelcomeMessage = customer.WelcomeMessage;
+                
                 //newsletter
                 var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
                 model.Newsletter = newsletter != null && newsletter.Active;

@@ -141,6 +141,10 @@ namespace Nop.Web.Models.Customer
         public string VatNumber { get; set; }
         public bool DisplayVatNumber { get; set; }
 
+        //welcome message account info
+        [NopResourceDisplayName("Account.Fields.WelcomeMessage")]
+        public string WelcomeMessage { get; set; }
+        
         public bool HoneypotEnabled { get; set; }
         public bool DisplayCaptcha { get; set; }
 

@@ -141,6 +141,10 @@ namespace Nop.Web.Models.Customer
         public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
         public int NumberOfExternalAuthenticationProviders { get; set; }
         public bool AllowCustomersToRemoveAssociations { get; set; }
+        
+        //welcome message account info
+        [NopResourceDisplayName("Account.Fields.WelcomeMessage")]
+        public string WelcomeMessage { get; set; }
 
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
 
