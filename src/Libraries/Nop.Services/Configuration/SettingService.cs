@@ -9,6 +9,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
+using Nop.Core.Domain.WebhookSettings;
 using Nop.Data;
 
 namespace Nop.Services.Configuration
@@ -443,6 +444,18 @@ namespace Nop.Services.Configuration
                 await SaveSettingAsync(settings, keySelector, storeId, clearCache);
             else if (storeId > 0)
                 await DeleteSettingAsync(settings, keySelector, storeId);
+        }
+
+        public Task SaveSettingOverridablePerStoreAsync<T, TPropType>(T settings, Expression<Func<T, TPropType>> keySelector, bool overrideForStore,
+            bool clearCache = true) where T : ISettings, new()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SaveSettingOverridablePerStoreAsync(WebhookSettings webhookSettings, Func<WebhookSettings, bool> keySelector,
+            string modelPlaceOrderEndpointUrl, bool clearCache)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -22,6 +22,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Domain.WebhookSettings;
 using Nop.Data;
 using Nop.Data.Configuration;
 using Nop.Services;
@@ -37,6 +38,7 @@ using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;
+using Nop.Web.Areas.Admin.Models.Webhook;
 using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Models.Extensions;
@@ -996,6 +998,27 @@ namespace Nop.Web.Areas.Admin.Factories
             model.ShowHeaderRssUrl_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.ShowHeaderRssUrl, storeId);
             model.NewsCommentsMustBeApproved_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NewsCommentsMustBeApproved, storeId);
 
+            return model;
+        }
+
+        public async Task<WebhookSettingModel> PrepareWebHookSettingsModelAsync(WebhookSettingModel model = null)
+        {
+            //load settings for a chosen store scope
+            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var webhookSettings = await _settingService.LoadSettingAsync<WebhookSettings>(storeId);
+
+            //fill in model values from the entity
+            model ??= webhookSettings.ToSettingsModel<WebhookSettingModel>();
+
+            //fill in additional values (not existing in the entity)
+            model.ActiveStoreScopeConfiguration = storeId;
+            
+            if (storeId <= 0)
+                return model;
+            
+            model.ConfigurationEnabled_OverrideForStore = await _settingService.SettingExistsAsync(webhookSettings, x => x.ConfigurationEnabled, storeId);
+            
+            
             return model;
         }
 

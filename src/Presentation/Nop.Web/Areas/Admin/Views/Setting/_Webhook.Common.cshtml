@@ -1,0 +1,34 @@
+﻿@model Nop.Web.Areas.Admin.Models.Webhook.WebhookSettingModel
+
+@{
+    ViewBag.Title = "PartialView Webhook" +
+                    "";
+ 
+}
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ConfigurationEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ConfigurationEnabled" />
+            <span asp-validation-for="ConfigurationEnabled"></span>
+        </div>
+    
+    </div>
+</div>
+
+
+<div class="card-body">    
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="PlaceOrderEndpointUrl_OverrideForStore" asp-input="PlaceOrderEndpointUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="PlaceOrderEndpointUrl" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PlaceOrderEndpointUrl" />
+            <span asp-validation-for="PlaceOrderEndpointUrl"></span>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Core.Domain.NewPage;
+using Nop.Core.Domain.WebhookSettings;
 
 namespace Nop.Web.Areas.Admin.Controllers;
 
@@ -14,7 +14,6 @@ public class WebhookSettingController : BaseAdminController
 
     public IActionResult Index()
     {
-       
         
         return View();
     }

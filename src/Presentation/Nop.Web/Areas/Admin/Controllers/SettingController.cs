@@ -25,6 +25,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Domain.WebhookSettings;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -47,6 +48,7 @@ using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Settings;
+using Nop.Web.Areas.Admin.Models.Webhook;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Controllers;
@@ -474,6 +476,61 @@ namespace Nop.Web.Areas.Admin.Controllers
             //if we got this far, something failed, redisplay form
             return View(model);
         }
+
+        /// <summary>
+        /// My code for Webhook
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IActionResult> Webhook()
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = await _settingModelFactory.PrepareWebHookSettingsModelAsync();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> Webhook(WebhookSettingModel model)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            if (ModelState.IsValid)
+            {
+                //load settings for a chosen store scope
+                var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+                var webhookSettings = await _settingService.LoadSettingAsync<WebhookSettings>(storeScope);
+                webhookSettings = model.ToSettings(webhookSettings);
+
+                //we do not clear cache after each setting update.
+                //this behavior can increase performance because cached settings will not be cleared 
+                if (model.PlaceOrderEndpointUrl != null)
+                    model.PlaceOrderEndpointUrl = model.PlaceOrderEndpointUrl.Trim();
+                //and loaded from database after each update
+                await _settingService.SaveSettingOverridablePerStoreAsync(webhookSettings, x => x.ConfigurationEnabled, model.ConfigurationEnabled_OverrideForStore, storeScope,false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(webhookSettings, x => x.PlaceOrderEndpointUrl, model.PlaceOrderEndpointUrl_OverrideForStore, storeScope,false);
+
+                //now clear settings cache
+                await _settingService.ClearCacheAsync();
+
+                //activity log
+                await _customerActivityService.InsertActivityAsync("EditSettings",
+                    await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
+
+                _notificationService.SuccessNotification(
+                    await _localizationService.GetResourceAsync("Admin.Configuration.Updated"));
+                return RedirectToAction("Webhook");
+
+            }
+            model = await _settingModelFactory.PrepareWebHookSettingsModelAsync(model);
+
+            //if we got this far, something failed, redisplay form
+            return View(model);
+        }
+
 
         public virtual async Task<IActionResult> Shipping()
         {

@@ -25,6 +25,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Domain.WebhookSettings;
 using Nop.Core.Infrastructure.Mapper;
 using Nop.Data.Configuration;
 using Nop.Services.Authentication.External;
@@ -63,6 +64,7 @@ using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Areas.Admin.Models.Vendors;
+using Nop.Web.Areas.Admin.Models.Webhook;
 using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Models;
 
@@ -109,7 +111,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateTopicsMaps();
             CreateVendorsMaps();
             CreateWarehouseMaps();
-
+            CreateWebhookMaps();
             //add some generic mapping rules
             ForAllMaps((mapConfiguration, map) =>
             {
@@ -1240,6 +1242,14 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ShowHeaderRssUrl_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowNewsOnMainPage_OverrideForStore, options => options.Ignore());
             CreateMap<NewsSettingsModel, NewsSettings>();
+        }
+
+        protected virtual void CreateWebhookMaps()
+        {
+            CreateMap<WebhookSettings, WebhookSettingModel>()
+                .ForMember(model => model.ConfigurationEnabled, options => options.Ignore())
+                .ForMember(model => model.PlaceOrderEndpointUrl, options => options.Ignore());
+            CreateMap<WebhookSettingModel, WebhookSettings>();
         }
 
         /// <summary>

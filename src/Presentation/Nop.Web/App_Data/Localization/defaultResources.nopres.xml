@@ -19826,4 +19826,14 @@
   <LocaleResource Name="Wishlist.YourWishlistURL">
     <Value>Your wishlist URL for sharing</Value>
   </LocaleResource>
+    <LocaleResource Name="admin.configuration.settings.webhook">
+        <Value>Admin configuration settings</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.configuration.settings.webhook.blocktitle.common">
+        <Value>Admin configuration settings blocktitle</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Webhooks.Enabled">
+        <Value>Check Box</Value>
+    </LocaleResource>
+    
 </Language>

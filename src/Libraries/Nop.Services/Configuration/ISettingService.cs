@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
+using Nop.Core.Domain.WebhookSettings;
 
 namespace Nop.Services.Configuration
 {
