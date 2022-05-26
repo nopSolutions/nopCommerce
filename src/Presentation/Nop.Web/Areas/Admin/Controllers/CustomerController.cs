@@ -423,7 +423,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     Email = customer.Email,
                                     Active = true,
                                     StoreId = store.Id,
-                                    CreatedOnUtc = DateTime.UtcNow
+                                    CreatedOnUtc = DateTime.UtcNow,
+                                    LanguageId = customer.LanguageId ?? store.DefaultLanguageId
                                 });
                             }
                         }
@@ -432,6 +433,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             //not subscribed
                             if (newsletterSubscription != null)
                             {
+                                newsletterSubscription.LanguageId = customer.LanguageId ?? store.DefaultLanguageId;
                                 await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletterSubscription);
                             }
                         }
@@ -666,7 +668,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                                         Email = customer.Email,
                                         Active = true,
                                         StoreId = store.Id,
-                                        CreatedOnUtc = DateTime.UtcNow
+                                        CreatedOnUtc = DateTime.UtcNow,
+                                        LanguageId = customer.LanguageId ?? store.DefaultLanguageId
                                     });
                                 }
                             }
@@ -675,6 +678,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 //not subscribed
                                 if (newsletterSubscription != null)
                                 {
+                                    newsletterSubscription.LanguageId = customer.LanguageId ?? store.DefaultLanguageId;
                                     await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletterSubscription);
                                 }
                             }

@@ -195,6 +195,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Catalog.Products.Multimedia.Videos.AddButton"] = "Add product video",
                 ["Admin.Catalog.Products.Copy.CopyMultimedia"] = "Copy multimedia",
                 ["Admin.Catalog.Products.Copy.CopyMultimedia.Hint"] = "Check to copy the images and videos.",
+
+                //#5120
+                ["Admin.Promotions.NewsLetterSubscriptions.Fields.Language"] = "Language",
             }, languageId).Wait();
 
             #endregion

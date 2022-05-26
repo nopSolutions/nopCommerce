@@ -3,12 +3,13 @@ using FluentMigrator;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
 using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-02-02 00:00:00", "Customer attribute", MigrationProcessType.Update)]
+    [NopMigration("2022-02-02 00:00:00", "4.60 update schema", MigrationProcessType.Update)]
     public class SchemaMigration : Migration
     {
         /// <summary>
@@ -145,6 +146,16 @@ namespace Nop.Data.Migrations.UpgradeTo460
             {
                 Alter.Table(customerTableName)
                     .AddColumn(taxDisplayTypeIdCustomerColumnName).AsInt32().Nullable();
+            }
+
+            //#5120
+            var newsLetterSubscriptionTableName = nameof(NewsLetterSubscription);
+            var languageIdNewsLetterSubscriptionColumnName = nameof(NewsLetterSubscription.LanguageId);
+
+            if (!Schema.Table(newsLetterSubscriptionTableName).Column(languageIdCustomerColumnName).Exists())
+            {
+                Alter.Table(newsLetterSubscriptionTableName)
+                    .AddColumn(languageIdNewsLetterSubscriptionColumnName).AsInt32().NotNullable().SetExistingRowsTo(0);
             }
         }
 
