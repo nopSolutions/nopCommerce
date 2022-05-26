@@ -874,7 +874,15 @@ namespace Nop.Web.Controllers
                         customer.Fax = model.Fax;
                     
                     //welcome message
-                    customer.WelcomeMessage = model.WelcomeMessage;
+                    if (model.WelcomeMessage == null)
+                    {
+                        customer.WelcomeMessage = "Hello " + model.FirstName;
+                    }
+                    else
+                    {
+                        customer.WelcomeMessage = model.WelcomeMessage;
+                    }
+
                     
                     //save customer attributes
                     customer.CustomCustomerAttributesXML = customerAttributesXml;
