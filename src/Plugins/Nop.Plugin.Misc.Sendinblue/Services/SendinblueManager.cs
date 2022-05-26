@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 using Nop.Core;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Misc.Sendinblue.Domain;
@@ -17,6 +18,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Installation;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Stores;
@@ -39,6 +41,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         private readonly ICustomerService _customerService;
         private readonly IEmailAccountService _emailAccountService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILanguageService _languageService;
         private readonly ILogger _logger;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ISettingService _settingService;
@@ -57,6 +60,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             ICustomerService customerService,
             IEmailAccountService emailAccountService,
             IGenericAttributeService genericAttributeService,
+            ILanguageService languageService,
             ILogger logger,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             ISettingService settingService,
@@ -71,6 +75,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             _customerService = customerService;
             _emailAccountService = emailAccountService;
             _genericAttributeService = genericAttributeService;
+            _languageService = languageService;
             _logger = logger;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _settingService = settingService;
@@ -211,7 +216,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                         $"{SendinblueDefaults.CityServiceAttribute};" +
                         $"{SendinblueDefaults.CountyServiceAttribute};" +
                         $"{SendinblueDefaults.StateServiceAttribute};" +
-                        $"{SendinblueDefaults.FaxServiceAttribute}";
+                        $"{SendinblueDefaults.FaxServiceAttribute};" +
+                        $"{SendinblueDefaults.LanguageAttribute};";
                     var csv = await subscriptions.AggregateAwaitAsync(title, async (all, subscription) =>
                     {
                         var firstName = string.Empty;
@@ -229,6 +235,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                         var county = string.Empty;
                         var state = string.Empty;
                         var fax = string.Empty;
+                        Language language = null;
 
                         var customer = await _customerService.GetCustomerByEmailAsync(subscription.Email);
                         if (customer != null)
@@ -257,7 +264,11 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                             county = customer.County;
                             state = (await _stateProvinceService.GetStateProvinceByIdAsync(customer.StateProvinceId))?.Name;
                             fax = customer.Fax;
+                            language = await _languageService.GetLanguageByIdAsync(customer.LanguageId ?? 0);
                         }
+
+                        language ??= (await _languageService.GetAllLanguagesAsync(storeId: storeId)).FirstOrDefault();
+
                         return $"{all}\n" +
                             $"{subscription.Email};" +
                             $"{firstName};" +
@@ -276,7 +287,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                             $"{city};" +
                             $"{county};" +
                             $"{state};" +
-                            $"{fax};";
+                            $"{fax};" +
+                            $"{language?.LanguageCulture};";
                     });
 
                     //prepare data to import
@@ -475,105 +487,111 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 var contacts = await client.GetContactsFromListAsync(listId);
 
                 //whether subscribed contact already in the list
-                var template = new { contacts = new[] { new { email = string.Empty } } };
+                var template = new { contacts = new[] { new { email = string.Empty, attributes = new Dictionary<string, string>() } } };
                 var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
-                var alreadyExist = contactObjects?.contacts?.Any(contact => contact.email == subscription.Email.ToLowerInvariant()) ?? false;
+                var contactObject = contactObjects?.contacts?.FirstOrDefault(contact => contact.email == subscription.Email.ToLowerInvariant());
+
+                //prepare attributes
+                var firstName = string.Empty;
+                var lastName = string.Empty;
+                var phone = string.Empty;
+                var sms = string.Empty;
+                var countryName = string.Empty;
+                var gender = string.Empty;
+                var dateOfBirth = string.Empty;
+                var company = string.Empty;
+                var address1 = string.Empty;
+                var address2 = string.Empty;
+                var zipCode = string.Empty;
+                var city = string.Empty;
+                var county = string.Empty;
+                var state = string.Empty;
+                var fax = string.Empty;
+                Language language = null;
+
+                var customer = await _customerService.GetCustomerByEmailAsync(subscription.Email);
+                if (customer != null)
+                {
+                    firstName = customer.FirstName;
+                    lastName = customer.LastName;
+                    phone = customer.Phone;
+                    var countryId = customer.CountryId;
+                    var country = await _countryService.GetCountryByIdAsync(countryId);
+                    countryName = country?.Name;
+                    var countryIsoCode = country?.NumericIsoCode ?? 0;
+                    if (countryIsoCode > 0 && !string.IsNullOrEmpty(phone))
+                    {
+                        //use the first phone code only
+                        var phoneCode = ISO3166.FromISOCode(countryIsoCode)
+                            ?.DialCodes?.FirstOrDefault()?.Replace(" ", string.Empty) ?? string.Empty;
+                        sms = phone.Replace($"+{phoneCode}", string.Empty);
+                    }
+                    gender = customer.Gender;
+                    dateOfBirth = customer.DateOfBirth?.ToString("yyyy-MM-dd");
+                    company = customer.Company;
+                    address1 = customer.StreetAddress;
+                    address2 = customer.StreetAddress2;
+                    zipCode = customer.ZipPostalCode;
+                    city = customer.City;
+                    county = customer.County;
+                    state = (await _stateProvinceService.GetStateProvinceByIdAsync(customer.StateProvinceId))?.Name;
+                    fax = customer.Fax;
+                    language = await _languageService.GetLanguageByIdAsync(customer.LanguageId ?? 0);
+                }
+
+                language ??= (await _languageService.GetAllLanguagesAsync(storeId: subscription.StoreId)).FirstOrDefault();
+
+                var attributes = new Dictionary<string, string>
+                {
+                    [SendinblueDefaults.UsernameServiceAttribute] = customer?.Username,
+                    [SendinblueDefaults.SMSServiceAttribute] = sms,
+                    [SendinblueDefaults.PhoneServiceAttribute] = phone,
+                    [SendinblueDefaults.CountryServiceAttribute] = countryName,
+                    [SendinblueDefaults.StoreIdServiceAttribute] = subscription.StoreId.ToString(),
+                    [SendinblueDefaults.GenderServiceAttribute] = gender,
+                    [SendinblueDefaults.DateOfBirthServiceAttribute] = dateOfBirth,
+                    [SendinblueDefaults.CompanyServiceAttribute] = company,
+                    [SendinblueDefaults.Address1ServiceAttribute] = address1,
+                    [SendinblueDefaults.Address2ServiceAttribute] = address2,
+                    [SendinblueDefaults.ZipCodeServiceAttribute] = zipCode,
+                    [SendinblueDefaults.CityServiceAttribute] = city,
+                    [SendinblueDefaults.CountyServiceAttribute] = county,
+                    [SendinblueDefaults.StateServiceAttribute] = state,
+                    [SendinblueDefaults.FaxServiceAttribute] = fax,
+                    [SendinblueDefaults.LanguageAttribute] = language?.LanguageCulture
+                };
+
+                switch (await GetAccountLanguageAsync())
+                {
+                    case SendinblueAccountLanguage.French:
+                        attributes.Add(SendinblueDefaults.FirstNameFrenchServiceAttribute, firstName);
+                        attributes.Add(SendinblueDefaults.LastNameFrenchServiceAttribute, lastName);
+                        break;
+                    case SendinblueAccountLanguage.German:
+                        attributes.Add(SendinblueDefaults.FirstNameGermanServiceAttribute, firstName);
+                        attributes.Add(SendinblueDefaults.LastNameGermanServiceAttribute, lastName);
+                        break;
+                    case SendinblueAccountLanguage.Italian:
+                        attributes.Add(SendinblueDefaults.FirstNameItalianServiceAttribute, firstName);
+                        attributes.Add(SendinblueDefaults.LastNameItalianServiceAttribute, lastName);
+                        break;
+                    case SendinblueAccountLanguage.Portuguese:
+                        attributes.Add(SendinblueDefaults.FirstNamePortugueseServiceAttribute, firstName);
+                        attributes.Add(SendinblueDefaults.LastNamePortugueseServiceAttribute, lastName);
+                        break;
+                    case SendinblueAccountLanguage.Spanish:
+                        attributes.Add(SendinblueDefaults.FirstNameSpanishServiceAttribute, firstName);
+                        attributes.Add(SendinblueDefaults.LastNameSpanishServiceAttribute, lastName);
+                        break;
+                    case SendinblueAccountLanguage.English:
+                        attributes.Add(SendinblueDefaults.FirstNameServiceAttribute, firstName);
+                        attributes.Add(SendinblueDefaults.LastNameServiceAttribute, lastName);
+                        break;
+                }
 
                 //Add new contact
-                if (!alreadyExist)
+                if (contactObject == null)
                 {
-                    var firstName = string.Empty;
-                    var lastName = string.Empty;
-                    var phone = string.Empty;
-                    var sms = string.Empty;
-                    var countryName = string.Empty;
-                    var gender = string.Empty;
-                    var dateOfBirth = string.Empty;
-                    var company = string.Empty;
-                    var address1 = string.Empty;
-                    var address2 = string.Empty;
-                    var zipCode = string.Empty;
-                    var city = string.Empty;
-                    var county = string.Empty;
-                    var state = string.Empty;
-                    var fax = string.Empty;
-
-                    var customer = await _customerService.GetCustomerByEmailAsync(subscription.Email);
-                    if (customer != null)
-                    {
-                        firstName = customer.FirstName;
-                        lastName = customer.LastName;
-                        phone = customer.Phone;
-                        var countryId = customer.CountryId;
-                        var country = await _countryService.GetCountryByIdAsync(countryId);
-                        countryName = country?.Name;
-                        var countryIsoCode = country?.NumericIsoCode ?? 0;
-                        if (countryIsoCode > 0 && !string.IsNullOrEmpty(phone))
-                        {
-                            //use the first phone code only
-                            var phoneCode = ISO3166.FromISOCode(countryIsoCode)
-                                ?.DialCodes?.FirstOrDefault()?.Replace(" ", string.Empty) ?? string.Empty;
-                            sms = phone.Replace($"+{phoneCode}", string.Empty);
-                        }
-                        gender = customer.Gender;
-                        dateOfBirth = customer.DateOfBirth?.ToString("yyyy-MM-dd");
-                        company = customer.Company;
-                        address1 = customer.StreetAddress;
-                        address2 = customer.StreetAddress2;
-                        zipCode = customer.ZipPostalCode;
-                        city = customer.City;
-                        county = customer.County;
-                        state = (await _stateProvinceService.GetStateProvinceByIdAsync(customer.StateProvinceId))?.Name;
-                        fax = customer.Fax;
-                    }
-
-                    var attributes = new Dictionary<string, string>
-                    {
-                        [SendinblueDefaults.UsernameServiceAttribute] = customer?.Username,
-                        [SendinblueDefaults.SMSServiceAttribute] = sms,
-                        [SendinblueDefaults.PhoneServiceAttribute] = phone,
-                        [SendinblueDefaults.CountryServiceAttribute] = countryName,
-                        [SendinblueDefaults.StoreIdServiceAttribute] = subscription.StoreId.ToString(),
-                        [SendinblueDefaults.GenderServiceAttribute] = gender,
-                        [SendinblueDefaults.DateOfBirthServiceAttribute] = dateOfBirth,
-                        [SendinblueDefaults.CompanyServiceAttribute] = company,
-                        [SendinblueDefaults.Address1ServiceAttribute] = address1,
-                        [SendinblueDefaults.Address2ServiceAttribute] = address2,
-                        [SendinblueDefaults.ZipCodeServiceAttribute] = zipCode,
-                        [SendinblueDefaults.CityServiceAttribute] = city,
-                        [SendinblueDefaults.CountyServiceAttribute] = county,
-                        [SendinblueDefaults.StateServiceAttribute] = state,
-                        [SendinblueDefaults.FaxServiceAttribute] = fax
-                    };
-
-                    switch (await GetAccountLanguageAsync())
-                    {
-                        case SendinblueAccountLanguage.French:
-                            attributes.Add(SendinblueDefaults.FirstNameFrenchServiceAttribute, firstName);
-                            attributes.Add(SendinblueDefaults.LastNameFrenchServiceAttribute, lastName);
-                            break;
-                        case SendinblueAccountLanguage.German:
-                            attributes.Add(SendinblueDefaults.FirstNameGermanServiceAttribute, firstName);
-                            attributes.Add(SendinblueDefaults.LastNameGermanServiceAttribute, lastName);
-                            break;
-                        case SendinblueAccountLanguage.Italian:
-                            attributes.Add(SendinblueDefaults.FirstNameItalianServiceAttribute, firstName);
-                            attributes.Add(SendinblueDefaults.LastNameItalianServiceAttribute, lastName);
-                            break;
-                        case SendinblueAccountLanguage.Portuguese:
-                            attributes.Add(SendinblueDefaults.FirstNamePortugueseServiceAttribute, firstName);
-                            attributes.Add(SendinblueDefaults.LastNamePortugueseServiceAttribute, lastName);
-                            break;
-                        case SendinblueAccountLanguage.Spanish:
-                            attributes.Add(SendinblueDefaults.FirstNameSpanishServiceAttribute, firstName);
-                            attributes.Add(SendinblueDefaults.LastNameSpanishServiceAttribute, lastName);
-                            break;
-                        case SendinblueAccountLanguage.English:
-                            attributes.Add(SendinblueDefaults.FirstNameServiceAttribute, firstName);
-                            attributes.Add(SendinblueDefaults.LastNameServiceAttribute, lastName);
-                            break;
-                    }
-
                     var createContact = new CreateContact
                     {
                         Email = subscription.Email,
@@ -588,6 +606,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     //update contact
                     var updateContact = new UpdateContact
                     {
+                        Attributes = attributes,
                         ListIds = new List<long?> { listId },
                         EmailBlacklisted = false
                     };
@@ -997,6 +1016,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     (CategoryEnum.Normal, SendinblueDefaults.CountyServiceAttribute, null, CreateAttribute.TypeEnum.Text),
                     (CategoryEnum.Normal, SendinblueDefaults.StateServiceAttribute, null, CreateAttribute.TypeEnum.Text),
                     (CategoryEnum.Normal, SendinblueDefaults.FaxServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, SendinblueDefaults.LanguageAttribute, null, CreateAttribute.TypeEnum.Text),
                     (CategoryEnum.Transactional, SendinblueDefaults.OrderIdServiceAttribute, null, CreateAttribute.TypeEnum.Id),
                     (CategoryEnum.Transactional, SendinblueDefaults.OrderDateServiceAttribute, null, CreateAttribute.TypeEnum.Text),
                     (CategoryEnum.Transactional, SendinblueDefaults.OrderTotalServiceAttribute, null, CreateAttribute.TypeEnum.Text),

@@ -204,6 +204,11 @@ namespace Nop.Plugin.Misc.Sendinblue
         public static string FaxServiceAttribute => "FAX";
 
         /// <summary>
+        /// Gets a name of attribute to store a language
+        /// </summary>
+        public static string LanguageAttribute => "LANGUAGE";
+
+        /// <summary>
         /// Gets a name of attribute to store a store identifier
         /// </summary>
         public static string StoreIdServiceAttribute => "STORE_ID";
