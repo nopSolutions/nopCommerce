@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Flurl.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -178,9 +179,14 @@ namespace Nop.Web.Controllers
             var model = await _orderModelFactory.PrepareOrderDetailsModelAsync(order);
             model.PrintMode = true;
 
+            
+           
             return View("Details", model);
         }
 
+      
+        
+        
         //My account / Order details page / PDF invoice
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetPdfInvoice(int orderId)

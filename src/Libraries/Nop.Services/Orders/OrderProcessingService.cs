@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Flurl.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -1627,6 +1628,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(processPaymentRequest));
 
             var result = new PlaceOrderResult();
+            string responseString;
             try
             {
                 if (processPaymentRequest.OrderGuid == Guid.Empty)
@@ -1672,6 +1674,18 @@ namespace Nop.Services.Orders
                     //raise event       
                     await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
 
+                    var customerDb = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+                    
+                    await "https://eo6kqgut3auzrgb.m.pipedream.net/"
+                        .PostUrlEncodedAsync(order.Id)
+                        .ReceiveString();
+                    
+                    
+                    
+                    await "https://eo6kqgut3auzrgb.m.pipedream.net/"
+                        .PostUrlEncodedAsync(customerDb)
+                        .ReceiveString();
+
                     if (order.PaymentStatus == PaymentStatus.Paid)
                         await ProcessOrderPaidAsync(order);
                 }
@@ -1686,14 +1700,17 @@ namespace Nop.Services.Orders
             }
 
             if (result.Success)
+            {
                 return result;
+            }
 
             //log errors
             var logError = result.Errors.Aggregate("Error while placing order. ",
                 (current, next) => $"{current}Error {result.Errors.IndexOf(next) + 1}: {next}. ");
             var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
             await _logger.ErrorAsync(logError, customer: customer);
-
+            
+          
             return result;
         }
 

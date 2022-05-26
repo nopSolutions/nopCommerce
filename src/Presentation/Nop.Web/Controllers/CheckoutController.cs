@@ -320,6 +320,9 @@ namespace Nop.Web.Controllers
 
             //model
             var model = await _checkoutModelFactory.PrepareCheckoutCompletedModelAsync(order);
+            
+            
+            
             return View(model);
         }
 
@@ -1206,7 +1209,7 @@ namespace Nop.Web.Controllers
                         //redirection or POST has been done in PostProcessPayment
                         return Content(await _localizationService.GetResourceAsync("Checkout.RedirectMessage"));
                     }
-
+                    
                     return RedirectToRoute("CheckoutCompleted", new { orderId = placeOrderResult.PlacedOrder.Id });
                 }
 

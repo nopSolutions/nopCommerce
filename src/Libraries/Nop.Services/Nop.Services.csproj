@@ -16,6 +16,7 @@
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
     <PackageReference Include="ClosedXML" Version="0.95.4" />
+    <PackageReference Include="Flurl.Http" Version="3.2.4" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.7.0" />
     <PackageReference Include="MailKit" Version="2.15.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="4.1.0" />

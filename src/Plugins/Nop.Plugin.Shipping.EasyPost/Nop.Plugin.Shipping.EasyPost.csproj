@@ -82,6 +82,7 @@
 
   <ItemGroup>
     <PackageReference Include="EasyPost-Official" Version="3.0.0" />
+    <PackageReference Include="Flurl.Http" Version="3.2.4" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->

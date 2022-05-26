@@ -65,6 +65,11 @@
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\NewPage\NewPage.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Flurl.Http" Version="3.2.4" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+
   <!-- This target execute after "Build" target.
     We use it to clean up folder with plugins from unnecessary and obsolete libraries. -->
   <Target Name="NopTarget" AfterTargets="Build">
