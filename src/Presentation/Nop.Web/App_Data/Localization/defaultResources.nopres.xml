@@ -7945,8 +7945,10 @@
     <Value>News comments</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.News.Enabled">
-    <Value>News enabled</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Webhooks.Enabled">
+        <Value>Webhooks enabled</Value>
+    </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.News.Enabled.Hint">
     <Value>Check to enable the news in your store.</Value>
   </LocaleResource>
