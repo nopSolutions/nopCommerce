@@ -149,8 +149,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.AdminComment")]
         public string AdminComment { get; set; }
         
-        // The NopResourceDisplayName provides the "key" used during localization
-        // WelcomeMessage display parameter
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.WelcomeMessage")]
         public string WelcomeMessage { get; set; } 
 

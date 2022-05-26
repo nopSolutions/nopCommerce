@@ -401,6 +401,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                     customer.Fax = model.Fax;
                 customer.CustomCustomerAttributesXML = customerAttributesXml;
 
+                //welcome message
+                customer.WelcomeMessage = model.WelcomeMessage;
+                
                 await _customerService.InsertCustomerAsync(customer);
 
                 //newsletter subscriptions
