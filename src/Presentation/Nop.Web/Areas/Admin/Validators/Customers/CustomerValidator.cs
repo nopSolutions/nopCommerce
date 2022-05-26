@@ -29,6 +29,11 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                 //only for registered users
                 .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
 
+            //Welcome message rule
+            RuleFor(x => x.WelcomeMessage)
+                .NotEmpty()
+                .Length(min: 0, max: 255);
+            
             //form fields
             if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
             {

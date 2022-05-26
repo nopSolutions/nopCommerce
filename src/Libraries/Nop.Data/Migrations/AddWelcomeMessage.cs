@@ -1,14 +1,12 @@
 ﻿using FluentMigrator;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations;
 
 
-[NopMigration("2022/05/25 12:00:00", "Category. Add some new property", MigrationProcessType.Update)]
-public class AddWelcomeMessage: MigrationBase
+[NopMigration("2022/05/26 13:00:00", "Category. Add some new property", MigrationProcessType.Update)]
+public class AddWelcomeMessage: AutoReversingMigration
 {
     /// <summary>Collect the UP migration expressions</summary>
     public override void Up()
@@ -18,13 +16,8 @@ public class AddWelcomeMessage: MigrationBase
             //add new column
             Alter.Table(NameCompatibilityManager.GetTableName(typeof(Customer)))
                 .AddColumn(nameof(Customer.WelcomeMessage))
-                .AsString(255)
+                .AsString(int.MaxValue)
                 .Nullable();
         }
-    }
-
-    public override void Down()
-    {
-        
     }
 }

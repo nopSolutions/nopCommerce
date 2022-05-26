@@ -148,6 +148,11 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.AdminComment")]
         public string AdminComment { get; set; }
+        
+        // The NopResourceDisplayName provides the "key" used during localization
+        // WelcomeMessage display parameter
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.WelcomeMessage")]
+        public string WelcomeMessage { get; set; } 
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.IsTaxExempt")]
         public bool IsTaxExempt { get; set; }
@@ -252,11 +257,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         public CustomerAssociatedExternalAuthRecordsSearchModel CustomerAssociatedExternalAuthRecordsSearchModel { get; set; }
 
-        // The NopResourceDisplayName provides the "key" used during localization
-        // WelcomeMessage display parameter
-        [NopResourceDisplayName("Admin.Customers.Customers.WelcomeMessage")]
-        public string WelcomeMessage { get; set; }
-        
         #endregion
 
         #region Nested classes

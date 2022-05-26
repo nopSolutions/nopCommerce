@@ -243,7 +243,6 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Welcome Message 
         /// </summary>
-        [NotMapped]
         public string WelcomeMessage { get; set; }
 
         #region Custom properties
