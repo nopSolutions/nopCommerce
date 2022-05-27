@@ -17,9 +17,11 @@
     <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
     <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="Flurl.Http" Version="3.2.4" />
+    <PackageReference Include="FubarCoder.RestSharp.Portable.HttpClient" Version="4.0.8" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.7.0" />
     <PackageReference Include="MailKit" Version="2.15.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="4.1.0" />
+    <PackageReference Include="RestSharp" Version="107.3.1-alpha.0.26" />
     <PackageReference Include="SkiaSharp" Version="2.80.3" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.3" />
     <PackageReference Include="Svg.Skia" Version="0.5.10" />

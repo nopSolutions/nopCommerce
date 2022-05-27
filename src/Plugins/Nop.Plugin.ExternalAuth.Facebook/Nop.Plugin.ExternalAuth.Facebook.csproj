@@ -59,6 +59,7 @@
   <ItemGroup>
     <PackageReference Include="Flurl.Http" Version="3.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.2" />
+    <PackageReference Include="RestSharp" Version="107.3.1-alpha.0.26" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->
