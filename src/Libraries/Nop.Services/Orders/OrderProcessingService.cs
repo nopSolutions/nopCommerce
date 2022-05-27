@@ -1847,16 +1847,16 @@ namespace Nop.Services.Orders
                     };
 
                     
-                    var url = "https://eo6kqgut3auzrgb.m.pipedream.net/";
+                    //get from setting, and then check if is enabled + url
+                    var url = "https://eo563nddt7hi18q.m.pipedream.net";
                     var client = new RestClient(url);
                     var request = new RestRequest(url, Method.POST);
-                    request.AddHeader("Content-Type", "application/json");
-                    var body = JsonConvert.SerializeObject(orderDetails);
-                    request.AddBody(body, "application/json");
+                    
+                    request.AddJsonBody(orderDetails);
+                    
                     var response = await client.Execute(request);
                     var output = response.Content;
-                    await _logger.InformationAsync(output);
-                    await _logger.InsertLogAsync(LogLevel.Information, "log", output);
+                    await _logger.InsertLogAsync(LogLevel.Information, "Sent .... for ... with ...", output);
                     
                     // await "https://eo6kqgut3auzrgb.m.pipedream.net/"
                     //     .PostUrlEncodedAsync(JsonConvert)
