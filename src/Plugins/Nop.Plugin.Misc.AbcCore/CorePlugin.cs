@@ -19,10 +19,14 @@ using Nop.Services.Media;
 using Nop.Plugin.Misc.AbcCore.Services;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
+using SevenSpikes.Nop.Plugins.HtmlWidgets.Domain;
+using Nop.Core.Caching;
 
 namespace Nop.Plugin.Misc.AbcCore
 {
-    public class CorePlugin : BasePlugin, IMiscPlugin, IAdminMenuPlugin, IWidgetPlugin, IConsumer<EntityDeletedEvent<ProductPicture>>
+    public class CorePlugin : BasePlugin, IMiscPlugin, IAdminMenuPlugin, IWidgetPlugin,
+        IConsumer<EntityDeletedEvent<ProductPicture>>,
+        IConsumer<EntityUpdatedEvent<HtmlWidget>>
     {
         private readonly IWebHelper _webHelper;
         private readonly ILocalizationService _localizationService;
@@ -32,6 +36,7 @@ namespace Nop.Plugin.Misc.AbcCore
         private readonly IPictureService _pictureService;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IStaticCacheManager _cacheManager;
 
         public CorePlugin(
             IWebHelper webHelper,
@@ -41,7 +46,8 @@ namespace Nop.Plugin.Misc.AbcCore
             INopFileProvider nopFileProvider,
             IPictureService pictureService,
             IProductAbcDescriptionService productAbcDescriptionService,
-            IWebHostEnvironment webHostEnvironment
+            IWebHostEnvironment webHostEnvironment,
+            IStaticCacheManager cacheManager
         )
         {
             _webHelper = webHelper;
@@ -52,6 +58,7 @@ namespace Nop.Plugin.Misc.AbcCore
             _pictureService = pictureService;
             _productAbcDescriptionService = productAbcDescriptionService;
             _webHostEnvironment = webHostEnvironment;
+            _cacheManager = cacheManager;
         }
 
         public async System.Threading.Tasks.Task HandleEventAsync(EntityDeletedEvent<ProductPicture> eventMessage)
@@ -72,6 +79,14 @@ namespace Nop.Plugin.Misc.AbcCore
                 _nopFileProvider.DeleteFile(abcProductImagePath);
                 await _logger.InformationAsync($"Deleted image `{abcProductImagePath}` (image deleted in NOP)");
             }
+        }
+
+        public async System.Threading.Tasks.Task HandleEventAsync(EntityUpdatedEvent<HtmlWidget> eventMessage)
+        {
+            // I think this is the wrong prefix, I just need to find the right one
+            // await _cacheManager.RemoveByPrefixAsync("Nop");
+
+            // await _logger.InformationAsync($"HtmlWidget '{eventMessage.Entity.Name}' updated, cache cleared.");
         }
 
         public System.Threading.Tasks.Task<IList<string>> GetWidgetZonesAsync()
