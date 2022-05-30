@@ -1821,43 +1821,7 @@ namespace Nop.Services.Orders
 
                     //raise event       
                     await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
-
-                    var orderItems = await _orderService.GetOrderItemsAsync(order.Id);
-                    var customerById = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-
-                    var listOfProducts = new List<ProductDetails>();
-
-
-                    foreach (var item in orderItems)
-                    {
-                        var product = await _productService.GetProductByIdAsync(item.ProductId);
-
-                        listOfProducts.Add(new ProductDetails() { Id = product.Id, Name = product.Name ,Total = item.Quantity});
-                    }
                     
-                    var orderDetails = new OrderDetails
-                    {
-                        Id = order.Id,
-                        OrderTotal = order.OrderTotal,
-                        Products = listOfProducts,
-                        Customer = new CustomerDetails()
-                        {
-                            Email = customerById.Email, Id = customerById.Id, Name = customerById.FirstName
-                        }
-                    };
-                    
-                    if (_webhookSettings.ConfigurationEnabled)
-                    {
-                        var url = _webhookSettings.PlaceOrderEndpointUrl;
-                        
-                        var client = new RestClient(url);
-                        var request = new RestRequest(url, Method.POST);
-                        request.AddJsonBody(orderDetails);
-                        var response = await client.Execute(request);
-                        var output = response.Content;
-                        await _logger.InsertLogAsync(LogLevel.Information, "Sent .... for ... with ...", output);
-                    }
-
                     if (order.PaymentStatus == PaymentStatus.Paid)
                         await ProcessOrderPaidAsync(order);
                 }
