@@ -21,7 +21,8 @@ public class OrderNotifier : IConsumer<OrderPlacedEvent>
     private readonly WebhookSettings _webhookSettings;
     private readonly ILogger _logger;
 
-    public OrderNotifier(IOrderService orderService, ICustomerService customerService, IProductService productService, ILogger logger, WebhookSettings webhookSettings)
+    public OrderNotifier(IOrderService orderService, ICustomerService customerService, IProductService productService,
+        ILogger logger, WebhookSettings webhookSettings)
     {
         _orderService = orderService;
         _customerService = customerService;
@@ -32,35 +33,32 @@ public class OrderNotifier : IConsumer<OrderPlacedEvent>
 
     public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
     {
-      
         var orderItems = await _orderService.GetOrderItemsAsync(eventMessage.Order.Id);
         var customerById = await _customerService.GetCustomerByIdAsync(eventMessage.Order.CustomerId);
-
         var listOfProducts = new List<ProductDetails>();
-
 
         foreach (var item in orderItems)
         {
             var product = await _productService.GetProductByIdAsync(item.ProductId);
 
-            listOfProducts.Add(new ProductDetails() { Id = product.Id, Name = product.Name ,Total = item.Quantity});
+            listOfProducts.Add(new ProductDetails() { Id = product.Id, Name = product.Name, Total = item.Quantity });
         }
-                    
+
         var orderDetails = new OrderDetails()
         {
-            Id =eventMessage.Order.Id,
+            Id = eventMessage.Order.Id,
             OrderTotal = eventMessage.Order.OrderTotal,
             Products = listOfProducts,
             Customer = new CustomerDetails()
-            {
+            { 
                 Email = customerById.Email, Id = customerById.Id, Name = customerById.FirstName
             }
         };
-                    
+
         if (_webhookSettings.ConfigurationEnabled)
         {
             var url = _webhookSettings.PlaceOrderEndpointUrl;
-                        
+
             var client = new RestClient(url);
             var request = new RestRequest(url, Method.POST);
             request.AddJsonBody(orderDetails);
