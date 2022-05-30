@@ -20,7 +20,6 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
         IConsumer<EntityDeletedEvent<ShoppingCartItem>>,
         IConsumer<OrderPaidEvent>,
-        IConsumer<OrderNotifier>,
         IConsumer<OrderPlacedEvent>,
         IConsumer<EntityTokensAddedEvent<Store, Token>>,
         IConsumer<EntityTokensAddedEvent<Customer, Token>>
@@ -150,11 +149,5 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         }
 
         #endregion
-
-
-        public async Task HandleEventAsync(OrderNotifier eventMessage)
-        {
-          
-        }
     }
 }

@@ -476,11 +476,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //if we got this far, something failed, redisplay form
             return View(model);
         }
-
-        /// <summary>
-        /// My code for Webhook
-        /// </summary>
-        /// <returns></returns>
+        
         public virtual async Task<IActionResult> Webhook()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))

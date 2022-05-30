@@ -16,7 +16,6 @@
   <ItemGroup>
     <PackageReference Include="FluentMigrator" Version="3.3.2" />
     <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
-    <PackageReference Include="Flurl.Http" Version="3.2.4" />
     <PackageReference Include="linq2db" Version="3.6.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
     <PackageReference Include="MySql.Data" Version="8.0.28" />

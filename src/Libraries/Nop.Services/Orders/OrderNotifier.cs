@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
@@ -33,38 +34,49 @@ public class OrderNotifier : IConsumer<OrderPlacedEvent>
 
     public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
     {
-        var orderItems = await _orderService.GetOrderItemsAsync(eventMessage.Order.Id);
-        var customerById = await _customerService.GetCustomerByIdAsync(eventMessage.Order.CustomerId);
-        var listOfProducts = new List<ProductDetails>();
-
-        foreach (var item in orderItems)
+        try
         {
-            var product = await _productService.GetProductByIdAsync(item.ProductId);
+            var orderItems = await _orderService.GetOrderItemsAsync(eventMessage.Order.Id);
+            var customerById = await _customerService.GetCustomerByIdAsync(eventMessage.Order.CustomerId);
+            var listOfProducts = new List<ProductDetails>();
 
-            listOfProducts.Add(new ProductDetails() { Id = product.Id, Name = product.Name, Total = item.Quantity });
-        }
+            foreach (var item in orderItems)
+            {
+                var product = await _productService.GetProductByIdAsync(item.ProductId);
 
-        var orderDetails = new OrderDetails()
-        {
-            Id = eventMessage.Order.Id,
-            OrderTotal = eventMessage.Order.OrderTotal,
-            Products = listOfProducts,
-            Customer = new CustomerDetails()
-            { 
-                Email = customerById.Email, Id = customerById.Id, Name = customerById.FirstName
+                listOfProducts.Add(new ProductDetails()
+                {
+                    Id = product.Id, Name = product.Name, Price = product.Price, Total = item.Quantity
+                });
             }
-        };
 
-        if (_webhookSettings.ConfigurationEnabled)
+            var orderDetails = new OrderDetails()
+            {
+                Id = eventMessage.Order.Id,
+                OrderTotal = eventMessage.Order.OrderTotal,
+                Products = listOfProducts,
+                Customer = new CustomerDetails()
+                {
+                    Email = customerById.Email, Id = customerById.Id, Name = customerById.FirstName
+                }
+            };
+
+            if (_webhookSettings.ConfigurationEnabled)
+            {
+                var url = _webhookSettings.PlaceOrderEndpointUrl;
+
+                var client = new RestClient(url);
+                var request = new RestRequest(url, Method.POST);
+                request.AddJsonBody(orderDetails);
+                var response = await client.Execute(request);
+                var output = response.Content;
+                await _logger.InsertLogAsync(LogLevel.Information, "Sent .... for ... with ...", output);
+            }
+        }
+        catch (Exception e)
         {
-            var url = _webhookSettings.PlaceOrderEndpointUrl;
-
-            var client = new RestClient(url);
-            var request = new RestRequest(url, Method.POST);
-            request.AddJsonBody(orderDetails);
-            var response = await client.Execute(request);
-            var output = response.Content;
-            await _logger.InsertLogAsync(LogLevel.Information, "Sent .... for ... with ...", output);
+            await _logger.InsertLogAsync(LogLevel.Error, $"Something went wrong for {eventMessage.Order.Id}. Please check the model");
+            throw;
         }
     }
 }

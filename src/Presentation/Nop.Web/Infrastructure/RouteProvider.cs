@@ -695,12 +695,6 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute(name: "PageNotFound",
                 pattern: $"{lang}/page-not-found",
                 defaults: new { controller = "Common", action = "PageNotFound" });
-            
-            
-            //my new page
-            endpointRouteBuilder.MapControllerRoute(name: "WebhookSetting",
-                pattern: $"{lang}/WebhookSetting",
-                defaults: new { controller = "WebhookSetting", action = "Index" });
         }
 
         #endregion

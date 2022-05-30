@@ -48,7 +48,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Flurl.Http" Version="3.2.4" />
     <PackageReference Include="GoogleAuthenticator" Version="2.2.0" />
     <PackageReference Include="RestSharp" Version="107.3.1-alpha.0.26" />
   </ItemGroup>
