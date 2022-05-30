@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.Internal;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -17,11 +18,13 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Domain.WebhookSettings;
 using Nop.Core.Events;
 using Nop.Core.Models;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -85,6 +88,7 @@ namespace Nop.Services.Orders
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly OrderSettings _orderSettings;
+        private readonly WebhookSettings _webhookSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
@@ -137,7 +141,7 @@ namespace Nop.Services.Orders
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings, ISettingService settingService, WebhookSettings webhookSettings)
         {
             _currencySettings = currencySettings;
             _addressService = addressService;
@@ -183,6 +187,7 @@ namespace Nop.Services.Orders
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
             _taxSettings = taxSettings;
+            _webhookSettings = webhookSettings;
         }
 
         #endregion
@@ -1818,7 +1823,6 @@ namespace Nop.Services.Orders
                     await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
 
 
-                    // var orderById = _orderService.GetOrderByIdAsync(order.Id);
                     var orderItems = await _orderService.GetOrderItemsAsync(order.Id);
                     var customerById = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
@@ -1829,39 +1833,30 @@ namespace Nop.Services.Orders
                     {
                         var product = await _productService.GetProductByIdAsync(item.ProductId);
 
-                        listOfProducts.Add(new ProductDetails() { Id = product.Id, Name = product.Name });
+                        listOfProducts.Add(new ProductDetails() { Id = product.Id, Name = product.Name ,Total = item.Quantity});
                     }
-
-                    var orderDetails = new OrderDetails()
+                    
+                    var orderDetails = new OrderDetails
                     {
                         Id = order.Id,
                         OrderTotal = order.OrderTotal,
-                        Products = new List<ProductDetails>()
-                        {
-                            new() { Id = listOfProducts[0].Id, Name = listOfProducts[0].Name },
-                        },
+                        Products = listOfProducts,
                         Customer = new CustomerDetails()
                         {
                             Email = customerById.Email, Id = customerById.Id, Name = customerById.FirstName
                         }
                     };
-
                     
-                    //get from setting, and then check if is enabled + url
-                    var url = "https://eo563nddt7hi18q.m.pipedream.net";
-                    var client = new RestClient(url);
-                    var request = new RestRequest(url, Method.POST);
-                    
-                    request.AddJsonBody(orderDetails);
-                    
-                    var response = await client.Execute(request);
-                    var output = response.Content;
-                    await _logger.InsertLogAsync(LogLevel.Information, "Sent .... for ... with ...", output);
-                    
-                    // await "https://eo6kqgut3auzrgb.m.pipedream.net/"
-                    //     .PostUrlEncodedAsync(JsonConvert)
-                    //     .ReceiveString();
-
+                    if (_webhookSettings.ConfigurationEnabled)
+                    {
+                        var url = _webhookSettings.PlaceOrderEndpointUrl;
+                        var client = new RestClient(url);
+                        var request = new RestRequest(url, Method.POST);
+                        request.AddJsonBody(orderDetails);
+                        var response = await client.Execute(request);
+                        var output = response.Content;
+                        await _logger.InsertLogAsync(LogLevel.Information, "Sent .... for ... with ...", output);
+                    }
 
                     if (order.PaymentStatus == PaymentStatus.Paid)
                         await ProcessOrderPaidAsync(order);

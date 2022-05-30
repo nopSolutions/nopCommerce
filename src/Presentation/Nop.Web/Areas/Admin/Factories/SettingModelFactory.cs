@@ -1017,6 +1017,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
             
             model.ConfigurationEnabled_OverrideForStore = await _settingService.SettingExistsAsync(webhookSettings, x => x.ConfigurationEnabled, storeId);
+            model.ConfigurationEnabled_OverrideForStore = await _settingService.SettingExistsAsync(webhookSettings, x => x.PlaceOrderEndpointUrl, storeId);
             
             
             return model;

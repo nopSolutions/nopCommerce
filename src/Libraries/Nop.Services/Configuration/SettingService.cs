@@ -446,17 +446,17 @@ namespace Nop.Services.Configuration
                 await DeleteSettingAsync(settings, keySelector, storeId);
         }
 
-        public Task SaveSettingOverridablePerStoreAsync<T, TPropType>(T settings, Expression<Func<T, TPropType>> keySelector, bool overrideForStore,
-            bool clearCache = true) where T : ISettings, new()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SaveSettingOverridablePerStoreAsync(WebhookSettings webhookSettings, Func<WebhookSettings, bool> keySelector,
-            string modelPlaceOrderEndpointUrl, bool clearCache)
-        {
-            throw new NotImplementedException();
-        }
+        // public Task SaveSettingOverridablePerStoreAsync<T, TPropType>(T settings, Expression<Func<T, TPropType>> keySelector, bool overrideForStore,
+        //     bool clearCache = true) where T : ISettings, new()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public Task SaveSettingOverridablePerStoreAsync(WebhookSettings webhookSettings, Func<WebhookSettings, bool> keySelector,
+        //     string modelPlaceOrderEndpointUrl, bool clearCache)
+        // {
+        //     throw new NotImplementedException();
+        // }
 
         /// <summary>
         /// Delete all settings

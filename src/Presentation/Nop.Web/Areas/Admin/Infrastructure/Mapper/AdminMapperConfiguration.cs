@@ -1247,8 +1247,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         protected virtual void CreateWebhookMaps()
         {
             CreateMap<WebhookSettings, WebhookSettingModel>()
-                .ForMember(model => model.ConfigurationEnabled, options => options.Ignore())
-                .ForMember(model => model.PlaceOrderEndpointUrl, options => options.Ignore());
+                .ForMember(model => model.ConfigurationEnabled_OverrideForStore,options => options.Ignore())
+                .ForMember(model => model.PlaceOrderEndpointUrl_OverrideForStore, options => options.Ignore());
             CreateMap<WebhookSettingModel, WebhookSettings>();
         }
 
