@@ -34,7 +34,7 @@ public class OrderNotifier : IConsumer<OrderPlacedEvent>
     {
       
         var orderItems = await _orderService.GetOrderItemsAsync(eventMessage.Order.Id);
-        var customerById = await _customerService.GetCustomerByIdAsync(eventMessage.Order.Id);
+        var customerById = await _customerService.GetCustomerByIdAsync(eventMessage.Order.CustomerId);
 
         var listOfProducts = new List<ProductDetails>();
 
@@ -46,7 +46,7 @@ public class OrderNotifier : IConsumer<OrderPlacedEvent>
             listOfProducts.Add(new ProductDetails() { Id = product.Id, Name = product.Name ,Total = item.Quantity});
         }
                     
-        var orderDetails = new OrderDetails
+        var orderDetails = new OrderDetails()
         {
             Id =eventMessage.Order.Id,
             OrderTotal = eventMessage.Order.OrderTotal,

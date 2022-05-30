@@ -32,7 +32,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
-                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+                @* @await Component.InvokeAsync(typeof(SettingModeViewComponent)) *@
                 <nop-cards id="customersettings-cards">
                     <nop-card asp-name="customersettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Webhook.Common", Model)</nop-card>
 
@@ -53,10 +53,10 @@
     
     
     <script>
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.ConfigurationEnabled)").click(toggleForceMultifactorAuthentication);
-            toggleForceMultifactorAuthentication();
-        });
+        // $(document).ready(function () {
+        //     $("#@Html.IdFor(model => model.ConfigurationEnabled)").click(toggleForceMultifactorAuthentication);
+        //     toggleForceMultifactorAuthentication();
+        // });
 
         function toggleForceMultifactorAuthentication() {
             warningValidation('@Url.Action("ForceMultifactorAuthenticationWarning", "Setting")',
