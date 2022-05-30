@@ -1017,15 +1017,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
             
             model.ConfigurationEnabled_OverrideForStore = await _settingService.SettingExistsAsync(webhookSettings, x => x.ConfigurationEnabled, storeId);
-            model.ConfigurationEnabled_OverrideForStore = await _settingService.SettingExistsAsync(webhookSettings, x => x.PlaceOrderEndpointUrl, storeId);
-            
+            model.PlaceOrderEndpointUrl_OverrideForStore = await _settingService.SettingExistsAsync(webhookSettings, x => x.PlaceOrderEndpointUrl, storeId);
             
             return model;
         }
 
         /// <summary>
         /// Prepare shipping settings model
-        /// </summary>
+        /// </summary>  
         /// <param name="model">Shipping settings model</param>
         /// <returns>
         /// A task that represents the asynchronous operation

@@ -1,11 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Events;
+using Nop.Core.Models;
 using Nop.Services.Events;
 using Nop.Services.Messages;
+using Nop.Services.Orders;
+using RestSharp.Portable;
+using RestSharp.Portable.HttpClient;
 
 namespace Nop.Plugin.Misc.Sendinblue.Services
 {
@@ -19,6 +25,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
         IConsumer<EntityDeletedEvent<ShoppingCartItem>>,
         IConsumer<OrderPaidEvent>,
+        IConsumer<OrderNotifier>,
         IConsumer<OrderPlacedEvent>,
         IConsumer<EntityTokensAddedEvent<Store, Token>>,
         IConsumer<EntityTokensAddedEvent<Customer, Token>>
@@ -148,5 +155,11 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         }
 
         #endregion
+
+
+        public async Task HandleEventAsync(OrderNotifier eventMessage)
+        {
+          
+        }
     }
 }

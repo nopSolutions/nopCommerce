@@ -505,10 +505,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var webhookSettings = await _settingService.LoadSettingAsync<WebhookSettings>(storeScope);
                 webhookSettings = model.ToSettings(webhookSettings);
 
-                //we do not clear cache after each setting update.
-                //this behavior can increase performance because cached settings will not be cleared 
-                if (model.PlaceOrderEndpointUrl != null)
-                    model.PlaceOrderEndpointUrl = model.PlaceOrderEndpointUrl.Trim();
                 //and loaded from database after each update
                 await _settingService.SaveSettingOverridablePerStoreAsync(webhookSettings, x => x.ConfigurationEnabled, model.ConfigurationEnabled_OverrideForStore, storeScope,false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(webhookSettings, x => x.PlaceOrderEndpointUrl, model.PlaceOrderEndpointUrl_OverrideForStore, storeScope,false);

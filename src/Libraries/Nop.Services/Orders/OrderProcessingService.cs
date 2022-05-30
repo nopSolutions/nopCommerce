@@ -1822,7 +1822,6 @@ namespace Nop.Services.Orders
                     //raise event       
                     await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
 
-
                     var orderItems = await _orderService.GetOrderItemsAsync(order.Id);
                     var customerById = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
@@ -1850,6 +1849,7 @@ namespace Nop.Services.Orders
                     if (_webhookSettings.ConfigurationEnabled)
                     {
                         var url = _webhookSettings.PlaceOrderEndpointUrl;
+                        
                         var client = new RestClient(url);
                         var request = new RestRequest(url, Method.POST);
                         request.AddJsonBody(orderDetails);
