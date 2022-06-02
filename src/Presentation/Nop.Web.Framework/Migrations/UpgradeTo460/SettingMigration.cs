@@ -299,6 +299,21 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 taxSettings.EuVatEnabledForGuests = false;
                 settingService.SaveSettingAsync(taxSettings, settings => settings.EuVatEnabledForGuests).Wait();
             }
+
+            //#5570
+            var sitemapXmlSettings = settingService.LoadSettingAsync<SitemapXmlSettings>().Result;
+
+            if (!settingService.SettingExistsAsync(sitemapXmlSettings, settings => settings.RebuildSitemapXmlAfterHours).Result)
+            {
+                sitemapXmlSettings.RebuildSitemapXmlAfterHours = 2 * 24;
+                settingService.SaveSettingAsync(sitemapXmlSettings, settings => settings.RebuildSitemapXmlAfterHours).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(sitemapXmlSettings, settings => settings.SitemapBuildOperationDelay).Result)
+            {
+                sitemapXmlSettings.SitemapBuildOperationDelay = 60;
+                settingService.SaveSettingAsync(sitemapXmlSettings, settings => settings.SitemapBuildOperationDelay).Wait();
+            }
         }
 
         public override void Down()

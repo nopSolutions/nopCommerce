@@ -14,7 +14,7 @@ namespace Nop.Core.Caching
     /// <summary>
     /// Represents a distributed cache 
     /// </summary>
-    public partial class DistributedCacheManager: CacheKeyService, ILocker, IStaticCacheManager
+    public partial class DistributedCacheManager : CacheKeyService, ILocker, IStaticCacheManager
     {
         #region Fields
 
@@ -55,7 +55,7 @@ namespace Nop.Core.Caching
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(key.CacheTime)
             };
-            
+
             return options;
         }
 
@@ -72,7 +72,7 @@ namespace Nop.Core.Caching
         {
             var json = await _distributedCache.GetStringAsync(key.Key);
 
-            if (string.IsNullOrEmpty(json)) 
+            if (string.IsNullOrEmpty(json))
                 return (false, default);
             
             using var _ = await _locker.LockAsync();
@@ -320,7 +320,7 @@ namespace Nop.Core.Caching
         {
             using var _ = await _locker.LockAsync();
 
-            foreach (var key in _keys) 
+            foreach (var key in _keys)
                 await _distributedCache.RemoveAsync(key);
 
             _items.Clear();
@@ -328,34 +328,33 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Perform some action with exclusive lock
+        /// Perform asynchronous action with exclusive in-memory lock
         /// </summary>
         /// <param name="resource">The key we are locking on</param>
         /// <param name="expirationTime">The time after which the lock will automatically be expired</param>
         /// <param name="action">Action to be performed with locking</param>
         /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
-        public bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
+        public async Task<bool> PerformActionWithLockAsync(string resource, TimeSpan expirationTime, Func<Task> action)
         {
-            //ensure that lock is acquired
-            if (!string.IsNullOrEmpty(_distributedCache.GetString(resource)))
+            if (!string.IsNullOrEmpty(await _distributedCache.GetStringAsync(resource)))
                 return false;
 
             try
             {
-                _distributedCache.SetString(resource, resource, new DistributedCacheEntryOptions
+                await _distributedCache.SetStringAsync(resource, resource, new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = expirationTime
                 });
 
                 //perform action
-                action();
+                await action();
 
                 return true;
             }
             finally
             {
                 //release lock even if action fails
-                _distributedCache.Remove(resource);
+                await _distributedCache.RemoveAsync(resource);
             }
         }
 
