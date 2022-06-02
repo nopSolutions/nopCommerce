@@ -2,7 +2,7 @@
 using Nop.Core.Configuration;
 using WebOptimizer;
 
-namespace Nop.Web.Framework.Configuration
+namespace Nop.Web.Framework.WebOptimizer
 {
     public class WebOptimizerConfig : WebOptimizerOptions, IConfig
     {
