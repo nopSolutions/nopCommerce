@@ -81,12 +81,10 @@ namespace Nop.Plugin.Misc.AbcCore
             }
         }
 
+        // Cleans additional cache for HTML Widgets after changing content to reflect changes immediately
         public async System.Threading.Tasks.Task HandleEventAsync(EntityUpdatedEvent<HtmlWidget> eventMessage)
         {
-            // I think this is the wrong prefix, I just need to find the right one
-            // await _cacheManager.RemoveByPrefixAsync("Nop");
-
-            // await _logger.InformationAsync($"HtmlWidget '{eventMessage.Entity.Name}' updated, cache cleared.");
+            await _cacheManager.RemoveByPrefixAsync("Nop.conditionstatement.all.");
         }
 
         public System.Threading.Tasks.Task<IList<string>> GetWidgetZonesAsync()
