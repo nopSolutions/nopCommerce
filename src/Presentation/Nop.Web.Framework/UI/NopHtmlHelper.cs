@@ -20,8 +20,9 @@ using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Seo;
 using Nop.Services.Localization;
-using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Mvc.Routing;
+using Nop.Web.Framework.WebOptimizer;
+using Nop.Web.Framework.WebOptimizer.Processors;
 using WebOptimizer;
 
 namespace Nop.Web.Framework.UI
@@ -60,16 +61,16 @@ namespace Nop.Web.Framework.UI
         #region Ctor
 
         public NopHtmlHelper(AppSettings appSettings,
-            IActionContextAccessor actionContextAccessor,
             HtmlEncoder htmlEncoder,
+            IActionContextAccessor actionContextAccessor,
             IAssetPipeline assetPipeline,
             IUrlHelperFactory urlHelperFactory,
             IWebHostEnvironment webHostEnvironment,
             SeoSettings seoSettings)
         {
             _appSettings = appSettings;
-            _actionContextAccessor = actionContextAccessor;
             _htmlEncoder = htmlEncoder;
+            _actionContextAccessor = actionContextAccessor;
             _assetPipeline = assetPipeline;
             _urlHelperFactory = urlHelperFactory;
             _webHostEnvironment = webHostEnvironment;
@@ -79,6 +80,35 @@ namespace Nop.Web.Framework.UI
         #endregion
 
         #region Utils
+
+        private IAsset CreateCssAsset(string bundleKey, string[] assetFiles)
+        {
+            var asset = _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextCss}; charset=UTF-8", assetFiles)
+                .EnforceFileExtensions(".css")
+                .AdjustRelativePaths()
+                .AddResponseHeader(HeaderNames.XContentTypeOptions, "nosniff");
+
+            //to more precisely log problem files we minify them before concatenating
+            asset.Processors.Add(new NopCssMinifier());
+
+            asset.Concatenate();
+
+            return asset;
+        }
+
+        private IAsset CreateJavaScriptAsset(string bundleKey, string[] assetFiles)
+        {
+            var asset = _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextJavascript}; charset=UTF-8", assetFiles)
+                        .EnforceFileExtensions(".js", ".es5", ".es6")
+                        .AddResponseHeader(HeaderNames.XContentTypeOptions, "nosniff");
+
+            //to more precisely log problem files we minify them before concatenating
+            asset.Processors.Add(new NopJsMinifier());
+
+            asset.Concatenate();
+
+            return asset;
+        }
 
         private string GetAssetKey(string key, ResourceLocation location)
         {
@@ -364,7 +394,7 @@ namespace Nop.Web.Framework.UI
                     .Select(item => item.Src)
                     .Distinct().ToArray();
 
-                var bundleAsset = GetOrCreateBundle(bundleKey, _assetPipeline.AddJavaScriptBundle, sources);
+                var bundleAsset = GetOrCreateBundle(bundleKey, CreateJavaScriptAsset, sources);
 
                 var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
                 result.AppendFormat("<script type=\"{0}\" src=\"{1}{2}?v={3}\"></script>",
@@ -384,7 +414,7 @@ namespace Nop.Web.Framework.UI
                     continue;
                 }
 
-                var asset = GetOrCreateBundle(item.Src, _assetPipeline.AddJavaScriptBundle);
+                var asset = GetOrCreateBundle(item.Src, CreateJavaScriptAsset);
 
                 result.AppendFormat("<script type=\"{0}\" src=\"{1}?v={2}\"></script>",
                     MimeTypes.TextJavascript, asset.Route, asset.GenerateCacheKey(httpContext));
@@ -538,12 +568,7 @@ namespace Nop.Web.Framework.UI
                     //remove the application path from the generated URL if exists
                     .Select(item => item.Src).ToArray();
 
-                var bundleAsset = GetOrCreateBundle(bundleKey, (route, assetFiles) => _assetPipeline.AddBundle(route, $"{MimeTypes.TextCss}; charset=UTF-8", assetFiles)
-                    .EnforceFileExtensions(".css")
-                    .AdjustRelativePaths()
-                    .Concatenate()
-                    .AddResponseHeader(HeaderNames.XContentTypeOptions, "nosniff")
-                    .MinifyCss(), sources);
+                var bundleAsset = GetOrCreateBundle(bundleKey, CreateCssAsset, sources);
 
                 var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
                 result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}{2}?v={3}\" />",
@@ -556,7 +581,7 @@ namespace Nop.Web.Framework.UI
 
             if (_actionContextAccessor.ActionContext == null)
                 throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext));
-            
+
             foreach (var item in styles)
             {
                 if (!item.IsLocal)
@@ -566,12 +591,7 @@ namespace Nop.Web.Framework.UI
                     continue;
                 }
 
-                var asset = GetOrCreateBundle(item.Src, (bundleKey, assetFiles) => _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextCss}; charset=UTF-8", assetFiles)
-                    .EnforceFileExtensions(".css")
-                    .AdjustRelativePaths()
-                    .Concatenate()
-                    .AddResponseHeader(HeaderNames.XContentTypeOptions, "nosniff")
-                    .MinifyCss());
+                var asset = GetOrCreateBundle(item.Src, CreateCssAsset);
 
                 result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}?v={2}\" />",
                     MimeTypes.TextCss, asset.Route, asset.GenerateCacheKey(httpContext));

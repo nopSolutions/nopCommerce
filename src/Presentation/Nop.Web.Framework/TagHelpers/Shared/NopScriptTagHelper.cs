@@ -13,9 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Configuration;
-using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.UI;
+using Nop.Web.Framework.WebOptimizer;
 using WebOptimizer;
 
 namespace Nop.Web.Framework.TagHelpers.Shared
