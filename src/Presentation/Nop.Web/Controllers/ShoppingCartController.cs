@@ -39,6 +39,8 @@ using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
+//customization
+using Nop.Services.Forums;
 
 namespace Nop.Web.Controllers
 {
@@ -83,6 +85,9 @@ namespace Nop.Web.Controllers
         private readonly OrderSettings _orderSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly ShippingSettings _shippingSettings;
+        //customization
+        private readonly IForumService _forumService;
+        private readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
 
         #endregion
 
@@ -123,7 +128,10 @@ namespace Nop.Web.Controllers
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            //customization
+            IForumService forumService,
+            IPrivateMessagesModelFactory privateMessagesModelFactory)
         {
             _captchaSettings = captchaSettings;
             _customerSettings = customerSettings;
@@ -161,6 +169,9 @@ namespace Nop.Web.Controllers
             _orderSettings = orderSettings;
             _shoppingCartSettings = shoppingCartSettings;
             _shippingSettings = shippingSettings;
+            //customization
+            _forumService = forumService;
+            _privateMessagesModelFactory = privateMessagesModelFactory;
         }
 
         #endregion

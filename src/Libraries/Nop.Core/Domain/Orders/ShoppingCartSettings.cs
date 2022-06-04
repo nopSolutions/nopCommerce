@@ -114,5 +114,14 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether a customer will see quantity of attribute values associated to products (when qty > 1)
         /// </summary>
         public bool RenderAssociatedAttributeValueQuantity { get; set; }
+
+        //customization
+        public int ThreeMonthSubscriptionProductId { get; set; }
+        public int SixMonthSubscriptionProductId { get; set; }
+        public int OneYearSubscriptionProductId { get; set; }
+
+        public int ThreeMonthSubscriptionAllottedCount { get; set; }
+        public int SixMonthSubscriptionAllottedCount { get; set; }
+        public int OneYearSubscriptionAllottedCount { get; set; }
     }
 }

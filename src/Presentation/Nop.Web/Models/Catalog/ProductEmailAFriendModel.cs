@@ -27,5 +27,9 @@ namespace Nop.Web.Models.Catalog
         public string Result { get; set; }
 
         public bool DisplayCaptcha { get; set; }
+
+        //customization
+        public string TargetCustomerEmailId { get; set; }
+        public string TargetCustomerMobileNumber { get; set; }
     }
 }

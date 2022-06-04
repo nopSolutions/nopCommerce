@@ -8,6 +8,9 @@ using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
+//customization
+using static Nop.Web.Areas.Admin.Models.Customers.CustomerModel;
+using Nop.Web.Models.PrivateMessages;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -31,6 +34,10 @@ namespace Nop.Web.Models.Catalog
             ProductReviewOverview = new ProductReviewOverviewModel();
             TierPrices = new List<TierPriceModel>();
             ProductEstimateShipping = new ProductEstimateShippingModel();
+            //customization
+            SendEmail = new SendEmailModel() { SendImmediately = true };
+            SendPm = new SendPmModel();
+            PrivateMessageModel = new PrivateMessageModel();
         }
 
         //picture(s)
@@ -331,6 +338,14 @@ namespace Nop.Web.Models.Catalog
         {
             public int ProductId { get; set; }
         }
+
+        #endregion
+
+        #region customization
+
+        public SendEmailModel SendEmail { get; set; }
+        public SendPmModel SendPm { get; }
+        public PrivateMessageModel PrivateMessageModel { get; set; }
 
         #endregion
     }

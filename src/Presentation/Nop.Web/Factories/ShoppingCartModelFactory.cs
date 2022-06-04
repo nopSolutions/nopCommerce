@@ -94,6 +94,8 @@ namespace Nop.Web.Factories
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
+        //customization
+        //private readonly IProductModelFactory _productModelFactory;
 
         #endregion
 
@@ -144,7 +146,10 @@ namespace Nop.Web.Factories
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings
+            //customization
+            //IProductModelFactory productModelFactory
+            )
         {
             _addressSettings = addressSettings;
             _captchaSettings = captchaSettings;
@@ -192,6 +197,8 @@ namespace Nop.Web.Factories
             _shoppingCartSettings = shoppingCartSettings;
             _taxSettings = taxSettings;
             _vendorSettings = vendorSettings;
+            //customization
+            //_productModelFactory = productModelFactory;
         }
 
         #endregion

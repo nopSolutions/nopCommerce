@@ -27,6 +27,10 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Models.Catalog;
+//customization
+using Nop.Core.Domain.Payments;
+using Nop.Services.Common;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Web.Controllers
 {
@@ -62,6 +66,9 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly ShippingSettings _shippingSettings;
+        //customization
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
 
         #endregion
 
@@ -93,7 +100,10 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
             ShoppingCartSettings shoppingCartSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,            
+            //customization
+            IGenericAttributeService genericAttributeService,
+            IPrivateMessagesModelFactory privateMessagesModelFactory)
         {
             _captchaSettings = captchaSettings;
             _catalogSettings = catalogSettings;
@@ -122,6 +132,9 @@ namespace Nop.Web.Controllers
             _localizationSettings = localizationSettings;
             _shoppingCartSettings = shoppingCartSettings;
             _shippingSettings = shippingSettings;
+            //customization
+            _genericAttributeService = genericAttributeService;
+            _privateMessagesModelFactory = privateMessagesModelFactory;
         }
 
         #endregion

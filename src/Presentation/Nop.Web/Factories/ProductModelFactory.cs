@@ -32,6 +32,9 @@ using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
+//customization
+using Nop.Services.Forums;
+using Nop.Web.Models.PrivateMessages;
 
 namespace Nop.Web.Factories
 {
@@ -79,7 +82,14 @@ namespace Nop.Web.Factories
         private readonly OrderSettings _orderSettings;
         private readonly SeoSettings _seoSettings;
         private readonly ShippingSettings _shippingSettings;
-        private readonly VendorSettings _vendorSettings;        
+        private readonly VendorSettings _vendorSettings;
+        //customization
+        private readonly IForumModelFactory _forumModelFactory;
+        private readonly IForumService _forumService;
+        private readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
+        private readonly ICustomerAttributeParser _customerAttributeParser;
+        private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly ICountryService _countryService;
 
         #endregion
 
@@ -122,7 +132,14 @@ namespace Nop.Web.Factories
             OrderSettings orderSettings,
             SeoSettings seoSettings,
             ShippingSettings shippingSettings,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            //customization
+            IForumModelFactory forumModelFactory,
+            IForumService forumService,
+            IPrivateMessagesModelFactory privateMessagesModelFactory,
+            ICustomerAttributeParser customerAttributeParser,
+            ICustomerAttributeService customerAttributeService,
+            ICountryService countryService)
         {
             _captchaSettings = captchaSettings;
             _catalogSettings = catalogSettings;
@@ -162,8 +179,13 @@ namespace Nop.Web.Factories
             _shippingSettings = shippingSettings;
             _vendorSettings = vendorSettings;
             _videoService = videoService;
-
-
+            //customization
+            _forumModelFactory = forumModelFactory;
+            _forumService = forumService;
+            _privateMessagesModelFactory = privateMessagesModelFactory;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
+            _countryService = countryService;
         }
 
         #endregion

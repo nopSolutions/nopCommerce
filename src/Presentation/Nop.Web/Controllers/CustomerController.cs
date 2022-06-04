@@ -44,6 +44,12 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
+//customization
+using Nop.Services.Seo;
+using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Core.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Web.Controllers
 {
@@ -98,6 +104,19 @@ namespace Nop.Web.Controllers
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly TaxSettings _taxSettings;
 
+        //customization
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IWebHelper _webHelper;
+
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IProductModelFactory _productModelFactory;
+        private readonly IProductTagService _productTagService;
+        private readonly ICategoryService _categoryService;
+        private readonly IUrlRecordService _urlRecordService;
+
+        private readonly INopFileProvider _fileProvider;
+        private const string FLAGS_PATH = @"images\flags";
+
         #endregion
 
         #region Ctor
@@ -146,7 +165,17 @@ namespace Nop.Web.Controllers
             MediaSettings mediaSettings,
             MultiFactorAuthenticationSettings multiFactorAuthenticationSettings,
             StoreInformationSettings storeInformationSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            //customization
+            IShoppingCartService shoppingCartService,
+            IWebHelper webHelper,
+            ISpecificationAttributeService specificationAttributeService,
+            IProductModelFactory productModelFactory,
+            ICategoryService categoryService,
+            IUrlRecordService urlRecordService,
+            IProductTagService productTagService,
+            INopFileProvider fileProvider
+            )
         {
             _addressSettings = addressSettings;
             _captchaSettings = captchaSettings;
@@ -193,6 +222,16 @@ namespace Nop.Web.Controllers
             _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
             _storeInformationSettings = storeInformationSettings;
             _taxSettings = taxSettings;
+
+            //customization
+            _shoppingCartService = shoppingCartService;
+            _webHelper = webHelper;
+            _specificationAttributeService = specificationAttributeService;
+            _productModelFactory = productModelFactory;
+            _categoryService = categoryService;
+            _urlRecordService = urlRecordService;
+            _productTagService = productTagService;
+            _fileProvider = fileProvider;
         }
 
         #endregion

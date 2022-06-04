@@ -383,7 +383,13 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether privacy policy should accepted during registration
         /// </summary>
         public bool AcceptPrivacyPolicyEnabled { get; set; }
-        
+
         #endregion
+
+        //customization
+        public int GenderSpecificationAttributeId { get; set; }
+        public int GenderMaleSpecificationAttributeOptionId { get; set; }
+        public int GenderFeMaleSpecificationAttributeOptionId { get; set; }
+        public bool ShowSecondaryTechnologySpecificationAttribute { get; set; }
     }
 }
