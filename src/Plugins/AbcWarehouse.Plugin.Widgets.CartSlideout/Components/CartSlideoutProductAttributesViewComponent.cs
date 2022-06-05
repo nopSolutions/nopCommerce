@@ -29,7 +29,11 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
                 null,
                 includedAttributeNames);
 
-            return View("~/Plugins/Misc.AbcFrontend/Views/Product/_ProductAttributes.cshtml", models);
+            // This will only work for Pavilion theme, will need to be adjusted for Pacific
+            // once Mickey Shorr is written
+            // More ideally, we won't need to modify _ProductAttributes.cshtml
+            // Could also just place this in AbcFrontend/Core?
+            return View("~/Themes/Pavilion/Views/Product/_ProductAttributes.cshtml", models);
         }
     }
 }
