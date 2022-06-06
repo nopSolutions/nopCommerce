@@ -15,6 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public CatalogSettingsModel()
         {
+            AvailableSortingOptions = new List<SelectListItem>();
             AvailableViewModes = new List<SelectListItem>();
             SortOptionSearchModel = new SortOptionSearchModel();
             ReviewTypeSearchModel = new ReviewTypeSearchModel();
@@ -61,6 +62,12 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowProductSorting")]
         public bool AllowProductSorting { get; set; }
         public bool AllowProductSorting_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DefaultProductSortingOption")]
+        public int DefaultProductSortingOptionId { get; set; }
+        public bool DefaultProductSortingOptionId_OverrideForStore { get; set; }
+
+        public IList<SelectListItem> AvailableSortingOptions { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowProductViewModeChanging")]
         public bool AllowProductViewModeChanging { get; set; }

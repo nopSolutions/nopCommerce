@@ -2867,6 +2867,7 @@ namespace Nop.Services.Installation
                 ShowFreeShippingNotification = true,
                 ShowShortDescriptionOnCatalogPages = false,
                 AllowProductSorting = true,
+                DefaultProductSortingOptionId = (int) ProductSortingEnum.Position,
                 AllowProductViewModeChanging = true,
                 DefaultViewMode = "grid",
                 ShowProductsFromSubcategories = false,

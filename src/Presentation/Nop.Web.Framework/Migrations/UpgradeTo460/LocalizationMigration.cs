@@ -233,6 +233,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Enums.Nop.Core.Domain.Catalog.ProductUrlStructureType.ManufacturerProduct"] = "/Manufacturer/Product",
                 ["Enums.Nop.Core.Domain.Catalog.ProductUrlStructureType.Product"] = "/Product",
 
+                //#5928
+                ["Admin.Configuration.Settings.Catalog.DefaultProductSortingOption"] = "Default product sorting option",
+                ["Admin.Configuration.Settings.Catalog.DefaultProductSortingOption.Hint"] = "If 'Allow product sorting' is disabled then product will be sorted by this sorting option.",
+
             }, languageId).Wait();
 
             #endregion

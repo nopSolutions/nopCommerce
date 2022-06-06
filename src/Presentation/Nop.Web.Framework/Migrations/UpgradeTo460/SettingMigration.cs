@@ -87,6 +87,20 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(catalogSettings, settings => settings.ShowShortDescriptionOnCatalogPages).Wait();
             }
 
+            //#385
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductUrlStructureTypeId).Result)
+            {
+                catalogSettings.ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.ProductUrlStructureTypeId).Wait();
+            }
+
+            //#5928
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.DefaultProductSortingOptionId).Result)
+            {
+                catalogSettings.DefaultProductSortingOptionId = (int)ProductSortingEnum.Position;
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.DefaultProductSortingOptionId).Wait();
+            }
+
             var storeInformationSettings = settingService.LoadSettingAsync<StoreInformationSettings>().Result;
 
             //#3997
@@ -167,14 +181,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 mediaSettings.VideoIframeHeight = 150;
                 settingService.SaveSettingAsync(mediaSettings, settings => settings.VideoIframeHeight).Wait();
             }
-
-            //#385
-            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductUrlStructureTypeId).Result)
-            {
-                catalogSettings.ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product;
-                settingService.SaveSettingAsync(catalogSettings, settings => settings.ProductUrlStructureTypeId).Wait();
-            }
-
         }
 
         public override void Down()

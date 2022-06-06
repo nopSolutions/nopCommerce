@@ -66,6 +66,11 @@ namespace Nop.Core.Domain.Catalog
         public bool AllowProductSorting { get; set; }
 
         /// <summary>
+        /// Gets or sets a default value of ProductSortingEnumId
+        /// </summary>
+        public int DefaultProductSortingOptionId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to change product view mode
         /// </summary>
         public bool AllowProductViewModeChanging { get; set; }

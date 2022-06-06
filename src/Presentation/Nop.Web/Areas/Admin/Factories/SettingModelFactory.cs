@@ -1155,6 +1155,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = await _localizationService.GetResourceAsync("Admin.Catalog.ViewMode.List"),
                 Value = "list"
             });
+            model.AvailableSortingOptions = (await ProductSortingEnum.Position.ToSelectListAsync(false))
+                    .Select(item => new SelectListItem(item.Text, item.Value))
+                    .ToList();
 
             //fill in overridden values
             if (storeId > 0)
@@ -1168,6 +1171,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ShowFreeShippingNotification_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowFreeShippingNotification, storeId);
                 model.ShowShortDescriptionOnCatalogPages_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowShortDescriptionOnCatalogPages, storeId);
                 model.AllowProductSorting_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowProductSorting, storeId);
+                model.DefaultProductSortingOptionId_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DefaultProductSortingOptionId, storeId);
                 model.AllowProductViewModeChanging_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowProductViewModeChanging, storeId);
                 model.DefaultViewMode_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DefaultViewMode, storeId);
                 model.ShowProductsFromSubcategories_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowProductsFromSubcategories, storeId);

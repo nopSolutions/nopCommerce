@@ -1892,7 +1892,8 @@ namespace Nop.Web.Factories
         {
             //set the order by position by default
             model.OrderBy = command.OrderBy;
-            command.OrderBy = (int)ProductSortingEnum.Position;
+
+            command.OrderBy = Enum.IsDefined(typeof(ProductSortingEnum), _catalogSettings.DefaultProductSortingOptionId) ? _catalogSettings.DefaultProductSortingOptionId : (int)ProductSortingEnum.Position;
 
             //ensure that product sorting is enabled
             if (!_catalogSettings.AllowProductSorting)
