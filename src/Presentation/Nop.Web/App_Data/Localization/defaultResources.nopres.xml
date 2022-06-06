@@ -6634,7 +6634,7 @@
     <Value>Force multi-factor authentication</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Hint">
-    <Value>Force activation of multi-factor authentication for all users (at least one MFA provider must be active).</Value>
+    <Value>Force activation of multi-factor authentication for customer roles specified in Access control list (at least one MFA provider must be active).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning">
     <Value>There are currently no active authentication providers. To use this setting, you must activate one of the multi-factor authentication providers.</Value>
@@ -18425,6 +18425,9 @@
   </LocaleResource>
   <LocaleResource Name="Permission.AllowCustomerImpersonation">
     <Value>Admin area. Allow Customer Impersonation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.Authentication.EnableMultiFactorAuthentication">
+    <Value>Security. Enable Multi-factor authentication</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.Authentication.ManageExternalMethods">
     <Value>Admin area. Manage External Authentication Methods</Value>

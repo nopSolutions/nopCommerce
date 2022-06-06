@@ -253,6 +253,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.Settings.Media.ProductDefaultImage.Hint"] = "Upload a picture to be used as the default image. If nothing is uploaded, {0} will be used.",
 
                 ["Admin.Help.Training"] = "Training",
+                
+                //5607
+                ["Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Hint"] = "Force activation of multi-factor authentication for customer roles specified in Access control list (at least one MFA provider must be active).",
+                ["Permission.Authentication.EnableMultiFactorAuthentication"] = "Security. Enable Multi-factor authentication",
 
             }, languageId).Wait();
 
