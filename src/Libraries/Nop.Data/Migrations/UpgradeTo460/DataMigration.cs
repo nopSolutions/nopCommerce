@@ -11,6 +11,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.ScheduleTasks;
+using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
@@ -43,13 +44,13 @@ namespace Nop.Data.Migrations.UpgradeTo460
             var customerRoleId = customerRole?.Id ?? 0;
 
             var query = from c in _dataProvider.GetTable<Customer>()
-                join crm in _dataProvider.GetTable<CustomerCustomerRoleMapping>() on c.Id equals crm.CustomerId
-                where !c.Deleted && (customerRoleId == 0 || crm.CustomerRoleId == customerRoleId)
-                select c;
+                        join crm in _dataProvider.GetTable<CustomerCustomerRoleMapping>() on c.Id equals crm.CustomerId
+                        where !c.Deleted && (customerRoleId == 0 || crm.CustomerRoleId == customerRoleId)
+                        select c;
 
             var pageIndex = 0;
             var pageSize = 500;
-            
+
             int castToInt(string value)
             {
                 return int.TryParse(value, out var result) ? result : default;
@@ -220,6 +221,19 @@ namespace Nop.Data.Migrations.UpgradeTo460
                     }
                 );
             }
+
+            //#5607
+            var permissionRecordTypeTable = _dataProvider.GetTable<PermissionRecord>();
+
+            if (!permissionRecordTypeTable.Any(prt => string.Compare(prt.SystemName, "MultiFactorAuthentication", StringComparison.InvariantCultureIgnoreCase) == 0))
+                _dataProvider.InsertEntity(
+                    new PermissionRecord
+                    {
+                        SystemName = "ForceMultiFactorAuthentication",
+                        Name = "Public store. Force multi-factor authentication",
+                        Category = "PublicStore"
+                    }
+                );
         }
 
         public override void Down()

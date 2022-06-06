@@ -66,6 +66,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord PublicStoreAllowNavigation = new() { Name = "Public store. Allow navigation", SystemName = "PublicStoreAllowNavigation", Category = "PublicStore" };
         public static readonly PermissionRecord AccessClosedStore = new() { Name = "Public store. Access a closed store", SystemName = "AccessClosedStore", Category = "PublicStore" };
         public static readonly PermissionRecord AccessProfiling = new() { Name = "Public store. Access MiniProfiler results", SystemName = "AccessProfiling", Category = "PublicStore" };
+        public static readonly PermissionRecord ForceMultiFactorAuthentication = new() { Name = "Public store. Force multi-factor authentication", SystemName = "ForceMultiFactorAuthentication", Category = "PublicStore" };
 
         /// <summary>
         /// Get permissions
@@ -128,7 +129,8 @@ namespace Nop.Services.Security
                 EnableWishlist,
                 PublicStoreAllowNavigation,
                 AccessClosedStore,
-                AccessProfiling
+                AccessProfiling,
+                ForceMultiFactorAuthentication
             };
         }
 
@@ -197,7 +199,8 @@ namespace Nop.Services.Security
                         EnableWishlist,
                         PublicStoreAllowNavigation,
                         AccessClosedStore,
-                        AccessProfiling
+                        AccessProfiling,
+                        ForceMultiFactorAuthentication
                     }
                 ),
                 (
@@ -207,7 +210,8 @@ namespace Nop.Services.Security
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
-                        PublicStoreAllowNavigation
+                        PublicStoreAllowNavigation,
+                        ForceMultiFactorAuthentication
                     }
                 ),
                 (
@@ -227,7 +231,8 @@ namespace Nop.Services.Security
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
-                        PublicStoreAllowNavigation
+                        PublicStoreAllowNavigation,
+                        ForceMultiFactorAuthentication
                     }
                 ),
                 (
@@ -237,7 +242,8 @@ namespace Nop.Services.Security
                         AccessAdminPanel,
                         ManageProducts,
                         ManageProductReviews,
-                        ManageOrders
+                        ManageOrders,
+                        ForceMultiFactorAuthentication
                     }
                 )
             };

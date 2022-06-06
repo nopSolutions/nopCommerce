@@ -9,6 +9,7 @@ using Nop.Data;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Security;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
@@ -38,6 +39,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             private readonly ICustomerService _customerService;
             private readonly IGenericAttributeService _genericAttributeService;
             private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+            private readonly IPermissionService _permissionService;
             private readonly IWorkContext _workContext;
             private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
 
@@ -48,12 +50,14 @@ namespace Nop.Web.Framework.Mvc.Filters
             public ForceMultiFactorAuthenticationFilter(ICustomerService customerService,
                 IGenericAttributeService genericAttributeService,
                 IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
+                IPermissionService permissionService,
                 IWorkContext workContext,
                 MultiFactorAuthenticationSettings multiFactorAuthenticationSettings)
             {
                 _customerService = customerService;
                 _genericAttributeService = genericAttributeService;
                 _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
+                _permissionService = permissionService;
                 _workContext = workContext;
                 _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
             }
@@ -98,6 +102,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //whether the feature is enabled
                 if (!_multiFactorAuthenticationSettings.ForceMultifactorAuthentication ||
+                    !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ForceMultiFactorAuthentication) ||
                     !await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
                 {
                     return;
