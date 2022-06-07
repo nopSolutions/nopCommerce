@@ -12,7 +12,6 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 {
     public class AbcDeliveryService : IAbcDeliveryService
     {
-        private readonly ICategoryService _categoryService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeService _productAttributeService;
         private readonly ILogger _logger;
@@ -20,14 +19,12 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
         private readonly IRepository<AbcDeliveryMap> _abcDeliveryMapRepository;
 
         public AbcDeliveryService(
-            ICategoryService categoryService,
             IPriceFormatter priceFormatter,
             IProductAttributeService productAttributeService,
             ILogger logger,
             IRepository<AbcDeliveryItem> abcDeliveryItemRepository,
             IRepository<AbcDeliveryMap> abcDeliveryMapRepository)
         {
-            _categoryService = categoryService;
             _priceFormatter = priceFormatter;
             _productAttributeService = productAttributeService;
             _logger = logger;

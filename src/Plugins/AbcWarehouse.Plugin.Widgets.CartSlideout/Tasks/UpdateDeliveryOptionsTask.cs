@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Misc.AbcCore.Delivery;
 using Nop.Plugin.Misc.AbcCore.Nop;
+using Nop.Services.Catalog;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
 
@@ -9,6 +12,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
     public class UpdateDeliveryOptionsTask : IScheduleTask
     {
         private readonly IAbcDeliveryService _abcDeliveryService;
+        private readonly ICategoryService _categoryService;
         private readonly ILogger _logger;
         private readonly IAbcProductAttributeService _productAttributeService;
 
@@ -18,10 +22,12 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
 
         public UpdateDeliveryOptionsTask(
             IAbcDeliveryService abcDeliveryService,
+            ICategoryService categoryService,
             ILogger logger,
             IAbcProductAttributeService productAttributeService)
         {
             _abcDeliveryService = abcDeliveryService;
+            _categoryService = categoryService;
             _logger = logger;
             _productAttributeService = productAttributeService;
         }
@@ -31,13 +37,83 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             await InitializeDeliveryOptionsProductAttributesAsync();
 
             var abcDeliveryMaps = await _abcDeliveryService.GetAbcDeliveryMapsAsync();
-            foreach (var abcDeliveryMap in abcDeliveryMaps)
+            foreach (var map in abcDeliveryMaps)
             {
-                await _logger.InformationAsync($"AbcDeliveryMap Category ID: {abcDeliveryMap.CategoryId}");
-
-                // Get products from a category
+                var productIds = (await _categoryService.GetProductCategoriesByCategoryIdAsync(map.CategoryId)).Select(pc => pc.ProductId);
 
                 // Apply to each product
+                foreach (var productId in productIds)
+                {
+                    
+                    var pams = new List<ProductAttributeMapping>();
+                    if (map.DeliveryOnly != 0 || map.DeliveryInstall != 0)
+                    {
+                        pams.Add(new ProductAttributeMapping()
+                        {
+                            ProductId = productId,
+                            ProductAttributeId = _deliveryPickupOptionsProductAttribute.Id,
+                            AttributeControlType = AttributeControlType.RadioList,
+                        });
+                    }
+
+                    var deliveryOptionsPam = new ProductAttributeMapping();
+                    try {
+                        deliveryOptionsPam = (await _productAttributeService.SaveProductAttributeMappingsAsync(
+                            productId,
+                            pams,
+                            new string[]
+                            {
+                                AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName,
+                                AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName,
+                            }
+                        )).SingleOrDefault();
+                    }
+                    catch {
+                        await _logger.InformationAsync($"Product ID: {productId}");
+                        throw;
+                    }
+
+                    if (map.DeliveryHaulway != 0)
+                    {
+                        pams.Add(new ProductAttributeMapping()
+                        {
+                            ProductId = productId,
+                            ProductAttributeId = _haulAwayDeliveryProductAttribute.Id,
+                            AttributeControlType = AttributeControlType.Checkboxes,
+                            DisplayOrder = 10,
+                            TextPrompt = AbcDeliveryConsts.HaulAwayTextPrompt
+
+                            // Needs condition - need ID from delivery options
+                        });
+                    }
+
+                    if (map.DeliveryHaulwayInstall != 0)
+                    {
+                        pams.Add(new ProductAttributeMapping()
+                        {
+                            ProductId = productId,
+                            ProductAttributeId = _haulAwayDeliveryInstallProductAttribute.Id,
+                            AttributeControlType = AttributeControlType.Checkboxes,
+                            DisplayOrder = 20,
+                            TextPrompt = AbcDeliveryConsts.HaulAwayTextPrompt
+
+                            // Needs condition - need ID from delivery options
+                        });
+                    }
+
+                    // Need to remove the "Delivery Options" pam so no duplicate below.
+                    pams.RemoveAll(pam => pam.Id == deliveryOptionsPam?.Id);
+
+                    // Need to save now without Delivery Options
+                    await _productAttributeService.SaveProductAttributeMappingsAsync(
+                        productId,
+                        pams,
+                        new string[]
+                        {
+                            AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName
+                        }
+                    );
+                }
             }
         }
 
