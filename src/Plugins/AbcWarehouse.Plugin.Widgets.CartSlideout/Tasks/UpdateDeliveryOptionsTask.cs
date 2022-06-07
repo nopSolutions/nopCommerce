@@ -40,11 +40,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             foreach (var map in abcDeliveryMaps)
             {
                 var productIds = (await _categoryService.GetProductCategoriesByCategoryIdAsync(map.CategoryId)).Select(pc => pc.ProductId);
-
-                // Apply to each product
                 foreach (var productId in productIds)
                 {
-                    
                     var pams = new List<ProductAttributeMapping>();
                     if (map.DeliveryOnly != 0 || map.DeliveryInstall != 0)
                     {
@@ -56,9 +53,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                         });
                     }
 
-                    var deliveryOptionsPam = new ProductAttributeMapping();
-                    try {
-                        deliveryOptionsPam = (await _productAttributeService.SaveProductAttributeMappingsAsync(
+                    var deliveryOptionsPam = (await _productAttributeService.SaveProductAttributeMappingsAsync(
                             productId,
                             pams,
                             new string[]
@@ -67,11 +62,6 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                                 AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName,
                             }
                         )).SingleOrDefault();
-                    }
-                    catch {
-                        await _logger.InformationAsync($"Product ID: {productId}");
-                        throw;
-                    }
 
                     if (map.DeliveryHaulway != 0)
                     {
@@ -101,17 +91,11 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                         });
                     }
 
-                    // Need to remove the "Delivery Options" pam so no duplicate below.
-                    pams.RemoveAll(pam => pam.Id == deliveryOptionsPam?.Id);
-
                     // Need to save now without Delivery Options
                     await _productAttributeService.SaveProductAttributeMappingsAsync(
                         productId,
                         pams,
-                        new string[]
-                        {
-                            AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName
-                        }
+                        new string[0]
                     );
                 }
             }

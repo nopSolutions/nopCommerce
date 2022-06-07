@@ -63,10 +63,14 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
             var toBeDeleted = existingPams.Where(e => !pams.Any(n => n.EqualTo(e)));
             var toBeInserted = pams.Where(n => !existingPams.Any(e => e.EqualTo(n)));
 
-            toBeDeleted.ToList().ForEach(async pam => await DeleteProductAttributeMappingAsync(pam));
+            // Handles duplicates
+            var groupedPams = existingPams.GroupBy(pam => pam.ProductAttributeId).Select(g => g.First());
+            var duplicatePams = existingPams.Except(groupedPams);
+
+            toBeDeleted.Union(duplicatePams).ToList().ForEach(async pam => await DeleteProductAttributeMappingAsync(pam));
             toBeInserted.ToList().ForEach(async pam => await InsertProductAttributeMappingAsync(pam));
 
-            return await existingPams.Union(toBeInserted).ToListAsync();
+            return await groupedPams.Union(toBeInserted).ToListAsync();
         }
     }
 }
