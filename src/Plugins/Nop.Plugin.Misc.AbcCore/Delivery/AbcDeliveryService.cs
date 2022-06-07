@@ -76,13 +76,12 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             }
         }
 
-        // Will only return options with mapped delivery options
-        // May not need to be made public
-        public async Task<AbcDeliveryMap> GetAbcDeliveryMapByCategoryIdAsync(int categoryId)
+        public async Task<IList<AbcDeliveryMap>> GetAbcDeliveryMapsAsync()
         {
-            var adm = await _abcDeliveryMapRepository.Table.FirstOrDefaultAsync(adm => adm.CategoryId == categoryId);
 
-            return adm != null && adm.HasDeliveryOptions() ? adm : null;
+            var abcDeliveryMaps = await _abcDeliveryMapRepository.Table.Where(adm => adm != null).ToListAsync();
+
+            return await abcDeliveryMaps.Where(adm => adm.HasDeliveryOptions()).ToListAsync();
         }
 
         private async System.Threading.Tasks.Task AddHaulAwayAsync(

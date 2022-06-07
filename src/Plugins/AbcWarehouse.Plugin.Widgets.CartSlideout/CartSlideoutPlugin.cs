@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Tasks;
+using Nop.Plugin.Misc.AbcCore.Delivery;
+using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Plugins;
@@ -14,14 +18,16 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout
     {
         private readonly string _taskType = $"{typeof(UpdateDeliveryOptionsTask).FullName}, {typeof(CartSlideoutPlugin).Namespace}";
 
+        private readonly IProductAttributeService _productAttributeService;
         private readonly IScheduleTaskService _scheduleTaskService;
-
         private readonly ISettingService _settingService;
 
         public CartSlideoutPlugin(
+            IProductAttributeService productAttributeService,
             IScheduleTaskService scheduleTaskService,
             ISettingService settingService)
         {
+            _productAttributeService = productAttributeService;
             _scheduleTaskService = scheduleTaskService;
             _settingService = settingService;
         }
@@ -48,12 +54,16 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout
             await RemoveTaskAsync();
             await AddTaskAsync();
 
+            await RemoveProductAttributesAsync();
+            await AddProductAttributesAsync();
+
             await base.InstallAsync();
         }
 
         public override async System.Threading.Tasks.Task UninstallAsync()
         {
             await RemoveTaskAsync();
+            await RemoveProductAttributesAsync();
 
             await base.UninstallAsync();
         }
@@ -78,6 +88,34 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout
             if (task != null)
             {
                 await _scheduleTaskService.DeleteTaskAsync(task);
+            }
+        }
+
+        private async System.Threading.Tasks.Task AddProductAttributesAsync()
+        {
+            var pas = new ProductAttribute[]
+            {
+                new ProductAttribute() { Name = AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName },
+                new ProductAttribute() { Name = AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName },
+                new ProductAttribute() { Name = AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName },
+            };
+
+            foreach (var pa in pas)
+            {
+                await _productAttributeService.InsertProductAttributeAsync(pa);
+            }
+        }
+
+        private async System.Threading.Tasks.Task RemoveProductAttributesAsync()
+        {
+            var attributes = (await _productAttributeService.GetAllProductAttributesAsync()).Where(pa =>
+                pa.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName ||
+                pa.Name == AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName ||
+                pa.Name == AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName);
+
+            foreach (var attribute in attributes)
+            {
+                await _productAttributeService.DeleteProductAttributeAsync(attribute);
             }
         }
     }
