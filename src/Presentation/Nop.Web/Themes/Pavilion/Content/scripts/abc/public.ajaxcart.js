@@ -95,8 +95,7 @@ var AjaxCart = {
             if (response.success === true) {
                 // ABC: customized to use added to cart slideout
                 if (response.slideoutInfo) {
-                    updateCartSlideoutHtml(response);
-                    displayCartSlideout(response);
+                    showCartSlideout(response);
                 }
 
                 //base functionality
@@ -135,15 +134,4 @@ var AjaxCart = {
         alert(this.localized_data.AjaxCartFailure);
     }
 };
-function updateCartSlideoutHtml(response) {
-    if (response.slideoutInfo.ProductInfoHtml) {
-        $('#cart-slideout__product-info').html(response.slideoutInfo.ProductInfoHtml);
-    }
-    if (response.slideoutInfo.SubtotalHtml) {
-        $('#cart-slideout__subtotal').html(response.slideoutInfo.SubtotalHtml);
-    }
-    if (response.slideoutInfo.ProductAttributesHtml) {
-        $('#cart-slideout__attributes').html(response.slideoutInfo.ProductAttributesHtml);
-    }
-}
 

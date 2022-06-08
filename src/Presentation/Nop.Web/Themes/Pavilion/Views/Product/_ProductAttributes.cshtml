@@ -101,10 +101,12 @@
                                 <ul class="option-list">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
-                                            attributeValue.Name :
-                                            T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
-                                                attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
+                                        // ABC: do not provide price adjustment, this is included in the title of the pav
+                                        // var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        //    attributeValue.Name :
+                                        //    T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
+                                        //        attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
+                                        var attributeName = attributeValue.Name;
                                         <li>
                                             <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
                                                    @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
@@ -133,10 +135,12 @@
                                 <ul class="option-list">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        // ABC: do not provide price adjustment, this is included in the title of the pav
+                                        @* var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
-                                                attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
+                                                attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text; *@
+                                        var attributeName = attributeValue.Name;
                                         <li>
                                             <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null)
                                                    @(attributeValue.CustomerEntersQty ? Html.Raw($"onchange=\"showHideCheckboxQuantity('{controlId}_{attributeValue.Id}')\"") : null)/>

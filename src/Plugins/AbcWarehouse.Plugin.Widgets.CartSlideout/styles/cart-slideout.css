@@ -1,4 +1,4 @@
-#cart-slideout-overlay {
+.cart-slideout-overlay {
     height: 100%;
     width: 100%;
     z-index: 100000;
@@ -8,7 +8,7 @@
     display: none;
 }
 
-#cart-slideout {
+.cart-slideout {
     height: 100%;
     width: 0;
     position: fixed;
@@ -19,7 +19,7 @@
     overflow-x: hidden; /* Disable horizontal scroll */
 }
 
-#cart-slideout__back {
+.cart-slideout__back {
     position: absolute;
     top: 13px;
     right: 280px;
@@ -27,7 +27,7 @@
     display: none;
 }
 
-#cart-slideout .cart-slideout__close {
+.cart-slideout .cart-slideout__close {
     position: absolute;
     top: 0;
     right: 25px;
@@ -35,48 +35,48 @@
     margin-left: 50px;
 }
 
-#cart-slideout .cart-slideout__title {
+.cart-slideout .cart-slideout__title {
     font-weight: bold;
     font-size: 1.25rem;
 }
 
-#cart-slideout .cart-slideout__title i {
+.cart-slideout .cart-slideout__title i {
     color: #4bd37b;
 }
 
-#cart-slideout__product-info {
+.cart-slideout__product-info {
     padding: 1rem 0 3rem 0;
 }
 
-#cart-slideout__product-name {
+.cart-slideout__product-name {
     font-size: 0.75rem;
 }
 
-#cart-slideout__delivery-zip-code {
+.cart-slideout__delivery-zip-code {
     display: flex;
     justify-content: space-between;
     margin: 1rem 0 0.5rem 0;
     align-items: center;
 }
 
-#cart-slideout__delivery-zip-code input {
+.cart-slideout__delivery-zip-code input {
     width: 50%;
     height: 2rem;
     font-size: 1rem;
 }
 
-#cart-slideout__buttons {
+.cart-slideout__buttons {
     position: absolute;
     bottom: 1rem;
 }
 
-#cart-slideout__subtotal {
+.cart-slideout__subtotal {
     text-align: right;
     color: #bb1b1b;
     font-size: 1.25rem;
 }
 
-#cart-slideout__buttons a {
+.cart-slideout__buttons a {
     width: 100%;
     background-color: white;
     border: 2px solid #e1e1e1;
@@ -103,24 +103,15 @@
 }
 
 /* Delivery Options */
-#cart-slideout__delivery-not-available {
-    display: none;
-    color: #f74258;
+/* Override NOP ProductAttributes.cshtml styles */
+.cart-slideout__delivery-options .attributes {
+    margin: 0;
+}
+.cart-slideout__delivery-options dt {
+    float: none;
 }
 
-#cart-slideout__delivery {
-    display: none;
-}
-
-#cart-slideout__delivery-options {
-    display: none;
-}
-
-#cart-slideout__attributes .text-prompt {
-    font-size: 1.25rem;
-}
-
-/* copied over from Pavilion theme to allow consistency */
+/* copied over from Pavilion theme to allow consistency in both desktop and mobile */
 .scrollYRemove {
     overflow: hidden !important;
     -ms-touch-action: none !important;
