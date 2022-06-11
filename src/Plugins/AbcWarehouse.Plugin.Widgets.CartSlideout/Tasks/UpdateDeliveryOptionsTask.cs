@@ -67,7 +67,11 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                             }
                         )).SingleOrDefault();
 
-                    await AddDeliveryOptionValuesAsync(deliveryOptionsPam.Id, productId, map);
+                    (int deliveryOptionsPamId,
+                     int? deliveryPavId,
+                     int? deliveryInstallPavId,
+                     decimal? deliveryPriceAdjustment,
+                     decimal? deliveryInstallPriceAdjustment) = await AddDeliveryOptionValuesAsync(deliveryOptionsPam.Id, productId, map);
 
                     if (map.DeliveryHaulway != 0)
                     {
@@ -102,6 +106,16 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                         productId,
                         pams,
                         new string[0]
+                    );
+
+                     await AddHaulAwayAsync(
+                        productId,
+                        map,
+                        deliveryOptionsPamId,
+                        deliveryPavId,
+                        deliveryInstallPavId,
+                        deliveryPriceAdjustment.HasValue ? deliveryPriceAdjustment.Value : 0M,
+                        deliveryInstallPriceAdjustment.HasValue ? deliveryInstallPriceAdjustment.Value : 0M
                     );
                 }
             }
@@ -202,6 +216,106 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             }
 
             return pav;
+        }
+
+        private async System.Threading.Tasks.Task AddHaulAwayAsync(
+            int productId,
+            AbcDeliveryMap map,
+            int deliveryOptionsPamId,
+            int? deliveryPavId,
+            int? deliveryInstallPavId,
+            decimal deliveryPriceAdjustment,
+            decimal deliveryInstallPriceAdjustment)
+        {
+            // Haulaway (Delivery)
+            if (deliveryPavId.HasValue)
+            {
+                await AddHaulAwayAttributeAsync(
+                    productId,
+                    _haulAwayDeliveryProductAttribute.Id,
+                    deliveryOptionsPamId,
+                    deliveryPavId.Value,
+                    map.DeliveryHaulway,
+                    deliveryPriceAdjustment);
+            }
+
+            // Haulaway (Delivery/Install)
+            if (deliveryInstallPavId.HasValue)
+            {
+                await AddHaulAwayAttributeAsync(
+                    productId,
+                    _haulAwayDeliveryInstallProductAttribute.Id,
+                    deliveryOptionsPamId,
+                    deliveryInstallPavId.Value,
+                    map.DeliveryHaulwayInstall,
+                    deliveryInstallPriceAdjustment);
+            }
+        }
+
+        private async System.Threading.Tasks.Task AddHaulAwayAttributeAsync(
+            int productId,
+            int productAttributeId,
+            int deliveryOptionsPamId,
+            int deliveryOptionsPavId,
+            int abcDeliveryMapItemNumber,
+            decimal priceAdjustment)
+        {
+            var pam = await AddHaulAwayAttributeMappingAsync(
+                productId,
+                _haulAwayDeliveryProductAttribute.Id,
+                deliveryOptionsPamId,
+                deliveryOptionsPavId);
+            if (pam == null)
+            {
+                return;
+            }
+
+            var pav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(pam.Id)).FirstOrDefault();
+            await AddValueAsync(
+                pam.Id,
+                pav,
+                abcDeliveryMapItemNumber,
+                "Remove Old Appliance ({0})",
+                0,
+                false,
+                priceAdjustment);
+        }
+
+        private async System.Threading.Tasks.Task<ProductAttributeMapping> AddHaulAwayAttributeMappingAsync(
+            int productId,
+            int productAttributeId,
+            int deliveryOptionsPamId,
+            int? pavId)
+        {
+            if (pavId == null)
+            {
+                return null;
+            }
+
+            var pam = new ProductAttributeMapping();
+            
+            try {
+                pam = (await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(productId))
+                                                    .SingleOrDefault(pam => pam.ProductAttributeId == productAttributeId);
+            }
+            catch {
+                await _logger.InformationAsync($"product ID: {productId}");
+                throw;
+            }
+            if (pam == null)
+            {
+                pam = new ProductAttributeMapping()
+                {
+                    ProductId = productId,
+                    ProductAttributeId = productAttributeId,
+                    AttributeControlType = AttributeControlType.Checkboxes,
+                    TextPrompt = "Haul Away",
+                    ConditionAttributeXml = $"<Attributes><ProductAttribute ID=\"{deliveryOptionsPamId}\"><ProductAttributeValue><Value>{pavId}</Value></ProductAttributeValue></ProductAttribute></Attributes>",
+                };
+                await _abcProductAttributeService.InsertProductAttributeMappingAsync(pam);
+            }
+
+            return pam;
         }
     }
 }
