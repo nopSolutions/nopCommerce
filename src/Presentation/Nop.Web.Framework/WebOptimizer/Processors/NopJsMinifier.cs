@@ -34,7 +34,7 @@ namespace Nop.Web.Framework.WebOptimizer.Processors
                 }
 
                 var input = context.Content[key].AsString();
-                var result = Uglify.Js(input, new CodeSettings());
+                var result = Uglify.Js(input, new CodeSettings { TermSemicolons = true });
 
                 var minified = result.Code;
 
