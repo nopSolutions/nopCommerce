@@ -39,8 +39,6 @@ WORKDIR /src/Plugins/Nop.Plugin.Shipping.EasyPost
 RUN dotnet build Nop.Plugin.Shipping.EasyPost.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.FixedByWeightByTotal
 RUN dotnet build Nop.Plugin.Shipping.FixedByWeightByTotal.csproj -c Release
-WORKDIR /src/Plugins/Nop.Plugin.Shipping.ShipStation
-RUN dotnet build Nop.Plugin.Shipping.ShipStation.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.UPS
 RUN dotnet build Nop.Plugin.Shipping.UPS.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Tax.Avalara
