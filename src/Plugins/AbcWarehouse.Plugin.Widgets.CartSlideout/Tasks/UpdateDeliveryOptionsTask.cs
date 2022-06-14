@@ -64,8 +64,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                         await _logger.InsertLogAsync(
                             LogLevel.Error,
                             $"Failure when updating delivery options for CategoryId {map.CategoryId}, Product ID {productId}",
-                            e.StackTrace
-                        );
+                            e.ToString());
                         hasErrors = true;
                     }
                 }
