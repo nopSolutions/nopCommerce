@@ -1539,14 +1539,14 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, int addressId, IFormCollection form)
+        public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, IFormCollection form)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             //find address (ensure that it belongs to the current customer)
-            var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
+            var address = await _customerService.GetCustomerAddressAsync(customer.Id, model.Address.Id);
             if (address == null)
                 //address is not found
                 return RedirectToRoute("CustomerAddresses");
