@@ -11,6 +11,8 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
 {
     public class AbcProductAttributeService : ProductAttributeService, IAbcProductAttributeService
     {
+        private readonly IRepository<ProductAttribute> _productAttributeRepository;
+
         // We need to exclude Warranty, Home Delivery, and Pickup until we've fully deployed
         // the Delivery Options functionality
         private string[] excludedProductAttributes = new string[]
@@ -30,7 +32,16 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
         : base(predefinedProductAttributeValueRepository, productAttributeRepository, productAttributeCombinationRepository,
                productAttributeMappingRepository, productAttributeValueRepository, staticCacheManager)
         {
+            _productAttributeRepository = productAttributeRepository;
+        }
 
+        public async Task<ProductAttribute> GetProductAttributeByNameAsync(string name)
+        {
+            var query = from pa in _productAttributeRepository.Table
+                where pa.Name == name
+                select pa;
+
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task SaveProductAttributeAsync(ProductAttribute pa)

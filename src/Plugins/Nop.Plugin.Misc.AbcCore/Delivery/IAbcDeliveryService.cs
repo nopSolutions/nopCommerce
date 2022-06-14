@@ -10,5 +10,14 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
         Task<AbcDeliveryItem> GetAbcDeliveryItemByItemNumberAsync(int itemNumber);
 
         Task<IList<AbcDeliveryMap>> GetAbcDeliveryMapsAsync();
+
+        Task<ProductAttributeValue> AddValueAsync(
+            int pamId,
+            ProductAttributeValue pav,
+            int itemNumber,
+            string displayName,
+            int displayOrder,
+            bool isPreSelected,
+            decimal priceAdjustment = 0);
     }
 }

@@ -9,5 +9,7 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
     {
         Task SaveProductAttributeAsync(ProductAttribute pa);
         Task<IList<ProductAttributeMapping>> SaveProductAttributeMappingsAsync(int productId, IList<ProductAttributeMapping> pams, string[] excludedPas);
+
+        Task<ProductAttribute> GetProductAttributeByNameAsync(string name);
     }
 }

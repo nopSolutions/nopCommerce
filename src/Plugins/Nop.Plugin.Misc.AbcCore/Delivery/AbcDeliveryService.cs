@@ -173,7 +173,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
                 priceAdjustment);
         }
 
-        private async System.Threading.Tasks.Task<ProductAttributeValue> AddValueAsync(
+        public async System.Threading.Tasks.Task<ProductAttributeValue> AddValueAsync(
             int pamId,
             ProductAttributeValue pav,
             int itemNumber,
