@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Logging;
+using Nop.Plugin.Misc.AbcCore;
 using Nop.Plugin.Misc.AbcCore.Delivery;
 using Nop.Plugin.Misc.AbcCore.Nop;
 using Nop.Services.Catalog;
@@ -14,23 +15,27 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
 {
     public class UpdateDeliveryOptionsTask : IScheduleTask
     {
+        private readonly CoreSettings _coreSettings;
         private readonly IAbcDeliveryService _abcDeliveryService;
         private readonly IAbcProductAttributeService _abcProductAttributeService;
         private readonly ICategoryService _categoryService;
         private readonly ILogger _logger;
         private readonly IPriceFormatter _priceFormatter;
+        
 
         private ProductAttribute _deliveryPickupOptionsProductAttribute;
         private ProductAttribute _haulAwayDeliveryProductAttribute;
         private ProductAttribute _haulAwayDeliveryInstallProductAttribute;
 
         public UpdateDeliveryOptionsTask(
+            CoreSettings coreSettings,
             IAbcDeliveryService abcDeliveryService,
             IAbcProductAttributeService abcProductAttributeService,
             ICategoryService categoryService,
             ILogger logger,
             IPriceFormatter priceFormatter)
         {
+            _coreSettings = coreSettings;
             _abcDeliveryService = abcDeliveryService;
             _abcProductAttributeService = abcProductAttributeService;
             _categoryService = categoryService;
@@ -258,7 +263,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             }
 
             var pam = (await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(productId))
-                                                    .SingleOrDefault(pam => pam.ProductAttributeId == productAttributeId);
+                                                    .FirstOrDefault(pam => pam.ProductAttributeId == productAttributeId);
+
             if (pam == null)
             {
                 pam = new ProductAttributeMapping()
@@ -269,7 +275,18 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                     TextPrompt = "Haul Away",
                     ConditionAttributeXml = $"<Attributes><ProductAttribute ID=\"{deliveryOptionsPamId}\"><ProductAttributeValue><Value>{pavId}</Value></ProductAttributeValue></ProductAttribute></Attributes>",
                 };
-                await _abcProductAttributeService.InsertProductAttributeMappingAsync(pam);
+                
+                try
+                {
+                    await _abcProductAttributeService.InsertProductAttributeMappingAsync(pam);
+                }
+                catch
+                {
+                    if (_coreSettings.IsDebugMode)
+                    {
+                        await _logger.InformationAsync($"Failed added PAM (async issue) - ProductId: {productId} ProductAttributeId: {productAttributeId}");
+                    }
+                }
             }
 
             return pam;
