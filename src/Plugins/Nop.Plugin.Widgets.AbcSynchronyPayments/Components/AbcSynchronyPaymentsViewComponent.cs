@@ -119,7 +119,10 @@ namespace Nop.Plugin.Widgets.AbcSynchronyPayments.Components
                 productAbcFinance.EndDate.Value :
                 DateTime.Parse(offerValidToGenericAttribute.Value);
             
-            var price = await _abcMattressListingPriceService.GetListingPriceForMattressProductAsync(productId) ?? product.Price;
+            var mattressProductPrice = await _abcMattressListingPriceService.GetListingPriceForMattressProductAsync(productId);
+            var price = mattressProductPrice.HasValue ?
+                mattressProductPrice.Value.Price :
+                product.Price;
             var isMattressProduct = _abcMattressProductService.IsMattressProduct(productId);
             
             model = new SynchronyPaymentModel

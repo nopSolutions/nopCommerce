@@ -164,7 +164,10 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
             product.OrderMinimumQuantity = 1;
             product.OrderMaximumQuantity = 10000;
             product.IsShipEnabled = true;
-            product.Price = await CalculatePriceAsync(abcMattressModel, entries);
+
+            var prices = await CalculatePriceAsync(abcMattressModel, entries);
+            product.OldPrice = prices.OldPrice;
+            product.Price = prices.Price;
             product.TaxCategoryId = (await _taxCategoryService.GetAllTaxCategoriesAsync())
                                                        .Where(tc => tc.Name == "Everything")
                                                        .Select(tc => tc.Id)
@@ -290,9 +293,9 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
             );
         }
 
-        private async Task<decimal> CalculatePriceAsync(AbcMattressModel model, IList<AbcMattressEntry> entries)
+        private async Task<(decimal OldPrice, decimal Price)> CalculatePriceAsync(AbcMattressModel model, IList<AbcMattressEntry> entries)
         {
-            if (!entries.Any()) return 0;
+            if (!entries.Any()) return (0M, 0M);
 
             var entry = entries.Where(e => e.Size.ToLower() == "queen")
                                        .FirstOrDefault();
@@ -306,7 +309,7 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
                                .First();
             }
 
-            return entry.Price;
+            return (entry.OldPrice, entry.Price);
         }
 
         public async Task SetProductAttributesAsync(AbcMattressModel model, Product product)
@@ -771,16 +774,18 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
             var existingSizes = pavs.Where(pav => pav.ProductAttributeMappingId == pam.Id);
 
             var entries = _abcMattressEntryService.GetAbcMattressEntriesByModelId(model.Id);
-            var newSizes = entries.Select(e => e.ToProductAttributeValue(pam.Id, product.Price)).ToList();
+            var newSizes = entries.Select(e => e.ToProductAttributeValue(pam.Id, product.Price, e.OldPrice)).ToList();
 
             var toBeDeleted = existingSizes
                 .Where(e => !newSizes.Any(n => n.Name == e.Name &&
                                                n.PriceAdjustment == e.PriceAdjustment &&
-                                               n.DisplayOrder == e.DisplayOrder));
+                                               n.DisplayOrder == e.DisplayOrder &&
+                                               n.Cost == e.Cost));
             var toBeInserted = newSizes
                 .Where(n => !existingSizes.Any(e => n.Name == e.Name &&
                                                     n.PriceAdjustment == e.PriceAdjustment &&
-                                                    n.DisplayOrder == e.DisplayOrder));
+                                                    n.DisplayOrder == e.DisplayOrder &&
+                                                    n.Cost == e.Cost));
 
             toBeInserted.ToList().ForEach(async n => await _productAttributeService.InsertProductAttributeValueAsync(n));
             toBeDeleted.ToList().ForEach(async e => await _productAttributeService.DeleteProductAttributeValueAsync(e));
