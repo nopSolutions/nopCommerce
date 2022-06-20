@@ -501,13 +501,38 @@
                 equalMonthlyPayment.innerText = "$" + equalPayment;
             }
 
-            function updateSavingsStory() {
-                //console.log('updates saving story');
+            function updateSavingsStory(overallPrice) {
+                var oldProductPriceElement = document.querySelector('.old-product-price');
+                var youSaveAmtElement = document.querySelector('.you-save-amt');
 
                 // hide if any other options are selected
+                var visibleDropdowns = document.querySelectorAll('dd:not([style="display:none"]) select');
+                for (var i = 0; i < visibleDropdowns.length; i++)
+                {
+                    var v = visibleDropdowns[i];
+                    if (!v.className.includes('mattress-size') && v.selectedIndex != 0)
+                    {
+                        oldProductPriceElement.style.display = 'none';
+                        youSaveAmtElement.style.display = 'none';
+                        return;
+                    }
+                }
 
+                var productAttributeValueId = document.querySelector('.mattress-size').selectedOptions[0].value;
+                var getProductAttributeValueUrl = `/api/ProductAttributeValue/${productAttributeValueId}`;
+                $.ajax({
+                    url: getProductAttributeValueUrl,
+                    success: function (data) {
+                        var oldProductPriceAmount = document.querySelector('.old-product-price span');
+                        oldProductPriceAmount.innerText = '$' + new Intl.NumberFormat('en-US').format(data.Cost);
 
-                //var oldProductPrice = document.querySelector('.old-product-price span');
+                        var difference = data.Cost - overallPrice;
+                        youSaveAmtElement.innerText = "You Save $" + new Intl.NumberFormat('en-US').format(difference);
+
+                        oldProductPriceElement.style.display = 'block';
+                        youSaveAmtElement.style.display = 'block';
+                    }
+                });
             }
 
             function @(attributeChangeHandlerFuncName)() {
@@ -571,7 +596,7 @@
                         updateMinPaymentModal(overallPrice);
                         updateEqualPaymentModal(overallPrice);
 
-                        updateSavingsStory();
+                        updateSavingsStory(overallPrice);
                     }
                 });
             }
