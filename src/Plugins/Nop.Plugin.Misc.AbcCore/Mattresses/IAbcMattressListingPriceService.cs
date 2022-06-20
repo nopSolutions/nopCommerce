@@ -4,6 +4,6 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
 {
     public interface IAbcMattressListingPriceService
     {
-        Task<decimal?> GetListingPriceForMattressProductAsync(int productId);
+        Task<(decimal Price, decimal OldPrice)?> GetListingPriceForMattressProductAsync(int productId);
     }
 }

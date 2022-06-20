@@ -154,9 +154,9 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             var mattressPrice = await _abcMattressListingPriceService.GetListingPriceForMattressProductAsync(
                 productId
             );
-            if (mattressPrice != null)
+            if (mattressPrice.HasValue)
             {
-                return (await _priceFormatter.FormatPriceAsync(mattressPrice.Value)).Replace(".00", "");
+                return (await _priceFormatter.FormatPriceAsync(mattressPrice.Value.Price)).Replace(".00", "");
             }
 
             return null;

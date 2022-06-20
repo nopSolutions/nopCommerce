@@ -9,22 +9,25 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
 {
     public class AbcMattressListingPriceService : IAbcMattressListingPriceService
     {
+        private readonly IAbcMattressEntryService _abcMattressEntryService;
         private readonly IProductService _productService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IWebHelper _webHelper;
 
         public AbcMattressListingPriceService(
+            IAbcMattressEntryService abcMattressEntryService,
             IProductService productService,
             IProductAttributeService productAttributeService,
             IWebHelper webHelper
         )
         {
+            _abcMattressEntryService = abcMattressEntryService;
             _productService = productService;
             _productAttributeService = productAttributeService;
             _webHelper = webHelper;
         }
 
-        public async Task<decimal?> GetListingPriceForMattressProductAsync(int productId)
+        public async Task<(decimal Price, decimal OldPrice)?> GetListingPriceForMattressProductAsync(int productId)
         {
             // only need to do this if we're on the 'shop by size' categories
             // but we're opening this up to be called anywhere
@@ -62,8 +65,10 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
             }
 
             var product = await _productService.GetProductByIdAsync(productId);
-            return value == null ? (decimal?)null :
-                                    Math.Round(product.Price + value.PriceAdjustment, 2);
+
+            return value == null ? null :
+                                    (Math.Round(product.Price + value.PriceAdjustment, 2),
+                                     value.Cost); // using ProductAttributeValue Cost for OldPrice
         }
 
         private bool IsSizeCategoryPage(string url)

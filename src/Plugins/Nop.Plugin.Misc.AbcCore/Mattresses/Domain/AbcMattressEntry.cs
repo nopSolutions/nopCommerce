@@ -9,13 +9,14 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses.Domain
         public int AbcMattressModelId { get; set; }
         public string Size { get; set; }
         public string ItemNo { get; set; }
+        public decimal OldPrice { get; set; }
         public decimal Price { get; set; }
         public string Type { get; set; }
 
         public ProductAttributeValue ToProductAttributeValue(
             int productAttributeMappingId,
-            decimal productPrice
-        )
+            decimal productPrice,
+            decimal oldPrice)
         {
             return new ProductAttributeValue()
             {
@@ -23,7 +24,9 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses.Domain
                 Name = Size,
                 PriceAdjustment = Price - productPrice,
                 IsPreSelected = Size == "Queen",
-                DisplayOrder = GetDisplayOrder(Size)
+                DisplayOrder = GetDisplayOrder(Size),
+                // Using cost as a weird option to store the old price
+                Cost = oldPrice
             };
         }
 
