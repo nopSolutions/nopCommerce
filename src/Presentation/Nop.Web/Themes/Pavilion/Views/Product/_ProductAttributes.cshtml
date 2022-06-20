@@ -501,6 +501,15 @@
                 equalMonthlyPayment.innerText = "$" + equalPayment;
             }
 
+            function updateSavingsStory() {
+                //console.log('updates saving story');
+
+                // hide if any other options are selected
+
+
+                //var oldProductPrice = document.querySelector('.old-product-price span');
+            }
+
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,
@@ -561,6 +570,8 @@
                         updateFinancingDisplay(overallPrice);
                         updateMinPaymentModal(overallPrice);
                         updateEqualPaymentModal(overallPrice);
+
+                        updateSavingsStory();
                     }
                 });
             }

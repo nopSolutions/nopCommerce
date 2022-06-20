@@ -124,8 +124,6 @@ function updateSizeUrl(selectedSize) {
   url.searchParams.delete("base");
   window.history.replaceState({}, '', url);
   ResetOtherDropdowns();
-
-  updateFinancing();
 }
 
 function getElementsByXPath(xpath) {
@@ -163,15 +161,6 @@ function updateBaseUrl(selectedBase) {
   url.searchParams.set(key, convertBaseToSlug(selectedBase));
   
   window.history.replaceState({}, '', url);
-}
-
-function updateFinancing() {
-  // var financingText = document.getElementsByClassName('synchrony-payment-detail')[0];
-  // financingText.style.display = "block";
-
-  // // now change values in the modal to make sense
-  // var minFullPrice = document.getElementsByClassName('min-payment-full-price')[0];
-  // minFullPrice.text = "$999";
 }
 
 // Adds event listeners to changes for sizes and bases
