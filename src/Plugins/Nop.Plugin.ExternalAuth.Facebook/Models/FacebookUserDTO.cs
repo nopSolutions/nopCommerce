@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.ExternalAuth.Facebook.Models
 {
-    public record FacebookUserDTO : BaseNopModel
+    public record FacebookUserDTO 
     {
         [JsonProperty("algorithm")]
         public string Algorithm { get; set; }

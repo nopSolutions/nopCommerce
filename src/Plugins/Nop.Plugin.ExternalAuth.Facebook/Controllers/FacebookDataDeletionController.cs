@@ -16,11 +16,10 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
-using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 {
-    public class FacebookDataDeletionController : BasePluginController
+    public class FacebookDataDeletionController : Controller
     {
         #region Fields
 
@@ -146,23 +145,6 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
                 await _logger.ErrorAsync($"Facebook datadeletioncallback error: {exception.Message}.", exception);
             }
             return null;
-        }
-
-        public async Task<IActionResult> DataDeletionStatusCheck(int earId)
-        {
-            
-            if (earId == 0)
-                return RedirectToAction("Index", "Home", new { area = string.Empty });
-
-            var externalAuthenticationRecord = await _externalAuthenticationService.GetExternalAuthenticationRecordByIdAsync(earId);
-            if (externalAuthenticationRecord != null)
-            {
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataExist"));
-                return RedirectToAction("Info", "Customer", new { area = string.Empty });
-            }
-
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataDeletedSuccessfully"));
-            return RedirectToAction("Info", "Customer", new { area = string.Empty });
         }
 
         #endregion
