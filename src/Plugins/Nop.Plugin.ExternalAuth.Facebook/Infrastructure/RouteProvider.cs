@@ -18,7 +18,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
             endpointRouteBuilder.MapControllerRoute(FacebookAuthenticationDefaults.DataDeletionCallbackRoute, $"facebook/data-deletion-callback/",
                 new { controller = "FacebookDataDeletion", action = "DataDeletionCallback" });
 
-            endpointRouteBuilder.MapControllerRoute(FacebookAuthenticationDefaults.DataDeletionStatusCheckRoute, $"DataDeletionStatusCheck/{{earId:min(0)}}",
+            endpointRouteBuilder.MapControllerRoute(FacebookAuthenticationDefaults.DataDeletionStatusCheckRoute, $"facebook/data-deletion-status-check/{{earId:min(0)}}",
                 new { controller = "FacebookAuthentication", action = "DataDeletionStatusCheck" });
         }
 

@@ -13,9 +13,7 @@ using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Plugin.ExternalAuth.Facebook.Models;
 using Nop.Services.Authentication.External;
-using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Messages;
 
 namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 {
@@ -26,9 +24,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         private readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
-        private readonly INotificationService _notificationService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IWebHelper _webHelper;
 
@@ -39,18 +35,14 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         public FacebookDataDeletionController(FacebookExternalAuthSettings facebookExternalAuthSettings,
             IActionContextAccessor actionContextAccessor,
             IExternalAuthenticationService externalAuthenticationService,
-            ILocalizationService localizationService,
             ILogger logger,
-            INotificationService notificationService,
             IUrlHelperFactory urlHelperFactory,
             IWebHelper webHelper)
         {
             _facebookExternalAuthSettings = facebookExternalAuthSettings;
             _actionContextAccessor = actionContextAccessor;
             _externalAuthenticationService = externalAuthenticationService;
-            _localizationService = localizationService;
             _logger = logger;
-            _notificationService = notificationService;
             _urlHelperFactory = urlHelperFactory;
             _webHelper = webHelper;
         }
@@ -130,7 +122,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
                     var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
                     var notificationUrl = urlHelper.RouteUrl(FacebookAuthenticationDefaults.DataDeletionStatusCheckRoute, new { earId = externalAuthenticationRecord.Id }, _webHelper.GetCurrentRequestProtocol());
 
-                    await _logger.InformationAsync($"Facebook datadeletioncallback successful for CustomerId: {externalAuthenticationRecord.CustomerId}, CustomerEmail: {externalAuthenticationRecord.Email}, ExternalAuthenticationRecordId: {externalAuthenticationRecord.Id}, ExternalIdentifier: {externalAuthenticationRecord.ExternalIdentifier}");
+                    await _logger.InformationAsync($"{FacebookAuthenticationDefaults.SystemName} datadeletioncallback successful for CustomerId: {externalAuthenticationRecord.CustomerId}, CustomerEmail: {externalAuthenticationRecord.Email}, ExternalAuthenticationRecordId: {externalAuthenticationRecord.Id}, ExternalIdentifier: {externalAuthenticationRecord.ExternalIdentifier}");
 
                     await _externalAuthenticationService.DeleteExternalAuthenticationRecordAsync(externalAuthenticationRecord);
 

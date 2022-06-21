@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.ExternalAuth.Facebook.Models
 {

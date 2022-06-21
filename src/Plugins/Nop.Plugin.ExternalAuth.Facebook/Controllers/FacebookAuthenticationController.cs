@@ -155,17 +155,17 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         {
 
             if (earId == 0)
-                return RedirectToAction("Index", "Home", new { area = string.Empty });
+                return RedirectToRoute("Homepage");
 
             var externalAuthenticationRecord = await _externalAuthenticationService.GetExternalAuthenticationRecordByIdAsync(earId);
             if (externalAuthenticationRecord != null)
             {
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataExist"));
-                return RedirectToAction("Info", "Customer", new { area = string.Empty });
+                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataExist"));
+                return RedirectToRoute("CustomerInfo");
             }
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataDeletedSuccessfully"));
-            return RedirectToAction("Info", "Customer", new { area = string.Empty });
+            return RedirectToRoute("CustomerInfo");
         }
 
         #endregion
