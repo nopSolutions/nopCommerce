@@ -6634,7 +6634,7 @@
     <Value>Force multi-factor authentication</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Hint">
-    <Value>Force activation of multi-factor authentication for all users (at least one MFA provider must be active).</Value>
+    <Value>Force activation of multi-factor authentication for specific customer roles allowed on access control list (at least one MFA provider must be active).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning">
     <Value>There are currently no active authentication providers. To use this setting, you must activate one of the multi-factor authentication providers.</Value>

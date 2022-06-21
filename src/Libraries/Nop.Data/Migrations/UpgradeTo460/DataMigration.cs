@@ -223,15 +223,15 @@ namespace Nop.Data.Migrations.UpgradeTo460
             }
 
             //#5607
-            var permissionRecordTypeTable = _dataProvider.GetTable<PermissionRecord>();
+            var permissionRecordTable = _dataProvider.GetTable<PermissionRecord>();
 
-            if (!permissionRecordTypeTable.Any(prt => string.Compare(prt.SystemName, "MultiFactorAuthentication", StringComparison.InvariantCultureIgnoreCase) == 0))
+            if (!permissionRecordTable.Any(prt => string.Compare(prt.SystemName, "ForceMultiFactorAuthentication", StringComparison.InvariantCultureIgnoreCase) == 0))
                 _dataProvider.InsertEntity(
                     new PermissionRecord
                     {
                         SystemName = "ForceMultiFactorAuthentication",
-                        Name = "Public store. Force multi-factor authentication",
-                        Category = "PublicStore"
+                        Name = "Security. Force multi-factor authentication",
+                        Category = "Security"
                     }
                 );
         }
