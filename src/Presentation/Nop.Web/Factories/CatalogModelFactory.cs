@@ -1892,6 +1892,7 @@ namespace Nop.Web.Factories
         {
             //set the order by position by default
             model.OrderBy = command.OrderBy;
+            command.OrderBy = (int)ProductSortingEnum.Position;
 
             //get active sorting options
             var activeSortingOptionsIds = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
