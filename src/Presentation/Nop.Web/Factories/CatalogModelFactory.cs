@@ -1894,10 +1894,6 @@ namespace Nop.Web.Factories
             model.OrderBy = command.OrderBy;
             command.OrderBy = (int)ProductSortingEnum.Position;
 
-            //ensure that product sorting is enabled
-            if (!_catalogSettings.AllowProductSorting)
-                return;
-
             //get active sorting options
             var activeSortingOptionsIds = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
                 .Except(_catalogSettings.ProductSortingEnumDisabled).ToList();
@@ -1909,8 +1905,14 @@ namespace Nop.Web.Factories
                 .Select(id => new { Id = id, Order = _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(id, out var order) ? order : id })
                 .OrderBy(option => option.Order).ToList();
 
+            command.OrderBy = orderedActiveSortingOptions.FirstOrDefault().Id;
+
+            //ensure that product sorting is enabled
+            if (!_catalogSettings.AllowProductSorting)
+                return;
+
             model.AllowProductSorting = true;
-            command.OrderBy = model.OrderBy ?? orderedActiveSortingOptions.FirstOrDefault().Id;
+            command.OrderBy = model.OrderBy ?? command.OrderBy;
 
             //prepare available model sorting options
             foreach (var option in orderedActiveSortingOptions)
