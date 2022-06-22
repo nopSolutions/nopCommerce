@@ -7938,6 +7938,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note">
     <Value>NOTE: Do not forget to backup your database before changing this option</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductDefaultImage">
+    <Value>Default image</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductDefaultImage.Hint">
+    <Value>Upload a picture to be used as the default image. If nothing is uploaded, {0} will be used.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ProductDetailsPictureSize">
     <Value>Product detail image size</Value>
   </LocaleResource>

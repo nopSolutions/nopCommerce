@@ -487,6 +487,10 @@ namespace Nop.Services.Media
             PictureType defaultPictureType = PictureType.Entity,
             string storeLocation = null)
         {
+            //get overridden default image if exists
+            if (defaultPictureType == PictureType.Entity && _mediaSettings.ProductDefaultImageId > 0)
+                return await GetPictureUrlAsync(_mediaSettings.ProductDefaultImageId, targetSize, false, storeLocation, PictureType.Entity);
+
             var defaultImageFileName = defaultPictureType switch
             {
                 PictureType.Avatar => await _settingService.GetSettingByKeyAsync("Media.Customer.DefaultAvatarImageName", NopMediaDefaults.DefaultAvatarFileName),

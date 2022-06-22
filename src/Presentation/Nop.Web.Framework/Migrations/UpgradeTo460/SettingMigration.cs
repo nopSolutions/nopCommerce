@@ -275,6 +275,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             if (!settingService.SettingExistsAsync(robotsTxtSettings, settings => settings.AllowSitemapXml).Result)
                 settingService.SaveSettingAsync(robotsTxtSettings, settings => settings.AllowSitemapXml).Wait();
+
+            //#5753
+            if (!settingService.SettingExistsAsync(mediaSettings, settings => settings.ProductDefaultImageId).Result)
+            {
+                mediaSettings.ProductDefaultImageId = 0;
+                settingService.SaveSettingAsync(mediaSettings, settings => settings.ProductDefaultImageId).Wait();
+            }
         }
 
         public override void Down()
