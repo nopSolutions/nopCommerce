@@ -131,7 +131,8 @@ namespace Nop.Services.Security
                 EnableWishlist,
                 PublicStoreAllowNavigation,
                 AccessClosedStore,
-                AccessProfiling
+                AccessProfiling,
+                ForceMultiFactorAuthentication
             };
         }
 

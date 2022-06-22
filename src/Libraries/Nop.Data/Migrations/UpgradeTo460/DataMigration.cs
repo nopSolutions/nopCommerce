@@ -6,6 +6,7 @@ using System.Linq;
 using FluentMigrator;
 using Nop.Core;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
@@ -226,7 +227,8 @@ namespace Nop.Data.Migrations.UpgradeTo460
             var permissionRecordTable = _dataProvider.GetTable<PermissionRecord>();
 
             if (!permissionRecordTable.Any(prt => string.Compare(prt.SystemName, "ForceMultiFactorAuthentication", StringComparison.InvariantCultureIgnoreCase) == 0))
-                _dataProvider.InsertEntity(
+            {
+                var forceMultifactorAuthenticationPermissionRecord = _dataProvider.InsertEntity(
                     new PermissionRecord
                     {
                         SystemName = "ForceMultiFactorAuthentication",
@@ -234,6 +236,50 @@ namespace Nop.Data.Migrations.UpgradeTo460
                         Category = "Security"
                     }
                 );
+
+                var isForceMultifactorAuthenticationEnabled = _dataProvider.GetTable<Setting>().Any(s => string.Compare(s.Name, "MultiFactorAuthenticationSettings.ForceMultifactorAuthentication", StringComparison.InvariantCultureIgnoreCase) == 0 && 
+                string.Compare(s.Value, "True", StringComparison.InvariantCultureIgnoreCase) == 0);
+
+                if (isForceMultifactorAuthenticationEnabled)
+                {
+                    //add it to all customer roles by default except guests role
+                    var customerRoles = _dataProvider
+                        .GetTable<CustomerRole>().Where(cr => cr.SystemName != NopCustomerDefaults.GuestsRoleName);
+
+                    if (customerRoles.Any())
+                    {
+                        var prCustomerRoleMappings = _dataProvider
+                        .GetTable<PermissionRecordCustomerRoleMapping>().Where(prcm => prcm.PermissionRecordId == forceMultifactorAuthenticationPermissionRecord.Id);
+
+                        foreach (var cRole in customerRoles)
+                        {
+                            _dataProvider.InsertEntity(
+                                new PermissionRecordCustomerRoleMapping
+                                {
+                                    CustomerRoleId = cRole.Id,
+                                    PermissionRecordId = forceMultifactorAuthenticationPermissionRecord.Id
+                                }
+                            );
+                        }
+                    }
+                }
+                else
+                {
+                    //add it to the Admin role by default
+                    var adminRole = _dataProvider
+                        .GetTable<CustomerRole>()
+                        .FirstOrDefault(x => x.IsSystemRole && x.SystemName == NopCustomerDefaults.AdministratorsRoleName);
+
+                    _dataProvider.InsertEntity(
+                        new PermissionRecordCustomerRoleMapping
+                        {
+                            CustomerRoleId = adminRole.Id,
+                            PermissionRecordId = forceMultifactorAuthenticationPermissionRecord.Id
+                        }
+                    );
+                }
+            }
+                
         }
 
         public override void Down()
