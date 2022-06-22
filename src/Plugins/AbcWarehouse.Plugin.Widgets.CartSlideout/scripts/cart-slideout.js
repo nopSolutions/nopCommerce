@@ -1,5 +1,5 @@
 // Globals
-const backButton = document.querySelector('.cart-slideout__back');
+const cartSlideoutBackButton = document.querySelector('.cart-slideout__back');
 
 const CartSlideoutProductInfo = document.getElementsByClassName("cart-slideout__product-info")[0];
 
@@ -45,7 +45,7 @@ function openDeliveryOptions(response) {
         deliveryNotAvailable.style.display = "block";
     }
 
-    backButton.style.display = "block";
+    cartSlideoutBackButton.style.display = "block";
 }
 
 function updateCheckDeliveryAvailabilityButton() {
@@ -77,7 +77,7 @@ function hideCartSlideout() {
 function back() {
     deliveryNotAvailable.style.display = "none";
     deliveryOptions.style.display = "none";
-    backButton.style.display = "none";
+    cartSlideoutBackButton.style.display = "none";
 
     input.style.display = "block";
 }
