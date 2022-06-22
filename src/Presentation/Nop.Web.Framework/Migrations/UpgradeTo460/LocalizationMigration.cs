@@ -252,6 +252,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.Settings.Media.ProductDefaultImage"] = "Default image",
                 ["Admin.Configuration.Settings.Media.ProductDefaultImage.Hint"] = "Upload a picture to be used as the default image. If nothing is uploaded, {0} will be used.",
 
+                ["Admin.Help.Training"] = "Training",
+
             }, languageId).Wait();
 
             #endregion
