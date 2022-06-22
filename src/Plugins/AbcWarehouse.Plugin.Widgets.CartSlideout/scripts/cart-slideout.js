@@ -1,4 +1,6 @@
 // Globals
+const backButton = document.querySelector('.cart-slideout__back');
+
 const CartSlideoutProductInfo = document.getElementsByClassName("cart-slideout__product-info")[0];
 
 const CartSlideoutOverlay = document.getElementsByClassName("cart-slideout-overlay")[0];
@@ -6,7 +8,55 @@ const CartSlideout = document.getElementsByClassName("cart-slideout")[0];
 
 const input = document.getElementsByClassName("cart-slideout__delivery-input")[0];
 const zipCodeInput = document.getElementsByClassName('cart-slideout__delivery-zip-code-input')[0];
-const checkButton = document.getElementsByClassName("cart-slideout__check-delivery-options")[0];
+const checkButton = document.querySelector(".cart-slideout__check-delivery-options__btn");
+
+const deliveryOptions = document.querySelector('.cart-slideout__delivery-options');
+const deliveryNotAvailable = document.querySelector('.cart-slideout__delivery-not-available');
+
+// Event listeners for updating the check delivery options button:
+zipCodeInput.addEventListener('keyup', updateCheckDeliveryAvailabilityButton);
+
+async function checkDeliveryShippingAvailabilityAsync() {
+    zipCodeInput.disabled = true;
+    checkButton.disabled = true;
+    checkButton.innerText = "Checking...";
+
+    const zip = zipCodeInput.value;
+    const response = await fetch(`/AddToCart/GetDeliveryOptions?zip=${zip}`);
+    if (response.status != 200) {
+        alert('Error occurred when checking delivery options.');
+        updateCheckDeliveryAvailabilityButton();
+        return;
+    }
+
+    const responseJson = await response.json();
+    openDeliveryOptions(responseJson);
+    updateCheckDeliveryAvailabilityButton();
+}
+
+function openDeliveryOptions(response) {
+    input.style.display = "none";
+    deliveryNotAvailable.style.display = "none";
+    deliveryOptions.style.display = "none";
+
+    if (response.isDeliveryAvailable) {
+        deliveryOptions.style.display = "block";
+    } else {
+        deliveryNotAvailable.style.display = "block";
+    }
+
+    backButton.style.display = "block";
+}
+
+function updateCheckDeliveryAvailabilityButton() {
+    if (zipCodeInput === undefined) { return; }
+  
+    const isNumber = /^\d+$/.test(zipCodeInput.value);
+  
+    zipCodeInput.disabled = false;
+    checkButton.disabled = !isNumber || zipCodeInput.value.length !== 5;
+    checkButton.innerText = "Check Delivery/Shipping Availability";
+}
 
 function showCartSlideout(response) {
     updateCartSlideoutHtml(response);
@@ -25,7 +75,9 @@ function hideCartSlideout() {
 }
 
 function back() {
+    deliveryNotAvailable.style.display = "none";
     deliveryOptions.style.display = "none";
+    backButton.style.display = "none";
 
     input.style.display = "block";
 }

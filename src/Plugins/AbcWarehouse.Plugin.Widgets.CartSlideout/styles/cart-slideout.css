@@ -87,19 +87,23 @@
     text-align: center;
 }
 
-.cart-slideout-btn {
-    font-size: 0.75rem;
+.cart-slideout__check-delivery-options__btn {
     background-color: white;
     border: 2px solid #e1e1e1;
+    padding: 0.5rem 0.25rem;
     margin-top: 0.25rem;
-    text-align: center;
-    padding: 0.5rem;
-    float: right;
+    font-size: 0.75rem;
+    display: block;
+    margin-left: auto;
 }
 
-.cart-slideout-btn:disabled {
+.cart-slideout__check-delivery-options__btn:disabled {
     opacity: 0.25;
     cursor: not-allowed;
+}
+
+.cart-slideout__delivery-not-available {
+    color: red;
 }
 
 /* Delivery Options */

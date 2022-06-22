@@ -20,22 +20,21 @@
   </div>
   <div class="cart-slideout__product-info"></div>
   <hr style="clear: both; margin-bottom: 1rem" />
-  @* <div class="cart-slideout__delivery-input">
+  <div class="cart-slideout__delivery-input">
       <div class="cart-slideout__delivery-zip-code">
           <label for="cart-slideout__delivery-zip-code">Enter Zip Code:</label>
           <input class="cart-slideout__delivery-zip-code-input" />
       </div>
-      <button class="cart-slideout__check-delivery-options"
-              class="cart-slideout-btn"
+      <button class="cart-slideout__check-delivery-options__btn"
               onclick="checkDeliveryShippingAvailabilityAsync()"
               disabled>
             Check Delivery/Shipping Availability
       </button>
   </div>
-  <div class="cart-slideout__delivery-not-available">
+  <div class="cart-slideout__delivery-not-available" style="display: none">
       Home Delivery Shipping is not available for the given zip code.
-  </div> *@
-  <div class="cart-slideout__delivery-options"></div>
+  </div>
+  <div class="cart-slideout__delivery-options" style="display: none"></div>
   <div class="cart-slideout__buttons">
       <div class="cart-slideout__subtotal"></div>
       <a href="/cart">Go To Cart</a>
