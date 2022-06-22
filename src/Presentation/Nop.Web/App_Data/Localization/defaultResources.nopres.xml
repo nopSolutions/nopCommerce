@@ -12642,6 +12642,9 @@
   <LocaleResource Name="Admin.Help.SupportServices">
     <Value>Premium support services</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Help.Training">
+    <Value>Training</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Home">
     <Value>Home</Value>
   </LocaleResource>
