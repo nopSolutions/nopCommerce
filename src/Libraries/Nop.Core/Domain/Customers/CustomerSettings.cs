@@ -26,11 +26,13 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether username will be validated (when registering or changing on the 'My Account' page)
         /// </summary>
         public bool UsernameValidationEnabled { get; set; }
+        public bool PasswordValidationEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether username will be validated using regex (when registering or changing on the 'My Account' page)
         /// </summary>
         public bool UsernameValidationUseRegex { get; set; }
+        public bool PasswordValidationUseRegex { get; set; }
 
         /// <summary>
         /// Gets or sets a username validation rule

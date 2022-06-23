@@ -69,26 +69,28 @@ namespace Nop.Web.Framework.Validators
         public static IRuleBuilder<TModel, string> IsPassword<TModel>(this IRuleBuilder<TModel, string> ruleBuilder,
             ILocalizationService localizationService, CustomerSettings customerSettings)
         {
-            var regExp = "^";
-            //Passwords must be at least X characters and contain the following: upper case (A-Z), lower case (a-z), number (0-9) and special character (e.g. !@#$%^&*-)
-            regExp += customerSettings.PasswordRequireUppercase ? "(?=.*?[A-Z])" : "";
-            regExp += customerSettings.PasswordRequireLowercase ? "(?=.*?[a-z])" : "";
-            regExp += customerSettings.PasswordRequireDigit ? "(?=.*?[0-9])" : "";
-            regExp += customerSettings.PasswordRequireNonAlphanumeric ? "(?=.*?[#?!@$%^&*-])" : "";
-            regExp += $".{{{customerSettings.PasswordMinLength},}}$";
+            /* var regExp = "^";
+             //Passwords must be at least X characters and contain the following: upper case (A-Z), lower case (a-z), number (0-9) and special character (e.g. !@#$%^&*-)
+             regExp += customerSettings.PasswordRequireUppercase ? "(?=.*?[A-Z])" : "";
+             regExp += customerSettings.PasswordRequireLowercase ? "(?=.*?[a-z])" : "";
+             regExp += customerSettings.PasswordRequireDigit ? "(?=.*?[0-9])" : "";
+             regExp += customerSettings.PasswordRequireNonAlphanumeric ? "(?=.*?[#?!@$%^&*-])" : "";
+             regExp += $".{{{customerSettings.PasswordMinLength},}}$";
 
-            ;
+             ;
 
-            var options = ruleBuilder
-                .NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Validation.Password.IsNotEmpty"))
-                .Matches(regExp).WithMessageAwait(async () => string.Format(await localizationService.GetResourceAsync("Validation.Password.Rule"),
-                string.Format(await localizationService.GetResourceAsync("Validation.Password.LengthValidation"), customerSettings.PasswordMinLength),
-                customerSettings.PasswordRequireUppercase ? await localizationService.GetResourceAsync("Validation.Password.RequireUppercase") : "",
-                customerSettings.PasswordRequireLowercase ? await localizationService.GetResourceAsync("Validation.Password.RequireLowercase") : "",
-                customerSettings.PasswordRequireDigit ? await localizationService.GetResourceAsync("Validation.Password.RequireDigit") : "",
-                customerSettings.PasswordRequireNonAlphanumeric ? await localizationService.GetResourceAsync("Validation.Password.RequireNonAlphanumeric") : ""));
+             var options = ruleBuilder
+                 .NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Validation.Password.IsNotEmpty"))
+                 .Matches(regExp).WithMessageAwait(async () => string.Format(await localizationService.GetResourceAsync("Validation.Password.Rule"),
+                 string.Format(await localizationService.GetResourceAsync("Validation.Password.LengthValidation"), customerSettings.PasswordMinLength),
+                 customerSettings.PasswordRequireUppercase ? await localizationService.GetResourceAsync("Validation.Password.RequireUppercase") : "",
+                 customerSettings.PasswordRequireLowercase ? await localizationService.GetResourceAsync("Validation.Password.RequireLowercase") : "",
+                 customerSettings.PasswordRequireDigit ? await localizationService.GetResourceAsync("Validation.Password.RequireDigit") : "",
+                 customerSettings.PasswordRequireNonAlphanumeric ? await localizationService.GetResourceAsync("Validation.Password.RequireNonAlphanumeric") : ""));
 
-            return options;
+             return options;*/
+            return ruleBuilder.SetValidator(new IsPasswordPropertyValidator<TModel, string>(customerSettings));
+
         }
     }
 }
