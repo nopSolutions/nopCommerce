@@ -81,7 +81,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             return View("~/Plugins/ExternalAuth.Facebook/Views/Configure.cshtml", model);
         }
 
-        [HttpPost]        
+        [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
         public async Task<IActionResult> Configure(ConfigurationModel model)
@@ -153,18 +153,12 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 
         public async Task<IActionResult> DataDeletionStatusCheck(int earId)
         {
-
-            if (earId == 0)
-                return RedirectToRoute("Homepage");
-
             var externalAuthenticationRecord = await _externalAuthenticationService.GetExternalAuthenticationRecordByIdAsync(earId);
-            if (externalAuthenticationRecord != null)
-            {
+            if (externalAuthenticationRecord is not null)
                 _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataExist"));
-                return RedirectToRoute("CustomerInfo");
-            }
+            else
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataDeletedSuccessfully"));
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataDeletedSuccessfully"));
             return RedirectToRoute("CustomerInfo");
         }
 

@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Plugin.ExternalAuth.Facebook.Models;
@@ -22,10 +20,8 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         #region Fields
 
         private readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ILogger _logger;
-        private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IWebHelper _webHelper;
 
         #endregion
@@ -33,17 +29,13 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         #region Ctor
 
         public FacebookDataDeletionController(FacebookExternalAuthSettings facebookExternalAuthSettings,
-            IActionContextAccessor actionContextAccessor,
             IExternalAuthenticationService externalAuthenticationService,
             ILogger logger,
-            IUrlHelperFactory urlHelperFactory,
             IWebHelper webHelper)
         {
             _facebookExternalAuthSettings = facebookExternalAuthSettings;
-            _actionContextAccessor = actionContextAccessor;
             _externalAuthenticationService = externalAuthenticationService;
             _logger = logger;
-            _urlHelperFactory = urlHelperFactory;
             _webHelper = webHelper;
         }
 
@@ -54,7 +46,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         // Convert string to a valid Base64 encoded string
         protected static string DecodeUrlBase64(string str)
         {
-            if(string.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
                 return null;
 
             str = str.Replace("-", "+").Replace("_", "/");
@@ -67,76 +59,60 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         #endregion
 
         #region Methods
-        
+
         [HttpPost]
         public async Task<IActionResult> DataDeletionCallback(IFormCollection form)
         {
             try
             {
                 string signed_request = form["signed_request"];
+                if (string.IsNullOrEmpty(signed_request))
+                    throw new NopException("Request data is missing");
 
-                if (!string.IsNullOrEmpty(signed_request))
+                var split = signed_request.Split('.');
+                var signatureRaw = DecodeUrlBase64(split[0]);
+                var dataRaw = DecodeUrlBase64(split[1]);
+                if (string.IsNullOrEmpty(signatureRaw) || string.IsNullOrEmpty(dataRaw))
+                    throw new NopException("Part of the request data is missing");
+
+                var signature = Convert.FromBase64String(signatureRaw);
+                var dataBuffer = Convert.FromBase64String(dataRaw);
+                var json = Encoding.UTF8.GetString(dataBuffer);
+                var appSecretBytes = Encoding.UTF8.GetBytes(_facebookExternalAuthSettings.ClientSecret);
+                HMAC hmac = new HMACSHA256(appSecretBytes);
+                var expectedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(split[1]));
+                if (!expectedHash.SequenceEqual(signature))
+                    throw new NopException("Hash validation failed");
+
+                var fbUser = JsonConvert.DeserializeObject<FacebookUserDTO>(json);
+                var authenticationParameters = new ExternalAuthenticationParameters
                 {
-                    var split = signed_request.Split('.');
-
-                    var signatureRaw = DecodeUrlBase64(split[0]);
-
-                    if (string.IsNullOrEmpty(signatureRaw))
-                        return null;
-
-                    var dataRaw = DecodeUrlBase64(split[1]);
-
-                    if (string.IsNullOrEmpty(dataRaw))
-                        return null;
-
-                    // the decoded signature
-                    var signature = Convert.FromBase64String(signatureRaw);
-                    var dataBuffer = Convert.FromBase64String(dataRaw);
-
-                    // JSON object
-                    var json = Encoding.UTF8.GetString(dataBuffer);
-
-                    var appSecretBytes = Encoding.UTF8.GetBytes(_facebookExternalAuthSettings.ClientSecret);
-                    HMAC hmac = new HMACSHA256(appSecretBytes);
-                    var expectedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(split[1]));
-
-                    if (!expectedHash.SequenceEqual(signature))
-                    {
-                        await _logger.ErrorAsync($"Facebook datadeletioncallback error: Hashing data disn't match. Data: {json}");
-                        return null;
-                    }
-
-                    var fbUser = JsonConvert.DeserializeObject<FacebookUserDTO>(json);
-                    var authenticationParameters = new ExternalAuthenticationParameters
-                    {
-                        ProviderSystemName = FacebookAuthenticationDefaults.SystemName,
-                        AccessToken = await HttpContext.GetTokenAsync(FacebookDefaults.AuthenticationScheme, "access_token"),
-                        ExternalIdentifier = fbUser.UserId
-                    };
-
-                    var externalAuthenticationRecord = await _externalAuthenticationService.GetExternalAuthenticationRecordByExternalAuthenticationParametersAsync(authenticationParameters);
-
-                    if (externalAuthenticationRecord == null)
-                        return null;
-
-                    var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-                    var notificationUrl = urlHelper.RouteUrl(FacebookAuthenticationDefaults.DataDeletionStatusCheckRoute, new { earId = externalAuthenticationRecord.Id }, _webHelper.GetCurrentRequestProtocol());
-
-                    await _logger.InformationAsync($"{FacebookAuthenticationDefaults.SystemName} datadeletioncallback successful for CustomerId: {externalAuthenticationRecord.CustomerId}, CustomerEmail: {externalAuthenticationRecord.Email}, ExternalAuthenticationRecordId: {externalAuthenticationRecord.Id}, ExternalIdentifier: {externalAuthenticationRecord.ExternalIdentifier}");
+                    ProviderSystemName = FacebookAuthenticationDefaults.SystemName,
+                    AccessToken = await HttpContext.GetTokenAsync(FacebookDefaults.AuthenticationScheme, "access_token"),
+                    ExternalIdentifier = fbUser.UserId
+                };
+                var externalAuthenticationRecord = await _externalAuthenticationService.GetExternalAuthenticationRecordByExternalAuthenticationParametersAsync(authenticationParameters);
+                if (externalAuthenticationRecord is not null)
+                {
+                    await _logger.InformationAsync($"{FacebookAuthenticationDefaults.SystemName} data deletion completed. " +
+                        $"CustomerId: {externalAuthenticationRecord.CustomerId}, " +
+                        $"CustomerEmail: {externalAuthenticationRecord.Email}, " +
+                        $"ExternalAuthenticationRecordId: {externalAuthenticationRecord.Id}");
 
                     await _externalAuthenticationService.DeleteExternalAuthenticationRecordAsync(externalAuthenticationRecord);
-
-                    return Ok(new { url = notificationUrl, confirmation_code = $"{fbUser.UserId}" });
                 }
 
-                return null;
+                var notificationUrl = Url.RouteUrl(FacebookAuthenticationDefaults.DataDeletionStatusCheckRoute,
+                    new { earId = externalAuthenticationRecord?.Id ?? 0 },
+                    _webHelper.GetCurrentRequestProtocol());
 
+                return Ok(new { url = notificationUrl, confirmation_code = $"{externalAuthenticationRecord?.Id ?? 0}" });
             }
             catch (Exception exception)
             {
-                await _logger.ErrorAsync($"Facebook datadeletioncallback error: {exception.Message}.", exception);
+                await _logger.ErrorAsync($"{FacebookAuthenticationDefaults.SystemName} data deletion error: {exception.Message}.", exception);
+                return BadRequest();
             }
-            return null;
         }
 
         #endregion

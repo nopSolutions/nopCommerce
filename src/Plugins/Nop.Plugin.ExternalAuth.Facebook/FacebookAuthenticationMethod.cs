@@ -67,8 +67,8 @@ namespace Nop.Plugin.ExternalAuth.Facebook
             //locales
             await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
-                ["Plugins.ExternalAuth.Facebook.AuthenticationDataDeletedSuccessfully"] = "Facebook authentication data already deleted.",
-                ["Plugins.ExternalAuth.Facebook.AuthenticationDataExist"] = "Facebook authentication data exist on the database. Please contact with an admin.",
+                ["Plugins.ExternalAuth.Facebook.AuthenticationDataDeletedSuccessfully"] = "Data deletion request completed",
+                ["Plugins.ExternalAuth.Facebook.AuthenticationDataExist"] = "Data deletion request is pending, please contact the admin",
                 ["Plugins.ExternalAuth.Facebook.ClientKeyIdentifier"] = "App ID/API Key",
                 ["Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint"] = "Enter your app ID/API key here. You can find it on your FaceBook application page.",
                 ["Plugins.ExternalAuth.Facebook.ClientSecret"] = "App Secret",
