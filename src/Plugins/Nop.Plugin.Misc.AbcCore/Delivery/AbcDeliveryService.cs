@@ -32,34 +32,6 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             _abcDeliveryMapRepository = abcDeliveryMapRepository;
         }
 
-        private async System.Threading.Tasks.Task<(int deliveryPickupOptionsProductAttributeId,
-                                                   int haulAwayDeliveryProductAttributeId,
-                                                   int haulAwayDeliveryInstallProductAttributeId)> GetAbcDeliveryProductAttributesAsync()
-        {
-            var productAttributes = await _productAttributeService.GetAllProductAttributesAsync();
-
-            int _deliveryPickupOptionsProductAttributeId = productAttributes
-                .Where(p => p.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName)
-                .Select(p => p.Id)
-                .Single();
-
-            int _haulAwayDeliveryProductAttributeId = productAttributes
-                .Where(p => p.Name == AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName)
-                .Select(p => p.Id)
-                .Single();
-
-            int _haulAwayDeliveryInstallProductAttributeId = productAttributes
-                .Where(p => p.Name == AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName)
-                .Select(p => p.Id)
-                .Single();
-
-            return (
-                _deliveryPickupOptionsProductAttributeId,
-                _haulAwayDeliveryProductAttributeId,
-                _haulAwayDeliveryInstallProductAttributeId
-            );
-        }
-
         public async Task<AbcDeliveryItem> GetAbcDeliveryItemByItemNumberAsync(int itemNumber)
         {
             try
@@ -81,7 +53,9 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             return await abcDeliveryMaps.Where(adm => adm.HasDeliveryOptions()).ToListAsync();
         }
 
-        public async System.Threading.Tasks.Task<ProductAttributeValue> AddValueAsync(
+        // Calling async methods synchronously, if things go wrong check this:
+        // https://stackoverflow.com/questions/22628087/calling-async-method-synchronously
+        public ProductAttributeValue AddValue(
             int pamId,
             ProductAttributeValue pav,
             int itemNumber,
@@ -90,25 +64,27 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             bool isPreSelected,
             decimal priceAdjustment = 0)
         {
-            if (pav == null && itemNumber != 0)
+            if (pav != null || itemNumber == 0)
             {
-                var item = await GetAbcDeliveryItemByItemNumberAsync(itemNumber);
-                var price = item.Price - priceAdjustment;
-                var priceDisplay = price == 0 ?
-                    "FREE" :
-                    await _priceFormatter.FormatPriceAsync(price);
-                pav = new ProductAttributeValue()
-                {
-                    ProductAttributeMappingId = pamId,
-                    Name = string.Format(displayName, priceDisplay),
-                    Cost = itemNumber,
-                    PriceAdjustment = price,
-                    IsPreSelected = isPreSelected,
-                    DisplayOrder = displayOrder,
-                };
-
-                await _productAttributeService.InsertProductAttributeValueAsync(pav);
+                return pav;
             }
+
+            var item = GetAbcDeliveryItemByItemNumberAsync(itemNumber).Result;
+            var price = item.Price - priceAdjustment;
+            var priceDisplay = price == 0 ?
+                "FREE" :
+                _priceFormatter.FormatPriceAsync(price).Result;
+            pav = new ProductAttributeValue()
+            {
+                ProductAttributeMappingId = pamId,
+                Name = string.Format(displayName, priceDisplay),
+                Cost = itemNumber,
+                PriceAdjustment = price,
+                IsPreSelected = isPreSelected,
+                DisplayOrder = displayOrder,
+            };
+
+            _productAttributeService.InsertProductAttributeValueAsync(pav);
 
             return pav;
         }
