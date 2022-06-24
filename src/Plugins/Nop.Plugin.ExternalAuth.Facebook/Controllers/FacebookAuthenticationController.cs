@@ -151,6 +151,23 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             return await _externalAuthenticationService.AuthenticateAsync(authenticationParameters, returnUrl);
         }
 
+        public async Task<IActionResult> DataDeletionStatusCheck(int earId)
+        {
+
+            if (earId == 0)
+                return RedirectToRoute("Homepage");
+
+            var externalAuthenticationRecord = await _externalAuthenticationService.GetExternalAuthenticationRecordByIdAsync(earId);
+            if (externalAuthenticationRecord != null)
+            {
+                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataExist"));
+                return RedirectToRoute("CustomerInfo");
+            }
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataDeletedSuccessfully"));
+            return RedirectToRoute("CustomerInfo");
+        }
+
         #endregion
     }
 }
