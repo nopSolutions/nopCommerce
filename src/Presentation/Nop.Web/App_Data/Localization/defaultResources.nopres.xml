@@ -13902,6 +13902,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.EndDate.Hint">
     <Value>The end of the discount period in Coordinated Universal Time (UTC).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsActive.Hint">
+    <Value>Indicating whether the discount is active.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative">
     <Value>Cumulative with other discounts</Value>
   </LocaleResource>
@@ -13976,6 +13982,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Info">
     <Value>Discount info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.IsActive.ActiveOnly">
+    <Value>Active only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.IsActive.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.IsActive.Hint">
+    <Value>Search by "IsActive" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.IsActive.InactiveOnly">
+    <Value>Inactive only</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountCouponCode">
     <Value>Coupon code</Value>

@@ -886,7 +886,7 @@ namespace Nop.Web.Factories
             var discountCouponCodes = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
             foreach (var couponCode in discountCouponCodes)
             {
-                var discount = await (await _discountService.GetAllDiscountsAsync(couponCode: couponCode))
+                var discount = await (await _discountService.GetAllDiscountsAsync(couponCode: couponCode, isActive: true))
                     .FirstOrDefaultAwaitAsync(async d => d.RequiresCouponCode && (await _discountService.ValidateDiscountAsync(d, customer)).IsValid);
 
                 if (discount != null)

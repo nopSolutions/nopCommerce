@@ -123,7 +123,7 @@ namespace Nop.Services.Orders
             if (_catalogSettings.IgnoreDiscounts)
                 return (discountAmount, appliedDiscounts);
 
-            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToOrderSubTotal);
+            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToOrderSubTotal, isActive: true);
             var allowedDiscounts = new List<Discount>();
             if (allDiscounts != null)
             {
@@ -159,7 +159,7 @@ namespace Nop.Services.Orders
             if (_catalogSettings.IgnoreDiscounts)
                 return (shippingDiscountAmount, appliedDiscounts);
 
-            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToShipping);
+            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToShipping, isActive: true);
             var allowedDiscounts = new List<Discount>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
@@ -196,7 +196,7 @@ namespace Nop.Services.Orders
             if (_catalogSettings.IgnoreDiscounts)
                 return (discountAmount, appliedDiscounts);
 
-            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToOrderTotal);
+            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToOrderTotal, isActive: true);
             var allowedDiscounts = new List<Discount>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)

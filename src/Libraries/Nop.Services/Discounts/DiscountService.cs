@@ -172,13 +172,14 @@ namespace Nop.Services.Discounts
         /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
         /// <param name="startDateUtc">Discount start date; pass null to load all records</param>
         /// <param name="endDateUtc">Discount end date; pass null to load all records</param>
+        /// <param name="isActive">A value indicating whether to get active discounts; "null" to load all discounts; "false" to load only inactive discounts; "true" to load only active discounts</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the discounts
         /// </returns>
         public virtual async Task<IList<Discount>> GetAllDiscountsAsync(DiscountType? discountType = null,
             string couponCode = null, string discountName = null, bool showHidden = false,
-            DateTime? startDateUtc = null, DateTime? endDateUtc = null)
+            DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool? isActive = null)
         {
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
@@ -198,11 +199,15 @@ namespace Nop.Services.Discounts
                 if (!string.IsNullOrEmpty(discountName))
                     query = query.Where(discount => discount.Name.Contains(discountName));
 
+                //filter by is active
+                if (isActive.HasValue)
+                    query = query.Where(discount => discount.IsActive == isActive.Value);
+
                 query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
 
                 return query;
             }, cache => cache.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountAllCacheKey, 
-                showHidden, couponCode ?? string.Empty, discountName ?? string.Empty)))
+                showHidden, couponCode ?? string.Empty, discountName ?? string.Empty, isActive)))
             .AsQueryable();
 
             //we know that this method is usually invoked multiple times
@@ -508,6 +513,10 @@ namespace Nop.Services.Discounts
 
             //invalid by default
             var result = new DiscountValidationResult();
+
+            //check discount is active
+            if (!discount.IsActive)
+                return result;
 
             //check coupon code
             if (discount.RequiresCouponCode)

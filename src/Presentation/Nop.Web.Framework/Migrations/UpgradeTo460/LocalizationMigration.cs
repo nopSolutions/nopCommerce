@@ -233,6 +233,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Enums.Nop.Core.Domain.Catalog.ProductUrlStructureType.ManufacturerProduct"] = "/Manufacturer/Product",
                 ["Enums.Nop.Core.Domain.Catalog.ProductUrlStructureType.Product"] = "/Product",
 
+                //5705
+                ["Admin.Promotions.Discounts.Fields.IsActive"] = "Is active",
+                ["Admin.Promotions.Discounts.Fields.IsActive.Hint"] = "Indicating whether the discount is active.",
+                ["Admin.Promotions.Discounts.List.IsActive"] = "Is Active",
+                ["Admin.Promotions.Discounts.List.IsActive.ActiveOnly"] = "Active only",
+                ["Admin.Promotions.Discounts.List.IsActive.All"] = "All",
+                ["Admin.Promotions.Discounts.List.IsActive.Hint"] = "Search by \"IsActive\" property.",
+                ["Admin.Promotions.Discounts.List.IsActive.InactiveOnly"] = "Inactive only",
+
             }, languageId).Wait();
 
             #endregion
