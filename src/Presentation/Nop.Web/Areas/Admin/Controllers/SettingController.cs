@@ -2037,22 +2037,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(new { Result = string.Empty });
         }
 
-        //Action that displays a notification (warning) to the store owner about the absence of active authentication providers
-        public async Task<IActionResult> ForceMultifactorAuthenticationWarning(bool forceMultifactorAuthentication)
-        {
-            //ForceMultifactorAuthentication is set and the store haven't active Authentication provider , so display warning
-            if (forceMultifactorAuthentication && !await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
-            {
-                return Json(new
-                {
-                    Result = await _localizationService
-                        .GetResourceAsync("Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning")
-                });
-            }
-
-            return Json(new { Result = string.Empty });
-        }
-
         //Action that displays a notification (warning) to the store owner about the need to restart the application after changing the setting
         public async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning(bool seoFriendlyUrlsForLanguagesEnabled)
         {

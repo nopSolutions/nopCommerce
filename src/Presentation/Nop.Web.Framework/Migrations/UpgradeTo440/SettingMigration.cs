@@ -36,14 +36,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 settingService.SaveSettingAsync(externalAuthenticationSettings, settings => settings.LogErrors).Wait();
             }
 
-            var multiFactorAuthenticationSettings = settingService.LoadSettingAsync<MultiFactorAuthenticationSettings>().Result;
-            if (!settingService.SettingExistsAsync(multiFactorAuthenticationSettings, settings => settings.ForceMultifactorAuthentication).Result)
-            {
-                multiFactorAuthenticationSettings.ForceMultifactorAuthentication = false;
-
-                settingService.SaveSettingAsync(multiFactorAuthenticationSettings, settings => settings.ForceMultifactorAuthentication).Wait();
-            }
-
             //#5102 Delete Full-text settings
             settingRepository
                 .DeleteAsync(setting => setting.Name == "commonsettings.usefulltextsearch" || setting.Name == "commonsettings.fulltextmode")

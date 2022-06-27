@@ -60,18 +60,4 @@
             </div>
         </div>
     </section>
-    <script>
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.MultiFactorAuthenticationSettings.ForceMultifactorAuthentication)").click(toggleForceMultifactorAuthentication);
-            toggleForceMultifactorAuthentication();
-        });
-
-        function toggleForceMultifactorAuthentication() {
-            warningValidation('@Url.Action("ForceMultifactorAuthenticationWarning", "Setting")',
-                '@Html.NameFor(model => model.MultiFactorAuthenticationSettings.ForceMultifactorAuthentication)',
-                {
-                    forceMultifactorAuthentication: $('#@Html.IdFor(model => model.MultiFactorAuthenticationSettings.ForceMultifactorAuthentication)').is(':checked')
-                });
-        }
-    </script>
 </form>

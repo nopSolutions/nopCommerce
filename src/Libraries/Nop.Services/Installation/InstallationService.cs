@@ -3044,11 +3044,6 @@ namespace Nop.Services.Installation
                 PhoneNumberValidationRule = "^[0-9]{1,14}?$"
             });
 
-            await settingService.SaveSettingAsync(new MultiFactorAuthenticationSettings
-            {
-                ForceMultifactorAuthentication = false
-            });
-
             await settingService.SaveSettingAsync(new AddressSettings
             {
                 CompanyEnabled = true,

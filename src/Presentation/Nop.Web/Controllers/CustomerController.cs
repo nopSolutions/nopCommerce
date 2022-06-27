@@ -36,6 +36,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Factories;
@@ -84,6 +85,7 @@ namespace Nop.Web.Controllers
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly INotificationService _notificationService;
         private readonly IOrderService _orderService;
+        private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductService _productService;
@@ -134,6 +136,7 @@ namespace Nop.Web.Controllers
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             INotificationService notificationService,
             IOrderService orderService,
+            IPermissionService permissionService,
             IPictureService pictureService,
             IPriceFormatter priceFormatter,
             IProductService productService,
@@ -180,6 +183,7 @@ namespace Nop.Web.Controllers
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _notificationService = notificationService;
             _orderService = orderService;
+            _permissionService = permissionService;
             _pictureService = pictureService;
             _priceFormatter = priceFormatter;
             _productService = productService;
@@ -1896,7 +1900,7 @@ namespace Nop.Web.Controllers
                     //save MultiFactorIsEnabledAttribute
                     if (!model.IsEnabled)
                     {
-                        if (!_multiFactorAuthenticationSettings.ForceMultifactorAuthentication)
+                        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ForceMultiFactorAuthentication))
                         {
                             await _genericAttributeService
                                 .SaveAttributeAsync(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, string.Empty);

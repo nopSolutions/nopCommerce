@@ -237,46 +237,52 @@ namespace Nop.Data.Migrations.UpgradeTo460
                     }
                 );
 
-                var isForceMultifactorAuthenticationEnabled = _dataProvider.GetTable<Setting>().Any(s => string.Compare(s.Name, "MultiFactorAuthenticationSettings.ForceMultifactorAuthentication", StringComparison.InvariantCultureIgnoreCase) == 0 && 
-                string.Compare(s.Value, "True", StringComparison.InvariantCultureIgnoreCase) == 0);
+                var forceMultifactorAuthenticationSettings = _dataProvider.GetTable<Setting>().Where(s => string.Compare(s.Name, "MultiFactorAuthenticationSettings.ForceMultifactorAuthentication", StringComparison.InvariantCultureIgnoreCase) == 0);
+                var isForceMultifactorAuthenticationEnabled = false;
 
-                if (isForceMultifactorAuthenticationEnabled)
+                if (forceMultifactorAuthenticationSettings.Any())
                 {
-                    //add it to all customer roles by default except guests role
-                    var customerRoles = _dataProvider
-                        .GetTable<CustomerRole>().Where(cr => cr.SystemName != NopCustomerDefaults.GuestsRoleName);
+                    isForceMultifactorAuthenticationEnabled = forceMultifactorAuthenticationSettings.Any(s => string.Compare(s.Value, "True", StringComparison.InvariantCultureIgnoreCase) == 0);
 
-                    if (customerRoles.Any())
+                    if (isForceMultifactorAuthenticationEnabled)
                     {
-                        var prCustomerRoleMappings = _dataProvider
-                        .GetTable<PermissionRecordCustomerRoleMapping>().Where(prcm => prcm.PermissionRecordId == forceMultifactorAuthenticationPermissionRecord.Id);
+                        //add it to all customer roles by default except guests role
+                        var customerRoles = _dataProvider
+                            .GetTable<CustomerRole>().Where(cr => cr.SystemName == NopCustomerDefaults.AdministratorsRoleName || cr.SystemName == NopCustomerDefaults.RegisteredRoleName);
 
-                        foreach (var cRole in customerRoles)
+                        if (customerRoles.Any())
                         {
-                            _dataProvider.InsertEntity(
-                                new PermissionRecordCustomerRoleMapping
-                                {
-                                    CustomerRoleId = cRole.Id,
-                                    PermissionRecordId = forceMultifactorAuthenticationPermissionRecord.Id
-                                }
-                            );
+                            var prCustomerRoleMappings = _dataProvider
+                            .GetTable<PermissionRecordCustomerRoleMapping>().Where(prcm => prcm.PermissionRecordId == forceMultifactorAuthenticationPermissionRecord.Id);
+
+                            foreach (var cRole in customerRoles)
+                            {
+                                _dataProvider.InsertEntity(
+                                    new PermissionRecordCustomerRoleMapping
+                                    {
+                                        CustomerRoleId = cRole.Id,
+                                        PermissionRecordId = forceMultifactorAuthenticationPermissionRecord.Id
+                                    }
+                                );
+                            }
                         }
                     }
-                }
-                else
-                {
-                    //add it to the Admin role by default
-                    var adminRole = _dataProvider
-                        .GetTable<CustomerRole>()
-                        .FirstOrDefault(x => x.IsSystemRole && x.SystemName == NopCustomerDefaults.AdministratorsRoleName);
 
-                    _dataProvider.InsertEntity(
-                        new PermissionRecordCustomerRoleMapping
-                        {
-                            CustomerRoleId = adminRole.Id,
-                            PermissionRecordId = forceMultifactorAuthenticationPermissionRecord.Id
-                        }
-                    );
+                    _dataProvider.BulkDeleteEntitiesAsync(forceMultifactorAuthenticationSettings.ToList());
+                }
+
+                if (!forceMultifactorAuthenticationSettings.Any() || !isForceMultifactorAuthenticationEnabled)
+                {
+                    if (_dataProvider.GetTable<CustomerRole>().FirstOrDefault(cr => cr.IsSystemRole && cr.SystemName == NopCustomerDefaults.AdministratorsRoleName) is CustomerRole adminRole)
+                    {
+                        _dataProvider.InsertEntity(
+                            new PermissionRecordCustomerRoleMapping
+                            {
+                                CustomerRoleId = adminRole.Id,
+                                PermissionRecordId = forceMultifactorAuthenticationPermissionRecord.Id
+                            }
+                        );
+                    }
                 }
             }
                 

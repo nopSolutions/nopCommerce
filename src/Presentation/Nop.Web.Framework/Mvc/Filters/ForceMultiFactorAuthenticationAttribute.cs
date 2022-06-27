@@ -41,7 +41,6 @@ namespace Nop.Web.Framework.Mvc.Filters
             private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
             private readonly IPermissionService _permissionService;
             private readonly IWorkContext _workContext;
-            private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
 
             #endregion
 
@@ -51,15 +50,13 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IGenericAttributeService genericAttributeService,
                 IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
                 IPermissionService permissionService,
-                IWorkContext workContext,
-                MultiFactorAuthenticationSettings multiFactorAuthenticationSettings)
+                IWorkContext workContext)
             {
                 _customerService = customerService;
                 _genericAttributeService = genericAttributeService;
                 _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
                 _permissionService = permissionService;
                 _workContext = workContext;
-                _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
             }
 
             #endregion
@@ -101,8 +98,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 }
 
                 //whether the feature is enabled
-                if (!_multiFactorAuthenticationSettings.ForceMultifactorAuthentication ||
-                    !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ForceMultiFactorAuthentication) ||
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ForceMultiFactorAuthentication) ||
                     !await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
                 {
                     return;
