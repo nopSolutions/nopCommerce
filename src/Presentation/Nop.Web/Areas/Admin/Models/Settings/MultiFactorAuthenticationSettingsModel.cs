@@ -12,9 +12,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public int ActiveStoreScopeConfiguration { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication")]
-        public bool ForceMultifactorAuthentication { get; set; }
-
         #endregion
     }
 }

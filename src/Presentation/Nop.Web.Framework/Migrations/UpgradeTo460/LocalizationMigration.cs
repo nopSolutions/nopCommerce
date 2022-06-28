@@ -50,6 +50,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions",
                 "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint",
+
+                //5607
+                "Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication",
+                "Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Hint",
+                "Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning",
             }).Wait();
 
             #endregion
