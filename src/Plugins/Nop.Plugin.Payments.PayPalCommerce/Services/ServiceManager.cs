@@ -820,7 +820,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                         order.CaptureTransactionResult = authorization.Status;
                         order.OrderStatus = Core.Domain.Orders.OrderStatus.Pending;
                         await _orderService.UpdateOrderAsync(order);
-                        await _orderProcessingService.CheckOrderStatusAsync(order, false);
+                        await _orderProcessingService.CheckOrderStatusAsync(order);
                         break;
 
                     case "voided":
@@ -856,7 +856,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                         order.CaptureTransactionResult = $"{capture.Status}. {capture.StatusDetails?.Reason}";
                         order.OrderStatus = Core.Domain.Orders.OrderStatus.Pending;
                         await _orderService.UpdateOrderAsync(order);
-                        await _orderProcessingService.CheckOrderStatusAsync(order, false);
+                        await _orderProcessingService.CheckOrderStatusAsync(order);
                         break;
 
                     case "refunded":

@@ -1574,7 +1574,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task CheckOrderStatusAsync(Order order, bool notifyCustomer)
+        public virtual async Task CheckOrderStatusAsync(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
@@ -1594,7 +1594,7 @@ namespace Nop.Services.Orders
                     if (order.PaymentStatus == PaymentStatus.Authorized ||
                         order.PaymentStatus == PaymentStatus.Paid)
                     {
-                        await SetOrderStatusAsync(order, OrderStatus.Processing, notifyCustomer);
+                        await SetOrderStatusAsync(order, OrderStatus.Processing, false);
                         await _eventPublisher.PublishAsync(new OrderStatusChangedEvent(order, prevOrderStatus));
                     }
 
@@ -1602,7 +1602,7 @@ namespace Nop.Services.Orders
                         order.ShippingStatus == ShippingStatus.Shipped ||
                         order.ShippingStatus == ShippingStatus.Delivered)
                     {
-                        await SetOrderStatusAsync(order, OrderStatus.Processing, notifyCustomer);
+                        await SetOrderStatusAsync(order, OrderStatus.Processing, false);
                         await _eventPublisher.PublishAsync(new OrderStatusChangedEvent(order, prevOrderStatus));
                     }
 
@@ -1694,7 +1694,7 @@ namespace Nop.Services.Orders
                         string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.PlaceOrder"), order.Id), order);
 
                     //check order status
-                    await CheckOrderStatusAsync(order, true);
+                    await CheckOrderStatusAsync(order);
 
                     //raise event       
                     await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
@@ -1811,7 +1811,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            await CheckOrderStatusAsync(updatedOrder, false);
+            await CheckOrderStatusAsync(updatedOrder);
 
             async Task<(List<ShoppingCartItem> restoredCart, ShoppingCartItem updatedShoppingCartItem)> restoreShoppingCartAsync(Order order, int updatedOrderItemId)
             {
@@ -2025,7 +2025,7 @@ namespace Nop.Services.Orders
                     await SendNotificationsAndSaveNotesAsync(order);
 
                     //check order status
-                    await CheckOrderStatusAsync(order, true);
+                    await CheckOrderStatusAsync(order);
 
                     //raise event       
                     await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
@@ -2277,7 +2277,7 @@ namespace Nop.Services.Orders
             await _eventPublisher.PublishShipmentSentAsync(shipment);
 
             //check order status
-            await CheckOrderStatusAsync(order, true);
+            await CheckOrderStatusAsync(order);
         }
 
         /// <summary>
@@ -2374,7 +2374,7 @@ namespace Nop.Services.Orders
             await _eventPublisher.PublishShipmentDeliveredAsync(shipment);
 
             //check order status
-            await CheckOrderStatusAsync(order, true);
+            await CheckOrderStatusAsync(order);
         }
 
         /// <summary>
@@ -2473,7 +2473,7 @@ namespace Nop.Services.Orders
             await AddOrderNoteAsync(order, "Order has been marked as authorized");
 
             //check order status
-            await CheckOrderStatusAsync(order, true);
+            await CheckOrderStatusAsync(order);
         
             await _eventPublisher.PublishAsync(new OrderAuthorizedEvent(order)); 
         }
@@ -2541,7 +2541,7 @@ namespace Nop.Services.Orders
                     //add a note
                     await AddOrderNoteAsync(order, "Order has been captured");
 
-                    await CheckOrderStatusAsync(order, false);
+                    await CheckOrderStatusAsync(order);
 
                     if (order.PaymentStatus == PaymentStatus.Paid) 
                         await ProcessOrderPaidAsync(order);
@@ -2616,7 +2616,7 @@ namespace Nop.Services.Orders
             //add a note
             await AddOrderNoteAsync(order, "Order has been marked as paid");
 
-            await CheckOrderStatusAsync(order, true);
+            await CheckOrderStatusAsync(order);
 
             if (order.PaymentStatus == PaymentStatus.Paid) 
                 await ProcessOrderPaidAsync(order);
@@ -2691,7 +2691,7 @@ namespace Nop.Services.Orders
                     await AddOrderNoteAsync(order, $"Order has been refunded. Amount = {request.AmountToRefund}");
 
                     //check order status
-                    await CheckOrderStatusAsync(order, false);
+                    await CheckOrderStatusAsync(order);
 
                     //notifications
                     var orderRefundedStoreOwnerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderRefundedStoreOwnerNotificationAsync(order, request.AmountToRefund, _localizationSettings.DefaultAdminLanguageId);
@@ -2790,7 +2790,7 @@ namespace Nop.Services.Orders
             await AddOrderNoteAsync(order, $"Order has been marked as refunded. Amount = {amountToRefund}");
 
             //check order status
-            await CheckOrderStatusAsync(order, false);
+            await CheckOrderStatusAsync(order);
 
             //notifications
             var orderRefundedStoreOwnerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderRefundedStoreOwnerNotificationAsync(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
@@ -2883,7 +2883,7 @@ namespace Nop.Services.Orders
                     await AddOrderNoteAsync(order, $"Order has been partially refunded. Amount = {amountToRefund}");
 
                     //check order status
-                    await CheckOrderStatusAsync(order, false);
+                    await CheckOrderStatusAsync(order);
 
                     //notifications
                     var orderRefundedStoreOwnerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderRefundedStoreOwnerNotificationAsync(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
@@ -2985,7 +2985,7 @@ namespace Nop.Services.Orders
             await AddOrderNoteAsync(order, $"Order has been marked as partially refunded. Amount = {amountToRefund}");
 
             //check order status
-            await CheckOrderStatusAsync(order, false);
+            await CheckOrderStatusAsync(order);
 
             //notifications
             var orderRefundedStoreOwnerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderRefundedStoreOwnerNotificationAsync(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
@@ -3060,7 +3060,7 @@ namespace Nop.Services.Orders
                     await AddOrderNoteAsync(order, "Order has been voided");
 
                     //check order status
-                    await CheckOrderStatusAsync(order, false);
+                    await CheckOrderStatusAsync(order);
 
                     //raise event       
                     await _eventPublisher.PublishAsync(new OrderVoidedEvent(order));
@@ -3137,7 +3137,7 @@ namespace Nop.Services.Orders
             await AddOrderNoteAsync(order, "Order has been marked as voided");
 
             //check order status
-            await CheckOrderStatusAsync(order, false);
+            await CheckOrderStatusAsync(order);
 
             //raise event       
             await _eventPublisher.PublishAsync(new OrderVoidedEvent(order));
