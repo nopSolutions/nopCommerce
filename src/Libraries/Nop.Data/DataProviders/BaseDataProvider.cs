@@ -41,7 +41,7 @@ namespace Nop.Data.DataProviders
         /// </summary>
         private MappingSchema GetMappingSchema()
         {
-            return Singleton<MappingSchema>.Instance ??= new MappingSchema(ConfigurationName)
+            return Singleton<MappingSchema>.Instance ??= new MappingSchema(ConfigurationName, LinqToDbDataProvider.MappingSchema)
             {
                 MetadataReader = new FluentMigratorMetadataReader(this)
             };
