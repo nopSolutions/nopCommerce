@@ -61,9 +61,9 @@ function updateCheckDeliveryAvailabilityButton() {
 function showCartSlideout(response) {
     updateCartSlideoutHtml(response);
 
-    CartSlideout.style.width = "320px";
     CartSlideout.style.padding = "2.5rem 1rem 0 1rem";
     CartSlideoutOverlay.style.display = "block";
+    CartSlideout.style.display = "block";
     document.body.classList.add("scrollYRemove");
 }
 
@@ -73,6 +73,44 @@ function hideCartSlideout() {
     CartSlideoutOverlay.style.display = "none";
     document.body.classList.remove("scrollYRemove");
 }
+
+function hideDeliveryOptions() {
+    var deliveryOptionsInformation = document.querySelector('.delivery-options-information');
+    deliveryOptionsInformation.style.display = "none";
+}
+
+async function checkDeliveryShippingAvailabilityAsync() {
+    zipCodeInput.disabled = true;
+    checkButton.disabled = true;
+    checkButton.innerText = "Checking...";
+
+    const zip = zipCodeInput.value;
+    const response = await fetch(`/AddToCart/GetDeliveryOptions?zip=${zip}`);
+    if (response.status != 200) {
+        alert('Error occurred when checking delivery options.');
+        updateCheckDeliveryAvailabilityButton();
+        return;
+    }
+
+    const responseJson = await response.json();
+    //openDeliveryOptions(responseJson);
+    updateCheckDeliveryAvailabilityButton();
+}
+
+// function openDeliveryOptions(response) {
+//     document.getElementById("cart-slideout__delivery-input").style.display = "none";
+    
+//     deliveryNotAvailable.style.display = "none";
+//     deliveryOptions.style.display = "none";
+
+//     if (response.isDeliveryAvailable) {
+//         deliveryOptions.style.display = "block";
+//     } else {
+//         deliveryNotAvailable.style.display = "block";
+//     }
+
+//     CartSlideoutBackButton.style.display = "block";
+// }
 
 function back() {
     deliveryNotAvailable.style.display = "none";
