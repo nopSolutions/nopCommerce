@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
+using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 
@@ -651,6 +653,7 @@ namespace Nop.Services.Catalog
                 MetaTitle = product.MetaTitle,
                 AllowCustomerReviews = product.AllowCustomerReviews,
                 LimitedToStores = product.LimitedToStores,
+                SubjectToAcl = product.SubjectToAcl,
                 Sku = newSku,
                 ManufacturerPartNumber = product.ManufacturerPartNumber,
                 Gtin = product.Gtin,
@@ -803,10 +806,17 @@ namespace Nop.Services.Catalog
             await CopyAttributesMappingAsync(product, productCopy, originalNewPictureIdentifiers);
             //product <-> discounts mapping
             await CopyDiscountsMappingAsync(product, productCopy);
+
             //store mapping
             var selectedStoreIds = await _storeMappingService.GetStoresIdsWithAccessAsync(product);
             foreach (var id in selectedStoreIds) 
                 await _storeMappingService.InsertStoreMappingAsync(productCopy, id);
+
+            //customer role mapping
+            var aclService = EngineContext.Current.Resolve<IAclService>();
+            var customerRoleIds = await aclService.GetCustomerRoleIdsWithAccessAsync(product);
+            foreach (var id in customerRoleIds)
+                await aclService.InsertAclRecordAsync(productCopy, id);
 
             //tier prices
             await CopyTierPricesAsync(product, productCopy);
