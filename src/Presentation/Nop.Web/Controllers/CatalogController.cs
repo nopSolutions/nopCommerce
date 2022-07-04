@@ -457,9 +457,12 @@ namespace Nop.Web.Controllers
 
         private async Task<bool> CheckCategoryAvailabilityAsync(Category category)
         {
+            if (category is null)
+                return false;
+
             var isAvailable = true;
 
-            if (category == null || category.Deleted)
+            if (category.Deleted)
                 isAvailable = false;
 
             var notAvailable =
