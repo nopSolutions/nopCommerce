@@ -26,6 +26,10 @@
                     <label class="text-prompt">
                         @textPrompt
                     </label>
+                    @if (attribute.Name == "Delivery/Pickup Options")
+                    {
+                        <i class="fas fa-info-circle delivery-options-info"></i>
+                    }
                     @if (attribute.IsRequired)
                     {
                         <span class="required">*</span>
