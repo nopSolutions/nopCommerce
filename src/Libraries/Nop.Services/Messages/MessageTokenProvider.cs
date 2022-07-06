@@ -1541,7 +1541,8 @@ namespace Nop.Services.Messages
                 MessageTemplateSystemNames.OrderPaidCustomerNotification or 
                 MessageTemplateSystemNames.OrderPaidVendorNotification or 
                 MessageTemplateSystemNames.OrderPaidAffiliateNotification or 
-                MessageTemplateSystemNames.OrderPlacedCustomerNotification or 
+                MessageTemplateSystemNames.OrderPlacedCustomerNotification or
+                MessageTemplateSystemNames.OrderProcessingCustomerNotification or
                 MessageTemplateSystemNames.OrderCompletedCustomerNotification or 
                 MessageTemplateSystemNames.OrderCancelledCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 

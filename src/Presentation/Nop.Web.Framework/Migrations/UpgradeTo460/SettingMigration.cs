@@ -282,6 +282,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 mediaSettings.ProductDefaultImageId = 0;
                 settingService.SaveSettingAsync(mediaSettings, settings => settings.ProductDefaultImageId).Wait();
             }
+
+            //#3651
+            if (!settingService.SettingExistsAsync(orderSettings, settings => settings.AttachPdfInvoiceToOrderProcessingEmail).Result)
+            {
+                orderSettings.AttachPdfInvoiceToOrderProcessingEmail = false;
+                settingService.SaveSettingAsync(orderSettings, settings => settings.AttachPdfInvoiceToOrderProcessingEmail).Wait();
+            }
         }
 
         public override void Down()

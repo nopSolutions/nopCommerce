@@ -8076,6 +8076,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPlacedEmail.Hint">
     <Value>Check to attach PDF invoice to the "order placed" email sent to a customer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail">
+    <Value>Attach PDF invoice ("order processing" email)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail.Hint">
+    <Value>Check to attach PDF invoice to the "order processing" email sent to a customer.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder">
     <Value>Auto update order totals</Value>
   </LocaleResource>
@@ -10499,6 +10505,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.VendorNotification">
     <Value>This message template is used to notify a vendor that the certain order was placed. Orders can be viewed by a vendor in Sales - Orders. You can allow them to access this part of Admin Area in Configuration - Access control list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderProcessing.CustomerNotification">
+    <Value>This message template is used to notify a customer that the certain order is processing. Orders can be viewed by a customer on the account page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderRefunded.CustomerNotification">
     <Value>This message template is used to notify a customer that the certain order was refunded. The customer can submit to refund the order when the payment status is paid on the account page, or it can be done by a store owner in Sales - Orders by clicking "Refund" button.</Value>

@@ -258,6 +258,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Hint"] = "Force activation of multi-factor authentication for customer roles specified in Access control list (at least one MFA provider must be active).",
                 ["Permission.Authentication.EnableMultiFactorAuthentication"] = "Security. Enable Multi-factor authentication",
 
+                //#3651
+                ["Admin.ContentManagement.MessageTemplates.Description.OrderProcessing.CustomerNotification"] = "This message template is used to notify a customer that the certain order is processing. Orders can be viewed by a customer on the account page.",
+                ["Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail"] = "Attach PDF invoice (\"order processing\" email)",
+                ["Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail.Hint"] = "Check to attach PDF invoice to the \"order processing\" email sent to a customer.",
+
             }, languageId).Wait();
 
             #endregion
