@@ -16,14 +16,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
             _productModelFactory = productModelFactory;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(Product product)
+        public async Task<IViewComponentResult> InvokeAsync(Product product, string[] includedAttributeNames)
         {
-            var includedAttributeNames = new string[]
-            {
-                "Delivery/Pickup Options",
-                "Haul Away",
-            };
-
             var models = await _productModelFactory.PrepareProductAttributeModelsAsync(
                 product,
                 null,

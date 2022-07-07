@@ -14,7 +14,6 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Models
         {
             return ShoppingCartItemId != 0 &&
                    ProductAttributeMappingId != 0 &&
-                   ProductAttributeValueId != 0 &&
                    IsChecked != null;
         }
     }

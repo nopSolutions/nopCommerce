@@ -419,26 +419,6 @@
                                         @* <div class="edit-item">
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                         </div> *@
-
-                                        // ABC: custom - I'm not sure if we're even using this
-                                        if (!isOnlineOnly)
-                                        {
-                                            if (await product.IsPickupAsync())
-                                            {
-                                                bool isPickup = item.AttributeInfo.Contains("Pickup");
-                                                string buttonMsg = isPickup ? "Change to Delivery" : "Change to Pickup in Store";
-                                                if (isPickup)
-                                                {
-                                                    <div class="edit-item">
-                                                        <a href="@editCartItemUrl">Change store</a>
-                                                    </div>
-                                                }
-                                                <div class="change">
-                                                    <button class="change-delivery-method" value="@item.Id">@buttonMsg</button>
-                                                    <span id="change_method_error_@item.Id" class="delivery-method-error"></span>
-                                                </div>
-                                            }
-                                        }
                                     }
                                     @if (item.Warnings.Count > 0)
                                     {

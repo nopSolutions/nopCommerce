@@ -53,7 +53,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
             var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(
                 model.ProductAttributeMappingId);
             shoppingCartItem.AttributesXml = model.IsChecked.Value ?
-                await AddProductAttributeAsync(
+                await ChangeProductAttributeAsync(
                     productAttributeMapping,
                     shoppingCartItem.AttributesXml,
                     model.ProductAttributeValueId) :
@@ -71,7 +71,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                     shoppingCartItem.RentalEndDateUtc,
                     shoppingCartItem.Quantity);
 
-            // conditional attributes
+            // conditional attributes - will need this for haulaway
             // var enabledAttributeMappingIds = new List<int>();
             // var disabledAttributeMappingIds = new List<int>();
             // var attributes = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
@@ -93,26 +93,32 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
             });
         }
 
+        // TODO:
         // Need to remove the existing mapped value if Delivery/Pickup
         // I think this will be the same with warranties and maybe pickup in store?
-        private async Task<string> AddProductAttributeAsync(
+        private async Task<string> ChangeProductAttributeAsync(
             ProductAttributeMapping pam,
             string attributesXml,
             int productAttributeValueId)
         {
             var result = attributesXml;
             var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
-            if (productAttribute.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName)
+            // TODO: Turn "Warranty" into an AbcDeliveryConst
+            if (productAttribute.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName ||
+                productAttribute.Name == "Warranty")
             {
                 result = _productAttributeParser.RemoveProductAttribute(
                     result,
                     pam);
             }
 
-            return _productAttributeParser.AddProductAttribute(
+            // If 0 was passed, don't add another attribute, treated as only removal
+            return productAttributeValueId != 0 ?
+                _productAttributeParser.AddProductAttribute(
                     result,
                     pam,
-                    productAttributeValueId.ToString());
+                    productAttributeValueId.ToString()) :
+                result;
         }
     }
 }

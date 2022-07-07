@@ -31,10 +31,18 @@
             Check Delivery/Shipping Availability
       </button>
   </div>
-  <div class="cart-slideout__delivery-not-available" style="display: none">
+  <div class="cart-slideout__delivery-not-available">
       Home Delivery Shipping is not available for the given zip code.
   </div>
-  <div class="cart-slideout__delivery-options" style="display: none"></div>
+  <div class="cart-slideout__delivery-options"></div>
+  <div class="cart-slideout__delivery-options-continue">
+        <button class="cart-slideout__continue__btn"
+                onclick="toWarranty()">
+            Continue
+        </button>
+  </div>
+  <!-- Pick up in store goes here -->
+  <div class="cart-slideout__warranty"></div>
   <div class="cart-slideout__buttons">
       <div class="cart-slideout__subtotal"></div>
       <a href="/cart">Go To Cart</a>
@@ -43,7 +51,7 @@
 </div>
 <div class="delivery-options-information">
     <a href="javascript:void(0)" class="close" onclick="hideDeliveryOptionsInformation()">&times;</a>
-    <h1>Delivery Information</h1>
+    <h2>Delivery Information</h2>
     <p>Free home delivery is available within our service area in Michigan, Ohio, and Indiana via mail in rebate.</p>
     <p>Please provide clear access for your product being delivered.</p>
     <p><b>Home Delivery Includes:</b> All appliances are unpacked and set in place.</p>
@@ -54,4 +62,27 @@
     <p>Look for the "Internet Order Pick-Up" signs or ask the nearest salesperson to direct you.</p>
     <p>*If you have ordered after store hours, you will not receive the store pickup notification E-mail until the next business day.</p>
     <p>In order to avoid cancellation, please pick up your item(s) within 48 hours.</p>
+</div>
+<div class="warranty-information">
+    <a href="javascript:void(0)" class="close" onclick="hideWarrantyInformation()">&times;</a>
+    <h2>Extended Warranty</h2>
+    <p>No Deductibles | Fully Transferable | All Labor | All Parts | Factory Service | 800# for Service</p>
+    <p>Extend the original Manufacturer's Product Warranty for up to 5 years and receive up to 50% Merchandise Credit Back if you don't use it.</p>
+    <table>
+        <tr>
+            <td><b>2 YEAR*</b> GET 10% CREDIT BACK</td>
+        </tr>
+        <tr>
+            <td><b>3 YEAR*</b> GET 20% CREDIT BACK</td>
+        </tr>
+        <tr>
+            <td><b>4 YEAR*</b> GET 25% CREDIT BACK</td>
+        </tr>
+        <tr>
+            <td><b>5 YEAR*</b> GET 50% CREDIT BACK</td>
+        </tr>
+    </table>
+    <p>No Check-Ups or Repairs, Get Up To 50% Of Cost of Warranty Plus Coverage Towards Your Next Major Electronics or Appliance Purchase, 90 Days To Redeem For Merchandise Credit, Call Our Toll Free Number.</p>
+    <p>*including Manufacturer's Warranty</p>
+    <p>ABC Warehouse offers Extended Warranty Plans on the item(s) listed below. Please select from the following Warranty Options to include with your purchase.</p>
 </div>

@@ -11,7 +11,8 @@
 }
 
 .cart-slideout,
-.delivery-options-information {
+.delivery-options-information,
+.warranty-information {
     height: 100%;
     width: 320px;
     position: fixed;
@@ -21,15 +22,21 @@
     background-color: #fff;
     overflow-x: hidden; /* Disable horizontal scroll */
     display: none;
+    padding: 2.5rem 1rem 0px;
 }
 
 /* hide all sub-screens to start */
-.cart-slideout__delivery-input {
+.cart-slideout__delivery-input,
+.cart-slideout__delivery-not-available,
+.cart-slideout__delivery-options,
+.cart-slideout__delivery-options-continue,
+.cart-slideout__warranty {
     display: none;
 }
 
 .cart-slideout .close,
-.delivery-options-information .close {
+.delivery-options-information .close,
+.warranty-information .close {
     position: absolute;
     top: 0;
     right: 25px;
@@ -37,8 +44,32 @@
     margin-left: 50px;
 }
 
-.delivery-options-information {
+/* Delivery options & warranty information */
+
+.delivery-options-information,
+.warranty-information {
     z-index: 100001;
+    font-size: 0.8rem;
+}
+
+.delivery-options-information p,
+.warranty-information p {
+    margin: 0.5rem 0;
+}
+
+i.delivery-options-info,
+i.warranty-info {
+    cursor: pointer;
+}
+
+.warranty-information {
+    z-index: 100002;
+}
+
+.warranty-information td {
+    border: 1px solid black;
+    padding: 1.5rem 1rem;
+    font-size: 1rem;
 }
 
 .cart-slideout__back {
@@ -101,7 +132,10 @@
     text-align: center;
 }
 
-.cart-slideout__check-delivery-options__btn {
+/* inline buttons */
+
+.cart-slideout__check-delivery-options__btn,
+.cart-slideout__continue__btn {
     background-color: white;
     border: 2px solid #e1e1e1;
     padding: 0.5rem 0.25rem;
@@ -116,22 +150,32 @@
     cursor: not-allowed;
 }
 
+.cart-slideout__continue__btn {
+    font-size: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
 .cart-slideout__delivery-not-available {
     color: red;
 }
 
 /* Delivery Information */
-i.delivery-options-info {
-    cursor: pointer;
-}
+
 
 /* Delivery Options */
 /* Override NOP ProductAttributes.cshtml styles */
-.cart-slideout__delivery-options .attributes {
+.cart-slideout .attributes {
     margin: 0;
 }
-.cart-slideout__delivery-options dt {
+.cart-slideout .attributes .text-prompt {
+    font-size: 1.1rem;
+}
+.cart-slideout dt {
     float: none;
+}
+.cart-slideout .attributes p {
+    margin: 0.5rem 0;
 }
 
 /* copied over from Pavilion theme to allow consistency in both desktop and mobile */

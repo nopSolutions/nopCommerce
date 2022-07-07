@@ -17,6 +17,8 @@
             {
                 var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
                 var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                // custom: change Warranty to Extended Warranty
+                textPrompt = textPrompt == "Warranty" ? "Extended Warranty" : textPrompt;
                 // custom: configure hidden items
                 var isHidden = attribute.IsHiddenPreload() ?
                     "display:none" :
@@ -30,17 +32,28 @@
                     {
                         <i class="fas fa-info-circle delivery-options-info"></i>
                     }
+                    @if (attribute.Name == "Warranty")
+                    {
+                        <i class="fas fa-info-circle warranty-info"></i>
+                    }
                     @if (attribute.IsRequired)
                     {
                         <span class="required">*</span>
                     }
-                    @if (!string.IsNullOrEmpty(attribute.Description))
+                    @* ABC: Use warranty-specific description *@
+                    @if (attribute.Name != "Warranty" && !string.IsNullOrEmpty(attribute.Description))
                     {
                         <div class="attribute-description">
                             @Html.Raw(attribute.Description)
                         </div>
                     }
                 </dt>
+                // ABC: Extra blurb for warranties
+                @if (attribute.Name == "Warranty")
+                {
+                    <p>No Deductibles | Fully Transferable | All Labor | All Parts | Factory Service | 800# for Service</p>
+                    <p>Extend the original Manufacturer's Product Warranty for up to 5 years and receive up to 50% Merchandise Credit Back if you don't use it.</p>
+                }
                 <dd id="@($"{NopCatalogDefaults.ProductAttributePrefix}input_{attribute.Id}")" style="@($"{isHidden}")">
                     @switch (attribute.AttributeControlType)
                     {
@@ -105,25 +118,30 @@
                                 <ul class="option-list">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        // ABC: do not provide price adjustment, this is included in the title of the pav
-                                        // var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
-                                        //    attributeValue.Name :
-                                        //    T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
-                                        //        attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
-                                        var attributeName = attributeValue.Name;
+                                        // ABC: do not provide price adjustment if delivery option, this is included in the title of the pav
+                                        var attributeName = attribute.Name == "Delivery/Pickup Options" ?
+                                            attributeValue.Name :
+                                            string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                                attributeValue.Name :
+                                                $"{attributeValue.Name} ({attributeValue.PriceAdjustment.Trim('+')})";
                                         <li>
                                             <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
                                                    @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
                                             <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
 
                                             @if (attributeValue.CustomerEntersQty)
-                                    {
+                                            {
                                                 <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                                     <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                     <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                                 </div>
                                             }
                                         </li>
+                                    }
+                                    @if (attribute.Name == "Warranty")
+                                    {
+                                        <input id="warranty-none" type="radio" name="@(controlId)" value="0" />
+                                        <label for="warranty-none">No Additional Warranty ($0)</label>
                                     }
                                 </ul>
                                 <script asp-location="Footer">
