@@ -241,7 +241,11 @@ namespace Nop.Data.DataProviders
         /// <returns>Queryable source</returns>
         public virtual IQueryable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
-            return new DataContext(LinqToDbDataProvider, GetCurrentConnectionString()) { MappingSchema = GetMappingSchema() }
+            return new DataContext(LinqToDbDataProvider, GetCurrentConnectionString())
+                {
+                    MappingSchema = GetMappingSchema(),
+                    CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
+                }
                 .GetTable<TEntity>();
         }
 
