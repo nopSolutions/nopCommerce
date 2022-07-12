@@ -7899,6 +7899,7 @@ namespace Nop.Services.Installation
             {
                 new Discount
                 {
+                    IsActive = true,
                     Name = "Sample discount with coupon code",
                     DiscountType = DiscountType.AssignedToSkus,
                     DiscountLimitation = DiscountLimitationType.Unlimited,
@@ -7909,6 +7910,7 @@ namespace Nop.Services.Installation
                 },
                 new Discount
                 {
+                    IsActive = true,
                     Name = "'20% order total' discount",
                     DiscountType = DiscountType.AssignedToOrderTotal,
                     DiscountLimitation = DiscountLimitationType.Unlimited,

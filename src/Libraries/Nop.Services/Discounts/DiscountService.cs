@@ -179,7 +179,7 @@ namespace Nop.Services.Discounts
         /// </returns>
         public virtual async Task<IList<Discount>> GetAllDiscountsAsync(DiscountType? discountType = null,
             string couponCode = null, string discountName = null, bool showHidden = false,
-            DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool? isActive = null)
+            DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool? isActive = true)
         {
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter

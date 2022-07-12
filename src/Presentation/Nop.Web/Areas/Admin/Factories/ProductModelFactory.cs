@@ -963,7 +963,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare model discounts
-            var availableDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true);
+            var availableDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true, isActive: null);
             await _discountSupportedModelFactory.PrepareModelDiscountsAsync(model, product, availableDiscounts, excludeProperties);
 
             //prepare model customer roles

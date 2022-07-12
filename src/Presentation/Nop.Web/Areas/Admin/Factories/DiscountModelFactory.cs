@@ -331,7 +331,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //set default values for the new model
             if (discount == null)
+            {
+                model.IsActive = true;
                 model.LimitationTimes = 1;
+            }
 
             return model;
         }
