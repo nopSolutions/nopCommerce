@@ -79,22 +79,27 @@ namespace Nop.Core.Domain.Orders
         public bool DisplayPickupInStoreOnShippingMethodPage { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating we should attach PDF invoice to "Order placed" email
+        /// Gets or sets a value indicating whether we should attach PDF invoice to "Order placed" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderPlacedEmail { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating we should attach PDF invoice to "Order paid" email
+        /// Gets or sets a value indicating whether we should attach PDF invoice to "Order paid" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderPaidEmail { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating we should attach PDF invoice to "Order completed" email
+        /// Gets or sets a value indicating whether we should attach PDF invoice to "Order processing" email
+        /// </summary>
+        public bool AttachPdfInvoiceToOrderProcessingEmail { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether we should attach PDF invoice to "Order completed" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderCompletedEmail { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating we PDF invoices should be generated in customer language. Otherwise, use the current one
+        /// Gets or sets a value indicating whether PDF invoices should be generated in customer language. Otherwise, use the current one
         /// </summary>
         public bool GeneratePdfInvoiceInCustomerLanguage { get; set; }
 

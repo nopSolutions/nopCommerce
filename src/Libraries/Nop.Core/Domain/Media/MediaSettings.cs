@@ -131,5 +131,10 @@ namespace Nop.Core.Domain.Media
         /// Gets or sets the height of the frame in CSS pixels
         /// </summary>
         public int VideoIframeHeight { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product default image id. If 0, then wwwroot/images/default-image.png will be used
+        /// </summary>
+        public int ProductDefaultImageId { get; set; }
     }
 }

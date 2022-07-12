@@ -36,6 +36,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Factories;
@@ -84,6 +85,7 @@ namespace Nop.Web.Controllers
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly INotificationService _notificationService;
         private readonly IOrderService _orderService;
+        private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductService _productService;
@@ -134,6 +136,7 @@ namespace Nop.Web.Controllers
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             INotificationService notificationService,
             IOrderService orderService,
+            IPermissionService permissionService,
             IPictureService pictureService,
             IPriceFormatter priceFormatter,
             IProductService productService,
@@ -180,6 +183,7 @@ namespace Nop.Web.Controllers
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _notificationService = notificationService;
             _orderService = orderService;
+            _permissionService = permissionService;
             _pictureService = pictureService;
             _priceFormatter = priceFormatter;
             _productService = productService;
@@ -517,17 +521,20 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Login");
 
             var customerMultiFactorAuthenticationInfo = HttpContext.Session.Get<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
-            var userName = customerMultiFactorAuthenticationInfo.UserName;
+            var userName = customerMultiFactorAuthenticationInfo?.UserName;
             if (string.IsNullOrEmpty(userName))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsernameAsync(userName) : await _customerService.GetCustomerByEmailAsync(userName);
             if (customer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
+
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableMultiFactorAuthentication, customer))
+                return RedirectToRoute("Homepage");
 
             var selectedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
             if (string.IsNullOrEmpty(selectedProvider))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new MultiFactorAuthenticationProviderModel();
             model = await _customerModelFactory.PrepareMultiFactorAuthenticationProviderModelAsync(model, selectedProvider, true);
@@ -1532,14 +1539,14 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, int addressId, IFormCollection form)
+        public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, IFormCollection form)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
 
             //find address (ensure that it belongs to the current customer)
-            var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
+            var address = await _customerService.GetCustomerAddressAsync(customer.Id, model.Address.Id);
             if (address == null)
                 //address is not found
                 return RedirectToRoute("CustomerAddresses");
@@ -1877,6 +1884,9 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
             }
 
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableMultiFactorAuthentication))
+                return RedirectToRoute("CustomerInfo");
+
             var model = new MultiFactorAuthenticationModel();
             model = await _customerModelFactory.PrepareMultiFactorAuthenticationModelAsync(model);
             return View(model);
@@ -1888,6 +1898,9 @@ namespace Nop.Web.Controllers
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (!await _customerService.IsRegisteredAsync(customer))
                 return Challenge();
+
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableMultiFactorAuthentication))
+                return RedirectToRoute("CustomerInfo");
 
             try
             {
@@ -1947,6 +1960,9 @@ namespace Nop.Web.Controllers
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
+
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableMultiFactorAuthentication))
+                return RedirectToRoute("CustomerInfo");
 
             var model = new MultiFactorAuthenticationProviderModel();
             model = await _customerModelFactory.PrepareMultiFactorAuthenticationProviderModelAsync(model, providerSysName);

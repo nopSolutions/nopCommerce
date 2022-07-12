@@ -38,6 +38,7 @@ namespace Nop.Services.Customers
         private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly INotificationService _notificationService;
+        private readonly IPermissionService _permissionService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
@@ -63,6 +64,7 @@ namespace Nop.Services.Customers
             IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             INotificationService notificationService,
+            IPermissionService permissionService,
             IRewardPointService rewardPointService,
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
@@ -84,6 +86,7 @@ namespace Nop.Services.Customers
             _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _notificationService = notificationService;
+            _permissionService = permissionService;
             _rewardPointService = rewardPointService;
             _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
@@ -179,11 +182,14 @@ namespace Nop.Services.Customers
                 return CustomerLoginResults.WrongPassword;
             }
 
-            var selectedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+            var selectedProvider = await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableMultiFactorAuthentication, customer)
+                ? await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute)
+                : null;
             var store = await _storeContext.GetCurrentStoreAsync();
             var methodIsActive = await _multiFactorAuthenticationPluginManager.IsPluginActiveAsync(selectedProvider, customer, store.Id);
             if (methodIsActive)
                 return CustomerLoginResults.MultiFactorAuthenticationRequired;
+
             if (!string.IsNullOrEmpty(selectedProvider))
                 _notificationService.WarningNotification(await _localizationService.GetResourceAsync("MultiFactorAuthentication.Notification.SelectedMethodIsNotActive"));
 

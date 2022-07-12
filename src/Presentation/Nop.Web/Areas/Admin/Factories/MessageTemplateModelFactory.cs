@@ -130,15 +130,18 @@ namespace Nop.Web.Areas.Admin.Factories
                     var messageTemplateModel = messageTemplate.ToModel<MessageTemplateModel>();
 
                     //fill in additional values (not existing in the entity)
-                    var storeNames = stores.Select(store => store.Name);
                     if (messageTemplate.LimitedToStores)
                     {
                         await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(messageTemplateModel, messageTemplate, false);
-                        storeNames = stores
+                        var storeNames = stores
                             .Where(store => messageTemplateModel.SelectedStoreIds.Contains(store.Id)).Select(store => store.Name);
+                        messageTemplateModel.ListOfStores = string.Join(", ", storeNames);
                     }
-
-                    messageTemplateModel.ListOfStores = string.Join(", ", storeNames);
+                    else
+                    {
+                        var allstores = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores");
+                        messageTemplateModel.ListOfStores = allstores;
+                    }
 
                     return messageTemplateModel;
                 });

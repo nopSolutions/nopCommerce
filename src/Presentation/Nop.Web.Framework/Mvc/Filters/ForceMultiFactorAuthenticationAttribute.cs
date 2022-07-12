@@ -8,7 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Data;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Common;
-using Nop.Services.Customers;
+using Nop.Services.Security;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
@@ -35,9 +35,9 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly ICustomerService _customerService;
             private readonly IGenericAttributeService _genericAttributeService;
             private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+            private readonly IPermissionService _permissionService;
             private readonly IWorkContext _workContext;
             private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
 
@@ -45,15 +45,15 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #region Ctor
 
-            public ForceMultiFactorAuthenticationFilter(ICustomerService customerService,
-                IGenericAttributeService genericAttributeService,
+            public ForceMultiFactorAuthenticationFilter(IGenericAttributeService genericAttributeService,
                 IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
+                IPermissionService permissionService,
                 IWorkContext workContext,
                 MultiFactorAuthenticationSettings multiFactorAuthenticationSettings)
             {
-                _customerService = customerService;
                 _genericAttributeService = genericAttributeService;
                 _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
+                _permissionService = permissionService;
                 _workContext = workContext;
                 _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
             }
@@ -78,9 +78,8 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
-                //validate only for registered customers
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                if (!await _customerService.IsRegisteredAsync(customer))
+                //whether the feature is enabled
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableMultiFactorAuthentication))
                     return;
 
                 //don't validate on the 'Multi-factor authentication settings' page
@@ -96,7 +95,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
                 }
 
-                //whether the feature is enabled
+                //whether multi-factor authentication is enforced
                 if (!_multiFactorAuthenticationSettings.ForceMultifactorAuthentication ||
                     !await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
                 {
@@ -104,6 +103,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 }
 
                 //check selected provider of MFA
+                var customer = await _workContext.GetCurrentCustomerAsync();
                 var selectedProvider = await _genericAttributeService
                     .GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
                 if (!string.IsNullOrEmpty(selectedProvider))

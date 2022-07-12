@@ -17,6 +17,7 @@ using LinqToDB.Tools;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Data.DataProviders.Interceptors;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
@@ -40,53 +41,10 @@ namespace Nop.Data.DataProviders
         /// </summary>
         private MappingSchema GetMappingSchema()
         {
-            if (Singleton<MappingSchema>.Instance is null)
+            return Singleton<MappingSchema>.Instance ??= new MappingSchema(ConfigurationName, LinqToDbDataProvider.MappingSchema)
             {
-                var mappings = new MappingSchema(ConfigurationName)
-                {
-                    MetadataReader = new FluentMigratorMetadataReader(this)
-                };
-
-                if (MiniProfillerEnabled)
-                {
-                    mappings.SetConvertExpression<ProfiledDbConnection, IDbConnection>(db => db.WrappedConnection);
-                    mappings.SetConvertExpression<ProfiledDbDataReader, IDataReader>(db => db.WrappedReader);
-                    mappings.SetConvertExpression<ProfiledDbTransaction, IDbTransaction>(db => db.WrappedTransaction);
-                    mappings.SetConvertExpression<ProfiledDbCommand, IDbCommand>(db => db.InternalCommand);
-                }
-
-                Singleton<MappingSchema>.Instance = mappings;
-            }
-
-            return Singleton<MappingSchema>.Instance;
-        }
-
-        private static void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
-        {
-            if (dataConnection is null)
-                throw new ArgumentNullException(nameof(dataConnection));
-
-            if (parameter is null)
-                throw new ArgumentNullException(nameof(parameter));
-
-            if (dataConnection.Command is IDbCommand command &&
-                command.Parameters.Count > 0 &&
-                command.Parameters.Contains(parameter.Name) &&
-                command.Parameters[parameter.Name] is IDbDataParameter param)
-            {
-                parameter.Value = param.Value;
-            }
-        }
-
-        private static void UpdateOutputParameters(DataConnection dataConnection, DataParameter[] dataParameters)
-        {
-            if (dataParameters is null || dataParameters.Length == 0)
-                return;
-
-            foreach (var dataParam in dataParameters.Where(p => p.Direction == ParameterDirection.Output))
-            {
-                UpdateParameterValue(dataConnection, dataParam);
-            }
+                MetadataReader = new FluentMigratorMetadataReader(this)
+            };
         }
 
         /// <summary>
@@ -105,6 +63,21 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Creates database command instance using provided command text and parameters.
+        /// </summary>
+        /// <param name="sql">Command text</param>
+        /// <param name="dataParameters">Command parameters</param>
+        protected virtual CommandInfo CreateDbCommand(string sql, DataParameter[] dataParameters)
+        {
+            if (dataParameters is null)
+                throw new ArgumentNullException(nameof(dataParameters));
+
+            var dataConnection = CreateDataConnection(LinqToDbDataProvider);
+
+            return new CommandInfo(dataConnection, sql, dataParameters);
+        }
+
+        /// <summary>
         /// Creates the database connection
         /// </summary>
         /// <param name="dataProvider">Data provider</param>
@@ -114,10 +87,17 @@ namespace Nop.Data.DataProviders
             if (dataProvider is null)
                 throw new ArgumentNullException(nameof(dataProvider));
 
-            return new DataConnection(dataProvider, CreateDbConnection(), GetMappingSchema())
+            var dataConnection = new DataConnection(dataProvider, CreateDbConnection(), GetMappingSchema())
             {
                 CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
             };
+
+            if (MiniProfillerEnabled)
+            {
+                dataConnection.AddInterceptor(UnwrapProfilerInterceptor.Instance);
+            }
+
+            return dataConnection;
         }
 
         /// <summary>
@@ -125,7 +105,7 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        protected virtual IDbConnection CreateDbConnection(string connectionString = null)
+        protected virtual DbConnection CreateDbConnection(string connectionString = null)
         {
             var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : GetCurrentConnectionString());
 
@@ -261,7 +241,11 @@ namespace Nop.Data.DataProviders
         /// <returns>Queryable source</returns>
         public virtual IQueryable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
-            return new DataContext(LinqToDbDataProvider, GetCurrentConnectionString()) { MappingSchema = GetMappingSchema() }
+            return new DataContext(LinqToDbDataProvider, GetCurrentConnectionString())
+                {
+                    MappingSchema = GetMappingSchema(),
+                    CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
+                }
                 .GetTable<TEntity>();
         }
 
@@ -397,11 +381,9 @@ namespace Nop.Data.DataProviders
         /// </returns>
         public virtual async Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
         {
-            using var dataContext = CreateDataConnection();
-            var command = new CommandInfo(dataContext, sql, dataParameters);
-            var affectedRecords = await command.ExecuteAsync();
-            UpdateOutputParameters(dataContext, dataParameters);
-            return affectedRecords;
+            var command = CreateDbCommand(sql, dataParameters);
+
+            return await command.ExecuteAsync();
         }
 
         /// <summary>
@@ -417,10 +399,8 @@ namespace Nop.Data.DataProviders
         /// </returns>
         public virtual Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
         {
-            using var dataContext = CreateDataConnection();
-            var command = new CommandInfo(dataContext, procedureName, parameters);
+            var command = CreateDbCommand(procedureName, parameters);
             var rez = command.QueryProc<T>()?.ToList();
-            UpdateOutputParameters(dataContext, parameters);
             return Task.FromResult<IList<T>>(rez ?? new List<T>());
         }
 

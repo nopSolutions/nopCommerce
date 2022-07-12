@@ -1890,27 +1890,25 @@ namespace Nop.Web.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareSortingOptionsAsync(CatalogProductsModel model, CatalogProductsCommand command)
         {
-            //set the order by position by default
-            model.OrderBy = command.OrderBy;
-            command.OrderBy = (int)ProductSortingEnum.Position;
-
-            //ensure that product sorting is enabled
-            if (!_catalogSettings.AllowProductSorting)
-                return;
-
             //get active sorting options
             var activeSortingOptionsIds = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
                 .Except(_catalogSettings.ProductSortingEnumDisabled).ToList();
-            if (!activeSortingOptionsIds.Any())
-                return;
 
             //order sorting options
             var orderedActiveSortingOptions = activeSortingOptionsIds
                 .Select(id => new { Id = id, Order = _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(id, out var order) ? order : id })
                 .OrderBy(option => option.Order).ToList();
 
+            //set the default option
+            model.OrderBy = command.OrderBy;
+            command.OrderBy = orderedActiveSortingOptions.FirstOrDefault()?.Id ?? (int)ProductSortingEnum.Position;
+
+            //ensure that product sorting is enabled
+            if (!_catalogSettings.AllowProductSorting)
+                return;
+
             model.AllowProductSorting = true;
-            command.OrderBy = model.OrderBy ?? orderedActiveSortingOptions.FirstOrDefault().Id;
+            command.OrderBy = model.OrderBy ?? command.OrderBy;
 
             //prepare available model sorting options
             foreach (var option in orderedActiveSortingOptions)

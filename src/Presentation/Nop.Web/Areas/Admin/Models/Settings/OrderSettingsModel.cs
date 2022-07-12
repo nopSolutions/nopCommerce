@@ -87,6 +87,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool AttachPdfInvoiceToOrderPaidEmail { get; set; }
         public bool AttachPdfInvoiceToOrderPaidEmail_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail")]
+        public bool AttachPdfInvoiceToOrderProcessingEmail { get; set; }
+        public bool AttachPdfInvoiceToOrderProcessingEmail_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderCompletedEmail")]
         public bool AttachPdfInvoiceToOrderCompletedEmail { get; set; }
         public bool AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore { get; set; }
@@ -123,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.OrderIdent")]
         public int? OrderIdent { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.CustomOrderNumberMask")]
         public string CustomOrderNumberMask { get; set; }
         public bool CustomOrderNumberMask_OverrideForStore { get; set; }

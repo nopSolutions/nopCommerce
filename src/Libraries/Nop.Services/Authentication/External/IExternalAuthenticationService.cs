@@ -49,6 +49,16 @@ namespace Nop.Services.Authentication.External
         Task DeleteExternalAuthenticationRecordAsync(ExternalAuthenticationRecord externalAuthenticationRecord);
 
         /// <summary>
+        /// Get the external authentication record
+        /// </summary>
+        /// <param name="parameters">External authentication parameters</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        Task<ExternalAuthenticationRecord> GetExternalAuthenticationRecordByExternalAuthenticationParametersAsync(ExternalAuthenticationParameters parameters);
+
+        /// <summary>
         /// Associate external account with customer
         /// </summary>
         /// <param name="customer">Customer</param>
