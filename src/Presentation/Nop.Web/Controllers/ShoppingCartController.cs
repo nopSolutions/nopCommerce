@@ -1291,7 +1291,7 @@ namespace Nop.Web.Controllers
             if (!string.IsNullOrWhiteSpace(discountcouponcode))
             {
                 //we find even hidden records here. this way we can display a user-friendly message if it's expired
-                var discounts = (await _discountService.GetAllDiscountsAsync(couponCode: discountcouponcode, showHidden: true))
+                var discounts = (await _discountService.GetAllDiscountsAsync(couponCode: discountcouponcode, showHidden: true, isActive: true))
                     .Where(d => d.RequiresCouponCode)
                     .ToList();
                 if (discounts.Any())

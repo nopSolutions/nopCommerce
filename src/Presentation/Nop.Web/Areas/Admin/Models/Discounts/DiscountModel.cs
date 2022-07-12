@@ -67,6 +67,9 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
         [UIHint("DateTimeNullable")]
         public DateTime? EndDateUtc { get; set; }
 
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.IsActive")]
+        public bool IsActive { get; set; }
+
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.RequiresCouponCode")]
         public bool RequiresCouponCode { get; set; }
 

@@ -2,13 +2,14 @@
 using FluentMigrator;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-02-02 00:00:00", "Customer attribute", MigrationProcessType.Update)]
+    [NopMigration("2022-02-02 00:00:00", "SchemaMigration for 4.60.0", MigrationProcessType.Update)]
     public class SchemaMigration : Migration
     {
         /// <summary>
@@ -145,6 +146,16 @@ namespace Nop.Data.Migrations.UpgradeTo460
             {
                 Alter.Table(customerTableName)
                     .AddColumn(taxDisplayTypeIdCustomerColumnName).AsInt32().Nullable();
+            }
+
+            //5705
+            var discountTableName = nameof(Discount);
+            var isActiveDiscountColumnName = nameof(Discount.IsActive);
+
+            if (!Schema.Table(discountTableName).Column(isActiveDiscountColumnName).Exists())
+            {
+                Alter.Table(discountTableName)
+                    .AddColumn(isActiveDiscountColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
             }
         }
 
