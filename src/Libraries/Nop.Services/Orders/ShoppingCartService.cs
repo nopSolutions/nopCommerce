@@ -248,6 +248,34 @@ namespace Nop.Services.Orders
             //get warnings
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             var warningLocale = await _localizationService.GetResourceAsync("ShoppingCart.RequiredProductWarning");
+
+            //check if all required products are in stock
+            var someRequiredProductsNotInStock = false;
+            foreach (var requiredProduct in requiredProducts)
+            {
+                var productsRequiringRequiredProduct = await GetProductsRequiringProductAsync(cart, requiredProduct);
+
+                //get the required quantity of the required product
+                var requiredProductRequiredQuantity = quantity * requiredProductQuantity +
+                    cart.Where(ci => productsRequiringRequiredProduct.Any(p => p.Id == ci.ProductId))
+                        .Where(item => item.Id != shoppingCartItemId)
+                        .Sum(item => item.Quantity * requiredProductQuantity);
+
+                if (requiredProduct.StockQuantity < requiredProductQuantity)
+                {
+                    someRequiredProductsNotInStock = true;
+                    //prepare warning message
+                    var requiredProductName = WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(requiredProduct, x => x.Name));
+                    var requiredProductWarning = _catalogSettings.UseLinksInRequiredProductWarnings
+                        ? string.Format(warningLocale, $"<a href=\"{urlHelper.RouteUrl(nameof(Product), new { SeName = await _urlRecordService.GetSeNameAsync(requiredProduct) })}\">{requiredProductName}</a>", requiredProductRequiredQuantity)
+                        : string.Format(warningLocale, requiredProductName, requiredProductRequiredQuantity);
+                    warnings.Add(requiredProductWarning);
+                }
+            }
+            if(someRequiredProductsNotInStock)
+                return warnings;
+
+
             foreach (var requiredProduct in requiredProducts)
             {
                 var productsRequiringRequiredProduct = await GetProductsRequiringProductAsync(cart, requiredProduct);
@@ -283,7 +311,7 @@ namespace Nop.Services.Orders
                 else
                     warnings.Add(requiredProductWarning);
             }
-
+                
             return warnings;
         }
 
