@@ -13,7 +13,7 @@ using Nop.Services.Tasks;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
 {
-    public class UpdateDeliveryOptionsTask : IScheduleTask
+    public partial class UpdateDeliveryOptionsTask : IScheduleTask
     {
         private readonly CoreSettings _coreSettings;
         private readonly IAbcDeliveryService _abcDeliveryService;
@@ -26,6 +26,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
         private ProductAttribute _deliveryPickupOptionsProductAttribute;
         private ProductAttribute _haulAwayDeliveryProductAttribute;
         private ProductAttribute _haulAwayDeliveryInstallProductAttribute;
+        private ProductAttribute _pickupInStoreProductAttribute;
 
         public UpdateDeliveryOptionsTask(
             CoreSettings coreSettings,
@@ -51,6 +52,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName);
             _haulAwayDeliveryInstallProductAttribute =
                 await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName);
+            _pickupInStoreProductAttribute =
+                await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.LegacyPickupInStoreProductAttributeName);
 
             var hasErrors = false;
 
@@ -96,10 +99,25 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 });
             }
 
-            var deliveryOptionsPam = (await _abcProductAttributeService.SaveProductAttributeMappingsAsync(
-                    productId,
-                    pams,
-                    new string[] { })).SingleOrDefault();
+            // debugging why SingleOrDefault() is failing
+            // var deliveryOptionsPam = (await _abcProductAttributeService.SaveProductAttributeMappingsAsync(
+            //         productId,
+            //         pams,
+            //         new string[] { })).SingleOrDefault();
+
+            var deliveryOptionsPams = (await _abcProductAttributeService.SaveProductAttributeMappingsAsync(
+                     productId,
+                     pams,
+                     new string[] { }));
+            ProductAttributeMapping deliveryOptionsPam = null;
+            if (deliveryOptionsPams.Count != 1)
+            {
+                throw new Exception($"Found {deliveryOptionsPams.Count} delivery option PAMs");
+            }
+            else
+            {
+                deliveryOptionsPam = deliveryOptionsPams.SingleOrDefault();
+            }
 
             (int deliveryOptionsPamId,
              int? deliveryPavId,
@@ -107,7 +125,14 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
              decimal? deliveryPriceAdjustment,
              decimal? deliveryInstallPriceAdjustment) = await AddDeliveryOptionValuesAsync(deliveryOptionsPam.Id, productId, map);
 
-             // Handle haul away here using the values above
+            await AddHaulAwayAsync(
+                productId,
+                map,
+                deliveryOptionsPamId,
+                deliveryPavId,
+                deliveryInstallPavId,
+                deliveryPriceAdjustment.HasValue ? deliveryPriceAdjustment.Value : 0M,
+                deliveryInstallPriceAdjustment.HasValue ? deliveryInstallPriceAdjustment.Value : 0M);
         }
 
         private async System.Threading.Tasks.Task<(int pamId,
@@ -139,7 +164,29 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 20,
                 deliveryOnlyPav == null);
 
-            return (pamId, deliveryOnlyPav?.Id, deliveryInstallationPav?.Id, deliveryOnlyPav?.PriceAdjustment, deliveryInstallationPav?.PriceAdjustment);
+            // Handle pickup in store via legacy product attribute, no need to return
+            var pams = await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(productId);
+            var pickupPam = await pams.WhereAwait(
+                async pam => (await _abcProductAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name ==
+                              AbcDeliveryConsts.LegacyPickupInStoreProductAttributeName).FirstOrDefaultAsync();
+            if (pickupPam != null)
+            {
+                var pickupPav = values.Where(pav => pav.Name.Contains("Pickup In-Store")).SingleOrDefault();
+                _abcDeliveryService.AddValue(
+                    pamId,
+                    pickupPav,
+                    // I think we'll need this info later, but not sure what it should be
+                    1,
+                    "Pickup In-Store Or Curbside (FREE)",
+                    0,
+                    false);
+            }
+
+            return (pamId,
+                    deliveryOnlyPav?.Id,
+                    deliveryInstallationPav?.Id,
+                    deliveryOnlyPav?.PriceAdjustment,
+                    deliveryInstallationPav?.PriceAdjustment);
         }
     }
 }

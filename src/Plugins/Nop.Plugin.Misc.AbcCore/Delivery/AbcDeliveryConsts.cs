@@ -6,6 +6,8 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
         public const string HaulAwayDeliveryProductAttributeName = "Haul Away (Delivery)";
         public const string HaulAwayDeliveryInstallProductAttributeName = "Haul Away (Delivery/Install)";
 
+        public const string LegacyPickupInStoreProductAttributeName = "Pickup";
+
         public const string HaulAwayTextPrompt = "Haul Away";
     }
 }

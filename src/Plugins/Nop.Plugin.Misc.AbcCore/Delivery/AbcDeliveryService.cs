@@ -69,8 +69,10 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
                 return pav;
             }
 
-            var item = GetAbcDeliveryItemByItemNumberAsync(itemNumber).Result;
-            var price = item.Price - priceAdjustment;
+            // Special case for pickup in store
+            var item = itemNumber == 1 ? new AbcDeliveryItem() : GetAbcDeliveryItemByItemNumberAsync(itemNumber).Result;
+            var price = itemNumber == 1 ? 0M : item.Price - priceAdjustment;
+            
             var priceDisplay = price == 0 ?
                 "FREE" :
                 _priceFormatter.FormatPriceAsync(price).Result;
