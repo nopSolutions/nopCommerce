@@ -66,6 +66,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                     try
                     {
                         await UpdateProductDeliveryOptionsAsync(map, productId);
+                        // let's try doing haulaway in here instead
                     }
                     catch (Exception e)
                     {
@@ -99,40 +100,16 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 });
             }
 
-            // debugging why SingleOrDefault() is failing
-            // var deliveryOptionsPam = (await _abcProductAttributeService.SaveProductAttributeMappingsAsync(
-            //         productId,
-            //         pams,
-            //         new string[] { })).SingleOrDefault();
-
-            var deliveryOptionsPams = (await _abcProductAttributeService.SaveProductAttributeMappingsAsync(
-                     productId,
-                     pams,
-                     new string[] { }));
-            ProductAttributeMapping deliveryOptionsPam = null;
-            if (deliveryOptionsPams.Count != 1)
-            {
-                throw new Exception($"Found {deliveryOptionsPams.Count} delivery option PAMs");
-            }
-            else
-            {
-                deliveryOptionsPam = deliveryOptionsPams.SingleOrDefault();
-            }
+            var deliveryOptionsPam = (await _abcProductAttributeService.SaveProductAttributeMappingsAsync(
+                    productId,
+                    pams,
+                    new string[] { })).SingleOrDefault();
 
             (int deliveryOptionsPamId,
              int? deliveryPavId,
              int? deliveryInstallPavId,
              decimal? deliveryPriceAdjustment,
              decimal? deliveryInstallPriceAdjustment) = await AddDeliveryOptionValuesAsync(deliveryOptionsPam.Id, productId, map);
-
-            await AddHaulAwayAsync(
-                productId,
-                map,
-                deliveryOptionsPamId,
-                deliveryPavId,
-                deliveryInstallPavId,
-                deliveryPriceAdjustment.HasValue ? deliveryPriceAdjustment.Value : 0M,
-                deliveryInstallPriceAdjustment.HasValue ? deliveryInstallPriceAdjustment.Value : 0M);
         }
 
         private async System.Threading.Tasks.Task<(int pamId,
