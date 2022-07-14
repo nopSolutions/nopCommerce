@@ -55,7 +55,7 @@ namespace Nop.Data.Migrations
                 .GetMigrations(t =>
                 {
                     var migrationAttribute = t.GetCustomAttribute<NopMigrationAttribute>();
-                    
+
                     if (migrationAttribute is null || _versionLoader.Value.VersionInfo.HasAppliedMigration(migrationAttribute.Version))
                         return false;
 
@@ -111,14 +111,16 @@ namespace Nop.Data.Migrations
         /// </summary>
         /// <param name="assembly">Assembly to find migrations</param>
         /// <param name="migrationProcessType">Type of migration process</param>
-        public virtual void ApplyUpMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.Installation)
+        /// <param name="commitVersionOnly">Commit only version information</param>
+        public virtual void ApplyUpMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.Installation, bool commitVersionOnly = false)
         {
             if (assembly is null)
                 throw new ArgumentNullException(nameof(assembly));
 
             foreach (var migrationInfo in GetUpMigrations(assembly, migrationProcessType))
             {
-                _migrationRunner.Up(migrationInfo.Migration);
+                if (!commitVersionOnly)
+                    _migrationRunner.Up(migrationInfo.Migration);
 
 #if DEBUG
                 if (!string.IsNullOrEmpty(migrationInfo.Description) &&
@@ -129,14 +131,14 @@ namespace Nop.Data.Migrations
                     .UpdateVersionInfo(migrationInfo.Version, migrationInfo.Description ?? migrationInfo.Migration.GetType().Name);
             }
         }
-        
+
         /// <summary>
         /// Executes all found (and applied) migrations
         /// </summary>
         /// <param name="assembly">Assembly to find the migration</param>
         public void ApplyDownMigrations(Assembly assembly)
         {
-            if(assembly is null)
+            if (assembly is null)
                 throw new ArgumentNullException(nameof(assembly));
 
             foreach (var migrationInfo in GetDownMigrations(assembly).Reverse())
