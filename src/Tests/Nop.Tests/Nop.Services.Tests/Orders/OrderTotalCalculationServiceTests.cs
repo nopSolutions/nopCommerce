@@ -110,6 +110,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
 
             _discount = new Discount
             {
+                IsActive = true,
                 Name = "Discount 1",
                 DiscountType = DiscountType.AssignedToOrderSubTotal,
                 DiscountAmount = 3,

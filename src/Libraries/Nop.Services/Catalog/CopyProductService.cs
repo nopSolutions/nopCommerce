@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
+using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 
@@ -19,6 +21,7 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
+        private readonly IAclService _aclService;
         private readonly ICategoryService _categoryService;
         private readonly IDownloadService _downloadService;
         private readonly ILanguageService _languageService;
@@ -39,7 +42,8 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        public CopyProductService(ICategoryService categoryService,
+        public CopyProductService(IAclService aclService,
+            ICategoryService categoryService,
             IDownloadService downloadService,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -55,6 +59,7 @@ namespace Nop.Services.Catalog
             IUrlRecordService urlRecordService,
             IVideoService videoService)
         {
+            _aclService = aclService;
             _categoryService = categoryService;
             _downloadService = downloadService;
             _languageService = languageService;
@@ -679,6 +684,7 @@ namespace Nop.Services.Catalog
                 MetaTitle = product.MetaTitle,
                 AllowCustomerReviews = product.AllowCustomerReviews,
                 LimitedToStores = product.LimitedToStores,
+                SubjectToAcl = product.SubjectToAcl,
                 Sku = newSku,
                 ManufacturerPartNumber = product.ManufacturerPartNumber,
                 Gtin = product.Gtin,
@@ -834,10 +840,16 @@ namespace Nop.Services.Catalog
             await CopyAttributesMappingAsync(product, productCopy, originalNewPictureIdentifiers);
             //product <-> discounts mapping
             await CopyDiscountsMappingAsync(product, productCopy);
+
             //store mapping
             var selectedStoreIds = await _storeMappingService.GetStoresIdsWithAccessAsync(product);
             foreach (var id in selectedStoreIds) 
                 await _storeMappingService.InsertStoreMappingAsync(productCopy, id);
+
+            //customer role mapping
+            var customerRoleIds = await _aclService.GetCustomerRoleIdsWithAccessAsync(product);
+            foreach (var id in customerRoleIds)
+                await _aclService.InsertAclRecordAsync(productCopy, id);
 
             //tier prices
             await CopyTierPricesAsync(product, productCopy);

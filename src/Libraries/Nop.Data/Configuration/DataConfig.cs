@@ -21,7 +21,7 @@ namespace Nop.Data.Configuration
 
         /// <summary>
         /// Gets or sets the wait time (in seconds) before terminating the attempt to execute a command and generating an error.
-        /// By default, timeout isn't set and a default value for the current provider used. 
+        /// By default, timeout isn't set and a default value for the current provider used.
         /// Set 0 to use infinite timeout.
         /// </summary>
         public int? SQLCommandTimeout { get; set; } = null;

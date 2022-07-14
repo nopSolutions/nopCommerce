@@ -15,7 +15,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
-using Nop.Data.Extensions;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -931,6 +930,56 @@ namespace Nop.Services.Messages
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// Sends an order processing notification to a customer
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderProcessingCustomerNotificationAsync(Order order, int languageId,
+            string attachmentFilePath = null, string attachmentFileName = null)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderProcessingCustomerNotification, store.Id);
+            if (!messageTemplates.Any())
+                return new List<int>();
+
+            //tokens
+            var commonTokens = new List<Token>();
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+
+            return await messageTemplates.SelectAwait(async messageTemplate =>
+            {
+                //email account
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+                var tokens = new List<Token>(commonTokens);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+
+                //event notification
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+
+                var toEmail = billingAddress.Email;
+                var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
+
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    attachmentFilePath, attachmentFileName);
             }).ToListAsync();
         }
 
@@ -2043,7 +2092,7 @@ namespace Nop.Services.Messages
                 return new List<int>();
 
             var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId);
-            
+
             //We should not send notifications to guests
             if (await _customerService.IsGuestAsync(customer))
                 return new List<int>();

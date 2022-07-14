@@ -23,6 +23,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             AdminAreaSettings = new AdminAreaSettingsModel();
             MinificationSettings = new MinificationSettingsModel();
             CustomHtmlSettings = new CustomHtmlSettingsModel();
+            RobotsTxtSettings = new RobotsTxtSettingsModel();
         }
 
         #endregion
@@ -54,7 +55,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public MinificationSettingsModel MinificationSettings { get; set; }
 
         public CustomHtmlSettingsModel CustomHtmlSettings { get; set; }
-        
+
+        public RobotsTxtSettingsModel RobotsTxtSettings { get; set; }
+
         #endregion
     }
 }

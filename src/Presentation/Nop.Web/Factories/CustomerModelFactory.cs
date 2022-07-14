@@ -27,6 +27,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Models.Common;
@@ -64,6 +65,7 @@ namespace Nop.Web.Factories
         private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOrderService _orderService;
+        private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
@@ -106,6 +108,7 @@ namespace Nop.Web.Factories
             IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IOrderService orderService,
+            IPermissionService permissionService,
             IPictureService pictureService,
             IProductService productService,
             IReturnRequestService returnRequestService,
@@ -144,6 +147,7 @@ namespace Nop.Web.Factories
             _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _orderService = orderService;
+            _permissionService = permissionService;
             _pictureService = pictureService;
             _productService = productService;
             _returnRequestService = returnRequestService;
@@ -721,7 +725,8 @@ namespace Nop.Web.Factories
                 });
             }
 
-            if (await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableMultiFactorAuthentication) &&
+                await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {

@@ -40,13 +40,14 @@ namespace Nop.Services.Discounts
         /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
         /// <param name="startDateUtc">Discount start date; pass null to load all records</param>
         /// <param name="endDateUtc">Discount end date; pass null to load all records</param>
+        /// <param name="isActive">A value indicating whether to get active discounts; "null" to load all discounts; "false" to load only inactive discounts; "true" to load only active discounts</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the discounts
         /// </returns>
         Task<IList<Discount>> GetAllDiscountsAsync(DiscountType? discountType = null,
             string couponCode = null, string discountName = null, bool showHidden = false,
-            DateTime? startDateUtc = null, DateTime? endDateUtc = null);
+            DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool? isActive = true);
 
         /// <summary>
         /// Inserts a discount

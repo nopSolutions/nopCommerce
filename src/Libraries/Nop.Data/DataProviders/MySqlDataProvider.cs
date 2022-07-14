@@ -10,10 +10,8 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.MySql;
 using LinqToDB.SqlQuery;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Nop.Core;
-using Nop.Core.Infrastructure;
-using Nop.Data.Migrations;
 
 namespace Nop.Data.DataProviders
 {
@@ -23,7 +21,6 @@ namespace Nop.Data.DataProviders
 
         //it's quite fast hash (to cheaply distinguish between objects)
         private const string HASH_ALGORITHM = "SHA1";
-        private static readonly Lazy<IDataProvider> _dataProvider = new(() => new MySqlDataProvider(ProviderName.MySql), true);
 
         #endregion
 
@@ -315,7 +312,7 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// MySql data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => _dataProvider.Value;
+        protected override IDataProvider LinqToDbDataProvider => MySqlTools.GetDataProvider(ProviderName.MySqlConnector);
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

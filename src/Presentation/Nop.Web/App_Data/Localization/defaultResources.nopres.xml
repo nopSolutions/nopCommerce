@@ -6634,7 +6634,7 @@
     <Value>Force multi-factor authentication</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Hint">
-    <Value>Force activation of multi-factor authentication for all users (at least one MFA provider must be active).</Value>
+    <Value>Force activation of multi-factor authentication for customer roles specified in Access control list (at least one MFA provider must be active).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning">
     <Value>There are currently no active authentication providers. To use this setting, you must activate one of the multi-factor authentication providers.</Value>
@@ -7191,6 +7191,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf">
     <Value>Pdf</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.RobotsTxt">
+    <Value>robots.txt</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Security">
     <Value>Security</Value>
   </LocaleResource>
@@ -7677,6 +7680,42 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaV3ScoreThreshold.Hint">
     <Value>Select a reCAPTCHA v3 score threshold (1.0 is very likely a good interaction, 0.0 is very likely a bot). By default, you can use a threshold of 0.5.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsInstruction">
+    <Value><![CDATA[You also may extend the robots.txt data by adding the {0} file on the wwwroot directory of your site.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules">
+    <Value>Additions rules</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules.Hint">
+    <Value>Put here an additional rules for robots.txt file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAllowSitemapXml">
+    <Value>Allow sitemap.xml</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAllowSitemapXml.Hint">
+    <Value>Check to allow robots use the sitemap.xml file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsCustomFileExists">
+    <Value>robots.txt file data overridden by {0} file in site root.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages">
+    <Value>Disallow languages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages.Hint">
+    <Value>The list of languages which prohibit to use by robots</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsDisallowPaths">
+    <Value>Disallow paths</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsDisallowPaths.Hint">
+    <Value>The list of paths which prohibit to use by robots</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsLocalizableDisallowPaths">
+    <Value>Localizable disallow paths</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsLocalizableDisallowPaths.Hint">
+    <Value>The list of localizable paths which prohibit to use by robots</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled">
     <Value>SEO friendly URLs with multiple languages enabled</Value>
   </LocaleResource>
@@ -7899,6 +7938,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note">
     <Value>NOTE: Do not forget to backup your database before changing this option</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductDefaultImage">
+    <Value>Default image</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductDefaultImage.Hint">
+    <Value>Upload a picture to be used as the default image. If nothing is uploaded, {0} will be used.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ProductDetailsPictureSize">
     <Value>Product detail image size</Value>
   </LocaleResource>
@@ -8030,6 +8075,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPlacedEmail.Hint">
     <Value>Check to attach PDF invoice to the "order placed" email sent to a customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail">
+    <Value>Attach PDF invoice ("order processing" email)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail.Hint">
+    <Value>Check to attach PDF invoice to the "order processing" email sent to a customer.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder">
     <Value>Auto update order totals</Value>
@@ -10455,6 +10506,9 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.VendorNotification">
     <Value>This message template is used to notify a vendor that the certain order was placed. Orders can be viewed by a vendor in Sales - Orders. You can allow them to access this part of Admin Area in Configuration - Access control list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderProcessing.CustomerNotification">
+    <Value>This message template is used to notify a customer that the certain order is processing. Orders can be viewed by a customer on the account page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderRefunded.CustomerNotification">
     <Value>This message template is used to notify a customer that the certain order was refunded. The customer can submit to refund the order when the payment status is paid on the account page, or it can be done by a store owner in Sales - Orders by clicking "Refund" button.</Value>
   </LocaleResource>
@@ -12597,6 +12651,9 @@
   <LocaleResource Name="Admin.Help.SupportServices">
     <Value>Premium support services</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Help.Training">
+    <Value>Training</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Home">
     <Value>Home</Value>
   </LocaleResource>
@@ -13902,6 +13959,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.EndDate.Hint">
     <Value>The end of the discount period in Coordinated Universal Time (UTC).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsActive.Hint">
+    <Value>Indicating whether the discount is active.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative">
     <Value>Cumulative with other discounts</Value>
   </LocaleResource>
@@ -13976,6 +14039,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Info">
     <Value>Discount info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.IsActive.ActiveOnly">
+    <Value>Active only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.IsActive.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.IsActive.Hint">
+    <Value>Search by "IsActive" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.IsActive.InactiveOnly">
+    <Value>Inactive only</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountCouponCode">
     <Value>Coupon code</Value>
@@ -18377,6 +18455,9 @@
   </LocaleResource>
   <LocaleResource Name="Permission.AllowCustomerImpersonation">
     <Value>Admin area. Allow Customer Impersonation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.Authentication.EnableMultiFactorAuthentication">
+    <Value>Security. Enable Multi-factor authentication</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.Authentication.ManageExternalMethods">
     <Value>Admin area. Manage External Authentication Methods</Value>

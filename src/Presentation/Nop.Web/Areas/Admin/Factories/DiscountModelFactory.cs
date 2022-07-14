@@ -194,6 +194,23 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available discount types
             await _baseAdminModelFactory.PrepareDiscountTypesAsync(searchModel.AvailableDiscountTypes);
 
+            //prepare "is active" filter (0 - all; 1 - active only; 2 - inactive only)
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "0",
+                Text = await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.List.IsActive.All")
+            });
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "1",
+                Text = await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.List.IsActive.ActiveOnly")
+            });
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "2",
+                Text = await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.List.IsActive.InactiveOnly")
+            });
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -219,6 +236,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchStartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()) : null;
             var endDateUtc = searchModel.SearchEndDate.HasValue ?
                 (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchEndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1) : null;
+            var isActive = searchModel.IsActiveId == 0 ? null : (bool?)(searchModel.IsActiveId == 1);
 
             //get discounts
             var discounts = (await _discountService.GetAllDiscountsAsync(showHidden: true,
@@ -226,7 +244,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 couponCode: searchModel.SearchDiscountCouponCode,
                 discountName: searchModel.SearchDiscountName,
                 startDateUtc: startDateUtc,
-                endDateUtc: endDateUtc)).ToPagedList(searchModel);
+                endDateUtc: endDateUtc,
+                isActive: isActive)).ToPagedList(searchModel);
 
             //prepare list model
             var model = await new DiscountListModel().PrepareToGridAsync(searchModel, discounts, () =>
@@ -312,7 +331,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //set default values for the new model
             if (discount == null)
+            {
+                model.IsActive = true;
                 model.LimitationTimes = 1;
+            }
 
             return model;
         }

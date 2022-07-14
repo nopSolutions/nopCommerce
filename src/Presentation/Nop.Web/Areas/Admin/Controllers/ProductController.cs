@@ -327,7 +327,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async Task SaveDiscountMappingsAsync(Product product, ProductModel model)
         {
-            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true);
+            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true, isActive: null);
 
             foreach (var discount in allDiscounts)
             {

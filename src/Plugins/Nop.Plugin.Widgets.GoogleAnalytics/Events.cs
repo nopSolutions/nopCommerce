@@ -22,7 +22,10 @@ using Nop.Services.Stores;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics
 {
-    public class EventConsumer : IConsumer<OrderCancelledEvent>, IConsumer<OrderPaidEvent>, IConsumer<EntityDeletedEvent<Order>>
+    public class EventConsumer :
+        IConsumer<OrderStatusChangedEvent>,
+        IConsumer<OrderPaidEvent>,
+        IConsumer<EntityDeletedEvent<Order>>
     {
         private readonly IAddressService _addressService;
         private readonly ICategoryService _categoryService;
@@ -200,8 +203,11 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// </summary>
         /// <param name="eventMessage">The event message</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task HandleEventAsync(OrderCancelledEvent eventMessage)
+        public async Task HandleEventAsync(OrderStatusChangedEvent eventMessage)
         {
+            if (eventMessage.Order.OrderStatus != OrderStatus.Cancelled)
+                return;
+
             //ensure the plugin is installed and active
             if (!await IsPluginEnabledAsync())
                 return;

@@ -95,7 +95,7 @@ namespace Nop.Plugin.Widgets.AccessiBe
         {
             await _settingService.SaveSettingAsync(new AccessiBeSettings
             {
-                WidgetZone = PublicWidgetZones.HeadHtmlTag
+                WidgetZone = PublicWidgetZones.BodyStartHtmlTagAfter
             });
 
             await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
