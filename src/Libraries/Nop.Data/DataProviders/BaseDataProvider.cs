@@ -139,7 +139,12 @@ namespace Nop.Data.DataProviders
         public virtual void InitializeDatabase()
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
+
+            var targetAssembly = typeof(NopDbStartup).Assembly;
+            migrationManager.ApplyUpMigrations(targetAssembly);
+
+            //mark update migrations as applied
+            migrationManager.ApplyUpMigrations(targetAssembly, MigrationProcessType.Update, true);
         }
 
         /// <summary>
