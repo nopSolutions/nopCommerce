@@ -11,6 +11,22 @@
             </p>
         </div>
     }
+    @if (Model.GuestCustomerVatEnabled || Model.DisplayGuestCustomerVatWarning)
+    {
+        <div class="section vat-number">
+            @if (Model.DisplayGuestCustomerVatWarning)
+            {
+                <label class="vat-number-warning">
+                    @T("Checkout.VatNumber.Warning")
+                </label>
+            }
+            @if (Model.GuestCustomerVatEnabled)
+            {
+                <label asp-for="VatNumber">@T("Checkout.VatNumber")</label>
+                <input asp-for="VatNumber" />
+            }
+        </div>
+    }
     @if (Model.ExistingAddresses.Count > 0)
     {
             <div class="section select-billing-address">

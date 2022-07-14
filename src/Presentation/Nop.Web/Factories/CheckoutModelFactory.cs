@@ -10,6 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -54,6 +55,7 @@ namespace Nop.Web.Factories
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ITaxService _taxService;
+        private readonly TaxSettings _taxSettings;
         private readonly IWorkContext _workContext;
         private readonly OrderSettings _orderSettings;
         private readonly PaymentSettings _paymentSettings;
@@ -88,6 +90,7 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             ITaxService taxService,
+            TaxSettings taxSettings,
             IWorkContext workContext,
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
@@ -118,6 +121,7 @@ namespace Nop.Web.Factories
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
             _taxService = taxService;
+            _taxSettings = taxSettings;
             _workContext = workContext;
             _orderSettings = orderSettings;
             _paymentSettings = paymentSettings;
@@ -251,8 +255,16 @@ namespace Nop.Web.Factories
                 ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep
             };
 
-            //existing addresses
+            //guest customer vat
             var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled)
+            {
+                model.VatNumber = customer.VatNumber;
+                model.GuestCustomerVatEnabled = _taxSettings.GuestCustomerVatEnabled;
+                model.DisplayGuestCustomerVatWarning = !_taxSettings.GuestCustomerVatEnabled;
+            }
+
+            //existing addresses
             var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
                 .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is Country country &&
                     (//published

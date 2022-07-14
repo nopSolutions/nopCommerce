@@ -108,6 +108,11 @@ namespace Nop.Core.Domain.Tax
         public bool EuVatEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether EU VAT (Europe Union Value Added Tax) for guest customers is enabled
+        /// </summary>
+        public bool GuestCustomerVatEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a shop country identifier
         /// </summary>
         public int EuVatShopCountryId { get; set; }

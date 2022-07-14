@@ -12,6 +12,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
 using Nop.Core.Http.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -22,6 +23,7 @@ using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
+using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
@@ -56,6 +58,8 @@ namespace Nop.Web.Controllers
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
+        private readonly ITaxService _taxService;
+        private readonly TaxSettings _taxSettings;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly OrderSettings _orderSettings;
@@ -87,6 +91,8 @@ namespace Nop.Web.Controllers
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
+            ITaxService taxService,
+            TaxSettings taxSettings,
             IWebHelper webHelper,
             IWorkContext workContext,
             OrderSettings orderSettings,
@@ -114,6 +120,8 @@ namespace Nop.Web.Controllers
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
+            _taxService = taxService;
+            _taxSettings = taxSettings;
             _webHelper = webHelper;
             _workContext = workContext;
             _orderSettings = orderSettings;
@@ -209,6 +217,23 @@ namespace Nop.Web.Controllers
             var store = await _storeContext.GetCurrentStoreAsync();
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, pickUpInStoreShippingOption, store.Id);
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedPickupPointAttribute, pickupPoint, store.Id);
+        }
+
+        /// <summary>
+        /// Save customer VAT number
+        /// </summary>
+        /// <param name="fullVatNumber">The full VAT number</param>
+        /// <param name="customer">The customer</param>
+        protected virtual async Task SaveCustomerVatNumberAsync(string fullVatNumber, Customer customer)
+        {
+            if (customer.VatNumber == fullVatNumber)
+                return;
+
+            var (vatNumberStatus, _, _) = await _taxService.GetVatNumberStatusAsync(fullVatNumber);
+
+            customer.VatNumberStatus = vatNumberStatus;
+            customer.VatNumber = fullVatNumber;
+            await _customerService.UpdateCustomerAsync(customer);
         }
 
         #endregion
@@ -499,17 +524,22 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual async Task<IActionResult> SelectBillingAddress(int addressId, bool shipToSameAddress = false)
+        [HttpPost, ActionName("BillingAddress")]
+        [FormValueRequired("selectedAddressId")]
+        public virtual async Task<IActionResult> SelectBillingAddress(int selectedAddressId, bool shipToSameAddress = false, string vatNumber = null)
         {
             //validation
             if (_orderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
+            var address = await _customerService.GetCustomerAddressAsync(customer.Id, selectedAddressId);
 
             if (address == null)
                 return RedirectToRoute("CheckoutBillingAddress");
+
+            if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled && _taxSettings.GuestCustomerVatEnabled)
+                await SaveCustomerVatNumberAsync(vatNumber, customer);
 
             customer.BillingAddressId = address.Id;
             await _customerService.UpdateCustomerAsync(customer);
@@ -554,6 +584,9 @@ namespace Nop.Web.Controllers
 
             if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
+
+            if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled && _taxSettings.GuestCustomerVatEnabled)
+                await SaveCustomerVatNumberAsync(model.VatNumber, customer);
 
             //custom address attributes
             var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
@@ -1404,6 +1437,9 @@ namespace Nop.Web.Controllers
                     throw new Exception("Anonymous checkout is not allowed");
 
                 _ = int.TryParse(form["billing_address_id"], out var billingAddressId);
+
+                if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled && _taxSettings.GuestCustomerVatEnabled)
+                    await SaveCustomerVatNumberAsync(model.VatNumber, customer);
 
                 if (billingAddressId > 0)
                 {

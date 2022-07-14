@@ -4240,7 +4240,8 @@ label, label + * {
   font-style: italic;
 }
 
-.min-amount-warning {
+.min-amount-warning,
+.vat-number-warning {
   margin: 0 0 20px;
   padding: 0 30px;
   color: #e4434b;
@@ -4754,7 +4755,6 @@ label, label + * {
 }
 
 .checkout-page .ship-to-same-address {
-  padding: 30px 0;
   text-align: center;
 }
 
@@ -4762,6 +4762,24 @@ label, label + * {
   margin: 0 0 5px;
   font-weight: bold;
   color: #444;
+}
+
+.checkout-page .billing-addresses {
+  padding-top: 30px;
+}
+
+.checkout-page .vat-number > label {
+  display: block;
+  margin: 0 0 10px;
+}
+
+.checkout-page .vat-number {
+  text-align: center;
+}
+
+.checkout-page .select-billing-address,
+.checkout-page .new-billing-address {
+  padding-top: 30px;
 }
 
 .checkout-page .pickup-in-store {
@@ -5007,6 +5025,10 @@ label, label + * {
 
 .opc .section {
   margin: 0 0 30px;
+}
+
+.opc .vat-number {
+  margin-bottom: 0;
 }
 
 .opc .section > label {
