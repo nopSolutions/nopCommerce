@@ -203,6 +203,12 @@ namespace Nop.Services.Plugins
         {
             var assembly = Assembly.GetAssembly(pluginType);
             _migrationManager.ApplyUpMigrations(assembly, migrationProcessType);
+
+            //mark update migrations as applied
+            if (migrationProcessType == MigrationProcessType.Installation)
+            {
+                _migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
+            }
         }
 
         protected virtual bool PluginsUploaded()
@@ -239,7 +245,7 @@ namespace Nop.Services.Plugins
         public virtual async Task<IList<PluginDescriptor>> GetPluginDescriptorsAsync<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
             Customer customer = null, int storeId = 0, string group = null, string dependsOnSystemName = "", string friendlyName = null, string author = null) where TPlugin : class, IPlugin
         {
-            var pluginDescriptors = _pluginsInfo.PluginDescriptors.Select(p=>p.pluginDescriptor).ToList();
+            var pluginDescriptors = _pluginsInfo.PluginDescriptors.Select(p => p.pluginDescriptor).ToList();
 
             //filter plugins
             pluginDescriptors = await pluginDescriptors.WhereAwait(async descriptor =>
@@ -440,7 +446,7 @@ namespace Nop.Services.Plugins
 
             var plugin = descriptor?.Instance<IPlugin>();
 
-            if(plugin != null)
+            if (plugin != null)
                 await plugin.PreparePluginToUninstallAsync();
 
             _pluginsInfo.PluginNamesToUninstall.Add(systemName);
@@ -477,7 +483,8 @@ namespace Nop.Services.Plugins
             _pluginsInfo.PluginDescriptors.ToList().ForEach(pluginDescriptor => pluginDescriptor.pluginDescriptor.ShowInPluginsList = true);
 
             //clear the uploaded directory
-            foreach (var directory in _fileProvider.GetDirectories(_fileProvider.MapPath(NopPluginDefaults.UploadedPath))) _fileProvider.DeleteDirectory(directory);
+            foreach (var directory in _fileProvider.GetDirectories(_fileProvider.MapPath(NopPluginDefaults.UploadedPath)))
+                _fileProvider.DeleteDirectory(directory);
         }
 
         /// <summary>
@@ -676,7 +683,7 @@ namespace Nop.Services.Plugins
 
                 if (installedPlugin.Version == newVersion.pluginDescriptor.Version)
                     continue;
-                
+
                 //run new migrations from the plugin if there are exists
                 InsertPluginData(newVersion.pluginDescriptor.PluginType, MigrationProcessType.Update);
 

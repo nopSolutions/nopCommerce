@@ -12,7 +12,8 @@ namespace Nop.Data.Migrations
         /// </summary>
         /// <param name="assembly">Assembly to find migrations</param>
         /// <param name="migrationProcessType">Type of migration process</param>
-        void ApplyUpMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.Installation);
+        /// <param name="commitVersionOnly">Commit only version information</param>
+        void ApplyUpMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.Installation, bool commitVersionOnly = false);
 
         /// <summary>
         /// Executes an Down migration
