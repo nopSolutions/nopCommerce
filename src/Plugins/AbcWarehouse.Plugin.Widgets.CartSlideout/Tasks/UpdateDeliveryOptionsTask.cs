@@ -65,8 +65,21 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 {
                     try
                     {
-                        await UpdateProductDeliveryOptionsAsync(map, productId);
+                        (int deliveryOptionsPamId,
+                         int? deliveryPavId,
+                         int? deliveryInstallPavId,
+                         decimal? deliveryPriceAdjustment,
+                         decimal? deliveryInstallPriceAdjustment) = await UpdateProductDeliveryOptionsAsync(map, productId);
                         // let's try doing haulaway in here instead
+                        // await AddHaulAwayAsync(
+                        //     productId,
+                        //     map,
+                        //     deliveryOptionsPamId,
+                        //     deliveryPavId,
+                        //     deliveryInstallPavId,
+                        //     deliveryPriceAdjustment.HasValue ? deliveryPriceAdjustment.Value : 0M,
+                        //     deliveryInstallPriceAdjustment.HasValue ? deliveryInstallPriceAdjustment.Value : 0M
+                        // );
                     }
                     catch (Exception e)
                     {
@@ -85,7 +98,11 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             }
         }
 
-        private async System.Threading.Tasks.Task UpdateProductDeliveryOptionsAsync(
+        private async System.Threading.Tasks.Task<(int pamId,
+                                                   int? deliveryPavId,
+                                                   int? deliveryInstallPavId,
+                                                   decimal? deliveryPriceAdjustment,
+                                                   decimal? deliveryInstallPriceAdjustment)> UpdateProductDeliveryOptionsAsync(
             AbcDeliveryMap map,
             int productId)
         {
@@ -100,6 +117,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 });
             }
 
+            // I think this needs to be changed... this SaveProductAttributes thing doesn't work
             var deliveryOptionsPam = (await _abcProductAttributeService.SaveProductAttributeMappingsAsync(
                     productId,
                     pams,
@@ -110,6 +128,12 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
              int? deliveryInstallPavId,
              decimal? deliveryPriceAdjustment,
              decimal? deliveryInstallPriceAdjustment) = await AddDeliveryOptionValuesAsync(deliveryOptionsPam.Id, productId, map);
+
+             return (deliveryOptionsPamId,
+             deliveryPavId,
+             deliveryInstallPavId,
+             deliveryPriceAdjustment,
+             deliveryInstallPriceAdjustment);
         }
 
         private async System.Threading.Tasks.Task<(int pamId,

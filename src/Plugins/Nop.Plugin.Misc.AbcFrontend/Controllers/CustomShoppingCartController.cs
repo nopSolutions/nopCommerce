@@ -48,6 +48,7 @@ using Nop.Services.Cms;
 using Nop.Plugin.Misc.AbcCore.Models;
 using Newtonsoft.Json;
 using Nop.Plugin.Misc.AbcFrontend.Models;
+using Nop.Plugin.Misc.AbcCore.Delivery;
 
 namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 {
@@ -676,7 +677,12 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                     "CartSlideoutProductAttributes",
                     new {
                         product = product,
-                        includedAttributeNames = new string[] { "Delivery/Pickup Options", "Haulaway" }
+                        includedAttributeNames = new string[]
+                        {
+                            AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName,
+                            AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName,
+                            AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName
+                        }
                     }),
                 WarrantyHtml = await RenderViewComponentToStringAsync(
                     "CartSlideoutProductAttributes",

@@ -169,6 +169,26 @@ function setAttributeListeners(shoppingCartItemId) {
             })
             .then(response => response.json())
             .then(responseJson => {
+                // update possible conditional options
+                responseJson.DisabledAttributeMappingIds.forEach(id => {
+                    var options = document.querySelectorAll(`[id$='_${id}']`);
+                    options.forEach(option => {
+                        option.style.display = "none";
+                        // Uncheck the hidden option
+                        var checkbox = option.querySelector(`input[id^='product_attribute_${id}_']`);
+                        if (checkbox !== undefined && checkbox !== null) {
+                            checkbox.checked = false;
+                        }
+                    })
+                });
+
+                responseJson.EnabledAttributeMappingIds.forEach(id => {
+                    var options = document.querySelectorAll(`[id$='_${id}']`);
+                    options.forEach(option => {
+                        option.style.display = "block";
+                    })
+                });
+
                 $('.cart-slideout__subtotal').html(responseJson.SubtotalHtml);
             })
             .catch(err => {

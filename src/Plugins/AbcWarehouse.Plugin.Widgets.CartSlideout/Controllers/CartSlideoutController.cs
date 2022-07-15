@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AbcWarehouse.Plugin.Widgets.CartSlideout.Models;
@@ -8,19 +9,20 @@ using Nop.Services.Catalog;
 using Nop.Services.Orders;
 using Nop.Plugin.Misc.AbcCore.Delivery;
 using Nop.Web.Framework.Controllers;
+using Nop.Plugin.Misc.AbcCore.Nop;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
 {
     public class CartSlideoutController : BaseController
     {
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
+        private readonly IAbcProductAttributeService _productAttributeService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IWorkContext _workContext;
 
         public CartSlideoutController(
             IProductAttributeParser productAttributeParser,
-            IProductAttributeService productAttributeService,
+            IAbcProductAttributeService productAttributeService,
             IShoppingCartService shoppingCartService,
             IWorkContext workContext)
         {
@@ -71,31 +73,30 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                     shoppingCartItem.RentalEndDateUtc,
                     shoppingCartItem.Quantity);
 
-            // conditional attributes - will need this for haulaway
-            // var enabledAttributeMappingIds = new List<int>();
-            // var disabledAttributeMappingIds = new List<int>();
-            // var attributes = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
-            // foreach (var attribute in attributes)
-            // {
-            //     var conditionMet = await _productAttributeParser.IsConditionMetAsync(attribute, attributeXml);
-            //     if (conditionMet.HasValue)
-            //     {
-            //         if (conditionMet.Value)
-            //             enabledAttributeMappingIds.Add(attribute.Id);
-            //         else
-            //             disabledAttributeMappingIds.Add(attribute.Id);
-            //     }
-            // }
+            // Check which attributes should be visible
+            var enabledAttributeMappingIds = new List<int>();
+            var disabledAttributeMappingIds = new List<int>();
+            var attributes = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(shoppingCartItem.ProductId);
+            foreach (var attribute in attributes)
+            {
+                var conditionMet = await _productAttributeParser.IsConditionMetAsync(attribute, shoppingCartItem.AttributesXml);
+                if (conditionMet.HasValue)
+                {
+                    if (conditionMet.Value)
+                        enabledAttributeMappingIds.Add(attribute.Id);
+                    else
+                        disabledAttributeMappingIds.Add(attribute.Id);
+                }
+            }
 
             return Json(new
             {
-                SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = shoppingCartItem })
+                SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = shoppingCartItem }),
+                EnabledAttributeMappingIds = enabledAttributeMappingIds,
+                DisabledAttributeMappingIds = disabledAttributeMappingIds
             });
         }
 
-        // TODO:
-        // Need to remove the existing mapped value if Delivery/Pickup
-        // I think this will be the same with warranties and maybe pickup in store?
         private async Task<string> ChangeProductAttributeAsync(
             ProductAttributeMapping pam,
             string attributesXml,
@@ -110,6 +111,32 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                 result = _productAttributeParser.RemoveProductAttribute(
                     result,
                     pam);
+            }
+
+            // If Delivery/Pickup, need to also clear the existing Haulaway options
+            if (productAttribute.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName)
+            {
+                var haulAwayDeliveryPa = await _productAttributeService.GetProductAttributeByNameAsync(
+                    AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName);
+                var haulAwayDeliveryPam = (await _productAttributeParser.ParseProductAttributeMappingsAsync(result)).FirstOrDefault(
+                    pam => pam.ProductAttributeId == haulAwayDeliveryPa.Id);
+                if (haulAwayDeliveryPam != null)
+                {
+                    result = _productAttributeParser.RemoveProductAttribute(
+                        result,
+                        haulAwayDeliveryPam);
+                }
+
+                var haulAwayDeliveryInstallPa = await _productAttributeService.GetProductAttributeByNameAsync(
+                    AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName);
+                var haulAwayDeliveryInstallPam = (await _productAttributeParser.ParseProductAttributeMappingsAsync(result)).FirstOrDefault(
+                    pam => pam.ProductAttributeId == haulAwayDeliveryInstallPa.Id);
+                if (haulAwayDeliveryInstallPam != null)
+                {
+                    result = _productAttributeParser.RemoveProductAttribute(
+                        result,
+                        haulAwayDeliveryInstallPam);
+                }
             }
 
             // If 0 was passed, don't add another attribute, treated as only removal
