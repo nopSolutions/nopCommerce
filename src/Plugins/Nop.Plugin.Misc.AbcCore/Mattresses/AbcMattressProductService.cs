@@ -546,22 +546,23 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
 
         public async Task SetManufacturerAsync(AbcMattressModel abcMattressModel, Product product)
         {
-            var existingProductManufacturers = await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id);
+            var existingProductManufacturer = (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id, true)).FirstOrDefault();
             var newProductManufacturer = new ProductManufacturer()
             {
                 ProductId = product.Id,
                 ManufacturerId = abcMattressModel.ManufacturerId.Value
             };
 
-            var toBeDeleted = existingProductManufacturers
-                .Where(e => e.ProductId != newProductManufacturer.ProductId &&
-                            e.ManufacturerId != newProductManufacturer.ProductId);
-            toBeDeleted.ToList().ForEach(async e => await _manufacturerService.DeleteProductManufacturerAsync(e));
-
-            if (!existingProductManufacturers.Any() ||
-                 toBeDeleted.Any())
+            // No current manufacturer, insert
+            if (existingProductManufacturer == null)
             {
                 await _manufacturerService.InsertProductManufacturerAsync(newProductManufacturer);
+            }
+            // manufacturers don't match, update
+            else if (existingProductManufacturer.ManufacturerId != newProductManufacturer.ManufacturerId)
+            {
+                existingProductManufacturer.ManufacturerId = newProductManufacturer.ManufacturerId;
+                await _manufacturerService.UpdateProductManufacturerAsync(existingProductManufacturer);
             }
         }
 
