@@ -1,0 +1,28 @@
+﻿@model PopularProductTagsModel
+
+@if (Model.Tags.Count > 0)
+{
+    <div class="block block-popular-tags well box-shadow-wrapper">
+        <div class="title main-title">
+            <strong>@T("Products.Tags.Popular")</strong>
+        </div>
+        <div class="listbox">
+            <div class="tags">
+                <ul class="nav nav-pills">
+                    @foreach (var item in Model.Tags)
+                    {
+                        <li>
+                            <a href="@Url.RouteUrl("ProductsByTag", new { item.SeName })" style="font-size:@(Model.GetFontSize(item))%;">@item.Name<span>,</span></a>&nbsp;
+                        </li>
+                    }
+                </ul>
+            </div>
+            @if (Model.TotalTags > Model.Tags.Count)
+            {
+                <div class="view-all">
+                    <a href="@Url.RouteUrl("ProductTagsAll")">@T("Products.Tags.Popular.ViewAll")</a>
+                </div>
+            }
+        </div>
+    </div>
+}

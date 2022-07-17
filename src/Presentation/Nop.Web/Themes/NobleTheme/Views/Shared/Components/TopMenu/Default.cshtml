@@ -1,0 +1,147 @@
+﻿@model TopMenuModel
+
+@functions {
+    async Task CategoryLine(TopMenuModel.CategoryLineModel lineModel)
+    {
+        <li>
+            <a href="@Url.RouteUrl("Category", new { SeName = lineModel.Category.SeName })">
+                @lineModel.Category.Name
+                @if (lineModel.Category.NumberOfProducts.HasValue)
+                {
+                    <text> </text>@T("Categories.TotalProducts", lineModel.Category.NumberOfProducts.Value)
+                }
+            </a>
+            @{
+                //subcategories
+                var subCategories = lineModel.ResponsiveMobileMenu ?
+                    //responsive (all categories)
+                    lineModel.Category.SubCategories :
+                    //standard design (only categories with "IncludeInTopMenu")
+                    lineModel.Category.SubCategories.Where(x => x.IncludeInTopMenu).ToList();
+
+                var levelClass = "";
+                if (lineModel.Level == 0)
+                {
+                    levelClass = "first-level";
+                }
+                if (subCategories.Count > 0)
+                {
+                    <div class="sublist-toggle"></div>
+                    <ul class="sublist @levelClass">
+                        @foreach (var subCategory in subCategories)
+                        {
+                            var categoryLineModel = new TopMenuModel.CategoryLineModel
+                            {
+                                Category = subCategory,
+                                Level = lineModel.Level + 1,
+                                ResponsiveMobileMenu = lineModel.ResponsiveMobileMenu
+                            };
+                            await CategoryLine(categoryLineModel);
+                        }
+                    </ul>
+                }
+            }
+        </li>
+    }
+}
+
+<div class="main-menu">
+    <nav class="navbar navbar-inverse category-menu">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button aria-expanded="false" data-target="#mobile-menu" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="mobile-menu" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuBefore, additionalData = Model })
+                @if (Model.DisplayHomepageMenuItem)
+                {
+                    <li class="home-wrapper"><a href="@Url.RouteUrl("HomePage")"><i class="fa fa-home fa-fw"></i></a></li>
+                }
+                @if (!Model.UseAjaxMenu)
+                {
+                    var rootCategories = Model.Categories.Where(x => x.IncludeInTopMenu).ToList();
+                    @foreach (var category in rootCategories)
+                    {
+                        var categoryLineModel = new TopMenuModel.CategoryLineModel
+                        {
+                            Category = category
+                        };
+                        @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+                    }
+                }
+                @foreach (var topic in Model.Topics)
+                {
+                    <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+                }
+                @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
+                {
+                    <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a></li>
+                }
+                @if (Model.DisplayProductSearchMenuItem)
+                {
+                    <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
+                }
+                @if (Model.DisplayCustomerInfoMenuItem)
+                {
+                    <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+                }
+                @if (Model.BlogEnabled && Model.DisplayBlogMenuItem)
+                {
+                    <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+                }
+                @if (Model.ForumEnabled && Model.DisplayForumsMenuItem)
+                {
+                    <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+                }
+                @if (Model.DisplayContactUsMenuItem)
+                {
+                    <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+                }
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuAfter, additionalData = Model })
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+
+    @if (Model.UseAjaxMenu)
+    {
+        <script asp-location="Footer">
+        $(document).ready(function () {
+            $('.menu-toggle').on('click', function () {
+                $(this).siblings('.top-menu.mobile').slideToggle('slow');
+            });
+            var localized_data = {
+                AjaxFailure: "@T("MainMenu.AjaxFailure")"
+            };
+            mainMenu.init('@Url.RouteUrl("GetCatalogRoot")', '@Url.RouteUrl("GetCatalogSubCategories")', 'ul.top-menu.notmobile', 'ul.top-menu.mobile', localized_data);
+        });
+        </script>
+
+        <script src="~/js/public.menu.js" asp-location="Footer"></script>
+
+    }
+
+
+    <script type="text/javascript" asp-location="Footer">
+        $(document).ready(function () {
+            $("#mobile-menu .dropdown .fa-angle-down").on('click', function () {
+                var $this = $(this);
+                $this.siblings("ul.dropdown-menu").slideToggle("slow", function () {
+                    if ($this.siblings("ul.dropdown-menu").css('display') == 'block')
+                        $this.addClass("rotate");
+                    else if ($this.siblings("ul.dropdown-menu").css('display') == 'none')
+                        $this.removeClass("rotate");
+                });
+            });
+        });
+    </script>
+
+</div>
+
+

@@ -1,0 +1,20 @@
+﻿@using Nop.Core
+@using Nop.Services.Helpers
+@using Nop.Web.Framework.UI
+@inject IThemeContext themeContext
+@inject IUserAgentHelper userAgentHelper
+@{
+	Layout ="";
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+    var supportRtl = await Html.ShouldUseRtlThemeAsync();
+
+    //add main CSS file
+	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/noble-responsive{(supportRtl ? ".rtl" : "")}.css");
+	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/noble-style{(supportRtl ? ".rtl" : "")}.css");
+	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/font-awesome.min.css");
+	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/bootstrap.min.css");
+	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/owl.carousel.min.css");
+		
+    //add jQuery UI css file
+    NopHtml.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
+}

@@ -1,0 +1,91 @@
+﻿@model ManufacturerModel
+@using Nop.Core.Domain.Seo
+@inject Nop.Core.IWebHelper webHelper
+@inject SeoSettings seoSettings
+@{
+    Layout = "_ColumnsTwo";
+    //title
+    NopHtml.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    //meta
+    NopHtml.AddMetaDescriptionParts(Model.MetaDescription);
+    NopHtml.AddMetaKeywordParts(Model.MetaKeywords);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-manufacturer-page");
+
+    if (seoSettings.CanonicalUrlsEnabled)
+    {
+        var manufacturerUrl = Url.RouteUrl("Manufacturer", new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        NopHtml.AddCanonicalUrlParts(manufacturerUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
+    }
+}
+
+@section CatalogFilters {
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsBeforeFilters, additionalData = Model })
+    @await Html.PartialAsync("_CatalogFilters", Model.CatalogProductsModel)
+}
+
+<div class="page manufacturer-page">
+    <div class="page-title panel-heading">
+        <h1>@Model.Name</h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsTop, additionalData = Model })
+        @*description*@
+        @if (!string.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="manufacturer-description">
+                @Html.Raw(Model.Description)
+            </div>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsBeforeFeaturedProducts, additionalData = Model })
+        @*featured products*@
+        @if (Model.FeaturedProducts.Count > 0)
+        {
+            <div class="featured-product-grid row">
+                <div class="title sub-title col-md-12">
+                    <strong>@T("Products.FeaturedProducts")</strong>
+                </div>
+                @if (Model.FeaturedProducts.Count <= 3)
+                {
+                    foreach (var product in Model.FeaturedProducts)
+                    {
+                        <div class="item-box col-xs-12 col-sm-4 col-md-4 product-align clearfix">
+                            <div class="thumbnail">
+                                @await Html.PartialAsync("_ProductBox", product)
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div id="manufacturer-featured-slider" class="manufacturer-featured-slider owl-carousel owl-theme">
+                        @foreach (var product in Model.FeaturedProducts)
+                        {
+                            <div class="item-box col-xs-12 col-sm-12 col-md-12 product-align clearfix">
+                                <div class="thumbnail">
+                                    @await Html.PartialAsync("_ProductBox", product)
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsAfterFeaturedProducts, additionalData = Model })
+
+        <div class="row">
+            <div class="col-md-12">
+                @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
+            </div>
+        </div>        
+
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsBeforeProductList, additionalData = Model })
+
+        @{
+            var catalogProductsViewData = new ViewDataDictionary(ViewData);
+            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("GetManufacturerProducts", "Catalog", new { manufacturerId = Model.Id }));
+        }
+        @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsBottom, additionalData = Model })
+    </div>
+</div>

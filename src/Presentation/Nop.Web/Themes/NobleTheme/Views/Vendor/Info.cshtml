@@ -1,0 +1,82 @@
+﻿@model VendorInfoModel
+
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.VendorInfo").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-vendorinfo-page");
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.VendorInfo })
+}
+
+    <div class="page account-page vendorinfo-page">
+        <div class="page-title panel-heading">
+            <h1>@T("Account.MyAccount") - @T("Account.VendorInfo")</h1>
+        </div>
+        <div class="page-body panel-body from-panel">
+            <form asp-route="CustomerVendorInfo" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label col-sm-2 col-md-2" asp-postfix=":"></label>
+                        <div class="visible-xs form-title-rquired"><nop-required /></div>
+                        <div class="col-sm-6 col-md-6">
+                            <input asp-for="Name" class="form-control" />
+                        </div>
+                        <div class="col-sm-4 col-md-4">
+                            <div class="visible-lg visible-md visible-sm form-title-rquired"><nop-required /></div>
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label col-sm-2 col-md-2" asp-postfix=":"></label>
+                        <div class="visible-xs form-title-rquired"><nop-required /></div>
+                        <div class="col-sm-6 col-md-6">
+                            <input asp-for="Email" class="form-control" />
+                        </div>
+                        <div class="col-sm-4 col-md-4">
+                            <div class="visible-lg visible-md visible-sm form-title-rquired"><nop-required /></div>
+                            <span asp-validation-for="Email"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label col-sm-2 col-md-2" asp-postfix=":"></label>
+                        <div class="col-sm-6 col-md-6">
+                            <textarea asp-for="Description" class="form-control"></textarea>
+                        </div>
+                        <div class="col-sm-4 col-md-4">
+                            <span asp-validation-for="Description"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PictureUrl" class="control-label col-sm-2 col-md-2" asp-postfix=":"></label>
+                        <div class="col-sm-6 col-md-6">
+                            <input name="uploadedFile" type="file" accept="image/*" class="btn btn-default" />
+                            @if (!string.IsNullOrEmpty(Model.PictureUrl))
+                            {
+                                <div class="vendor-picture">
+                                    <img src="@(Model.PictureUrl)" alt="picture" />
+                                    <button type="submit" name="remove-picture" class="remove-picture-button btn btn-default">@T("Account.VendorInfo.Picture.Remove")</button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    @if (Model.VendorAttributes.Count > 0)
+                    {
+                        @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
+                    }
+                </div>
+                <div class="form-group row">
+                    <div class="buttons col-sm-offset-2 col-md-offset-2 col-md-5">
+                        <button type="submit" name="save-info-button" class="btn btn-primary save-vendorinfo-button">@T("Common.Save")</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>

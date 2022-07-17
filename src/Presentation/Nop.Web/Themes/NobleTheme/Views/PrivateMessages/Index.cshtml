@@ -1,0 +1,37 @@
+﻿@model PrivateMessageIndexModel
+
+@{    
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.PrivateMessages").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-private-messages");
+    NopHtml.AppendPageCssClassParts("html-private-messages-page");
+}
+<div class="page private-messages private-messages-page">
+    <div class="page-title panel-heading">
+        <h1>
+            @T("PrivateMessages.PrivateMessages")
+        </h1>
+    </div>
+    <div class="page-body panel-body from-panel">
+        @{
+            var selectSentTab = Model.SentItemsTabSelected ? ".tabs( 'option', 'active', 1 )" : "";
+        }
+
+        <ul id="tabs" class="nav nav-tabs">
+            <li class="active"><a href="#tabs-1" data-toggle="tab">@T("PrivateMessages.Inbox")</a></li>
+            <li><a href="#tabs-2" data-toggle="tab">@T("PrivateMessages.SentItems")</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="tabs-1" class="tab-pane active">
+                @await Component.InvokeAsync("PrivateMessagesInbox", new { pageNumber = Model.InboxPage, tab = "inbox" })
+            </div>
+            <div id="tabs-2" class="tab-pane">
+                @await Component.InvokeAsync("PrivateMessagesSentItems", new { pageNumber = Model.SentItemsPage, tab = "sent" })
+            </div>
+        </div>
+
+    </div>
+</div>

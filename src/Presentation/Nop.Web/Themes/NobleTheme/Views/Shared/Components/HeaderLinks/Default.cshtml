@@ -1,0 +1,76 @@
+﻿@model HeaderLinksModel
+@using Nop.Core.Domain.Customers
+@inject Nop.Core.IWebHelper webHelper
+
+<div class="header-links header-top-right">
+    <ul>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderLinksBefore, additionalData = Model })
+        @await Component.InvokeAsync("AdminHeaderLinks")
+        @if (Model.IsAuthenticated)
+        {
+            <li class="my-account"><a href="@Url.RouteUrl("CustomerInfo")" class="ico-account"><i class="fa fa-user"></i> <span>@T("Account.MyAccount")@*@Model.CustomerName*@</span></a></li>
+        }
+        else
+        {
+            var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url)
+                ? url.ToString()
+                : webHelper.GetRawUrl(Context.Request);
+            @if (Model.RegistrationType != UserRegistrationType.Disabled)
+            {
+                <li class="register"><a href="@Url.RouteUrl("Register", new { returnUrl })" class="ico-register"><i class="fa fa-user"></i> <span>@T("Account.Register")</span></a></li>
+            }            
+        }
+        @if (Model.WishlistEnabled)
+        {
+            <li class="my-wishlist">
+                <a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">
+                    <i class="fa fa-heart"></i>
+                    <span class="wishlist-label">@T("Wishlist")</span>
+                    <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+                </a>
+            </li>
+        }
+        @if (Model.ShoppingCartEnabled)
+        {
+            <li class="dropdown  my-cart" id="topcartlink">
+                <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
+                    <i class="fa fa-suitcase"></i>
+                    <span class="cart-label">@T("ShoppingCart")</span>
+                    <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    @await Component.InvokeAsync("FlyoutShoppingCart")
+                </ul>
+            </li>
+        }
+        @if (Model.AllowPrivateMessages)
+        {
+            <li>
+                <a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">
+                    <i class="fa fa-envelope"></i>
+                    <span class="inbox-label">@T("PrivateMessages.Inbox")</span>
+                    <span class="inbox-unread">@Model.UnreadPrivateMessages</span>
+                </a>
+            </li>
+        }
+        @if (Model.IsAuthenticated)
+        {
+            <li class="logout"><a href="@Url.RouteUrl("Logout")" class="ico-logout"><i class="fa fa-gear"></i> <span>@T("Account.Logout")</span></a></li>
+        }
+        else
+        {
+            var returnUrl = webHelper.GetRawUrl(Context.Request);
+            <li class="login"><a href="@Url.RouteUrl("Login", new { returnUrl })" class="ico-login"><i class="fa fa-gear"></i> <span>@T("Account.Login")</span></a></li>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderLinksAfter, additionalData = Model })
+    </ul>
+    @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
+    {
+        //new private message notification
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
+            });
+        </script>
+    }
+</div>

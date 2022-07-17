@@ -1,0 +1,118 @@
+﻿@using Nop.Services.Localization
+@model ActiveDiscussionsModel
+@inject ILocalizationService localizationService
+<div class="forums-table-section topics-group active-discussions">
+    <div class="forums-table-section-title">
+        <div class="forum-active-discussion">
+            <strong>@T("Forum.ActiveDiscussions")</strong>
+            <span>
+                @if (Model.ActiveDiscussionsFeedEnabled)
+                {
+                <a href="@Url.RouteUrl("ActiveDiscussionsRSS")" class="link-rss" title="@T("Forum.ActiveDiscussionsRSSLinkTitle")"><i class="fa fa-rss-square">@*@T("Forum.RSS")*@</i></a>
+                }
+                @if (Model.ViewAllLinkEnabled)
+                {
+                @Html.RouteLink(T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions", null, new { @class = "view-all" })
+                }
+            </span>
+        </div>
+        @{
+            var pager = await Html.PagerAsync(new PagerModel(localizationService)
+            {
+                PageSize = Model.TopicPageSize,
+                TotalRecords = Model.TopicTotalRecords,
+                PageIndex = Model.TopicPageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "ActiveDiscussionsPaged",
+                UseRouteLinks = true,
+                RouteValues = new ForumActiveDiscussionsRouteValues()
+            });
+        }
+        @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+        {
+        <div class="pager upper">
+            @pager
+        </div>
+        }
+    </div>
+    <div class="forums-table-section-body">
+        @if (Model.ForumTopics.Count > 0)
+        {
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th class="topic-name">
+                        @T("Forum.TopicTitle")
+                    </th>
+                    <th class="replies">
+                        @T("Forum.Replies")
+                    </th>
+                    <th class="views">
+                        @T("Forum.Views")
+                    </th>
+                    @if (Model.AllowPostVoting)
+                        {
+                    <th class="votes">
+                        @T("Forum.Votes")
+                    </th>
+                        }
+                    <th class="last-post">
+                        @T("Forum.LatestPost")
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var topic in Model.ForumTopics)
+                    {
+                <tr>
+                    <td class="topic-name">
+                        @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName }, new { @class = "topic-title" })
+                        @if (topic.NumPosts > Model.PostsPageSize)
+                                {
+                        <div class="topicspager">
+                            @await Html.ForumTopicSmallPagerAsync(topic)
+                        </div>
+                                }
+                        <div class="topic-starter">
+                            @if (topic.CustomerId > 0)
+                                    {
+                            <label>@T("Forum.Author"):</label>
+                                        if (topic.AllowViewingProfiles)
+                                        {
+                            @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                        }
+                                        else
+                                        {
+                            @topic.CustomerName
+                                        }
+                                    }
+                        </div>
+                    </td>
+                    <td class="replies">
+                        @topic.NumReplies
+                    </td>
+                    <td class="views">
+                        @topic.Views
+                    </td>
+                    @if (Model.AllowPostVoting)
+                            {
+                    <td class="votes">
+                        @topic.Votes
+                    </td>
+                            }
+                    <td class="last-post">
+                        @await Component.InvokeAsync("ForumLastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                    </td>
+                </tr>
+                    }
+            </tbody>
+        </table>
+        }
+    </div>
+    @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+    {
+    <div class="pager lower">
+        @pager
+    </div>
+    }
+</div>

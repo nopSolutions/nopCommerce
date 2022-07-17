@@ -1,0 +1,35 @@
+﻿@model IList<ManufacturerModel>
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Manufacturers").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-manufacturer-list-page");
+}
+<div class="page manufacturer-list-page">
+    <div class="page-title panel-heading">
+        <h1>@T("Manufacturers.List")</h1>
+    </div>
+    <div class="page-body">
+        <div class="manufacturer-grid row">
+            @foreach (var item in Model)
+            {
+                <div class="item-box col-xs-12 col-sm-4 col-md-4">
+                    <div class="manufacturer-item thumbnail">
+                        <h2 class="title">
+                            <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                @item.Name
+                            </a>
+                        </h2>
+                        <div class="picture">
+                            <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

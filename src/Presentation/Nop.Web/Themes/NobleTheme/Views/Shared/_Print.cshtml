@@ -1,0 +1,35 @@
+﻿@inject Nop.Core.Domain.Common.CommonSettings commonSettings
+@inject IThemeContext themeContext
+@{
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+}
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" class="@NopHtml.GeneratePageCssClasses()">
+<head>
+    <title>@NopHtml.GenerateTitle()</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <link href="~/Themes/@themeName/Content/css/print.css" rel="stylesheet" type="text/css" />
+
+    @NopHtml.GenerateCssFiles()    
+    @NopHtml.GenerateScripts(ResourceLocation.Head)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
+</head>
+<body>
+    @RenderBody()
+    <!-- FooterScripts  -->
+
+    <script src="~/lib_npm/jquery/jquery.min.js"></script>
+    @* when jQuery migrate script logging is active you will see the log in the browser console *@
+    @if (commonSettings.JqueryMigrateScriptLoggingActive)
+    {
+        <script src="~/lib_npm/jquery-migrate/jquery-migrate.js"></script>
+    }
+    else
+    {
+        <script src="~/lib_npm/jquery-migrate/jquery-migrate.min.js"></script>
+    }
+
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
+</body>
+</html>

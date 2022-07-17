@@ -1,0 +1,103 @@
+Release Date: March 12, 2022
+nopAccelerate Noble Themes version: 2.5.2
+
+Added Feature
+
+Support for nopCommerce 4.52 added
+
+==========================================
+
+Release Date: March 12, 2022
+nopAccelerate Noble Themes version: 2.5.0
+
+Added Feature
+
+Support for nopCommerce 4.50 added
+
+==========================================
+
+Release Date: May 04, 2021
+nopAccelerate Noble Themes version: 2.4.0
+
+Added Feature
+
+Support for nopCommerce 4.40 added
+
+==========================================
+
+Release Date: July 01, 2020
+nopAccelerate Noble Themes version: 2.3.0
+
+Added Feature
+Support for nopCommerce 4.30 added
+
+Bug Fixes
+Fixed issue. Theme EU cookie design issue in mobile.
+Fixed issue. Theme product details page thumbs image issue.
+
+==========================================
+
+Release Date: July 17, 2019
+nopAccelerate Noble Themes version: 2.2.0
+
+Added Feature
+
+Support for nopCommerce 4.20 added
+
+==========================================
+
+Release Date: August 21, 2018
+nopAccelerate Noble Themes version: 2.1.0
+
+Added Feature
+
+Support for nopCommerce 4.10 added
+
+==========================================
+
+Release Date: May 18, 2018
+nopAccelerate Noble Themes version: 2.0.1
+
+Bug Fixes
+
+Fixed issue. language(flag) images display issue.
+Fixed issue. slider didn't show properly.
+
+==========================================
+
+Release Date: November 17, 2017
+nopAccelerate Noble Themes version: 2.0.0
+
+Added Feature
+
+Support for nopCommerce 4.0 added
+
+==========================================
+
+Release Date: March 17, 2017
+Noble Theme version: 1.2.0
+
+Added Feature
+
+Support for nopCommerce 3.90 added
+Updated FontAwesome to version 4.7.0
+
+==========================================
+
+Release Date: September 13, 2016
+nopAccelerate Noble Theme version: 1.1.0
+
+Added Feature
+
+Support for nopCommerce 3.80 added
+Updated FontAwesome to version 4.6.3
+Updated Bootstrap to version 3.3.7
+
+==========================================
+
+Release Date: February 10, 2016
+nopAccelerate Noble Theme version: 1.0.0
+
+Release nopAccelerate Noble Theme Initial version 1.0.0.
+
+==========================================

@@ -1,0 +1,19 @@
+﻿@model Nop.Web.Models.Catalog.CategorySimpleModel
+<li class="dropdown">
+    <span class="fa fa-angle-down visible-xs"></span>
+    <a class="dropdown-toggle" href="@Url.RouteUrl("Category", new { SeName = Model.SeName })" role="button" aria-expanded="false">
+        @Model.Name
+        @if (Model.NumberOfProducts.HasValue)
+        {
+            <text> </text>@T("Categories.TotalProducts", Model.NumberOfProducts.Value)
+        }
+    </a>
+    @{
+        <ul class="dropdown-menu sub-menusublist first-level" role="menu">
+            @foreach (var subCategory in Model.SubCategories)
+            {
+                @await Html.PartialAsync("_CategorySubCategoryLine.TopMenu", subCategory)
+            }
+        </ul>
+    }
+</li>

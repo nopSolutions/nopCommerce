@@ -1,0 +1,39 @@
+﻿@model UserAgreementModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-user-agreement-page");
+}
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $("#agreement-agree").on('click', toggleContinueButton);
+        toggleContinueButton();
+    });
+
+    function toggleContinueButton() {
+        if ($('#agreement-agree').is(':checked')) {
+            $('#continue-downloading').prop('disabled', false);
+        } else {
+            $('#continue-downloading').prop('disabled', true);
+        }
+    }
+</script>
+<div class="page user-agreement-page from-panel">
+    <div class="page-title panel-heading">
+        <h1>@T("DownloadableProducts.UserAgreement")</h1>
+    </div>
+    <div class="page-body panel-body">
+        <strong> @Html.Raw(Model.UserAgreementText)</strong>
+         <label class="checkbox">
+            <input id="agreement-agree" type="checkbox" value="@T("DownloadableProducts.IAgree")" />
+         </label>
+	@Html.Raw(Model.UserAgreementText)
+         <div class="control-group">
+            <div class="controls">
+                <button type="submit" id="continue-downloading" class="btn btn-primary user-agreement-button" onclick="setLocation('@Url.RouteUrl("GetDownload", new { orderItemId = Model.OrderItemGuid, agree = true })    ')">@T("Common.Continue")</button>      
+            </div>
+        </div>
+    </div>
+</div>

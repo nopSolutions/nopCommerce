@@ -1,0 +1,96 @@
+﻿@model ContactUsModel
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.ContactUs").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-contact-page");
+}
+<div class="page contact-page">
+    <div class="page-title panel-heading">
+        <h1>@T("PageTitle.ContactUs")</h1>
+    </div>
+       <div class="contact-details from-panel">
+        <div class="page-body">
+            @await Component.InvokeAsync("TopicBlock", new { systemName = "ContactUs" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContactUsTop, additionalData = Model })
+            @if (Model.SuccessfullySent)
+            {
+                <div class="result alert alert-success">
+                    @Model.Result
+                </div>
+            }
+            else
+            {
+                <form asp-route="ContactUs" method="post">
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label asp-for="FullName" class = "control-label col-sm-2 col-md-2" asp-postfix=":"></label>
+                            <div class="visible-xs form-title-rquired"><nop-required /></div>
+                            <div class="col-sm-6 col-md-6">
+                                <input asp-for="FullName" placeholder="@T("ContactUs.FullName.Hint")" class="fullname form-control" />
+                            </div>
+                            <div class="col-sm-4 col-md-4">
+                                <div class="visible-lg visible-md visible-sm form-title-rquired"><nop-required /></div>
+                                <span asp-validation-for="FullName"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email" class = "control-label col-sm-2 col-md-2" asp-postfix=":"></label>
+                            <div class="visible-xs form-title-rquired"><nop-required /></div>
+                            <div class="col-sm-6 col-md-6">
+                                <input asp-for="Email" placeholder="@T("ContactUs.Email.Hint")" class="email form-control" />
+                            </div>
+                            <div class="col-sm-4 col-md-4">
+                                <div class="visible-lg visible-md visible-sm form-title-rquired"><nop-required /></div>
+                                <span asp-validation-for="Email"></span>
+                            </div>
+                        </div>
+                        @if (Model.SubjectEnabled)
+                        {
+                        <div class="form-group">
+                            <label asp-for="Subject" class = "control-label col-sm-2 col-md-2" asp-postfix=":"></label>
+                            <div class="visible-xs form-title-rquired"><nop-required /></div>
+                            <div class="col-sm-6 col-md-6">
+                                <input asp-for="Subject" placeholder="@T("ContactUs.Subject.Hint")" class="subject form-control" />
+                            </div>
+                            <div class="col-sm-4 col-md-4">
+                                <div class="visible-lg visible-md visible-sm form-title-rquired"><nop-required /></div>
+                                <span asp-validation-for="Subject"></span>
+                            </div>
+                        </div>
+                        }
+                        <div class="form-group">
+                            <label asp-for="Enquiry" class = "control-label col-sm-2 col-md-2" asp-postfix=":"></label>
+                            <div class="visible-xs form-title-rquired"><nop-required /></div>
+                            <div class="col-sm-6 col-md-6">
+                                <textarea asp-for="Enquiry" placeholder="@T("ContactUs.Enquiry.Hint")" class="enquiry form-control"></textarea>
+                            </div>
+                            <div class="col-sm-4 col-md-4">
+                                <div class="visible-lg visible-md visible-sm form-title-rquired"><nop-required /></div>
+                                <span asp-validation-for="Enquiry"></span>
+                            </div>
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                        <div class="form-group">
+                            <div class="captcha-box col-sm-offset-2 col-md-offset-2 col-md-8">
+                                <nop-captcha />
+                            </div>
+                        </div>
+                        }
+                        <div class="form-group">
+                            <div class=" col-sm-offset-2 col-md-offset-2 col-md-2">
+                                <button type="submit" name="send-email" class="btn btn-primary contact-us-button">@T("ContactUs.Button")</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            }
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContactUsBottom, additionalData = Model })
+        </div>
+    </div>
+</div>

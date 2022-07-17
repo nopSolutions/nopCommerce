@@ -1,0 +1,129 @@
+﻿@model ApplyVendorModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Vendors.Apply").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-apply-vendor-page");
+}
+<div class="page apply-vendor-page">
+    <div class="page-title panel-heading">
+        <h1>@T("PageTitle.Vendors.Apply")</h1>
+    </div>
+    <div class="page-body panel-body from-panel">
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "ApplyVendor" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ApplyVendorTop, additionalData = Model })
+        @if (Model.DisableFormInput)
+        {
+            <div class="result alert alert-success">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            <form asp-route="ApplyVendorAccount" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label col-sm-4 col-md-4" asp-postfix=":"></label>
+                        <div class="col-sm-5 col-md-5">
+                            <input asp-for="Name" class="name form-control" placeholder="@T("Vendors.ApplyAccount.Name.Hint")" />
+                        </div>
+                        <div class="col-sm-3 col-md-3">
+                            <nop-required />
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label col-sm-4 col-md-4" asp-postfix=":"></label>
+                        <div class="col-sm-5 col-md-5">
+                            <input asp-for="Email" class="name form-control" placeholder="@T("Vendors.ApplyAccount.Email.Hint")" />
+                        </div>
+                        <div class="col-sm-3 col-md-3">
+                            <nop-required />
+                            <span asp-validation-for="Email"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label col-sm-4 col-md-4" asp-postfix=":"></label>
+                        <div class="col-sm-5 col-md-5">
+                            <textarea asp-for="Description" class="description form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4 col-md-4">@T("Vendors.ApplyAccount.Picture"):</label>
+                        <div class="col-sm-5 col-md-5">
+                            <label class="btn btn-default">
+                                <input name="uploadedFile" type="file" accept="image/*" />
+                            </label>
+                        </div>
+                    </div>
+                    @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
+                    @if (Model.DisplayCaptcha)
+                    {
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-md-offset-4 col-md-8">
+                                <div class="captcha-box">
+                                    <nop-captcha />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.TermsOfServiceEnabled)
+                    {
+                        <script asp-location="Footer">
+                                $(document).ready(function() {
+                                    $('#apply-vendor').on('click', function () {
+                                        if ($('#termsofservice').is(':checked')) {
+                                            //do some stuff
+                                            return true;
+                                        } else {
+                                            //just show validation errors, dont post
+                                            alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Vendors.ApplyAccount.AcceptTermsOfService.Required").Text))');
+                                            return false;
+                                        }
+                                    });
+                                });
+                        </script>
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-md-offset-4 col-sm-5 col-md-5">
+                                <div class="terms-of-service">
+                                    <input id="termsofservice" type="checkbox" name="termsofservice" />
+                                    <label for="termsofservice">
+                                        @T("Vendors.ApplyAccount.AcceptTermsOfService")
+                                        @if (Model.TermsOfServicePopup)
+                                        {
+                                            <span class="read" id="read-acceptterms">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</span>
+                                            <script asp-location="Footer">
+                                                $(document).ready(function() {
+                                                    $('#read-acceptterms').on('click',
+                                                        function (e) {
+                                                            displayPopupContentFromUrl(
+                                                                '@Url.RouteUrl("TopicPopup", new {SystemName = "VendorTermsOfService"})',
+                                                                '@T("Vendors.ApplyAccount.AcceptTermsOfService")');
+                                                        });
+                                                });
+                                            </script>
+                                        }
+                                        else
+                                        {
+                                            <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("VendorTermsOfService") })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                                        }
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <div class="buttons col-sm-offset-4 col-md-offset-4 col-md-8">
+                            <button type="submit" name="apply-vendor" id="apply-vendor" class="btn btn-primary apply-vendor-button">@T("Vendors.ApplyAccount.Button")</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ApplyVendorBottom, additionalData = Model })
+    </div>
+</div>

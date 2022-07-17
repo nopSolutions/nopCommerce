@@ -1,0 +1,89 @@
+﻿@using Nop.Core.Configuration
+@using Nop.Core.Domain.Common
+@using Nop.Core.Domain.Seo
+@using Nop.Services.Security
+@using Nop.Core.Events
+@inject CommonSettings commonSettings
+@inject IEventPublisher eventPublisher
+@inject IPermissionService permissionService
+@inject SeoSettings seoSettings
+@inject AppSettings appSettings
+@{
+
+    //resources
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/noble.js");
+	NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/bootstrap.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/head.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/owl.carousel.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
+    //when jQuery migrate script logging is active you will see the log in the browser console
+    if (commonSettings.JqueryMigrateScriptLoggingActive)
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.js");
+    }
+    else
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.min.js");
+    }
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation/jquery.validate.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery/jquery.min.js");
+
+    //custom tag(s)
+    if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
+    {
+        NopHtml.AppendHeadCustomParts(seoSettings.CustomHeadTags);
+    }
+
+    var displayMiniProfiler = appSettings.Get<CommonConfig>().MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
+
+    //event
+    await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
+}
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
+<head>
+    <title>@NopHtml.GenerateTitle()</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@NopHtml.GenerateMetaDescription()" />
+    <meta name="keywords" content="@NopHtml.GenerateMetaKeywords()" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="generator" content="nopCommerce" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" as="font" href="@Url.Content($"~/Themes/NobleTheme/Content/fonts/fontawesome-webfont.woff2")" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet" />
+    @NopHtml.GenerateHeadCustom()
+    @*This is used so that themes can inject content into the header*@
+    @await Html.PartialAsync("Head")
+    @NopHtml.GenerateCssFiles()
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
+    @NopHtml.GenerateCanonicalUrls()
+    @await Component.InvokeAsync("NewsRssHeaderLink")
+    @await Component.InvokeAsync("BlogRssHeaderLink")
+    @*Insert favicon and app icons head code*@
+    @await Component.InvokeAsync("Favicon")
+    @if (displayMiniProfiler)
+    {
+        <mini-profiler />
+    }
+    @NopHtml.GenerateScripts(ResourceLocation.Head)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
+    <!--Theme Designed by nopAccelerate Themes - https://themes.nopaccelerate.com/themes/ -->
+    <!--Copyright (c) 2016-->
+    <!--[if lt IE 9]>
+           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <nop-antiforgery-token />
+    <!--[if lt IE 7]>
+        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <![endif]-->
+    @RenderBody()
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
+</body>
+</html>

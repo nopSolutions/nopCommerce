@@ -1,0 +1,185 @@
+﻿@using Nop.Services.Localization
+@model ForumTopicPageModel
+@inject ILocalizationService localizationService
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(Model.Subject);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-forum-topic-page");
+}
+@await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
+<div class="row">
+    @await Html.PartialAsync("_ForumHeader")
+</div>
+<div class="forum-page-edit from-panel">
+    <div class="panel-body">
+        <div class="page forum-topic-page">
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicAfterHeader, additionalData = Model })
+            <div class="title">
+                <h2 class="topic-name">
+                    <span>@Model.Subject</span>
+                </h2>
+                <div class="manage">
+                    @if (Model.IsCustomerAllowedToEditTopic)
+                    {
+                        <i class ="fa fa-pencil"></i> @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "edit-topic-link-button" })
+                    }
+                    @if (Model.IsCustomerAllowedToDeleteTopic)
+                    {
+                        <a href="#" class="delete-topic-link-button" onclick="return deletetopic(@(Model.Id))"><i class="fa fa-trash-o"></i> @T("Forum.DeleteTopic").Text</a>
+                        <script asp-location="Footer">
+                            function deletetopic(topicId) {
+                                if (confirm('@T("Common.AreYouSure")')) {
+                                    var postData = {
+                                        id: topicId
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@Url.Action("TopicDelete", "Boards")",
+                                        data: postData,
+                                        dataType: "json",
+                                        success: function (data, textStatus, jqXHR) {
+                                            location.href = data.redirect;
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            alert('Failed to delete');
+                                        }
+                                    });
+                                }
+                                return false;
+                            }
+                        </script>
+                    }
+                    @if (Model.IsCustomerAllowedToMoveTopic)
+                    {
+                        <i class ="fa fa-mail-forward"></i> @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "move-topic-link-button" })
+                    }
+                </div>
+            </div>
+            <div class="topic-header">
+                <div class="topic-options">
+                    <i class ="fa fa-reply"></i> @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-link-button" })
+                    @if (Model.IsCustomerAllowedToSubscribe)
+                    {
+                        <a class="watch-topic-button" href="#" id="watch-topic-top"><i class="fa fa-eye"></i> @Model.WatchTopicText</a>
+			            <script type="text/javascript" asp-location="Footer">
+                            $(document).ready(function () {
+                                $('#watch-topic-top').on('click', function () {
+                                    var postData = {};
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        data: postData,
+                                        url: "@Url.RouteUrl("TopicWatch", new { id = Model.Id })",
+                                        dataType: "json",
+                                        success: function (data, textStatus, jqXHR) {
+                                            $('#watch-topic-top').text(data.Text);
+                                            $('#watch-topic-bottom').text(data.Text);
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            alert('Failed to watch');
+                                        }
+                                    });
+                                });
+                            });
+                     </script>                 
+                   }
+                </div>
+                <div class="pagination">
+                    @{
+                        var pager = await Html.PagerAsync(new PagerModel(localizationService)
+                        {
+                            PageSize = Model.PostsPageSize,
+                            TotalRecords = Model.PostsTotalRecords,
+                            PageIndex = Model.PostsPageIndex,
+                            ShowTotalSummary = false,
+                            RouteActionName = "TopicSlugPaged",
+                            UseRouteLinks = true,
+                            RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+                        });
+                    }
+                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicTop, additionalData = Model })
+                    @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+                    {
+                        <div class="pager upper">
+                            @pager
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="posts">
+                @foreach (var post in @Model.ForumPostModels)
+                {
+                    await Html.RenderPartialAsync("_ForumPost", post);
+                }
+            </div>
+        </div>
+        <div class="topic-footer">
+            <div class="topic-options">
+                <i class="fa fa-reply"></i> @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-link-button" })
+                @if (Model.IsCustomerAllowedToSubscribe)
+                {
+                    <a class="watch-topic-button" href="#" id="watch-topic-top"><i class="fa fa-eye"></i> @Model.WatchTopicText</a>
+                    <script type="text/javascript" asp-location="Footer">
+                        $('#watch-topic-bottom').on('click', function () {
+                            $('#watch-topic-bottom').click(function () {
+                                var postData = {};
+                                addAntiForgeryToken(postData);
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@Url.RouteUrl("TopicWatch", new { id = Model.Id })",
+                                    data: postData,
+                                    dataType: "json",
+                                    success: function (data, textStatus, jqXHR) {
+                                        $('#watch-topic-top').text(data.Text);
+                                        $('#watch-topic-bottom').text(data.Text);
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        alert('Failed to watch');
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                }
+            </div>
+            @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+            {
+                <div class="pager lower">
+                    @pager
+                </div>
+            }
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicBottom, additionalData = Model })
+    </div>
+</div>
+<script type="text/javascript" asp-location="Footer">
+    function deletepost(postId) {
+        if (confirm('@T("Common.AreYouSure")')) {
+            var postData = {
+                id: postId
+            };
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.Action("PostDelete", "Boards")",
+                data: postData,
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    location.href = data.redirect;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Failed to delete');
+                }
+            });
+        }
+        return false;
+    }
+</script>
