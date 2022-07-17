@@ -31,8 +31,10 @@ namespace Nop.Tests
         /// </summary>
         /// <param name="assembly">Assembly to find migrations</param>
         /// <param name="migrationProcessType">Type of migration process</param>
+        /// <param name="commitVersionOnly">Commit only version information</param>
         public void ApplyUpMigrations(Assembly assembly,
-            MigrationProcessType migrationProcessType = MigrationProcessType.Installation)
+            MigrationProcessType migrationProcessType = MigrationProcessType.Installation,
+            bool commitVersionOnly = false)
         {
             _migrationRunner.MigrateUp(637200411689037680);
         }
