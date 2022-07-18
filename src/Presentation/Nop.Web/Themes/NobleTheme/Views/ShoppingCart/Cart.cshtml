@@ -11,7 +11,7 @@
 }
 @if (!Model.OnePageCheckoutEnabled)
 {
-    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Cart })
+    @await Component.InvokeAsync(typeof(CheckoutProgressViewComponent), new {step = CheckoutProgressStep.Cart})
 }
 <div class="page shopping-cart-page">
     <div class="page-title panel-heading">

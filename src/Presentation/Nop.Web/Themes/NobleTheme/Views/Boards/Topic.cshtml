@@ -16,7 +16,7 @@
 <div class="forum-page-edit from-panel">
     <div class="panel-body">
         <div class="page forum-topic-page">
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicAfterHeader, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicAfterHeader, additionalData = Model })
             <div class="title">
                 <h2 class="topic-name">
                     <span>@Model.Subject</span>
@@ -100,10 +100,10 @@
                             ShowTotalSummary = false,
                             RouteActionName = "TopicSlugPaged",
                             UseRouteLinks = true,
-                            RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+                            RouteValues = new RouteValues { Id = Model.Id, Slug = Model.SeName }
                         });
                     }
-                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicTop, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicTop, additionalData = Model })
                     @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
                     {
                         <div class="pager upper">
@@ -156,7 +156,7 @@
                 </div>
             }
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicBottom, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicBottom, additionalData = Model })
     </div>
 </div>
 <script type="text/javascript" asp-location="Footer">

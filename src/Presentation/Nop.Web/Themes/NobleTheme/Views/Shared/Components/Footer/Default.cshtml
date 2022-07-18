@@ -155,5 +155,5 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.Footer, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.Footer, additionalData = Model })
 </div>

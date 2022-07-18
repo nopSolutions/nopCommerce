@@ -106,6 +106,6 @@
             }
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAddInfo, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsAddInfo, additionalData = Model })
 </div>
 }

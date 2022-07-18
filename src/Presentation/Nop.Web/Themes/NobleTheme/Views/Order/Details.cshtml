@@ -45,7 +45,7 @@
                 </div>
             }
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsPageTop, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageTop, additionalData = Model })
         <div class="order-overview">
             <div class="order-number">
                 <h4>@T("Order.Order#")@Model.CustomOrderNumber</h4>
@@ -61,7 +61,7 @@
                     @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
                 </li>
             </ul>
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsPageOverview, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageOverview, additionalData = Model })
         </div>
         <div class="order-details-area">
             <div class="row">
@@ -184,7 +184,7 @@
                                     </li>
                                 }
                             }
-                            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsBillingAddress, additionalData = Model })
+                            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsBillingAddress, additionalData = Model })
                         </ul>
                         </div>
                             @if (!string.IsNullOrEmpty(Model.PaymentMethod))
@@ -328,7 +328,7 @@
                                             @Html.Raw(Model.ShippingAddress.FormattedCustomAddressAttributes)
                                         </li>
                                     }
-                                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsShippingAddress, additionalData = Model })
+                                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsShippingAddress, additionalData = Model })
                                 }
                                 else
                                 {
@@ -564,7 +564,7 @@
                     </div>
                 </div>
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsPageBeforeproducts, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageBeforeproducts, additionalData = Model })
             <div class="section products">
                 <div class="title">
                     <strong>@T("Order.Product(s)")</strong>
@@ -656,7 +656,7 @@
                                             <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                         </div>
                                     }
-                                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsProductLine, additionalData = item })
+                                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsProductLine, additionalData = item })
                                 </td>
                                 @if (Model.ShowVendorName)
                                 {
@@ -689,7 +689,7 @@
                     }
                 </div>
             </div>
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsPageAfterproducts, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageAfterproducts, additionalData = Model })
             <div class="section options">
                 @if (!string.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                 {
@@ -872,6 +872,6 @@
                 }
             </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsPageBottom, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageBottom, additionalData = Model })
     </div>
 </div>

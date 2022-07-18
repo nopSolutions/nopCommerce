@@ -15,7 +15,7 @@
         <h1>@T("Checkout.SelectShippingMethod")</h1>
     </div>
     <div class="page-body checkout-data panel-body from-panel">
-       @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingMethodTop, additionalData = Model })
+       @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingMethodTop, additionalData = Model })
         <div class="section shipping-method">
             <form asp-route="CheckoutShippingMethod" method="post">
                 @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
@@ -78,10 +78,10 @@
                         </ul>
                     </div>
                 }
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingMethodBottom, additionalData = Model })
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingMethodBottom, additionalData = Model })
             </form>
         </div>
-       @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingMethodBottom, additionalData = Model })
+       @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingMethodBottom, additionalData = Model })
         <div class="section order-summary-body">
             <div class="title small-heading">
                 <strong>@T("Checkout.OrderSummary")</strong>

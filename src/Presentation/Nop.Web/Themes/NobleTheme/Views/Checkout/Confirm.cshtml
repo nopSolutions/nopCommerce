@@ -15,7 +15,7 @@
         <h1>@T("Checkout.ConfirmYourOrder")</h1>
     </div>
     <div class="page-body checkout-data panel-body from-panel">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutConfirmTop, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutConfirmTop, additionalData = Model })
         <div class="section confirm-order">
             <form asp-route="CheckoutConfirm" method="post" id="confirm-order-form">
                 <script type="text/javascript" asp-location="Footer">
@@ -70,7 +70,7 @@
                     }
                     else
                     {
-                    <a class="read" id="read-terms" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a>
+                        <a class="read" id="read-terms" href="@Url.RouteTopicUrl("conditionsofuse")">@T("Checkout.TermsOfService.Read")</a>
                     }
                 </div>
                 }
@@ -103,7 +103,7 @@
                 }
             </form>
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutConfirmBottom, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutConfirmBottom, additionalData = Model })
         <div class="order-summary-body">
             @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
         </div>

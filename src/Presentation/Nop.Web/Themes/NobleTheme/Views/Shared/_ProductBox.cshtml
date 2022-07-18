@@ -63,8 +63,8 @@
                 @Html.Raw(Model.ShortDescription)
             </div>
             <div class="add-info">
-		        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBoxAddinfoBefore, additionalData = Model })
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBoxAddinfoMiddle, additionalData = Model })
+		        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductBoxAddinfoBefore, additionalData = Model })
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductBoxAddinfoMiddle, additionalData = Model })
                 <div class="buttons">
                     @if (!Model.ProductPrice.DisableBuyButton)
                     {
@@ -110,7 +110,7 @@
                         </div>
                     }
                 </div>
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBoxAddinfoAfter, additionalData = Model })
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductBoxAddinfoAfter, additionalData = Model })
             </div>
         </div>
     </div>

@@ -11,8 +11,8 @@
 <div class="row">
     @await Html.PartialAsync("_ForumHeader")
 </div>
-@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumGroupAfterHeader, additionalData = Model })
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupAfterHeader, additionalData = Model })
 <div class="page forum-group-page">
     @await Html.PartialAsync("_ForumGroup", Model)
 </div>
-@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumGroupBottom, additionalData = Model })
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupBottom, additionalData = Model })

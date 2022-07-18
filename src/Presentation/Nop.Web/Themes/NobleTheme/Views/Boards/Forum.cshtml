@@ -13,7 +13,7 @@
 }
 @await Component.InvokeAsync("ForumBreadcrumb", new { forumId = Model.Id })
 @await Html.PartialAsync("_ForumHeader")
-@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumAfterHeader, additionalData = Model })
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumAfterHeader, additionalData = Model })
 <div class="page forum-page">
     <div class="forum-top">
         <div class="forum-info">
@@ -56,7 +56,7 @@
                 <a href="@Url.RouteUrl("ForumRSS", new { id = Model.Id })" class="link-rss" title="@T("Forum.ForumRSSLinkTitle")"><i class="fa fa-rss-square"></i> @*@T("Forum.RSS")*@</a>
             }
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumTop, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumTop, additionalData = Model })
         <div class="pagination">
             @{
                 var pager = await Html.PagerAsync(new PagerModel(localizationService)
@@ -67,7 +67,7 @@
                     ShowTotalSummary = false,
                     RouteActionName = "ForumSlugPaged",
                     UseRouteLinks = true,
-                    RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+                    RouteValues = new RouteValues { Id = Model.Id, Slug = Model.SeName }
                 });
             }
             @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
@@ -188,5 +188,5 @@
         @pager
     </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumBottom, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumBottom, additionalData = Model })
 </div>

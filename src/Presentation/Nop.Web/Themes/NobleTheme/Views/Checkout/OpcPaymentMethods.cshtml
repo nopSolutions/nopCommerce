@@ -1,7 +1,7 @@
 ﻿@model CheckoutPaymentMethodModel
 
 <div class="checkout-data">
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutPaymentMethodTop, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutPaymentMethodTop, additionalData = Model })
     <div class="section payment-method">
         @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
         {
@@ -68,5 +68,5 @@
         </div>
         }
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutPaymentMethodBottom, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutPaymentMethodBottom, additionalData = Model })
 </div>

@@ -4,7 +4,7 @@
     {
         <div class="form-group">
             <input type="text" class="search-nav form-control" id="small-searchterms" autocomplete="off" placeholder="@T("Search.SearchBox.Tooltip")" name="q" aria-label="@T("Search.SearchBox.Text.Label")" />
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton, additionalData = Model })
             <button type="submit" class="btn search-box-button"></button>
             @if (Model.SearchTermMinimumLength > 0)
             {
@@ -57,7 +57,7 @@
                     </script>
                 </text>
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBox, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.SearchBox, additionalData = Model })
         </div>
     }
 </form>

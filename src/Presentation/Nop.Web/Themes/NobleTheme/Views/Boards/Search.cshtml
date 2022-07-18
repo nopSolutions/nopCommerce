@@ -32,7 +32,7 @@
         <h1>@T("Forum.Search")</h1>
     </div>
     <div class="page-body panel-body from-panel">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchBeforeSearchform, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsSearchBeforeSearchform, additionalData = Model })
         <form asp-route="Search" method="get">
             <div class="search-input">
                 <div class="basic-search">
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </form>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchAfterSearchform, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsSearchAfterSearchform, additionalData = Model })
         <div class="search-error">
             @Model.Error
         </div>
@@ -97,10 +97,10 @@
                         PageIndex = Model.TopicPageIndex,
                         ShowTotalSummary = false,
                         RouteActionName = "Search",
-                        RouteValues = new ForumSearchRouteValues { advs = advs, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
+                        RouteValues = new ForumSearchRouteValues { Advs = advs, Searchterms = searchterms, ForumId = forumId, Within = within, LimitDays = limitDays },
                     });
                 }
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchBeforeResults, additionalData = Model })
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsSearchBeforeResults, additionalData = Model })
                 @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
                 {
                 <div class="pager upper">
@@ -222,7 +222,7 @@
             @pager
         </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchAfterResults, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsSearchAfterResults, additionalData = Model })
     </div>
 
 </div>

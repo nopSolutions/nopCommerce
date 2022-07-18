@@ -59,7 +59,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div id="mobile-menu" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuBefore, additionalData = Model })
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMenuBefore, additionalData = Model })
                 @if (Model.DisplayHomepageMenuItem)
                 {
                     <li class="home-wrapper"><a href="@Url.RouteUrl("HomePage")"><i class="fa fa-home fa-fw"></i></a></li>
@@ -104,7 +104,7 @@
                 {
                     <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
                 }
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuAfter, additionalData = Model })
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMenuAfter, additionalData = Model })
             </ul>
         </div><!-- /.navbar-collapse -->
     </nav>

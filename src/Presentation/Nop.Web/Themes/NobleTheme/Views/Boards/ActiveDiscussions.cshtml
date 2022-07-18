@@ -12,7 +12,7 @@
     <div class="row">
         @await Html.PartialAsync("_ForumHeader")
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsActivediscussionsAfterHeader, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsActivediscussionsAfterHeader, additionalData = Model })
     @await Html.PartialAsync("_ActiveTopics", Model)
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsActivediscussionsAfterTopics, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsActivediscussionsAfterTopics, additionalData = Model })
 </div>

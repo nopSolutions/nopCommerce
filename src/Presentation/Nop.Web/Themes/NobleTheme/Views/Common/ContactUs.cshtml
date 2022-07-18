@@ -15,7 +15,7 @@
        <div class="contact-details from-panel">
         <div class="page-body">
             @await Component.InvokeAsync("TopicBlock", new { systemName = "ContactUs" })
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContactUsTop, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContactUsTop, additionalData = Model })
             @if (Model.SuccessfullySent)
             {
                 <div class="result alert alert-success">
@@ -90,7 +90,7 @@
                     </div>
                 </form>
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContactUsBottom, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContactUsBottom, additionalData = Model })
         </div>
     </div>
 </div>

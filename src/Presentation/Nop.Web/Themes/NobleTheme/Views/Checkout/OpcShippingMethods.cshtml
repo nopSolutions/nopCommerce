@@ -20,7 +20,7 @@
     @if (Model.PickupPointsModel == null || !Model.PickupPointsModel.PickupInStoreOnly)
     {
         <div class="section shipping-method" id="shipping-methods-form">
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodTop, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodTop, additionalData = Model })
             @if (Model.Warnings.Count == 0)
             {
                 <ul class="method-list">
@@ -63,6 +63,6 @@
                 </div>
             }
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodBottom, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodBottom, additionalData = Model })
     }
 </div>

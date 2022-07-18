@@ -8,7 +8,7 @@
 {
 <div class="breadcrumb-wrapper">
     <ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBreadcrumbBefore, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductBreadcrumbBefore, additionalData = Model })
         <li>
             <span>
                 <a href="@Url.RouteUrl("Homepage")">
@@ -33,7 +33,7 @@
                   id="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">
             </span>
             <meta itemprop="position" content="@position" />
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBreadcrumbAfter, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductBreadcrumbAfter, additionalData = Model })
         </li>
     </ul>
 </div>

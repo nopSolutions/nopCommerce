@@ -1,5 +1,5 @@
 ﻿<div class="header">
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderBefore })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderBefore })
     <div class="header-upper">
         <div class="container">
             <div class="row">
@@ -8,7 +8,7 @@
                         @await Component.InvokeAsync("TaxTypeSelector")
                         @await Component.InvokeAsync("CurrencySelector")
                         @await Component.InvokeAsync("LanguageSelector")
-                        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderSelectors })
+                        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderSelectors })
                     </div>
                 </div>
                 <div class="col-md-9 header-upper-right pull-right">
@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMiddle })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMiddle })
     <div class="header-lower">
         <div class="container">
             <div class="row">
@@ -36,5 +36,5 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderAfter })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderAfter })
 </div>

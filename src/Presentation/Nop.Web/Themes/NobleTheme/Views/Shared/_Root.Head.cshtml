@@ -1,14 +1,22 @@
 ﻿@using Nop.Core.Configuration
+@using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
 @using Nop.Services.Security
 @using Nop.Core.Events
+
+@inject CatalogSettings catalogSettings
 @inject CommonSettings commonSettings
 @inject IEventPublisher eventPublisher
 @inject IPermissionService permissionService
 @inject SeoSettings seoSettings
 @inject AppSettings appSettings
 @{
+
+    if (catalogSettings.DisplayAllPicturesOnCatalogPages)
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/swiper/swiper-bundle.min.js");
+    }
 
     //resources
     NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/noble.js");
@@ -59,7 +67,7 @@
     @*This is used so that themes can inject content into the header*@
     @await Html.PartialAsync("Head")
     @NopHtml.GenerateCssFiles()
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeadHtmlTag })
     @NopHtml.GenerateCanonicalUrls()
     @await Component.InvokeAsync("NewsRssHeaderLink")
     @await Component.InvokeAsync("BlogRssHeaderLink")

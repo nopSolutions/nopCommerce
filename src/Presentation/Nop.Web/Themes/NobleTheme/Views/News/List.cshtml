@@ -14,7 +14,7 @@
         <h1>@T("News")</h1>
     </div>
     <div class="page-body panel-body from-panel">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsListPageBeforeItems, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.NewsListPageBeforeItems, additionalData = Model })
         <div class="news-items">
             @foreach (var item in Model.NewsItems)
             {
@@ -33,7 +33,7 @@
                     <a href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })" class="btn btn-primary read-more">
                         @T("News.MoreInfo")
                     </a>
-                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsListPageInsideItem, additionalData = item })
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.NewsListPageInsideItem, additionalData = item })
                 </div>
             }
         </div>
@@ -47,6 +47,6 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsListPageAfterItems, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.NewsListPageAfterItems, additionalData = Model })
 </div>
 

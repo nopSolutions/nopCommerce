@@ -23,7 +23,7 @@
                 <i class="fa fa-user"></i>@Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerProfileId }, new { @class = "pm-link-button" })
             </div>
         }
-        @*@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProfilePageInfoUserdetails, additionalData = Model })*@
+        @*@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProfilePageInfoUserdetails, additionalData = Model })*@
     </div>
     <div class="profile-stats">
         <div class="title">
@@ -52,6 +52,6 @@
             </li>
         }
             </ul>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProfilePageInfoUserstats, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProfilePageInfoUserstats, additionalData = Model })
     </div>
 </div>

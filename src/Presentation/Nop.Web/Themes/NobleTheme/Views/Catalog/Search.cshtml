@@ -41,7 +41,7 @@
                             <input asp-for="q" class="search-text form-control" />
                         </div>
                     </div>
-                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductSearchPageBasic, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductSearchPageBasic, additionalData = Model })
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-md-offset-2 col-sm-5 col-md-5">
                             <div class="checkbox custom-checkbox">
@@ -95,7 +95,7 @@
                             </div>
                         </div>
                     </div>
-                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductSearchPageAdvanced, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductSearchPageAdvanced, additionalData = Model })
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-offset-3 col-md-offset-2 col-sm-3 col-md-3">
@@ -105,7 +105,7 @@
             </form>
         </div>
         @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductSearchPageBeforeResults, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductSearchPageBeforeResults, additionalData = Model })
         <div class="search-results">
             @{
                 var catalogProductsViewData = new ViewDataDictionary(ViewData);
@@ -133,6 +133,6 @@
                 });
             </script>
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductSearchPageAfterResults, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductSearchPageAfterResults, additionalData = Model })
     </div>
 </div>
