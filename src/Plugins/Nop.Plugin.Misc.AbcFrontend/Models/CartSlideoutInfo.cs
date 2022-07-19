@@ -7,5 +7,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Models
         public string DeliveryOptionsHtml { get; init; }
         public string WarrantyHtml { get; init; }
         public int ShoppingCartItemId { get; init; }
+        public int ProductId { get; init; }
     }
 }

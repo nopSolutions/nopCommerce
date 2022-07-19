@@ -24,6 +24,7 @@
     <None Remove="plugin.json" />
     <None Remove="scripts/cart-slideout.js" />
     <None Remove="styles/cart-slideout.css" />
+    <None Remove="Views/_PickupInStore.cshtml" />
     <None Remove="Views/_ProductInfo.cshtml" />
     <None Remove="Views/_Subtotal.cshtml" />
     <None Remove="Views/_ViewImports.cshtml" />
@@ -41,6 +42,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="styles/cart-slideout.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views/_PickupInStore.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views/_ProductInfo.cshtml">

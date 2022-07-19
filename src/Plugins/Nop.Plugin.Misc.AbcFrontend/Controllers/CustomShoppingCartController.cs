@@ -690,7 +690,8 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                         product = product,
                         includedAttributeNames = new string[] { "Warranty" }
                     }),
-                ShoppingCartItemId = sci.Id
+                ShoppingCartItemId = sci.Id,
+                ProductId = sci.ProductId
             };
         }
 

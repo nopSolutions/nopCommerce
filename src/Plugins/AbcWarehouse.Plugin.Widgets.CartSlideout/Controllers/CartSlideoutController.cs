@@ -89,11 +89,14 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                 }
             }
 
+            var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(model.ProductAttributeValueId);
+
             return Json(new
             {
                 SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = shoppingCartItem }),
                 EnabledAttributeMappingIds = enabledAttributeMappingIds,
-                DisabledAttributeMappingIds = disabledAttributeMappingIds
+                DisabledAttributeMappingIds = disabledAttributeMappingIds,
+                IsPickup = pav.Name.Contains("Pickup In-Store")
             });
         }
 

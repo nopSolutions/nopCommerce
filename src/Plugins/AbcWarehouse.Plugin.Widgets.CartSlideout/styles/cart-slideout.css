@@ -30,6 +30,7 @@
 .cart-slideout__delivery-not-available,
 .cart-slideout__delivery-options,
 .cart-slideout__delivery-options-continue,
+.cart-slideout__pickup-in-store,
 .cart-slideout__warranty {
     display: none;
 }
