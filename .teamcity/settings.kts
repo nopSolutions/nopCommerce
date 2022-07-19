@@ -13,26 +13,36 @@ version = "2021.2"
 
 project {
 
-   buildType(DebugBuild)
+   buildType(PublicBuild)
 }
 
-object DebugBuild : BuildType({
+object PublicBuild : BuildType({
 
-    name = "Build [Debug]"
+    name = "Build [Public]"
 
-    artifactRules = "+:artifacts/publish/public/**/*=>artifacts/publish/public\n+:artifacts/publish/private/**/*=>artifacts/publish/private"
+    artifactRules = "+:artifacts/publish/public/**/*=>artifacts/publish/public\n+:artifacts/publish/private/**/*=>artifacts/publish/private\n+:artifacts/logs/**/*=>logs\n+:%system.teamcity.build.tempDir%/Metalama/AssemblyLocator/**/*=>logs\n+:%system.teamcity.build.tempDir%/Metalama/CompileTime/**/.completed=>logs\n+:%system.teamcity.build.tempDir%/Metalama/CompileTimeTroubleshooting/**/*=>logs\n+:%system.teamcity.build.tempDir%/Metalama/CrashReports/**/*=>logs\n+:%system.teamcity.build.tempDir%/Metalama/Extract/**/.completed=>logs\n+:%system.teamcity.build.tempDir%/Metalama/ExtractExceptions/**/*=>logs\n+:%system.teamcity.build.tempDir%/Metalama/Logs/**/*=>logs"
 
     vcs {
         root(DslContext.settingsRoot)
     }
 
     steps {
+        // Step to kill all dotnet or VBCSCompiler processes that might be locking files we delete in during cleanup.
         powerShell {
+            name = "Kill background processes before cleanup"
             scriptMode = file {
                 path = "Build.ps1"
             }
             noProfile = false
-            param("jetbrains_powershell_scriptArguments", "test --configuration Debug --buildNumber %build.number%")
+            param("jetbrains_powershell_scriptArguments", "tools kill")
+        }
+        powerShell {
+            name = "Build [Public]"
+            scriptMode = file {
+                path = "Build.ps1"
+            }
+            noProfile = false
+            param("jetbrains_powershell_scriptArguments", "test --configuration Public --buildNumber %build.number%")
         }
     }
 
@@ -47,20 +57,9 @@ object DebugBuild : BuildType({
         }
     }
 
-    triggers {
+    dependencies {
 
-        vcs {
-            watchChangesInDependencies = true
-            branchFilter = "+:<default>"
-            // Build will not trigger automatically if the commit message contains comment value.
-            triggerRules = "-:comment=<<VERSION_BUMP>>:**"
-        }        
-
-    }
-
-  dependencies {
-
-        snapshot(AbsoluteId("Metalama_Metalama_DebugBuild")) {
+        snapshot(AbsoluteId("Metalama_Metalama_PublicBuild")) {
                      onDependencyFailure = FailureAction.FAIL_TO_START
                 }
 
