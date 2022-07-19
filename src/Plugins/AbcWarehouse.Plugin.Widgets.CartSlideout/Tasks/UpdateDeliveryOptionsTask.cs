@@ -121,7 +121,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 ConditionAttributeXml = $"<Attributes><ProductAttribute ID=\"{deliveryOptionsPamId}\"><ProductAttributeValue><Value>{deliveryPav.Id}</Value></ProductAttributeValue></ProductAttribute></Attributes>",
             } : null;
 
-            var resultPam = SaveProductAttributeMappingAsync(existingPam, newPam);
+            var resultPam = await SaveProductAttributeMappingAsync(existingPam, newPam);
 
             if (resultPam != null)
             {
@@ -135,7 +135,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                     ProductAttributeMappingId = resultPam.Id,
                     Name = string.Format("Remove Old Appliance ({0})", priceFormatted),
                     Cost = mapItemNumber,
-                    PriceAdjustment = 0,
+                    PriceAdjustment = price,
                     IsPreSelected = false,
                     DisplayOrder = 0,
                 };
@@ -254,6 +254,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             return existingPam;
         }
 
+        // Try making these synchronous to prevent collision issues
         private async System.Threading.Tasks.Task<ProductAttributeValue> SaveProductAttributeValueAsync(ProductAttributeValue existingPav, ProductAttributeValue newPav)
         {
             if (existingPav == null && newPav == null)
@@ -268,6 +269,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             else if (existingPav != null && newPav == null)
             {
                 await _abcProductAttributeService.DeleteProductAttributeValueAsync(existingPav);
+                return null;
             }
             else if (!ArePavsEqual(existingPav, newPav))
             {
