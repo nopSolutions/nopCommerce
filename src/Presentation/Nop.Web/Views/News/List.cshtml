@@ -38,7 +38,7 @@
         @{
             var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
         }
-        @if (!(await pager.IsEmpty()))
+        @if (!(await pager.IsEmptyAsync()))
         {
             <div class="pager">
                 @pager

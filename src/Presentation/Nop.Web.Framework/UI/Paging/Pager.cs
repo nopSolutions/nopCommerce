@@ -34,7 +34,7 @@ namespace Nop.Web.Framework.UI.Paging
         #region Fields
 
         /// <summary>
-        /// Page query string prameter name
+        /// Page query string parameter name
         /// </summary>
         private string _queryParam = "page";
 
@@ -74,6 +74,11 @@ namespace Nop.Web.Framework.UI.Paging
         private bool _showIndividualPages = true;
 
         /// <summary>
+        /// A value indicating whether to show ellipses for pager
+        /// </summary>
+        private bool _showEllipses = true;
+
+        /// <summary>
         /// A value indicating whether to render empty query string parameters (without values)
         /// </summary>
         private bool _renderEmptyParameters = true;
@@ -99,6 +104,11 @@ namespace Nop.Web.Framework.UI.Paging
         private string _previousPageCssClass = "previous-page";
 
         /// <summary>
+        /// Previous ellipses css class name
+        /// </summary>
+        private string _previousEllipsesClass = "previous-ellipses";
+
+        /// <summary>
 		/// Current page css class name
 		/// </summary>
         private string _currentPageCssClass = "current-page";
@@ -107,6 +117,11 @@ namespace Nop.Web.Framework.UI.Paging
         /// Individual page css class name
         /// </summary>
         private string _individualPageCssClass = "individual-page";
+
+        /// <summary>
+        /// Next ellipses css class name
+        /// </summary>
+        private string _nextEllipsesClass = "next-ellipses";
 
         /// <summary>
 		/// Next page css class name
@@ -230,6 +245,17 @@ namespace Nop.Web.Framework.UI.Paging
         }
 
         /// <summary>
+        /// Set number of individual page items to display
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Pager ShowEllipses(bool value)
+        {
+            _showEllipses = value;
+            return this;
+        }
+
+        /// <summary>
         /// Set a value indicating whether to render empty query string parameters (without values)
         /// </summary>
         /// <param name="value">Value</param>
@@ -286,6 +312,17 @@ namespace Nop.Web.Framework.UI.Paging
         }
 
         /// <summary>
+        /// Set previous ellipses pager css class name
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
+        public Pager PreviousEllipsesCssClass(string value)
+        {
+            _previousEllipsesClass = value;
+            return this;
+        }
+
+        /// <summary>
         /// Set current page pager css class name
         /// </summary>
         /// <param name="value">Value</param>
@@ -304,6 +341,17 @@ namespace Nop.Web.Framework.UI.Paging
         public Pager IndividualPageCssClass(string value)
         {
             _individualPageCssClass = value;
+            return this;
+        }
+
+        /// <summary>
+        /// Set next ellipses pager css class name
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
+        public Pager NextEllipsesCssClass(string value)
+        {
+            _nextEllipsesClass = value;
             return this;
         }
 
@@ -368,7 +416,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-	    public virtual async Task<bool> IsEmpty()
+	    public virtual async Task<bool> IsEmptyAsync()
         {
             return string.IsNullOrEmpty(await GenerateHtmlStringAsync());
         }
@@ -404,6 +452,26 @@ namespace Nop.Web.Framework.UI.Paging
 
             if (_showPagerItems && (_model.TotalPages > 1))
             {
+                var firstPageToDisplay = 1;
+                var lastPageToDisplay = _model.TotalPages;
+                var pageNumbersToDisplay = lastPageToDisplay;
+                var totalPageCount = _model.TotalPages;
+                if (_showEllipses && totalPageCount > _individualPagesDisplayedCount)
+                {
+                    var maxPageNumbersToDisplay = _individualPagesDisplayedCount;
+                    firstPageToDisplay = _model.PageNumber - maxPageNumbersToDisplay / 2;
+                    if (firstPageToDisplay < 1)
+                    {
+                        firstPageToDisplay = 1;
+                    }
+                    pageNumbersToDisplay = maxPageNumbersToDisplay;
+                    lastPageToDisplay = firstPageToDisplay + pageNumbersToDisplay - 1;
+                    if (lastPageToDisplay > _model.TotalPages)
+                    {
+                        firstPageToDisplay = _model.TotalPages - maxPageNumbersToDisplay + 1;
+                    }
+                }
+
                 if (_showFirst)
                 {
                     //first page
@@ -418,6 +486,11 @@ namespace Nop.Web.Framework.UI.Paging
                         links.Append(await CreatePageLinkAsync(_model.PageIndex, await localizationService.GetResourceAsync("Pager.Previous"), _previousPageCssClass));
                 }
 
+                if (_showEllipses && firstPageToDisplay > 1)
+                {
+                    links.Append(await CreatePageLinkAsync(firstPageToDisplay - 1, await localizationService.GetResourceAsync("Pager.Ellipses"), _previousEllipsesClass));
+                }
+
                 if (_showIndividualPages)
                 {
                     //individual pages
@@ -430,6 +503,11 @@ namespace Nop.Web.Framework.UI.Paging
                         else
                             links.Append(await CreatePageLinkAsync(i + 1, (i + 1).ToString(), _individualPageCssClass));
                     }
+                }
+
+                if (_showEllipses && firstPageToDisplay + pageNumbersToDisplay - 1 < _model.TotalPages)
+                {
+                    links.Append(await CreatePageLinkAsync(firstPageToDisplay + _individualPagesDisplayedCount, await localizationService.GetResourceAsync("Pager.Ellipses"), _nextEllipsesClass));
                 }
 
                 if (_showNext)
@@ -557,11 +635,11 @@ namespace Nop.Web.Framework.UI.Paging
 
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             var url = webHelper.GetThisPageUrl(false);
-            foreach (var routeValue in routeValues) 
+            foreach (var routeValue in routeValues)
                 url = webHelper.ModifyQueryString(url, routeValue.Key, routeValue.Value?.ToString());
 
             if (_renderEmptyParameters && parametersWithEmptyValues.Any())
-                foreach (var key in parametersWithEmptyValues) 
+                foreach (var key in parametersWithEmptyValues)
                     url = webHelper.ModifyQueryString(url, key);
 
             return url;

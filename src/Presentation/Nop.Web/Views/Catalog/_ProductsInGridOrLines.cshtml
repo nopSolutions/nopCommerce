@@ -28,7 +28,7 @@
         .BooleanParameterName("sid")
         .RenderEmptyParameters(true);
 
-    @if (!await pager.IsEmpty())
+    @if (!await pager.IsEmptyAsync())
     {
         <div class="pager">
             @pager
