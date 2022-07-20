@@ -584,9 +584,9 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 if (!IsConfigured(settings))
                     throw new NopException("Plugin not configured");
 
-                var request = new AuthorizationsVoidRequest(authorizationId);
+                var request = new VoidRequest(authorizationId);
 
-                return await HandleCheckoutRequestAsync<AuthorizationsVoidRequest, object>(settings, request);
+                return await HandleCheckoutRequestAsync<VoidRequest, PayPalCheckoutSdk.Payments.Authorization> (settings, request);
             });
         }
 
