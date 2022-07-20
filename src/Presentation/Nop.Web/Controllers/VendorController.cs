@@ -222,7 +222,7 @@ namespace Nop.Web.Controllers
                 {
                     var contentType = uploadedFile.ContentType.ToLowerInvariant();
 
-                    if(!contentType.StartsWith("image/"))
+                    if(!contentType.StartsWith("image/") || contentType.StartsWith("image/svg"))
                         ModelState.AddModelError("", await _localizationService.GetResourceAsync("Vendors.ApplyAccount.Picture.ErrorMessage"));
                     else
                     {
@@ -322,7 +322,7 @@ namespace Nop.Web.Controllers
                 {
                     var contentType = uploadedFile.ContentType.ToLowerInvariant();
 
-                    if (!contentType.StartsWith("image/"))
+                    if (!contentType.StartsWith("image/") || contentType.StartsWith("image/svg"))
                         ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.VendorInfo.Picture.ErrorMessage"));
                     else
                     {
