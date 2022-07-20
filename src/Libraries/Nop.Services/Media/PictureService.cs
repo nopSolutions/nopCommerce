@@ -426,24 +426,18 @@ namespace Nop.Services.Media
 
             var parts = mimeType.Split('/');
             var lastPart = parts[^1];
-            switch (lastPart)
+            lastPart = lastPart switch
             {
-                case "pjpeg":
-                    lastPart = "jpg";
-                    break;
-                case "x-png":
-                    lastPart = "png";
-                    break;
-                case "x-icon":
-                    lastPart = "ico";
-                    break;
-                case "svg+xml":
-                    lastPart = "svg";
-                    break;
-                default:
-                    break;
-            }
-
+                "pjpeg" or "jpeg" => "jpg",
+                "bmp" => "bmp",
+                "gif" => "gif",
+                "x-png" or "png" => "png",
+                "tiff" => "tiff",
+                "x-icon" => "ico",
+                "webp" => "webp",
+                "svg+xml" => "svg",
+                _ => "",
+            };
             return Task.FromResult(lastPart);
         }
 
