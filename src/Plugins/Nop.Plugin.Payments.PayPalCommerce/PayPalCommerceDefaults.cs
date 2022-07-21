@@ -79,6 +79,12 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         };
 
         /// <summary>
+        /// Gets a list of currencies that do not support decimals. 
+        /// Refer to https://developer.paypal.com/docs/integration/direct/rest/currency-codes/ for more information 
+        /// </summary>
+        public static List<string> CurrenciesWithoutDecimals => new() { "HUF", "JPY", "TWD" };
+
+        /// <summary>
         /// Gets a name of the view component to display payment info in public store
         /// </summary>
         public const string PAYMENT_INFO_VIEW_COMPONENT_NAME = "PayPalCommercePaymentInfo";

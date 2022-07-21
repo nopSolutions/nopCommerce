@@ -427,6 +427,12 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                     };
                 }
 
+                PayPalCheckoutSdk.Orders.Money prepareMoney(decimal value) => new()
+                {
+                    CurrencyCode = currency,
+                    Value = value.ToString(PayPalCommerceDefaults.CurrenciesWithoutDecimals.Contains(currency.ToUpperInvariant()) ? "0" : "0.00", CultureInfo.InvariantCulture)
+                };
+
                 //set order items
                 purchaseUnit.Items = await shoppingCart.SelectAwait(async item =>
                 {
@@ -442,7 +448,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                         Quantity = item.Quantity.ToString(),
                         Category = (product.IsDownload ? ItemCategoryType.Digital_goods : ItemCategoryType.Physical_goods)
                             .ToString().ToUpperInvariant(),
-                        UnitAmount = new PayPalCheckoutSdk.Orders.Money { CurrencyCode = currency, Value = itemPrice.ToString("0.00", CultureInfo.InvariantCulture) }
+                        UnitAmount = prepareMoney(itemPrice)
                     };
                 }).ToListAsync();
 
@@ -460,7 +466,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                             Name = CommonHelper.EnsureMaximumLength(attribute.Name, 127),
                             Description = CommonHelper.EnsureMaximumLength($"{attribute.Name} - {attributeValue.Name}", 127),
                             Quantity = 1.ToString(),
-                            UnitAmount = new PayPalCheckoutSdk.Orders.Money { CurrencyCode = currency, Value = attributePrice.ToString("0.00", CultureInfo.InvariantCulture) }
+                            UnitAmount = prepareMoney(attributePrice)
                         });
                     }
                 }
@@ -480,13 +486,13 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 purchaseUnit.AmountWithBreakdown = new AmountWithBreakdown
                 {
                     CurrencyCode = currency,
-                    Value = orderTotal.ToString("0.00", CultureInfo.InvariantCulture),
+                    Value = prepareMoney(orderTotal).Value,
                     AmountBreakdown = new AmountBreakdown
                     {
-                        ItemTotal = new PayPalCheckoutSdk.Orders.Money { CurrencyCode = currency, Value = itemTotal.ToString("0.00", CultureInfo.InvariantCulture) },
-                        TaxTotal = new PayPalCheckoutSdk.Orders.Money { CurrencyCode = currency, Value = taxTotal.ToString("0.00", CultureInfo.InvariantCulture) },
-                        Shipping = new PayPalCheckoutSdk.Orders.Money { CurrencyCode = currency, Value = shippingTotal.ToString("0.00", CultureInfo.InvariantCulture) },
-                        Discount = new PayPalCheckoutSdk.Orders.Money { CurrencyCode = currency, Value = discountTotal.ToString("0.00", CultureInfo.InvariantCulture) }
+                        ItemTotal = prepareMoney(itemTotal),
+                        TaxTotal = prepareMoney(taxTotal),
+                        Shipping = prepareMoney(shippingTotal),
+                        Discount = prepareMoney(discountTotal)
                     }
                 };
 
@@ -586,7 +592,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
 
                 var request = new VoidRequest(authorizationId);
 
-                return await HandleCheckoutRequestAsync<VoidRequest, PayPalCheckoutSdk.Payments.Authorization> (settings, request);
+                return await HandleCheckoutRequestAsync<VoidRequest, PayPalCheckoutSdk.Payments.Authorization>(settings, request);
             });
         }
 
@@ -616,7 +622,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                     refundRequest.Amount = new PayPalCheckoutSdk.Payments.Money
                     {
                         CurrencyCode = currency,
-                        Value = amount.Value.ToString("0.00", CultureInfo.InvariantCulture)
+                        Value = amount.Value.ToString(PayPalCommerceDefaults.CurrenciesWithoutDecimals.Contains(currency.ToUpperInvariant()) ? "0" : "0.00", CultureInfo.InvariantCulture)
                     };
                 }
                 var request = new CapturesRefundRequest(captureId).RequestBody(refundRequest);
