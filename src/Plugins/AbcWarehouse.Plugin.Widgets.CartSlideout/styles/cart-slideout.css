@@ -6,7 +6,7 @@
     z-index: 100000;
     position: fixed;
     background-color: black;
-    opacity: 0.9;
+    opacity: 0.7;
     display: none;
 }
 
@@ -14,7 +14,7 @@
 .delivery-options-information,
 .warranty-information {
     height: 100%;
-    width: 320px;
+    width: 100%;
     position: fixed;
     z-index: 100000;
     top: 0;
@@ -22,7 +22,11 @@
     background-color: #fff;
     overflow-x: hidden; /* Disable horizontal scroll */
     display: none;
-    padding: 2.5rem 1rem 0px;
+    padding: 2.5rem 1rem 1rem;
+}
+
+.cart-slideout {
+    flex-direction: column;
 }
 
 /* hide all sub-screens to start */
@@ -43,6 +47,42 @@
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
+}
+
+/* Cart Slideout Content */
+.cart-slideout__content {
+    padding: 1rem 0;
+    flex-grow: 2;
+    overflow: scroll;
+}
+
+/* Cart Slideout Pickup In Store */
+
+.cart-slideout__pickup-in-store h2 {
+    color: #333;
+}
+
+.cart-slideout__pickup-in-store h2 {
+    display: inline;
+    /* this should match text-prompt */
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.cart-slideout__pickup-in-store button {
+    margin-right: 0.5rem;
+    border: 2px solid #78de9c;
+    height: 3rem;
+    background-color: white;
+    font-weight: bold;
+    width: 9rem;
+}
+
+.cart-slideout__pickup-in-store button.not-available {
+    border: 1px solid gray;
+    font-weight: normal;
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 /* Delivery options & warranty information */
@@ -76,7 +116,6 @@ i.warranty-info {
 .cart-slideout__back {
     position: absolute;
     top: 13px;
-    right: 280px;
     font-size: 20px;
     display: none;
 }
@@ -101,19 +140,14 @@ i.warranty-info {
 .cart-slideout__delivery-zip-code {
     display: flex;
     justify-content: space-between;
-    margin: 1rem 0 0.5rem 0;
     align-items: center;
 }
 
 .cart-slideout__delivery-zip-code input {
-    width: 50%;
+    width: 6rem;
     height: 2rem;
     font-size: 1rem;
-}
-
-.cart-slideout__buttons {
-    position: absolute;
-    bottom: 1rem;
+    padding-left: 0.15rem;
 }
 
 .cart-slideout__subtotal {
@@ -139,7 +173,7 @@ i.warranty-info {
 .cart-slideout__continue__btn {
     background-color: white;
     border: 2px solid #e1e1e1;
-    padding: 0.5rem 0.25rem;
+    padding: 0.5rem;
     margin-top: 0.25rem;
     font-size: 0.75rem;
     display: block;
@@ -185,4 +219,13 @@ i.warranty-info {
     -ms-touch-action: none !important;
     touch-action: none !important;
     -webkit-overflow-scrolling: touch !important;
+}
+
+@media (min-width: 768px)
+{
+    .cart-slideout,
+    .delivery-options-information,
+    .warranty-information {
+        width: 28rem;
+    }
 }

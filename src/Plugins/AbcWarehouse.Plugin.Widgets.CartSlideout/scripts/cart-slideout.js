@@ -21,6 +21,7 @@ const warrantyOptions = document.querySelector('.cart-slideout__warranty');
 const deliveryOptionsInformation = document.querySelector('.delivery-options-information');
 const warrantyInformation = document.querySelector('.warranty-information');
 
+var cartSlideoutShoppingCartItemId = 0;
 var cartSlideoutProductId = 0;
 var isPickup = false;
 
@@ -30,7 +31,6 @@ zipCodeInput.addEventListener('keyup', updateCheckDeliveryAvailabilityButton);
 async function checkDeliveryShippingAvailabilityAsync() {
     zipCodeInput.disabled = true;
     checkButton.disabled = true;
-    checkButton.innerText = "Checking...";
 
     const zip = zipCodeInput.value;
     document.cookie = `customerZipCode=${zip}`;
@@ -46,6 +46,7 @@ async function checkDeliveryShippingAvailabilityAsync() {
     if (responseJson.pickupInStoreHtml) {
         $('.cart-slideout__pickup-in-store').html(responseJson.pickupInStoreHtml);
     }
+    setInformationalIconListeners();
     updateCheckDeliveryAvailabilityButton();
 }
 
@@ -78,7 +79,7 @@ function showCartSlideout(response) {
     updateCartSlideoutHtml(response);
 
     CartSlideoutOverlay.style.display = "block";
-    CartSlideout.style.display = "block";
+    CartSlideout.style.display = "flex";
     document.body.classList.add("scrollYRemove");
 }
 
@@ -153,6 +154,7 @@ function updateCartSlideoutHtml(response) {
         $('.cart-slideout__delivery-options').html(response.slideoutInfo.DeliveryOptionsHtml);
         setAttributeListeners(response.slideoutInfo.ShoppingCartItemId);
         cartSlideoutProductId = response.slideoutInfo.ProductId;
+        cartSlideoutShoppingCartItemId = response.slideoutInfo.ShoppingCartItemId;
     }
 }
 
@@ -166,6 +168,28 @@ function clickContinueButton() {
     } else {
         warrantyOptions.style.display = "block";
     }
+}
+
+async function selectStoreAsync(shopId)
+{
+    const payload = {
+        shoppingCartItemId: cartSlideoutShoppingCartItemId,
+        shopId: shopId
+    }
+    const response = await fetch('/AddToCart/SelectPickupStore', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    if (response.status != 200) {
+        alert('Error occurred when selecting pickup store.');
+        return;
+    }
+
+    pickupInStoreOptions.style.display = "none";
+    warrantyOptions.style.display = "block";
 }
 
 function setAttributeListeners(shoppingCartItemId) {
@@ -255,11 +279,13 @@ function setAttributeListeners(shoppingCartItemId) {
 }
 
 function setInformationalIconListeners() {
-    var deliveryOptionInformationIcon = document.querySelector('i.delivery-options-info');
+    var deliveryOptionInformationIcons = document.querySelectorAll('i.delivery-options-info');
     var warrantyInformationIcon = document.querySelector('i.warranty-info');
-    deliveryOptionInformationIcon.onclick = function () {
-        deliveryOptionsInformation.style.display = "block";
-    };
+    for (icon in deliveryOptionInformationIcons) {
+        deliveryOptionInformationIcons[icon].onclick = function() {
+            deliveryOptionsInformation.style.display = "block";
+        }
+    }
     warrantyInformationIcon.onclick = function () {
         warrantyInformation.style.display = "block";
     };

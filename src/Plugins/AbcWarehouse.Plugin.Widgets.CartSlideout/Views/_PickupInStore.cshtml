@@ -1,1 +1,22 @@
-<p>Works!</p>
+@using Nop.Plugin.Misc.AbcCore.Models
+
+@model List<ProductStock>
+
+<h2>Select Pick-Up Location</h2><i style="margin-left: 0.3rem;" class="fas fa-info-circle delivery-options-info"></i>
+@foreach (var item in Model)
+{
+    <div style="margin: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h3>@item.Shop.Name</h3>
+            @Html.Raw(@item.Shop.ShortDescription)
+        </div>
+        @if (@item.Available)
+        {
+            <button class="available" onclick="selectStoreAsync(@item.Shop.Id)">Available Today</button>
+        }
+        else
+        {
+            <button class="not-available" disabled>Not Available</button>
+        }
+    </div>
+}

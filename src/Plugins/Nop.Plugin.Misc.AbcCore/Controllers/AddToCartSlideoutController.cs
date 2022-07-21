@@ -1,13 +1,19 @@
 using LinqToDB;
 using LinqToDB.Data;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Data;
 using Nop.Plugin.Misc.AbcCore.Delivery;
 using Nop.Plugin.Misc.AbcCore.Models;
 using Nop.Plugin.Misc.AbcCore.Services;
+using Nop.Services.Catalog;
+using Nop.Services.Orders;
 using Nop.Web.Framework.Controllers;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
+using SevenSpikes.Nop.Plugins.StoreLocator.Domain.Shops;
 
 namespace Nop.Plugin.Misc.AbcCore.Controllers
 {
@@ -16,15 +22,24 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
         private readonly IBackendStockService _backendStockService;
         private readonly IDeliveryService _deliveryService;
         private readonly INopDataProvider _nopDataProvider;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IWorkContext _workContext;
 
         public CartSlideoutController(
             IBackendStockService backendStockService,
             IDeliveryService deliveryService,
-            INopDataProvider nopDataProvider
+            INopDataProvider nopDataProvider,
+            IProductAttributeParser productAttributeParser,
+            IShoppingCartService shoppingCartService,
+            IWorkContext workContext
         ) {
             _backendStockService = backendStockService;
             _deliveryService = deliveryService;
             _nopDataProvider = nopDataProvider;
+            _productAttributeParser = productAttributeParser;
+            _shoppingCartService = shoppingCartService;
+            _workContext = workContext;
         }
 
         public async Task<IActionResult> GetDeliveryOptions(int? productId, int? zip)
@@ -50,6 +65,47 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
                         productStock = stockResponse.ProductStocks
                     })
             });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SelectPickupStore(int? shoppingCartItemId, int? shopId)
+        {
+            // Just for now, let's make the connection
+            return Ok();
+
+            if (!shoppingCartItemId.HasValue)
+            {
+                return BadRequest("Shopping Cart Item ID is required.");
+            }
+            if (!shopId.HasValue)
+            {
+                return BadRequest("Shop ID is required.");
+            }
+
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var shoppingCart = await _shoppingCartService.GetShoppingCartAsync(customer);
+            var shoppingCartItem = shoppingCart.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
+            if (shoppingCartItem == null)
+            {
+                return BadRequest($"Unable to find shopping cart item with id {shoppingCartItemId}");
+            }
+
+            shoppingCartItem.AttributesXml = _productAttributeParser.AddProductAttribute(
+                shoppingCartItem.AttributesXml,
+                new ProductAttributeMapping(), // need to get the pickup attribute from product
+                "West Bloomfield" // Need to get the shop name
+            );
+            
+            await _shoppingCartService.UpdateShoppingCartItemAsync(
+                    customer,
+                    shoppingCartItem.Id,
+                    shoppingCartItem.AttributesXml,
+                    shoppingCartItem.CustomerEnteredPrice,
+                    shoppingCartItem.RentalStartDateUtc,
+                    shoppingCartItem.RentalEndDateUtc,
+                    shoppingCartItem.Quantity);
+
+            return Ok();
         }
     }
 }

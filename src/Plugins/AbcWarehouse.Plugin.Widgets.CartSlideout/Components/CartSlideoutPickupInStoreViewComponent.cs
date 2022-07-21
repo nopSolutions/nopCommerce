@@ -12,7 +12,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
     {
         public async Task<IViewComponentResult> InvokeAsync(List<ProductStock> productStock)
         {
-            return View("~/Plugins/Widgets.CartSlideout/Views/_PickupInStore.cshtml");
+            return View("~/Plugins/Widgets.CartSlideout/Views/_PickupInStore.cshtml", productStock);
         }
     }
 }
