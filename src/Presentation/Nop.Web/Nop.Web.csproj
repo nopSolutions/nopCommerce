@@ -118,4 +118,9 @@
     <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- Metalama Transitive Project Fabric Aspects -->
+    <ProjectReference Include="..\..\Metalama.Aspects\Metalama.Aspects\Metalama.Aspects.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -42,4 +42,9 @@
     <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
   </Target>
 
+  <ItemGroup>
+    <!-- Metalama Transitive Project Fabric Aspects -->
+    <ProjectReference Include="..\..\Metalama.Aspects\Metalama.Aspects\Metalama.Aspects.csproj" />
+  </ItemGroup>
+
 </Project>
