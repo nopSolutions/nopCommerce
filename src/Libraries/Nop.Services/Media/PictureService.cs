@@ -917,41 +917,8 @@ namespace Nop.Services.Media
             //contentType is not always available 
             //that's why we manually update it here
             //http://www.sfsu.edu/training/mimetype.htm
-            if (string.IsNullOrEmpty(contentType) || contentType == MimeTypes.ImageSvg)
-            {
-                switch (fileExtension)
-                {
-                    case ".bmp":
-                        contentType = MimeTypes.ImageBmp;
-                        break;
-                    case ".gif":
-                        contentType = MimeTypes.ImageGif;
-                        break;
-                    case ".jpeg":
-                    case ".jpg":
-                    case ".jpe":
-                    case ".jfif":
-                    case ".pjpeg":
-                    case ".pjp":
-                        contentType = MimeTypes.ImageJpeg;
-                        break;
-                    case ".webp":
-                        contentType = MimeTypes.ImageWebp;
-                        break;
-                    case ".png":
-                        contentType = MimeTypes.ImagePng;
-                        break;
-                    case ".svg":
-                        contentType = MimeTypes.ImageSvg;
-                        break;
-                    case ".tiff":
-                    case ".tif":
-                        contentType = MimeTypes.ImageTiff;
-                        break;
-                    default:
-                        break;
-                }
-            }
+            if (string.IsNullOrEmpty(contentType) || contentType == MimeTypes.ImageSvg) 
+                contentType = GetPictureContentTypeByFileExtension(fileExtension);
 
             var picture = await InsertPictureAsync(await _downloadService.GetDownloadBitsAsync(formFile), contentType, _fileProvider.GetFileNameWithoutExtension(fileName));
 
@@ -1232,6 +1199,50 @@ namespace Nop.Services.Media
             {
                 // ignored
             }
+        }
+
+        #endregion
+
+        #region Common methods
+
+        public string GetPictureContentTypeByFileExtension(string fileExtension)
+        {
+            string contentType = null;
+
+            switch (fileExtension.ToLower())
+            {
+                case ".bmp":
+                    contentType = MimeTypes.ImageBmp;
+                    break;
+                case ".gif":
+                    contentType = MimeTypes.ImageGif;
+                    break;
+                case ".jpeg":
+                case ".jpg":
+                case ".jpe":
+                case ".jfif":
+                case ".pjpeg":
+                case ".pjp":
+                    contentType = MimeTypes.ImageJpeg;
+                    break;
+                case ".webp":
+                    contentType = MimeTypes.ImageWebp;
+                    break;
+                case ".png":
+                    contentType = MimeTypes.ImagePng;
+                    break;
+                case ".svg":
+                    contentType = MimeTypes.ImageSvg;
+                    break;
+                case ".tiff":
+                case ".tif":
+                    contentType = MimeTypes.ImageTiff;
+                    break;
+                default:
+                    break;
+            }
+
+            return contentType;
         }
 
         #endregion
