@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -257,7 +258,7 @@ namespace Nop.Web.Controllers
                     AllowCustomersToSelectPageSize = true,
                     PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions,
                     PictureId = pictureId,
-                    Description = description
+                    Description = WebUtility.HtmlEncode(description) 
                 };
                 await _vendorService.InsertVendorAsync(vendor);
                 //search engine name (the same as vendor name)
@@ -349,7 +350,7 @@ namespace Nop.Web.Controllers
 
                 vendor.Name = model.Name;
                 vendor.Email = model.Email;
-                vendor.Description = description;
+                vendor.Description = WebUtility.HtmlEncode(description);
 
                 if (picture != null)
                 {
