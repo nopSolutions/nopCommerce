@@ -62,6 +62,7 @@ namespace Nop.Plugin.Misc.AbcCore.Infrastructure
             services.AddScoped<ArchiveService>();
             services.AddScoped<IAbcDeliveryService, AbcDeliveryService>();
             services.AddScoped<IAbcProductAttributeService, AbcProductAttributeService>();
+            services.AddScoped<IGeocodeService, GeocodeService>();
         }
     }
 }

@@ -89,7 +89,7 @@ namespace Nop.Plugin.Misc.AbcCore
 
         public System.Threading.Tasks.Task<IList<string>> GetWidgetZonesAsync()
         {
-            return Task.FromResult<IList<string>>(new List<string> { AdminWidgetZones.ProductDetailsBlock });
+            return Task.FromResult<IList<string>>(new List<string> { AdminWidgetZones.ProductDetailsBlock, AdminWidgetZones.HeaderBefore });
         }
 
         public string GetWidgetViewComponentName(string widgetZone)
@@ -156,7 +156,9 @@ namespace Nop.Plugin.Misc.AbcCore
                     [CoreLocales.PLPDescription] = "PLP Description",
                     [CoreLocales.PLPDescriptionHint] = "Description displayed for PLP (Product Box).",
                     [CoreLocales.MobilePhoneNumber] = "Mobile Phone Header",
-                    [CoreLocales.MobilePhoneNumberHint] = "The phone number used on the mobile header."
+                    [CoreLocales.MobilePhoneNumberHint] = "The phone number used on the mobile header.",
+                    [CoreLocales.GoogleMapsGeocodingAPIKey] = "Google Maps Geocoding API Key",
+                    [CoreLocales.GoogleMapsGeocodingAPIKeyHint] = "API key for handling geocoding services, including delivery options/pickup in store."
                 }
             );
         }

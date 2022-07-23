@@ -2,7 +2,7 @@
   "Group": "Misc",
   "FriendlyName": "ABC Warehouse Core",
   "SystemName": "Misc.AbcCore",
-  "Version": "4.40.2",
+  "Version": "4.40.3",
   "SupportedVersions": [ "4.40" ],
   "Author": "Dave Farinelli",
   "DisplayOrder": -1,

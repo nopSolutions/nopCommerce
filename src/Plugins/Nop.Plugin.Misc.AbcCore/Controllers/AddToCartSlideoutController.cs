@@ -10,6 +10,7 @@ using Nop.Plugin.Misc.AbcCore.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Orders;
 using Nop.Web.Framework.Controllers;
+using System;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
     {
         private readonly IBackendStockService _backendStockService;
         private readonly IDeliveryService _deliveryService;
+        private readonly IGeocodeService _geocodeService;
         private readonly INopDataProvider _nopDataProvider;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IShoppingCartService _shoppingCartService;
@@ -29,6 +31,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
         public CartSlideoutController(
             IBackendStockService backendStockService,
             IDeliveryService deliveryService,
+            IGeocodeService geocodeService,
             INopDataProvider nopDataProvider,
             IProductAttributeParser productAttributeParser,
             IShoppingCartService shoppingCartService,
@@ -36,6 +39,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
         ) {
             _backendStockService = backendStockService;
             _deliveryService = deliveryService;
+            _geocodeService = geocodeService;
             _nopDataProvider = nopDataProvider;
             _productAttributeParser = productAttributeParser;
             _shoppingCartService = shoppingCartService;
@@ -56,6 +60,13 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
 
             // pickup in store options
             StockResponse stockResponse = await _backendStockService.GetApiStockAsync(productId.Value);
+            
+            // get 5 closest based on zip code
+            var coords = _geocodeService.GeocodeZip(zip.Value);
+            stockResponse.ProductStocks = stockResponse.ProductStocks
+                    .Select(s => s)
+                    .OrderBy(s => Distance(Double.Parse(s.Shop.Latitude), Double.Parse(s.Shop.Longitude), coords.lat, coords.lng))
+                    .Take(5).ToList();
 
             return Json(new {
                 isDeliveryAvailable = await _deliveryService.CheckZipcodeAsync(zip.Value),
@@ -106,6 +117,11 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
                     shoppingCartItem.Quantity);
 
             return Ok();
+        }
+
+        private double Distance(double lat1, double lng1, double lat2, double lng2)
+        {
+            return Math.Pow(Math.Pow(lat1 - lat2, 2) + Math.Pow(lng1 - lng2, 2), 0.5);
         }
     }
 }

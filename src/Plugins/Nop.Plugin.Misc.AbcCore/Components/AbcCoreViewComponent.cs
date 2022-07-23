@@ -19,34 +19,54 @@ using Nop.Services.Common;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Plugin.Misc.AbcCore.Models;
+using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Misc.AbcCore.Components
 {
     [ViewComponent(Name = "AbcCore")]
     public class AbcCoreViewComponent : NopViewComponent
     {
+        private readonly CoreSettings _coreSettings;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly INotificationService _notificationService;
 
         public AbcCoreViewComponent(
-            IGenericAttributeService genericAttributeService
+            CoreSettings coreSettings,
+            IGenericAttributeService genericAttributeService,
+            INotificationService notificationService
         ) {
+            _coreSettings = coreSettings;
             _genericAttributeService = genericAttributeService;
+            _notificationService = notificationService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, ProductModel additionalData = null)
         {
-            var productId = additionalData.Id;
-            var plpDescription = await _genericAttributeService.GetAttributeAsync<Product, string>(
-                productId, "PLPDescription"
-            );
-
-            var model = new ABCProductDetailsModel
+            if (widgetZone == AdminWidgetZones.ProductDetailsBlock)
             {
-                ProductId = productId,
-                PLPDescription = plpDescription
-            };
+                var productId = additionalData.Id;
+                var plpDescription = await _genericAttributeService.GetAttributeAsync<Product, string>(
+                    productId, "PLPDescription"
+                );
 
-            return View("~/Plugins/Misc.AbcCore/Views/ProductDetails.cshtml", model);
+                var model = new ABCProductDetailsModel
+                {
+                    ProductId = productId,
+                    PLPDescription = plpDescription
+                };
+
+                return View("~/Plugins/Misc.AbcCore/Views/ProductDetails.cshtml", model);
+            }
+            else if (widgetZone == AdminWidgetZones.HeaderBefore && !_coreSettings.IsValid())
+            {
+                _notificationService.ErrorNotification(
+                    string.Format(
+                        "Misc.AbcCore - Please <a href=\"{0}\">configure</a> the plugin to ensure working functionality.",
+                        Url.Action("Configure", "AbcCore")),
+                        false);
+            }
+
+            return Content("");
         }
 
     }

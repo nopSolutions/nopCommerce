@@ -28,5 +28,10 @@ namespace Nop.Plugin.Misc.AbcCore
             Base + "MobilePhoneNumber";
         public const string MobilePhoneNumberHint =
             MobilePhoneNumber + ".Hint";
+
+        public const string GoogleMapsGeocodingAPIKey =
+            Base + "GoogleMapsGeocodingAPIKey";
+        public const string GoogleMapsGeocodingAPIKeyHint =
+            GoogleMapsGeocodingAPIKey + ".Hint";
     }
 }
