@@ -739,11 +739,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
             foreach (var header in _httpContextAccessor.HttpContext.Request.Headers)
             {
-                model.Headers.Add(new SystemInfoModel.HeaderModel
-                {
-                    Name = header.Key,
-                    Value = header.Value
-                });
+                if (header.Key != HeaderNames.Cookie)
+                    model.Headers.Add(new SystemInfoModel.HeaderModel
+                    {
+                        Name = header.Key,
+                        Value = header.Value
+                    });
             }
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())

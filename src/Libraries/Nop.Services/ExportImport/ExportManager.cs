@@ -1734,18 +1734,6 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportCustomersToXlsxAsync(IList<Customer> customers)
         {
-            async Task<object> getPasswordFormat(Customer customer)
-            {
-                var password = await _customerService.GetCurrentPasswordAsync(customer.Id);
-
-                var passwordFormatId = password?.PasswordFormatId ?? 0;
-
-                if (!_catalogSettings.ExportImportRelatedEntitiesByName)
-                    return passwordFormatId;
-
-                return CommonHelper.ConvertEnum(((PasswordFormat)passwordFormatId).ToString());
-            }
-
             var vendors = await _vendorService.GetVendorsByCustomerIdsAsync(customers.Select(c => c.Id).ToArray());
 
             object getVendor(Customer customer)
@@ -1787,9 +1775,6 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("CustomerGuid", p => p.CustomerGuid),
                 new PropertyByName<Customer>("Email", p => p.Email),
                 new PropertyByName<Customer>("Username", p => p.Username),
-                new PropertyByName<Customer>("Password", async p => (await _customerService.GetCurrentPasswordAsync(p.Id))?.Password),
-                new PropertyByName<Customer>("PasswordFormat", getPasswordFormat),
-                new PropertyByName<Customer>("PasswordSalt", async p => (await _customerService.GetCurrentPasswordAsync(p.Id))?.PasswordSalt),
                 new PropertyByName<Customer>("IsTaxExempt", p => p.IsTaxExempt),
                 new PropertyByName<Customer>("AffiliateId", p => p.AffiliateId),
                 new PropertyByName<Customer>("Vendor", getVendor),
@@ -1866,12 +1851,7 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteElementStringAsync("CustomerGuid", null, customer.CustomerGuid.ToString());
                 await xmlWriter.WriteElementStringAsync("Email", null, customer.Email);
                 await xmlWriter.WriteElementStringAsync("Username", null, customer.Username);
-
-                var customerPassword = await _customerService.GetCurrentPasswordAsync(customer.Id);
-                await xmlWriter.WriteElementStringAsync("Password", null, customerPassword?.Password);
-                await xmlWriter.WriteElementStringAsync("PasswordFormatId", null, (customerPassword?.PasswordFormatId ?? 0).ToString());
-                await xmlWriter.WriteElementStringAsync("PasswordSalt", null, customerPassword?.PasswordSalt);
-
+                
                 await xmlWriter.WriteElementStringAsync("IsTaxExempt", null, customer.IsTaxExempt.ToString());
                 await xmlWriter.WriteElementStringAsync("AffiliateId", null, customer.AffiliateId.ToString());
                 await xmlWriter.WriteElementStringAsync("VendorId", null, customer.VendorId.ToString());
