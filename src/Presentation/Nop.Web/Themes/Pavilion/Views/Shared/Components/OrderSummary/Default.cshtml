@@ -387,7 +387,10 @@
                                     @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                     {
                                         <div class="attributes">
-                                            @Html.Raw(item.AttributeInfo)
+                                            <!-- ABC: use custom attribute info listing -->
+                                            <!-- @Html.Raw(item.AttributeInfo) -->
+                                            
+                                            @await Html.PartialAsync("_AttributeInfo", (item.Id, item.AttributeInfo))
                                         </div>
                                     }
                                     <!-- ABC: custom -->

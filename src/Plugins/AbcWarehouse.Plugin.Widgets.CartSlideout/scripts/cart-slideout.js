@@ -291,6 +291,10 @@ function setInformationalIconListeners() {
     };
 }
 
+function editCartItem(shoppingCartItemId) {
+    alert(`shoppingCartItemId: ${shoppingCartItemId}`);
+}
+
 function getCookie(cookieName) {
     let cookie = {};
     document.cookie.split(';').forEach(function(el) {

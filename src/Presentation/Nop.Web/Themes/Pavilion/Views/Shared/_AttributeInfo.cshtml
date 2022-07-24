@@ -1,0 +1,51 @@
+@using System.Web;
+
+@model (int shoppingCartItemId, string attributeInfo);
+
+@{
+    var attributes = @Model.attributeInfo.Split("<br />");
+    var deliveryPickupOptions = attributes.FirstOrDefault(a => a.Contains("Delivery/Pickup Options: "));
+    if (deliveryPickupOptions != null)
+    {
+        // remove attribute name
+        deliveryPickupOptions = deliveryPickupOptions.Substring(deliveryPickupOptions.IndexOf(':') + 2);
+        // remove second price difference
+        deliveryPickupOptions = deliveryPickupOptions.Substring(0, deliveryPickupOptions.IndexOf('['));
+        deliveryPickupOptions = deliveryPickupOptions.Trim();
+    }
+    var warranty = attributes.FirstOrDefault(a => a.Contains("Warranty: "));
+    if (warranty != null)
+    {
+        // remove attribute name
+        warranty = warranty.Substring(warranty.IndexOf(':') + 2);
+        // change format of price difference
+        warranty = warranty.Replace('[', '(').Replace(']', ')').Remove(warranty.IndexOf('+'), 1);
+        warranty = warranty.Trim();
+    }
+
+    var a = 1;
+}
+
+@if (attributes.Any())
+{
+    <div class="abc-cart-attribute-info">
+        @if (deliveryPickupOptions != null)
+        {
+            <div class="abc-cart-attribute-info__section">
+                <h4>Delivery/Pickup Options</h4>
+                <p>@Html.Raw(@deliveryPickupOptions)</p>
+            </div>
+        }
+
+        @if (warranty != null)
+        {
+            <div class="abc-cart-attribute-info__section">
+                <h4>Warranty</h4>
+                <p>@Html.Raw(@warranty)</p>
+            </div>
+        }
+
+        <a onclick="editCartItem(@Model.shoppingCartItemId)">EDIT</a>
+    </div>
+}
+
