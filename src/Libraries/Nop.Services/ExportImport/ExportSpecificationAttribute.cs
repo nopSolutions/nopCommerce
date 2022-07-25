@@ -3,6 +3,11 @@
     public class ExportSpecificationAttribute
     {
         /// <summary>
+        /// Gets or sets the identifier
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the attribute type ID
         /// </summary>
         public int AttributeTypeId { get; set; }
