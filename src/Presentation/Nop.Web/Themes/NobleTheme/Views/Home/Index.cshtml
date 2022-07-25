@@ -2,7 +2,7 @@
 @inject SeoSettings seoSettings
 
 @{
-    Layout = "_ColumnsTwo";
+    Layout = "_ColumnsOne";
 
     //title
     if (!string.IsNullOrEmpty(seoSettings.HomepageTitle))
@@ -19,9 +19,9 @@
     //page class
     NopHtml.AppendPageCssClassParts("html-home-page");
 }
-@section HomePageSlider {
+@*@section HomePageSlider {
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageTop })
-}
+}*@
 <div class="page home-page">
     <div class="page-body">
         @*@await Component.InvokeAsync("TopicBlock", new { systemName = "HomepageText" })*@

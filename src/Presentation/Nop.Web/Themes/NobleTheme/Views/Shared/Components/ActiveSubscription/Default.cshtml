@@ -1,0 +1,65 @@
+﻿@model SubscriptionModel
+
+@{
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.OrderDetails").Text);
+    //page class
+    //Html.AppendPageCssClassParts("html-order-details-page");
+}
+
+@if (Model.IsPaidCustomer)
+{
+    <div class="page-body panel-body from-panel" style="margin-top:10px;">
+        <div class="order-list">
+            <div class="section order-item clearfix">
+                <div class="title">
+                    <strong>Active Subscriptions</strong>
+                </div>
+                <div class="order-details-page">
+                    <div class="page-body panel-body from-panel" style="border: 2px solid darkgreen !important; background-color: #AFE1AF; margin-top: 10px;">
+                        <div class="section clearfix">
+                            <ul class="nav">
+                                <li class="order-date">
+                                    <span>Subscription Plan: @Model.SubscriptionProduct</span>
+                                </li>
+                                <li class="order-date">
+                                    <span>Subscription Date: @Model.SubscriptionDate</span>
+                                </li>
+                                <li class="order-status">
+                                    <span>Subscription Credit Count: @Model.AllottedCreditCount</span>
+                                </li>
+                                <li class="order-total">
+                                    Used Credit Count: <strong>@Model.UsedCreditCount</strong>
+                                </li>
+                                <li class="order-total">
+                                    Avaialable Credit Count: <strong> @(@Model.AllottedCreditCount-@Model.UsedCreditCount)</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="page-body panel-body from-panel" style="margin-top:10px;">
+        <div class="order-list">
+            <div class="section order-item clearfix">
+                <div class="title">
+                    <strong>Active Subscriptions</strong>
+                </div>
+                <div class="order-details-page">
+                    <div class="page-body panel-body from-panel" style="border: 2px solid orange !important; background-color: #FFE5B4; ">
+                        <div class="section clearfix">
+                            <h5> <span>You do not have any active subscriptions. Please upgrade</span></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

@@ -13,7 +13,7 @@
         <h1>@T("Account.Register")</h1>
     </div>
     <div class="page-body form-horizontal panel-body from-panel">
-        <form asp-route="Register" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+        <form id="registrationform" asp-route="Register" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
             <div class="fieldset">
                 <div>
@@ -39,6 +39,9 @@
                 {
                     <div class="form-group">
                         <label asp-for="FirstName" class="control-label col-sm-2 col-md-2" asp-postfix=":"></label>
+                        <span style="" title="FirstName of the User" data-toggle="tooltip" class="ico-help">
+                            <i class="fa fa-question-circle"></i>
+                        </span>
                         @if (Model.FirstNameRequired)
                         {
                             <div class="visible-xs form-title-rquired"><nop-required /></div>
@@ -276,10 +279,10 @@
                             <div class="visible-xs form-title-rquired"><nop-required /></div>
                             <div class="col-sm-6 col-md-6 col-xs-12">
                                 <select asp-for="CountryId" asp-items="Model.AvailableCountries" class="form-control"
-                                    data-trigger="country-select"
-                                    data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
-                                    data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
-                                    data-loading="#states-loading-progress"></select>
+                                        data-trigger="country-select"
+                                        data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
+                                        data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
+                                        data-loading="#states-loading-progress"></select>
                             </div>
                             <div class="col-sm-4 col-md-4 col-xs-12">
                                 @if (Model.CountryRequired)
@@ -313,16 +316,19 @@
             @if (Model.PhoneEnabled || Model.FaxEnabled)
             {
                 <div class="fieldset">
-                    <div>
-                        <h3>@T("Account.YourContactInformation")</h3>
-                    </div>
+                    @*<div>
+                            <h3>@T("Account.YourContactInformation")</h3>
+                        </div>*@
                     @if (Model.PhoneEnabled)
                     {
                         <div class="form-group row">
                             <label asp-for="Phone" class="control-label col-sm-2 col-md-2" asp-postfix=":"></label>
                             <div class="visible-xs form-title-rquired"><nop-required /></div>
                             <div class="col-sm-6 col-md-6 col-xs-12">
-                                <input asp-for="Phone" class="form-control" />
+                                <input id="Phone" asp-for="Phone" class="form-control" />
+                                @*<input type="button" class="btn btn-default register-next-step-button" value="Verify" onclick="return process(this);" />*@
+                                <div class="alert alert-info" style="display: none"></div>
+                                <div class="alert alert-error" style="display: none"></div>
                             </div>
                             <div class="col-sm-4 col-md-4 col-xs-12">
                                 @if (Model.PhoneRequired)
@@ -512,7 +518,7 @@
                             }
                         }
                     </div>
-                            </div>
+                </div>
             }
             <div class="form-group">
                 <div class="col-sm-offset-2 col-md-offset-2 col-md-2">
@@ -525,4 +531,57 @@
         </form>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+</script>
+
+<script>
+
+    $('#registrationform').submit(function () {
+
+        console.log('form submit fired');
+        var fullNumber = phoneInput.getNumber();
+        $("#Phone").val(fullNumber);
+        return true;
+    })
+
+</script>
+
+<script>
+
+    const phoneInputField = document.querySelector("#phone");
+
+    const phoneInput = window.intlTelInput(phoneInputField, {
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        initialCountry: "in",
+        autoHideDialCode: false,
+        preferredCountries: ["in", "us"],
+        onlyCountries: ["in", "us", "ca", "au", "gb"],
+        separateDialCode: true,
+        nationalMode: true,
+        formatOnDisplay: false,
+        localizedCountries: { 'in': 'India' }
+        /*hiddenInput:"Phone"*/
+    });
+
+
+    phoneInputField.addEventListener('countrychange', function (e) {
+        var countryCode = phoneInput.getSelectedCountryData().dialCode;
+        console.log('countrychange');
+        console.log($("#Phone").val());
+    });
+
+    const info = document.querySelector(".alert-info");
+    const error = document.querySelector(".alert-error");
+
+    function process(event) {
+        //event.preventDefault();
+        const phoneNumber = phoneInput.getNumber();
+        info.style.display = "";
+        info.innerHTML = `Phone number in E.164 format: <strong>${phoneNumber}</strong>`;
+    }
+
+</script>
 

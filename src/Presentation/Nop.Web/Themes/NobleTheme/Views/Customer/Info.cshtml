@@ -346,7 +346,11 @@
                                 <label asp-for="Phone" class="control-label col-sm-2 col-md-2" asp-postfix=":"></label>
                                 <div class="visible-xs form-title-rquired"><nop-required /></div>
                                 <div class="col-sm-6 col-md-6">
-                                    <input asp-for="Phone" class="form-control" />
+                                    <input id="Phone" type="tel" asp-for="Phone" class="form-control" />
+                                    <input type="hidden" id="phone2" class="form-control" />
+                                    @*<input type="button" class="btn btn-default register-next-step-button" value="Verify" onclick="return process(this);" />*@
+                                    <div class="alert alert-info" style="display: none"></div>
+                                    <div class="alert alert-error" style="display: none"></div>
                                 </div>
                                 <div class="col-sm-4 col-md-4">
                                     @if (Model.PhoneRequired)
@@ -572,4 +576,67 @@
         }
         return false;
     }
+
+    //customization
+    $(document).ready(function () {
+        //disable profile type radio buttons in my account page
+        $("#customer_attribute_1_1").click(function () { return false; });
+        $("#customer_attribute_1_2").click(function () { return false; });
+
+        // display avialabilty in my account page
+        $('#customer_attribute_2').parent().parent().show();
+
+        //hide relavent experiance when take support radio is selected
+        if ($("#customer_attribute_1_2").is(":checked")) {
+            $('#customer_attribute_3').parent().parent().hide();
+        }
+
+    });
+
+</script>
+
+<script>
+    $('#registrationform').submit(function () {
+        //console.log('form submit fired');
+        var fullNumber = phoneInput.getNumber();
+        $("#Phone").val(fullNumber);
+        //console.log(fullNumber);
+        return true;
+    })
+</script>
+
+<script>
+
+    const phoneInputField = document.querySelector("#phone");
+
+    const phoneInput = window.intlTelInput(phoneInputField, {
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        initialCountry: "in",
+        autoHideDialCode: false,
+        preferredCountries: ["in", "us"],
+        onlyCountries: ["in", "us", "ca", "au", "gb"],
+        separateDialCode: true,
+        nationalMode: true,
+        formatOnDisplay: false,
+        localizedCountries: { 'in': 'India' }
+        /*hiddenInput:"Phone"*/
+    });
+
+
+    phoneInputField.addEventListener('countrychange', function (e) {
+        var countryCode = phoneInput.getSelectedCountryData().dialCode;
+        console.log('countrychange');
+        console.log($("#Phone").val());
+    });
+
+    const info = document.querySelector(".alert-info");
+    const error = document.querySelector(".alert-error");
+
+    function process(event) {
+        //event.preventDefault();
+        const phoneNumber = phoneInput.getNumber();
+        info.style.display = "";
+        info.innerHTML = `Phone number in E.164 format: <strong>${phoneNumber}</strong>`;
+    }
+
 </script>

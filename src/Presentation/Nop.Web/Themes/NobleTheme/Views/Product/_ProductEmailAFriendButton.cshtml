@@ -2,7 +2,36 @@
 
 @if (Model.EmailAFriendEnabled)
 {
-    <div class="email-a-friend">
-        <button type="button" class="btn btn-default" onclick="setLocation('@Url.RouteUrl("ProductEmailAFriend", new { productId = Model.Id })')">@T("Products.EmailAFriend")</button>
+    var viewMobileNumberRouteUrl = Url.RouteUrl("ViewCustomerMobileNumber", new { productId = Model.Id });
+    var htmlStr = "<div> Please upgrade your subscription to view the Mobile Numbers & Send emails directly. </div>";
+
+    @*<div class="email-a-friend">
+            <button type="button" class="btn btn-default" onclick="setLocation('@Url.RouteUrl("ProductEmailAFriend", new { productId = Model.Id })')">@T("Products.EmailAFriend")</button>
+        </div>*@
+
+    <div id="callNow" class="email-a-friend" style="padding-left:15px;" data-premium="true">
+        <a class="product-item-links" href="#" onclick="ShowMobileNumber();">
+            <i class="fa fa-mobile-phone fa-lg icon-color" title="click to unlock"></i>
+            Call Now
+        </a>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            console.log('@viewMobileNumberRouteUrl');
+        });
+
+        function ShowMobileNumber() {
+            var ispremium = $("#callNow").attr("data-premium");
+            if (!ispremium) {
+                displayPopupNotificationwithhtml('@Html.Raw(JavaScriptEncoder.Default.Encode(htmlStr))');
+                return false;
+            }
+            else {
+
+            }
+            displayPopupContentFromUrl('@viewMobileNumberRouteUrl', 'View Contact Detail', true, 300);
+            return false;
+        }
+    </script>
 }

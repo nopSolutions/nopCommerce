@@ -9,6 +9,10 @@
     NopHtml.AppendPageCssClassParts("html-private-messages");
     NopHtml.AppendPageCssClassParts("html-private-message-view-page");
 }
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.PrivateMessages })
+}
 <div class="page private-messages private-message-view-page">
     <div class="page-title panel-heading">
         <h1>@T("PrivateMessages.View.ViewMessage")</h1>
@@ -17,11 +21,16 @@
         <div class="view-message">
             <div>
                 <label>@T("PrivateMessages.View.From")</label>
-                <span>@Model.CustomerFromName</span>
+                @*<span>@Model.CustomerFromName</span>*@
+                <span><a href="@Url.RouteUrl("Product", new {SeName= @Model.CustomerFromSeName})">@Model.CustomerFromSeName</a></span>
             </div>
             <div>
                 <label>@T("PrivateMessages.View.To")</label>
                 <span>@Model.CustomerToName</span>
+            </div>
+            <div>
+                <label>Created On:</label>
+                <span>@Model.CreatedOn</span>
             </div>
             <div>
                 <label>@T("PrivateMessages.View.Subject")</label>
@@ -31,7 +40,27 @@
                 <span>@Html.Raw(Model.Message)</span>
             </div>
             <div class="options">
-                <button type="button" class="btn btn-default reply-pm-button" onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })')">@T("PrivateMessages.View.ReplyButton")</button>
+                @if (Model.IsSystemGenerated)
+                {
+                    <span style="margin-right:10px;" title="This is system generated mail. You cant reply to this message." data-toggle="tooltip" class="ico-help">
+                        <i class="fa fa-question-circle"></i>
+                    </span>
+                    @*<button  disabled type="button" class="btn btn-default reply-pm-button" onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })')">@T("PrivateMessages.View.ReplyButton")</button>*@
+                }
+                else
+                {
+                    if (!Model.CanCustomerReply)
+                    {
+                        @*<span style="margin-right: 10px;" title="Please upgrade to reply to this message." data-toggle="tooltip" class="ico-help">
+                    <i class="fa fa-question-circle"></i>
+                </span>*@
+                        <button disabled type="button" class="btn btn-default reply-pm-button" onclick="setLocation('@Url.RouteUrl("Pricing")')">Upgrade to Reply</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-default reply-pm-button" onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })')">@T("PrivateMessages.View.ReplyButton")</button>
+                    }
+                }
                 <button type="button" class="btn btn-default delete-pm-button" onclick="setLocation('@Url.RouteUrl("DeletePM", new { privateMessageId = Model.Id })')">@T("PrivateMessages.View.DeleteButton")</button>
                 <button type="button" class="btn btn-default back-pm-button" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')">@T("PrivateMessages.View.BackButton")</button>
             </div>

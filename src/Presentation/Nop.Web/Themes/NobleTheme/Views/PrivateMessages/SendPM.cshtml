@@ -23,7 +23,8 @@
                         @T("PrivateMessages.Send.To")
                         @if (Model.AllowViewingToProfile)
                         {
-                            <a href="@Url.RouteUrl("CustomerProfile", new {id = Model.ToCustomerId})">@(Model.CustomerToName)</a>
+                            @*<a href="@Url.RouteUrl("CustomerProfile", new {id = Model.ToCustomerId})">@(Model.CustomerToName)</a>*@
+                            <span>@Model.CustomerToName</span>
                         }
                         else
                         {

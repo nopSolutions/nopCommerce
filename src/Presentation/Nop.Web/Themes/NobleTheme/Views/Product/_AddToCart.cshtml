@@ -29,7 +29,7 @@
     {
         <div class="add-to-cart-panel">
             <div class="form-group row">
-                <div class="quan col-md-5">
+                <div class="quan col-md-5" hidden>
                     <label asp-for="EnteredQuantity" asp-postfix=":" class="qty-label"></label>
                     @if (Model.AllowedQuantities.Count > 0)
                     {

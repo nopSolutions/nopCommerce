@@ -1,11 +1,13 @@
 ﻿@model SpecificationFilterModel
 
-<div class="product-filter product-spec-filter well">
+<div class="product-filter product-spec-filter">
     <div class="filter-title">
-        <i class="fa fa-arrow-circle-right"></i>
-        <strong>@T("Filtering.SpecificationFilter")</strong>
+        <a id="filter-list-icon" class="menu-list" onclick="showFilter();" href="#">
+            <i class="fa fa-sliders fa-1x" aria-hidden="true"></i>
+            <span>Filters</span>
+        </a>
     </div>
-    <div class="filter-content">
+    <div class="filter-content filter-hide">
         @foreach (var attr in Model.Attributes)
         {
             <ul class="nav nav-list group product-spec-group @(attr.Values.Any(x => !string.IsNullOrEmpty(x.ColorSquaresRgb)) ? "product-spec-color" : null )">
@@ -26,7 +28,7 @@
                         {
                             <label for="attribute-option-@value.Id" class="attribute-squares color-squares">
                                 <span class="attribute-square color" style="background-color: @(value.ColorSquaresRgb);"></span>
-                                    @value.Name
+                                @value.Name
                             </label>
                         }
                     </li>
@@ -35,10 +37,14 @@
         }
     </div>
 </div>
+
 <script asp-location="Footer">
     $(document).ready(function () {
         var $optionEls = $('[data-option-id]');
         $optionEls.on('change', function () {
+            console.log('Filter Applied');
+            var drawerFilter = $("#filter-menu-drawer").data("kendoDrawer");
+            drawerFilter.hide();
             CatalogProducts.getProducts();
         });
 
@@ -56,3 +62,181 @@
         });
     });
 </script>
+
+<style>
+    .box-shadow-wrapper .listbox ul li { 
+        /* padding: 0px 0px 10px 20px !important;
+        float: none !important;
+        width: 100%;
+        border-bottom: 0px solid #ddd !important;
+        color: #807f7f;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        background-image: none !important;*/
+    }
+
+    .product-spec-group .title { 
+        border-bottom: 1px solid gray;
+        margin-bottom: 10px;
+    }
+
+    .product-filter .filter-content .title strong { 
+        font-size: 14px;
+        color: #00000085;
+    }
+
+    .product-spec-group .item label {
+        font-weight: 100; 
+    }
+
+    .product-filter .group .name {
+        padding-bottom: 5px !important; 
+    }
+</style>
+
+
+<div id="filter-menu-drawer">
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        var drawer = $("#filter-menu-drawer").kendoDrawer({
+            template: $("#drawer-template").html(),
+            position: 'left',
+            autoCollapse: false,
+            swipeToOpen: false,
+            itemClick: function (e) {
+                //console.log("Clicked on the" + e.item.find(".item-text").text());
+                console.log(e);
+            }
+        }).data("kendoDrawer");
+
+    });
+
+    function showFilter(e) {
+        console.log('show filter');
+        var drawerInstance = $("#filter-menu-drawer").data("kendoDrawer");
+        console.log(drawerInstance);
+        drawerInstance.show();
+    }
+
+    function hideFilter(e) {
+        console.log('hide filter');
+        var drawerInstance = $("#filter-menu-drawer").data("kendoDrawer");
+        drawerInstance.hide();
+    }
+
+</script>
+
+<script id="drawer-template" type="text/x-kendo-template">
+        <div class="filtersTitlePanel">
+            <p class="filtersTitle">Filter by</p>
+            <a class="close-btn" onclick="hideFilter();">
+                <i class="fa fa-times" style="font-size: 2rem;"></i>
+            </a>
+        </div>
+      <div class="filter-content">
+
+        @foreach (var attr in Model.Attributes)
+        {
+            <ul class="nav nav-list group product-spec-group @(attr.Values.Any(x => !string.IsNullOrEmpty(x.ColorSquaresRgb)) ? "product-spec-color" : null )">
+                <li class="title name">
+                    <strong>@attr.Name</strong>
+                </li>
+                @foreach (var value in attr.Values)
+                {
+                    <li class="item @(!string.IsNullOrEmpty(value.ColorSquaresRgb) ? "color-item" : null)">
+                        <input class="" id="attribute-option-@value.Id" type="checkbox" data-option-id="@value.Id" checked="@value.Selected" />
+                        @if (string.IsNullOrEmpty(value.ColorSquaresRgb))
+                        {
+                            <label class="" for="attribute-option-@value.Id">
+                                @value.Name
+                            </label>
+                        }
+                        else
+                        {
+                            <label for="attribute-option-@value.Id" class="attribute-squares color-squares">
+                                <span class="attribute-square color" style="background-color: @(value.ColorSquaresRgb);"></span>
+                                @value.Name
+                            </label>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</script>
+
+<style>
+    @@media screen and (min-width: 0px) and (max-width: 600px) {
+        .filter-hide { 
+            display: none; 
+        }
+
+        .filtersTitlePanel {
+            display: block;
+        }
+
+        .product-filter > .filter-title { 
+            background: white;
+        }
+        /* show it on small screens */ }
+
+    @@media screen and (min-width: 601px) and (max-width: 1024px) {
+        .filter-hide {
+            display: block; 
+        }
+
+        .filtersTitlePanel { 
+            display: none; 
+        }
+        /* hide it elsewhere */
+    }
+
+    @@media screen and (min-width: 601px) {
+        .filtersTitlePanel { 
+            display: none; 
+        }
+    }
+
+    .filtersTitlePanel p {
+        display: inline; 
+        padding-left: 10px; 
+    }
+
+    .filtersTitlePanel a { 
+        margin-right: 10px; 
+        float: right; 
+    }
+
+    .filtersTitlePanel { 
+        margin-top: 10px;
+    }
+
+    .filter-content {
+        /*  padding-left: 15px;
+        padding-top: 20px;*/ 
+    }
+
+    .filter-title span { 
+        display: inline; 
+    }
+
+    .filter-title a:hover { 
+        text-decoration: none; 
+    }
+
+    .filter-title a { 
+        text-decoration: none; 
+        color:black; 
+    }
+
+    .product-spec-group { 
+        padding-top: 7px !important; 
+        padding-left: 15px !important;
+        padding-right:5px !important; 
+    }
+
+</style>

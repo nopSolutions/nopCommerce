@@ -3,110 +3,121 @@
 @functions {
     async Task CategoryLine(TopMenuModel.CategoryLineModel lineModel)
     {
-        <li>
-            <a href="@Url.RouteUrl("Category", new { SeName = lineModel.Category.SeName })">
-                @lineModel.Category.Name
+<li>
+<a href="@Url.RouteUrl("Category", new { SeName = lineModel.Category.SeName })">
+@lineModel.Category.Name
                 @if (lineModel.Category.NumberOfProducts.HasValue)
                 {
-                    <text> </text>@T("Categories.TotalProducts", lineModel.Category.NumberOfProducts.Value)
-                }
-            </a>
+    <text> </text>@T("Categories.TotalProducts", lineModel.Category.NumberOfProducts.Value)
+}
+</a>
             @{
-                //subcategories
-                var subCategories = lineModel.ResponsiveMobileMenu ?
-                    //responsive (all categories)
-                    lineModel.Category.SubCategories :
-                    //standard design (only categories with "IncludeInTopMenu")
-                    lineModel.Category.SubCategories.Where(x => x.IncludeInTopMenu).ToList();
+            //subcategories
+            var subCategories = lineModel.ResponsiveMobileMenu ?
+                //responsive (all categories)
+                lineModel.Category.SubCategories :
+                //standard design (only categories with "IncludeInTopMenu")
+                lineModel.Category.SubCategories.Where(x => x.IncludeInTopMenu).ToList();
 
-                var levelClass = "";
-                if (lineModel.Level == 0)
-                {
-                    levelClass = "first-level";
-                }
-                if (subCategories.Count > 0)
-                {
-                    <div class="sublist-toggle"></div>
-                    <ul class="sublist @levelClass">
-                        @foreach (var subCategory in subCategories)
-                        {
-                            var categoryLineModel = new TopMenuModel.CategoryLineModel
-                            {
-                                Category = subCategory,
-                                Level = lineModel.Level + 1,
-                                ResponsiveMobileMenu = lineModel.ResponsiveMobileMenu
-                            };
-                            await CategoryLine(categoryLineModel);
-                        }
-                    </ul>
-                }
+            var levelClass = "";
+            if (lineModel.Level == 0)
+            {
+                levelClass = "first-level";
             }
-        </li>
+            if (subCategories.Count > 0)
+            {
+    <div class="sublist-toggle"></div>
+    <ul class="sublist @levelClass">
+        @foreach(var subCategory in subCategories)
+    {
+        var categoryLineModel = new TopMenuModel.CategoryLineModel
+        {
+            Category = subCategory,
+            Level = lineModel.Level + 1,
+            ResponsiveMobileMenu = lineModel.ResponsiveMobileMenu
+        };
+        await CategoryLine(categoryLineModel);
     }
+    </ul>
+}
+}
+</li>
+}
 }
 
-<div class="main-menu">
-    <nav class="navbar navbar-inverse category-menu">
+<div class="main-menu" style="min-height:40px;">
+    <a id="menu-list-icon" class="menu-list" href="#my-menu">
+        <i class="fa fa-bars" style="font-size: 2rem; color: white;"></i>
+    </a>
+    <span class="header-logo header-logo-on-menu" style="padding-left:5px;padding-top:10px;">
+        @await Component.InvokeAsync("Logo")
+    </span>
+    <nav id="my-menu" class="navbar navbar-inverse category-menu" title="">
+        <a id="menu-close-icon" style="float: right; width: 30px !important; margin-right: 0px; padding-left: 0px;padding-right:40px; ">
+            <i class="fa fa-times" style="font-size: 2rem;"></i>
+        </a>
         <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button aria-expanded="false" data-target="#mobile-menu" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
+        @*<div class="navbar-header">
+                <button aria-expanded="false" data-target="#mobile-menu" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>*@
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div id="mobile-menu" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMenuBefore, additionalData = Model })
-                @if (Model.DisplayHomepageMenuItem)
+        @*<div id="mobile-menu" class="collapse navbar-collapse">*@
+        <ul id="mobile-menu" class="nav navbar-nav">
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone=PublicWidgetZones.HeaderMenuBefore, additionalData=Model })
+            @if (Model.DisplayHomepageMenuItem)
+            {
+                <li class="home-wrapper"><a href="@Url.RouteUrl("HomePage")"><i class="fa fa-home fa-fw"></i></a></li>
+            }
+            @if (!Model.UseAjaxMenu)
+            {
+                var rootCategories = Model.Categories.Where(x => x.IncludeInTopMenu).ToList();
+                @foreach (var category in rootCategories)
                 {
-                    <li class="home-wrapper"><a href="@Url.RouteUrl("HomePage")"><i class="fa fa-home fa-fw"></i></a></li>
-                }
-                @if (!Model.UseAjaxMenu)
-                {
-                    var rootCategories = Model.Categories.Where(x => x.IncludeInTopMenu).ToList();
-                    @foreach (var category in rootCategories)
+                    var categoryLineModel = new TopMenuModel.CategoryLineModel
                     {
-                        var categoryLineModel = new TopMenuModel.CategoryLineModel
-                        {
-                            Category = category
-                        };
-                        @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
-                    }
+                        Category = category
+                    };
+                    @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
                 }
-                @foreach (var topic in Model.Topics)
-                {
-                    <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
-                }
-                @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
-                {
-                    <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a></li>
-                }
-                @if (Model.DisplayProductSearchMenuItem)
-                {
-                    <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
-                }
-                @if (Model.DisplayCustomerInfoMenuItem)
-                {
-                    <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
-                }
-                @if (Model.BlogEnabled && Model.DisplayBlogMenuItem)
-                {
-                    <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
-                }
-                @if (Model.ForumEnabled && Model.DisplayForumsMenuItem)
-                {
-                    <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
-                }
-                @if (Model.DisplayContactUsMenuItem)
-                {
-                    <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
-                }
-                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMenuAfter, additionalData = Model })
-            </ul>
-        </div><!-- /.navbar-collapse -->
+            }
+            @foreach (var topic in Model.Topics)
+            {
+                <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+            }
+            @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
+            {
+                <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a></li>
+            }
+            @if (Model.DisplayProductSearchMenuItem)
+            {
+                <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
+            }
+            @if (Model.DisplayCustomerInfoMenuItem)
+            {
+                <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+            }
+            @if (Model.BlogEnabled && Model.DisplayBlogMenuItem)
+            {
+                <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+            }
+            @if (Model.ForumEnabled && Model.DisplayForumsMenuItem)
+            {
+                <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+            }
+            @if (Model.DisplayContactUsMenuItem)
+            {
+                <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+            }
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMenuAfter, additionalData = Model })
+        </ul>
+
+
+        @*</div>*@<!-- /.navbar-collapse -->
     </nav>
 
     @if (Model.UseAjaxMenu)
@@ -141,7 +152,151 @@
             });
         });
     </script>
+</div>
 
+<div id="overlay-drawer">
 </div>
 
 
+<script>
+    //$(document).ready(function () {
+
+    //    var ken = $("#overlay-drawer").kendoDrawer({
+    //        template: "<ul> \
+    //                    <li data-role='drawer-item'><span class='k-item-text'>First Item</span></li> \
+    //                    <li data-role='drawer-separator'></li> \
+    //                    <li data-role='drawer-item'><span class='k-item-text'>Second Item</span></li> \
+    //                    <li data-role='drawer-item' class='k-state-selected'><span class='k-item-text'>Third Item</span></li> \
+    //                    <li data-role='drawer-separator'></li> \
+    //                    <li data-role='drawer-item'><span class='k-item-text'>Last Item</span></li> \
+    //                    </ul>",
+    //        position: "left",
+    //        swipeToOpen: false
+    //    }).data().kendoDrawer;
+
+    //    $("#show").click(function (e) {
+    //        var drawerInstance = $("#overlay-drawer").data().kendoDrawer;
+    //        console.log(drawerInstance);
+    //        drawerInstance.show();
+    //    });
+
+    //    $("#show-drawer").click(function (e) {
+    //        var drawerInstance = $("#overlay-drawer").data().kendoDrawer;
+    //        console.log(drawerInstance);
+    //        drawerInstance.show();
+    //    });
+
+    //});
+</script>
+
+<style>
+    .fieldlist {
+        margin: 0 0 -1em;
+        padding: 0;
+    }
+
+        .fieldlist li {
+            list-style: none;
+            padding-bottom: 1em;
+        }
+
+    #overlay-drawer {
+        border: 0;
+    }
+
+    .k-drawer-content {
+        padding: 1em;
+    }
+
+    #example .demo-section {
+        max-width: 640px;
+    }
+</style>
+
+@*Main menu Mmenu script*@
+<script>
+    document.addEventListener(
+        "DOMContentLoaded", () => {
+            const menu = new MmenuLight(
+                document.querySelector("#my-menu"),
+                "(max-width: 600px)",
+            );
+
+            const navigator = menu.navigation({
+                title: 'Technologies',
+                //slidingSubmenus: false,
+                theme: 'light'
+            });
+
+            const drawer = menu.offcanvas({
+                position: 'left'
+            });
+
+            document.querySelector("a[href='#my-menu']")
+                .addEventListener("click", (evnt) => {
+                    evnt.preventDefault();
+                    drawer.open();
+                });
+
+            document.querySelector("a[id='menu-close-icon']")
+                .addEventListener("click", (evnt) => {
+                    evnt.preventDefault();
+                    drawer.close();
+                });
+        }
+    );
+</script>
+
+<style>
+    /*.navbar-inverse .navbar-nav > li > a {
+        color: black !important;
+    }*/
+    .mm {
+        background: #ffe;
+        color: yellow; 
+        /* --mm-spn-item-height: 46px;*/
+        --mm-ocd-max-width: 300px;
+        background-color: yellow !important;
+        color: greenyellow !important;
+        --mm-spn-item-height: 30px !important;
+        --mm-spn-item-indent: 0px !important;
+        --mm-ocd-width: 50% !important;
+    }
+
+    .mm-spn.mm-spn--light {
+        color: black;
+        background-color: white;
+    }
+
+    .mm-arrow {
+        display: none;
+    }
+
+    #my-menu ul.nav.navbar-nav li {
+        border-bottom: 0px solid black !important;
+    }
+
+        #my-menu ul.nav.navbar-nav li a:hover {
+            color: black !important;
+        }
+
+    .mm-arrow:after {
+        display: none;
+    }
+
+    .mm-spn li::after {
+        margin-left: 0px !important;
+    }
+
+    .mm-spn li::before {
+        content: none !important;
+    }
+
+    .menu-list {
+        padding-left: 5px;
+    }
+
+        .menu-list i {
+            padding-top: 10px;
+        }
+</style>

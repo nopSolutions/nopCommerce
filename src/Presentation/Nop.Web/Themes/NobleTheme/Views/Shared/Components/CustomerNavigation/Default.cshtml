@@ -1,19 +1,76 @@
-﻿@model CustomerNavigationModel 
+﻿@model CustomerNavigationModel
 
 <div class="block block-account-navigation well box-shadow-wrapper">
-    <div class="title main-title">
+    <div class="title main-title" id="myAccountMenu">
         <strong>@T("Account.Navigation")</strong>
     </div>
     <div class="listbox">
-        <ul class="nav nav-list">
-            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AccountNavigationBefore, additionalData = Model })
-            @foreach (var item in Model.CustomerNavigationItems)
-            {
-            <li class="@item.ItemClass @(Model.SelectedTab == item.Tab ? "active" : "inactive")">
-                <a href="@Url.RouteUrl(item.RouteName)">@(item.Title)</a>
-            </li>
-            }
-            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AccountNavigationAfter, additionalData = Model })
-        </ul>
+        <nav id="my-AccountMenu" class="" title="">
+            <a id="menu-close-icon-account" class="close-icon-account" style="float: right; width: 30px !important; margin-right: 0px; padding-left: 0px;padding-right:40px; ">
+                <i class="fa fa-times" style="font-size: 2rem;"></i>
+            </a>
+            <ul class="nav nav-list">
+                @foreach (var item in Model.CustomerNavigationItems)
+                {
+                    <li class="@item.ItemClass @(Model.SelectedTab == item.Tab ? "active" : "inactive")">
+                        <a href="@Url.RouteUrl(item.RouteName)">@(item.Title)</a>
+                    </li>
+                }
+            </ul>
+        </nav>
     </div>
 </div>
+
+<script>
+    document.addEventListener(
+        "DOMContentLoaded", () => {
+            const menuAccount = new MmenuLight(
+                document.querySelector("#my-AccountMenu"),
+                "(max-width: 600px)",
+            );
+
+            const navigator = menuAccount.navigation({
+                title: 'My Account',
+                //slidingSubmenus: false,
+                theme: 'light'
+            });
+
+            const drawerAccount = menuAccount.offcanvas({
+                position: 'left'
+            });
+
+            document.querySelector("div[id='myAccountMenu']")
+                .addEventListener("click", (evnt) => {
+                    evnt.preventDefault();
+                    drawerAccount.open();
+                });
+
+            document.querySelector("a[id='menu-close-icon-account']")
+                .addEventListener("click", (evnt) => {
+                    evnt.preventDefault();
+                    drawerAccount.close();
+                });
+        }
+    );
+</script>
+
+<style>
+
+    @@media (min-width:480px) {
+        .close-icon-account {
+            display: none !important;
+        }
+    }
+
+    .mm-spn ul li.active > a {
+        background-color: #F5F5F5; 
+        border-left: 5px solid #20b2aa; 
+        text-decoration: none; 
+    }
+
+    .mm-spn.mm-spn--light { 
+        color: black !important; 
+        background-color:white;
+    }
+
+</style>

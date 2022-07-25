@@ -18,28 +18,98 @@
         NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/swiper/swiper-bundle.min.js");
     }
 
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/jquery.min.js"></script>
+
     //resources
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/noble.js");
-	NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/bootstrap.min.js");
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/head.min.js");
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/owl.carousel.min.js");
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
+    //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/noble.js");
+    //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/bootstrap.min.js");
+    //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/head.min.js");
+    //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/owl.carousel.min.js");
+    //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
+    //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
+    //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
+
+    //<!script src="lib_npm/jquery/jquery.min.js"></!script>
+    
+
+    //resources to avoid bundling
+    //<!script src="~/Themes/NobleTheme/Content/js/noble.js"></!script>
+    //<!script src="Themes/NobleTheme/Content/js/bootstrap.min.js"></!script>
+    //<!script src="Themes/NobleTheme/Content/js/head.min.js"></!script>
+    //<!script src="Themes/NobleTheme/Content/js/owl.carousel.min.js"></!script>
+    //<!script src="js/public.countryselect.js"></!script>
+    //<!script src="js/public.ajaxcart.js"></!script>
+    //<!script src="js/public.common.js"></!script>
+
+
+    //resources to avoid bundling
+    <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/noble.js"></script>
+    <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/bootstrap.min.js"></script>
+    <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/head.min.js"></script>
+    <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/owl.carousel.min.js"></script>
+    <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/public.countryselect.js"></script>
+    <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/public.ajaxcart.js"></script>
+    <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/public.common.js"></script>
+
     //when jQuery migrate script logging is active you will see the log in the browser console
     if (commonSettings.JqueryMigrateScriptLoggingActive)
     {
-        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.js");
+        //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.js");
     }
     else
     {
-        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.min.js");
+        //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.min.js");
     }
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation/jquery.validate.min.js");
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery/jquery.min.js");
+    //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
+    //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+    //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation/jquery.validate.min.js");
+    //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery/jquery.min.js");
 
+     
+
+    var kendoVersion = "2021.2.616";
+
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.bootstrap.min.css" />
+    @*<link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.default.mobile.min.css" />*@
+    //<script src="https://kendo.cdn.telerik.com/2021.2.616/js/jquery.min.js"></script>
+
+    @*<script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.all.min.js"></script>*@
+    @*<script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.ui.core.min.js"></script>*@
+
+    //Kendo drawer widget
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.core.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.userevents.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.drawer.min.js"></script>
+
+    //Kendo multiselect widget
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.data.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.popup.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.list.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.fx.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.draganddrop.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.mobile.scroller.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.virtuallist.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.multiselect.min.js"></script>
+
+
+    @*Bootstrap icons*@
+    @*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">*@
+
+    //NopHtml.AppendScriptParts(ResourceLocation.None, "~/Themes/NobleTheme/Content/js/mmenu-light.js");
+
+    //<!script src="Themes/NobleTheme/Content/js/mmenu-light.js"></!script>
+    <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/mmenu-light.js"></script>
+
+    //phone number format widget
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+
+    <script>
+        if (typeof kendo == "undefined") {
+            console.log('Kendo is not supported');
+        }
+    </script>
     //custom tag(s)
     if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
     {
