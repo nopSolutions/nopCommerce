@@ -223,6 +223,10 @@ namespace Nop.Web.Infrastructure
                 pattern: $"{lang}/checkout/billingaddress",
                 defaults: new { controller = "Checkout", action = "BillingAddress" });
 
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutSelectBillingAddress",
+                pattern: $"{lang}/checkout/selectbillingaddress",
+                defaults: new { controller = "Checkout", action = "SelectBillingAddress" });
+
             endpointRouteBuilder.MapControllerRoute(name: "CheckoutShippingMethod",
                 pattern: $"{lang}/checkout/shippingmethod",
                 defaults: new { controller = "Checkout", action = "ShippingMethod" });

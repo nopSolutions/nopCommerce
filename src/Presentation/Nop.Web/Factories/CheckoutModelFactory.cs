@@ -55,12 +55,12 @@ namespace Nop.Web.Factories
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ITaxService _taxService;
-        private readonly TaxSettings _taxSettings;
         private readonly IWorkContext _workContext;
         private readonly OrderSettings _orderSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -90,12 +90,12 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             ITaxService taxService,
-            TaxSettings taxSettings,
             IWorkContext workContext,
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            TaxSettings taxSettings)
         {
             _addressSettings = addressSettings;
             _captchaSettings = captchaSettings;
@@ -121,12 +121,12 @@ namespace Nop.Web.Factories
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
             _taxService = taxService;
-            _taxSettings = taxSettings;
             _workContext = workContext;
             _orderSettings = orderSettings;
             _paymentSettings = paymentSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
