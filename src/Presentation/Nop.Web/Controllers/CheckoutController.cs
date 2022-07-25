@@ -59,13 +59,13 @@ namespace Nop.Web.Controllers
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
         private readonly ITaxService _taxService;
-        private readonly TaxSettings _taxSettings;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly OrderSettings _orderSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -92,13 +92,13 @@ namespace Nop.Web.Controllers
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
             ITaxService taxService,
-            TaxSettings taxSettings,
             IWebHelper webHelper,
             IWorkContext workContext,
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            TaxSettings taxSettings)
         {
             _addressSettings = addressSettings;
             _captchaSettings = captchaSettings;
@@ -128,6 +128,7 @@ namespace Nop.Web.Controllers
             _paymentSettings = paymentSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -524,22 +525,17 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("BillingAddress")]
-        [FormValueRequired("selectedAddressId")]
-        public virtual async Task<IActionResult> SelectBillingAddress(int selectedAddressId, bool shipToSameAddress = false, string vatNumber = null)
+        public virtual async Task<IActionResult> SelectBillingAddress(int addressId, bool shipToSameAddress = false)
         {
             //validation
             if (_orderSettings.CheckoutDisabled)
                 return RedirectToRoute("ShoppingCart");
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var address = await _customerService.GetCustomerAddressAsync(customer.Id, selectedAddressId);
+            var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
 
             if (address == null)
                 return RedirectToRoute("CheckoutBillingAddress");
-
-            if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled && _taxSettings.GuestCustomerVatEnabled)
-                await SaveCustomerVatNumberAsync(vatNumber, customer);
 
             customer.BillingAddressId = address.Id;
             await _customerService.UpdateCustomerAsync(customer);
@@ -585,8 +581,8 @@ namespace Nop.Web.Controllers
             if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled && _taxSettings.GuestCustomerVatEnabled)
-                await SaveCustomerVatNumberAsync(model.VatNumber, customer);
+            if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled && _taxSettings.EuVatEnabledForGuests)
+                await SaveCustomerVatNumberAsync(model.BillingNewAddress.VatNumber, customer);
 
             //custom address attributes
             var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
@@ -1438,8 +1434,8 @@ namespace Nop.Web.Controllers
 
                 _ = int.TryParse(form["billing_address_id"], out var billingAddressId);
 
-                if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled && _taxSettings.GuestCustomerVatEnabled)
-                    await SaveCustomerVatNumberAsync(model.VatNumber, customer);
+                if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled && _taxSettings.EuVatEnabledForGuests)
+                    await SaveCustomerVatNumberAsync(model.BillingNewAddress.VatNumber, customer);
 
                 if (billingAddressId > 0)
                 {

@@ -104,9 +104,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool EuVatEnabled { get; set; }
         public bool EuVatEnabled_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Tax.GuestCustomerVatEnabled")]
-        public bool GuestCustomerVatEnabled { get; set; }
-        public bool GuestCustomerVatEnabled_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatEnabledForGuests")]
+        public bool EuVatEnabledForGuests { get; set; }
+        public bool EuVatEnabledForGuests_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatShopCountry")]
         public int EuVatShopCountryId { get; set; }

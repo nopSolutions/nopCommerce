@@ -3303,7 +3303,7 @@ namespace Nop.Services.Installation
                 PaymentMethodAdditionalFeeIncludesTax = false,
                 PaymentMethodAdditionalFeeTaxClassId = 0,
                 EuVatEnabled = isEurope,
-                GuestCustomerVatEnabled = false,
+                EuVatEnabledForGuests = false,
                 EuVatShopCountryId =
                     isEurope
                         ? (_countryRepository.Table.FirstOrDefault(x => x.TwoLetterIsoCode == country)?.Id ?? 0)

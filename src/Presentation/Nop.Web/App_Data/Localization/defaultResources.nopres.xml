@@ -1251,6 +1251,12 @@
   <LocaleResource Name="Address.Fields.StateProvince.Required">
     <Value>State / province is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Address.Fields.VatNumber">
+    <Value>VAT number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Address.Fields.VatNumber.Warning">
+    <Value>VAT number can be entered and used only after <a href="{0}">registration</a>.</Value>
+  </LocaleResource>
   <LocaleResource Name="Address.Fields.ZipPostalCode">
     <Value>Zip / postal code</Value>
   </LocaleResource>
@@ -9024,6 +9030,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatEnabled.Hint">
     <Value>Check to enable EU VAT (the European Union Value Added Tax).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatEnabledForGuests">
+    <Value>EU VAT enabled for guests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatEnabledForGuests.Hint">
+    <Value>Check to enable EU VAT (the European Union Value Added Tax) for guest customers.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatShopCountry">
     <Value>Your shop country</Value>
   </LocaleResource>
@@ -9041,12 +9053,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.ForceTaxExclusionFromOrderSubtotal.Hint">
     <Value>Check to always exclude tax from order subtotal (no matter of selected tax dispay type). This setting effects only pages where order totals are displayed.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Tax.GuestCustomerVatEnabled">
-    <Value>Guest customer VAT enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Tax.GuestCustomerVatEnabled.Hint">
-    <Value>Check to enable EU VAT (the European Union Value Added Tax) for guest customers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.HideTaxInOrderSummary">
     <Value>Hide tax in order summary</Value>
@@ -16538,12 +16544,6 @@
   </LocaleResource>
   <LocaleResource Name="Checkout.UseRewardPoints">
     <Value>Use my reward points, {0} of {1} reward points ({2}) available for this order</Value>
-  </LocaleResource>
-  <LocaleResource Name="Checkout.VatNumber">
-    <Value>VAT number</Value>
-  </LocaleResource>
-  <LocaleResource Name="Checkout.VatNumber.Warning">
-    <Value>VAT number can be entered and used only after registration.</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.YourOrderHasBeenSuccessfullyProcessed">
     <Value>Your order has been successfully processed!</Value>

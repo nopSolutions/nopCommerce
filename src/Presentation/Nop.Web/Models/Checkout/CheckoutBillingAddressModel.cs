@@ -21,10 +21,6 @@ namespace Nop.Web.Models.Checkout
         public bool ShipToSameAddress { get; set; }
         public bool ShipToSameAddressAllowed { get; set; }
 
-        public string VatNumber { get; set; }
-        public bool GuestCustomerVatEnabled { get; set; }
-        public bool DisplayGuestCustomerVatWarning { get; set; }
-
         /// <summary>
         /// Used on one-page checkout page
         /// </summary>

@@ -255,16 +255,9 @@ namespace Nop.Web.Factories
                 ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep
             };
 
-            //guest customer vat
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled)
-            {
-                model.VatNumber = customer.VatNumber;
-                model.GuestCustomerVatEnabled = _taxSettings.GuestCustomerVatEnabled;
-                model.DisplayGuestCustomerVatWarning = !_taxSettings.GuestCustomerVatEnabled;
-            }
-
+            
             //existing addresses
+            var customer = await _workContext.GetCurrentCustomerAsync();
             var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
                 .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is Country country &&
                     (//published
@@ -302,6 +295,14 @@ namespace Nop.Web.Factories
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: customer,
                 overrideAttributesXml: overrideAttributesXml);
+
+            if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled)
+            {
+                model.BillingNewAddress.VatNumber = customer.VatNumber;
+                model.BillingNewAddress.EuVatEnabled = true;
+                model.BillingNewAddress.EuVatEnabledForGuests = _taxSettings.EuVatEnabledForGuests;
+            }
+
             return model;
         }
 

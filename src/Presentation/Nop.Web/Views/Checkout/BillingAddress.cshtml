@@ -37,22 +37,6 @@
                             </div>
                         </div>
                     }
-                    @if (Model.GuestCustomerVatEnabled || Model.DisplayGuestCustomerVatWarning)
-                    {
-                        <div class="section vat-number">
-                            @if (Model.DisplayGuestCustomerVatWarning)
-                            {
-                                <label class="vat-number-warning">
-                                    @T("Checkout.VatNumber.Warning")
-                                </label>
-                            }
-                            @if (Model.GuestCustomerVatEnabled)
-                            {
-                                <label asp-for="VatNumber">@T("Checkout.VatNumber")</label>
-                                <input asp-for="VatNumber" />
-                            }
-                        </div>
-                    }
                     @if (Model.ExistingAddresses.Count > 0)
                     {
                         <div class="section select-billing-address">
@@ -166,7 +150,20 @@
                                             }
                                         </ul>
                                         <div class="select-button">
-                                            <button type="submit" name="selectedAddressId" formnovalidate="formnovalidate" value="@item.Id" class="button-1 select-billing-address-button">@T("Checkout.BillToThisAddress")</button>
+                                            <button type="button" class="button-1 select-billing-address-button" onclick="selectBillingAddress@(item.Id)()">@T("Checkout.BillToThisAddress")</button>
+                                            
+                                            <script asp-location="Footer">
+                                                function selectBillingAddress@(item.Id)() {
+                                                    if ($('#@Html.IdFor(model => model.ShipToSameAddress)')
+                                                        .is(':checked')) {
+                                                        setLocation(
+                                                            '@Html.Raw(Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id, shipToSameAddress = "true"}))');
+                                                    } else {
+                                                        setLocation(
+                                                            '@Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id})');
+                                                    }
+                                                }
+                                            </script>
                                         </div>
                                     </div>
                                 }
