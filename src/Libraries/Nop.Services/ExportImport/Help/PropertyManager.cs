@@ -15,6 +15,7 @@ namespace Nop.Services.ExportImport.Help
     /// Class for working with PropertyByName object list
     /// </summary>
     /// <typeparam name="T">Object type</typeparam>
+    /// <typeparam name="L">Language</typeparam>
     public class PropertyManager<T, L> where L : Language
     {
         /// <summary>
@@ -408,7 +409,7 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
-        /// Count of properties
+        /// Count of default properties
         /// </summary>
         public int Count => _defaultProperties.Count;
 
