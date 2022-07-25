@@ -267,7 +267,7 @@ namespace Nop.Services.ExportImport
             new FileExtensionContentTypeProvider().TryGetContentType(filePath, out var mimeType);
 
             //set to jpeg in case mime type cannot be found
-            return mimeType ?? MimeTypes.ImageJpeg;
+            return mimeType ?? _pictureService.GetPictureContentTypeByFileExtension(_fileProvider.GetFileExtension(filePath));
         }
 
         /// <summary>
@@ -286,6 +286,10 @@ namespace Nop.Services.ExportImport
                 return null;
 
             var mimeType = GetMimeTypeFromFilePath(picturePath);
+
+            if (string.IsNullOrEmpty(mimeType))
+                return null;
+
             var newPictureBinary = await _fileProvider.ReadAllBytesAsync(picturePath);
             var pictureAlreadyExists = false;
             if (picId != null)
@@ -335,6 +339,10 @@ namespace Nop.Services.ExportImport
                         continue;
 
                     var mimeType = GetMimeTypeFromFilePath(picturePath);
+
+                    if(string.IsNullOrEmpty(mimeType))
+                        continue;
+
                     var newPictureBinary = await _fileProvider.ReadAllBytesAsync(picturePath);
                     var pictureAlreadyExists = false;
                     if (!product.IsNew)
@@ -402,6 +410,10 @@ namespace Nop.Services.ExportImport
                     try
                     {
                         var mimeType = GetMimeTypeFromFilePath(picturePath);
+
+                        if(string.IsNullOrEmpty(mimeType))
+                            continue;
+
                         var newPictureBinary = await _fileProvider.ReadAllBytesAsync(picturePath);
                         var pictureAlreadyExists = false;
                         var seoFileName = await _pictureService.GetPictureSeNameAsync(product.ProductItem.Name);
