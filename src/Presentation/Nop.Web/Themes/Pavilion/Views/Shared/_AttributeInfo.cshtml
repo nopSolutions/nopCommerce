@@ -14,6 +14,16 @@
         deliveryPickupOptions = deliveryPickupOptions.Substring(0, braceIndex);
         deliveryPickupOptions = deliveryPickupOptions.Trim();
     }
+
+    var pickup = attributes.FirstOrDefault(a => a.Contains("Pickup: "));
+    var available = attributes.FirstOrDefault(a => a.Contains("Available: "));
+    if (pickup != null && available != null)
+    {
+        // remove attribute name
+        pickup = pickup.Substring(pickup.IndexOf(':') + 2);
+        available = available.Substring(available.IndexOf(':') + 2);
+    }
+
     var warranty = attributes.FirstOrDefault(a => a.Contains("Warranty: "));
     if (warranty != null)
     {
@@ -33,6 +43,10 @@
             <div class="abc-cart-attribute-info__section">
                 <h4>Delivery/Pickup Options</h4>
                 <p>@Html.Raw(@deliveryPickupOptions)</p>
+                @if (pickup != null && available != null)
+                {
+                    <p>@pickup: @available</p>
+                }
             </div>
         }
 
@@ -44,7 +58,7 @@
             </div>
         }
 
-        <a onclick="editCartItem(@Model.shoppingCartItemId)">EDIT</a>
+        <a onclick="editCartItemAsync(@Model.shoppingCartItemId)">EDIT</a>
     </div>
 }
 

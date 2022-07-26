@@ -185,8 +185,8 @@ function clickContinueButton() {
 async function selectStoreAsync(shopId)
 {
     const payload = {
-        shoppingCartItemId: cartSlideoutShoppingCartItemId,
-        shopId: shopId
+        ShoppingCartItemId: cartSlideoutShoppingCartItemId,
+        ShopId: shopId
     }
     const response = await fetch('/AddToCart/SelectPickupStore', {
         method: 'POST',
@@ -307,8 +307,9 @@ function setInformationalIconListeners() {
     }
 }
 
-function editCartItem(shoppingCartItemId) {
-    alert(`shoppingCartItemId: ${shoppingCartItemId}`);
+async function editCartItemAsync(shoppingCartItemId) {
+    var zip = getCookie('customerZipCode');
+    const response = await fetch(`/AddToCart/GetEditCartItemInfo?shoppingCartItemId=${shoppingCartItemId}&zip=${zip}`);
 }
 
 function getCookie(cookieName) {

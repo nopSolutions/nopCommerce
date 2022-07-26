@@ -35,6 +35,9 @@ namespace Nop.Plugin.Misc.AbcCore.Infrastructure
             endpointRouteBuilder.MapControllerRoute("CartSlideout_SelectPickupStore",
                             "AddToCart/SelectPickupStore",
                             new { controller = "CartSlideout", action = "SelectPickupStore"});
+            endpointRouteBuilder.MapControllerRoute("CartSlideout_GetEditCartItemInfo",
+                            "AddToCart/GetEditCartItemInfo",
+                            new { controller = "CartSlideout", action = "GetEditCartItemInfo"});
         }
     }
 }

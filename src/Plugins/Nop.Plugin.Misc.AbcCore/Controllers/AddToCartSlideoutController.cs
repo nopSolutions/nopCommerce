@@ -15,34 +15,42 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using SevenSpikes.Nop.Plugins.StoreLocator.Domain.Shops;
+using Nop.Plugin.Misc.AbcCore.Nop;
+using SevenSpikes.Nop.Plugins.StoreLocator.Services;
 
 namespace Nop.Plugin.Misc.AbcCore.Controllers
 {
     public class CartSlideoutController : BasePluginController
     {
+        private readonly IAbcProductAttributeService _abcProductAttributeService;
         private readonly IBackendStockService _backendStockService;
         private readonly IDeliveryService _deliveryService;
         private readonly IGeocodeService _geocodeService;
         private readonly INopDataProvider _nopDataProvider;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly IShopService _shopService;
         private readonly IWorkContext _workContext;
 
         public CartSlideoutController(
+            IAbcProductAttributeService abcProductAttributeService,
             IBackendStockService backendStockService,
             IDeliveryService deliveryService,
             IGeocodeService geocodeService,
             INopDataProvider nopDataProvider,
             IProductAttributeParser productAttributeParser,
             IShoppingCartService shoppingCartService,
+            IShopService shopService,
             IWorkContext workContext
         ) {
+            _abcProductAttributeService = abcProductAttributeService;
             _backendStockService = backendStockService;
             _deliveryService = deliveryService;
             _geocodeService = geocodeService;
             _nopDataProvider = nopDataProvider;
             _productAttributeParser = productAttributeParser;
             _shoppingCartService = shoppingCartService;
+            _shopService = shopService;
             _workContext = workContext;
         }
 
@@ -79,32 +87,35 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SelectPickupStore(int? shoppingCartItemId, int? shopId)
+        public async Task<IActionResult> SelectPickupStore([FromBody]SelectPickupStoreModel model)
         {
-            // Just for now, let's make the connection
-            return Ok();
-
-            if (!shoppingCartItemId.HasValue)
+            if (model.ShoppingCartItemId == 0)
             {
                 return BadRequest("Shopping Cart Item ID is required.");
             }
-            if (!shopId.HasValue)
+            if (model.ShopId == 0)
             {
                 return BadRequest("Shop ID is required.");
             }
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             var shoppingCart = await _shoppingCartService.GetShoppingCartAsync(customer);
-            var shoppingCartItem = shoppingCart.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
+            var shoppingCartItem = shoppingCart.FirstOrDefault(sci => sci.Id == model.ShoppingCartItemId);
             if (shoppingCartItem == null)
             {
-                return BadRequest($"Unable to find shopping cart item with id {shoppingCartItemId}");
+                return BadRequest($"Unable to find shopping cart item with id {model.ShoppingCartItemId}");
             }
+
+            var pickupPa = await _abcProductAttributeService.GetProductAttributeByNameAsync("Pickup");
+            var pickupPam = (await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(
+                shoppingCartItem.ProductId)).First(pam => pam.ProductAttributeId == pickupPa.Id);
+            var shop = await _shopService.GetShopByIdAsync(model.ShopId);
 
             shoppingCartItem.AttributesXml = _productAttributeParser.AddProductAttribute(
                 shoppingCartItem.AttributesXml,
-                new ProductAttributeMapping(), // need to get the pickup attribute from product
-                "West Bloomfield" // Need to get the shop name
+                pickupPam,
+                // will need to add pickupMsg in here
+                shop.Name + "\nAvailable: 1 to 3 days"// + pickupMsg
             );
             
             await _shoppingCartService.UpdateShoppingCartItemAsync(
@@ -119,15 +130,11 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             return Ok();
         }
 
-        // public async Task<IActionResult> GetExistingCartItemOptions(int? shoppingCartItemId)
-        // {
-        //     // Need to get all of the options based on the shopping cart item id (and product id) provided.
-        //     // Delivery options
-        //     // Pickup in store (but where do we get the zip code from?)
-        //     // Warranties
-        //     // Going to be very similar to what we do in Add to Cart
-
-        // }
+        public async Task<IActionResult> GetEditCartItemInfo(int? shoppingCartItemId, int? zip)
+        {
+            // let's start with getting the delivery options info... might need to combine what's in CartController
+            return Ok();
+        }
 
         private double Distance(double lat1, double lng1, double lat2, double lng2)
         {
