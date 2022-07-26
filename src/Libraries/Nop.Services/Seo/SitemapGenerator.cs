@@ -535,9 +535,11 @@ namespace Nop.Services.Seo
                 getRouteParamsAwait != null ? await getRouteParamsAwait(null) : null,
                 await GetHttpProtocolAsync());
 
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             var updatedOn = dateTimeUpdatedOn ?? DateTime.UtcNow;
             var languages = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled
-                ? await _languageService.GetAllLanguagesAsync()
+                ? await _languageService.GetAllLanguagesAsync(storeId: store.Id)
                 : null;
 
             if (languages == null)
