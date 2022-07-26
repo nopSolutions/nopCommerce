@@ -24,6 +24,7 @@ const warrantyInformation = document.querySelector('.warranty-information');
 var cartSlideoutShoppingCartItemId = 0;
 var cartSlideoutProductId = 0;
 var isPickup = false;
+var hasWarranties = false;
 
 // Event listeners for updating the check delivery options button:
 zipCodeInput.addEventListener('keyup', updateCheckDeliveryAvailabilityButton);
@@ -57,7 +58,7 @@ function openDeliveryOptions(response) {
 
     if (response.isDeliveryAvailable) {
         deliveryOptions.style.display = "block";
-        deliveryOptionsContinue.style.display = "block";
+        updateContinueButton();
     } else {
         deliveryNotAvailable.style.display = "block";
     }
@@ -93,6 +94,7 @@ function hideCartSlideout() {
     cartSlideoutBackButton.style.display = "none";
 
     isPickup = false;
+    hasWarranties = false;
 
     hideDeliveryOptionsInformation();
     hideWarrantyInformation();
@@ -114,7 +116,7 @@ function back() {
         pickupInStoreOptions.style.display = "none";
 
         deliveryOptions.style.display = "block";
-        deliveryOptionsContinue.style.display = "block";
+        updateContinueButton();
     } else if (warrantyOptions.style.display === "block") {
         warrantyOptions.style.display = "none";
 
@@ -122,7 +124,7 @@ function back() {
             pickupInStoreOptions.style.display = "block";
         } else {
             deliveryOptions.style.display = "block";
-            deliveryOptionsContinue.style.display = "block";
+            updateContinueButton();
         }
     } else if (deliveryOptions.style.display === "block" || deliveryNotAvailable.style.display === "block") {
         deliveryNotAvailable.style.display = "none";
@@ -143,13 +145,17 @@ function updateCartSlideoutHtml(response) {
     if (response.slideoutInfo.SubtotalHtml) {
         $('.cart-slideout__subtotal').html(response.slideoutInfo.SubtotalHtml);
     }
-    if (response.slideoutInfo.WarrantyHtml) {
+    hasWarranties = response.slideoutInfo.WarrantyHtml &&
+                    response.slideoutInfo.WarrantyHtml !== "\n" &&
+                    response.slideoutInfo.WarrantyHtml !== "\r\n";
+    if (hasWarranties) {
         $('.cart-slideout__warranty').html(response.slideoutInfo.WarrantyHtml);
     }
 
     // Should only check zip code if product has delivery options
     if (response.slideoutInfo.DeliveryOptionsHtml &&
-        response.slideoutInfo.DeliveryOptionsHtml !== "\n") {
+        response.slideoutInfo.DeliveryOptionsHtml !== "\n" &&
+        response.slideoutInfo.DeliveryOptionsHtml !== "\r\n") {
         deliveryInput.style.display = "block";
         zipCodeInput.value = getCookie('customerZipCode');
         updateCheckDeliveryAvailabilityButton();
@@ -158,6 +164,10 @@ function updateCartSlideoutHtml(response) {
         cartSlideoutProductId = response.slideoutInfo.ProductId;
         cartSlideoutShoppingCartItemId = response.slideoutInfo.ShoppingCartItemId;
     }
+}
+
+function updateContinueButton() {
+    deliveryOptionsContinue.style.display = hasWarranties || isPickup ? "block" : "none";
 }
 
 function clickContinueButton() {
@@ -242,6 +252,7 @@ function setAttributeListeners(shoppingCartItemId) {
                 });
 
                 isPickup = responseJson.IsPickup;
+                updateContinueButton();
 
                 $('.cart-slideout__subtotal').html(responseJson.SubtotalHtml);
 
