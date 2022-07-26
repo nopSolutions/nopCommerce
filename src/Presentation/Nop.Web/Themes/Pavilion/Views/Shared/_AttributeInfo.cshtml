@@ -10,7 +10,8 @@
         // remove attribute name
         deliveryPickupOptions = deliveryPickupOptions.Substring(deliveryPickupOptions.IndexOf(':') + 2);
         // remove second price difference
-        deliveryPickupOptions = deliveryPickupOptions.Substring(0, deliveryPickupOptions.IndexOf('['));
+        var braceIndex = deliveryPickupOptions.IndexOf('[') == -1 ? deliveryPickupOptions.Length : deliveryPickupOptions.IndexOf('[');
+        deliveryPickupOptions = deliveryPickupOptions.Substring(0, braceIndex);
         deliveryPickupOptions = deliveryPickupOptions.Trim();
     }
     var warranty = attributes.FirstOrDefault(a => a.Contains("Warranty: "));
@@ -22,8 +23,6 @@
         warranty = warranty.Replace('[', '(').Replace(']', ')').Remove(warranty.IndexOf('+'), 1);
         warranty = warranty.Trim();
     }
-
-    var a = 1;
 }
 
 @if (attributes.Any())
