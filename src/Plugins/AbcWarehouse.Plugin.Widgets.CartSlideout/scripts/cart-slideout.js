@@ -24,6 +24,7 @@ const warrantyInformation = document.querySelector('.warranty-information');
 var cartSlideoutShoppingCartItemId = 0;
 var cartSlideoutProductId = 0;
 var isPickup = false;
+var hasWarranties = false;
 
 // Event listeners for updating the check delivery options button:
 zipCodeInput.addEventListener('keyup', updateCheckDeliveryAvailabilityButton);
@@ -92,6 +93,9 @@ function hideCartSlideout() {
     warrantyOptions.style.display = "none";
     cartSlideoutBackButton.style.display = "none";
 
+    isPickup = false;
+    hasWarranties = false;
+
     hideDeliveryOptionsInformation();
     hideWarrantyInformation();
 
@@ -141,7 +145,8 @@ function updateCartSlideoutHtml(response) {
     if (response.slideoutInfo.SubtotalHtml) {
         $('.cart-slideout__subtotal').html(response.slideoutInfo.SubtotalHtml);
     }
-    if (response.slideoutInfo.WarrantyHtml) {
+    hasWarranties = response.slideoutInfo.WarrantyHtml && response.slideoutInfo.WarrantyHtml !== "\n"
+    if (hasWarranties) {
         $('.cart-slideout__warranty').html(response.slideoutInfo.WarrantyHtml);
     }
 
@@ -286,9 +291,12 @@ function setInformationalIconListeners() {
             deliveryOptionsInformation.style.display = "block";
         }
     }
-    warrantyInformationIcon.onclick = function () {
-        warrantyInformation.style.display = "block";
-    };
+
+    if (hasWarranties) {
+        warrantyInformationIcon.onclick = function () {
+            warrantyInformation.style.display = "block";
+        };
+    }
 }
 
 function editCartItem(shoppingCartItemId) {
