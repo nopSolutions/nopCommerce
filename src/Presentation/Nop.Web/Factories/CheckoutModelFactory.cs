@@ -10,6 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -59,6 +60,7 @@ namespace Nop.Web.Factories
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -92,7 +94,8 @@ namespace Nop.Web.Factories
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            TaxSettings taxSettings)
         {
             _addressSettings = addressSettings;
             _captchaSettings = captchaSettings;
@@ -123,6 +126,7 @@ namespace Nop.Web.Factories
             _paymentSettings = paymentSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -251,6 +255,7 @@ namespace Nop.Web.Factories
                 ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep
             };
 
+            
             //existing addresses
             var customer = await _workContext.GetCurrentCustomerAsync();
             var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
@@ -290,6 +295,14 @@ namespace Nop.Web.Factories
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: customer,
                 overrideAttributesXml: overrideAttributesXml);
+
+            if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled)
+            {
+                model.BillingNewAddress.VatNumber = customer.VatNumber;
+                model.BillingNewAddress.EuVatEnabled = true;
+                model.BillingNewAddress.EuVatEnabledForGuests = _taxSettings.EuVatEnabledForGuests;
+            }
+
             return model;
         }
 

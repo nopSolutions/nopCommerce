@@ -4798,6 +4798,17 @@ label, label + * {
   color: #444;
 }
 
+.vat-number-warning {
+  text-align: center;
+  font-size: 13px;
+  color: #e4434b;
+  margin-top: 5px;
+}
+
+  .vat-number-warning a {
+    text-decoration: underline;
+  }
+
 .checkout-page .pickup-in-store {
   text-align: center;
 }

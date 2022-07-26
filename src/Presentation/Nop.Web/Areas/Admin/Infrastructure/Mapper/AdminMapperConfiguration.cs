@@ -1615,6 +1615,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.EuVatAssumeValid_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.EuVatEnabled_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.EuVatEnabledForGuests_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.EuVatShopCountries, options => options.Ignore())
                 .ForMember(model => model.EuVatShopCountryId_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.EuVatUseWebService_OverrideForStore, options => options.Ignore())
