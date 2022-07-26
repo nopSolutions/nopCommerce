@@ -1,6 +1,4 @@
 ﻿@model AddressModel
-@using Nop.Core
-@inject IWebHelper webHelper
 
 <input class="address-id" asp-for="Id" type="hidden"/>
 <div class="edit-address">
@@ -141,27 +139,6 @@
                 <nop-required />
             }
             <span asp-validation-for="FaxNumber"></span>
-        </div>
-    }
-    @if (Model.EuVatEnabled)
-    {
-        <div class="inputs">
-            <label asp-for="VatNumber" asp-postfix=":"></label>
-            @if (Model.EuVatEnabledForGuests)
-            {
-                <input asp-for="VatNumber" />
-                <span asp-validation-for="VatNumber"></span>
-            }
-            else
-            {
-                 var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url)
-                    ? url.ToString()
-                    : webHelper.GetRawUrl(Context.Request);
-
-                <span class="vat-number-warning">
-                    @T("Address.Fields.VatNumber.Warning", Url.RouteUrl("Register", new { returnUrl }))
-                </span>
-            }
         </div>
     }
     @if (Model.CustomAddressAttributes.Count > 0)

@@ -77,11 +77,6 @@ namespace Nop.Web.Models.Common
         [NopResourceDisplayName("Address.Fields.FaxNumber")]
         public string FaxNumber { get; set; }
 
-        public bool EuVatEnabled { get; set; }
-        public bool EuVatEnabledForGuests { get; set; }
-        [NopResourceDisplayName("Address.Fields.VatNumber")]
-        public string VatNumber { get; set; }
-
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
 

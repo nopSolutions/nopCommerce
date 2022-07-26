@@ -274,9 +274,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#1961
                 ["Admin.Configuration.Settings.Tax.EuVatEnabledForGuests"] = "EU VAT enabled for guests",
-                ["Admin.Configuration.Settings.Tax.EuVatEnabledForGuests.Hint"] = "Check to enable EU VAT (the European Union Value Added Tax) for guest customers.",
-                ["Address.Fields.VatNumber"] = "VAT number",
-                ["Address.Fields.VatNumber.Warning"] = "VAT number can be entered and used only after <a href=\"{0}\">registration</a>.",
+                ["Admin.Configuration.Settings.Tax.EuVatEnabledForGuests.Hint"] = "Check to enable EU VAT (the European Union Value Added Tax) for guest customers. They will have to enter it during the checkout at the billing address step.",
+                ["Checkout.VatNumber"] = "VAT number",
+                ["Checkout.VatNumber.Disabled"] = "VAT number can be entered (on the <a href=\"{0}\">customer info page</a>) and used only after registration",
+                ["Checkout.VatNumber.Warning"] = "VAT number is {0}",
 
             }, languageId).Wait();
 

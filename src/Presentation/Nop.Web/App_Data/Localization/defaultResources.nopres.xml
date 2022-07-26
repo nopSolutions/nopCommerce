@@ -1251,12 +1251,6 @@
   <LocaleResource Name="Address.Fields.StateProvince.Required">
     <Value>State / province is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Address.Fields.VatNumber">
-    <Value>VAT number</Value>
-  </LocaleResource>
-  <LocaleResource Name="Address.Fields.VatNumber.Warning">
-    <Value>VAT number can be entered and used only after <a href="{0}">registration</a>.</Value>
-  </LocaleResource>
   <LocaleResource Name="Address.Fields.ZipPostalCode">
     <Value>Zip / postal code</Value>
   </LocaleResource>
@@ -9034,7 +9028,7 @@
     <Value>EU VAT enabled for guests</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatEnabledForGuests.Hint">
-    <Value>Check to enable EU VAT (the European Union Value Added Tax) for guest customers.</Value>
+    <Value>Check to enable EU VAT (the European Union Value Added Tax) for guest customers. They will have to enter it during the checkout at the billing address step.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatShopCountry">
     <Value>Your shop country</Value>
@@ -16544,6 +16538,15 @@
   </LocaleResource>
   <LocaleResource Name="Checkout.UseRewardPoints">
     <Value>Use my reward points, {0} of {1} reward points ({2}) available for this order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.VatNumber">
+    <Value>VAT number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.VatNumber.Disabled">
+    <Value>VAT number can be entered (on the <a href="{0}">customer info page</a>) and used only after registration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.VatNumber.Warning">
+    <Value>VAT number is {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.YourOrderHasBeenSuccessfullyProcessed">
     <Value>Your order has been successfully processed!</Value>
