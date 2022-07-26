@@ -164,7 +164,7 @@ namespace Nop.Services.Catalog
 
             if (!isMinimumStockReached && !_catalogSettings.PublishBackProductWhenCancellingOrders)
                 return;
-            
+
             switch (product.LowStockActivity)
             {
                 case LowStockActivity.DisableBuyButton:
@@ -344,7 +344,7 @@ namespace Nop.Services.Catalog
 
             var stockMessage = string.Empty;
             var stockQuantity = await GetTotalStockQuantityAsync(product);
-            
+
             if (stockQuantity > 0)
             {
                 if (product.MinStockQuantity >= stockQuantity && product.LowStockActivity == LowStockActivity.Nothing)
@@ -497,12 +497,12 @@ namespace Nop.Services.Catalog
                 return new List<CrossSellProduct>();
 
             var query = from csp in _crossSellProductRepository.Table
-                join p in _productRepository.Table on csp.ProductId2 equals p.Id
-                where productIds.Contains(csp.ProductId1) &&
-                      !p.Deleted &&
-                      (showHidden || p.Published)
-                orderby csp.Id
-                select csp;
+                        join p in _productRepository.Table on csp.ProductId2 equals p.Id
+                        where productIds.Contains(csp.ProductId1) &&
+                              !p.Deleted &&
+                              (showHidden || p.Published)
+                        orderby csp.Id
+                        select csp;
             var crossSellProducts = await query.ToListAsync();
 
             return crossSellProducts;
@@ -866,12 +866,12 @@ namespace Nop.Services.Catalog
             else if (overridePublished.HasValue)
                 productsQuery = productsQuery.Where(p => p.Published == overridePublished.Value);
 
-            //apply store mapping constraints
-            productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
-
-            //apply ACL constraints
             if (!showHidden)
             {
+                //apply store mapping constraints
+                productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
+
+                //apply ACL constraints
                 var customer = await _workContext.GetCurrentCustomerAsync();
                 productsQuery = await _aclService.ApplyAcl(productsQuery, customer);
             }
@@ -1025,7 +1025,8 @@ namespace Nop.Services.Catalog
                         where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
                             categoryIds.Contains(pc.CategoryId)
                         group pc by pc.ProductId into pc
-                        select new { 
+                        select new
+                        {
                             ProductId = pc.Key,
                             DisplayOrder = pc.First().DisplayOrder
                         };
@@ -1050,7 +1051,8 @@ namespace Nop.Services.Catalog
                         where (!excludeFeaturedProducts || !pm.IsFeaturedProduct) &&
                             manufacturerIds.Contains(pm.ManufacturerId)
                         group pm by pm.ProductId into pm
-                        select new { 
+                        select new
+                        {
                             ProductId = pm.Key,
                             DisplayOrder = pm.First().DisplayOrder
                         };
@@ -1095,7 +1097,7 @@ namespace Nop.Services.Catalog
                         select p;
                 }
             }
-            
+
             return await productsQuery.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy).ToPagedListAsync(pageIndex, pageSize);
         }
 

@@ -98,14 +98,15 @@ namespace Nop.Services.Topics
                 var query = _topicRepository.Table;
 
                 if (!showHidden)
+                {
                     query = query.Where(t => t.Published);
 
-                //apply store mapping constraints
-                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                    //apply store mapping constraints
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
-                //apply ACL constraints
-                if (!showHidden)
+                    //apply ACL constraints
                     query = await _aclService.ApplyAcl(query, customerRoleIds);
+                }
 
                 return query.Where(t => t.SystemName == systemName)
                     .OrderBy(t => t.Id)
@@ -124,7 +125,7 @@ namespace Nop.Services.Topics
         /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opics
+        /// The task result contains the topics
         /// </returns>
         public virtual async Task<IList<Topic>> GetAllTopicsAsync(int storeId,
             bool ignoreAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
@@ -135,14 +136,16 @@ namespace Nop.Services.Topics
             return await _topicRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
+                {
                     query = query.Where(t => t.Published);
 
-                //apply store mapping constraints
-                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                    //apply store mapping constraints
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
-                //apply ACL constraints
-                if (!showHidden && !ignoreAcl)
-                    query = await _aclService.ApplyAcl(query, customerRoleIds);
+                    //apply ACL constraints
+                    if (!ignoreAcl)
+                        query = await _aclService.ApplyAcl(query, customerRoleIds);
+                }
 
                 if (onlyIncludedInTopMenu)
                     query = query.Where(t => t.IncludeInTopMenu);

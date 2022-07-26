@@ -111,8 +111,9 @@ namespace Nop.Web.Factories
                 !await _aclService.AuthorizeAsync(topic) ||
                 //store mapping
                 !await _storeMappingService.AuthorizeAsync(topic))
-
+            {
                 return null;
+            }
 
             return await PrepareTopicModelAsync(topic);
         }
