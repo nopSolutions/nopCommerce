@@ -186,14 +186,14 @@ namespace Nop.Services.ExportImport
 
         private static ExportedAttributeType GetTypeOfExportedAttribute(IXLWorksheet worksheet, PropertyManager<ExportProductAttribute> productAttributeManager, PropertyManager<ExportSpecificationAttribute> specificationAttributeManager, int iRow)
         {
-            productAttributeManager.ReadFromXlsx(worksheet, iRow, ExportProductAttribute.ProducAttributeCellOffset);
+            productAttributeManager.ReadFromXlsx(worksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
 
             if (productAttributeManager.IsCaption)
             {
                 return ExportedAttributeType.ProductAttribute;
             }
 
-            specificationAttributeManager.ReadFromXlsx(worksheet, iRow, ExportProductAttribute.ProducAttributeCellOffset);
+            specificationAttributeManager.ReadFromXlsx(worksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
 
             if (specificationAttributeManager.IsCaption)
             {
@@ -1002,10 +1002,10 @@ namespace Nop.Services.ExportImport
             var allAttributeIds = new List<int>();
             var allSpecificationAttributeOptionIds = new List<int>();
 
-            var attributeIdCellNum = 1 + ExportProductAttribute.ProducAttributeCellOffset;
+            var attributeIdCellNum = 1 + ExportProductAttribute.ProductAttributeCellOffset;
             var specificationAttributeOptionIdCellNum =
                 specificationAttributeManager.GetIndex("SpecificationAttributeOptionId") +
-                ExportProductAttribute.ProducAttributeCellOffset;
+                ExportProductAttribute.ProductAttributeCellOffset;
 
             var productsInFile = new List<int>();
 
@@ -1045,7 +1045,7 @@ namespace Nop.Services.ExportImport
                     {
                         case ExportedAttributeType.ProductAttribute:
                             productAttributeManager.ReadFromXlsx(worksheet, endRow,
-                                ExportProductAttribute.ProducAttributeCellOffset);
+                                ExportProductAttribute.ProductAttributeCellOffset);
                             if (int.TryParse((worksheet.Row(endRow).Cell(attributeIdCellNum).Value ?? string.Empty).ToString(), out var aid))
                             {
                                 allAttributeIds.Add(aid);
@@ -1053,7 +1053,7 @@ namespace Nop.Services.ExportImport
 
                             break;
                         case ExportedAttributeType.SpecificationAttribute:
-                            specificationAttributeManager.ReadFromXlsx(worksheet, endRow, ExportProductAttribute.ProducAttributeCellOffset);
+                            specificationAttributeManager.ReadFromXlsx(worksheet, endRow, ExportProductAttribute.ProductAttributeCellOffset);
 
                             if (int.TryParse((worksheet.Row(endRow).Cell(specificationAttributeOptionIdCellNum).Value ?? string.Empty).ToString(), out var saoid))
                             {

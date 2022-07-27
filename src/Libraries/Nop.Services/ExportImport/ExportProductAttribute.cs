@@ -5,7 +5,7 @@
         /// <summary>
         ///  Gets or sets the cell offset
         /// </summary>
-        public static int ProducAttributeCellOffset { get; } = 2;
+        public static int ProductAttributeCellOffset { get; } = 2;
 
         /// <summary>
         /// Gets or sets the attribute identifier
