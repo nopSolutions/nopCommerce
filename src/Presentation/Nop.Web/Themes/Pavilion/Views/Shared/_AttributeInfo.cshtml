@@ -15,6 +15,17 @@
         deliveryPickupOptions = deliveryPickupOptions.Trim();
     }
 
+    var haulaway = attributes.FirstOrDefault(a => a.Contains("Haul Away "));
+    if (haulaway != null)
+    {
+        // remove attribute name
+        haulaway = haulaway.Substring(haulaway.IndexOf(':') + 2);
+        // remove second price difference
+        var braceIndex = haulaway.IndexOf('[') == -1 ? haulaway.Length : haulaway.IndexOf('[');
+        haulaway = haulaway.Substring(0, braceIndex);
+        haulaway = haulaway.Trim();
+    }
+
     var pickup = attributes.FirstOrDefault(a => a.Contains("Pickup: "));
     var available = attributes.FirstOrDefault(a => a.Contains("Available: "));
     if (pickup != null && available != null)
@@ -43,6 +54,10 @@
             <div class="abc-cart-attribute-info__section">
                 <h4>Delivery/Pickup Options</h4>
                 <p>@Html.Raw(@deliveryPickupOptions)</p>
+                @if (haulaway != null)
+                {
+                    <p>@haulaway</p>
+                }
                 @if (pickup != null && available != null)
                 {
                     <p>@pickup: @available</p>

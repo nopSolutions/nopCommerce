@@ -315,11 +315,15 @@ function setInformationalIconListeners() {
 async function editCartItemAsync(shoppingCartItemId) {
     editMode = true;
     var zip = getCookie('customerZipCode');
+
+    AjaxCart.setLoadWaiting(true);
     const response = await fetch(`/AddToCart/GetEditCartItemInfo?shoppingCartItemId=${shoppingCartItemId}&zip=${zip}`);
     if (response.status != 200) {
         alert('Error occurred when editing cart item.');
+        AjaxCart.setLoadWaiting(false);
         return;
     }
+    AjaxCart.setLoadWaiting(false);
 
     const responseJson = await response.json();
     showCartSlideout(responseJson);

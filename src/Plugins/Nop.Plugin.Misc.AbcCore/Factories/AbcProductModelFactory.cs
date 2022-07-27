@@ -147,12 +147,12 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             string[] attributesToInclude
         ) {
             var models = await base.PrepareProductAttributeModelsAsync(product, updatecartitem);
+            var filteredModels = models.Where(m => attributesToInclude.Contains(m.Name)).ToList();
 
-            // should we pre-select the items here?
-            //_productAttributeParser
+            // Warranty needs to be pre-selected
             if (updatecartitem != null)
             {
-                var warrantyModel = models.FirstOrDefault(m => m.Name == "Warranty");
+                var warrantyModel = filteredModels.FirstOrDefault(m => m.Name == "Warranty");
                 if (warrantyModel != null)
                 {
                     var selectedValue = (await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml, warrantyModel.Id)).FirstOrDefault();
@@ -164,7 +164,7 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             }
             
 
-            return models.Where(m => attributesToInclude.Contains(m.Name)).ToList();
+            return filteredModels;
         }
 
         private async Task<string> AdjustMattressPriceAsync(int productId)
