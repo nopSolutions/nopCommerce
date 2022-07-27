@@ -1206,6 +1206,11 @@ namespace Nop.Services.Media
 
         #region Common methods
 
+        /// <summary>
+        /// Get content type for picture by file extension
+        /// </summary>
+        /// <param name="fileExtension">The file extension</param>
+        /// <returns>Picture's content type</returns>
         public string GetPictureContentTypeByFileExtension(string fileExtension)
         {
             string contentType = null;
