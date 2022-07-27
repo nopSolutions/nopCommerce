@@ -428,7 +428,8 @@ namespace Nop.Services.Media
             var lastPart = parts[^1];
             lastPart = lastPart switch
             {
-                "pjpeg" or "jpeg" => "jpg",
+                "pjpeg" => "jpg",
+                "jpeg" => "jpeg",
                 "bmp" => "bmp",
                 "gif" => "gif",
                 "x-png" or "png" => "png",
