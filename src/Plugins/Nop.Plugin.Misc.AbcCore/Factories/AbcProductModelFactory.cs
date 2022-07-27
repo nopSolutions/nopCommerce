@@ -37,6 +37,7 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
         private readonly IAbcMattressListingPriceService _abcMattressListingPriceService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
+        private readonly IProductAttributeParser _productAttributeParser;
 
         public AbcProductModelFactory(
             CaptchaSettings captchaSettings,
@@ -92,6 +93,7 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             _abcMattressListingPriceService = abcMattressListingPriceService;
             _priceFormatter = priceFormatter;
             _productAbcDescriptionService = productAbcDescriptionService;
+            _productAttributeParser = productAttributeParser;
         }
 
         protected override async Task<ProductOverviewModel.ProductPriceModel>
@@ -145,6 +147,22 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             string[] attributesToInclude
         ) {
             var models = await base.PrepareProductAttributeModelsAsync(product, updatecartitem);
+
+            // should we pre-select the items here?
+            //_productAttributeParser
+            if (updatecartitem != null)
+            {
+                var warrantyModel = models.FirstOrDefault(m => m.Name == "Warranty");
+                if (warrantyModel != null)
+                {
+                    var selectedValue = (await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml, warrantyModel.Id)).FirstOrDefault();
+                    if (selectedValue != null)
+                    {
+                        selectedValue.IsPreSelected = true;
+                    }
+                }
+            }
+            
 
             return models.Where(m => attributesToInclude.Contains(m.Name)).ToList();
         }

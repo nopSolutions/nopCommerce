@@ -1,4 +1,4 @@
-namespace Nop.Plugin.Misc.AbcFrontend.Models
+namespace Nop.Plugin.Misc.AbcCore.Delivery
 {
     public class CartSlideoutInfo
     {

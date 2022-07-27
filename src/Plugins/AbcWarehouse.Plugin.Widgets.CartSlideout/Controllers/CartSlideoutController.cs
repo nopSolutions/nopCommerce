@@ -96,7 +96,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                 SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = shoppingCartItem }),
                 EnabledAttributeMappingIds = enabledAttributeMappingIds,
                 DisabledAttributeMappingIds = disabledAttributeMappingIds,
-                IsPickup = pav.Name.Contains("Pickup In-Store")
+                IsPickup = pav == null ? false : pav.Name.Contains("Pickup In-Store")
             });
         }
 

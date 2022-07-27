@@ -25,6 +25,7 @@ var cartSlideoutShoppingCartItemId = 0;
 var cartSlideoutProductId = 0;
 var isPickup = false;
 var hasWarranties = false;
+var editMode = false;
 
 // Event listeners for updating the check delivery options button:
 zipCodeInput.addEventListener('keyup', updateCheckDeliveryAvailabilityButton);
@@ -85,21 +86,25 @@ function showCartSlideout(response) {
 }
 
 function hideCartSlideout() {
-    CartSlideoutOverlay.style.display = "none";
-    CartSlideout.style.display = "none";
-    deliveryOptions.style.display = "none";
-    deliveryOptionsContinue.style.display = "none";
-    deliveryNotAvailable.style.display = "none";
-    warrantyOptions.style.display = "none";
-    cartSlideoutBackButton.style.display = "none";
+    if (editMode) {
+        location.reload();
+    } else {
+        CartSlideoutOverlay.style.display = "none";
+        CartSlideout.style.display = "none";
+        deliveryOptions.style.display = "none";
+        deliveryOptionsContinue.style.display = "none";
+        deliveryNotAvailable.style.display = "none";
+        warrantyOptions.style.display = "none";
+        cartSlideoutBackButton.style.display = "none";
 
-    isPickup = false;
-    hasWarranties = false;
+        isPickup = false;
+        hasWarranties = false;
 
-    hideDeliveryOptionsInformation();
-    hideWarrantyInformation();
+        hideDeliveryOptionsInformation();
+        hideWarrantyInformation();
 
-    document.body.classList.remove("scrollYRemove");
+        document.body.classList.remove("scrollYRemove");
+    }
 }
 
 function hideDeliveryOptionsInformation() {
@@ -308,8 +313,28 @@ function setInformationalIconListeners() {
 }
 
 async function editCartItemAsync(shoppingCartItemId) {
+    editMode = true;
     var zip = getCookie('customerZipCode');
     const response = await fetch(`/AddToCart/GetEditCartItemInfo?shoppingCartItemId=${shoppingCartItemId}&zip=${zip}`);
+    if (response.status != 200) {
+        alert('Error occurred when editing cart item.');
+        return;
+    }
+
+    const responseJson = await response.json();
+    showCartSlideout(responseJson);
+
+    // now we'll need to show warranty options, or pickup options, or delivery options
+    cartSlideoutBackButton.style.display = "block";
+    deliveryInput.style.display = "none";
+
+    if (hasWarranties) {
+        warrantyOptions.style.display = "block";
+    } else {
+        deliveryOptions.style.display = "block";
+    }
+
+    document.querySelector('.cart-slideout__buttons__cart').style.display = "none";
 }
 
 function getCookie(cookieName) {

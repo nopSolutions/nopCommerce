@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using SevenSpikes.Nop.Plugins.StoreLocator.Domain.Shops;
 using Nop.Plugin.Misc.AbcCore.Nop;
 using SevenSpikes.Nop.Plugins.StoreLocator.Services;
+using Nop.Core.Domain.Orders;
+using Newtonsoft.Json;
 
 namespace Nop.Plugin.Misc.AbcCore.Controllers
 {
@@ -27,6 +29,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
         private readonly IDeliveryService _deliveryService;
         private readonly IGeocodeService _geocodeService;
         private readonly INopDataProvider _nopDataProvider;
+        private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IShopService _shopService;
@@ -38,6 +41,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             IDeliveryService deliveryService,
             IGeocodeService geocodeService,
             INopDataProvider nopDataProvider,
+            IProductService productService,
             IProductAttributeParser productAttributeParser,
             IShoppingCartService shoppingCartService,
             IShopService shopService,
@@ -48,6 +52,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             _deliveryService = deliveryService;
             _geocodeService = geocodeService;
             _nopDataProvider = nopDataProvider;
+            _productService = productService;
             _productAttributeParser = productAttributeParser;
             _shoppingCartService = shoppingCartService;
             _shopService = shopService;
@@ -132,13 +137,55 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
 
         public async Task<IActionResult> GetEditCartItemInfo(int? shoppingCartItemId, int? zip)
         {
-            // let's start with getting the delivery options info... might need to combine what's in CartController
-            return Ok();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var shoppingCart = await _shoppingCartService.GetShoppingCartAsync(customer);
+            var shoppingCartItem = shoppingCart.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
+            var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
+
+            var slideoutInfo = await GetSlideoutInfoAsync(product, shoppingCartItem);
+
+            return Json(new
+            {
+                slideoutInfo
+            }, new JsonSerializerSettings() 
+            { 
+                NullValueHandling = NullValueHandling.Ignore 
+            });
         }
 
         private double Distance(double lat1, double lng1, double lat2, double lng2)
         {
             return Math.Pow(Math.Pow(lat1 - lat2, 2) + Math.Pow(lng1 - lng2, 2), 0.5);
+        }
+
+        private async Task<CartSlideoutInfo> GetSlideoutInfoAsync(
+            Product product,
+            ShoppingCartItem sci)
+        {
+            return new CartSlideoutInfo() {
+                ProductInfoHtml = await RenderViewComponentToStringAsync("CartSlideoutProductInfo", new { productId = product.Id } ),
+                SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = sci } ),
+                DeliveryOptionsHtml = await RenderViewComponentToStringAsync(
+                    "CartSlideoutProductAttributes",
+                    new {
+                        product = product,
+                        includedAttributeNames = new string[]
+                        {
+                            AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName,
+                            AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName,
+                            AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName
+                        },
+                        updateCartItem = sci
+                    }),
+                WarrantyHtml = await RenderViewComponentToStringAsync(
+                    "CartSlideoutProductAttributes",
+                    new {
+                        product = product,
+                        includedAttributeNames = new string[] { "Warranty" }
+                    }),
+                ShoppingCartItemId = sci.Id,
+                ProductId = sci.ProductId
+            };
         }
     }
 }

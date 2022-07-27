@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Misc.AbcCore.Factories;
 using Nop.Web.Framework.Components;
+using Nop.Core.Domain.Orders;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
 {
@@ -16,11 +17,11 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
             _productModelFactory = productModelFactory;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(Product product, string[] includedAttributeNames)
+        public async Task<IViewComponentResult> InvokeAsync(Product product, string[] includedAttributeNames, ShoppingCartItem updateCartItem = null)
         {
             var models = await _productModelFactory.PrepareProductAttributeModelsAsync(
                 product,
-                null,
+                updateCartItem,
                 includedAttributeNames);
 
             // This will only work for Pavilion theme, will need to be adjusted for Pacific
