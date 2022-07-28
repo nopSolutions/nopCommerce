@@ -390,11 +390,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 
             await SendExternalShippingMethodRequestAsync();
 
-            if (await _warrantyService.CartContainsWarrantiesAsync(cart))
-            {
-                return RedirectToRoute("WarrantySelection");
-            }
-
             return RedirectToRoute("CheckoutPaymentMethod");
         }
 

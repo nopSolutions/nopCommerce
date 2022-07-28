@@ -108,6 +108,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
             var result = attributesXml;
             var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
             // TODO: Turn "Warranty" into an AbcDeliveryConst
+            // removes the existing option
             if (productAttribute.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName ||
                 productAttribute.Name == "Warranty")
             {
@@ -116,9 +117,19 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                     pam);
             }
 
-            // If Delivery/Pickup, need to also clear the existing Haulaway options
+            // If Delivery/Pickup, need to also clear the existing Pickup/Haulaway options
             if (productAttribute.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName)
             {
+                var pickupPa = await _productAttributeService.GetProductAttributeByNameAsync("Pickup");
+                var pickupPam = (await _productAttributeParser.ParseProductAttributeMappingsAsync(result)).FirstOrDefault(
+                    pam => pam.ProductAttributeId == pickupPa.Id);
+                if (pickupPam != null)
+                {
+                    result = _productAttributeParser.RemoveProductAttribute(
+                        result,
+                        pickupPam);
+                }
+
                 var haulAwayDeliveryPa = await _productAttributeService.GetProductAttributeByNameAsync(
                     AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName);
                 var haulAwayDeliveryPam = (await _productAttributeParser.ParseProductAttributeMappingsAsync(result)).FirstOrDefault(

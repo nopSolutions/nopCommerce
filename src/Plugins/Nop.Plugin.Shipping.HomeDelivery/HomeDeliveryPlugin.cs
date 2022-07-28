@@ -83,45 +83,44 @@ namespace Nop.Plugin.Shipping.HomeDelivery
                 return response;
             }
 
-            //TODO clone the request to prevent issues cause by modification
-            var it = getShippingOptionRequest.Items.GetEnumerator();
-            var homeDeliveryList = new List<GetShippingOptionRequest.PackageItem>();
-            var pickupInStoreList = new List<GetShippingOptionRequest.PackageItem>();
+            // find all items that don't qualify as Delivery/Pickup
+            // There are 3 possibilities
+            //  1. Delivery/Pickup (gets excluded)
+            //  2. Legacy Delivery (mattresses, just uses the old system)
+            //  3. Fedex - used by default if neither above are fulfilled
+            var legacyHomeDeliveryItems = new List<GetShippingOptionRequest.PackageItem>();
+            var fedexDeliveryItems = new List<GetShippingOptionRequest.PackageItem>();
 
-            //find and separately process all home delivery items
             foreach (var item in getShippingOptionRequest.Items)
             {
-                //checking first for items that are pickup in store so they dont get charged as home delivery
-                string itemAttributeXml = item.ShoppingCartItem.AttributesXml;
-                List<ProductAttributeMapping> pam = (await _productAttributeParser.ParseProductAttributeMappingsAsync(itemAttributeXml)).ToList();
-                if (await pam.Select(p => p).WhereAwait(async p => ((await _productAttributeService.GetProductAttributeByIdAsync(p.ProductAttributeId)).Name == "Pickup")).CountAsync() > 0)
+                var itemAttributeXml = item.ShoppingCartItem.AttributesXml;
+                var pams = await _productAttributeParser.ParseProductAttributeMappingsAsync(itemAttributeXml);
+                var pas = new List<ProductAttribute>();
+                foreach (var pam in pams)
                 {
-                    pickupInStoreList.Add(item);
+                    pas.Add(await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId));
                 }
-                // also checking product attribute (why not only check the product attribute?)
-                else if (_productHomeDeliveryRepo.Table.Any(phd => phd.Product_Id == item.ShoppingCartItem.ProductId) ||
-                         await pam.Select(p => p)
-                            .WhereAwait(async p => ((await _productAttributeService.GetProductAttributeByIdAsync(p.ProductAttributeId)).Name == "Home Delivery"))
-                            .AnyAsync())
+
+                var paNames = pas.Select(pa => pa.Name);
+
+                if (paNames.Contains(AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName))
                 {
-                    homeDeliveryList.Add(item);
+                    continue;
                 }
+                // legacy
+                else if (paNames.Contains("Home Delivery"))
+                {
+                    legacyHomeDeliveryItems.Add(item);
+                    continue;
+                }
+
+                fedexDeliveryItems.Add(item);
             }
 
-            foreach (var item in pickupInStoreList)
-            {
-                getShippingOptionRequest.Items.Remove(item);
-            }
-
-            foreach (var item in homeDeliveryList)
-            {
-                getShippingOptionRequest.Items.Remove(item);
-            }
-
-            var homeDeliveryCharge = await _homeDeliveryCostService.GetHomeDeliveryCostAsync(homeDeliveryList);
+            var legacyHomeDeliveryCharge = await _homeDeliveryCostService.GetHomeDeliveryCostAsync(legacyHomeDeliveryItems);
 
             //if there are items to be shipped, use the base calculation service if items remain that will be shipped by ups
-            if (getShippingOptionRequest.Items.Count > 0)
+            if (legacyHomeDeliveryItems.Count > 0 || fedexDeliveryItems.Count > 0)
             {
                 var oldProtocol = ServicePointManager.SecurityProtocol;
                 try
@@ -137,26 +136,27 @@ namespace Nop.Plugin.Shipping.HomeDelivery
                 {
                     ServicePointManager.SecurityProtocol = oldProtocol;
                 }
-                if (homeDeliveryList.Count > 0)
+                if (legacyHomeDeliveryItems.Count > 0)
                 {
                     var zip = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
                     await CheckZipcodeAsync(zip, response);
                     foreach (var shippingOption in response.ShippingOptions)
                     {
                         shippingOption.Name += " and Home Delivery";
-                        shippingOption.Rate += homeDeliveryCharge;
+                        shippingOption.Rate += legacyHomeDeliveryCharge;
                     }
                 }
-            }//else the cart contains only home delivery and/or pickup in store
-            else if (homeDeliveryList.Count > 0)
+            }// else check if contains only legacy home delivery
+            else if (legacyHomeDeliveryItems.Count > 0)
             {
                 var zip = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
                 await CheckZipcodeAsync(zip, response);
-                response.ShippingOptions.Add(new ShippingOption { Name = "Home Delivery", Rate = homeDeliveryCharge });
-            }//else the cart contains only pickup in store
-            else
+                response.ShippingOptions.Add(new ShippingOption { Name = "Home Delivery", Rate = legacyHomeDeliveryCharge });
+            }
+            // use the default option of no charge, since cost is built into the items
+            else 
             {
-                response.ShippingOptions.Add(new ShippingOption { Name = "Pickup in Store", Rate = decimal.Zero });
+                response.ShippingOptions.Add(new ShippingOption { Name = "Home Delivery/Pickup", Rate = 0M });
             }
             return response;
         }

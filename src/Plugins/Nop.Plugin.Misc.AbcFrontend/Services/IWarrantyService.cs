@@ -8,7 +8,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Services
 {
     public interface IWarrantyService
     {
-        Task<bool> CartContainsWarrantiesAsync(IList<ShoppingCartItem> cart);
         string GetWarrantySkuByName(string name);
     }
 }

@@ -3,6 +3,14 @@
 @model (int shoppingCartItemId, string attributeInfo);
 
 @{
+    // Need to check whether Edit is an option
+    string controllerName = Url.ActionContext.RouteData.Values["controller"].ToString();
+    string actionName = Url.ActionContext.RouteData.Values["action"].ToString();
+    var showEdit = (controllerName.Equals("ShoppingCart") && actionName.Equals("Cart")) ||
+                   (controllerName.Equals("Checkout") && actionName.Equals("BillingAddress")) ||
+                   (controllerName.Equals("Checkout") && actionName.Equals("ShippingAddress")) ||
+                   (controllerName.Equals("CustomCheckout") && actionName.Equals("ShippingMethod"));
+
     var attributes = @Model.attributeInfo.Split("<br />");
     var deliveryPickupOptions = attributes.FirstOrDefault(a => a.Contains("Delivery/Pickup Options: "));
     if (deliveryPickupOptions != null)
@@ -73,7 +81,10 @@
             </div>
         }
 
-        <a onclick="editCartItemAsync(@Model.shoppingCartItemId)">EDIT</a>
+        @if (showEdit)
+        {
+            <a onclick="editCartItemAsync(@Model.shoppingCartItemId)">EDIT</a>
+        }
     </div>
 }
 
