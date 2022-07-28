@@ -78,12 +78,11 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <param name="systemName">The topic system name</param>
         /// <param name="storeId">Store identifier; pass 0 to ignore filtering by store and load the first one</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic
+        /// The task result contains the topic
         /// </returns>
-        public virtual async Task<Topic> GetTopicBySystemNameAsync(string systemName, int storeId = 0, bool showHidden = false)
+        public virtual async Task<Topic> GetTopicBySystemNameAsync(string systemName, int storeId = 0)
         {
             if (string.IsNullOrEmpty(systemName))
                 return null;
@@ -93,27 +92,21 @@ namespace Nop.Services.Topics
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopTopicDefaults.TopicBySystemNameCacheKey, systemName, storeId, customerRoleIds);
 
-            var topic = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var query = _topicRepository.Table;
+                var query = _topicRepository.Table
+                    .Where(t => t.Published);
 
-                if (!showHidden)
-                {
-                    query = query.Where(t => t.Published);
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
-                    //apply store mapping constraints
-                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
-
-                    //apply ACL constraints
-                    query = await _aclService.ApplyAcl(query, customerRoleIds);
-                }
+                //apply ACL constraints
+                query = await _aclService.ApplyAcl(query, customerRoleIds);
 
                 return query.Where(t => t.SystemName == systemName)
                     .OrderBy(t => t.Id)
                     .FirstOrDefault();
             });
-
-            return topic;
         }
 
         /// <summary>

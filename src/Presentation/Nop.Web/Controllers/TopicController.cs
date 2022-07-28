@@ -47,12 +47,24 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> TopicDetails(int topicId)
         {
+            var topic = await _topicService.GetTopicByIdAsync(topicId);
+
+            if (topic == null)
+                return InvokeHttp404();
+
+            var notAvailable = !topic.Published ||
+                //ACL (access control list)
+                !await _aclService.AuthorizeAsync(topic) ||
+                //store mapping
+                !await _storeMappingService.AuthorizeAsync(topic);
+
             //allow administrators to preview any topic
             var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics);
 
-            var model = await _topicModelFactory.PrepareTopicModelByIdAsync(topicId, hasAdminAccess);
-            if (model == null)
+            if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
+
+            var model = await _topicModelFactory.PrepareTopicModelAsync(topic);
 
             //display "edit" (manage) link
             if (hasAdminAccess)
