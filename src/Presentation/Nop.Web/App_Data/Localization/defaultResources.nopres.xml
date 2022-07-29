@@ -9604,10 +9604,10 @@
     <Value>Please provide a name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled">
-    <Value>SSL enabled</Value>
+    <Value>SSL</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled.Hint">
-    <Value>Check if your store will be SSL secured. SSL (Secure Socket Layer) is the standard security technology for establishing an encrypted connection between a web server and the browser. This ensures that all data exchanged between web server and browser arrives unchanged.</Value>
+    <Value>SSL (Secure Socket Layer) is the standard security technology for establishing an encrypted connection between a web server and the browser. This ensures that all data exchanged between web server and browser arrives unchanged.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled.Hint2">
     <Value>WARNING: Do not enable it until you have SSL certificate installed on the server.</Value>
@@ -9620,6 +9620,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Url.Required">
     <Value>Please provide a store URL.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Ssl.Disable">
+    <Value>Disable SSL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Ssl.Enable">
+    <Value>Enable SSL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Ssl.Updated">
+    <Value>The SSL setting has been successfully changed. Do not forget to synchronize the store URL with the current HTTP protocol.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Updated">
     <Value>The store has been updated successfully.</Value>

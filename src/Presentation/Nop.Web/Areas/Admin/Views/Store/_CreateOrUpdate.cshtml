@@ -61,7 +61,12 @@
                                 <nop-label asp-for="SslEnabled" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="SslEnabled" />
+                                <a class="btn bg-olive"
+                                    asp-protocol="@(Model.SslEnabled ? Uri.UriSchemeHttp : Uri.UriSchemeHttps)"
+                                    asp-action="SetStoreSslByCurrentRequestScheme"  
+                                    asp-route-id="@Model.Id">
+                                        @(Model.SslEnabled ? T("Admin.Configuration.Stores.Ssl.Disable") : T("Admin.Configuration.Stores.Ssl.Enable"))
+                                </a>
                                 <div><em>@T("Admin.Configuration.Stores.Fields.SslEnabled.Hint2")</em></div>
                                 <span asp-validation-for="SslEnabled"></span>
                             </div>

@@ -33,6 +33,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IStoreModelFactory _storeModelFactory;
         private readonly IStoreService _storeService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -48,6 +49,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreModelFactory storeModelFactory,
             IStoreService storeService,
             IGenericAttributeService genericAttributeService,
+            IWebHelper webHelper,
             IWorkContext workContext)
         {
             _customerActivityService = customerActivityService;
@@ -59,6 +61,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _storeModelFactory = storeModelFactory;
             _storeService = storeService;
             _genericAttributeService = genericAttributeService;
+            _webHelper = webHelper;
             _workContext = workContext;
 
         }
@@ -151,6 +154,31 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [HttpsRequirement(true)]
+        public virtual async Task<IActionResult> SetStoreSslByCurrentRequestScheme(int id)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
+                return AccessDeniedView();
+
+            //try to get a store with the specified id
+            var store = await _storeService.GetStoreByIdAsync(id);
+            if (store == null)
+                return RedirectToAction("List");
+
+            var value = _webHelper.IsCurrentConnectionSecured();
+
+            if (store.SslEnabled != value)
+            {
+                store.SslEnabled = value;
+                await _storeService.UpdateStoreAsync(store);
+
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Stores.Ssl.Updated"));
+            }
+
+            return RedirectToAction("Edit", new { id = id });
+        }
+
+        [HttpsRequirement(true)]
         public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
