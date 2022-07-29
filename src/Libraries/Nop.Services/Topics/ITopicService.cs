@@ -31,12 +31,11 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <param name="systemName">The topic system name</param>
         /// <param name="storeId">Store identifier; pass 0 to ignore filtering by store and load the first one</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic
+        /// The task result contains the topic
         /// </returns>
-        Task<Topic> GetTopicBySystemNameAsync(string systemName, int storeId = 0, bool showHidden = false);
+        Task<Topic> GetTopicBySystemNameAsync(string systemName, int storeId = 0);
 
         /// <summary>
         /// Gets all topics
