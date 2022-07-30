@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Custom Plugin",
+  "SystemName": "Misc.Custom",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "Sateesh Munagala",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.Custom.dll",
+  "Description": "This plugin provides On-job-support functioanlity"
+}
