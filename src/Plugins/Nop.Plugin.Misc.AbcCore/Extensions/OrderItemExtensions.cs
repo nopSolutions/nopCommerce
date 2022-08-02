@@ -50,11 +50,16 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
             {
                 return null;
             }
+            oi.AttributeDescription = "Mattress Size: Queen<br />Base (Queen): 6&quot; Low-Pro Box Spring<br />Home Delivery: This item will be delivered to you by Hawthorne";
             var baseIndex = oi.AttributeDescription.IndexOf("Base (");
             var baseString = oi.AttributeDescription.Substring(baseIndex);
+
             var nextBreakPointIndex = baseString.IndexOf("<br />") == -1 ? baseString.Length : baseString.IndexOf("<br />");
             baseString = baseString.Substring(6, nextBreakPointIndex - 6);
+
+            nextBreakPointIndex = baseString.IndexOf("[") == -1 ? baseString.Length : baseString.IndexOf("[");
             baseString = baseString.Substring(0, baseString.IndexOf("["));
+
             baseString = baseString.Substring(baseString.IndexOf(":") + 1);
 
             return baseString.Replace("&quot;", "\"").Replace("&amp;", "&").Trim();
