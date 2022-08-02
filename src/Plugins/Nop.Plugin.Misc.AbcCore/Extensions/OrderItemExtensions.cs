@@ -58,9 +58,10 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
             baseString = baseString.Substring(6, nextBreakPointIndex - 6);
 
             nextBreakPointIndex = baseString.IndexOf("[") == -1 ? baseString.Length : baseString.IndexOf("[");
-            baseString = baseString.Substring(0, baseString.IndexOf("["));
+            baseString = baseString.Substring(0, nextBreakPointIndex);
 
-            baseString = baseString.Substring(baseString.IndexOf(":") + 1);
+            nextBreakPointIndex = baseString.IndexOf(":") == -1 ? baseString.Length : baseString.IndexOf(":");
+            baseString = baseString.Substring(nextBreakPointIndex + 1);
 
             return baseString.Replace("&quot;", "\"").Replace("&amp;", "&").Trim();
         }
