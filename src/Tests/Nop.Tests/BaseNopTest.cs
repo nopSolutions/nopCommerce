@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -258,6 +259,10 @@ namespace Nop.Tests
             services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
             services.AddSingleton<ILocker, MemoryCacheManager>();
 
+            var distributedCache = new Mock<IDistributedCache>();
+            services.AddSingleton(distributedCache.Object);
+            services.AddSingleton<DistributedCacheManager>();
+            
             //services
             services.AddTransient<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
             services.AddTransient<ICategoryService, CategoryService>();
