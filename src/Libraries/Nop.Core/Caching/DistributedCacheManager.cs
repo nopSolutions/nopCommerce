@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -80,6 +81,9 @@ namespace Nop.Core.Caching
             var item = JsonConvert.DeserializeObject<T>(json);
             _perRequestCache.Set(key.Key, item);
 
+            using var _ = await _locker.LockAsync();
+            _keys.Add(key.Key);
+
             return (true, item);
         }
 
@@ -98,6 +102,9 @@ namespace Nop.Core.Caching
 
             var item = JsonConvert.DeserializeObject<T>(json);
             _perRequestCache.Set(key.Key, item);
+
+            using var _ = _locker.Lock();
+            _keys.Add(key.Key);
 
             return (true, item);
         }

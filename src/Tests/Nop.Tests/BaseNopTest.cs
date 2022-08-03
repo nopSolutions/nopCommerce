@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -95,6 +96,7 @@ namespace Nop.Tests
     {
         private static readonly ServiceProvider _serviceProvider;
         private static readonly ResourceManager _resourceManager;
+        protected static readonly Mock<IDistributedCache> _distributedCache;
 
         protected BaseNopTest()
         {
@@ -258,6 +260,10 @@ namespace Nop.Tests
             services.AddSingleton<IMemoryCache>(memoryCache);
             services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
             services.AddSingleton<ILocker, MemoryCacheManager>();
+
+            _distributedCache = new Mock<IDistributedCache>();
+            services.AddSingleton(_distributedCache.Object);
+            services.AddSingleton<DistributedCacheManager>();
 
             //services
             services.AddTransient<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
