@@ -14004,4 +14004,10 @@
   <browscapitem name="Core_Class_HttpClient_Cached">
     <item name="Crawler" value="true" />
   </browscapitem>
+  <browscapitem name="Azure Traffic Manager Endpoint Monitor"> <!-- Azure Traffic Manager -->
+    <item name="Crawler" value="true" />
+  </browscapitem>
+  <browscapitem name="AlwaysOn"> <!-- Azure AppService AlwaysOn -->
+    <item name="Crawler" value="true" />
+  </browscapitem>
 </browsercapitems>
