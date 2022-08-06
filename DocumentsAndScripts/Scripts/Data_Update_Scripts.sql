@@ -4,9 +4,7 @@ use [itjobsupport]
 use [nopcommerce46]
 
 SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceValue like '%options%'
-
 SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceName like '%Apply for vendor%'
-
 SELECT * FROM [dbo].[Setting] WHERE [Name] like '%reviews%';
 
 ---------------------------------------------------------
@@ -16,6 +14,7 @@ ALTER TABLE [dbo].[Forums_PrivateMessage] ADD SenderSubject [nvarchar](450) NULL
 ALTER TABLE [dbo].[Forums_PrivateMessage] ADD SenderBodyText [nvarchar](max) NULL;
 ALTER TABLE [dbo].[Forums_PrivateMessage] ADD RecipientBodyText [nvarchar](max) NULL;
 ALTER TABLE [dbo].[Forums_PrivateMessage] ADD IsSystemGenerated Bit NULL;
+ALTER TABLE [dbo].[Forums_PrivateMessage] ADD ParentMessageId [int] NULL;
 
 ALTER TABLE [dbo].[Customer] ADD CustomerProfileTypeId [int] NULL;
 
@@ -24,6 +23,7 @@ ALTER TABLE [dbo].[Customer] ADD CustomerProfileTypeId [int] NULL;
 ---------------------------------------------------------
 
 ---------------  Local String update queries    ------------------------------------------
+
 UPDATE [dbo].[LocaleStringResource] SET ResourceValue='Recently viewed profiles' WHERE resourcename = 'products.recentlyviewedproducts';
 -- org: Recently viewed products
 UPDATE [dbo].[LocaleStringResource] SET ResourceValue='Shortlisted' WHERE resourcename='pagetitle.wishlist';
@@ -114,44 +114,50 @@ SELECT * FROM [dbo].[Setting] WHERE [Name] like '%catalogsettings%';
 SELECT * FROM [dbo].[Setting] WHERE [Value] like '%20%';
 
 UPDATE [dbo].[Setting] SET Value='<p>Mail Personal or Business Check, Cashiers Check or money order to:</p><p><br /><b>On Job Support</b> <br /><b>Hitech City,</b> <br /><b>Hyderabad,500018 </b> <br /><b>INDIA</b></p><p>Notice that if you pay by Personal or Business Check, your order may be held for up to 10 days after we receive your check to allow enough time for the check to clear. If you want us to server faster upon receipt of your payment, then we recommend your send a money order or Cashiers check.</p>' WHERE Name = 'checkmoneyorderpaymentsettings.descriptiontext';
+
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'shippingsettings.hideshippingtotal';
+
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'shoppingcartsettings.showgiftcardbox';
+UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'shoppingcartsettings.showproductimagesonshoppingcart';
+UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'shoppingcartsettings.allowcartitemediting';
+UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'shoppingcartsettings.moveitemsfromwishlisttocart';
 
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.showskuonproductdetailspage';
-UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'shoppingcartsettings.showproductimagesonshoppingcart';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.allowproductviewmodechanging';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.allowproductsorting';
 UPDATE [dbo].[Setting] SET Value='list'  WHERE Name = 'catalogsettings.defaultviewmode';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'catalogsettings.showsharebutton';
+
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'catalogsettings.productreviewsmustbeapproved';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.productreviewpossibleonlyafterpurchasing';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'catalogsettings.notifystoreowneraboutnewproductreviews';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'catalogsettings.notifycustomeraboutproductreviewreply';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'catalogsettings.showproductreviewstabonaccountpage';
+
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'catalogsettings.emailafriendenabled';
 UPDATE [dbo].[Setting] SET Value='10'	 WHERE Name = 'catalogsettings.recentlyviewedproductsnumber';
-UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'catalogsettings.compareproductsenabled';
+UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.compareproductsenabled';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'catalogsettings.showlinktoallresultinsearchautocomplete';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.allowproductsorting';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.searchpageallowcustomerstoselectpagesize';
 
+
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'ordersettings.anonymouscheckoutallowed';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'ordersettings.disablebillingaddresscheckoutstep';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'ordersettings.termsofserviceonshoppingcartpage';
+
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'ordersettings.termsofserviceonorderconfirmpage';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'ordersettings.onepagecheckoutdisplayordertotalsonpaymentinfotab';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'ordersettings.returnrequestsenabled';
 UPDATE [dbo].[Setting] SET Value='{ID}{YYYY}{MM}{DD}' WHERE Name = 'ordersettings.customordernumbermask';
 
-UPDATE [dbo].[Setting] SET Value='20, 50, 100' WHERE Name = 'adminareasettings.gridpagesizes';
--- Original : 7, 15, 20, 50, 100
-UPDATE [dbo].[Setting] SET Value='20' WHERE Name = 'adminareasettings.defaultgridpagesize';
--- Original : 15
 
+UPDATE [dbo].[Setting] SET Value='20, 50, 100' WHERE Name = 'adminareasettings.gridpagesizes';
+UPDATE [dbo].[Setting] SET Value='20' WHERE Name = 'adminareasettings.defaultgridpagesize';
 
 
 SELECT * FROM [dbo].[Setting] WHERE [Name] like 'shoppingCartSettings.MiniShoppingCartProductNumber%';
-SELECT * FROM [dbo].[Setting] WHERE [Name] like 'ShippingSettings.%';
+SELECT * FROM [dbo].[Setting] WHERE [Name] like 'shoppingcartsettings.move%';
 SELECT * FROM [dbo].[Setting] WHERE [Name] like 'CatalogSettings.%';
 SELECT * FROM [dbo].[Setting] WHERE [Name] like '%infotab%';
 SELECT * FROM [dbo].[Setting] WHERE [Value] like '%Anonymous%';
@@ -218,8 +224,8 @@ DBCC CHECKIDENT ('SpecificationAttributeOption', RESEED, 27);
 SELECT * FROM [dbo].[Setting] WHERE [Name] like '%customersettings.%';
 
 
-UPDATE [dbo].[Setting] SET Value='On Job support Help |Job Guidance| Interview Tips | USA | INDIA | MS Students | Masters in USA' WHERE Name = 'seosettings.homepagetitle';
-UPDATE [dbo].[Setting] SET Value='On Job support Help |Job Guidance| Interview Tips | USA | INDIA | MS Students | Masters in USA' WHERE Name = 'seosettings.homepagedescription';
-UPDATE [dbo].[Setting] SET Value='On Job support Help |Job Guidance| Interview Tips | USA | INDIA | MS Students | Masters in USA' WHERE Name = 'seosettings.defaulttitle';
-UPDATE [dbo].[Setting] SET Value='On Job support Help |Job Guidance| Interview Tips | USA | INDIA | MS Students | Masters in USA' WHERE Name = 'seosettings.defaultmetakeywords';
-UPDATE [dbo].[Setting] SET Value='On Job support Help |Job Guidance| Interview Tips | USA | INDIA | MS Students | Masters in USA' WHERE Name = 'seosettings.defaultmetadescription';
+UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.homepagetitle';
+UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.homepagedescription';
+UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.defaulttitle';
+UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.defaultmetakeywords';
+UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.defaultmetadescription';
