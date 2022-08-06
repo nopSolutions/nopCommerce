@@ -157,12 +157,12 @@ namespace Nop.CustomExtensions.Services
 
         public async Task HandleEventAsync(EntityUpdatedEvent<GenericAttribute> eventMessage)
         {
-            await Task.FromResult(0);
+            await CreateOrUpdateProductPictureMappingAsync(eventMessage.Entity);
         }
 
         public async Task HandleEventAsync(EntityDeletedEvent<GenericAttribute> eventMessage)
         {
-            await DeleteProductPictureMappingAsync(eventMessage.Entity);
+            await Task.FromResult(0);
         }
 
         public async Task AddCustomerToPaidCustomerRole(int customerId)
@@ -455,43 +455,39 @@ namespace Nop.CustomExtensions.Services
 
         public async Task CreateOrUpdateProductPictureMappingAsync(GenericAttribute entity)
         {
-
-            if (entity.Key == "AvatarPictureId" && entity.KeyGroup == "Customer")
-            {
-                var customerId = entity.EntityId;
-                var pictureId = entity.Value;
-                var customer = await _customerService.GetCustomerByIdAsync(customerId);
-
-                var pictures = await _productService.GetProductPicturesByProductIdAsync(customer.VendorId);
-
-                if (pictures.Count() == 0)
-                {
-                    //create product to picture mapping
-                    await _productService.InsertProductPictureAsync(new ProductPicture
-                    {
-                        ProductId = customer.VendorId,
-                        PictureId = Convert.ToInt32(pictureId),
-                        DisplayOrder = 1
-                    });
-                }
-            }
-        }
-
-        public async Task DeleteProductPictureMappingAsync(GenericAttribute entity)
-        {
-
-            if (entity.Key == "AvatarPictureId" && entity.KeyGroup == "Customer")
+            //check if customer deleted the profile picture
+            if (entity.Key == NopCustomerDefaults.AvatarPictureIdAttribute && entity.KeyGroup == "Customer" && entity.Value == "0")
             {
                 var customerId = entity.EntityId;
                 var customer = await _customerService.GetCustomerByIdAsync(customerId);
 
                 var pictures = await _productService.GetProductPicturesByProductIdAsync(customer.VendorId);
 
+                //delete existing product to picture mappings
                 foreach (var picture in pictures)
-                {
                     await _productService.DeleteProductPictureAsync(picture);
-                }
+            }
 
+            //check if customer updated/created the profile picture
+            if (entity.Key == NopCustomerDefaults.AvatarPictureIdAttribute && entity.KeyGroup == "Customer" && Convert.ToUInt32(entity.Value) > 0)
+            {
+                var customerId = entity.EntityId;
+                var pictureId = Convert.ToInt32(entity.Value);
+                var customer = await _customerService.GetCustomerByIdAsync(customerId);
+
+                var pictures = await _productService.GetProductPicturesByProductIdAsync(customer.VendorId);
+
+                //delete existing product to picture mappings
+                foreach (var picture in pictures)
+                    await _productService.DeleteProductPictureAsync(picture);
+
+                //create product to picture mappings
+                await _productService.InsertProductPictureAsync(new ProductPicture
+                {
+                    ProductId = customer.VendorId,
+                    PictureId = pictureId,
+                    DisplayOrder = 1
+                });
             }
         }
 
