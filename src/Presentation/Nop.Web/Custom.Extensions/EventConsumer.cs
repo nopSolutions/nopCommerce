@@ -154,7 +154,7 @@ namespace Nop.CustomExtensions.Services
         {
             await CreateOrUpdateProductPictureMappingAsync(eventMessage.Entity);
         }
-       
+
         public async Task HandleEventAsync(EntityUpdatedEvent<GenericAttribute> eventMessage)
         {
             await Task.FromResult(0);
@@ -462,9 +462,9 @@ namespace Nop.CustomExtensions.Services
                 var pictureId = entity.Value;
                 var customer = await _customerService.GetCustomerByIdAsync(customerId);
 
-                var pictures = _productService.GetProductPicturesByProductIdAsync(customer.VendorId);
+                var pictures = await _productService.GetProductPicturesByProductIdAsync(customer.VendorId);
 
-                if (pictures.count == 0)
+                if (pictures.Count() == 0)
                 {
                     //create product to picture mapping
                     await _productService.InsertProductPictureAsync(new ProductPicture
