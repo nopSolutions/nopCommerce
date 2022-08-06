@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Models.Media;
+//customization
+using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Models.ShoppingCart
 {
@@ -12,6 +14,8 @@ namespace Nop.Web.Models.ShoppingCart
         {
             Items = new List<ShoppingCartItemModel>();
             Warnings = new List<string>();
+            //customization
+            Products = new List<ProductOverviewModel>();
         }
 
         public Guid CustomerGuid { get; set; }

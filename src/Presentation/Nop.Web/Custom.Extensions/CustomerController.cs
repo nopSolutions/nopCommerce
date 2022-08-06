@@ -334,7 +334,7 @@ namespace Nop.Web.Controllers
             var profileTypeId = (int)ProductAndCustomerAttributeEnum.ProfileType;
             var profileType = _customerAttributeParser.ParseValues(customerAttributesXml, profileTypeId).FirstOrDefault();
 
-            var customerProfileTypeId = Convert.ToInt32(profileType);
+            var customerProfileTypeId = profileType != null ? Convert.ToInt32(profileType) : 0;
             return customerProfileTypeId;
         }
 
@@ -378,13 +378,13 @@ namespace Nop.Web.Controllers
                         "Public Store. New Customer Registered", await _workContext.GetCurrentCustomerAsync());
             }
 
-            
+
 
         }
 
         public async Task<bool> CreateCustomerAfflicateAsync(Customer customer)
         {
-           
+
             return true;
         }
 

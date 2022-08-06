@@ -108,6 +108,17 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> Category(int categoryId, CatalogProductsCommand command)
         {
+            //customization : re direct guest users to login/register page when they try to visit any category (except pricing category) or profiles
+            if ((await _workContext.GetCurrentCustomerAsync()).CustomerProfileTypeId == 0 && categoryId != 3)
+                return RedirectToRoute("Login");
+
+            //customization : show opposite category products to logged in user
+            //i.e for 'Support Takers' show 'Give Support' category profiles and vice versa
+            if (categoryId == 1)
+                categoryId = 2;
+            else if (categoryId == 2)
+                categoryId = 1;
+
             var category = await _categoryService.GetCategoryByIdAsync(categoryId);
 
             if (!await CheckCategoryAvailabilityAsync(category))

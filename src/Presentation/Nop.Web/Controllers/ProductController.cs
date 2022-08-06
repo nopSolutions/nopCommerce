@@ -535,6 +535,24 @@ namespace Nop.Web.Controllers
 
             var model = new ProductEmailAFriendModel();
             model = await _productModelFactory.PrepareProductEmailAFriendModelAsync(model, product, false);
+
+            //customization start
+            //to do : move this logic to custom extension folder
+            //Check whether Customer has any active paid subscription other wise display upgrade view
+            var orders = await _orderService.SearchOrdersAsync(customerId: (await _workContext.GetCurrentCustomerAsync()).Id);
+
+            //check order status code
+            var isValid = orders.Where(a => a.OrderStatus == OrderStatus.OrderActive).SingleOrDefault();
+
+            if (isValid == null)
+            {
+                //Dispaly Upgrade View
+                model.Result = await _localizationService.GetResourceAsync("Orders.UpgradeSubscription.Message");
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Orders.UpgradeSubscription.Message"));
+                //return View("_UpgradeSubscription.cshtml", model);
+            }
+            //customization end
+
             return View(model);
         }
 
@@ -552,6 +570,10 @@ namespace Nop.Web.Controllers
             {
                 ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
+
+            //customization Get Customer Email by Customer Id (Vendor Id)
+            var customerTo = await _customerService.GetCustomerByIdAsync(product.VendorId);
+            model.FriendEmail = customerTo.Email;
 
             //check whether the current customer is guest and ia allowed to email a friend
             var customer = await _workContext.GetCurrentCustomerAsync();

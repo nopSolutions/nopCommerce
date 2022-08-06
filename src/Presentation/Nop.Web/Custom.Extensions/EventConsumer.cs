@@ -13,6 +13,13 @@ using Nop.Services.Affiliates;
 using Nop.Web.Areas.Admin.Models.Affiliates;
 using Nop.Core.Domain.Affiliates;
 using Nop.Services.Localization;
+using Nop.Core.Domain.Catalog;
+using Nop.Services.Catalog;
+using System.Collections.Generic;
+using System;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Services.Seo;
+using Nop.Web.Areas.Admin.Models.Catalog;
 
 namespace Nop.CustomExtensions.Services
 {
@@ -34,6 +41,13 @@ namespace Nop.CustomExtensions.Services
         private readonly IAddressService _addressService;
         private readonly ILocalizationService _localizationService;
 
+        private readonly ICustomerAttributeParser _customerAttributeParser;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly ICategoryService _categoryService;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IProductService _productService;
+        private readonly CustomerSettings _customerSettings;
+        private readonly IWorkContext _workContext;
         #endregion
 
         #region Ctor
@@ -47,7 +61,17 @@ namespace Nop.CustomExtensions.Services
              IAffiliateService affiliateService,
              IAddressService addressService,
              ILocalizationService localizationService,
-             ICustomerActivityService customerActivityService)
+             ICustomerActivityService customerActivityService,
+
+             ICustomerAttributeParser customerAttributeParser,
+             ISpecificationAttributeService specificationAttributeService,
+             ICategoryService categoryService,
+             IUrlRecordService urlRecordService,
+             IProductService productService,
+             CustomerSettings customerSettings,
+             IWorkContext workContext
+
+            )
         {
             _genericAttributeService = genericAttributeService;
             _customerService = customerService;
@@ -59,6 +83,14 @@ namespace Nop.CustomExtensions.Services
             _affiliateService = affiliateService;
             _addressService = addressService;
             _localizationService = localizationService;
+
+            _customerAttributeParser = customerAttributeParser;
+            _specificationAttributeService = specificationAttributeService;
+            _categoryService = categoryService;
+            _urlRecordService = urlRecordService;
+            _productService = productService;
+            _customerSettings = customerSettings;
+            _workContext = workContext;
         }
 
         #endregion
@@ -74,6 +106,10 @@ namespace Nop.CustomExtensions.Services
         public async Task HandleEventAsync(CustomerRegisteredEvent eventMessage)
         {
             var customer = eventMessage.Customer;
+
+            //create product immediatly after customer registered
+            await CreateProductAsync(customer, customer.CustomCustomerAttributesXML, customer.FirstName, customer.LastName, customer.Gender);
+
             var address = await _customerService.GetAddressesByCustomerIdAsync(customer.Id);
 
             var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
@@ -94,9 +130,9 @@ namespace Nop.CustomExtensions.Services
             var friendlyUrlName = await _affiliateService.ValidateFriendlyUrlNameAsync(affiliate, freindlyName);
 
             affiliate.FriendlyUrlName = friendlyUrlName;
-            affiliate.AddressId = address.FirstOrDefault().Id;
+            //affiliate.AddressId = address.FirstOrDefault().Id;
 
-            await _affiliateService.InsertAffiliateAsync(affiliate);
+            //await _affiliateService.InsertAffiliateAsync(affiliate);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("AddNewAffiliate",
@@ -108,7 +144,7 @@ namespace Nop.CustomExtensions.Services
         {
             await Task.FromResult(0);
         }
-
+     
         public async Task AddCustomerToPaidCustomerRole(int customerId)
         {
             var customer = await _customerService.GetCustomerByIdAsync(customerId);
@@ -184,6 +220,218 @@ namespace Nop.CustomExtensions.Services
 
         }
 
+        private async Task CreateProductAsync(Customer customer, string customerAttributesXml, string firstName, string lastName, string gender)
+        {
+            var customerProfileTypeId = GetCustomerProfileTypeId(customerAttributesXml);
+
+            var shortDescriptionId = (int)ProductAndCustomerAttributeEnum.ShortDescription;
+            var fullDescriptionId = (int)ProductAndCustomerAttributeEnum.FullDescription;
+
+            var primaryTechnologyAttributeValues = _customerAttributeParser.ParseValues(customerAttributesXml, (int)ProductAndCustomerAttributeEnum.PrimaryTechnology).ToList();
+            var secondaryTechnologyAttributeValues = _customerAttributeParser.ParseValues(customerAttributesXml, (int)ProductAndCustomerAttributeEnum.SecondaryTechnology).ToList();
+
+            var totalAttributeValues = primaryTechnologyAttributeValues.Select(int.Parse).ToList();
+            totalAttributeValues.AddRange(secondaryTechnologyAttributeValues.Select(x => int.Parse(x)).Distinct().ToList());
+
+            var attributeValuesFromSpec = (await _specificationAttributeService.GetSpecificationAttributeOptionsByIdsAsync(totalAttributeValues.ToArray())).Select(x => x.Name).ToList();
+
+            var categories = await _categoryService.GetAllCategoriesAsync(attributeValuesFromSpec);
+            var missedCategories = attributeValuesFromSpec.Except(categories.Select(x => x.Name)).ToList();
+
+            var categoryIds = new List<int>();
+
+            categoryIds.Add(customerProfileTypeId); //give support or take support
+            categoryIds.AddRange(categories.Select(x => x.Id).ToList()); //primary technologies & secondary technologies selected
+
+            //create technical category if it doesnt exist in the selected primary technology list
+            var newlyAddedCategoryIds = await CreateCategoryAsync(missedCategories);
+            categoryIds.AddRange(newlyAddedCategoryIds);
+
+            // create product model with customer data
+            var productModel = new Nop.Web.Areas.Admin.Models.Catalog.ProductModel()
+            {
+                Name = firstName + " " + lastName,
+                Published = true,
+                ShortDescription = _customerAttributeParser.ParseValues(customerAttributesXml, shortDescriptionId).FirstOrDefault(),
+                FullDescription = _customerAttributeParser.ParseValues(customerAttributesXml, fullDescriptionId).FirstOrDefault(),
+                ShowOnHomepage = false,
+                AllowCustomerReviews = true,
+                IsShipEnabled = false,
+                Price = 500,
+                SelectedCategoryIds = categoryIds,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 1000,
+                IsTaxExempt = true,
+                //below are mandatory feilds otherwise the product will not be visible in front end store
+                Sku = $"SKU_{firstName}_{lastName}",
+                ProductTemplateId = 1, // simple product template
+                ProductTypeId = (int)ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                //set product vendor id to customer id. AKA VendorId means Customer Id
+                VendorId = customer.Id
+            };
+
+            var product = productModel.ToEntity<Product>();
+            product.CreatedOnUtc = DateTime.UtcNow;
+            product.UpdatedOnUtc = DateTime.UtcNow;
+
+            //product creation
+            await _productService.InsertProductAsync(product);
+
+            //product categories mappings (map this product to its cateogories)
+            await SaveCategoryMappingsAsync(product, productModel);
+
+            //set SEO settings. Otherwise the product wont be visible in front end
+            productModel.SeName = await _urlRecordService.ValidateSeNameAsync(product, productModel.SeName, product.Name, true);
+            await _urlRecordService.SaveSlugAsync(product, productModel.SeName, 0);
+
+            //Update customer with Productid as VendorId. Here Vendor Id means Product Id
+            customer.VendorId = product.Id;
+            await _customerService.UpdateCustomerAsync(customer);
+
+            //create product specification attribute mappings
+            await CreateProductSpecificationAttributeMappingsAsync(product, customerAttributesXml, gender);
+
+            //update customer availability in order to send notifications to other similar customers
+            //await CreateOrUpdateCustomerCurrentAvailabilityAsync(customer, customerAttributesXml);
+
+        }
+
+        public int GetCustomerProfileTypeId(string customerAttributesXml)
+        {
+            var profileTypeId = (int)ProductAndCustomerAttributeEnum.ProfileType;
+            var profileType = _customerAttributeParser.ParseValues(customerAttributesXml, profileTypeId).FirstOrDefault();
+
+            var customerProfileTypeId = Convert.ToInt32(profileType);
+            return customerProfileTypeId;
+        }
+
+        private async Task<List<int>> CreateCategoryAsync(List<string> categories)
+        {
+            var newlyAddedcategoryIds = new List<int>();
+            foreach (var category in categories)
+            {
+                var newCategory = new Category
+                {
+                    Name = category,
+                    CategoryTemplateId = 1,
+                    IncludeInTopMenu = false,
+                    ShowOnHomepage = false,
+                    Published = true,
+                    PriceRangeFiltering = false,
+                    PageSize = 20 //default page size otherwise cateogory wont appear 
+                };
+                await _categoryService.InsertCategoryAsync(newCategory);
+
+                //search engine name
+                var seName = await _urlRecordService.ValidateSeNameAsync(newCategory, category, category, true);
+                await _urlRecordService.SaveSlugAsync(newCategory, seName, 0);
+                newlyAddedcategoryIds.Add(newCategory.Id);
+            }
+
+            return newlyAddedcategoryIds;
+        }
+
+        protected virtual async Task SaveCategoryMappingsAsync(Product product, ProductModel model)
+        {
+            var existingProductCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true);
+
+            //delete categories
+            foreach (var existingProductCategory in existingProductCategories)
+                if (!model.SelectedCategoryIds.Contains(existingProductCategory.CategoryId))
+                    await _categoryService.DeleteProductCategoryAsync(existingProductCategory);
+
+            //add categories
+            foreach (var categoryId in model.SelectedCategoryIds)
+            {
+                if (_categoryService.FindProductCategory(existingProductCategories, product.Id, categoryId) == null)
+                {
+                    //find next display order
+                    var displayOrder = 1;
+                    var existingCategoryMapping = await _categoryService.GetProductCategoriesByCategoryIdAsync(categoryId, showHidden: true);
+                    if (existingCategoryMapping.Any())
+                        displayOrder = existingCategoryMapping.Max(x => x.DisplayOrder) + 1;
+
+                    await _categoryService.InsertProductCategoryAsync(new ProductCategory
+                    {
+                        ProductId = product.Id,
+                        CategoryId = categoryId,
+                        DisplayOrder = displayOrder
+                    });
+                }
+            }
+        }
+
+        protected virtual async Task CreateProductSpecificationAttributeMappingsAsync(Product product, string customerAttributesXml, string gender)
+        {
+            var spectAttributes = await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync();
+
+            foreach (var attribute in spectAttributes)
+            {
+                //gender specification attribute mapping
+                if (attribute.Id == _customerSettings.GenderSpecificationAttributeId)
+                {
+                    var psaGender = new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ProductId = product.Id,
+                        SpecificationAttributeOptionId = (gender == "M") ? _customerSettings.GenderMaleSpecificationAttributeOptionId : _customerSettings.GenderFeMaleSpecificationAttributeOptionId,
+                        ShowOnProductPage = true
+                    };
+                    await _specificationAttributeService.InsertProductSpecificationAttributeAsync(psaGender);
+                }
+
+                //attribute.Id means primary tech,secondary tect etc.
+                var attributeOptionIds = _customerAttributeParser.ParseValues(customerAttributesXml, attribute.Id).ToList();
+
+                foreach (var attributeOptionId in attributeOptionIds)
+                {
+                    //create product to spec attribute mapping
+                    var psa = new ProductSpecificationAttribute
+                    {
+                        //attribute id 1 means profile type. Do not Show Profile Type filter on product filters page
+                        AllowFiltering = attribute.Id == 1 ? false : true,
+                        ProductId = product.Id,
+                        SpecificationAttributeOptionId = Convert.ToInt32(attributeOptionId),
+                        ShowOnProductPage = true
+                    };
+                    await _specificationAttributeService.InsertProductSpecificationAttributeAsync(psa);
+                }
+            }
+        }
+
+        private async Task CreateOrUpdateCustomerCurrentAvailabilityAsync(Customer customer, string newCustomerAttributesXml)
+        {
+            var oldCustomAttributeXml = customer.CustomCustomerAttributesXML;
+
+            if (!string.IsNullOrEmpty(oldCustomAttributeXml))
+            {
+                //existing customer
+                var OldCustomerAvailability = _customerAttributeParser.ParseValues(oldCustomAttributeXml, (int)ProductAndCustomerAttributeEnum.CurrentAvalibility)
+                                                                  .ToList().Select(int.Parse).FirstOrDefault();
+                var newCustomerAvailability = _customerAttributeParser.ParseValues(newCustomerAttributesXml, (int)ProductAndCustomerAttributeEnum.CurrentAvalibility)
+                                                                      .ToList().Select(int.Parse).FirstOrDefault();
+
+                // SpecificationAttributeOption: 3 - Available ; 4 - UnAvailable
+                if (OldCustomerAvailability == 4 && newCustomerAvailability == 3)
+                {
+                    //customer changed from UnAvailable to Available
+                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.NotifiedAboutCustomerAvailabilityAttribute, false, (await _storeContext.GetCurrentStoreAsync()).Id);
+
+                    await _customerActivityService.InsertActivityAsync(await _workContext.GetCurrentCustomerAsync(), "PublicStore.EditCustomerAvailabilityToTrue",
+                    "Public Store. Customer changed from UnAvailable to Available", await _workContext.GetCurrentCustomerAsync());
+                }
+            }
+            else
+            {
+                //new customer
+                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.NotifiedAboutCustomerAvailabilityAttribute, false, (await _storeContext.GetCurrentStoreAsync()).Id);
+
+                await _customerActivityService.InsertActivityAsync(await _workContext.GetCurrentCustomerAsync(), "PublicStore.EditCustomerAvailabilityToTrue",
+                        "Public Store. New Customer Registered", await _workContext.GetCurrentCustomerAsync());
+            }
+
+        }
 
         #endregion
     }

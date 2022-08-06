@@ -346,6 +346,21 @@ namespace Nop.Web.Controllers
                             }
                         }
                         break;
+                   //customization
+                    case AttributeControlType.KendoMultiSelect:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                var enteredText = ctrlAttributes.ToString().Trim().Split(",");
+                                foreach (var item in enteredText)
+                                {
+                                    attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                                    attribute, item.ToString());
+                                }
+                            }
+                        }
+                        break;
                     case AttributeControlType.Datepicker:
                     case AttributeControlType.ColorSquares:
                     case AttributeControlType.ImageSquares:
@@ -862,6 +877,9 @@ namespace Nop.Web.Controllers
                 var customerUserName = model.Username?.Trim();
                 var customerEmail = model.Email?.Trim();
 
+                //customization
+                customer.CustomerProfileTypeId = GetCustomerProfileTypeId(customerAttributesXml);
+
                 var isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
                 var registrationRequest = new CustomerRegistrationRequest(customer,
                     customerEmail,
@@ -873,6 +891,9 @@ namespace Nop.Web.Controllers
                 var registrationResult = await _customerRegistrationService.RegisterCustomerAsync(registrationRequest);
                 if (registrationResult.Success)
                 {
+                    //customization
+                    //await CreateProductAsync(customer, customerAttributesXml, model.FirstName, model.LastName, model.Gender);
+
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
                         customer.TimeZoneId = model.TimeZoneId;
@@ -1359,6 +1380,17 @@ namespace Nop.Web.Controllers
 
                     if (_forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled)
                         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SignatureAttribute, model.Signature);
+
+                    //customization
+                    await CreateOrUpdateCustomerCurrentAvailabilityAsync(customer, customerAttributesXml);
+
+                    //save customer attributes
+                    // to do : revisit this logic again
+                    //await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
+                      //  NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
+
+                    //customization
+                    await UpdateProductAsync(customer, customerAttributesXml, model.FirstName, model.LastName);
 
                     //GDPR
                     if (_gdprSettings.GdprEnabled)

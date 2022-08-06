@@ -23,7 +23,14 @@ namespace Nop.Data.Mapping.Builders.Forums
                 .WithColumn(nameof(PrivateMessage.Subject)).AsString(450).NotNullable()
                 .WithColumn(nameof(PrivateMessage.Text)).AsString(int.MaxValue).NotNullable()
                 .WithColumn(nameof(PrivateMessage.FromCustomerId)).AsInt32().ForeignKey<Customer>().OnDelete(Rule.None)
-                .WithColumn(nameof(PrivateMessage.ToCustomerId)).AsInt32().ForeignKey<Customer>().OnDelete(Rule.None);
+                .WithColumn(nameof(PrivateMessage.ToCustomerId)).AsInt32().ForeignKey<Customer>().OnDelete(Rule.None)
+                //customization
+                .WithColumn(nameof(PrivateMessage.SenderSubject)).AsString(450).Nullable()
+                .WithColumn(nameof(PrivateMessage.SenderBodyText)).AsString(int.MaxValue).Nullable()
+                .WithColumn(nameof(PrivateMessage.RecipientBodyText)).AsString(int.MaxValue).Nullable()
+                .WithColumn(nameof(PrivateMessage.IsSystemGenerated)).AsBoolean().Nullable()
+                .WithColumn(nameof(PrivateMessage.ParentMessageId)).AsInt32().Nullable()
+                ;
         }
 
         #endregion

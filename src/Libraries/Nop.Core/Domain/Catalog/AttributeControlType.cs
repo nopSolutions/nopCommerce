@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Catalog
+﻿namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents an attribute control type
@@ -53,6 +53,8 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Read-only checkboxes
         /// </summary>
-        ReadonlyCheckboxes = 50
+        ReadonlyCheckboxes = 50,
+
+        KendoMultiSelect = 51
     }
 }

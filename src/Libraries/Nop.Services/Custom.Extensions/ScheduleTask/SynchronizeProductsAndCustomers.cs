@@ -26,7 +26,6 @@ namespace Nop.Services.Custom.Extensions.ScheduleTask
         private readonly CustomerSettings _customerSettings;
         private readonly ICustomerService _customerService;
 
-        //customization
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IWebHelper _webHelper;
 
@@ -191,7 +190,7 @@ namespace Nop.Services.Custom.Extensions.ScheduleTask
                 var lastName = customer.LastName;
                 var gender = customer.Gender;
 
-                ////create product model with customer data
+                // create product model with customer data
                 //var productModel = new Nop.Web.Areas.Admin.Models.Catalog.ProductModel()
                 //{
                 //    Name = firstName + " " + lastName,
@@ -348,25 +347,25 @@ namespace Nop.Services.Custom.Extensions.ScheduleTask
             {
                 var currentCustomer = await _customerService.GetCustomerByIdAsync(customer.CustomerId);
 
-                //var customerAttributeXml = await _genericAttributeService.GetAttributeAsync<string>(currentCustomer, NopCustomerDefaults.CustomCustomerAttributes);
-                //var primaryTechAttributeIds = _customerAttributeParser.ParseValues(customerAttributeXml, (int)ProductAndCustomerAttributeEnum.PrimaryTechnology)
-                //                                                      .ToList().Select(int.Parse);
+                var customerAttributeXml = currentCustomer.CustomCustomerAttributesXML;
+                var primaryTechAttributeIds = _customerAttributeParser.ParseValues(customerAttributeXml, (int)ProductAndCustomerAttributeEnum.PrimaryTechnology)
+                                                                      .ToList().Select(int.Parse);
 
-                //var specOptions = await _specificationAttributeService.GetSpecificationAttributeOptionsByIdsAsync(primaryTechAttributeIds.ToArray());
+                var specOptions = await _specificationAttributeService.GetSpecificationAttributeOptionsByIdsAsync(primaryTechAttributeIds.ToArray());
 
                 // get similar target customers
-                //var targetProducts = (await _productService.SearchProductsAsync(filteredSpecOptions: specOptions)).ToList();
-                //var targetCustomerIds = targetProducts.Where(x => x.VendorId > 0).Select(x => x.VendorId).ToArray();
+                var targetProducts = (await _productService.SearchProductsAsync(filteredSpecOptions: specOptions)).ToList();
+                var targetCustomerIds = targetProducts.Where(x => x.VendorId > 0).Select(x => x.VendorId).ToArray();
 
-                //var targetCustomers = await _customerService.GetCustomersByIdsAsync(targetCustomerIds);
+                var targetCustomers = await _customerService.GetCustomersByIdsAsync(targetCustomerIds);
 
                 var product = await _productService.GetProductByIdAsync(currentCustomer.VendorId);
 
                 //notify the target customers that current customer is avialable
-                //foreach (var customerToNotify in targetCustomers)
-                //{
-                //    await _workflowMessageService.SendCustomerAvilableNotificationToOtherCustomersAsync(product, customerToNotify, _localizationSettings.DefaultAdminLanguageId);
-                //}
+                foreach (var customerToNotify in targetCustomers)
+                {
+                    await _workflowMessageService.SendCustomerAvilableNotificationToOtherCustomersAsync(product, customerToNotify, _localizationSettings.DefaultAdminLanguageId);
+                }
 
                 //update activity log EntityId column to 1 so that notification is sent only one time when this customer is available back
                 //var activity = await _customerActivityService.GetActivityByIdAsync(customer.Id);

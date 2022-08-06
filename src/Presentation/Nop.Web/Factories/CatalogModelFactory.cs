@@ -775,7 +775,18 @@ namespace Nop.Web.Factories
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
             var isFiltering = filterableOptions.Any() || selectedPriceRange?.From is not null;
-            await PrepareCatalogProductsAsync(model, products, isFiltering);
+            //await PrepareCatalogProductsAsync(model, products, isFiltering);
+
+            //customization start
+            if (!category.Name.Contains("Pricing", StringComparison.OrdinalIgnoreCase))
+            {
+                var productsCustomSimple = await GetCustomProducts(products, command);
+                await PrepareCatalogProductsCustomAsync(model, productsCustomSimple, isFiltering);
+            }
+            else
+                await PrepareCatalogProductsAsync(model, products, isFiltering);
+
+            //customization end
 
             return model;
         }
@@ -821,8 +832,30 @@ namespace Nop.Web.Factories
             var store = await _storeContext.GetCurrentStoreAsync();
             var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: store.Id);
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
+
+            //customization
+            var customerProfileTypeId = (await _workContext.GetCurrentCustomerAsync()).CustomerProfileTypeId;
+
+            //If customerProfileTypeId is 0 then check the guest customerProfileTypeId
+            //This is to show popup on the home page
+            if (customerProfileTypeId == 0)
+            {
+                var guestCustomer = await _workContext.GetCurrentCustomerAsync();
+                customerProfileTypeId = guestCustomer.CustomerProfileTypeId;
+            }
+
+            //If customer belongs to give support hide Take support category and vice versa
+            if (customerProfileTypeId == 1) //give support
+                customerProfileTypeId = 2;
+            else if (customerProfileTypeId == 2) //take support
+                customerProfileTypeId = 1;
+
             foreach (var category in categories)
             {
+                //customization : remove give support/take support when user logged in
+                if (category.Id == customerProfileTypeId)
+                    continue;
+
                 var categoryModel = new CategorySimpleModel
                 {
                     Id = category.Id,

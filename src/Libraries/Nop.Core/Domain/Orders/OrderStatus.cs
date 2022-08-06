@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Orders
+﻿namespace Nop.Core.Domain.Orders
 {
     /// <summary>
     /// Represents an order status enumeration
@@ -23,6 +23,11 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Cancelled
         /// </summary>
-        Cancelled = 40
+        Cancelled = 40,
+
+        //customization
+        OrderExpired = 50,
+
+        OrderActive = 60
     }
 }

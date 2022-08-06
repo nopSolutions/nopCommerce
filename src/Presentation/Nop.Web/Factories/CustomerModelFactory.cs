@@ -605,6 +605,9 @@ namespace Nop.Web.Factories
                 ItemClass = "customer-orders"
             });
 
+            // customization : My Account page. Add custom naviagation items
+            CustomizeCustomerNavigationItemsAsync(model);
+
             var store = await _storeContext.GetCurrentStoreAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
 
@@ -990,17 +993,21 @@ namespace Nop.Web.Factories
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
+                    //customization
+                    //var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
+                    var attributeValues = await GetCustomCustomerAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var valueModel = new CustomerAttributeValueModel
                         {
                             Id = attributeValue.Id,
                             Name = await _localizationService.GetLocalizedAsync(attributeValue, x => x.Name),
-                            IsPreSelected = attributeValue.IsPreSelected
+                            IsPreSelected = false
                         };
+
                         attributeModel.Values.Add(valueModel);
                     }
+
                 }
 
                 //set already selected attributes
@@ -1023,7 +1030,7 @@ namespace Nop.Web.Factories
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesAsync(selectedAttributesXml);
+                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesCustomAsync(selectedAttributesXml);
                                 foreach (var attributeValue in selectedValues)
                                     foreach (var item in attributeModel.Values)
                                         if (attributeValue.Id == item.Id)
@@ -1045,6 +1052,28 @@ namespace Nop.Web.Factories
                                 var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
                                 if (enteredText.Any())
                                     attributeModel.DefaultValue = enteredText[0];
+                            }
+                        }
+                        break;
+                    //customization
+                    case AttributeControlType.KendoMultiSelect:
+                        {
+                            if (!string.IsNullOrEmpty(selectedAttributesXml))
+                            {
+                                //clear default selection
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
+
+                                //select new values
+                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesCustomAsync(selectedAttributesXml);
+                                foreach (var attributeValue in selectedValues)
+                                {
+                                    foreach (var item in attributeModel.Values)
+                                    {
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
+                                    }
+                                }
                             }
                         }
                         break;

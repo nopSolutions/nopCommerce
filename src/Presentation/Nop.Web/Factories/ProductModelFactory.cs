@@ -653,6 +653,9 @@ namespace Nop.Web.Factories
                 async Task<PictureModel> preparePictureModelAsync(Picture picture)
                 {
                     var (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
+                    //customization
+                    picture = await CustomizeProductPictureAsync(product);
+
                     var (fullSizeImageUrl, _) = await _pictureService.GetPictureUrlAsync(picture);
                     return new PictureModel
                     {
@@ -1258,6 +1261,9 @@ namespace Nop.Web.Factories
                 (imageUrl, defaultPicture) = await _pictureService.GetPictureUrlAsync(defaultPicture, defaultPictureSize, !isAssociatedProduct);
                 (fullSizeImageUrl, defaultPicture) = await _pictureService.GetPictureUrlAsync(defaultPicture, 0, !isAssociatedProduct);
 
+                //customization
+                defaultPicture = await CustomizeProductPictureAsync(product);
+
                 var defaultPictureModel = new PictureModel
                 {
                     ImageUrl = imageUrl,
@@ -1388,6 +1394,9 @@ namespace Nop.Web.Factories
                         (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
                         (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)
                 };
+
+                // customization
+                await CustomizeProductModel(model, product);
 
                 //price
                 if (preparePriceModel)
@@ -1657,6 +1666,9 @@ namespace Nop.Web.Factories
                 model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
             }
 
+            //customization
+            await CustomizeProductDetailModel(model, product);
+
             //product review overview
             model.ProductReviewOverview = await PrepareProductReviewOverviewModelAsync(product);
 
@@ -1743,6 +1755,10 @@ namespace Nop.Web.Factories
             model.ProductId = product.Id;
             model.ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
             model.ProductSeName = await _urlRecordService.GetSeNameAsync(product);
+
+
+            //customization
+            await CustomizeProductReviewModel(model, product);
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
 

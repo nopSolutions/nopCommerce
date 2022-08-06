@@ -254,7 +254,10 @@ namespace Nop.Web.Controllers
                         IsDeletedByAuthor = false,
                         IsDeletedByRecipient = false,
                         IsRead = false,
-                        CreatedOnUtc = nowUtc
+                        CreatedOnUtc = nowUtc,
+                        //customization
+                        //SenderSubject = subject
+                        ParentMessageId = replyToPM != null ? (replyToPM.ParentMessageId == 0 ? replyToPM.Id : replyToPM.ParentMessageId) : 0
                     };
 
                     await _forumService.InsertPrivateMessageAsync(privateMessage);

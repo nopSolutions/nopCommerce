@@ -695,6 +695,19 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute(name: "PageNotFound",
                 pattern: $"{lang}/page-not-found",
                 defaults: new { controller = "Common", action = "PageNotFound" });
+
+            //customization
+            //shortListed
+            endpointRouteBuilder.MapControllerRoute(name: "ShortListed",
+                pattern: $"{lang}/ShortListed/{{customerGuid?}}",
+                defaults: new { controller = "ShoppingCart", action = "ShortListed" });
+
+            //customization
+            //View Customer(Product) Mobile Number/EmailId
+            endpointRouteBuilder.MapControllerRoute(name: "ViewCustomerMobileNumber",
+                pattern: $"{lang}/ViewCustomerMobileNumber/{{productId?}}",
+                defaults: new { controller = "Product", action = "ViewCustomerMobileNumber" });
+
         }
 
         #endregion

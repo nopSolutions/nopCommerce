@@ -228,6 +228,9 @@ namespace Nop.Web.Factories
                 model.Subject = $"Re: {replyToPM.Subject}";
             }
 
+            //customization
+            await BuildCustomSendPrivateMessageModel(model, customerTo);
+
             return model;
         }
 
@@ -261,6 +264,9 @@ namespace Nop.Web.Factories
                 CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(pm.CreatedOnUtc, DateTimeKind.Utc),
                 IsRead = pm.IsRead,
             };
+
+            //customization
+            await BuildCustomPrivateMessageModel(model, pm);
 
             return model;
         }
