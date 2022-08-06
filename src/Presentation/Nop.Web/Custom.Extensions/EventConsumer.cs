@@ -20,13 +20,18 @@ using System;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Core.Domain.Common;
 
 namespace Nop.CustomExtensions.Services
 {
     /// <summary>
     /// Represents event consumer
     /// </summary>
-    public class EventConsumer : IConsumer<OrderPaidEvent>, IConsumer<CustomerRegisteredEvent>
+    public class EventConsumer : IConsumer<OrderPaidEvent>,
+        IConsumer<CustomerRegisteredEvent>,
+        IConsumer<EntityInsertedEvent<GenericAttribute>>,
+        IConsumer<EntityUpdatedEvent<GenericAttribute>>,
+        IConsumer<EntityDeletedEvent<GenericAttribute>>
     {
         #region Fields
 
@@ -144,7 +149,22 @@ namespace Nop.CustomExtensions.Services
         {
             await Task.FromResult(0);
         }
-     
+
+        public async Task HandleEventAsync(EntityInsertedEvent<GenericAttribute> eventMessage)
+        {
+            await CreateOrUpdateProductPictureMappingAsync(eventMessage.Entity);
+        }
+       
+        public async Task HandleEventAsync(EntityUpdatedEvent<GenericAttribute> eventMessage)
+        {
+            await Task.FromResult(0);
+        }
+
+        public async Task HandleEventAsync(EntityDeletedEvent<GenericAttribute> eventMessage)
+        {
+            await DeleteProductPictureMappingAsync(eventMessage.Entity);
+        }
+
         public async Task AddCustomerToPaidCustomerRole(int customerId)
         {
             var customer = await _customerService.GetCustomerByIdAsync(customerId);
@@ -431,6 +451,48 @@ namespace Nop.CustomExtensions.Services
                         "Public Store. New Customer Registered", await _workContext.GetCurrentCustomerAsync());
             }
 
+        }
+
+        public async Task CreateOrUpdateProductPictureMappingAsync(GenericAttribute entity)
+        {
+
+            if (entity.Key == "AvatarPictureId" && entity.KeyGroup == "Customer")
+            {
+                var customerId = entity.EntityId;
+                var pictureId = entity.Value;
+                var customer = await _customerService.GetCustomerByIdAsync(customerId);
+
+                var pictures = _productService.GetProductPicturesByProductIdAsync(customer.VendorId);
+
+                if (pictures.count == 0)
+                {
+                    //create product to picture mapping
+                    await _productService.InsertProductPictureAsync(new ProductPicture
+                    {
+                        ProductId = customer.VendorId,
+                        PictureId = Convert.ToInt32(pictureId),
+                        DisplayOrder = 1
+                    });
+                }
+            }
+        }
+
+        public async Task DeleteProductPictureMappingAsync(GenericAttribute entity)
+        {
+
+            if (entity.Key == "AvatarPictureId" && entity.KeyGroup == "Customer")
+            {
+                var customerId = entity.EntityId;
+                var customer = await _customerService.GetCustomerByIdAsync(customerId);
+
+                var pictures = await _productService.GetProductPicturesByProductIdAsync(customer.VendorId);
+
+                foreach (var picture in pictures)
+                {
+                    await _productService.DeleteProductPictureAsync(picture);
+                }
+
+            }
         }
 
         #endregion

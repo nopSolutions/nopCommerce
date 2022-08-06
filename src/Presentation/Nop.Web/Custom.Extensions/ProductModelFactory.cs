@@ -88,6 +88,8 @@ namespace Nop.Web.Factories
                 //picture
                 if (preparePictureModel)
                 {
+                    var productOriginal = await _productService.GetProductByIdAsync(product.Id);
+                    model.PictureModels = await PrepareProductOverviewPicturesModelAsync(productOriginal, productThumbPictureSize);
                     //model.DefaultPictureModel = await PrepareProductOverviewPictureModel(product, productThumbPictureSize);
                 }
 
