@@ -878,7 +878,7 @@ namespace Nop.Web.Controllers
                 var customerEmail = model.Email?.Trim();
 
                 //customization
-                customer.CustomerProfileTypeId = GetCustomerProfileTypeId(customerAttributesXml);
+                //customer.CustomerProfileTypeId = GetCustomerProfileTypeId(customerAttributesXml);
 
                 var isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
                 var registrationRequest = new CustomerRegistrationRequest(customer,

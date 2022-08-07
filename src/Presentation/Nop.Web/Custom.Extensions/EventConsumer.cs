@@ -112,36 +112,17 @@ namespace Nop.CustomExtensions.Services
         {
             var customer = eventMessage.Customer;
 
+            //update customer customerprofiletypeid
+            await UpdateCustomerCustomerProfileTypeIdAsync(customer);
+
+            //add customer to givesupport/take support roles
+            await AddCustomerToJobSupportRoleAsync(customer);
+
             //create product immediatly after customer registered
             await CreateProductAsync(customer, customer.CustomCustomerAttributesXML, customer.FirstName, customer.LastName, customer.Gender);
 
-            var address = await _customerService.GetAddressesByCustomerIdAsync(customer.Id);
-
-            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
-            var firstName = customer.FirstName;
-            var lastName = customer.LastName;
-
-            //affiliate.AddressId = address.Id;
-
-            var affiliate = new Affiliate
-            {
-                Active = true,
-                AdminComment = "Affiliate created for customer",
-                FriendlyUrlName = ""
-            };
-
-            //validate friendly URL name
-            var freindlyName = string.Format("referral-{0}-{1}", firstName, lastName);
-            var friendlyUrlName = await _affiliateService.ValidateFriendlyUrlNameAsync(affiliate, freindlyName);
-
-            affiliate.FriendlyUrlName = friendlyUrlName;
-            //affiliate.AddressId = address.FirstOrDefault().Id;
-
-            //await _affiliateService.InsertAffiliateAsync(affiliate);
-
-            //activity log
-            await _customerActivityService.InsertActivityAsync("AddNewAffiliate",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewAffiliate"), affiliate.Id), affiliate);
+            //create customer as customer affliate so that he can refer his friends.
+            await CreateCustomerAffliateAsync(customer);
 
         }
 
@@ -489,6 +470,63 @@ namespace Nop.CustomExtensions.Services
                     DisplayOrder = 1
                 });
             }
+        }
+
+        public async Task AddCustomerToJobSupportRoleAsync(Customer customer)
+        {
+            if (customer.CustomerProfileTypeId == (int)CustomerProfileTypeEnum.GiveSupport)
+            {
+                var giveSupportRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GiveSupportRoleName);
+                if (giveSupportRole == null)
+                    throw new NopException("'Give Support' role could not be loaded");
+
+                await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = giveSupportRole.Id });
+            }
+            else if (customer.CustomerProfileTypeId == (int)CustomerProfileTypeEnum.TakeSupport)
+            {
+                var takeSupportRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.TakeSupportRoleName);
+                if (takeSupportRole == null)
+                    throw new NopException("'Take Support' role could not be loaded");
+
+                await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = takeSupportRole.Id });
+            }
+        }
+
+        public async Task CreateCustomerAffliateAsync(Customer customer)
+        {
+            var address = await _customerService.GetAddressesByCustomerIdAsync(customer.Id);
+
+            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var firstName = customer.FirstName;
+            var lastName = customer.LastName;
+
+            //affiliate.AddressId = address.Id;
+
+            var affiliate = new Affiliate
+            {
+                Active = true,
+                AdminComment = "Affiliate created for customer",
+                FriendlyUrlName = ""
+            };
+
+            //validate friendly URL name
+            var freindlyName = string.Format("referral-{0}-{1}", firstName, lastName);
+            var friendlyUrlName = await _affiliateService.ValidateFriendlyUrlNameAsync(affiliate, freindlyName);
+
+            affiliate.FriendlyUrlName = friendlyUrlName;
+            //affiliate.AddressId = address.FirstOrDefault().Id;
+
+            //await _affiliateService.InsertAffiliateAsync(affiliate);
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("AddNewAffiliate",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewAffiliate"), affiliate.Id), affiliate);
+        }
+
+        public async Task UpdateCustomerCustomerProfileTypeIdAsync(Customer customer)
+        {
+            customer.CustomerProfileTypeId = GetCustomerProfileTypeId(customer.CustomCustomerAttributesXML);
+            await _customerService.UpdateCustomerAsync(customer);
         }
 
         #endregion

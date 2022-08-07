@@ -313,24 +313,7 @@ namespace Nop.Services.Customers
             await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = registeredRole.Id });
             
             //customization : add customer to givesupport/takesupport role
-            //To do : move this logic to custom extension folder event consumer class
-            if (request.Customer.CustomerProfileTypeId == (int)CustomerProfileTypeEnum.GiveSupport)
-            {
-                var giveSupportRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GiveSupportRoleName);
-                if (giveSupportRole == null)
-                    throw new NopException("'Give Support' role could not be loaded");
-
-                await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = giveSupportRole.Id });
-            }
-            else if (request.Customer.CustomerProfileTypeId == (int)CustomerProfileTypeEnum.TakeSupport)
-            {
-                var takeSupportRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.TakeSupportRoleName);
-                if (takeSupportRole == null)
-                    throw new NopException("'Take Support' role could not be loaded");
-
-                await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = takeSupportRole.Id });
-            }
-            //customization end
+            //this logic to custom extension folder event consumer class
 
             //remove from 'Guests' role            
             if (await _customerService.IsGuestAsync(request.Customer))
