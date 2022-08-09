@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class FaviconViewComponent : NopViewComponent
+    public partial class FaviconViewComponent : NopViewComponent
     {
         private readonly ICommonModelFactory _commonModelFactory;
 

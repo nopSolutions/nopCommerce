@@ -15,7 +15,7 @@ namespace Nop.Core.Infrastructure
     /// <summary>
     /// IO functions using the on-disk file system
     /// </summary>
-    public class NopFileProvider : PhysicalFileProvider, INopFileProvider
+    public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     {
         /// <summary>
         /// Initializes a new instance of a NopFileProvider

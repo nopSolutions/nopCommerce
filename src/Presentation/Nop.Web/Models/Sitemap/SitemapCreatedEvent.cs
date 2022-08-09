@@ -5,7 +5,7 @@ namespace Nop.Web.Models.Sitemap
     /// <summary>
     /// Represents an event that occurs when the sitemap is created
     /// </summary>
-    public class SitemapCreatedEvent
+    public partial class SitemapCreatedEvent
     {
         #region Ctor
 

@@ -3,7 +3,7 @@
     /// <summary>
     /// Order authorized event
     /// </summary>
-    public class OrderAuthorizedEvent
+    public partial class OrderAuthorizedEvent
     {
         /// <summary>
         /// Ctor

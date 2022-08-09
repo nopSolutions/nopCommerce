@@ -5,7 +5,7 @@ namespace Nop.Services.Helpers
     /// <summary>
     /// DateTime settings
     /// </summary>
-    public class DateTimeSettings : ISettings
+    public partial class DateTimeSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a default store time zone identifier

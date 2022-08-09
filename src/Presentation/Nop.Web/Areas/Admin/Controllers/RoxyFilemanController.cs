@@ -12,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     //the original file was \RoxyFileman-1.4.5-net\fileman\asp_net\main.ashx
 
     //do not validate request token (XSRF)
-    public class RoxyFilemanController : BaseAdminController
+    public partial class RoxyFilemanController : BaseAdminController
     {
         #region Fields
 

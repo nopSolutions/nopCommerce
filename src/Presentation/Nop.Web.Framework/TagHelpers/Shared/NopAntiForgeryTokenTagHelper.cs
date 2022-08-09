@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     /// "nop-antiforgery-token" tag helper
     /// </summary>
     [HtmlTargetElement("nop-antiforgery-token", TagStructure = TagStructure.WithoutEndTag)]
-    public class NopAntiForgeryTokenTagHelper : TagHelper
+    public partial class NopAntiForgeryTokenTagHelper : TagHelper
     {
         #region Properties
 

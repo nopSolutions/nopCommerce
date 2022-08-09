@@ -12,7 +12,7 @@ namespace Nop.Services.Helpers
     /// <summary>
     /// Helper class for working with XML file of Browser Capabilities Project (http://browscap.org/)
     /// </summary>
-    public class BrowscapXmlHelper
+    public partial class BrowscapXmlHelper
     {
         private readonly INopFileProvider _fileProvider;
         private Regex _crawlerUserAgentsRegexp;

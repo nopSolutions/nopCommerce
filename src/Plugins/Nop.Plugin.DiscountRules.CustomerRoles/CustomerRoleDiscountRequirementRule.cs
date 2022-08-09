@@ -14,7 +14,7 @@ using Nop.Services.Plugins;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles
 {
-    public partial class CustomerRoleDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
+    public class CustomerRoleDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
         #region Fields
 

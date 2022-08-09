@@ -6,7 +6,7 @@ namespace Nop.Services.Customers
     /// <summary>
     /// Customer registration result
     /// </summary>
-    public class CustomerRegistrationResult
+    public partial class CustomerRegistrationResult
     {
         public CustomerRegistrationResult()
         {

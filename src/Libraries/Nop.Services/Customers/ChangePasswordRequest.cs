@@ -5,7 +5,7 @@ namespace Nop.Services.Customers
     /// <summary>
     /// Change password request
     /// </summary>
-    public class ChangePasswordRequest
+    public partial class ChangePasswordRequest
     {
         /// <summary>
         /// Email

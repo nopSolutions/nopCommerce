@@ -6,7 +6,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Models
     /// <summary>
     /// Represents a custom event search model
     /// </summary>
-    public partial record CustomEventSearchModel : BaseSearchModel
+    public record CustomEventSearchModel : BaseSearchModel
     {
         #region Ctor
 

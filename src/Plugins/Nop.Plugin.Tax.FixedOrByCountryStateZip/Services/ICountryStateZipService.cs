@@ -7,7 +7,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
     /// <summary>
     /// Tax rate service interface
     /// </summary>
-    public partial interface ICountryStateZipService
+    public interface ICountryStateZipService
     {
         /// <summary>
         /// Deletes a tax rate

@@ -9,7 +9,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure.Cache
     /// <summary>
     /// Event consumer of the "Fixed or by weight" shipping plugin (used for removing unused settings)
     /// </summary>
-    public partial class FixedByWeightByTotalEventConsumer : IConsumer<EntityDeletedEvent<ShippingMethod>>
+    public class FixedByWeightByTotalEventConsumer : IConsumer<EntityDeletedEvent<ShippingMethod>>
     {
         #region Fields
         

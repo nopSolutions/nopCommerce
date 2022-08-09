@@ -7,7 +7,7 @@ namespace Nop.Core.Infrastructure
     /// <summary>
     /// Represents object for the configuring services and middleware on application startup
     /// </summary>
-    public interface INopStartup
+    public partial interface INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware

@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Orders
     /// <summary>
     /// Order voided event
     /// </summary>
-    public class OrderVoidedEvent
+    public partial class OrderVoidedEvent
     {
         #region Ctor
 

@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents an event that raised when tax rate is calculated
     /// </summary>
-    public class TaxRateCalculatedEvent
+    public partial class TaxRateCalculatedEvent
     {
         #region Ctor
 

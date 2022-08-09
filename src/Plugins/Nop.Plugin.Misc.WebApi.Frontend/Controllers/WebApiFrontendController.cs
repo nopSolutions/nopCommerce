@@ -10,7 +10,7 @@ namespace Nop.Plugin.Misc.WebApi.Frontend.Controllers
     [AutoValidateAntiforgeryToken]
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
-    public partial class WebApiFrontendController : BasePluginController
+    public class WebApiFrontendController : BasePluginController
     {
         #region Fields
 

@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.Infrastructure
     /// <summary>
     /// Represents object for the configuring MVC on application startup
     /// </summary>
-    public class NopMvcStartup : INopStartup
+    public partial class NopMvcStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware

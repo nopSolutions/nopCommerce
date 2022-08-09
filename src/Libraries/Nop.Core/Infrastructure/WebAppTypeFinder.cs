@@ -8,7 +8,7 @@ namespace Nop.Core.Infrastructure
     /// Provides information about types in the current web application. 
     /// Optionally this class can look at all assemblies in the bin folder.
     /// </summary>
-    public class WebAppTypeFinder : AppDomainTypeFinder
+    public partial class WebAppTypeFinder : AppDomainTypeFinder
     {
         #region Fields
 

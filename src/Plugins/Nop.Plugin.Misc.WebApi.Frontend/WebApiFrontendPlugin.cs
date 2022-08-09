@@ -13,7 +13,7 @@ namespace Nop.Plugin.Misc.WebApi.Frontend
     /// <summary>
     /// Represents the Web API frontend plugin
     /// </summary>
-    public partial class WebApiFrontendPlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
+    public class WebApiFrontendPlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
     {
         #region Fields
 

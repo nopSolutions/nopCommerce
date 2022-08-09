@@ -71,7 +71,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
     /// <summary>
     /// AutoMapper configuration for admin area models
     /// </summary>
-    public class AdminMapperConfiguration : Profile, IOrderedMapperProfile
+    public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
     {
         #region Ctor
 

@@ -5,7 +5,7 @@ namespace Nop.Web.Framework.Mvc.Routing
     /// <summary>
     /// Represents route publisher
     /// </summary>
-    public interface IRoutePublisher
+    public partial interface IRoutePublisher
     {
         /// <summary>
         /// Register routes

@@ -9,7 +9,7 @@ namespace Nop.Core
     /// </summary>
     /// <typeparam name="T">T</typeparam>
     [Serializable]
-    public class PagedList<T> : List<T>, IPagedList<T>
+    public partial class PagedList<T> : List<T>, IPagedList<T>
     {
         /// <summary>
         /// Ctor

@@ -12,7 +12,7 @@ using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Components
 {
-    public class RecentlyViewedProductsBlockViewComponent : NopViewComponent
+    public partial class RecentlyViewedProductsBlockViewComponent : NopViewComponent
     {
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;

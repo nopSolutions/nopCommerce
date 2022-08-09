@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.Validators
     /// <summary>
     /// Phohe number validator
     /// </summary>
-    public class PhoneNumberPropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
+    public partial class PhoneNumberPropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
     {
         private readonly CustomerSettings _customerSettings;
 

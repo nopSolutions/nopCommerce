@@ -9,7 +9,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Infrastructure.Cache
     /// <summary>
     /// Discount requirement rule event consumer (used for removing unused settings)
     /// </summary>
-    public partial class DiscountRequirementEventConsumer : IConsumer<EntityDeletedEvent<DiscountRequirement>>
+    public class DiscountRequirementEventConsumer : IConsumer<EntityDeletedEvent<DiscountRequirement>>
     {
         #region Fields
         

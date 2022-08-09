@@ -5,7 +5,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Domain
     /// <summary>
     /// Represents a pickup point of store
     /// </summary>
-    public partial class StorePickupPoint : BaseEntity
+    public class StorePickupPoint : BaseEntity
     {
         /// <summary>
         /// Gets or sets a name

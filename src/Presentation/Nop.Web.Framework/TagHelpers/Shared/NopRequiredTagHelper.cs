@@ -8,7 +8,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     /// "nop-required" tag helper
     /// </summary>
     [HtmlTargetElement("nop-required", TagStructure = TagStructure.WithoutEndTag)]
-    public class NopRequiredTagHelper : TagHelper
+    public partial class NopRequiredTagHelper : TagHelper
     {
         #region Methods
 

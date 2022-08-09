@@ -14,7 +14,7 @@ namespace Nop.Core.Infrastructure
     /// <summary>
     /// Represents Nop engine
     /// </summary>
-    public class NopEngine : IEngine
+    public partial class NopEngine : IEngine
     {
         #region Utilities
 

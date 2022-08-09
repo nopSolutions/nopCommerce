@@ -12,7 +12,7 @@ namespace Nop.Web.Infrastructure
     /// <summary>
     /// Represents the registering services on application startup
     /// </summary>
-    public class NopStartup : INopStartup
+    public partial class NopStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware

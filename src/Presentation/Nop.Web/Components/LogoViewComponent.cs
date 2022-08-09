@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class LogoViewComponent : NopViewComponent
+    public partial class LogoViewComponent : NopViewComponent
     {
         private readonly ICommonModelFactory _commonModelFactory;
 

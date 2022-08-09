@@ -9,7 +9,7 @@ namespace Nop.Services.Messages
     /// <summary>
     /// SMTP Builder
     /// </summary>
-    public interface ISmtpBuilder
+    public partial interface ISmtpBuilder
     {
         /// <summary>
         /// Create a new SMTP client for a specific email account

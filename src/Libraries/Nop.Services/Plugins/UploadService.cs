@@ -19,7 +19,7 @@ namespace Nop.Services.Plugins
     /// <summary>
     /// Represents the implementation of a service for uploading application extensions (plugins or themes) and favicon and app icons
     /// </summary>
-    public class UploadService : IUploadService
+    public partial class UploadService : IUploadService
     {
         #region Fields
 
@@ -499,7 +499,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Represents uploaded item (plugin or theme) details 
         /// </summary>
-        public class UploadedItem
+        public partial class UploadedItem
         {
             /// <summary>
             /// Gets or sets the type of an uploaded item

@@ -12,7 +12,7 @@ namespace Nop.Web.Components
     /// <summary>
     /// Represents a estimate shipping view component on shopping cart page
     /// </summary>
-    public class ShoppingCartEstimateShippingViewComponent : NopViewComponent
+    public partial class ShoppingCartEstimateShippingViewComponent : NopViewComponent
     {
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IShoppingCartService _shoppingCartService;
