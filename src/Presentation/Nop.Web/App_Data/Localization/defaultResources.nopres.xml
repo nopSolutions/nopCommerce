@@ -14709,6 +14709,12 @@
   <LocaleResource Name="Admin.Reports.SalesSummary.Store.Hint">
     <Value>Filter report by orders placed in a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Vendor.Hint">
+    <Value>Search by a specific vendor.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests">
     <Value>Return requests</Value>
   </LocaleResource>

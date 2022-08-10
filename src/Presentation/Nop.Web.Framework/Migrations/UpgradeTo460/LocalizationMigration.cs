@@ -285,6 +285,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.Stores.Ssl.Enable"] = "Enable SSL",
                 ["Admin.Configuration.Stores.Ssl.Disable"] = "Disable SSL",
                 ["Admin.Configuration.Stores.Ssl.Updated"] = "The SSL setting has been successfully changed. Do not forget to synchronize the store URL with the current HTTP protocol.",
+
+                ["Admin.Reports.SalesSummary.Vendor"] = "Vendor",
+                ["Admin.Reports.SalesSummary.Vendor.Hint"] = "Search by a specific vendor.",
             }, languageId).Wait();
 
             #endregion
