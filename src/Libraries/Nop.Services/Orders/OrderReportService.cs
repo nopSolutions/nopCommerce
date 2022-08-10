@@ -434,11 +434,11 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Get sales summary report
         /// </summary>
-        /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="categoryId">Category identifier; 0 to load all records</param>
         /// <param name="productId">Product identifier; 0 to load all records</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
@@ -530,6 +530,15 @@ namespace Nop.Services.Orders
             //filter by store
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
+
+            if (vendorId > 0)
+            {
+                query = from o in query
+                        join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                        join p in _productRepository.Table on oi.ProductId equals p.Id
+                        where p.VendorId == vendorId
+                        select o;
+            }
 
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
 

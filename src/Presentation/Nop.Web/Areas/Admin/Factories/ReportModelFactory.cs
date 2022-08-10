@@ -77,6 +77,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter orders
             var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
             var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
+
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
@@ -93,6 +96,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 categoryId: searchModel.CategoryId,
                 productId: searchModel.ProductId,
                 manufacturerId: searchModel.ManufacturerId,
+                vendorId: currentVendor?.Id ?? 0,
                 storeId: searchModel.StoreId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -173,7 +177,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare "group by" filter
             searchModel.GroupByOptions = (await GroupByOptions.Day.ToSelectListAsync()).ToList();
-            
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
