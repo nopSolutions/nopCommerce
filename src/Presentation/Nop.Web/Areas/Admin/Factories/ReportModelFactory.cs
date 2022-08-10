@@ -96,7 +96,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 categoryId: searchModel.CategoryId,
                 productId: searchModel.ProductId,
                 manufacturerId: searchModel.ManufacturerId,
-                vendorId: currentVendor?.Id ?? 0,
+                vendorId: currentVendor?.Id ?? searchModel.VendorId,
                 storeId: searchModel.StoreId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -177,6 +177,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare "group by" filter
             searchModel.GroupByOptions = (await GroupByOptions.Day.ToSelectListAsync()).ToList();
+
+            //prepare available vendors
+            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
