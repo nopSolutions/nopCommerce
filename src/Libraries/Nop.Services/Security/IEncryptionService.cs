@@ -3,7 +3,7 @@
     /// <summary>
     /// Encryption service
     /// </summary>
-    public interface IEncryptionService 
+    public partial interface IEncryptionService 
     {
         /// <summary>
         /// Create salt key

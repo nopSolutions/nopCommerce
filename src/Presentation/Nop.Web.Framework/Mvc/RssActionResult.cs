@@ -11,7 +11,7 @@ namespace Nop.Web.Framework.Mvc
     /// <summary>
     /// RSS action result
     /// </summary>
-    public class RssActionResult : ContentResult
+    public partial class RssActionResult : ContentResult
     {
         /// <summary>
         /// Ctor

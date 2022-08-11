@@ -10,7 +10,7 @@ namespace Nop.Core.ComponentModel
     /// Generic List type converted
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
-    public class GenericListTypeConverter<T> : TypeConverter
+    public partial class GenericListTypeConverter<T> : TypeConverter
     {
         /// <summary>
         /// Type converter

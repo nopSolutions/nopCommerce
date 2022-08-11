@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Components
     /// <summary>
     /// Represents a view component that displays the store scope configuration
     /// </summary>
-    public class StoreScopeConfigurationViewComponent : NopViewComponent
+    public partial class StoreScopeConfigurationViewComponent : NopViewComponent
     {
         #region Fields
 

@@ -12,7 +12,7 @@ namespace Nop.Services.Logging
     /// <summary>
     /// Customer activity service
     /// </summary>
-    public class CustomerActivityService : ICustomerActivityService
+    public partial class CustomerActivityService : ICustomerActivityService
     {
         #region Fields
 

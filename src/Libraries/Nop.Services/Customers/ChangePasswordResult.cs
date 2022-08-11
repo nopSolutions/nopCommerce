@@ -6,7 +6,7 @@ namespace Nop.Services.Customers
     /// <summary>
     /// Change password result
     /// </summary>
-    public class ChangePasswordResult
+    public partial class ChangePasswordResult
     {
         public ChangePasswordResult()
         {

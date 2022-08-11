@@ -343,7 +343,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Represents a manager for caching during an HTTP request (short term caching)
         /// </summary>
-        protected class PerRequestCache
+        protected partial class PerRequestCache
         {
             #region Fields
 

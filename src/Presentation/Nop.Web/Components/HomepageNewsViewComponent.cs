@@ -6,7 +6,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class HomepageNewsViewComponent : NopViewComponent
+    public partial class HomepageNewsViewComponent : NopViewComponent
     {
         private readonly INewsModelFactory _newsModelFactory;
         private readonly NewsSettings _newsSettings;

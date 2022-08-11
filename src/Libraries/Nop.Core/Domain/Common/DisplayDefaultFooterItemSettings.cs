@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Common
     /// <summary>
     /// Display default menu item settings
     /// </summary>
-    public class DisplayDefaultFooterItemSettings : ISettings
+    public partial class DisplayDefaultFooterItemSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether to display "sitemap" footer item

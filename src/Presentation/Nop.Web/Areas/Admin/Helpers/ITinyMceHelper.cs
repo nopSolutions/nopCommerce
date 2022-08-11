@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Areas.Admin.Helpers
 {
-    public interface ITinyMceHelper
+    public partial interface ITinyMceHelper
     {
         Task<string> GetTinyMceLanguageAsync();
     }

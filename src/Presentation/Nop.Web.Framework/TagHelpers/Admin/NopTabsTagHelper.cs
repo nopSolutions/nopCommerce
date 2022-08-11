@@ -12,7 +12,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-tabs" tag helper
     /// </summary>
     [HtmlTargetElement("nop-tabs", Attributes = ID_ATTRIBUTE_NAME)]
-    public class NopTabsTagHelper : TagHelper
+    public partial class NopTabsTagHelper : TagHelper
     {
         #region Constants
 
@@ -173,7 +173,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-tab" tag helper
     /// </summary>
     [HtmlTargetElement("nop-tab", ParentTag = "nop-tabs", Attributes = NAME_ATTRIBUTE_NAME)]
-    public class NopTabTagHelper : TagHelper
+    public partial class NopTabTagHelper : TagHelper
     {
         #region Constants
 
@@ -325,7 +325,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// <summary>
     /// Tab context item
     /// </summary>
-    public class NopTabContextItem
+    public partial class NopTabContextItem
     {
         /// <summary>
         /// Title

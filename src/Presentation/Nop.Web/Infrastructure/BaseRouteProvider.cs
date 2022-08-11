@@ -8,7 +8,7 @@ namespace Nop.Web.Infrastructure
     /// <summary>
     /// Represents base provider
     /// </summary>
-    public class BaseRouteProvider
+    public partial class BaseRouteProvider
     {
         /// <summary>
         /// Get pattern used to detect routes with language code

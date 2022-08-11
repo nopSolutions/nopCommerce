@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.Infrastructure
     /// <summary>
     /// Represents class for the configuring routing on application startup
     /// </summary>
-    public class NopStaticFilesStartup : INopStartup
+    public partial class NopStaticFilesStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware

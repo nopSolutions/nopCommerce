@@ -188,7 +188,7 @@ namespace Nop.Services.Orders
         /// <summary>
         /// PlaceOrder container
         /// </summary>
-        protected class PlaceOrderContainer
+        protected partial class PlaceOrderContainer
         {
             public PlaceOrderContainer()
             {

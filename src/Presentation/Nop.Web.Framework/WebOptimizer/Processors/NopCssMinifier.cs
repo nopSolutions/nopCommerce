@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.WebOptimizer.Processors
     /// Represents a class of processor that handle style assets
     /// </summary>
     /// <remarks>Implementation has taken from WebOptimizer to add logging</remarks>
-    public class NopCssMinifier : Processor
+    public partial class NopCssMinifier : Processor
     {
         #region Methods
 

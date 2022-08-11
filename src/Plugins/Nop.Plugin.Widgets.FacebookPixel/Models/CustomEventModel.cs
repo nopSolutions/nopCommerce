@@ -8,7 +8,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Models
     /// <summary>
     /// Represents a custom event model
     /// </summary>
-    public partial record CustomEventModel : BaseNopModel
+    public record CustomEventModel : BaseNopModel
     {
         #region Ctor
 

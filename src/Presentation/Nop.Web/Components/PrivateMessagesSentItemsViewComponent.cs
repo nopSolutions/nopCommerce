@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class PrivateMessagesSentItemsViewComponent : NopViewComponent
+    public partial class PrivateMessagesSentItemsViewComponent : NopViewComponent
     {
         private readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
 

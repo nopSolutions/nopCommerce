@@ -3,7 +3,7 @@
     /// <summary>
     /// Support versions from nopCommerce.com marketplace
     /// </summary>
-    public class OfficialFeedVersion
+    public partial class OfficialFeedVersion
     {
         /// <summary>
         /// Identifier

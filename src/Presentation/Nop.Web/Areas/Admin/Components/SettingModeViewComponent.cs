@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Components
     /// <summary>
     /// Represents a view component that displays the setting mode
     /// </summary>
-    public class SettingModeViewComponent : NopViewComponent
+    public partial class SettingModeViewComponent : NopViewComponent
     {
         #region Fields
 

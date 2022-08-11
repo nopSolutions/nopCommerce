@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.Infrastructure
     /// <summary>
     /// Represents object for the configuring common features and middleware on application startup
     /// </summary>
-    public class NopCommonStartup : INopStartup
+    public partial class NopCommonStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware

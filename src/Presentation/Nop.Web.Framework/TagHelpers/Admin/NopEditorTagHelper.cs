@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-editor" tag helper
     /// </summary>
     [HtmlTargetElement("nop-editor", Attributes = FOR_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class NopEditorTagHelper : TagHelper
+    public partial class NopEditorTagHelper : TagHelper
     {
         #region Constants
 

@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.Infrastructure
     /// <summary>
     /// Represents object for the configuring authentication middleware on application startup
     /// </summary>
-    public class AuthenticationStartup : INopStartup
+    public partial class AuthenticationStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware

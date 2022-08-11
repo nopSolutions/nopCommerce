@@ -22,7 +22,7 @@ namespace Nop.Services.Media.RoxyFileman
     /// <summary>
     /// File RoxyFileman service
     /// </summary>
-    public class FileRoxyFilemanService : BaseRoxyFilemanService, IRoxyFilemanService
+    public partial class FileRoxyFilemanService : BaseRoxyFilemanService, IRoxyFilemanService
     {
         #region Fields
 

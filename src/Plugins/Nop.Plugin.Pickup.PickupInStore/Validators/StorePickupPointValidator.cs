@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Validators
 {
-    public partial class StorePickupPointValidator : BaseNopValidator<StorePickupPointModel>
+    public class StorePickupPointValidator : BaseNopValidator<StorePickupPointModel>
     {
         public StorePickupPointValidator(ILocalizationService localizationService)
         {

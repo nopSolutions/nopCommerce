@@ -11,7 +11,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
     /// "nop-bb-code-editor" tag helper
     /// </summary>
     [HtmlTargetElement("nop-bb-code-editor", Attributes = FOR_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class NopBBCodeEditorTagHelper : TagHelper
+    public partial class NopBBCodeEditorTagHelper : TagHelper
     {
         #region Constants
 

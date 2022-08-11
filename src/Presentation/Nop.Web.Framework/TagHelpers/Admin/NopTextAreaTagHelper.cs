@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-textarea" tag helper
     /// </summary>
     [HtmlTargetElement("nop-textarea", Attributes = FOR_ATTRIBUTE_NAME)]
-    public class NopTextAreaTagHelper : TextAreaTagHelper
+    public partial class NopTextAreaTagHelper : TextAreaTagHelper
     {
         #region Constants
 

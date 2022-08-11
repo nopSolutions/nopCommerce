@@ -10,7 +10,7 @@ namespace Nop.Services.Security
     /// <summary>
     /// Encryption service
     /// </summary>
-    public class EncryptionService : IEncryptionService
+    public partial class EncryptionService : IEncryptionService
     {
         #region Fields
 

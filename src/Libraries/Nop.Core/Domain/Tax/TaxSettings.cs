@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Tax
     /// <summary>
     /// Tax settings
     /// </summary>
-    public class TaxSettings : ISettings
+    public partial class TaxSettings : ISettings
     {
         /// <summary>
         /// Tax based on

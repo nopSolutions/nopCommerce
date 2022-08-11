@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents descriptor of the application extension (plugin or theme)
     /// </summary>
-    public interface IDescriptor
+    public partial interface IDescriptor
     {
         /// <summary>
         /// Gets or sets the system name

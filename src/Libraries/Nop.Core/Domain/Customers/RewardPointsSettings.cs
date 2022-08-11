@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Customers
     /// <summary>
     /// Reward points settings
     /// </summary>
-    public class RewardPointsSettings : ISettings
+    public partial class RewardPointsSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether Reward Points Program is enabled

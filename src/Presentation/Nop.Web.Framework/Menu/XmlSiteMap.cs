@@ -16,7 +16,7 @@ namespace Nop.Web.Framework.Menu
     /// <summary>
     /// XML sitemap
     /// </summary>
-    public class XmlSiteMap : IXmlSiteMap
+    public partial class XmlSiteMap : IXmlSiteMap
     {
         #region Fields
 

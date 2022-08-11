@@ -10,7 +10,7 @@ namespace Nop.Services.Media.RoxyFileman
     /// <summary>
     /// Represents the roxyFileman fake HttpRequest file
     /// </summary>
-    public class RoxyFilemanFormFile : IFormFile
+    public partial class RoxyFilemanFormFile : IFormFile
     {
         #region Fields
 

@@ -13,7 +13,7 @@ namespace Nop.Services.Messages
     /// <summary>
     /// Newsletter subscription service
     /// </summary>
-    public class NewsLetterSubscriptionService : INewsLetterSubscriptionService
+    public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionService
     {
         #region Fields
 

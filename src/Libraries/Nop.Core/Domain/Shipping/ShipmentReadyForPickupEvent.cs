@@ -3,7 +3,7 @@
     /// <summary>
     /// Shipment ready for pickup event
     /// </summary>
-    public class ShipmentReadyForPickupEvent
+    public partial class ShipmentReadyForPickupEvent
     {
         /// <summary>
         /// Ctor

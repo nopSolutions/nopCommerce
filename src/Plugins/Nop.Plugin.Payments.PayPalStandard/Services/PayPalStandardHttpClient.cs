@@ -10,7 +10,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Services
     /// <summary>
     /// Represents the HTTP client to request PayPal services
     /// </summary>
-    public partial class PayPalStandardHttpClient
+    public class PayPalStandardHttpClient
     {
         #region Fields
 

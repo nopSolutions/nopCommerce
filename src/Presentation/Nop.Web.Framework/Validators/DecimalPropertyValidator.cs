@@ -7,7 +7,7 @@ namespace Nop.Web.Framework.Validators
     /// <summary>
     /// Decimal validator
     /// </summary>
-    public class DecimalPropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
+    public partial class DecimalPropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
     {
         private readonly decimal _maxValue;
 

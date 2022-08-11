@@ -2,7 +2,7 @@
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Models
 {
-    public partial record ShippingByWeightByTotalListModel : BasePagedListModel<ShippingByWeightByTotalModel>
+    public record ShippingByWeightByTotalListModel : BasePagedListModel<ShippingByWeightByTotalModel>
     {
     }
 }

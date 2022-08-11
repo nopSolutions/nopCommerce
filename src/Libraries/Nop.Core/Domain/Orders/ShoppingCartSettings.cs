@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Orders
     /// <summary>
     /// Shopping cart settings
     /// </summary>
-    public class ShoppingCartSettings : ISettings
+    public partial class ShoppingCartSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether a customer should be redirected to the shopping cart page after adding a product to the cart/wishlist

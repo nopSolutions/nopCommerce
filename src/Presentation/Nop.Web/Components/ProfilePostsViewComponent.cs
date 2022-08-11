@@ -7,7 +7,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class ProfilePostsViewComponent : NopViewComponent
+    public partial class ProfilePostsViewComponent : NopViewComponent
     {
         private readonly ICustomerService _customerService;
         private readonly IProfileModelFactory _profileModelFactory;

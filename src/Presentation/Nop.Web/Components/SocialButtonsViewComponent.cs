@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class SocialButtonsViewComponent : NopViewComponent
+    public partial class SocialButtonsViewComponent : NopViewComponent
     {
         private readonly ICommonModelFactory _commonModelFactory;
 

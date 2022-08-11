@@ -3,7 +3,7 @@
     /// <summary>
     /// Search term record (for statistics)
     /// </summary>
-    public class SearchTermReportLine
+    public partial class SearchTermReportLine
     {
         /// <summary>
         /// Gets or sets the keyword

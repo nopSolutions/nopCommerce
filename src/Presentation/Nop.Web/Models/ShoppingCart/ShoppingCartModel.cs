@@ -158,7 +158,7 @@ namespace Nop.Web.Models.ShoppingCart
             public List<string> Messages { get; set; }
             public bool IsApplied { get; set; }
 
-            public record DiscountInfoModel : BaseNopEntityModel
+            public partial record DiscountInfoModel : BaseNopEntityModel
             {
                 public string CouponCode { get; set; }
             }

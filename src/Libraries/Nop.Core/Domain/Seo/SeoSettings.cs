@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Seo
     /// <summary>
     /// SEO settings
     /// </summary>
-    public class SeoSettings : ISettings
+    public partial class SeoSettings : ISettings
     {
         /// <summary>
         /// Page title separator

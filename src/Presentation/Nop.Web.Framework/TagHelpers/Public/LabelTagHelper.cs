@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
     /// "label" tag helper
     /// </summary>
     [HtmlTargetElement("label", Attributes = FOR_ATTRIBUTE_NAME)]
-    public class LabelTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper
+    public partial class LabelTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper
     {
         #region Constants
 

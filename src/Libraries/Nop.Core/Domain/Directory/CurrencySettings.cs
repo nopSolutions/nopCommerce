@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Directory
     /// <summary>
     /// Currency settings
     /// </summary>
-    public class CurrencySettings : ISettings
+    public partial class CurrencySettings : ISettings
     {
         /// <summary>
         /// A value indicating whether to display currency labels

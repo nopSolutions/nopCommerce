@@ -5,7 +5,7 @@ namespace Nop.Services.Authentication.External
     /// <summary>
     /// Customer auto registered by external authentication method event
     /// </summary>
-    public class CustomerAutoRegisteredByExternalMethodEvent
+    public partial class CustomerAutoRegisteredByExternalMethodEvent
     {
         /// <summary>
         /// Ctor

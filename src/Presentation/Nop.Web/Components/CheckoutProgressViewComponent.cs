@@ -6,7 +6,7 @@ using Nop.Web.Models.Checkout;
 
 namespace Nop.Web.Components
 {
-    public class CheckoutProgressViewComponent : NopViewComponent
+    public partial class CheckoutProgressViewComponent : NopViewComponent
     {
         private readonly ICheckoutModelFactory _checkoutModelFactory;
 

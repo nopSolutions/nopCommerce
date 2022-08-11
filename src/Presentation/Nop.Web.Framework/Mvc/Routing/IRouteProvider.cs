@@ -5,7 +5,7 @@ namespace Nop.Web.Framework.Mvc.Routing
     /// <summary>
     /// Route provider
     /// </summary>
-    public interface IRouteProvider
+    public partial interface IRouteProvider
     {
         /// <summary>
         /// Register routes

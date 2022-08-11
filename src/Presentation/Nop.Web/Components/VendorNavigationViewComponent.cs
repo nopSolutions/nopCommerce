@@ -7,7 +7,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class VendorNavigationViewComponent : NopViewComponent
+    public partial class VendorNavigationViewComponent : NopViewComponent
     {
         private readonly ICatalogModelFactory _catalogModelFactory;
         private readonly VendorSettings _vendorSettings;
