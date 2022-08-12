@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
@@ -7,6 +7,7 @@ using FluentMigrator.Runner.Processors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
@@ -42,9 +43,36 @@ namespace Nop.Data
                 .AddSingleton<IConventionSet, NopConventionSet>()
                 .AddTransient<IMappingEntityAccessor>(x => x.GetRequiredService<IDataProviderManager>().DataProvider)
                 .ConfigureRunner(rb =>
-                    rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres()
-                        // define the assembly containing the migrations
-                        .ScanIn(mAssemblies).For.Migrations());
+                {
+                    var migrationRunnerBuilder = rb.WithVersionTable(new MigrationVersionInfo());
+                    var dataSettings = DataSettingsManager.LoadSettings();
+                    switch (dataSettings.DataProvider)
+                    {
+                        case DataProviderType.SqlServer:
+                            migrationRunnerBuilder.AddSqlServer();
+                            break;
+                        case DataProviderType.MySql:
+                            migrationRunnerBuilder.AddMySql5();
+                            break;
+                        case DataProviderType.PostgreSQL:
+                            migrationRunnerBuilder.AddPostgres();
+                            break;
+                        default:
+                            if (!DataSettingsManager.IsDatabaseInstalled())
+                            {
+                                // This is for the first installation
+                                migrationRunnerBuilder.AddSqlServer().AddMySql5().AddPostgres();
+                            }
+                            else
+                            {
+                                throw new NopException($"Not supported data provider name: '{dataSettings.DataProvider}'");
+                            }
+                            break;
+                    }
+
+                    // define the assembly containing the migrations
+                    migrationRunnerBuilder.ScanIn(mAssemblies).For.Migrations();
+                });
         }
 
         /// <summary>
