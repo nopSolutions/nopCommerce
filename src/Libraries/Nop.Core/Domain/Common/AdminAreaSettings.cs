@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Common
     /// <summary>
     /// Admin area settings
     /// </summary>
-    public class AdminAreaSettings : ISettings
+    public partial class AdminAreaSettings : ISettings
     {
         /// <summary>
         /// Default grid page size

@@ -269,7 +269,7 @@ namespace Nop.Web.Models.Common
     /// <summary>
     /// Interface for custom RouteValues objects
     /// </summary>
-    public interface IRouteValues
+    public partial interface IRouteValues
     {
         int PageNumber { get; set; }
     }

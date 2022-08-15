@@ -6,7 +6,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class NewsletterBoxViewComponent : NopViewComponent
+    public partial class NewsletterBoxViewComponent : NopViewComponent
     {
         private readonly CustomerSettings _customerSettings;
         private readonly INewsletterModelFactory _newsletterModelFactory;

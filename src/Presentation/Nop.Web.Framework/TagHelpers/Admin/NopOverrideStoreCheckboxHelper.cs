@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-override-store-checkbox" tag helper
     /// </summary>
     [HtmlTargetElement("nop-override-store-checkbox", Attributes = FOR_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class NopOverrideStoreCheckboxHelper : TagHelper
+    public partial class NopOverrideStoreCheckboxHelper : TagHelper
     {
         #region Constants
 

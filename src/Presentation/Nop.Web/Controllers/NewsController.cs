@@ -223,6 +223,7 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            RouteData.Values["action"] = "NewsItem";
             model = await _newsModelFactory.PrepareNewsItemModelAsync(model, newsItem, true);
             return View(model);
         }

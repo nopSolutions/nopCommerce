@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents the plugin updated event
     /// </summary>
-    public class PluginUpdatedEvent
+    public partial class PluginUpdatedEvent
     {
         #region Ctor
 

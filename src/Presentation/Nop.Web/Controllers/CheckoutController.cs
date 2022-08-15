@@ -12,6 +12,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
 using Nop.Core.Http.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -22,6 +23,7 @@ using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
+using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
@@ -56,12 +58,14 @@ namespace Nop.Web.Controllers
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
+        private readonly ITaxService _taxService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly OrderSettings _orderSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -87,12 +91,14 @@ namespace Nop.Web.Controllers
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
+            ITaxService taxService,
             IWebHelper webHelper,
             IWorkContext workContext,
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            TaxSettings taxSettings)
         {
             _addressSettings = addressSettings;
             _captchaSettings = captchaSettings;
@@ -114,12 +120,14 @@ namespace Nop.Web.Controllers
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
+            _taxService = taxService;
             _webHelper = webHelper;
             _workContext = workContext;
             _orderSettings = orderSettings;
             _paymentSettings = paymentSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -209,6 +217,31 @@ namespace Nop.Web.Controllers
             var store = await _storeContext.GetCurrentStoreAsync();
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, pickUpInStoreShippingOption, store.Id);
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedPickupPointAttribute, pickupPoint, store.Id);
+        }
+
+        /// <summary>
+        /// Save customer VAT number
+        /// </summary>
+        /// <param name="fullVatNumber">The full VAT number</param>
+        /// <param name="customer">The customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the Vat number error if exists
+        /// </returns>
+        protected virtual async Task<string> SaveCustomerVatNumberAsync(string fullVatNumber, Customer customer)
+        {
+            var (vatNumberStatus, _, _) = await _taxService.GetVatNumberStatusAsync(fullVatNumber);
+            customer.VatNumberStatus = vatNumberStatus;
+            customer.VatNumber = fullVatNumber;
+            await _customerService.UpdateCustomerAsync(customer);
+
+            if (vatNumberStatus != VatNumberStatus.Valid && !string.IsNullOrEmpty(fullVatNumber))
+            {
+                var warning = await _localizationService.GetResourceAsync("Checkout.VatNumber.Warning");
+                return string.Format(warning, await _localizationService.GetLocalizedEnumAsync(vatNumberStatus));
+            }
+
+            return string.Empty;
         }
 
         #endregion
@@ -554,6 +587,13 @@ namespace Nop.Web.Controllers
 
             if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
+
+            if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled && _taxSettings.EuVatEnabledForGuests)
+            {
+                var warning = await SaveCustomerVatNumberAsync(model.VatNumber, customer);
+                if (!string.IsNullOrEmpty(warning))
+                    ModelState.AddModelError("", warning);
+            }
 
             //custom address attributes
             var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
@@ -1416,6 +1456,13 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
+                    if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled && _taxSettings.EuVatEnabledForGuests)
+                    {
+                        var warning = await SaveCustomerVatNumberAsync(model.VatNumber, customer);
+                        if (!string.IsNullOrEmpty(warning))
+                            ModelState.AddModelError("", warning);
+                    }
+
                     //new address
                     var newAddress = model.BillingNewAddress;
 

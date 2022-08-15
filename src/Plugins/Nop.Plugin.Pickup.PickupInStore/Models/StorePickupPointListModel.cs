@@ -2,7 +2,7 @@
 
 namespace Nop.Plugin.Pickup.PickupInStore.Models
 {
-    public partial record StorePickupPointListModel : BasePagedListModel<StorePickupPointModel>
+    public record StorePickupPointListModel : BasePagedListModel<StorePickupPointModel>
     {
     }
 }

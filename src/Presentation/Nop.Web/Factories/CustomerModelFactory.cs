@@ -394,11 +394,17 @@ namespace Nop.Web.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == (await _dateTimeHelper.GetCurrentTimeZoneAsync()).Id) });
 
+            //VAT
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+            if (_taxSettings.EuVatEnabled && _taxSettings.EuVatEnabledForGuests)
+                model.VatNumber = customer.VatNumber;
+
             //form fields
             model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
             model.LastNameEnabled = _customerSettings.LastNameEnabled;
@@ -484,7 +490,7 @@ namespace Nop.Web.Factories
             }
 
             //custom customer attributes
-            var customAttributes = await PrepareCustomCustomerAttributesAsync(await _workContext.GetCurrentCustomerAsync(), overrideCustomCustomerAttributesXml);
+            var customAttributes = await PrepareCustomCustomerAttributesAsync(customer, overrideCustomCustomerAttributesXml);
             foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
 

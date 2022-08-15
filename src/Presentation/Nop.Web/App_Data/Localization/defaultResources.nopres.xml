@@ -9024,6 +9024,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatEnabled.Hint">
     <Value>Check to enable EU VAT (the European Union Value Added Tax).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatEnabledForGuests">
+    <Value>EU VAT enabled for guests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatEnabledForGuests.Hint">
+    <Value>Check to enable EU VAT (the European Union Value Added Tax) for guest customers. They will have to enter it during the checkout at the billing address step.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatShopCountry">
     <Value>Your shop country</Value>
   </LocaleResource>
@@ -9598,10 +9604,10 @@
     <Value>Please provide a name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled">
-    <Value>SSL enabled</Value>
+    <Value>SSL</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled.Hint">
-    <Value>Check if your store will be SSL secured. SSL (Secure Socket Layer) is the standard security technology for establishing an encrypted connection between a web server and the browser. This ensures that all data exchanged between web server and browser arrives unchanged.</Value>
+    <Value>SSL (Secure Socket Layer) is the standard security technology for establishing an encrypted connection between a web server and the browser. This ensures that all data exchanged between web server and browser arrives unchanged.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled.Hint2">
     <Value>WARNING: Do not enable it until you have SSL certificate installed on the server.</Value>
@@ -9614,6 +9620,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Url.Required">
     <Value>Please provide a store URL.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Ssl.Disable">
+    <Value>Disable SSL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Ssl.Enable">
+    <Value>Enable SSL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Ssl.Updated">
+    <Value>The SSL setting has been successfully changed. Do not forget to synchronize the store URL with the current HTTP protocol.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Updated">
     <Value>The store has been updated successfully.</Value>
@@ -14694,6 +14709,12 @@
   <LocaleResource Name="Admin.Reports.SalesSummary.Store.Hint">
     <Value>Filter report by orders placed in a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Vendor.Hint">
+    <Value>Search by a specific vendor.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests">
     <Value>Return requests</Value>
   </LocaleResource>
@@ -16532,6 +16553,15 @@
   </LocaleResource>
   <LocaleResource Name="Checkout.UseRewardPoints">
     <Value>Use my reward points, {0} of {1} reward points ({2}) available for this order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.VatNumber">
+    <Value>VAT number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.VatNumber.Disabled">
+    <Value>VAT number can be entered (on the <a href="{0}">customer info page</a>) and used only after registration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.VatNumber.Warning">
+    <Value>VAT number is {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.YourOrderHasBeenSuccessfullyProcessed">
     <Value>Your order has been successfully processed!</Value>

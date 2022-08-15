@@ -139,7 +139,7 @@ namespace Nop.Services.Orders
             if (categoryId > 0)
             {
                 orderItems = from orderItem in orderItems
-                    join p in _productRepository.Table on orderItem.ProductId equals p.Id 
+                    join p in _productRepository.Table on orderItem.ProductId equals p.Id
                     join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
                     into p_pc
                     from pc in p_pc.DefaultIfEmpty()
@@ -150,7 +150,7 @@ namespace Nop.Services.Orders
             if (manufacturerId > 0)
             {
                 orderItems = from orderItem in orderItems
-                    join p in _productRepository.Table on orderItem.ProductId equals p.Id 
+                    join p in _productRepository.Table on orderItem.ProductId equals p.Id
                     join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
                     into p_pm
                     from pm in p_pm.DefaultIfEmpty()
@@ -301,11 +301,11 @@ namespace Nop.Services.Orders
 
             query = from o in query
                 join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                where 
+                where
                     (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
                     (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
                     (string.IsNullOrEmpty(billingEmail) || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
-                    (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))                            
+                    (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))
                 select o;
 
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
@@ -434,11 +434,11 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Get sales summary report
         /// </summary>
-        /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="categoryId">Category identifier; 0 to load all records</param>
         /// <param name="productId">Product identifier; 0 to load all records</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
@@ -475,8 +475,8 @@ namespace Nop.Services.Orders
                 paymentStatusId = (int)ps.Value;
 
             //var orderItems = SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, null, billingCountryId);
-            
-            var query = _orderRepository.Table;            
+
+            var query = _orderRepository.Table;
             query = query.Where(o => !o.Deleted);
 
             //filter by date
@@ -500,7 +500,7 @@ namespace Nop.Services.Orders
                     join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                     join p in _productRepository.Table on oi.ProductId equals p.Id
                     join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
-                    where pc.CategoryId == categoryId                        
+                    where pc.CategoryId == categoryId
                     select o;
 
             //filter by manufacturer
@@ -525,77 +525,88 @@ namespace Nop.Services.Orders
                 query = from o in query
                         join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                         where oi.ProductId == productId
-                        select o;            
+                        select o;
 
             //filter by store
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
 
+            if (vendorId > 0)
+            {
+                query = from o in query
+                        join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                        join p in _productRepository.Table on oi.ProductId equals p.Id
+                        where p.VendorId == vendorId
+                        select o;
+            }
+
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+            var userTimeZone = await _dateTimeHelper.GetCurrentTimeZoneAsync();
+            var utcOffsetInMinutes = userTimeZone.BaseUtcOffset.TotalMinutes;
 
             var items = groupBy switch
             {
                 GroupByOptions.Day => from oq in query
-                                          group oq by $"{oq.CreatedOnUtc.Year}-{oq.CreatedOnUtc.Month}-{oq.CreatedOnUtc.Day}" into result
-                                          let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
-                                          select new
-                                          {
-                                              OrderSummary = result.Key,
-                                              OrderSummaryType = groupBy,
-                                              OrderCount = result.Count(),
-                                              OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
-                                              OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
-                                              OrderTaxSum = result.Sum(o => o.OrderTax),
-                                              OrderTotalSum = result.Sum(o => o.OrderTotal),
-                                              OrederRefundedAmountSum = result.Sum(o => o.RefundedAmount),
-                                              OrderTotalCost = orderItems.Sum(oi => (decimal?)oi.OriginalProductCost * oi.Quantity)
-                                          },
+                                      group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).Date into result
+                                      let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                      select new
+                                      {
+                                          SummaryDate = result.Key,
+                                          OrderSummaryType = groupBy,
+                                          OrderCount = result.Count(),
+                                          OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
+                                          OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
+                                          OrderTaxSum = result.Sum(o => o.OrderTax),
+                                          OrderTotalSum = result.Sum(o => o.OrderTotal),
+                                          OrderRefundedAmountSum = result.Sum(o => o.RefundedAmount),
+                                          OrderTotalCost = orderItems.Sum(oi => (decimal?)oi.OriginalProductCost * oi.Quantity)
+                                      },
                 GroupByOptions.Week => from oq in query
-                                            group oq by $"{oq.CreatedOnUtc.Year}-{oq.CreatedOnUtc.Month}-{oq.CreatedOnUtc.Day - (int)oq.CreatedOnUtc.DayOfWeek}" into result
-                                            let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
-                                            select new
-                                            {
-                                                OrderSummary = result.Key,
-                                                OrderSummaryType = groupBy,
-                                                OrderCount = result.Count(),
-                                                OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
-                                                OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
-                                                OrderTaxSum = result.Sum(o => o.OrderTax),
-                                                OrderTotalSum = result.Sum(o => o.OrderTotal),
-                                                OrederRefundedAmountSum = result.Sum(o => o.RefundedAmount),
-                                                OrderTotalCost = orderItems.Sum(oi => (decimal?)oi.OriginalProductCost * oi.Quantity)
-                                            },
+                                       group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).AddDays(- (int)oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).DayOfWeek).Date into result
+                                       let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                       select new
+                                       {
+                                           SummaryDate = result.Key,
+                                           OrderSummaryType = groupBy,
+                                           OrderCount = result.Count(),
+                                           OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
+                                           OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
+                                           OrderTaxSum = result.Sum(o => o.OrderTax),
+                                           OrderTotalSum = result.Sum(o => o.OrderTotal),
+                                           OrderRefundedAmountSum = result.Sum(o => o.RefundedAmount),
+                                           OrderTotalCost = orderItems.Sum(oi => (decimal?)oi.OriginalProductCost * oi.Quantity)
+                                       },
                 GroupByOptions.Month => from oq in query
-                                            group oq by $"{oq.CreatedOnUtc.Year}-{oq.CreatedOnUtc.Month}" into result
-                                            let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
-                                            select new
-                                            {
-                                                OrderSummary = result.Key,
-                                                OrderSummaryType = groupBy,
-                                                OrderCount = result.Count(),
-                                                OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
-                                                OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
-                                                OrderTaxSum = result.Sum(o => o.OrderTax),
-                                                OrderTotalSum = result.Sum(o => o.OrderTotal),
-                                                OrederRefundedAmountSum = result.Sum(o => o.RefundedAmount),
-                                                OrderTotalCost = orderItems.Sum(oi => (decimal?)oi.OriginalProductCost * oi.Quantity)
-                                            },
-                _ => throw new ArgumentException("Wrong grouBy parameter", nameof(groupBy)),
+                                        group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).AddDays(1 - oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).Day).Date into result
+                                        let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                        select new
+                                        {
+                                            SummaryDate = result.Key,
+                                            OrderSummaryType = groupBy,
+                                            OrderCount = result.Count(),
+                                            OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
+                                            OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
+                                            OrderTaxSum = result.Sum(o => o.OrderTax),
+                                            OrderTotalSum = result.Sum(o => o.OrderTotal),
+                                            OrderRefundedAmountSum = result.Sum(o => o.RefundedAmount),
+                                            OrderTotalCost = orderItems.Sum(oi => (decimal?)oi.OriginalProductCost * oi.Quantity)
+                                        },
+                _ => throw new ArgumentException("Wrong groupBy parameter", nameof(groupBy)),
             };
 
             var ssReport =
                 from orderItem in items
-                orderby orderItem.OrderSummary descending
+                orderby orderItem.SummaryDate descending
                 select new SalesSummaryReportLine
                 {
-                    Summary = orderItem.OrderSummary,
+                    SummaryDate = orderItem.SummaryDate,
                     SummaryType = (int)orderItem.OrderSummaryType,
                     NumberOfOrders = orderItem.OrderCount,
                     Profit = orderItem.OrderTotalSum
                          - orderItem.OrderShippingExclTaxSum
                          - orderItem.OrderPaymentFeeExclTaxSum
                          - orderItem.OrderTaxSum
-                         - orderItem.OrederRefundedAmountSum
+                         - orderItem.OrderRefundedAmountSum
                          - Convert.ToDecimal(orderItem.OrderTotalCost),
                     Shipping = orderItem.OrderShippingExclTaxSum.ToString(CultureInfo.CurrentCulture),
                     Tax = orderItem.OrderTaxSum.ToString(CultureInfo.CurrentCulture),
@@ -603,39 +614,23 @@ namespace Nop.Services.Orders
                 };
 
             var report = await ssReport.ToPagedListAsync(pageIndex, pageSize);
-            var dayFormat = "MMM dd, yyyy";
+
+            static string formatSummary(DateTime dt, GroupByOptions groupByOption)
+            {
+                const string dayFormat = "MMM dd, yyyy";
+
+                return groupByOption switch
+                {
+                    GroupByOptions.Week => $"{dt.ToString(dayFormat)} - {dt.AddDays(6).ToString(dayFormat)}",
+                    GroupByOptions.Day => dt.ToString(dayFormat),
+                    GroupByOptions.Month => dt.ToString("MMMM, yyyy"),
+                    _ => ""
+                };
+            }
 
             foreach (var reportLine in report)
             {
-                var isCorrectDate =
-                    DateTime.TryParseExact(reportLine.Summary, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date) ||
-                    DateTime.TryParseExact(reportLine.Summary, "yyyy-M-d", CultureInfo.InvariantCulture, DateTimeStyles.None, out date) ||
-                    DateTime.TryParseExact(reportLine.Summary, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out date) ||
-                    DateTime.TryParseExact(reportLine.Summary, "yyyy-M", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
-
-                if (groupBy == GroupByOptions.Week)
-                {
-                    if (!isCorrectDate)
-                    {
-                        var data = reportLine.Summary.Replace("--", "-").Split("-").Select(int.Parse).ToList();
-                        date = new DateTime(data[0], data[1], 1).AddDays((data[2] + 1) * -1);
-                    }
-
-                    var date1 = date.ToString(dayFormat);
-                    var date2 = date.AddDays(6).ToString(dayFormat);
-                    reportLine.Summary = $"{date1} - {date2}";
-                }
-                else if (isCorrectDate)
-                {
-                    var dateFormat = groupBy switch
-                    {
-                        GroupByOptions.Day => dayFormat,
-                        GroupByOptions.Month => "MMMM, yyyy",
-                        _ => ""
-                    };
-
-                    reportLine.Summary = date.ToString(dateFormat);
-                }
+                reportLine.Summary = formatSummary(reportLine.SummaryDate, groupBy);
 
                 reportLine.ProfitStr = await _priceFormatter.FormatPriceAsync(reportLine.Profit, true, false);
                 reportLine.Shipping = await _priceFormatter
@@ -644,7 +639,7 @@ namespace Nop.Services.Orders
                 reportLine.OrderTotal = await _priceFormatter.FormatPriceAsync(Convert.ToDecimal(reportLine.OrderTotal), true, false);
             }
 
-            return report;            
+            return report;
         }
 
         /// <summary>
@@ -841,7 +836,7 @@ namespace Nop.Services.Orders
                       !o.Deleted
                 select new { ProductId = oi.ProductId };
 
-            var query = 
+            var query =
                 from p in _productRepository.Table
                 join oi in availableProductsQuery on p.Id equals oi.ProductId
                     into p_oi
@@ -959,7 +954,7 @@ namespace Nop.Services.Orders
                                            oba.PhoneNumber.Contains(billingPhone))) &&
                       (dontSearchEmail || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
                       (dontSearchLastName ||
-                       (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName))) &&
+                      (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName))) &&
                       (dontSearchOrderNotes || _orderNoteRepository.Table.Any(oNote =>
                            oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)))
                 select orderItem;

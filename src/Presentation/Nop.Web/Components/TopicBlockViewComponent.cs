@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class TopicBlockViewComponent : NopViewComponent
+    public partial class TopicBlockViewComponent : NopViewComponent
     {
         private readonly ITopicModelFactory _topicModelFactory;
 

@@ -15,7 +15,7 @@ namespace Nop.Core.Infrastructure
     /// <summary>
     /// IO functions using the on-disk file system
     /// </summary>
-    public class NopFileProvider : PhysicalFileProvider, INopFileProvider
+    public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     {
         /// <summary>
         /// Initializes a new instance of a NopFileProvider
@@ -114,7 +114,7 @@ namespace Nop.Core.Infrastructure
         ///  Depth-first recursive delete, with handling for descendant directories open in Windows Explorer.
         /// </summary>
         /// <param name="path">Directory path</param>
-        public void DeleteDirectory(string path)
+        public virtual void DeleteDirectory(string path)
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(path);
@@ -578,7 +578,7 @@ namespace Nop.Core.Infrastructure
         /// <summary>Locate a file at the given path.</summary>
         /// <param name="subpath">Relative path that identifies the file.</param>
         /// <returns>The file information. Caller must check Exists property.</returns>
-        public new IFileInfo GetFileInfo(string subpath)
+        public virtual new IFileInfo GetFileInfo(string subpath)
         {
             subpath = subpath.Replace(Root, string.Empty);
 

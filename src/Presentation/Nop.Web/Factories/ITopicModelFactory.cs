@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Topics;
 using Nop.Web.Models.Topics;
 
 namespace Nop.Web.Factories
@@ -9,15 +10,14 @@ namespace Nop.Web.Factories
     public partial interface ITopicModelFactory
     {
         /// <summary>
-        /// Get the topic model by topic identifier
+        /// Prepare the topic model
         /// </summary>
-        /// <param name="topicId">Topic identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="topic">Topic</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic model
+        /// The task result contains the topic model
         /// </returns>
-        Task<TopicModel> PrepareTopicModelByIdAsync(int topicId, bool showHidden = false);
+        Task<TopicModel> PrepareTopicModelAsync(Topic topic);
 
         /// <summary>
         /// Get the topic model by topic system name

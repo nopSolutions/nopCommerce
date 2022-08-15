@@ -16,7 +16,7 @@ namespace Nop.Data
     /// <summary>
     /// Represents object for the configuring DB context on application startup
     /// </summary>
-    public class NopDbStartup : INopStartup
+    public partial class NopDbStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware

@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.WebOptimizer.Processors
     /// Represents a class of processor that handle javascript assets
     /// </summary>
     /// <remarks>Implementation has taken from WebOptimizer to add logging</remarks>
-    public class NopJsMinifier : Processor
+    public partial class NopJsMinifier : Processor
     {
         #region Methods
 

@@ -6,6 +6,7 @@ using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -288,6 +289,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             {
                 orderSettings.AttachPdfInvoiceToOrderProcessingEmail = false;
                 settingService.SaveSettingAsync(orderSettings, settings => settings.AttachPdfInvoiceToOrderProcessingEmail).Wait();
+            }
+
+            var taxSettings = settingService.LoadSettingAsync<TaxSettings>().Result;
+
+            //#1961
+            if (!settingService.SettingExistsAsync(taxSettings, settings => settings.EuVatEnabledForGuests).Result)
+            {
+                taxSettings.EuVatEnabledForGuests = false;
+                settingService.SaveSettingAsync(taxSettings, settings => settings.EuVatEnabledForGuests).Wait();
             }
         }
 

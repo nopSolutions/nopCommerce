@@ -5,7 +5,7 @@ namespace Nop.Web.Framework.Events
     /// <summary>
     /// Represents a page rendering event
     /// </summary>
-    public class PageRenderingEvent
+    public partial class PageRenderingEvent
     {
         #region Ctor
 

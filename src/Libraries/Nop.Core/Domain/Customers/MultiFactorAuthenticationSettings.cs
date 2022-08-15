@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Customers
     /// <summary>
     /// Multi-factor authentication settings
     /// </summary>
-    public class MultiFactorAuthenticationSettings : ISettings
+    public partial class MultiFactorAuthenticationSettings : ISettings
     {
         #region Ctor
 

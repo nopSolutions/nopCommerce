@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
     /// "input" tag helper
     /// </summary>
     [HtmlTargetElement("input", Attributes = FOR_ATTRIBUTE_NAME)]
-    public class InputTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper
+    public partial class InputTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper
     {
         #region Constants
 

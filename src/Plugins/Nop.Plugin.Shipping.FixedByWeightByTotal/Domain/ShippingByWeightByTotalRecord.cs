@@ -5,7 +5,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Domain
     /// <summary>
     /// Represents a shipping by weight record
     /// </summary>
-    public partial class ShippingByWeightByTotalRecord : BaseEntity
+    public class ShippingByWeightByTotalRecord : BaseEntity
     {
         /// <summary>
         /// Gets or sets the store identifier

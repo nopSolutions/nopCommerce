@@ -3,9 +3,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Nop.Core;
 using Nop.Web.Framework.UI;
 
 namespace Nop.Web.Framework.TagHelpers.Shared
@@ -14,7 +12,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     /// CSS bundling tag helper
     /// </summary>
     [HtmlTargetElement(LINK_TAG_NAME, Attributes = "[rel=stylesheet]")]
-    public class NopLinkTagHelper : UrlResolutionTagHelper
+    public partial class NopLinkTagHelper : UrlResolutionTagHelper
     {
         #region Constants
 

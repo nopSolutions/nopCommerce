@@ -7,7 +7,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class FlyoutShoppingCartViewComponent : NopViewComponent
+    public partial class FlyoutShoppingCartViewComponent : NopViewComponent
     {
         private readonly IPermissionService _permissionService;
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;

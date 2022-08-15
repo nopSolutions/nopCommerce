@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class CategoryNavigationViewComponent : NopViewComponent
+    public partial class CategoryNavigationViewComponent : NopViewComponent
     {
         private readonly ICatalogModelFactory _catalogModelFactory;
 

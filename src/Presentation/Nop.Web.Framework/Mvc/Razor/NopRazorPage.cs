@@ -8,7 +8,7 @@ namespace Nop.Web.Framework.Mvc.Razor
     /// Web view page
     /// </summary>
     /// <typeparam name="TModel">Model</typeparam>
-    public abstract class NopRazorPage<TModel> : Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
+    public abstract partial class NopRazorPage<TModel> : Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
     {
         private ILocalizationService _localizationService;
         private Localizer _localizer;
@@ -45,7 +45,7 @@ namespace Nop.Web.Framework.Mvc.Razor
     /// <summary>
     /// Web view page
     /// </summary>
-    public abstract class NopRazorPage : NopRazorPage<dynamic>
+    public abstract partial class NopRazorPage : NopRazorPage<dynamic>
     {
     }
 }

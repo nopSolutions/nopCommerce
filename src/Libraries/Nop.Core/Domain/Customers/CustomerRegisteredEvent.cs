@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Customers
     /// <summary>
     /// Customer registered event
     /// </summary>
-    public class CustomerRegisteredEvent
+    public partial class CustomerRegisteredEvent
     {
         /// <summary>
         /// Ctor

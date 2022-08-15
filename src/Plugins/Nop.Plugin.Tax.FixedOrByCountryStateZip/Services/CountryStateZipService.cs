@@ -10,7 +10,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
     /// <summary>
     /// Tax rate service
     /// </summary>
-    public partial class CountryStateZipService : ICountryStateZipService
+    public class CountryStateZipService : ICountryStateZipService
     {
         #region Fields
 

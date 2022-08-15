@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Common
     /// <summary>
     /// Represent sitemap.xml settings
     /// </summary>
-    public class SitemapXmlSettings : ISettings
+    public partial class SitemapXmlSettings : ISettings
     {
         public SitemapXmlSettings()
         {

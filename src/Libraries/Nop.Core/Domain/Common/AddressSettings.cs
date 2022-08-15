@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Common
     /// <summary>
     /// Address settings
     /// </summary>
-    public class AddressSettings : ISettings
+    public partial class AddressSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether 'Company' is enabled

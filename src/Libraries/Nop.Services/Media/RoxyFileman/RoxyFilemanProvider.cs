@@ -8,7 +8,7 @@ namespace Nop.Services.Media.RoxyFileman
     /// <summary>
     /// Represent a file provider for roxyFileman images folder
     /// </summary>
-    public class RoxyFilemanProvider : IFileProvider
+    public partial class RoxyFilemanProvider : IFileProvider
     {
         #region Fields
 

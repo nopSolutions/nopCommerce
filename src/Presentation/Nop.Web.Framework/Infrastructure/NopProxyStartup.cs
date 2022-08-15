@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.Infrastructure
     /// <summary>
     /// Represents object for the configuring services on application startup
     /// </summary>
-    public class NopProxyStartup : INopStartup
+    public partial class NopProxyStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware

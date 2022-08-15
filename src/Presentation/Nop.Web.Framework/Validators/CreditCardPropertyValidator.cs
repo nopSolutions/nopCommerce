@@ -7,7 +7,7 @@ namespace Nop.Web.Framework.Validators
     /// <summary>
     /// Credit card validator
     /// </summary>
-    public class CreditCardPropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
+    public partial class CreditCardPropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
     {
         public override string Name => "CreditCardPropertyValidator";
 

@@ -7,7 +7,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class PopularProductTagsViewComponent : NopViewComponent
+    public partial class PopularProductTagsViewComponent : NopViewComponent
     {
         private readonly CatalogSettings _catalogSettings;
         private readonly ICatalogModelFactory _catalogModelFactory;

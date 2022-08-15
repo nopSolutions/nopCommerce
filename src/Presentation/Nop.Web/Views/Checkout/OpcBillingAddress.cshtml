@@ -63,6 +63,23 @@
     }
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressMiddle, additionalData = Model })
     <div class="section new-billing-address" id="billing-new-address-form">
+        @if (Model.EuVatEnabled)
+        {
+            <div class="inputs">
+                <label asp-for="VatNumber" asp-postfix=":"></label>
+                @if (Model.EuVatEnabledForGuests)
+                {
+                    <input asp-for="VatNumber" />
+                    <span asp-validation-for="VatNumber"></span>
+                }
+                else
+                {
+                    <span class="vat-number-warning">
+                        @T("Checkout.VatNumber.Disabled", Url.RouteUrl("CustomerInfo"))
+                    </span>
+                }
+            </div>
+        }
         <div class="enter-address">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
             @{

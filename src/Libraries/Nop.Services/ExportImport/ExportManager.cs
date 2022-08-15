@@ -619,7 +619,7 @@ namespace Nop.Services.ExportImport
             if (!attributes.Any())
                 return row;
 
-            attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
+            attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
             worksheet.Row(row).Collapse();
 
@@ -627,7 +627,7 @@ namespace Nop.Services.ExportImport
             {
                 row++;
                 attributeManager.CurrentObject = exportProductAttribute;
-                await attributeManager.WriteToXlsxAsync(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
+                await attributeManager.WriteToXlsxAsync(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
                 worksheet.Row(row).Collapse();
             }
@@ -654,7 +654,7 @@ namespace Nop.Services.ExportImport
             if (!attributes.Any())
                 return row;
 
-            attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
+            attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
             worksheet.Row(row).Collapse();
 
@@ -662,7 +662,7 @@ namespace Nop.Services.ExportImport
             {
                 row++;
                 attributeManager.CurrentObject = exportProductAttribute;
-                await attributeManager.WriteToXlsxAsync(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
+                await attributeManager.WriteToXlsxAsync(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
                 worksheet.Row(row).Collapse();
             }

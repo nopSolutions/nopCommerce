@@ -1,6 +1,6 @@
 ﻿namespace Nop.Services.ExportImport
 {
-    public class ExportSpecificationAttribute
+    public partial class ExportSpecificationAttribute
     {
         /// <summary>
         /// Gets or sets the attribute type ID

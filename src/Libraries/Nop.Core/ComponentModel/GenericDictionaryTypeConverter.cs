@@ -11,7 +11,7 @@ namespace Nop.Core.ComponentModel
     /// </summary>
     /// <typeparam name="K">Key type (simple)</typeparam>
     /// <typeparam name="V">Value type (simple)</typeparam>
-    public class GenericDictionaryTypeConverter<K, V> : TypeConverter
+    public partial class GenericDictionaryTypeConverter<K, V> : TypeConverter
     {
         /// <summary>
         /// Type converter

@@ -12,7 +12,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-nested-setting" tag helper
     /// </summary>
     [HtmlTargetElement("nop-nested-setting", Attributes = FOR_ATTRIBUTE_NAME)]
-    public class NopNestedSettingTagHelper : TagHelper
+    public partial class NopNestedSettingTagHelper : TagHelper
     {
         #region Constants
 

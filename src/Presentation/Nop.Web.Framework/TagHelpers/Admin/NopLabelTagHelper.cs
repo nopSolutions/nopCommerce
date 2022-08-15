@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-label" tag helper
     /// </summary>
     [HtmlTargetElement("nop-label", Attributes = FOR_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class NopLabelTagHelper : TagHelper
+    public partial class NopLabelTagHelper : TagHelper
     {
         #region Constants
 

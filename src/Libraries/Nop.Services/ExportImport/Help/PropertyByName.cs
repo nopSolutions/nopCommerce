@@ -9,7 +9,7 @@ namespace Nop.Services.ExportImport.Help
     /// A helper class to access the property by name
     /// </summary>
     /// <typeparam name="T">Object type</typeparam>
-    public class PropertyByName<T>
+    public partial class PropertyByName<T>
     {
         private object _propertyValue;
 

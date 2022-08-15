@@ -67,7 +67,7 @@ namespace Nop.Web.Models.Catalog
 
         #region Nested classes
 
-        public record CategoryModel : BaseNopEntityModel
+        public partial record CategoryModel : BaseNopEntityModel
         {
             public string Breadcrumb { get; set; }
         }

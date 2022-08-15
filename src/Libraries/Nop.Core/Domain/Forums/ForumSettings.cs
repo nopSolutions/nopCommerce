@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Forums
     /// <summary>
     /// Forum settings
     /// </summary>
-    public class ForumSettings : ISettings
+    public partial class ForumSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether forums are enabled

@@ -6,7 +6,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class WidgetViewComponent : NopViewComponent
+    public partial class WidgetViewComponent : NopViewComponent
     {
         private readonly IWidgetModelFactory _widgetModelFactory;
 

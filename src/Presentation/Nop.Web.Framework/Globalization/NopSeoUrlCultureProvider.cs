@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.Globalization
     /// <summary>
     /// Determines the culture information for a request via the URL
     /// </summary>
-    public class NopSeoUrlCultureProvider : RequestCultureProvider
+    public partial class NopSeoUrlCultureProvider : RequestCultureProvider
     {
         /// <summary>
         /// Implements the provider to determine the culture of the given request

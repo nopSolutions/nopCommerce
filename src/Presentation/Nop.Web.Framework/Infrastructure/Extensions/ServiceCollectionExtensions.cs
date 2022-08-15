@@ -296,6 +296,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 //we'll use this until https://github.com/dotnet/aspnetcore/issues/6566 is solved 
                 options.ModelBinderProviders.Insert(0, new InvariantNumberModelBinderProvider());
+                options.ModelBinderProviders.Insert(1, new CustomPropertiesModelBinderProvider());
                 //add custom display metadata provider 
                 options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider());
 

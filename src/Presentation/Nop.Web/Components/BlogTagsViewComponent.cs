@@ -6,7 +6,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class BlogTagsViewComponent : NopViewComponent
+    public partial class BlogTagsViewComponent : NopViewComponent
     {
         private readonly BlogSettings _blogSettings;
         private readonly IBlogModelFactory _blogModelFactory;

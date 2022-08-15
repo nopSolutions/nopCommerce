@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Messages
     /// <summary>
     /// Message templates settings
     /// </summary>
-    public class MessageTemplatesSettings : ISettings
+    public partial class MessageTemplatesSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether to replace message tokens according to case invariant rules

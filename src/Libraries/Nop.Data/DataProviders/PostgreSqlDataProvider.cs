@@ -17,7 +17,7 @@ using Npgsql;
 
 namespace Nop.Data.DataProviders
 {
-    public class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
+    public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     {
         #region Fields
 

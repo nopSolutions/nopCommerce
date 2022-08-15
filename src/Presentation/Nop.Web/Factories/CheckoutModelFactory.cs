@@ -10,6 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -59,6 +60,7 @@ namespace Nop.Web.Factories
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -92,7 +94,8 @@ namespace Nop.Web.Factories
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            TaxSettings taxSettings)
         {
             _addressSettings = addressSettings;
             _captchaSettings = captchaSettings;
@@ -123,6 +126,7 @@ namespace Nop.Web.Factories
             _paymentSettings = paymentSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -144,7 +148,7 @@ namespace Nop.Web.Factories
                 AllowPickupInStore = _shippingSettings.AllowPickupInStore
             };
 
-            if (!model.AllowPickupInStore) 
+            if (!model.AllowPickupInStore)
                 return model;
 
             model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
@@ -158,7 +162,7 @@ namespace Nop.Web.Factories
                 var address = customer.BillingAddressId.HasValue
                     ? await _addressService.GetAddressByIdAsync(customer.BillingAddressId.Value)
                     : null;
-                var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(cart, address, 
+                var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(cart, address,
                     customer, storeId: store.Id);
                 if (pickupPointsResponse.Success)
                     model.PickupPoints = await pickupPointsResponse.PickupPoints.SelectAwait(async point =>
@@ -251,8 +255,15 @@ namespace Nop.Web.Factories
                 ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep
             };
 
-            //existing addresses
             var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled)
+            {
+                model.VatNumber = customer.VatNumber;
+                model.EuVatEnabled = true;
+                model.EuVatEnabledForGuests = _taxSettings.EuVatEnabledForGuests;
+            }
+
+            //existing addresses
             var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
                 .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is Country country &&
                     (//published
@@ -290,6 +301,7 @@ namespace Nop.Web.Factories
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: customer,
                 overrideAttributesXml: overrideAttributesXml);
+
             return model;
         }
 
@@ -304,7 +316,7 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the shipping address model
         /// </returns>
-        public virtual async Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart, 
+        public virtual async Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart,
             int? selectedCountryId = null, bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutShippingAddressModel
@@ -575,7 +587,7 @@ namespace Nop.Web.Factories
                 //terms of service
                 TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage,
                 TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks,
-                DisplayCaptcha = await _customerService.IsGuestAsync(await _customerService.GetShoppingCartCustomerAsync(cart)) 
+                DisplayCaptcha = await _customerService.IsGuestAsync(await _customerService.GetShoppingCartCustomerAsync(cart))
                     && _captchaSettings.Enabled && _captchaSettings.ShowOnCheckoutPageForGuests
             };
             //min order amount validation
@@ -622,7 +634,7 @@ namespace Nop.Web.Factories
         public virtual Task<CheckoutProgressModel> PrepareCheckoutProgressModelAsync(CheckoutProgressStep step)
         {
             var model = new CheckoutProgressModel { CheckoutProgressStep = step };
-            
+
             return Task.FromResult(model);
         }
 

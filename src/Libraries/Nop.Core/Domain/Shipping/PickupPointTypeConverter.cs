@@ -10,7 +10,7 @@ namespace Nop.Core.Domain.Shipping
     /// <summary>
     /// Type converter for "PickupPoint"
     /// </summary>
-    public class PickupPointTypeConverter : TypeConverter
+    public partial class PickupPointTypeConverter : TypeConverter
     {
         /// <summary>
         /// Gets a value indicating whether this converter can        

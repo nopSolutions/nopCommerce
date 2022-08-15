@@ -7,7 +7,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
     /// <summary>
     /// Store pickup point service interface
     /// </summary>
-    public partial interface IStorePickupPointService
+    public interface IStorePickupPointService
     {
         /// <summary>
         /// Gets all pickup points

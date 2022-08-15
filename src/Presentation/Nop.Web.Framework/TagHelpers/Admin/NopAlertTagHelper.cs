@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-alert" tag helper
     /// </summary>
     [HtmlTargetElement("nop-alert", Attributes = ALERT_NAME_ID, TagStructure = TagStructure.WithoutEndTag)]
-    public class NopAlertTagHelper : TagHelper
+    public partial class NopAlertTagHelper : TagHelper
     {
         #region Constants
 

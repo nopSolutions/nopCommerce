@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Payments
     /// <summary>
     /// Payment settings
     /// </summary>
-    public class PaymentSettings : ISettings
+    public partial class PaymentSettings : ISettings
     {
         public PaymentSettings()
         {

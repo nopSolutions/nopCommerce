@@ -10,7 +10,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class EuCookieLawViewComponent : NopViewComponent
+    public partial class EuCookieLawViewComponent : NopViewComponent
     {
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IStoreContext _storeContext;

@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class FooterViewComponent : NopViewComponent
+    public partial class FooterViewComponent : NopViewComponent
     {
         private readonly ICommonModelFactory _commonModelFactory;
 

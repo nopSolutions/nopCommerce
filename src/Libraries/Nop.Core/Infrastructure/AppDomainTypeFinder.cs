@@ -12,7 +12,7 @@ namespace Nop.Core.Infrastructure
     /// certain patterns are investigated and an optional list of assemblies
     /// referenced by <see cref="AssemblyNames"/> are always investigated.
     /// </summary>
-    public class AppDomainTypeFinder : ITypeFinder
+    public partial class AppDomainTypeFinder : ITypeFinder
     {
         #region Fields
 

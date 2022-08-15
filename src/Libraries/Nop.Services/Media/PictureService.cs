@@ -428,7 +428,8 @@ namespace Nop.Services.Media
             var lastPart = parts[^1];
             lastPart = lastPart switch
             {
-                "pjpeg" or "jpeg" => "jpg",
+                "pjpeg" => "jpg",
+                "jpeg" => "jpeg",
                 "bmp" => "bmp",
                 "gif" => "gif",
                 "x-png" or "png" => "png",
@@ -1205,6 +1206,11 @@ namespace Nop.Services.Media
 
         #region Common methods
 
+        /// <summary>
+        /// Get content type for picture by file extension
+        /// </summary>
+        /// <param name="fileExtension">The file extension</param>
+        /// <returns>Picture's content type</returns>
         public string GetPictureContentTypeByFileExtension(string fileExtension)
         {
             string contentType = null;
