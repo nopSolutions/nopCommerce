@@ -1,0 +1,33 @@
+﻿@model WishlistModel
+@using Nop.Core
+@using Nop.Core.Domain.Tax
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
+@{
+    //Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Wishlist").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-wishlist-page");
+
+    NopHtml.AppendPageCssClassParts("html-private-messages");
+    NopHtml.AppendPageCssClassParts("html-private-messages-page");
+}
+
+@if (Model.Products.Count > 0)
+{
+    <div class="product-grid clearfix">
+        <div class="row">
+            @foreach (var product in Model.Products)
+            {
+                <div class="item-box product-list col-xs-12 col-sm-12 col-md-12 product-align">
+                    <div class="thumbnail product-item-shadow">
+                        @await Html.PartialAsync("_ProductBox", product)
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+

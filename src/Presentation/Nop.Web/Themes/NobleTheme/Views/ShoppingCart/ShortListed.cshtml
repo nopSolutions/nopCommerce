@@ -1,0 +1,47 @@
+﻿@model WishlistModel
+@using Nop.Core
+@using Nop.Core.Domain.Orders
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Wishlist").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-wishlist-page");
+
+    NopHtml.AppendPageCssClassParts("html-private-messages");
+    NopHtml.AppendPageCssClassParts("html-private-messages-page");
+}
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ShortListed })
+}
+
+<div class="page private-messages private-messages-page">
+    <div class="page-title panel-heading">
+        <h1>
+            Short Listed Profiles
+        </h1>
+    </div>
+    <div class="page-body panel-body from-panel">
+        @{
+            //var selectSentTab = Model.SentItemsTabSelected ? ".tabs( 'option', 'active', 1 )" : "";
+        }
+
+        <ul id="tabs" class="nav nav-tabs">
+            <li class="active"><a href="#tabs-1" data-toggle="tab">Short Listed By Me</a></li>
+            <li><a href="#tabs-2" data-toggle="tab">Short Listed Me</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="tabs-1" class="tab-pane active">
+                @await Component.InvokeAsync("ShortList", new { actionTypeId = (int)ShoppingCartType.Wishlist })
+            </div>
+            <div id="tabs-2" class="tab-pane">
+                @await Component.InvokeAsync("ShortList", new { actionTypeId = (int)ShoppingCartType.ShortListedMe })
+            </div>
+        </div>
+    </div>
+</div>

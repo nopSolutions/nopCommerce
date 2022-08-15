@@ -238,6 +238,7 @@
     <None Include="Themes\NobleTheme\Views\Shared\Components\SearchBox\Default.cshtml" />
     <None Include="Themes\NobleTheme\Views\Shared\Components\SelectedCheckoutAttributes\Default.cshtml" />
     <None Include="Themes\NobleTheme\Views\Shared\Components\ShoppingCartEstimateShipping\Default.cshtml" />
+    <None Include="Themes\NobleTheme\Views\Shared\Components\ShortList\Default.cshtml" />
     <None Include="Themes\NobleTheme\Views\Shared\Components\SocialButtons\Default.cshtml" />
     <None Include="Themes\NobleTheme\Views\Shared\Components\StoreThemeSelector\Default.cshtml" />
     <None Include="Themes\NobleTheme\Views\Shared\Components\TaxTypeSelector\Default.cshtml" />

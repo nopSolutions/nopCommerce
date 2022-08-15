@@ -33,7 +33,17 @@ SELECT * FROM [UrlRecord] Where EntityName='Category' AND EntityId in (1,2,3)
 --DELETE FROM [product] Where Id in (1,2,3)
 
 SELECT * FROM [CustomerRole]
+SELECT * FROM [UrlRecord] Where EntityName='Product'
+and slug like '%test%'
 
+UPDATE Customer SET CustomerProfileTypeId=0
+Where Id=1
+
+UPDATE Customer SET CustomerProfileTypeId=1
+Where Id=1
+
+SELECT * From Product WHERE  Vendorid <> null
+-- DELETE From Product WHERE Id in (46,47)
 
 
 --INSERT INTO [dbo].[UrlRecord]([EntityName],[Slug],[EntityId],[IsActive],[LanguageId]) VALUES('Product','sateesh-um',263,1,0)
@@ -133,13 +143,15 @@ UPDATE [Product_SpecificationAttribute_Mapping] SET AllowFiltering=0 Where Speci
 SELECT * FROM [Category] where id=29
 SELECT PageSize FROM [Category] where id=29
 SELECT * FROM [Product]
-SELECT * FROM [Product_Category_Mapping] where CategoryId=30
+SELECT * FROM [Product_Category_Mapping] where CategoryId=2
+SELECT * FROM [Product_Category_Mapping] where CategoryId=49
 
 SELECT * FROM [Customer]
 select * from  [dbo].[Product_SpecificationAttribute_Mapping] where ProductId=34
 
 SELECT * FROM [UrlRecord] WHERE EntityName='product'
 
+SELECT * FROM [Picture]
 
 -- DELETE FROM [Category] where id=29
 SELECT * FROM [CategoryTemplate]
@@ -154,13 +166,26 @@ SELECT * FROM [dbo].[ProductTemplate]
 
 update [product] SET showonhomepage=1 WHERE Id in (8)
 
+SELECT * FROM [dbo].[Product_Picture_Mapping]
+WHERE ProductId=49
+
+INSERT INTO [dbo].[Product_Picture_Mapping]([PictureId],[ProductId],[DisplayOrder])
+  VALUES (78,49,1)
+
 SELECT * FROM [product] WHERE Id=14
 SELECT * FROM [product] WHERE VendorId=273
 
 SELECT * FROM [dbo].[Product_SpecificationAttribute_Mapping]
 WHERE ProductId=8
 
-select * from [dbo].[GenericAttribute] where entityid=273
+SELECT  * FROM [dbo].[Customer] 
+SELECT * FROM [Picture]
+
+-- umsateeshTest@gmail.com
+
+SELECT * FROM [Product_Picture_Mapping] Where productid=49
+
+select * from [dbo].[GenericAttribute] where entityid=1376
 
 select * from [dbo].[GenericAttribute]  where [Key] like '%city%'
 

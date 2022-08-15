@@ -654,7 +654,7 @@ namespace Nop.Web.Factories
                 {
                     var (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
                     //customization
-                    picture = await CustomizeProductPictureAsync(product);
+                    //picture = await CustomizeProductPictureAsync(product);
 
                     var (fullSizeImageUrl, _) = await _pictureService.GetPictureUrlAsync(picture);
                     return new PictureModel

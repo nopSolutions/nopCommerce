@@ -15,7 +15,7 @@ namespace Nop.Web.Models.ShoppingCart
             Items = new List<ShoppingCartItemModel>();
             Warnings = new List<string>();
             //customization
-            Products = new List<ProductOverviewModel>();
+            //Products = new List<ProductOverviewModel>();
         }
 
         public Guid CustomerGuid { get; set; }

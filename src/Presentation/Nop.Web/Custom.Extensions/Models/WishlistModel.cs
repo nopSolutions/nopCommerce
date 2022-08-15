@@ -5,7 +5,23 @@ namespace Nop.Web.Models.ShoppingCart
 {
     public partial record WishlistModel
     {
-        public IList<ProductOverviewModel> Products { get; set; }
+        private IList<ProductOverviewModel> _products;
+
+        public IList<ProductOverviewModel> Products
+        {
+            get
+            {
+                if (_products == null)
+                {
+                    _products = new List<ProductOverviewModel>();
+                }
+                return _products;
+            }
+            set
+            {
+                _products = value;
+            }
+        }
 
     }
 }
