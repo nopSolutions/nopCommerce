@@ -21,9 +21,9 @@ namespace Nop.Plugin.Misc.Custom
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<CatalogController, CustomCatalogController>();
-            services.AddScoped<ICatalogModelFactory, CustomCatalogModelFactory>();
-            services.AddScoped<PrivateMessagesModelFactory, CustomPrivateMessagesModelFactory>();
+            //services.AddScoped<CatalogController, CustomCatalogController>();
+            //services.AddScoped<ICatalogModelFactory, CustomCatalogModelFactory>();
+            //services.AddScoped<PrivateMessagesModelFactory, CustomPrivateMessagesModelFactory>();
         }
 
         /// <summary>

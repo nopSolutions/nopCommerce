@@ -62,10 +62,10 @@ namespace Nop.Plugin.Misc.Custom.Controllers
 
             //customization : show opposite category products to logged in user
             //i.e for 'Support Takers' show 'Give Support' category profiles and vice versa
-            if (categoryId == 1)
-                categoryId = 2;
-            else if (categoryId == 2)
-                categoryId = 1;
+            //if (categoryId == 1)
+            //    categoryId = 2;
+            //else if (categoryId == 2)
+            //    categoryId = 1;
 
             return await base.Category(categoryId, command);
         }
