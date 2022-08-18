@@ -19,13 +19,11 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
         {
             _staticCacheManager = GetService<DistributedCacheManager>();
             _distributedCache = Mock.Get(GetService<IDistributedCache>());
-
         }
 
         [Test]
         public async Task CanSetObjectInCacheAndWillTrackIfRemoved()
         {
-          
             await _staticCacheManager.SetAsync(new CacheKey("some_key_1"), 1);
             _distributedCache.Verify(x=> x.SetAsync("some_key_1", It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()), Times.Once);
             await _staticCacheManager.RemoveByPrefixAsync("some_key_1");
@@ -33,7 +31,7 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
         }
 
         [Test]
-        public async Task CanGetAsyncFromCacheAndWillTrackInPerRequestCacheIfRemoved()
+        public async Task CanGetAsyncFromCacheAndWillTrackIfRemoved()
         {
             _distributedCache.Setup(x => x.GetAsync("some_key_2", It.IsAny<CancellationToken>())).ReturnsAsync(Encoding.UTF8.GetBytes("2"));
             await _staticCacheManager.GetAsync(new CacheKey("some_key_2"),()=> 2);
@@ -42,7 +40,7 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
         }
 
         [Test]
-        public async Task CanGetFromCacheAndWillTrackInPerRequestCacheIfRemoved()
+        public async Task CanGetFromCacheAndWillTrackRemoved()
         {
             _distributedCache.Setup(x => x.Get("some_key_3")).Returns(Encoding.UTF8.GetBytes("3"));
             _staticCacheManager.Get(new CacheKey("some_key_3"),()=> 3);
