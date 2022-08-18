@@ -1,0 +1,242 @@
+﻿@model ProductOverviewModel
+@using Nop.Core
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Orders
+@using Nop.Core.Domain.Tax
+@inject CatalogSettings catalogSettings
+@inject IWorkContext workContext
+@{
+    //prepare "Add to cart" AJAX link
+    var addtocartlink = "";
+    var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
+    var quantity = 1;
+    if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+    }
+    else
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity });
+    }
+
+    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
+    var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
+}
+
+<div id="price">
+    <div class="plan">
+        <div class="plan-inner">
+            <div class="entry-title">
+                <h3>
+                    <span style="color:white;" href="@Url.RouteUrl("Product", new {SeName = Model?.SeName})">@Model.Name</span>
+                </h3>
+                @*<a style="color:white;" href="@Url.RouteUrl("Product", new {SeName = Model?.SeName})">@Model.Name</a>*@
+                <div class="price" style="width:150px;">
+                    @Model.ProductPrice?.Price
+                </div>
+            </div>
+            <div class="entry-content">
+                @{
+                    string[] lines = Model.ShortDescription?.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    <ul>
+                        @if (lines != null && lines.Length > 0)
+                        {
+                            @foreach (var item in lines)
+                            {
+                                <li>
+                                    <strong></strong>
+                                    <span>
+                                        <i class="fa fa-check-circle fa-1x" style="color: #15c39a;padding-right:5px"></i>
+                                    </span>
+                                    @Html.Raw(item)
+                                </li>
+                            }
+                        }
+                    </ul>
+                }
+                @*@Html.Raw(Model.ShortDescription)*@
+            </div>
+            <div class="btn" style="">
+                @if (!Model.ProductPrice.DisableBuyButton)
+                {
+                    var addToCartText = T("ShoppingCart.AddToCart").Text;
+                    if (Model.ProductPrice.IsRental)
+                    {
+                        addToCartText = T("ShoppingCart.Rent").Text;
+                    }
+                    if (Model.ProductPrice.AvailableForPreOrder)
+                    {
+                        addToCartText = T("ShoppingCart.PreOrder").Text;
+                    }
+                }
+                <input type="button" value="Buy Now" class="" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    body {
+        background: #F2F2F2;
+        padding: 0;
+        margin: 0;
+    }
+
+    #price {
+        text-align: center;
+        /*border: 1px solid black;*/
+    }
+
+    .plan {
+        display: inline-block;
+        margin: 10px 1%;
+        font-family: 'Lato', Arial, sans-serif;
+        border: 1px solid lightgray;
+    }
+
+    .plan-inner {
+        background: #fff;
+        margin: 0 auto;
+        min-width: 280px;
+        max-width: 100%;
+        position: relative;
+    }
+
+    .entry-title {
+        background: #53CFE9;
+        height: 140px;
+        position: relative;
+        text-align: center;
+        color: #fff;
+        margin-bottom: 30px;
+    }
+
+        .entry-title > h3 {
+            background: #20BADA;
+            font-size: 20px;
+            padding: 5px 0;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .entry-title .price {
+            position: absolute;
+            bottom: -25px;
+            background: #20BADA;
+            height: 95px;
+            width: 95px;
+            margin: 0 auto;
+            left: 0;
+            right: 0;
+            overflow: hidden;
+            border-radius: 50px;
+            border: 5px solid #fff;
+            line-height: 80px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+    .price span {
+        position: absolute;
+        font-size: 9px;
+        bottom: -10px;
+        left: 30px;
+        font-weight: 400;
+    }
+
+    .entry-content {
+        color: #323232;
+    }
+
+        .entry-content ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-align: center;
+        }
+
+        .entry-content li {
+            border-bottom: 1px solid #E5E5E5;
+            padding: 10px 0;
+        }
+
+            .entry-content li:last-child {
+                border: none;
+            }
+
+    .btn {
+        padding: 3em 0;
+        text-align: center;
+    }
+
+        .btn a {
+            background: #323232;
+            padding: 10px 30px;
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 700;
+            text-decoration: none
+        }
+
+    .hot {
+        position: absolute;
+        top: -7px;
+        background: #F80;
+        color: #fff;
+        text-transform: uppercase;
+        z-index: 2;
+        padding: 2px 5px;
+        font-size: 9px;
+        border-radius: 2px;
+        right: 10px;
+        font-weight: 700;
+    }
+
+    .basic .entry-title {
+        background: #75DDD9;
+    }
+
+        .basic .entry-title > h3 {
+            background: #44CBC6;
+        }
+
+    .basic .price {
+        background: #44CBC6;
+    }
+
+    .standard .entry-title {
+        background: #4484c1;
+    }
+
+        .standard .entry-title > h3 {
+            background: #3772aa;
+        }
+
+    .standard .price {
+        background: #3772aa;
+    }
+
+    .ultimite .entry-title > h3 {
+        background: #DD4B5E;
+    }
+
+    .ultimite .entry-title {
+        background: #F75C70;
+    }
+
+    .ultimite .price {
+        background: #DD4B5E;
+    }
+</style>
+
+@*Custom styles*@
+<style>
+    .entry-content ul {
+        margin-left: 15px;
+        padding-left: 15px;
+        text-align: left;
+    }
+</style>
+
