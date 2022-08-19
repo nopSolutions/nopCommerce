@@ -317,7 +317,7 @@ namespace Nop.Services.Media
         /// <summary>
         /// Get image format by mime type
         /// </summary>
-        /// <param name="mimetype">Mime type</param>
+        /// <param name="mimeType">Mime type</param>
         /// <returns>SKEncodedImageFormat</returns>
         protected virtual SKEncodedImageFormat GetImageFormatByMimeType(string mimeType)
         {

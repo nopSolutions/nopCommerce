@@ -336,5 +336,10 @@ namespace Nop.Core.Infrastructure
         /// <param name="contents">The string to write to the file</param>
         /// <param name="encoding">The encoding to apply to the string</param>
         void WriteAllText(string path, string contents, Encoding encoding);
+
+        /// <summary>
+        /// Gets or sets the absolute path to the directory that contains the web-servable application content files.
+        /// </summary>
+        string WebRootPath { get; }
     }
 }
