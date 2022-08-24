@@ -4,11 +4,15 @@ using System.Linq;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 
+using Metalama.Aspects;
+
 namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents key for caching objects
     /// </summary>
+    [Introduction]
+    [MethodIntroductionAttribute]
     public partial class CacheKey
     {
         #region Ctor

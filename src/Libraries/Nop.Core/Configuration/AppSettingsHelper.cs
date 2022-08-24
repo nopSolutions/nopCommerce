@@ -6,11 +6,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nop.Core.Infrastructure;
 
+using Metalama.Aspects;
+
 namespace Nop.Core.Configuration
 {
     /// <summary>
     /// Represents the app settings helper
     /// </summary>
+    [Introduction]
     public partial class AppSettingsHelper
     {
         #region Fields

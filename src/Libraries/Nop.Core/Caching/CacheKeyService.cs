@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using Nop.Core.Configuration;
 
+using Metalama.Aspects;
+
 namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents the default cache key service implementation
     /// </summary>
+    [Introduction]
     public abstract partial class CacheKeyService
     {
         #region Constants

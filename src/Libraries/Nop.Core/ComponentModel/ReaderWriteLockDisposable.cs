@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 
+using Metalama.Aspects;
+
 namespace Nop.Core.ComponentModel
 {
     /// <summary>
@@ -9,6 +11,7 @@ namespace Nop.Core.ComponentModel
     /// <remarks>
     /// Intended as an infrastructure class.
     /// </remarks>
+    [Introduction]
     public class ReaderWriteLockDisposable : IDisposable
     {
         private bool _disposed = false;

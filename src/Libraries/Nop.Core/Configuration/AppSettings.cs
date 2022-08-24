@@ -4,11 +4,14 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+using Metalama.Aspects;
+
 namespace Nop.Core.Configuration
 {
     /// <summary>
     /// Represents the app settings
     /// </summary>
+    [Introduction]
     public partial class AppSettings
     {
         #region Fields

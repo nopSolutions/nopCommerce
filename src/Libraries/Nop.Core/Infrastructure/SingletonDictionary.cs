@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Metalama.Aspects;
 
 namespace Nop.Core.Infrastructure
 {
@@ -7,6 +8,7 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     /// <typeparam name="TKey">The type of key.</typeparam>
     /// <typeparam name="TValue">The type of value.</typeparam>
+    [Introduction]
     public class SingletonDictionary<TKey, TValue> : Singleton<IDictionary<TKey, TValue>>
     {
         static SingletonDictionary()

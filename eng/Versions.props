@@ -11,7 +11,7 @@
     
     <!-- Set the default versions of dependencies -->
     <PropertyGroup>
-        <PostSharpEngineeringVersion>1.0.79-preview</PostSharpEngineeringVersion>
+        <PostSharpEngineeringVersion>1.0.85-preview</PostSharpEngineeringVersion>
 		<MetalamaVersion>branch:master</MetalamaVersion>
     </PropertyGroup>
 

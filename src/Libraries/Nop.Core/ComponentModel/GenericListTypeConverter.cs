@@ -4,12 +4,15 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
+using Metalama.Aspects;
+
 namespace Nop.Core.ComponentModel
 {
     /// <summary>
     /// Generic List type converted
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
+    [Introduction]
     public class GenericListTypeConverter<T> : TypeConverter
     {
         /// <summary>
