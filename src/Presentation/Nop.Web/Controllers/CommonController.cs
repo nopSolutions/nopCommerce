@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
@@ -300,10 +301,18 @@ namespace Nop.Web.Controllers
         [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> SitemapXml(int? id)
         {
-            var sitemapModel = _sitemapXmlSettings.SitemapXmlEnabled
-                ? await _sitemapModelFactory.PrepareSitemapXmlModelAsync(id) : null;
+            if (!_sitemapXmlSettings.SitemapXmlEnabled)
+                return StatusCode(StatusCodes.Status403Forbidden);
 
-            return Content(sitemapModel?.SitemapXml, "text/xml");
+            try
+            {
+                var sitemapXmlModel = await _sitemapModelFactory.PrepareSitemapXmlModelAsync(id ?? 0);
+                return PhysicalFile(sitemapXmlModel.SitemapXmlPath, MimeTypes.ApplicationXml);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         public virtual async Task<IActionResult> SetStoreTheme(string themeName, string returnUrl = "")
