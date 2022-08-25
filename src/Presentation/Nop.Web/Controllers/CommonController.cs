@@ -112,9 +112,9 @@ namespace Nop.Web.Controllers
         }
 
         //available even when a store is closed
-        [CheckAccessClosedStore(true)]
+        [CheckAccessClosedStore(ignore: true)]
         //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
+        [CheckAccessPublicStore(ignore: true)]
         public virtual async Task<IActionResult> SetLanguage(int langid, string returnUrl = "")
         {
             var language = await _languageService.GetLanguageByIdAsync(langid);
@@ -146,7 +146,7 @@ namespace Nop.Web.Controllers
         }
 
         //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
+        [CheckAccessPublicStore(ignore: true)]
         public virtual async Task<IActionResult> SetCurrency(int customerCurrency, string returnUrl = "")
         {
             var currency = await _currencyService.GetCurrencyByIdAsync(customerCurrency);
@@ -165,7 +165,7 @@ namespace Nop.Web.Controllers
         }
 
         //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
+        [CheckAccessPublicStore(ignore: true)]
         public virtual async Task<IActionResult> SetTaxType(int customerTaxType, string returnUrl = "")
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
@@ -184,7 +184,7 @@ namespace Nop.Web.Controllers
 
         //contact us page
         //available even when a store is closed
-        [CheckAccessClosedStore(true)]
+        [CheckAccessClosedStore(ignore: true)]
         public virtual async Task<IActionResult> ContactUs()
         {
             var model = new ContactUsModel();
@@ -196,7 +196,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ContactUs")]
         [ValidateCaptcha]
         //available even when a store is closed
-        [CheckAccessClosedStore(true)]
+        [CheckAccessClosedStore(ignore: true)]
         public virtual async Task<IActionResult> ContactUsSend(ContactUsModel model, bool captchaValid)
         {
             //validate CAPTCHA
@@ -293,11 +293,11 @@ namespace Nop.Web.Controllers
 
         //SEO sitemap page
         //available even when a store is closed
-        [CheckAccessClosedStore(true)]
+        [CheckAccessClosedStore(ignore: true)]
         //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
+        [CheckAccessPublicStore(ignore: true)]
         //ignore SEO friendly URLs checks
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> SitemapXml(int? id)
         {
             var sitemapModel = _sitemapXmlSettings.SitemapXmlEnabled
@@ -323,9 +323,9 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         //available even when a store is closed
-        [CheckAccessClosedStore(true)]
+        [CheckAccessClosedStore(ignore: true)]
         //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
+        [CheckAccessPublicStore(ignore: true)]
         public virtual async Task<IActionResult> EuCookieLawAccept()
         {
             if (!_storeInformationSettings.DisplayEuCookieLawWarning)
@@ -340,11 +340,11 @@ namespace Nop.Web.Controllers
 
         //robots.txt file
         //available even when a store is closed
-        [CheckAccessClosedStore(true)]
+        [CheckAccessClosedStore(ignore: true)]
         //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
+        [CheckAccessPublicStore(ignore: true)]
         //ignore SEO friendly URLs checks
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> RobotsTextFile()
         {
             var robotsFileContent = await _commonModelFactory.PrepareRobotsTextFileAsync();
@@ -360,7 +360,7 @@ namespace Nop.Web.Controllers
 
         //store is closed
         //available even when a store is closed
-        [CheckAccessClosedStore(true)]
+        [CheckAccessClosedStore(ignore: true)]
         public virtual IActionResult StoreClosed()
         {
             return View();

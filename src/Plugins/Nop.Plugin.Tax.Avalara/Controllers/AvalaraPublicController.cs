@@ -90,7 +90,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             return View("~/Plugins/Tax.Avalara/Views/Customer/ExemptionCertificates.cshtml", model);
         }
 
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public async Task<IActionResult> DownloadCertificate(int id)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();

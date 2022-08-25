@@ -120,7 +120,7 @@ namespace Nop.Web.Controllers
             return View("List", model);
         }
 
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> ListRss(int languageId)
         {
             var store = await _storeContext.GetCurrentStoreAsync();
