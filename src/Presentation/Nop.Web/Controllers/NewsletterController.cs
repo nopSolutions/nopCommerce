@@ -36,7 +36,7 @@ namespace Nop.Web.Controllers
         }
 
         //available even when a store is closed
-        [CheckAccessClosedStore(true)]
+        [CheckAccessClosedStore(ignore: true)]
         [HttpPost]
         public virtual async Task<IActionResult> SubscribeNewsletter(string email, bool subscribe)
         {
@@ -102,7 +102,7 @@ namespace Nop.Web.Controllers
         }
 
         //available even when a store is closed
-        [CheckAccessClosedStore(true)]
+        [CheckAccessClosedStore(ignore: true)]
         public virtual async Task<IActionResult> SubscriptionActivation(Guid token, bool active)
         {
             var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(token);

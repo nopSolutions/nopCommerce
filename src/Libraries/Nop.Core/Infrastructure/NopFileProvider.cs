@@ -65,7 +65,7 @@ namespace Nop.Core.Infrastructure
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Combines an array of strings into a path
         /// </summary>
@@ -93,7 +93,7 @@ namespace Nop.Core.Infrastructure
         }
 
         /// <summary>
-        /// Creates or overwrites a file in the specified path
+        /// Creates a file in the specified path
         /// </summary>
         /// <param name="path">The path and name of the file to create</param>
         public virtual void CreateFile(string path)
@@ -260,7 +260,7 @@ namespace Nop.Core.Infrastructure
         {
             var allPaths = new List<string>();
 
-            if(paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
+            if (paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
                 allPaths.Add(WebRootPath);
 
             allPaths.AddRange(paths);
@@ -395,9 +395,9 @@ namespace Nop.Core.Infrastructure
             if (string.IsNullOrEmpty(searchPattern))
                 searchPattern = "*.*";
 
-            return Directory.GetFileSystemEntries(directoryPath, searchPattern, 
-                new EnumerationOptions 
-                { 
+            return Directory.GetFileSystemEntries(directoryPath, searchPattern,
+                new EnumerationOptions
+                {
                     IgnoreInaccessible = true,
                     MatchCasing = MatchCasing.CaseInsensitive,
                     RecurseSubdirectories = !topDirectoryOnly,
@@ -440,6 +440,22 @@ namespace Nop.Core.Infrastructure
         public virtual DateTime GetLastWriteTimeUtc(string path)
         {
             return File.GetLastWriteTimeUtc(path);
+        }
+
+        /// <summary>
+        /// Creates or opens a file at the specified path for read/write access
+        /// </summary>
+        /// <param name="path">The path and name of the file to create</param>
+        /// <returns>A <see cref="FileStream"/> that provides read/write access to the file specified in <paramref name="path"/></returns>
+        public FileStream GetOrCreateFile(string path)
+        {
+            if (FileExists(path))
+                return File.Open(path, FileMode.Open, FileAccess.ReadWrite);
+
+            var fileInfo = new FileInfo(path);
+            CreateDirectory(fileInfo.DirectoryName);
+
+            return File.Create(path);
         }
 
         /// <summary>
@@ -521,7 +537,7 @@ namespace Nop.Core.Infrastructure
         {
             await using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var streamReader = new StreamReader(fileStream, encoding);
-            
+
             return await streamReader.ReadToEndAsync();
         }
 
@@ -538,7 +554,7 @@ namespace Nop.Core.Infrastructure
 
             return streamReader.ReadToEnd();
         }
-        
+
         /// <summary>
         /// Writes the specified byte array to the file
         /// </summary>

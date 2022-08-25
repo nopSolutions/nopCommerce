@@ -36,7 +36,7 @@ namespace Nop.Core.Caching
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare cache entry options for the passed key
         /// </summary>
@@ -122,7 +122,7 @@ namespace Nop.Core.Caching
 
             result = await acquire();
 
-            if(result != null)
+            if (result != null)
                 await SetAsync(key, result);
 
             return result;
@@ -192,7 +192,7 @@ namespace Nop.Core.Caching
 
             return Task.CompletedTask;
         }
-        
+
         /// <summary>
         /// Perform some action with exclusive in-memory lock
         /// </summary>
@@ -219,6 +219,45 @@ namespace Nop.Core.Caching
             {
                 //release lock even if action fails
                 _memoryCache.Remove(key);
+            }
+        }
+
+        /// <summary>
+        /// Perform asynchronous action with exclusive in-memory lock
+        /// </summary>
+        /// <param name="resource">The key we are locking on</param>
+        /// <param name="expirationTime">The time after which the lock will automatically be expired</param>
+        /// <param name="action">Action to be performed with locking</param>
+        /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
+        public async Task<bool> PerformActionWithLockAsync(string resource, TimeSpan expirationTime, Func<Task> action)
+        {
+            //ensure that lock is acquired
+            var isSet = await _memoryCache.GetOrCreateAsync(resource, cacheEntry =>
+                {
+                    cacheEntry.AbsoluteExpiration = DateTimeOffset.Now;
+                    return Task.FromResult(false);
+                });
+
+            if (isSet)
+                return false;
+
+            try
+            {
+                await _memoryCache.GetOrCreateAsync(resource, cacheEntry =>
+                {
+                    cacheEntry.AbsoluteExpirationRelativeToNow = expirationTime;
+                    return Task.FromResult(true);
+                });
+
+                //perform action
+                await action();
+
+                return true;
+            }
+            finally
+            {
+                //release lock even if action fails
+                _memoryCache.Remove(resource);
             }
         }
 
@@ -274,7 +313,7 @@ namespace Nop.Core.Caching
             if (_disposed)
                 return;
 
-            if (disposing) 
+            if (disposing)
                 _memoryCache.Dispose();
 
             _disposed = true;
