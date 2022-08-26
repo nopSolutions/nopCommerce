@@ -1,3 +1,4 @@
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Stores
@@ -5,7 +6,7 @@ namespace Nop.Core.Domain.Stores
     /// <summary>
     /// Represents a store
     /// </summary>
-    public partial class Store : BaseEntity, ILocalizedEntity
+    public partial class Store : BaseEntity, ILocalizedEntity, ISoftDeletedEntity
     {
         /// <summary>
         /// Gets or sets the store name
@@ -56,5 +57,10 @@ namespace Nop.Core.Domain.Stores
         /// Gets or sets the company VAT (used in Europe Union countries)
         /// </summary>
         public string CompanyVat { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity has been deleted
+        /// </summary>
+        public bool Deleted { get; set; }
     }
 }
