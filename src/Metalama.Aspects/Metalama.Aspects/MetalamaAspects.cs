@@ -45,6 +45,8 @@ namespace Metalama.Aspects
              */
             //amender.With(p => p.Types.SelectMany(t => t.Methods).Where(m => m.IsAsync)).AddAspect<LoggingAspect>();
 
+            amender.With(p => p.Types.SelectMany(t => t.Methods).Where( m => !m.IsAbstract)).AddAspect<ParametrizedLoggingAspect>();
+
             #endregion
         }
     }
@@ -83,7 +85,7 @@ namespace Metalama.Aspects
             /* Tests causing errors */
 
             // CSC : error LAMA0001: Unexpected exception occurred in Metalama: Exception of type 'Metalama.Framework.Engine.AssertionFailedException' was thrown.
-            //amender.With(p => p.Types.SelectMany(t => t.Fields).Where(it => !it.IsAbstract && !it.IsImplicitlyDeclared)).AddAspect<OverrideAttribute>();
+            // amender.With(p => p.Types.SelectMany(t => t.Fields).Where(it => !it.IsAbstract && !it.IsImplicitlyDeclared)).AddAspect<OverrideAttribute>();
 
             #endregion
         }
@@ -93,7 +95,20 @@ namespace Metalama.Aspects
     {
         public override void AmendProject(IProjectAmender amender)
         {
-            amender.With(p => p.Types).AddAspect<InterfaceIntroductionAttribute>();
+            #region fixed and/or working
+            /* Fixed and working tests */
+
+            // TODO
+
+            #endregion
+
+            #region errors
+            /* Tests causing errors */
+
+            // CSC : error LAMA0001: Unexpected exception occurred in Metalama: Exception of type 'Metalama.Framework.Engine.AssertionFailedException' was thrown.
+            // amender.With(p => p.Types).AddAspect<InterfaceIntroductionAttribute>();
+
+            #endregion
         }
     }
 
@@ -250,6 +265,39 @@ namespace Metalama.Aspects
 
             return meta.Proceed();
 
+        }
+    }
+
+    public class ParametrizedLoggingAspect : OverrideMethodAspect
+    {
+        public override dynamic OverrideMethod()
+        {
+            try
+            {
+                var result = meta.Proceed();
+
+                Console.WriteLine($"Executing {meta.Target.Method.ToDisplayString()}");
+                var parameters = meta.Target.Parameters;
+
+                if (parameters.Count > 0)
+                {
+                    foreach (var parameter in parameters)
+                    {
+                        Console.WriteLine($"Method has parameter {parameter.Name} of type {parameter.Type} with {parameter.DefaultValue} default value.");
+                    }
+                    return result;
+                }
+                else
+                {
+                    Console.WriteLine("Parameterless method.");
+                    return result;
+                }
+            }
+            catch ( Exception e )
+            {
+                Console.WriteLine($"Caught exception {e.Message} in {meta.Target.Method.Name}");
+                throw;
+            }
         }
     }
 
