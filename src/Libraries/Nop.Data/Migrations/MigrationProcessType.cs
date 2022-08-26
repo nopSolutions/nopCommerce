@@ -18,6 +18,15 @@
         /// <summary>
         /// Update
         /// </summary>
-        Update
+        Update,
+
+        /// <summary>
+        /// Apply migration right after the migration runner will become available
+        /// </summary>
+        ///<remarks>
+        /// Avoid using dependency injection in migrations that are marked by this type of migration process,
+        /// because many dependencies are not registered yet.
+        ///</remarks>
+        NoDependencies
     }
 }

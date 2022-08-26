@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FluentMigrator;
 
 namespace Nop.Data.Migrations
 {
@@ -16,9 +17,21 @@ namespace Nop.Data.Migrations
         void ApplyUpMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.Installation, bool commitVersionOnly = false);
 
         /// <summary>
-        /// Executes an Down migration
+        /// Executes a Down for all found (and applied) migrations
         /// </summary>
         /// <param name="assembly">Assembly to find the migration</param>
         void ApplyDownMigrations(Assembly assembly);
+
+        /// <summary>
+        /// Executes down expressions for the passed migration
+        /// </summary>
+        /// <param name="migration">Migration to rollback</param>
+        void DownMigration(IMigration migration);
+
+        /// <summary>
+        /// Executes up expressions for the passed migration
+        /// </summary>
+        /// <param name="migration">Migration to apply</param>
+        void UpMigration(IMigration migration);
     }
 }
