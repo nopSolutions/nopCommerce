@@ -5,6 +5,9 @@ using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 
 using Metalama.Aspects;
+using Metalama.Framework.Aspects;
+
+[assembly: AspectOrder( typeof(IntroductionAttribute), typeof(MethodIntroductionAttribute ) )]
 
 namespace Nop.Core.Caching
 {
@@ -12,7 +15,7 @@ namespace Nop.Core.Caching
     /// Represents key for caching objects
     /// </summary>
     [Introduction]
-    [MethodIntroductionAttribute]
+    [MethodIntroduction]
     public partial class CacheKey
     {
         #region Ctor
