@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FluentMigrator;
 using FluentMigrator.Runner;
 using Nop.Data.Migrations;
 
@@ -23,7 +24,7 @@ namespace Nop.Tests
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -40,10 +41,26 @@ namespace Nop.Tests
         }
 
         /// <summary>
-        /// Executes all found (and unapplied) migrations
+        /// Executes a Down for all found (and applied) migrations
         /// </summary>
         /// <param name="assembly">Assembly to find the migration</param>
         public void ApplyDownMigrations(Assembly assembly)
+        {
+        }
+
+        /// <summary>
+        /// Executes down expressions for the passed migration
+        /// </summary>
+        /// <param name="migration">Migration to rollback</param>
+        public void DownMigration(IMigration migration)
+        {
+        }
+
+        /// <summary>
+        /// Executes up expressions for the passed migration
+        /// </summary>
+        /// <param name="migration">Migration to apply</param>
+        public void UpMigration(IMigration migration)
         {
         }
 
