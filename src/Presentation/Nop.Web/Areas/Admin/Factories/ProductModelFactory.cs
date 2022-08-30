@@ -880,7 +880,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.UnlimitedDownloads = true;
                 model.IsShipEnabled = true;
                 model.AllowCustomerReviews = true;
-                model.Published = true;
+                model.Published = false;
                 model.VisibleIndividually = true;
             }
 

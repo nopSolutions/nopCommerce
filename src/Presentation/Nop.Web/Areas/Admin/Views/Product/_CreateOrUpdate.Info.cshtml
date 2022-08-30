@@ -306,7 +306,7 @@
             </script>
         </div>
     </div>
-    <div class="form-group row @(Model.ProductEditorSettingsModel.Published ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.Published ? null : "advanced-setting")"@(Model.CanPublish ? null : Html.Raw("style='display: none;'") )>
         <div class="col-md-3">
             <nop-label asp-for="Published" />
         </div>

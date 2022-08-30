@@ -799,7 +799,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _productModelFactory.PrepareProductModelAsync(new ProductModel(), null);
-
+            model.CanPublish = await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePublish);
             //show configuration tour
             if (showtour)
             {
@@ -819,6 +819,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+            var canPublish = await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePublish);
 
             //validate maximum number of products per vendor
             var currentVendor = await _workContext.GetCurrentVendorAsync();
@@ -841,6 +842,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.ShowOnHomepage = false;
 
                 //product
+                model.Published = canPublish ? model.Published : false;
                 var product = model.ToEntity<Product>();
                 product.CreatedOnUtc = DateTime.UtcNow;
                 product.UpdatedOnUtc = DateTime.UtcNow;
@@ -892,7 +894,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             model = await _productModelFactory.PrepareProductModelAsync(model, null, true);
-
+            model.CanPublish = canPublish;
             //if we got this far, something failed, redisplay form
             return View(model);
         }
@@ -901,6 +903,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+            var canPublish = await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePublish);
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(id);
@@ -914,7 +917,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _productModelFactory.PrepareProductModelAsync(null, product);
-
+            model.CanPublish = canPublish;
             return View(model);
         }
 
@@ -923,6 +926,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+            var canPublish = await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePublish);
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(model.Id);
@@ -963,6 +967,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var previousProductType = product.ProductType;
 
                 //product
+                model.Published = canPublish ? model.Published : false;
                 product = model.ToEntity(product);
 
                 product.UpdatedOnUtc = DateTime.UtcNow;
