@@ -1,7 +1,7 @@
 ﻿﻿nopCommerce: free and open-source eCommerce solution
 ===========
 
-Here I Add new permmisions 
+Here I Add new product permissions for ADD or Edit
 ### Key features ###
 
 * The product is being developed and supported by the professional team since 2008.
