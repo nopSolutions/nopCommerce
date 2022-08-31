@@ -1,10 +1,8 @@
-﻿const del = require('del');
+﻿import { deleteAsync } from 'del';
 const targetPath = './wwwroot/lib_npm/';
 
-function clean(cb) {
-  return del(targetPath + '**/*').then(() => {
+export default function clean(cb) {
+  return deleteAsync(targetPath + '**/*').then(() => {
     cb()
   })
 };
-
-exports.Execute = clean;
