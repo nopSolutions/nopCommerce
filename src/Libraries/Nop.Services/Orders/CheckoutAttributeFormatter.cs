@@ -84,7 +84,7 @@ namespace Nop.Services.Orders
             bool allowHyperlinks = true)
         {
             var result = new StringBuilder();
-            var currentLanguage = _workContext.GetWorkingLanguageAsync();
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             var attributes = await _checkoutAttributeParser.ParseCheckoutAttributesAsync(attributesXml);
             for (var i = 0; i < attributes.Count; i++)
             {
