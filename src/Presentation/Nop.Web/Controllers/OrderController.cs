@@ -182,7 +182,7 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page / PDF invoice
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> GetPdfInvoice(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);

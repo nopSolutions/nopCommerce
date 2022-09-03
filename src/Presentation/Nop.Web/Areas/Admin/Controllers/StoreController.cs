@@ -154,7 +154,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(true)]
+        [HttpsRequirement(ignore: true)]
         public virtual async Task<IActionResult> SetStoreSslByCurrentRequestScheme(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
@@ -178,7 +178,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("Edit", new { id = id });
         }
 
-        [HttpsRequirement(true)]
+        [HttpsRequirement(ignore: true)]
         public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))

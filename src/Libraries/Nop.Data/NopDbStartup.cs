@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
@@ -45,6 +46,21 @@ namespace Nop.Data
                     rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres()
                         // define the assembly containing the migrations
                         .ScanIn(mAssemblies).For.Migrations());
+
+            services.AddTransient(p => new Lazy<IVersionLoader>(p.GetRequiredService<IVersionLoader>()));
+
+            //data layer
+            services.AddTransient<IDataProviderManager, DataProviderManager>();
+            services.AddTransient(serviceProvider =>
+                serviceProvider.GetRequiredService<IDataProviderManager>().DataProvider);
+
+            //repositories	
+            services.AddScoped(typeof(IRepository<>), typeof(EntityRepository<>));
+
+            using var scope = services.BuildServiceProvider().CreateScope();
+            var runner = scope.ServiceProvider.GetRequiredService<IMigrationManager>();
+            foreach (var assembly in mAssemblies)
+                runner.ApplyUpMigrations(assembly, MigrationProcessType.NoDependencies);
         }
 
         /// <summary>
