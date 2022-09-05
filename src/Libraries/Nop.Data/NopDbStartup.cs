@@ -57,6 +57,9 @@ namespace Nop.Data
             //repositories	
             services.AddScoped(typeof(IRepository<>), typeof(EntityRepository<>));
 
+            if (!DataSettingsManager.IsDatabaseInstalled())
+                return;
+
             using var scope = services.BuildServiceProvider().CreateScope();
             var runner = scope.ServiceProvider.GetRequiredService<IMigrationManager>();
             foreach (var assembly in mAssemblies)
